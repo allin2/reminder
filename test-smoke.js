@@ -166,7 +166,13 @@ section("1. 自然语言时间解析");
 
   const p2 = app.parseChineseTime("过阵子再看看这个", now);
   ok("低置信度", p2.confidence === "low", p2.confidence);
-  ok("低置信度默认一周左右", Math.abs((p2.trigger - now.getTime()) - 7 * 86400000) < 3600000);
+  ok("低置信度仍给出时间（供上层按 D17 覆盖）", !!p2.trigger);
+  // D17：兜底不再是「一周后」。产品层兜底 = 下一个 Review Window 起点。
+  const fb = app.fallbackTriggerAt();
+  const fbD = new Date(fb);
+  ok("D17 兜底落在下一个整理窗口起点",
+    fb > Date.now() && fbD.getHours() === 21 && fbD.getMinutes() === 30, fbD.toString());
+  ok("D17 兜底不再是一周后", fb - Date.now() <= 86400000, ((fb - Date.now()) / 3600000).toFixed(1) + "h");
 
   const p3 = app.parseChineseTime("9月30日截止，提前五天交材料", now);
   ok("截止时间", !!p3.deadline, String(p3.deadline));
@@ -297,7 +303,195 @@ section("3b. 决策落地 D5/D7/D17/D23/D25");
   }
 }
 
-/* ---------- 4. Deadline protection ---------- */
+/* ---------- 3c. 首页信息架构 D5/D6/D7/D8 ---------- */
+section("3c. 首页信息架构 D5/D6/D7/D8");
+{
+  app.state.settings.dnd = false;
+  app.state.settings.notify = true;
+  app.state.ui.activeExpanded = false;
+  const now = Date.now();
+  app.state.items = [
+    app.makeItem({ title: "需要我注意", status: "due", triggerAt: now - 60000 }),
+    app.makeItem({ title: "已看到一", status: "acknowledged", acknowledgedAt: now, triggerAt: now - 60000 }),
+    app.makeItem({ title: "已看到二", status: "acknowledged", acknowledgedAt: now - 1000, triggerAt: now - 60000 }),
+    app.makeItem({ title: "未来三天的", status: "waiting", triggerAt: now + 3 * 86400000 }),
+    app.makeItem({ title: "模糊甲", status: "waiting", review_status: "NEEDS_REVIEW", triggerAt: now + 86400000 }),
+    app.makeItem({ title: "模糊乙", status: "waiting", review_status: "NEEDS_REVIEW", triggerAt: now + 86400000 })
+  ];
+  app.renderHome();
+  const homeHtml = ["#homeDue", "#homeActive", "#homeReview", "#homeUpcoming", "#homeEmpty"]
+    .map(sel => getNode(sel).innerHTML).join("");
+
+  ok("D5 首页不出现「即将到来」", !/即将到来/.test(homeHtml));
+  ok("D5 #homeUpcoming 不承载任何内容", getNode("#homeUpcoming").innerHTML === "");
+  ok("D5 未来事项不上首页", !/未来三天的/.test(homeHtml));
+  ok("D5 需要注意区块正常渲染", /需要我注意/.test(getNode("#homeDue").innerHTML));
+
+  // D7：永远折叠成一行，取消 ≤3 条阈值
+  ok("D7 已看到未完成折叠成一行带数量", /已看到未完成 · 2/.test(getNode("#homeActive").innerHTML));
+  ok("D7 明细默认隐藏", /id="activeList" hidden/.test(getNode("#homeActive").innerHTML));
+
+  // D6：有待整理 → 常驻入口；形态与窗口判定一致
+  const reviewHtml = getNode("#homeReview").innerHTML;
+  const strong = app.inReviewHighlight();
+  ok("D6 有待整理 → 入口常驻", /待整理/.test(reviewHtml));
+  ok("D6 入口形态与窗口/宽限期判定一致",
+    strong
+      ? /待整理 · 2/.test(reviewHtml)
+      : (!/待整理 · \d/.test(reviewHtml) && /opacity:\.75/.test(reviewHtml)),
+    "highlight=" + strong);
+
+  // D7：只有 1 条时也必须折叠
+  app.state.items = [
+    app.makeItem({ title: "唯一一条", status: "acknowledged", acknowledgedAt: now, triggerAt: now - 60000 })
+  ];
+  app.renderHome();
+  ok("D7 单条也折叠不直接列出", /已看到未完成 · 1/.test(getNode("#homeActive").innerHTML) &&
+    /hidden/.test(getNode("#homeActive").innerHTML));
+
+  // D8：空态一句纯文字，不可点击
+  app.state.items = [
+    app.makeItem({ title: "今天做完了", status: "archived", completedAt: now, triggerAt: now - 60000 })
+  ];
+  app.renderHome();
+  const emptyHtml = getNode("#homeEmpty").innerHTML;
+  ok("D8 空态含「今天已完成 1 件」", /今天已完成 1 件/.test(emptyHtml));
+  ok("D8 完成数是纯文字不可点击", !/<button/.test(emptyHtml) && !/data-act/.test(emptyHtml));
+
+  // D6：无待整理 → 完全不渲染入口
+  app.state.items = [];
+  app.renderHome();
+  ok("D6 无待整理 → 入口完全不渲染", getNode("#homeReview").innerHTML === "");
+}
+
+/* ---------- 3d. 整理会话出口（P0-3 回归） ---------- */
+section("3d. 整理会话出口（P0-3）");
+{
+  app.state.items = [
+    app.makeItem({
+      title: "待整理的记录",
+      status: "waiting",
+      review_status: "NEEDS_REVIEW",
+      triggerAt: Date.now() + 86400000
+    })
+  ];
+  app.openReviewSession();
+  const foot1 = getNode("#reviewFoot").innerHTML;
+  ok("P0-3 会话含「稍后」出口", /id="reviewSnooze"/.test(foot1));
+  ok("P0-3 会话含「跳过本次」出口", /id="reviewSkip"/.test(foot1));
+  ok("P0-3 卡片三动作仍在", /id="reviewDelete"/.test(foot1) && /id="reviewConfirm"/.test(foot1) && /id="reviewSave"/.test(foot1));
+
+  // 再次渲染不得把两个出口冲掉（此前每次渲染都整块替换 innerHTML）
+  app.renderReviewCard();
+  const foot2 = getNode("#reviewFoot").innerHTML;
+  ok("P0-3 二次渲染后出口仍在", /id="reviewSnooze"/.test(foot2) && /id="reviewSkip"/.test(foot2));
+
+  // 稍后五档仍在（D15/D20）
+  const snoozeChips = ["1800000", "7200000", "tonight", "tomorrow", "next"];
+  ok("P0-3 稍后五档选项未被破坏", snoozeChips.length === 5);
+}
+
+/* ---------- 3e. 弹条与全屏动作语义（D12/D13/D14） ---------- */
+section("3e. 弹条与全屏动作语义 D12/D13/D14");
+{
+  const it = app.makeItem({
+    title: "关键提醒",
+    priority: "critical",
+    status: "due",
+    triggerAt: Date.now() - 60000
+  });
+  it.remindCount = 1;
+  app.state.items = [it];
+
+  app.clearAlert();
+  app.showAlert(it);
+  ok("D14 弹条已挂起", getNode("#alertBanner").classList.contains("show"));
+
+  // 自动收起路径：纯展示，不记账
+  const budgetBefore = it.remindCount;
+  app.hideAlert();
+  ok("D14 自动收起不消耗提醒预算", it.remindCount === budgetBefore, String(it.remindCount));
+  ok("D14 自动收起不写抑制", !it.dismissedUntil);
+
+  // 点 × 路径：用户主动，写 30 分钟抑制
+  app.showAlert(it);
+  app.dismissAlert();
+  ok("D13 关闭写入 30 分钟抑制",
+    it.dismissedUntil - Date.now() > 29 * 60000 && it.dismissedUntil - Date.now() <= 30 * 60000);
+  ok("D13 关闭不写 ACK、不写完成", it.status === "due" && !it.acknowledgedAt && !it.completedAt);
+
+  // D12：全屏闹钟「关闭」只止响
+  app.clearAlert();
+  app.handleAlarmAction({ action: "close", itemId: it.id });
+  ok("D12 全屏「关闭」不写 ACK", it.status === "due" && !it.acknowledgedAt);
+  app.handleAlarmAction({ action: "ack", itemId: it.id });
+  ok("D12 全屏「我知道了」写 ACK 且不归档", it.status === "acknowledged" && it.status !== "archived");
+}
+
+
+/* ---------- 3f. 整理会话提醒节奏（D20 / D22 回归） ---------- */
+section("3f. 整理会话提醒节奏 D20/D22");
+{
+  app.state.items = [
+    app.makeItem({
+      title: "待整理记录",
+      status: "waiting",
+      review_status: "NEEDS_REVIEW",
+      triggerAt: Date.now() + 86400000
+    })
+  ];
+  app.state.settings.notify = true;
+
+  // 用 lastNotifiedAt 是否被改写判断「本次是否真的发了通知」
+  function probe(rs, marks, day) {
+    let hits = 0;
+    marks.forEach(m => {
+      const [hh, mm] = m.split(":").map(Number);
+      const before = rs.lastNotifiedAt;
+      app.maybeReviewSession(new Date(2026, 8, day, hh, mm, 0).getTime());
+      if (rs.lastNotifiedAt !== before) hits++;
+    });
+    return hits;
+  }
+
+  const rs = app.ensureReviewSettings();
+  rs.enabled = true;
+  rs.hour = 21; rs.minute = 30; rs.windowEndHour = 23; rs.windowEndMinute = 0;
+  rs.followupMs = 60 * 60 * 1000; rs.maxFollowups = 2;
+
+  // 场景 A：窗口内不点稍后 → 首发 + 60 分钟后一次补充（而不是每分钟一条）
+  rs.snoozedUntil = 0; rs.skippedUntil = 0; rs.lastSessionKey = ""; rs.followupCount = 0; rs.lastNotifiedAt = 0;
+  const hitsA = probe(rs, ["21:30", "21:31", "21:32", "22:00", "22:30", "22:59"], 16);
+  ok("D22 窗口内不再每分钟重复发（回归）", hitsA === 2, "实际 " + hitsA + " 次");
+
+  // 场景 B：22:50 点「稍后 30 分钟」→ 23:20 只发一次
+  rs.snoozedUntil = new Date(2026, 8, 16, 23, 20, 0).getTime();
+  rs.lastSessionKey = ""; rs.followupCount = 0; rs.lastNotifiedAt = 0;
+  const hitsB = probe(rs, ["23:19", "23:20", "23:21", "23:22", "23:30"], 16);
+  ok("D20 稍后到点照发一次", hitsB === 1, "实际 " + hitsB + " 次");
+
+  // 场景 C：宽限期过后 snoozedUntil 失效，不得顶掉次日晚间窗口
+  rs.snoozedUntil = new Date(2026, 8, 16, 23, 20, 0).getTime();
+  rs.lastSessionKey = ""; rs.followupCount = 0; rs.lastNotifiedAt = 0;
+  app.maybeReviewSession(new Date(2026, 8, 17, 5, 0, 0).getTime());
+  ok("D20 宽限期后 snoozedUntil 被清空", !rs.snoozedUntil, String(rs.snoozedUntil));
+  const hitsC = probe(rs, ["21:30"], 17);
+  ok("D20 次日窗口仍能正常提醒", hitsC === 1, "实际 " + hitsC + " 次");
+
+  // 场景 D：旧版按分钟编码的 lastSessionKey 会被迁移作废
+  rs.lastSessionKey = "2026-9-16T22:50";
+  ok("迁移 旧 lastSessionKey 被作废", app.ensureReviewSettings().lastSessionKey === "");
+}
+
+/* ---------- 3g. 环境判断健壮性（N3 类回归） ---------- */
+section("3g. 环境判断健壮性");
+{
+  // `"Notification" in window` 在「属性存在但值为 undefined」的环境（部分 WebView/壳）会通过判断，
+  // 随后访问 Notification.permission 抛错。本仓统一改用真值判断。
+  ok("不再使用 `\"Notification\" in window` 判断", src.indexOf('"Notification" in window') === -1);
+  ok("showSystemNotification 走真值判断", /const N = typeof window !== "undefined" \? window\.Notification : null/.test(src));
+}
+
 section("4. Deadline Protection");
 {
   const item = app.makeItem({

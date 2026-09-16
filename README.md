@@ -75,8 +75,9 @@ npm test
 
 预期：
 - `test-unit.js`：**29 项全部通过**
-- `test-native-reminders.js`：**42 项全部通过**
-- `test-smoke.js`：**65 项全部通过**（含 D5/D7/D15/D17/D22/D23/D25 落地断言）
+- `test-native-reminders.js`：**69 项全部通过**（含 D9/D25 首次全屏路由、P0-2 闹钟撤销、P0-1 待整理排程）
+- `test-smoke.js`：**96 项全部通过**（含 D5/D6/D7/D8 首页架构、D12/D13/D14 弹条与全屏语义、
+  D15/D17/D22/D23/D25 落地断言、P0-3 整理会话出口回归）
 
 UI 手测建议顺序：示例载入 → 导航 → 录入 → 到期弹条 → 我知道了 → 完成 → 归档。
 
@@ -172,11 +173,12 @@ npm run cap:open      # 用 Android Studio 打开 android/
 
 - Android 使用 `@capacitor/local-notifications@6.1.3`，底层由 `AlarmManager` 排程；应用进程被普通回收或设备休眠时不依赖常驻前台服务。
 - 普通、重要、关键三个通知渠道分别排 1、4、8 次；重要每 30 分钟、关键每 15 分钟补充提醒。渠道启用提示音和震动，不申请勿扰策略访问，也**不使用全屏 Intent**。
-- **全屏闹钟是独立通道，只给「关键」档**：关键事项的首次提醒走 `SystemBridge` 的 `setAlarmClock` + 全屏 `AlarmActivity`（亮屏、循环响铃、波形震动、锁屏直达）；后续 7 次补充提醒仍走通知渠道。全屏界面提供「我知道了 / 稍后 2 小时 / 完成」，以及一个只止响、不表态的「关闭」。
-- **待整理不使用全屏闹钟**，只用普通通知；其提醒受「本地通知」总开关控制，并按普通事项参与勿扰。
+- **全屏闹钟是独立通道，不再只给「关键」档**（D25 / A-01）：**有标记**（☆重要 · 🚨关键）事项的**首次**提醒一律走 `SystemBridge` 的 `setAlarmClock` + 全屏 `AlarmActivity`（亮屏、循环响铃、波形震动、锁屏直达）；**未标记**事项按「我的 → 默认提醒方式」的录入时快照决定。后续补充提醒（重要 3 次 / 关键 7 次）仍走通知渠道。全屏界面提供「我知道了 / 稍后 2 小时 / 完成」，以及一个只止响、不表态的「关闭」。
+- **闹钟台账与撤销**：每次对账都会撤销不再需要的全屏闹钟（删除、改期、ACK、完成、关闭「本地通知」都会触发），并持久化已排 id，避免幽灵提醒。
+- **待整理不使用全屏闹钟**，只用普通通知（`attention-normal-v2`）：在下一个整理窗口起点预排首次 + 60 分钟 × 2 次补充；其提醒受「本地通知」总开关控制，并按普通事项参与勿扰。
 - Android 13+ 由用户在“我的”页面主动授予通知权限；未授权时只保留应用内提醒，不循环弹窗。
 - Android 12+ 可主动进入系统“闹钟和提醒”设置授予精确闹钟权限；未授权时仍使用原生非精确 `AlarmManager`，界面会标明时间可能延迟。
-- 官方插件接收 `BOOT_COMPLETED` / `LOCKED_BOOT_COMPLETED` 并恢复持久化排程；应用更新后也恢复排程，应用启动和恢复前台时会重新对账。
+- 官方插件接收 `BOOT_COMPLETED` / `LOCKED_BOOT_COMPLETED` 并恢复**它自己**的持久化排程；`SystemBridge` 排下的**全屏闹钟另由 `BootRestoreReceiver` 恢复**（读 `attention_alarm_schedules`，只补未过期项）。应用更新后也恢复排程，应用启动和恢复前台时会重新对账。
 - 用户在系统设置中主动“强制停止”应用后，Android 会阻止闹钟和广播，必须由用户再次打开应用；这是平台边界。
 
 数据仍以 IndexedDB 中的事项为真源，原生 pending 通知只是可删除、可重建的投影。完整契约与验证等级见
@@ -185,10 +187,18 @@ npm run cap:open      # 用 Android Studio 打开 android/
 
 ### 当前验证边界
 
-- 已完成 Node mock、Web 冒烟、Capacitor 资源同步与 Manifest/插件注册静态核对。
+- 已完成 Node mock（含 SystemBridge 通道）、Web 冒烟、Capacitor 资源同步与 Manifest/插件注册静态核对。
 - 仓库内的 `releases/安心收件箱-debug.apk` 是**自签名 debug 包**，只能用于侧载验证，不可发布。
 - 本机未安装 JDK 17、Android SDK 或模拟器，因此 Gradle 编译、APK 生成/安装、系统杀进程、Doze、重启和真机通知动作均为 `NOT_PERFORMED`，不能据此宣称 Android 真机 PASS。
+- 2026-09-16 晚修复轮新增/修改的 Java（`BootRestoreReceiver`、`SystemBridgePlugin` 的闹钟落盘与撤销、`AlarmActivity` 的重排入账）**只做到 `javac` 语法级通过**，未编译、未装机。
 - 全屏闹钟、`USE_EXACT_ALARM` / `USE_FULL_SCREEN_INTENT` 等受限权限的**商店审核影响尚未评估**；PRD §33 也未把上架纳入 MVP。
+
+### 已知未落地
+
+- `schema 5` 迁移（`docs/compose/spec/delivery-mode.md` T9），需与 G01 正交状态建模合并。
+- 四维正交状态 / `time_source`（验收 H1–H3）、Onboarding（I1–I3）、Deadline 分层保护（E3–E7）。
+- `completed` 幽灵状态、`sessionStatus` / `notifyPrompted` 只写字段、旧通知渠道 `-v1` 的处置。
+- 最近一次对齐审查：[`docs/reviews/code-vs-plan-2026-09-16.md`](./docs/reviews/code-vs-plan-2026-09-16.md)。
 
 ---
 

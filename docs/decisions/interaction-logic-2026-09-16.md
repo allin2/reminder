@@ -11,8 +11,14 @@ changes-code: true
 
 > 2026-09-16 通过四轮 grilling 得出的全部决议。
 > ✅ **代码已落地**：Web（`app-core.js` / `lib/native-reminders.js` / `lib/parse-cn.js` / `index.html`）
-> 与 Android（`AlarmActivity` / `SystemBridgePlugin` / `AlarmScheduler` / `AlarmTestReceiver`）。
-> `npm test`：unit 29 / native 42 / smoke **65** 全绿。
+> 与 Android（`AlarmActivity` / `SystemBridgePlugin` / `AlarmScheduler` / `AlarmTestReceiver` / `BootRestoreReceiver`）。
+> `npm test`：unit 29 / native 69 / smoke **96** 全绿。
+>
+> ✅ **2026-09-16 晚修复轮**（审查见 [`../reviews/code-vs-plan-2026-09-16.md`](../reviews/code-vs-plan-2026-09-16.md)）：
+> 修掉「待整理原生排程未接线」「全屏闹钟只排不撤」「整理会话出口被渲染冲掉」三个链路级缺陷，
+> 并补上全屏闹钟的开机恢复与待整理渠道归位；随后独立复核又发现并修掉
+> **整理提醒每分钟重复发**（`reviewSessionKey` 按分钟取粒度导致 `maxFollowups` 失效）
+> 与「稍后」到点在原生侧不提醒。测试从 136 条增到 **194** 条。
 
 > ✅ **2026-09-16 晚：已按 V0.2 冻结基线复核完毕。**
 > V0.2（`docs/baseline/Attention_Inbox_V0.2_产品需求与业务规格基线.md`）声明自己为唯一业务基线，
@@ -120,16 +126,26 @@ P1/P2/P4 是这个产品存在的理由——破坏它们，它就退化成一�
 
 这些是纯实现问题，不影响产品语义，登记为待清理项：
 
-| # | 问题 | 位置 |
-|---|---|---|
-| ~~**E1**~~ | ~~`#sheetLowConf` 整块已成死 UI：`openLowConfSheet()` 定义后无任何调用点，但 HTML 面板、chips、`finishSaveAfterLowConf`、`setLowConfPick` 全都还在~~ → **已撤销**：按 D15 修订，这块 UI 与函数**保留**，改为按"必要"条件触发 | `app-core.js:2090` · `index.html:1421` |
-| **E2** | `sessionStatus` 只写不读（6 处赋值，无读取点） | `app-core.js` |
-| **E3** | `notifyPrompted` 只写不读（3 处赋值） | `app-core.js` |
-| **E4** | `completed` 幽灵状态：被当终态判断，但 `completeItem()` 实际写入 `archived` | `app-core.js:986,1404,2060` |
-| **E5** | 通知渠道改名 `-v2` 后，设备上已存在的旧渠道不复用也不清理；用户此前对旧渠道的静音设置会失效 | `native-reminders.js:12` |
+| # | 问题 | 位置 | 状态 |
+|---|---|---|---|
+| ~~**E1**~~ | ~~`#sheetLowConf` 整块已成死 UI~~ → 按 D15 修订保留，改为按"必要"条件触发 | `app-core.js` · `index.html` | ✅ 已结清 |
+| **E2** | `sessionStatus` 只写不读（6 处赋值，无读取点） | `app-core.js` | 待清理 |
+| **E3** | `notifyPrompted` 只写不读（3 处赋值） | `app-core.js` | 待清理 |
+| **E4** | `completed` 幽灵状态：被当终态判断，但 `completeItem()` 实际写入 `archived` | `app-core.js:986,1404,2060` | 待清理 |
+| **E5** | 通知渠道改名 `-v2` 后，设备上已存在的旧渠道不复用也不清理；用户此前对旧渠道的静音设置会失效 | `native-reminders.js:12` | 待清理 |
 
 **已排除**：此前记录的「原生补充提醒不复检勿扰」实测**不构成问题**——只有 `normal` 受勿扰影响，
 而 `normal` 本来就没有补充提醒（`POLICY.normal.total = 1`）。
+
+**2026-09-16 晚修复轮补记**（链路级缺陷，非产品语义）：
+
+| # | 问题 | 处置 |
+|---|---|---|
+| **E6** | 「待整理」的 `buildReviewDesired()` 有定义无调用点，安卓上待整理永远不会响 | 并入 `reconcile()` 同一次对账（P0-1） |
+| **E7** | 全屏闹钟只排不撤，删除/改期/关权限后照响 | 新增 `reconcileAlarms()` + 闹钟 id 台账（P0-2） |
+| **E8** | 整理会话「稍后 / 跳过本次」被 `#reviewFoot` 的整体 `innerHTML` 替换冲掉 | 出口随卡片重建（P0-3） |
+| **E9** | 待整理通知误用「重要」渠道，与 D18「按普通事项」相悖 | 改回 `CHANNELS.normal`（P1-6） |
+| **E10** | 全屏闹钟无开机恢复 | 新增 `BootRestoreReceiver`（P1-4，未编译验证） |
 
 ---
 
@@ -160,4 +176,5 @@ P1/P2/P4 是这个产品存在的理由——破坏它们，它就退化成一�
 5. **延迟澄清四处调整**（D15–D21）——牵涉 `promoteDue`、`maybeReviewSession`、`renderReviewEntry`
 6. **工程遗留清理**（E1–E5）
 
-每一步都应带动 `npm test`（现基线 unit 29 / native mock 42 / smoke 55）。
+每一步都应带动 `npm test`（落地时基线 unit 29 / native mock 42 / smoke 55；
+2026-09-16 晚修复轮结束后为 unit 29 / native **69** / smoke **96**）。

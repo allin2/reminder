@@ -681,6 +681,12 @@
       if (state.settings.review.maxFollowups == null || state.settings.review.maxFollowups === 1) {
         state.settings.review.maxFollowups = 2;
       }
+      // 迁移：旧的 lastSessionKey 按分钟编码（无 "W:" / "S:" 前缀），会绕过 maxFollowups，直接作废
+      const lsk = state.settings.review.lastSessionKey;
+      if (lsk && lsk.indexOf("W:") !== 0 && lsk.indexOf("S:") !== 0) {
+        state.settings.review.lastSessionKey = "";
+        state.settings.review.followupCount = 0;
+      }
     }
     return state.settings.review;
   }
@@ -737,9 +743,21 @@
     );
   }
 
-  function reviewSessionKey(d) {
-    return d.getFullYear() + "-" + (d.getMonth() + 1) + "-" + d.getDate() +
-      "T" + d.getHours() + ":" + d.getMinutes();
+  /**
+   * 整理会话的「本次」标识。**必须按窗口取，不能按分钟取**。
+   *
+   * 按分钟取会让 key 每分钟都变，配合 maybeReviewSession 里
+   * `lastSessionKey !== key → followupCount = 0` 的重置逻辑，
+   * followupCount 永远回不到上限 → maxFollowups 失效 → 窗口内每分钟发一条（D22 被绕过）。
+   */
+  function reviewSessionKey(d, rs) {
+    const st = rs || ensureReviewSettings();
+    const start = new Date(d);
+    start.setHours(st.hour != null ? st.hour : 21, st.minute != null ? st.minute : 30, 0, 0);
+    // now 早于今天的窗口起点 → 归属上一个已开始的窗口
+    if (start.getTime() > d.getTime()) start.setDate(start.getDate() - 1);
+    return "W:" + start.getFullYear() + "-" + (start.getMonth() + 1) + "-" + start.getDate() +
+      "T" + pad(start.getHours()) + ":" + pad(start.getMinutes());
   }
 
   function nextReviewWindowStart(from) {
@@ -800,15 +818,22 @@
     }
     if (rs.snoozedUntil && now < rs.snoozedUntil) return;
     if (rs.skippedUntil && now < rs.skippedUntil) return;
-    if (!inReviewWindow(now) && !(rs.snoozedUntil && now >= rs.snoozedUntil && now < rs.snoozedUntil + 3600000)) {
+    // D20：宽限期（snoozedUntil 后 1 小时）一过即失效。
+    // 否则 snoozeDue 永远为真，会一直顶掉后续窗口的提醒额度。
+    if (rs.snoozedUntil && now >= rs.snoozedUntil + 3600000) rs.snoozedUntil = 0;
+    if (!inReviewWindow(now) && !(rs.snoozedUntil && now >= rs.snoozedUntil)) {
       // allow snoozed follow-up outside window briefly handled above
       if (!rs.snoozedUntil) return;
     }
 
-    const key = reviewSessionKey(new Date(now));
     const windowOpen = inReviewWindow(now);
     const snoozeDue = rs.snoozedUntil && now >= rs.snoozedUntil;
     if (!windowOpen && !snoozeDue) return;
+
+    // 一次「稍后」拥有独立额度（用户主动要求到点再提一次）；
+    // 窗口内其余提醒共享同一个窗口额度，由 maxFollowups + followupMs 共同约束。
+    // 注：稍后额度的后续补充会撞上 1 小时宽限期上界，因此一次「稍后」实际只提一次。
+    const key = snoozeDue ? "S:" + Number(rs.snoozedUntil) : reviewSessionKey(new Date(now), rs);
 
     const maxFollowups = rs.maxFollowups != null ? rs.maxFollowups : 2;
     if (rs.lastSessionKey === key && rs.followupCount >= maxFollowups) {
@@ -898,12 +923,17 @@
       '<div class="field"><label for="reviewTrigger">提醒时间</label><input id="reviewTrigger" type="datetime-local" value="' + toLocalInput(it.triggerAt) + '" /></div>' +
       '<div class="field"><label for="reviewNote">备注（可选）</label><input id="reviewNote" type="text" value="' + escapeHtml(it.note || "") + '" placeholder="例如：主要想看它的调度机制" /></div>';
 
+    // P0-3：「稍后 / 跳过本次」必须随每次渲染重建 —— 整块替换 innerHTML 会把静态节点连监听器一起丢掉
     const foot = $("#reviewFoot");
     if (foot) {
       foot.innerHTML =
+        '<button class="btn secondary" id="reviewSnooze">稍后</button>' +
+        '<button class="btn secondary" id="reviewSkip">跳过本次</button>' +
         '<button class="btn secondary" id="reviewDelete">删除</button>' +
         '<button class="btn secondary" id="reviewConfirm">确认</button>' +
         '<button class="btn primary" id="reviewSave">保存修改</button>';
+      $("#reviewSnooze").onclick = () => openSheet("sheetReviewSnooze");
+      $("#reviewSkip").onclick = skipReviewThisTime;
       $("#reviewDelete").onclick = reviewDelete;
       $("#reviewConfirm").onclick = reviewConfirm;
       $("#reviewSave").onclick = reviewSaveEdit;
@@ -1392,14 +1422,14 @@
         active.map(it => renderItemCard(it, "active")).join("") + "</div>"
       : "";
 
-    // D8：空态里一句纯文字完成数；当天完成卡片只在空态容身
+    // D8：空态里一句纯文字完成数 —— 纯文字、不可点击、无徽标、无强调色、不新增区块
+    // （当天完成明细走「未来 → 已归档」，不在首页开入口）
     const quiet = !dueList.length && !active.length;
     $("#homeEmpty").innerHTML = quiet
       ? '<div class="empty"><div class="empty-mark">✓</div><h3>此刻很安静</h3>' +
         "<p>没有需要你注意的事项。已交给系统的未来，会自己在合适的时候回来。</p>" +
         (doneToday.length
-          ? '<p style="margin-top:12px;font-size:0.92rem;color:var(--ink-2)">今天已完成 ' + doneToday.length + " 件</p>" +
-            doneToday.map(it => renderItemCard(it, "archived")).join("")
+          ? '<p style="margin-top:12px;font-size:0.92rem;color:var(--ink-2)">今天已完成 ' + doneToday.length + " 件</p>"
           : "") +
         "</div>"
       : "";
@@ -1676,7 +1706,9 @@
     }
     const online = navigator.onLine;
     const swReady = !!(navigator.serviceWorker && navigator.serviceWorker.controller);
-    const notify = state.settings.notify && "Notification" in window && Notification.permission === "granted";
+    // 同 showSystemNotification：属性存在但为 undefined 时 `in` 判断会抛错
+    const N = typeof window !== "undefined" ? window.Notification : null;
+    const notify = !!state.settings.notify && !!N && N.permission === "granted";
     pill.textContent = online ? "在线" : "离线可用";
     pill.className = "pill " + (online ? "time" : "future");
     sub.textContent = (swReady ? "PWA 已就绪" : "PWA 未注册") +
@@ -2630,11 +2662,29 @@
     return changed;
   }
 
+  function sameIdSet(a, b) {
+    if (!Array.isArray(a) || !Array.isArray(b) || a.length !== b.length) return false;
+    for (let i = 0; i < a.length; i++) if (a[i] !== b[i]) return false;
+    return true;
+  }
+
   async function syncNativeRemindersNow() {
     if (!nativeReady || !NativeReminders.reconcile) return nativeReminderStatus;
     try {
-      const status = await NativeReminders.reconcile(state.items, state.settings, Date.now());
+      // P0-1：把待整理队列并进同一次对账（原生侧据此预排 LocalNotifications）
+      const review = {
+        count: needsReviewItems().length,
+        settings: ensureReviewSettings()
+      };
+      const status = await NativeReminders.reconcile(state.items, state.settings, Date.now(), review);
       setNativeReminderStatus(status);
+      // P0-2：记住本轮排下的全屏闹钟 id，供下一轮撤销不再需要的闹钟。
+      // 仅在集合真变化时 save()，否则 save → queue → reconcile 会自激成死循环。
+      if (status && Array.isArray(status.scheduledAlarmIds) &&
+        !sameIdSet(state.settings.scheduledAlarmIds, status.scheduledAlarmIds)) {
+        state.settings.scheduledAlarmIds = status.scheduledAlarmIds;
+        save();
+      }
       return status;
     } catch (error) {
       const status = { reliability: "error", error: error && error.message ? error.message : String(error) };
@@ -2927,10 +2977,7 @@
     const refresh = $("#labRefresh");
     if (refresh) refresh.addEventListener("click", refreshNotifyLab);
 
-    const reviewSnoozeBtn = $("#reviewSnooze");
-    if (reviewSnoozeBtn) reviewSnoozeBtn.addEventListener("click", () => openSheet("sheetReviewSnooze"));
-    const reviewSkipBtn = $("#reviewSkip");
-    if (reviewSkipBtn) reviewSkipBtn.addEventListener("click", skipReviewThisTime);
+    // P0-3：reviewSnooze / reviewSkip 不再在此绑定 —— 它们随 renderReviewCard() 重建，改由渲染处逐次挂载
 
     $$("[data-snooze-review]").forEach(btn => {
       btn.addEventListener("click", () => {
@@ -3097,7 +3144,10 @@
   function showSystemNotification(opts) {
     if (!state.settings.notify) return;
     if (NativeReminders.isNativeAndroid && NativeReminders.isNativeAndroid()) return;
-    if (!("Notification" in window) || Notification.permission !== "granted") return;
+    // 用真值判断而非 `in`：属性存在但为 undefined 时（部分壳/旧浏览器）会直接抛错，
+    // 而本函数在 tick → showAlert 的主链路上，抛错会打断整轮提醒。
+    const N = typeof window !== "undefined" ? window.Notification : null;
+    if (!N || N.permission !== "granted") return;
     const privacy = !!state.settings.privacyNotify;
     const payload = {
       title: privacy ? "安心收件箱提醒" : (opts.title || "安心收件箱提醒"),
@@ -3669,8 +3719,9 @@
           state.settings.notifyPrompted = true;
           toast(state.settings.notify ? "已开启 Android 原生通知" : "通知权限未授予，将使用应用内提醒");
           if (state.settings.notify) queueNativeReminderSync();
-        } else if ("Notification" in window) {
-          const perm = await Notification.requestPermission();
+        } else if (typeof window !== "undefined" && window.Notification &&
+          typeof window.Notification.requestPermission === "function") {
+          const perm = await window.Notification.requestPermission();
           state.settings.notify = perm === "granted";
           toast(perm === "granted" ? "已开启本地通知" : "通知权限未授予，将使用应用内提醒");
         } else {
@@ -4057,6 +4108,19 @@
       resolveDeliveryMode,
       ensureReviewSettings,
       inReviewHighlight,
+      // 渲染 / 会话 / 弹条 —— 供测试直接断言行为，无用户可见副作用
+      renderHome,
+      renderReviewEntry,
+      renderReviewCard,
+      openReviewSession,
+      maybeReviewSession,
+      needsReviewItems,
+      detectNeedsReview,
+      showAlert,
+      hideAlert,
+      dismissAlert,
+      handleAlarmAction,
+      clearAlert: () => { alertItem = null; },
       get state() { return state; },
       save,
       load,

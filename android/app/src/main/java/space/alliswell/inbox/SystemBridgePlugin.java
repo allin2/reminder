@@ -7,6 +7,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
@@ -24,6 +25,9 @@ import com.getcapacitor.annotation.CapacitorPlugin;
 import com.getcapacitor.annotation.Permission;
 import com.getcapacitor.annotation.PermissionCallback;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 @CapacitorPlugin(
   name = "SystemBridge",
   permissions = {
@@ -39,6 +43,68 @@ public class SystemBridgePlugin extends Plugin {
   public static final String CHANNEL_NAME = "提醒测试";
   public static final int REQ_NOTIFY = 21001;
   public static final int REQ_EXACT = 21002;
+
+  /** P1-4：已排全屏闹钟的持久化记录，供开机后恢复 */
+  public static final String PREFS_SCHEDULES = "attention_alarm_schedules";
+  public static final String KEY_ALARMS = "alarms";
+
+  /** P1-4：记录一条已排闹钟（同 id 覆盖） */
+  static synchronized void persistAlarm(Context context, int id, long triggerAt,
+                                        String title, String body, String itemId, String level) {
+    try {
+      SharedPreferences prefs = context.getSharedPreferences(PREFS_SCHEDULES, Context.MODE_PRIVATE);
+      JSONArray arr = new JSONArray(prefs.getString(KEY_ALARMS, "[]"));
+      JSONArray out = new JSONArray();
+      for (int i = 0; i < arr.length(); i++) {
+        JSONObject o = arr.optJSONObject(i);
+        if (o != null && o.optInt("id", 0) != id) out.put(o);
+      }
+      JSONObject entry = new JSONObject();
+      entry.put("id", id);
+      entry.put("triggerAt", triggerAt);
+      entry.put("title", title == null ? "" : title);
+      entry.put("body", body == null ? "" : body);
+      entry.put("itemId", itemId == null ? "" : itemId);
+      entry.put("level", level == null ? "" : level);
+      out.put(entry);
+      prefs.edit().putString(KEY_ALARMS, out.toString()).apply();
+    } catch (Exception ignored) {}
+  }
+
+  /** P1-4：撤销记录 */
+  static synchronized void forgetAlarm(Context context, int id) {
+    try {
+      SharedPreferences prefs = context.getSharedPreferences(PREFS_SCHEDULES, Context.MODE_PRIVATE);
+      JSONArray arr = new JSONArray(prefs.getString(KEY_ALARMS, "[]"));
+      JSONArray out = new JSONArray();
+      for (int i = 0; i < arr.length(); i++) {
+        JSONObject o = arr.optJSONObject(i);
+        if (o != null && o.optInt("id", 0) != id) out.put(o);
+      }
+      prefs.edit().putString(KEY_ALARMS, out.toString()).apply();
+    } catch (Exception ignored) {}
+  }
+
+  /** P1-4：开机 / 应用更新后重排仍未来的闹钟，丢弃已过期的 */
+  static synchronized void restorePersistedAlarms(Context context) {
+    try {
+      SharedPreferences prefs = context.getSharedPreferences(PREFS_SCHEDULES, Context.MODE_PRIVATE);
+      JSONArray arr = new JSONArray(prefs.getString(KEY_ALARMS, "[]"));
+      JSONArray kept = new JSONArray();
+      long now = System.currentTimeMillis();
+      for (int i = 0; i < arr.length(); i++) {
+        JSONObject o = arr.optJSONObject(i);
+        if (o == null) continue;
+        int id = o.optInt("id", 0);
+        long triggerAt = o.optLong("triggerAt", 0L);
+        if (id == 0 || triggerAt <= now) continue;
+        AlarmScheduler.schedule(context, triggerAt, o.optString("title"), o.optString("body"),
+          id, o.optString("itemId"), o.optString("level"));
+        kept.put(o);
+      }
+      prefs.edit().putString(KEY_ALARMS, kept.toString()).apply();
+    } catch (Exception ignored) {}
+  }
 
   private void ensureChannel() {
     if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) return;
@@ -324,6 +390,8 @@ public class SystemBridgePlugin extends Plugin {
     r.put("mode", mode);
     r.put("triggerAt", triggerAt);
     r.put("delayMs", delayMs);
+    // P1-4：落盘，供开机恢复
+    persistAlarm(getContext(), id, triggerAt, title, body, itemId, level);
     return r;
   }
 
@@ -339,6 +407,8 @@ public class SystemBridgePlugin extends Plugin {
       PendingIntent pi = PendingIntent.getBroadcast(getContext(), id, intent, flags);
       if (am != null) am.cancel(pi);
       pi.cancel();
+      // P1-4：同步撤销记录，避免开机后被"复活"
+      forgetAlarm(getContext(), id);
       JSObject r = new JSObject();
       r.put("ok", true);
       call.resolve(r);

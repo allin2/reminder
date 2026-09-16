@@ -1,6 +1,6 @@
 ---
 feature: delivery-mode
-status: decided
+status: landed
 updated: 2026-09-16
 branch: main
 relates: android-fullscreen-alarm.md
@@ -12,18 +12,16 @@ decisions: D9 D12 D25
 
 ## Report
 
-**交付状态** — **规格已定，代码未落地。** 基线依据
+**交付状态** — **已落地**（`a2d384b` + 2026-09-16 晚修复轮）。基线依据
 [V0.2 修订附录 A-01](../../baseline/V0.2-amendments.md)（来源提案 CP-001），
 与 [关键档全屏闹钟](./android-fullscreen-alarm.md) 的 D9 配套。
 
-**现状** — 这个概念**完全不存在**：
+**落地位置** — `app-core.js` 的 `resolveDeliveryMode()` / `normalizeItem()` / `saveItemFromForm()` /
+`renderMe()`；`lib/native-reminders.js` 的 `shouldFirstAlarm()` / `buildDesired()` / `reconcileAlarms()`；
+`AlarmActivity.java` 的四出口。
 
-- 事项没有"投递方式"字段；全局也没有任何杠杆；
-- 现状的投递由**档位间接决定**：普通/重要走通知渠道（importance 3 / 4）；
-- 关键档**本应**走更强机制，但目前**根本没接**（D9 未落地）。
-
-所以现状实际是：**所有事项都只有通知栏一条路**，而通知栏默认还是关的
-（`settings.notify = false`，见 `docs/product-logic.md` §6）。
+**仍未做** — `T9`（schema 5 迁移，需与 G01 正交状态建模合并）；`T10` 的迁移一档断言
+（赋值 / 编辑重算已有断言，迁移暂无）。
 
 ## [S1] Problem
 
@@ -121,13 +119,15 @@ R2 就不成立。
 
 ## Tasks
 
-- [ ] T1: 新增 `settings.defaultDeliveryMode`（默认 `notification`）与 `item.delivery_mode` — acceptance: 字段出现在 state 与 `normalizeItem` (covers: S2.2)
-- [ ] T2: 录入时按 S2.3 快照赋值 — acceptance: 有标记必为 alarm；未标记取当时设置 (covers: S2.3)
-- [ ] T3: 编辑时按 S2.4 重算 — acceptance: 去掉标记会退回当前默认，而非保留 alarm (covers: S2.4)
-- [ ] T4: 「我的」新增设置行与两行说明文案 — acceptance: 文案含"只影响之后录入"与"标记项不受影响" (covers: S2.8)
-- [ ] T5: **关键档接入全屏闹钟**（D9，前置依赖） — acceptance: 关键档首次走全屏 (covers: S2.5)
-- [ ] T6: 重要档首次接入全屏闹钟 — acceptance: 重要档首次全屏、后续 3 次走通知 (covers: S2.5)
-- [ ] T7: 普通档按 `delivery_mode` 路由 — acceptance: 默认 notification 时行为与现状完全一致 (covers: S2.5)
-- [ ] T8: `delivery_mode` 纳入原生对账重建 — acceptance: 重建后投递方式不漂移（INV-09） (covers: S2.7)
+- [x] T1: 新增 `settings.defaultDeliveryMode`（默认 `notification`）与 `item.delivery_mode` — acceptance: 字段出现在 state 与 `normalizeItem` (covers: S2.2)
+- [x] T2: 录入时按 S2.3 快照赋值 — acceptance: 有标记必为 alarm；未标记取当时设置 (covers: S2.3)
+- [x] T3: 编辑时按 S2.4 重算 — acceptance: 去掉标记会退回当前默认，而非保留 alarm (covers: S2.4)
+- [x] T4: 「我的」新增设置行与两行说明文案 — acceptance: 文案含"只影响之后录入"与"标记项不受影响" (covers: S2.8)
+- [x] T5: **关键档接入全屏闹钟**（D9，前置依赖） — acceptance: 关键档首次走全屏 (covers: S2.5)
+- [x] T6: 重要档首次接入全屏闹钟 — acceptance: 重要档首次全屏、后续 3 次走通知 (covers: S2.5)
+- [x] T7: 普通档按 `delivery_mode` 路由 — acceptance: 默认 notification 时行为与现状完全一致 (covers: S2.5)
+- [x] T8: `delivery_mode` 纳入原生对账重建 — acceptance: 重建后投递方式不漂移（INV-09） (covers: S2.7)
 - [ ] T9: schema 5 迁移，与 G01 合并 — acceptance: 老数据迁移后投递方式与档位一致 (covers: S2.7)
-- [ ] T10: 补测试 — acceptance: 覆盖赋值、编辑重算、迁移、路由四条 (covers: S2.3–S2.7)
+- [~] T10: 补测试 — 赋值（`test-smoke.js` 3b ×3）、首次路由与后续走通知（`test-native-reminders.js`
+      「alarm first delivery」×6）、闹钟撤销（「alarm reconciliation」×7）已覆盖；
+      **迁移一档仍缺** (covers: S2.3–S2.7)

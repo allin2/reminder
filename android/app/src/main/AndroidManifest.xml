@@ -61,6 +61,17 @@
                 <action android:name="space.alliswell.inbox.ACTION_TEST_ALARM" />
             </intent-filter>
         </receiver>
+
+        <!-- P1-4：恢复 SystemBridge 排下的全屏闹钟（插件只恢复它自己的通知排程） -->
+        <receiver
+            android:name=".BootRestoreReceiver"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
+            </intent-filter>
+        </receiver>
     </application>
 
     <!-- Permissions -->

@@ -27,9 +27,12 @@ function section(name) {
 function createEnvironment(options) {
   options = options || {};
   const calls = { schedule: [], cancel: [], deliveredRemoved: [], channels: [], actionTypes: [] };
+  const alarmCalls = { scheduleAlarm: [], scheduleAt: [], cancelAlarm: [] };
   let pending = (options.pending || []).slice();
   let actionCallback = null;
   let resumeCallback = null;
+  const display = options.display || "granted";
+  const exact = options.exact || "granted";
   const local = {
     async checkPermissions() { return { display: options.display || "granted" }; },
     async requestPermissions() { return { display: options.requestDisplay || options.display || "granted" }; },
@@ -60,12 +63,27 @@ function createEnvironment(options) {
       return { async remove() { resumeCallback = null; } };
     }
   };
+  // SystemBridge：全屏闹钟通道（D9 / D25 / P0-2 / P1-4）
+  const bridge = {
+    async scheduleAlarm(value) { alarmCalls.scheduleAlarm.push(value); return { ok: true, id: value.id, mode: "alarmClock" }; },
+    async scheduleAt(value) { alarmCalls.scheduleAt.push(value); return { ok: true, id: value.id, mode: "alarmClock" }; },
+    async cancelAlarm(value) { alarmCalls.cancelAlarm.push(value); return { ok: true }; },
+    async diagnose() {
+      return {
+        notificationsEnabled: display !== "denied",
+        postNotificationsGranted: display !== "denied",
+        canExactAlarm: exact === "granted",
+        ignoringBatteryOptimizations: true
+      };
+    }
+  };
   global.Capacitor = {
     getPlatform() { return "android"; },
-    Plugins: { LocalNotifications: local, App: app }
+    Plugins: { LocalNotifications: local, App: app, SystemBridge: bridge }
   };
   return {
     calls,
+    alarms: alarmCalls,
     get pending() { return pending; },
     fireAction(value) { if (actionCallback) actionCallback(value); },
     resume() { if (resumeCallback) resumeCallback({ isActive: true }); }
@@ -228,6 +246,92 @@ async function run() {
   const inexact = createEnvironment({ display: "granted", exact: "denied" });
   const inexactStatus = await native.reconcile(future, { notify: true }, now);
   ok("精确权限拒绝时保留非精确排程", inexactStatus.reliability === "inexact" && inexact.calls.schedule.length === 1);
+
+  section("alarm first delivery (D9 / D25 / A-01)");
+  {
+    const items = [
+      item("n-plain", "normal", now + 3600000),
+      item("im", "important", now + 3600000),
+      item("cr", "critical", now + 3600000),
+      item("n-alarm", "normal", now + 3600000, { delivery_mode: "alarm" })
+    ];
+    const d = native.buildDesired(items, { notify: true }, now);
+    const first = id => d.find(n => n.extra.itemId === id && n.extra.attempt === 0);
+    ok("D25 重要档首次走全屏闹钟", !!(first("im") && first("im").extra.useAlarm));
+    ok("D25 关键档首次走全屏闹钟", !!(first("cr") && first("cr").extra.useAlarm));
+    ok("A-01 默认通知的普通档首次不走闹钟", !(first("n-plain") && first("n-plain").extra.useAlarm));
+    ok("A-01 delivery_mode=alarm 的普通档首次走闹钟", !!(first("n-alarm") && first("n-alarm").extra.useAlarm));
+    ok("D25 重要档后续 3 次仍走通知", d.filter(n => n.extra.itemId === "im" && n.extra.attempt > 0).every(n => !n.extra.useAlarm));
+    ok("D25 关键档后续 7 次仍走通知", d.filter(n => n.extra.itemId === "cr" && n.extra.attempt > 0).every(n => !n.extra.useAlarm));
+  }
+
+  section("alarm reconciliation (P0-2)");
+  {
+    await native._resetForTests();
+    const env = createEnvironment();
+    const alarmItem = item("alarmA", "critical", now + 3600000);
+
+    const s1 = await native.reconcile([alarmItem], { notify: true }, now, null);
+    ok("首次对账排下全屏闹钟", s1.alarmScheduled === 1 && env.alarms.scheduleAlarm.length === 1);
+    ok("对账回报已排闹钟 id", s1.scheduledAlarmIds.length === 1 && s1.scheduledAlarmIds[0] === env.alarms.scheduleAlarm[0].id);
+
+    const held = { notify: true, scheduledAlarmIds: s1.scheduledAlarmIds };
+    const s2 = await native.reconcile([alarmItem], held, now, null);
+    ok("重复对账不误撤闹钟", s2.alarmCancelled === 0 && env.alarms.cancelAlarm.length === 0);
+
+    const s3 = await native.reconcile([], held, now, null);
+    ok("删除事项撤销全屏闹钟", s3.alarmCancelled === 1 && env.alarms.cancelAlarm.length === 1);
+    ok("撤销后不再持有 alarm id", s3.scheduledAlarmIds.length === 0);
+
+    const s4 = await native.reconcile([alarmItem], held, now, null);
+    const off = { notify: false, scheduledAlarmIds: s4.scheduledAlarmIds };
+    const beforeOff = env.alarms.scheduleAlarm.length;
+    const s5 = await native.reconcile([alarmItem], off, now, null);
+    ok("关闭「本地通知」后撤销全屏闹钟", s5.alarmCancelled === 1 && s5.scheduledAlarmIds.length === 0);
+    ok("关闭后不再新排闹钟", env.alarms.scheduleAlarm.length === beforeOff);
+  }
+
+  section("review projection (P0-1 / P1-6 / D18 / D22)");
+  {
+    const rs = { enabled: true, hour: 21, minute: 30, followupMs: 60 * 60 * 1000, maxFollowups: 2 };
+    const rd = native.buildReviewDesired(4, rs, now, { notify: true });
+    ok("D22 待整理当天共 3 次", rd.length === 3, String(rd.length));
+    ok("D22 补提醒间隔 60 分钟", rd[1].schedule.at.getTime() - rd[0].schedule.at.getTime() === 60 * 60 * 1000);
+    ok("D22 窗口起点 21:30", rd[0].schedule.at.getHours() === 21 && rd[0].schedule.at.getMinutes() === 30);
+    ok("P1-6 待整理走普通渠道", rd.every(n => n.channelId === native.CHANNELS.normal));
+    ok("D12 待整理通知带快捷动作类型", rd.every(n => n.actionTypeId === native.ACTION_TYPE_ID));
+    ok("关闭整理功能则不排", native.buildReviewDesired(2, { enabled: false }, now, { notify: true }).length === 0);
+
+    const beforeWindow = new Date(2026, 0, 15, 20, 0, 0).getTime();
+    const rq = native.buildReviewDesired(2, rs, beforeWindow, { dnd: true, quietStart: "20:00", quietEnd: "23:00" });
+    ok("D18 窗口起点落入勿扰 → 顺延到勿扰结束",
+      rq.length === 3 && rq[0].schedule.at.getTime() === new Date(2026, 0, 15, 23, 0, 0).getTime());
+    ok("D18 补提醒按顺延后锚点固定间隔，不被各自顺延压成一条",
+      rq[1].schedule.at.getTime() === new Date(2026, 0, 16, 0, 0, 0).getTime() &&
+      rq[2].schedule.at.getTime() === new Date(2026, 0, 16, 1, 0, 0).getTime());
+
+    // D20：稍后必须单独占一个槽位，否则安卓上「稍后 30 分钟」到点不响
+    const snoozed = Object.assign({}, rs, { snoozedUntil: new Date(2026, 0, 15, 23, 20, 0).getTime() });
+    const rsn = native.buildReviewDesired(3, snoozed, new Date(2026, 0, 15, 22, 50, 0).getTime(), { notify: true });
+    ok("D20 稍后时刻被排进待整理通知",
+      rsn.some(n => n.schedule.at.getTime() === new Date(2026, 0, 15, 23, 20, 0).getTime()),
+      rsn.map(n => n.schedule.at.toLocaleString()).join(" | "));
+    const rsPast = Object.assign({}, rs, { snoozedUntil: new Date(2026, 0, 15, 23, 20, 0).getTime() });
+    const rsp = native.buildReviewDesired(3, rsPast, new Date(2026, 0, 15, 23, 40, 0).getTime(), { notify: true });
+    ok("D20 已过去的稍后不再占槽位", rsp.length === 3, String(rsp.length));
+
+    await native._resetForTests();
+    const env = createEnvironment();
+    const review = { count: 3, settings: rs };
+    const sr = await native.reconcile([], { notify: true }, now, review);
+    ok("P0-1 待整理并入同一次对账", sr.desired === 3 && sr.scheduled === 3 && env.calls.schedule.length === 1);
+    const srOff = await native.reconcile([], { notify: false }, now, review);
+    ok("D18 关闭通知总开关后待整理排程被撤销", srOff.cancelled === 3 && srOff.scheduled === 0);
+    const srDisabled = await native.reconcile([], { notify: true }, now, { count: 3, settings: { enabled: false } });
+    ok("D18 关闭整理功能后不排待整理", srDisabled.desired === 0);
+    const srNone = await native.reconcile([], { notify: true }, now, null);
+    ok("P0-1 未传待整理上下文时不排", srNone.desired === 0);
+  }
 
   section("actions and resume");
   await native._resetForTests();

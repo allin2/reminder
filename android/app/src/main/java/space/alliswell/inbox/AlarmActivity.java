@@ -126,13 +126,14 @@ public class AlarmActivity extends AppCompatActivity {
     if (reschedule) {
       try {
         long delay = 2 * 60 * 60 * 1000L; // D11：快捷稍后固定 2 小时
-        AlarmScheduler.schedule(
-          this,
-          System.currentTimeMillis() + delay,
-          getIntent() != null ? getIntent().getStringExtra(EXTRA_TITLE) : "安心收件箱",
-          getIntent() != null ? getIntent().getStringExtra(EXTRA_BODY) : "有一条事项需要你确认",
-          getIntent() != null ? getIntent().getIntExtra(EXTRA_ID, 90002) : 90002
-        );
+        long triggerAt = System.currentTimeMillis() + delay;
+        String title = getIntent() != null ? getIntent().getStringExtra(EXTRA_TITLE) : "安心收件箱";
+        String body = getIntent() != null ? getIntent().getStringExtra(EXTRA_BODY) : "有一条事项需要你确认";
+        String level = getIntent() != null ? getIntent().getStringExtra(EXTRA_LEVEL) : null;
+        int id = getIntent() != null ? getIntent().getIntExtra(EXTRA_ID, 90002) : 90002;
+        AlarmScheduler.schedule(this, triggerAt, title, body, id, itemId, level);
+        // P0-2：自行重排的闹钟也要入账，否则下一轮对账撤不掉它（会变成幽灵闹钟 / 重复响）
+        SystemBridgePlugin.persistAlarm(this, id, triggerAt, title, body, itemId, level);
       } catch (Exception ignored) {}
     }
     try {
