@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#0F1A14"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:padding="28dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="⏰"
+        android:textSize="56sp" />
+
+    <TextView
+        android:id="@+id/alarmTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:gravity="center"
+        android:text="安心收件箱"
+        android:textColor="#F5F7F4"
+        android:textSize="26sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/alarmBody"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:gravity="center"
+        android:text="有一条事项需要你确认"
+        android:textColor="#C8D6CC"
+        android:textSize="16sp" />
+
+    <TextView
+        android:id="@+id/alarmClockText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="28dp"
+        android:fontFamily="sans-serif-light"
+        android:text="00:00"
+        android:textColor="#8FD6B4"
+        android:textSize="48sp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btnSnooze"
+            android:layout_width="0dp"
+            android:layout_height="56dp"
+            android:layout_marginEnd="10dp"
+            android:layout_weight="1"
+            android:background="#24352C"
+            android:text="稍后 10 分钟"
+            android:textColor="#C8D6CC"
+            android:textSize="16sp" />
+
+        <Button
+            android:id="@+id/btnDismiss"
+            android:layout_width="0dp"
+            android:layout_height="56dp"
+            android:layout_marginStart="10dp"
+            android:layout_weight="1"
+            android:background="#1b6b4a"
+            android:text="关闭闹钟"
+            android:textColor="#FFFFFF"
+            android:textSize="16sp" />
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="18dp"
+        android:gravity="center"
+        android:text="点击「关闭闹钟」后停止响铃"
+        android:textColor="#6f7a86"
+        android:textSize="12sp" />
+</LinearLayout>
