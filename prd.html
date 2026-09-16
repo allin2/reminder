@@ -76,6 +76,8 @@
         <div class="hero-kicker">
           <span>文档版本 V0.1</span>
           <span>·</span>
+          <span>已被 V0.2 基线取代</span>
+          <span>·</span>
           <span>产品阶段 MVP</span>
           <span>·</span>
           <span>手机 App（iOS / Android）</span>
@@ -101,6 +103,13 @@
           </div>
         </dl>
       </header>
+
+      <div class="callout warn" style="margin-top:1.5rem">
+        <span class="callout-label">基线变更 · 2026-09-16</span>
+        <p><strong>本文是 V0.1，已被 V0.2 冻结基线取代</strong>：docs/baseline/Attention_Inbox_V0.2_产品需求与业务规格基线.md。</p>
+        <p>V0.2 声明自己为唯一业务基线，两者冲突时以 V0.2 为准。本文保留作为 V0.1 的历史详述——部分章节仍比 V0.2 更细（如状态机节点定义、交互示例、指标口径）。</p>
+        <p>逐条对齐分析、6 项待裁决冲突与全新需求清单见 docs/baseline/v0.2-alignment.md。</p>
+      </div>
 
       <!-- 01 -->
       <section class="section" id="s1">
@@ -166,18 +175,25 @@
         <p>产品的核心价值不是 Reminder 本身，而是建立对未来事项托管机制的信任。</p>
 
         <h3>3.2 核心产品原则</h3>
+        <p>五条原则分两级。<strong>红线</strong>不可让渡——任何实现与红线冲突，都必须回退实现；<strong>默认值</strong>是默认行为，允许有意识的例外，但例外必须显式论证并记录下来。</p>
+        <div class="callout warn">
+          <p><strong>例外的唯一论证标准</strong>：这个例外会让 <a href="#s31">§31.4</a> 的「用户主动查看 Future 的频率」<strong>上升还是下降</strong>？</p>
+          <p>PRD 自己把这个指标定义为<strong>不信任信号</strong>，理想方向是下降。任何让该指标上升的例外，无论多方便，都不成立。</p>
+        </div>
         <div class="principles">
-          <article class="principle">
+          <article class="principle is-redline">
             <div class="principle-top">
               <span class="n">原则一</span>
               <h3>Attention ≠ Task</h3>
+              <span class="tier">红线</span>
             </div>
             <p>系统管理的是「什么时候一件事情应该重新进入用户注意力」，而不是「用户应该如何执行、拆解和管理任务」。</p>
           </article>
-          <article class="principle">
+          <article class="principle is-redline">
             <div class="principle-top">
               <span class="n">原则二</span>
               <h3>Acknowledged ≠ Completed</h3>
+              <span class="tier">红线</span>
             </div>
             <p>「我知道了」和「我完成了」必须严格分离。用户点击<strong>我知道了</strong>，表示「我已经真正注意到这件事情」，但不代表「我已经完成了这件事情」。</p>
             <p class="rule">只有用户主动执行「完成」，事项才进入归档。</p>
@@ -186,14 +202,17 @@
             <div class="principle-top">
               <span class="n">原则三</span>
               <h3>Future 默认不可见</h3>
+              <span class="tier">默认值</span>
             </div>
             <p>未来事项虽然已经存在，但不应该因为存在就提前消耗用户注意力。</p>
             <p class="rule">未来事项默认不展示在首页。用户需要时可以主动查看或搜索。</p>
+            <p>这符合它自身的定义——「默认不展示」，而不是「不许展示」。但它同时也是产品承诺的核心，所以<strong>任何把它搬上首页的例外都必须按 §3.2 的论证标准显式论证</strong>，并且默认答案是拒绝。</p>
           </article>
-          <article class="principle">
+          <article class="principle is-redline">
             <div class="principle-top">
               <span class="n">原则四</span>
               <h3>通知送达 ≠ 用户看到</h3>
+              <span class="tier">红线</span>
             </div>
             <p>系统不得推测用户已经看到。以下行为均不能自动等同于 Acknowledged：</p>
             <ul class="dash">
@@ -204,14 +223,17 @@
               <li>用户打开 App。</li>
             </ul>
             <p class="rule">只有用户主动执行「我知道了」，才能认为 Attention Delivery 成功。</p>
+            <p>推论：<strong>关闭提醒 ≠ 我已经看到</strong>。任何"止响"动作（关闭弹条、关闭全屏闹钟）都不得写入 ACK，也不得停掉后续补充提醒。</p>
           </article>
           <article class="principle">
             <div class="principle-top">
               <span class="n">原则五</span>
               <h3>低交互优先</h3>
+              <span class="tier">默认值</span>
             </div>
             <p>管理注意力的工具本身不能成为新的注意力负担。每个功能都必须经过判断：这个功能是在帮用户减少注意力管理成本，还是要求用户花更多注意力管理这个 App？</p>
             <p class="rule">若属于后者，默认不加入产品。</p>
+            <p>与原则三冲突时的处理：优先保住用户的<strong>注意力预算</strong>，而不是保住产品的<strong>功能完整度</strong>。让用户少做一次判断，通常比多给一个入口更有价值。</p>
           </article>
         </div>
       </section>
@@ -555,12 +577,23 @@ archived_at</code></pre>
               </tr>
               <tr>
                 <td><span class="pill pill-red">低</span></td>
-                <td>要求用户进行一次极简选择。</td>
-                <td>「过阵子再看看」→ 一周后 / 一个月后 / 自定义</td>
+                <td>直接保存，标记为<strong>待整理</strong>，当晚集中澄清。</td>
+                <td>「过阵子再看看」→ 先收下，21:30 一起处理</td>
               </tr>
             </tbody>
           </table>
         </div>
+
+        <h3>10.1 延后澄清（Deferred Clarification）</h3>
+        <p>低置信度的确认<strong>不在捕获现场做</strong>。用户在刚说完一句话的那一刻最不想被打断做判断，因此系统一律先收下，把澄清推迟到<strong>每日整理窗口</strong>（默认 21:30–23:00）批量进行。</p>
+        <ul class="dash">
+          <li><strong>捕获永不失败</strong>：解析不出时间也照样保存，不弹确认框；</li>
+          <li>被标记为待整理的记录，默认兜底到 <strong>7 天后</strong>，但<strong>不进入首页「需要注意」</strong>，兜底时间也不发提醒——到点只再推一次整理；</li>
+          <li>整理卡片<strong>必须显式展示</strong>「系统解析：未设定时间」，不得让兜底时间成为隐性决定；</li>
+          <li>整理时逐条给出：原始记录、系统解析结果、来源（标题 / URL / 来源 App / 记录时间），可确认、保存修改或删除；</li>
+          <li>「稍后」允许跨出整理窗口；窗口外的那段时间入口仍然可见，且通知点击直达整理会话。</li>
+        </ul>
+        <p>完整契约见 <strong>docs/compose/spec/deferred-clarification.md</strong>。</p>
       </section>
 
       <!-- 11 -->
@@ -615,13 +648,15 @@ End:   Sunday</code></pre>
         </ul>
         <p>但仍应避免无限高频打扰。</p>
         <h3>13.3 关键事项</h3>
-        <p>用户显式开启「🚨 关键 / 绝不能错过」，允许：</p>
+        <p>用户在录入时显式选择「🚨 关键 / 绝不能错过」（默认档位是「普通」，所以选择关键本身就是一次主动开启），允许：</p>
         <ul class="plain">
           <li>更强声音；</li>
           <li>更强震动；</li>
           <li>锁屏高显著性；</li>
           <li>系统允许情况下的闹钟级提醒。</li>
         </ul>
+        <p><strong>闹钟级提醒的落地</strong>：关键档的<strong>首次</strong>提醒使用全屏闹钟（系统闹钟通道 + 亮屏 + 循环响铃 + 波形震动 + 锁屏直达）；后续最多 7 次补充提醒仍走通知渠道。全屏界面提供「我知道了 / 稍后 2 小时 / 完成」，外加一个<strong>「关闭」</strong>——关闭只止响，不表态、不写 ACK、不停掉后续提醒（遵循原则四）。</p>
+        <p>关键档是<strong>唯一</strong>使用全屏闹钟的档位。其他任何功能——包括待整理——都不得使用它。</p>
         <div class="callout critical">
           <span class="callout-label">范围约束</span>
           <p>该功能属于增强能力，不得成为 MVP 发布的硬性依赖。</p>
@@ -634,7 +669,9 @@ End:   Sunday</code></pre>
           <span class="section-num">14</span>
           <h2>通知操作</h2>
         </div>
-        <p>通知中应尽可能直接提供三个操作。</p>
+        <p>不同入口给不同的<strong>动作深度</strong>：快捷入口只给固定动作，主动入口才给完整选项。要求用户在通知栏里先做选择，只会让「推迟一件事」变得更费劲。</p>
+
+        <h3>14.1 快捷动作（通知栏、全屏闹钟）</h3>
         <div class="split">
           <div class="panel">
             <h3>我知道了</h3>
@@ -642,14 +679,28 @@ End:   Sunday</code></pre>
             <p>行为：停止当前追踪；事项保持未完成。</p>
           </div>
           <div class="panel">
-            <h3>稍后提醒</h3>
+            <h3>稍后 2 小时</h3>
             <p>含义：我已经知道这件事，但现在不适合继续关注。</p>
-            <p>快捷选项：30 分钟后 / 2 小时后 / 今晚 / 明天 / 自定义。</p>
+            <p>行为：按<strong>相对时长</strong>重新排程。</p>
           </div>
         </div>
-        <div class="panel">
-          <h3>完成</h3>
-          <p style="margin:0">含义：事项已经结束。行为：自动进入 Archive。</p>
+        <div class="split">
+          <div class="panel">
+            <h3>完成</h3>
+            <p>含义：事项已经结束。行为：自动进入 Archive。</p>
+          </div>
+          <div class="panel">
+            <h3>关闭（仅全屏闹钟）</h3>
+            <p>含义：让它停下来，但我还没表态。</p>
+            <p>行为：停止响铃与震动；<strong>不写 ACK</strong>、不计入关闭抑制、后续补充提醒照常。</p>
+          </div>
+        </div>
+
+        <h3>14.2 完整选项（应用内弹条与事项表单）</h3>
+        <p>用户愿意停下来做选择时，给出完整集合：<strong>30 分钟后 / 2 小时后 / 今晚 20:00 / 明天 09:00 / 本周末 / 自定义</strong>。</p>
+        <p>前两项按<strong>相对时长</strong>排程——「30 分钟后」就该是 30 分钟后，不随系统时间调整而漂移；其余按<strong>本地墙钟</strong>排程——「明天 09:00」永远是本地 9 点。</p>
+        <div class="callout warn">
+          <p>任何入口都<strong>不得</strong>给出上表之外的时长。同一件事在三处出现三种推迟时长（曾同时存在 10 分钟 / 2 小时 / 六个选项），属于实现漂移，不是设计。</p>
         </div>
       </section>
 
@@ -694,7 +745,7 @@ deadline   = 9 月 30 日</code></pre>
           <span class="section-num">17</span>
           <h2>首页</h2>
         </div>
-        <p>首页必须避免制造任务焦虑。</p>
+        <p>首页必须避免制造任务焦虑。它的信息量要能被一屏看完，且默认状态下<strong>越短越好</strong>。</p>
         <div class="split">
           <div class="panel">
             <h3>第一视觉</h3>
@@ -702,17 +753,26 @@ deadline   = 9 月 30 日</code></pre>
           </div>
           <div class="panel">
             <h3>第二视觉</h3>
-            <p>弱化显示<strong>已看到未完成 · N</strong>：默认只展示数量，用户主动点击后查看详细列表。</p>
+            <p>弱化显示<strong>已看到未完成 · N</strong>：<strong>永远折叠成一行</strong>，只展示数量，用户主动点击后才展开详细列表。</p>
           </div>
         </div>
+        <p>此外还有两个<strong>条件区块</strong>，它们的出现都由状态决定，不常驻：</p>
+        <ul class="dash">
+          <li><strong>待整理 · N</strong> —— 只在每日整理窗口（默认 21:30–23:00）内出现，窗口外不占首页。它的语义是「一笔还没结清的账」，不是逾期任务，也不是未来事项；</li>
+          <li><strong>今天已完成</strong> —— 不单独成块。当首页既没有需要注意、也没有待确认的事项时，在空态里补一句「今天已完成 N 件」。</li>
+        </ul>
         <h3>首页不显示</h3>
         <ul class="dash">
-          <li>所有未来事项；</li>
+          <li>所有未来事项，<strong>包括"即将到来""未来 7 天"这类未来列表</strong>；</li>
           <li>所有历史；</li>
           <li>全部未完成数量；</li>
           <li>总任务数；</li>
-          <li>逾期焦虑红点。</li>
+          <li>逾期焦虑红点；</li>
+          <li>任何形式的"还有多少天""下一个是几点"前瞻提示。</li>
         </ul>
+        <div class="callout warn">
+          <p>把未来拉上首页，会直接推高 §31.4 定义的<strong>不信任信号</strong>（用户主动查看 Future 的频率）。若确有必要，必须先按 §3.2 的论证标准显式论证——默认答案是拒绝。</p>
+        </div>
       </section>
 
       <!-- 18 -->
@@ -1015,6 +1075,11 @@ deadline   = 9 月 30 日</code></pre>
         <h3>31.4 信任指标</h3>
         <p>观察：用户主动进入 Future 页面检查的频率。</p>
         <p>若用户频繁检查「我之前是不是已经记了？」，说明用户尚未完全信任系统。理想情况下，随着使用时间增加，该指标应该下降。</p>
+        <div class="callout warn">
+          <span class="callout-label">双重身份</span>
+          <p>这个指标不只是"观察对象"，它同时是 <strong>§3.2 里判断原则三 / 原则五例外是否成立的唯一标准</strong>。任何声称"为了用户方便"而把未来信息搬进首页的改动，都必须先回答：它会让这个频率下降吗？</p>
+          <p>如果答案是不会，那么无论体验多顺滑，它都是在把「不信任」制度化。</p>
+        </div>
       </section>
 
       <!-- 32 -->

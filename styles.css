@@ -580,6 +580,28 @@ ul.dash li::before {
   font-weight: 500;
 }
 
+/* Principle tiers — 2026-09-16 原则分级（红线 / 默认值） */
+.principle-top .tier {
+  margin-left: auto;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.04em;
+  padding: 0.14rem 0.5rem;
+  border: 1px solid var(--line-strong);
+  border-radius: 999px;
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+.principle.is-redline {
+  border-color: var(--critical);
+}
+
+.principle.is-redline .tier {
+  border-color: var(--critical);
+  color: var(--critical);
+}
+
 /* Code / model blocks */
 pre.code,
 .code-block {

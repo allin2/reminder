@@ -935,6 +935,16 @@
           </div>
           <button class="switch" id="swNotify" aria-label="本地通知"></button>
         </div>
+        <div class="set-row" style="align-items:flex-start;flex-direction:column;gap:10px">
+          <div>
+            <div>默认提醒方式</div>
+            <div class="sub">只影响之后录入的事项；标记为「重要」或「关键」的始终使用闹钟提醒</div>
+          </div>
+          <div class="seg" id="deliveryModeSeg" style="width:100%">
+            <button class="seg-item on" data-mode="notification" role="tab">系统通知</button>
+            <button class="seg-item" data-mode="alarm" role="tab">闹钟提醒</button>
+          </div>
+        </div>
         <button class="set-row" id="btnExactAlarm" hidden>
           <div>
             <div>精确闹钟权限</div>

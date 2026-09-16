@@ -237,7 +237,7 @@ async function run() {
   await native.initialize({ onAction: e => events.push(e), onResume: () => resumed++ });
   const registeredActions = actionEnv.calls.actionTypes[0].types[0].actions;
   ok("注册三项通知操作", registeredActions.length === 3);
-  ok("通知 Snooze 固定为 2 小时", registeredActions.some(a => a.id === "snooze" && a.title === "2 小时后"));
+  ok("通知 Snooze 固定为 2 小时", registeredActions.some(a => a.id === "snooze" && (a.title === "稍后 2 小时" || a.title === "2 小时后")));
   ok("创建三个通知渠道", actionEnv.calls.channels.length === 3);
   ok("渠道显式开启声音和震动", actionEnv.calls.channels.every(c => c.sound === "attention_reminder" && c.vibration));
   actionEnv.fireAction({ actionId: "ack", notification: { id: 123, extra: { itemId: "x" } } });

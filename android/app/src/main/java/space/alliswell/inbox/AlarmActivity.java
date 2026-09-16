@@ -2,6 +2,8 @@ package space.alliswell.inbox;
 
 import android.app.KeyguardManager;
 import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.media.AudioAttributes;
 import android.media.MediaPlayer;
 import android.media.RingtoneManager;
@@ -23,10 +25,19 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+/**
+ * 全屏闹钟（D9/D11/D12）：四出口 —— 我知道了 / 稍后 2 小时 / 完成 / 关闭。
+ * 「关闭」只止响、不写 ACK、不停后续补充提醒。
+ */
 public class AlarmActivity extends AppCompatActivity {
   public static final String EXTRA_TITLE = "alarmTitle";
   public static final String EXTRA_BODY = "alarmBody";
   public static final String EXTRA_ID = "alarmId";
+  public static final String EXTRA_ITEM_ID = "alarmItemId";
+  public static final String EXTRA_LEVEL = "alarmLevel";
+  public static final String PREFS = "attention_alarm";
+  public static final String KEY_ACTION = "lastAction";
+  public static final String KEY_ITEM_ID = "lastItemId";
 
   private MediaPlayer mediaPlayer;
   private Vibrator vibrator;
@@ -58,17 +69,23 @@ public class AlarmActivity extends AppCompatActivity {
 
     String title = getIntent() != null ? getIntent().getStringExtra(EXTRA_TITLE) : null;
     String body = getIntent() != null ? getIntent().getStringExtra(EXTRA_BODY) : null;
+    String level = getIntent() != null ? getIntent().getStringExtra(EXTRA_LEVEL) : null;
+    String itemId = getIntent() != null ? getIntent().getStringExtra(EXTRA_ITEM_ID) : "";
+    if (itemId == null) itemId = "";
     if (title == null || title.isEmpty()) title = "安心收件箱";
     if (body == null || body.isEmpty()) body = "有一条事项需要你确认";
     final String finalTitle = title;
     final String finalBody = body;
+    final String finalItemId = itemId;
     final int alarmId = getIntent() != null ? getIntent().getIntExtra(EXTRA_ID, 90002) : 90002;
 
     TextView titleView = findViewById(R.id.alarmTitle);
     TextView bodyView = findViewById(R.id.alarmBody);
     TextView clockView = findViewById(R.id.alarmClockText);
+    TextView levelView = findViewById(R.id.alarmLevel);
     titleView.setText(finalTitle);
     bodyView.setText(finalBody);
+    if (level != null && !level.isEmpty()) levelView.setText(level);
 
     SimpleDateFormat fmt = new SimpleDateFormat("HH:mm", Locale.getDefault());
     clockView.setText(fmt.format(new Date()));
@@ -84,20 +101,55 @@ public class AlarmActivity extends AppCompatActivity {
     startAlarmSound();
     startVibration();
 
-    Button dismiss = findViewById(R.id.btnDismiss);
+    // D11：快捷动作 = 我知道了 / 稍后 2 小时 / 完成；D12：关闭只止响
+    Button ack = findViewById(R.id.btnAck);
     Button snooze = findViewById(R.id.btnSnooze);
-    dismiss.setOnClickListener(v -> {
-      stopAlarmEffects();
-      finish();
+    Button done = findViewById(R.id.btnDone);
+    Button dismiss = findViewById(R.id.btnDismiss);
+
+    ack.setOnClickListener(v -> {
+      finishWithAction("ack", finalItemId, false);
     });
     snooze.setOnClickListener(v -> {
-      stopAlarmEffects();
-      try {
-        long delay = 10 * 60 * 1000L;
-        AlarmScheduler.schedule(this, System.currentTimeMillis() + delay, finalTitle, finalBody, alarmId);
-      } catch (Exception ignored) {}
-      finish();
+      finishWithAction("snooze", finalItemId, true);
     });
+    done.setOnClickListener(v -> {
+      finishWithAction("done", finalItemId, false);
+    });
+    dismiss.setOnClickListener(v -> {
+      finishWithAction("close", finalItemId, false);
+    });
+  }
+
+  private void finishWithAction(String action, String itemId, boolean reschedule) {
+    stopAlarmEffects();
+    if (reschedule) {
+      try {
+        long delay = 2 * 60 * 60 * 1000L; // D11：快捷稍后固定 2 小时
+        AlarmScheduler.schedule(
+          this,
+          System.currentTimeMillis() + delay,
+          getIntent() != null ? getIntent().getStringExtra(EXTRA_TITLE) : "安心收件箱",
+          getIntent() != null ? getIntent().getStringExtra(EXTRA_BODY) : "有一条事项需要你确认",
+          getIntent() != null ? getIntent().getIntExtra(EXTRA_ID, 90002) : 90002
+        );
+      } catch (Exception ignored) {}
+    }
+    try {
+      SharedPreferences prefs = getSharedPreferences(PREFS, MODE_PRIVATE);
+      prefs.edit().putString(KEY_ACTION, action).putString(KEY_ITEM_ID, itemId).apply();
+    } catch (Exception ignored) {}
+    // 回到 WebView 让 JS 处理 ACK/完成
+    try {
+      Intent main = getPackageManager().getLaunchIntentForPackage(getPackageName());
+      if (main != null) {
+        main.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        main.putExtra("alarmAction", action);
+        main.putExtra("alarmItemId", itemId);
+        startActivity(main);
+      }
+    } catch (Exception ignored) {}
+    finish();
   }
 
   private Uri alarmUri() {
@@ -175,6 +227,9 @@ public class AlarmActivity extends AppCompatActivity {
 
   @Override
   public void onBackPressed() {
-    // keep alarm on screen until user dismisses
+    // D12：返回 = 「关闭」（只止响，不写 ACK）
+    finishWithAction("close",
+      getIntent() != null ? getIntent().getStringExtra(EXTRA_ITEM_ID) : "",
+      false);
   }
 }

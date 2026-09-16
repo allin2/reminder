@@ -26,15 +26,18 @@
 
 | 操作 | 说明 |
 |------|------|
-| 快速录入 | 一句话自然语言；自动解析时间；低置信度时会让你极简确认 |
-| 现在需要注意 | 首页只展示当前应进入注意力的事项 |
+| 快速录入 | 一句话自然语言；自动解析时间；**捕获永不失败**，解析不出来也照样收下 |
+| 现在需要注意 | 首页只展示当前应进入注意力的事项；**不出现「即将到来」**（D5） |
 | 我知道了 | 确认「已看到」，**不会**变成完成 |
-| 稍后 | 30 分钟 / 2 小时 / 今晚 / 明天 / 周末 / 自定义 |
+| 稍后 | 应用内给完整六档；通知栏/全屏闹钟快捷动作固定 **2 小时**（D11） |
 | 完成 | 唯一正常归档出口 |
+| 待整理 | 模糊记录先收下；入口**常驻弱形态**，整理窗口∪宽限期内变显著（D6）；兜底=下一个 Review Window，不占首页（D17） |
+| 弹条 | **只有点 × 才关闭**；挂 10 分钟自动收起且不记账（D13/D14） |
 | 未来 | 托管中的事项 + 月历；默认不占首页 |
-| 已归档 | 按日回看，可恢复 |
+| 已归档 | 按日回看，可恢复；**重开不自动提醒**，可选设时间（D23） |
+| 默认提醒方式 | 未标记事项按全局默认（录入时快照）；**有标记（重要/关键）一律闹钟**（D25 / A-01） |
 | 笔记 | 轻量 Markdown，可置顶、关联项目 |
-| 搜索 | 事项、标签、项目、笔记 |
+| 搜索 | 事项、标签、项目、笔记；也是找回待整理记录的入口 |
 | AI（可选） | 我的 → AI 智能理解，BYOK；失败自动回退本地解析 |
 
 ---
@@ -53,7 +56,8 @@
 | `sw.js` | Service Worker（离线壳层、通知） |
 | `manifest.json` | PWA 清单（安装、分享入口、快捷方式） |
 | `icon.svg` / `icon-192.png` / `icon-512.png` | 应用图标 |
-| `prd.html` | 产品需求文档（附属，依赖同目录 `styles.css`、`app.js`） |
+| `docs/baseline/` | **唯一业务基线**（V0.2 冻结版）与对齐分析 |
+| `prd.html` | 产品需求文档 **V0.1（历史详述）**，依赖同目录 `styles.css`、`app.js` |
 | `test-smoke.js` | Node 集成冒烟（生命周期主路径） |
 | `test-unit.js` | Node 单元测试（解析/周期/提醒/存储） |
 | `test-native-reminders.js` | Android 原生提醒投影与权限 mock 测试 |
@@ -72,7 +76,7 @@ npm test
 预期：
 - `test-unit.js`：**29 项全部通过**
 - `test-native-reminders.js`：**42 项全部通过**
-- `test-smoke.js`：**55 项全部通过**
+- `test-smoke.js`：**65 项全部通过**（含 D5/D7/D15/D17/D22/D23/D25 落地断言）
 
 UI 手测建议顺序：示例载入 → 导航 → 录入 → 到期弹条 → 我知道了 → 完成 → 归档。
 
@@ -82,6 +86,7 @@ UI 手测建议顺序：示例载入 → 导航 → 录入 → 到期弹条 → 
 
 - **存储**：优先 IndexedDB（`attention-inbox`），不可用时自动退回 `localStorage`；首次打开会把旧 `localStorage` 数据迁入 IDB（旧键保留作备份）。
 - **重提醒**：普通事项不自动重弹；重要约每 30 分钟、最多 4 次；关键约每 15 分钟、最多 8 次；用户关闭弹条后 30 分钟内不再打扰；ACK/完成后停止。
+- **首次投递**：有标记（重要/关键）或 `delivery_mode=alarm` 的事项，**首次**走全屏闹钟，后续仍走通知（D9/D25）。
 - **周末窗口**：解析出 `window` 的事项，倾向在窗口日 10:00 进入注意力。
 
 ---
@@ -100,13 +105,34 @@ UI 手测建议顺序：示例载入 → 导航 → 录入 → 到期弹条 → 
 
 ## 产品原则（摘要）
 
-1. 系统管理的是「何时重新进入注意力」，不是完整任务管理  
-2. 只有用户主动「完成」才归档  
-3. 未来事项默认不占据首页  
-4. 只有显式「我知道了」才算真正注意到  
-5. 管理注意力的工具本身不能成为新的注意力负担  
+原则分两级，**红线不可让渡**，**默认值允许有意识的例外但必须显式论证**：
 
-完整说明见 [prd.html](./prd.html)。
+**红线**
+
+1. 系统管理的是「何时重新进入注意力」，不是完整任务管理（Attention ≠ Task）
+2. 只有用户主动「完成」才归档；「我知道了」永不等同于完成（Acknowledged ≠ Completed）
+3. 只有显式「我知道了」才算真正注意到；送达、显示、解锁、点击通知、打开 App 都不算（送达 ≠ 看到）
+
+**默认值**
+
+4. 未来事项默认不占据首页（Future 默认不可见）
+5. 管理注意力的工具本身不能成为新的注意力负担（低交互优先）
+
+> **例外的唯一论证标准**：它会让「用户主动查看 Future 的频率」上升还是下降？
+> 该指标在 PRD 里被定义为**不信任信号**，理想方向是下降。
+
+**需求基线**：[`docs/baseline/Attention_Inbox_V0.2_产品需求与业务规格基线.md`](./docs/baseline/Attention_Inbox_V0.2_产品需求与业务规格基线.md)
+（V0.2 冻结基线，**唯一业务基线**）。`prd.html` 是 V0.1，已降级为历史详述，冲突时以 V0.2 为准。
+
+> **生效基线 = V0.2 原文（冻结，不编辑）+ 已批准的条款级修订**
+> （[`docs/baseline/V0.2-amendments.md`](./docs/baseline/V0.2-amendments.md)，当前 1 项：A-01 默认提醒方式）。
+> 新需求按 §24 先记为[变更提案](./docs/baseline/change-proposals.md)。
+
+逐条对齐、7 项冲突的裁决与全新需求清单见
+[`docs/baseline/v0.2-alignment.md`](./docs/baseline/v0.2-alignment.md)。
+
+交互逻辑的裁决记录见
+[`docs/decisions/interaction-logic-2026-09-16.md`](./docs/decisions/interaction-logic-2026-09-16.md)。
 
 ---
 
@@ -145,18 +171,24 @@ npm run cap:open      # 用 Android Studio 打开 android/
 ### 原生提醒与权限
 
 - Android 使用 `@capacitor/local-notifications@6.1.3`，底层由 `AlarmManager` 排程；应用进程被普通回收或设备休眠时不依赖常驻前台服务。
-- 普通、重要、关键三个通知渠道分别排 1、4、8 次；重要每 30 分钟、关键每 15 分钟补充提醒。渠道启用提示音和震动，但不申请勿扰策略访问，也不使用全屏通知。
+- 普通、重要、关键三个通知渠道分别排 1、4、8 次；重要每 30 分钟、关键每 15 分钟补充提醒。渠道启用提示音和震动，不申请勿扰策略访问，也**不使用全屏 Intent**。
+- **全屏闹钟是独立通道，只给「关键」档**：关键事项的首次提醒走 `SystemBridge` 的 `setAlarmClock` + 全屏 `AlarmActivity`（亮屏、循环响铃、波形震动、锁屏直达）；后续 7 次补充提醒仍走通知渠道。全屏界面提供「我知道了 / 稍后 2 小时 / 完成」，以及一个只止响、不表态的「关闭」。
+- **待整理不使用全屏闹钟**，只用普通通知；其提醒受「本地通知」总开关控制，并按普通事项参与勿扰。
 - Android 13+ 由用户在“我的”页面主动授予通知权限；未授权时只保留应用内提醒，不循环弹窗。
 - Android 12+ 可主动进入系统“闹钟和提醒”设置授予精确闹钟权限；未授权时仍使用原生非精确 `AlarmManager`，界面会标明时间可能延迟。
 - 官方插件接收 `BOOT_COMPLETED` / `LOCKED_BOOT_COMPLETED` 并恢复持久化排程；应用更新后也恢复排程，应用启动和恢复前台时会重新对账。
 - 用户在系统设置中主动“强制停止”应用后，Android 会阻止闹钟和广播，必须由用户再次打开应用；这是平台边界。
 
-数据仍以 IndexedDB 中的事项为真源，原生 pending 通知只是可删除、可重建的投影。完整契约与验证等级见 [`docs/compose/spec/android-native-reminders.md`](./docs/compose/spec/android-native-reminders.md)。
+数据仍以 IndexedDB 中的事项为真源，原生 pending 通知只是可删除、可重建的投影。完整契约与验证等级见
+[`docs/compose/spec/android-native-reminders.md`](./docs/compose/spec/android-native-reminders.md) 与
+[`docs/compose/spec/android-fullscreen-alarm.md`](./docs/compose/spec/android-fullscreen-alarm.md)。
 
 ### 当前验证边界
 
 - 已完成 Node mock、Web 冒烟、Capacitor 资源同步与 Manifest/插件注册静态核对。
-- 本次环境未安装 JDK 17、Android SDK 或模拟器，因此 Gradle 编译、APK 生成/安装、系统杀进程、Doze、重启和真机通知动作均为 `NOT_PERFORMED`，不能据此宣称 Android 真机 PASS。
+- 仓库内的 `releases/安心收件箱-debug.apk` 是**自签名 debug 包**，只能用于侧载验证，不可发布。
+- 本机未安装 JDK 17、Android SDK 或模拟器，因此 Gradle 编译、APK 生成/安装、系统杀进程、Doze、重启和真机通知动作均为 `NOT_PERFORMED`，不能据此宣称 Android 真机 PASS。
+- 全屏闹钟、`USE_EXACT_ALARM` / `USE_FULL_SCREEN_INTENT` 等受限权限的**商店审核影响尚未评估**；PRD §33 也未把上架纳入 MVP。
 
 ---
 

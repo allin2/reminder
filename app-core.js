@@ -466,14 +466,17 @@
       dailySummary: false,
       privacyNotify: false,
       lastSummaryAt: 0,
+      // D25 / A-01：未标记事项的默认投递方式（录入时快照）
+      defaultDeliveryMode: "notification",
       review: {
         enabled: true,
         hour: 21,
         minute: 30,
         windowEndHour: 23,
         windowEndMinute: 0,
-        followupMs: 45 * 60 * 1000,
-        maxFollowups: 1,
+        // D22：60 分钟 × 2 次
+        followupMs: 60 * 60 * 1000,
+        maxFollowups: 2,
         lastNotifiedAt: 0,
         followupCount: 0,
         snoozedUntil: 0,
@@ -621,13 +624,29 @@
       review_status: it.review_status || "READY",
       reviewed_at: it.reviewed_at || null,
       sourceTitle: it.sourceTitle || "",
-      sourceApp: it.sourceApp || ""
+      sourceApp: it.sourceApp || "",
+      delivery_mode: it.delivery_mode || null,
+      isFallbackTrigger: !!it.isFallbackTrigger
     };
+    if (!item.delivery_mode) {
+      item.delivery_mode = (item.priority === "important" || item.priority === "critical")
+        ? "alarm"
+        : (state.settings.defaultDeliveryMode || "notification");
+    }
     if (NativeReminders.migrateItem) NativeReminders.migrateItem(item);
     return item;
   }
 
+  /** D25 赋值快照：有标记→alarm；未标记→当前全局默认 */
+  function resolveDeliveryMode(priority) {
+    if (priority === "important" || priority === "critical") return "alarm";
+    return state.settings.defaultDeliveryMode === "alarm" ? "alarm" : "notification";
+  }
+
   function makeItem(o) {
+    if (o && o.delivery_mode == null && o.priority) {
+      o = Object.assign({}, o, { delivery_mode: resolveDeliveryMode(o.priority) });
+    }
     return normalizeItem(o);
   }
 
@@ -644,8 +663,9 @@
         minute: 30,
         windowEndHour: 23,
         windowEndMinute: 0,
-        followupMs: 45 * 60 * 1000,
-        maxFollowups: 1,
+        // D22：60 分钟 × 2 次补提醒（当天最多 3 次）
+        followupMs: 60 * 60 * 1000,
+        maxFollowups: 2,
         lastNotifiedAt: 0,
         followupCount: 0,
         snoozedUntil: 0,
@@ -653,8 +673,30 @@
         sessionStatus: "idle",
         lastSessionKey: ""
       };
+    } else {
+      // 升级旧参数：45min×1 → 60min×2
+      if (state.settings.review.followupMs == null || state.settings.review.followupMs === 45 * 60 * 1000) {
+        state.settings.review.followupMs = 60 * 60 * 1000;
+      }
+      if (state.settings.review.maxFollowups == null || state.settings.review.maxFollowups === 1) {
+        state.settings.review.maxFollowups = 2;
+      }
     }
     return state.settings.review;
+  }
+
+  /** D17：兜底 = 下一个 Review Window；Review 关闭时退次日晚间 20:00 */
+  function fallbackTriggerAt() {
+    const rs = ensureReviewSettings();
+    if (rs.enabled) return nextReviewWindowStart();
+    const d = addDays(new Date(), 1);
+    d.setHours(20, 0, 0, 0);
+    return d.getTime();
+  }
+
+  function hasSpecificTimeWord(text) {
+    if (Lib.hasSpecificTimeWord) return Lib.hasSpecificTimeWord(text);
+    return /明天|后天|下周|下周|月底|今晚/.test(String(text || ""));
   }
 
   const VAGUE_RE = /^(这个|那个|它|something)?\s*(以后|后面|之后|过阵子|回头|有空|有时间)?\s*(看看|看一下|关注|处理|研究|了解)?\s*$/;
@@ -723,27 +765,28 @@
   }
 
   async function fireReviewNotification(count) {
+    if (!state.settings.notify) return;
     const title = "待整理";
     const body = "有 " + count + " 条随手记录待整理 · 预计只需几分钟";
+    // D19：走 LocalNotifications / Web 通知，不再用全屏闹钟
     const bridge = systemBridge();
+    if (NativeReminders.isNativeAndroid && NativeReminders.isNativeAndroid()) {
+      // 原生侧由 reconcile/buildReviewDesired 排程；此处仅在应用内 toast
+      return;
+    }
     if (bridge && bridge.showNotification) {
       try {
         await bridge.showNotification({ title, body, id: 91001 });
         return;
       } catch (e) {}
     }
-    if (bridge && bridge.scheduleAlarm) {
-      try {
-        await bridge.scheduleAlarm({
-          delayMs: 1000,
-          title,
-          body,
-          id: 91001
-        });
-        return;
-      } catch (e) {}
-    }
-    showSystemNotification({ title, body, tag: "review-session" });
+    showSystemNotification({
+      title,
+      body,
+      tag: "review-session",
+      requireInteraction: true,
+      data: { itemId: "review-session" }
+    });
   }
 
   function maybeReviewSession(now) {
@@ -767,7 +810,8 @@
     const snoozeDue = rs.snoozedUntil && now >= rs.snoozedUntil;
     if (!windowOpen && !snoozeDue) return;
 
-    if (rs.lastSessionKey === key && rs.followupCount >= (rs.maxFollowups || 1)) {
+    const maxFollowups = rs.maxFollowups != null ? rs.maxFollowups : 2;
+    if (rs.lastSessionKey === key && rs.followupCount >= maxFollowups) {
       // already fully notified for this window
       return;
     }
@@ -778,8 +822,8 @@
       rs.followupCount = 0;
       rs.sessionStatus = "due";
       shouldNotify = true;
-    } else if (rs.followupCount < (rs.maxFollowups || 1) &&
-      now - (rs.lastNotifiedAt || 0) >= (rs.followupMs || 45 * 60 * 1000)) {
+    } else if (rs.followupCount < maxFollowups &&
+      now - (rs.lastNotifiedAt || 0) >= (rs.followupMs || 60 * 60 * 1000)) {
       shouldNotify = true;
     }
 
@@ -832,9 +876,10 @@
       return;
     }
     if (progress) progress.textContent = (idx + 1) + " / " + total;
-    const parsedHint = it.triggerAt
-      ? fmtTime(it.triggerAt) + (it.deadlineAt ? " · 截止 " + fmtDate(it.deadlineAt) : "")
-      : "未设定时间";
+    // D16：显式展示系统解析结果；无时间时必须写「未设定时间」
+    const parsedHint = it.isFallbackTrigger || !it.triggerAt
+      ? "未设定时间 · 已用兜底值（" + fmtTime(it.triggerAt || fallbackTriggerAt()) + " 的整理窗口）"
+      : fmtTime(it.triggerAt) + (it.deadlineAt ? " · 截止 " + fmtDate(it.deadlineAt) : "");
     const sourceBits = [];
     if (it.sourceTitle) sourceBits.push(escapeHtml(it.sourceTitle));
     if (it.url) sourceBits.push(escapeHtml(it.url));
@@ -868,6 +913,7 @@
   function markReviewDone(item, extra) {
     item.review_status = "REVIEWED";
     item.reviewed_at = Date.now();
+    item.isFallbackTrigger = false;
     if (extra && extra.triggerAt != null) {
       item.triggerAt = extra.triggerAt;
       item.scheduleBasis = "wall-clock";
@@ -885,7 +931,8 @@
     if (!it) return;
     const triggerInput = $("#reviewTrigger");
     const triggerAt = triggerInput ? parseLocalInput(triggerInput.value) : it.triggerAt;
-    markReviewDone(it, { triggerAt: triggerAt || it.triggerAt || (Date.now() + 7 * 86400000) });
+    // D17：无时间时兜底为下一个 Review Window，而不是 now+7 天
+    markReviewDone(it, { triggerAt: triggerAt || fallbackTriggerAt() });
     save();
     state.ui.reviewIndex += 1;
     queueNativeReminderSync();
@@ -899,7 +946,7 @@
     const title = ($("#reviewTitle") && $("#reviewTitle").value.trim()) || it.title;
     const triggerAt = parseLocalInput($("#reviewTrigger") ? $("#reviewTrigger").value : "") || it.triggerAt;
     const note = $("#reviewNote") ? $("#reviewNote").value.trim() : it.note;
-    markReviewDone(it, { title, triggerAt: triggerAt || (Date.now() + 7 * 86400000), note });
+    markReviewDone(it, { title, triggerAt: triggerAt || fallbackTriggerAt(), note });
     save();
     state.ui.reviewIndex += 1;
     queueNativeReminderSync();
@@ -925,15 +972,9 @@
     save();
     closeSheet("sheetReview");
     toast("待整理稍后提醒 · " + label);
-    const bridge = systemBridge();
-    if (bridge && bridge.scheduleAlarm) {
-      bridge.scheduleAlarm({
-        delayMs: ms,
-        title: "待整理",
-        body: "有 " + needsReviewItems().length + " 条随手记录待整理",
-        id: 91002
-      }).catch(() => {});
-    }
+    // D19：普通通知，不走全屏闹钟
+    fireReviewNotification(needsReviewItems().length);
+    queueNativeReminderSync();
   }
 
   function skipReviewThisTime() {
@@ -945,6 +986,15 @@
     toast("已跳过本次 · 下个整理时间再见");
   }
 
+  /** D6/D20：窗口 ∪ 宽限期内显著，平时弱形态；无待整理时不渲染 */
+  function inReviewHighlight(now) {
+    now = now || Date.now();
+    const rs = ensureReviewSettings();
+    if (inReviewWindow(now)) return true;
+    if (rs.snoozedUntil && now >= rs.snoozedUntil && now < rs.snoozedUntil + 3600000) return true;
+    return false;
+  }
+
   function renderReviewEntry() {
     const host = $("#homeReview");
     if (!host) return;
@@ -953,11 +1003,21 @@
       host.innerHTML = "";
       return;
     }
-    host.innerHTML = '<button class="soft-entry" id="openReview" style="margin-bottom:10px">' +
-      '<span><strong>待整理 · ' + n + "</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">信息尚未二次确认，不是逾期任务</span></span>" +
-      "<span>整理 ›</span></button>";
+    const strong = inReviewHighlight();
+    if (strong) {
+      // 显著：提到最前，带数字
+      host.innerHTML = '<button class="soft-entry strong-entry" id="openReview" style="margin-bottom:10px;border-color:var(--attention);background:var(--attention-bg)">' +
+        '<span><strong style="color:#7a540e">待整理 · ' + n + "</strong><br><span style=\"font-size:0.78rem;color:#8a6a17\">信息尚未二次确认，不是逾期任务</span></span>" +
+        "<span>整理 ›</span></button>";
+    } else {
+      // 弱形态：无数字、无强调色
+      host.innerHTML = '<button class="soft-entry" id="openReview" style="margin-bottom:10px;opacity:.75">' +
+        '<span><strong style="font-weight:500;color:var(--muted)">待整理</strong><br>' +
+        '<span style="font-size:0.78rem;color:var(--muted)">信息尚未二次确认，不是逾期任务</span></span>' +
+        "<span style=\"color:var(--muted)\">›</span></button>";
+    }
     const btn = $("#openReview");
-    if (btn) btn.addEventListener("click", openReviewSession);
+    if (btn) btn.addEventListener("click", () => openReviewSession());
   }
 
   function scheduleNextReviewAlarm() {
@@ -965,19 +1025,9 @@
     if (!rs.enabled) return;
     const count = needsReviewItems().length;
     if (!count) return;
-    const bridge = systemBridge();
-    if (!bridge || !bridge.scheduleAlarm) return;
-    let at = nextReviewWindowStart();
-    if (rs.snoozedUntil && rs.snoozedUntil > Date.now()) at = rs.snoozedUntil;
-    const delayMs = Math.max(2000, at - Date.now());
-    // only schedule within 24h to avoid stale long alarms
-    if (delayMs > 26 * 3600000) return;
-    bridge.scheduleAlarm({
-      delayMs,
-      title: "待整理",
-      body: "有 " + count + " 条随手记录待整理 · 预计只需几分钟",
-      id: 91003
-    }).catch(() => {});
+    if (!state.settings.notify) return;
+    // D19：原生侧由 reconcile 预排 LocalNotifications；Web 侧依赖 tick
+    queueNativeReminderSync();
   }
 
   /* ---------- lifecycle ---------- */
@@ -1024,8 +1074,12 @@
 
   function promoteDue(now) {
     now = now || Date.now();
+    const reviewEnabled = ensureReviewSettings().enabled;
     let changed = false;
     state.items.forEach(it => {
+      // D17：Review 开启时，NEEDS_REVIEW 兜底记录永不进 due；
+      // Review 关闭时退为普通事项，正常提醒
+      if (reviewEnabled && it.review_status === "NEEDS_REVIEW") return;
       if (it.status === "waiting" || it.status === "snoozed") {
         // 柔性窗口：仅对 waiting 生效，避免覆盖用户 snooze
         if (it.status === "waiting" && Lib.applyWindowTrigger && (it.windowStart || it.windowEnd)) {
@@ -1134,7 +1188,9 @@
           triggerAt: nextTrigger,
           scheduleBasis: "wall-clock",
           localTrigger: toLocalInput(nextTrigger),
-          deadlineAt: null
+          deadlineAt: null,
+          // 下一周期继承投递方式快照（有标记仍为 alarm）
+          delivery_mode: resolveDeliveryMode(it.priority)
         }));
       }
     }
@@ -1183,20 +1239,23 @@
     render();
   }
 
+  /** D23：归档重开不设 trigger_at（不自动提醒），可选给一次极简时间选择 */
   function restoreItem(id) {
     const it = state.items.find(x => x.id === id);
     if (!it) return;
-    const restoredAt = Date.now();
     it.status = "waiting";
     it.completedAt = null;
-    it.triggerAt = restoredAt + 3600000;
-    it.scheduleBasis = "elapsed";
+    it.triggerAt = null;
+    it.scheduleBasis = null;
     it.localTrigger = null;
-    it.snoozedAt = restoredAt;
-    it.snoozeDelayMs = 3600000;
+    it.snoozedAt = null;
+    it.snoozeDelayMs = null;
     it.dismissedUntil = null;
     save();
-    toast("已恢复到未来");
+    toast("已恢复 · 不会自动提醒", "设置时间", () => {
+      state.ui.snoozeId = it.id;
+      openSheet("sheetSnooze");
+    });
     render();
   }
 
@@ -1293,7 +1352,9 @@
     promoteDue();
     const now = Date.now();
     const dueMap = new Map();
+    const reviewEnabled = ensureReviewSettings().enabled;
     state.items.forEach(it => {
+      if (reviewEnabled && it.review_status === "NEEDS_REVIEW") return;
       if (isDue(it, now) || it.status === "due") dueMap.set(it.id, it);
     });
     const dueList = Array.from(dueMap.values()).sort((a, b) => {
@@ -1303,7 +1364,7 @@
     });
 
     const active = state.items
-      .filter(it => it.status === "acknowledged")
+      .filter(it => it.status === "acknowledged" && it.review_status !== "NEEDS_REVIEW")
       .sort((a, b) => (b.acknowledgedAt || 0) - (a.acknowledgedAt || 0));
 
     const doneToday = state.items.filter(it => {
@@ -1312,39 +1373,55 @@
       return sameDay(new Date(it.completedAt), new Date());
     });
 
+    // D5：首页不再出现「即将到来」；顺序 = 需要注意 → 已看到（折叠） → 待整理弱入口 → 空态
+    const homeUpcoming = $("#homeUpcoming");
+    if (homeUpcoming) homeUpcoming.innerHTML = "";
+
     $("#homeDue").innerHTML = dueList.length
       ? '<div class="sec"><div class="sec-head"><div class="sec-title">现在需要注意</div><div class="sec-count">' +
         dueList.length + "</div></div>" +
         dueList.map(it => renderItemCard(it, "due")).join("") + "</div>"
       : "";
 
+    // D7：「已看到未完成」永远折叠成一行（带数量）
     const expanded = state.ui.activeExpanded;
     $("#homeActive").innerHTML = active.length
-      ? '<div class="sec"><div class="sec-head"><div class="sec-title">已看到未完成</div><div class="sec-count">' +
-        active.length + "</div></div>" +
-        (active.length > 3
-          ? '<button class="soft-entry" id="toggleActive"><span><strong>已看到未完成 · ' + active.length +
-            '</strong></span><span>' + (expanded ? "收起" : "展开") + " ›</span></button>" +
-            '<div id="activeList"' + (expanded ? "" : " hidden") + ">" +
-            active.map(it => renderItemCard(it, "active")).join("") + "</div>"
-          : active.map(it => renderItemCard(it, "active")).join("")) +
+      ? '<button class="soft-entry" id="toggleActive"><span><strong>已看到未完成 · ' + active.length +
+        "</strong></span><span>" + (expanded ? "收起" : "展开") + " ›</span></button>" +
+        '<div id="activeList"' + (expanded ? "" : " hidden") + ">" +
+        active.map(it => renderItemCard(it, "active")).join("") + "</div>"
+      : "";
+
+    // D8：空态里一句纯文字完成数；当天完成卡片只在空态容身
+    const quiet = !dueList.length && !active.length;
+    $("#homeEmpty").innerHTML = quiet
+      ? '<div class="empty"><div class="empty-mark">✓</div><h3>此刻很安静</h3>' +
+        "<p>没有需要你注意的事项。已交给系统的未来，会自己在合适的时候回来。</p>" +
+        (doneToday.length
+          ? '<p style="margin-top:12px;font-size:0.92rem;color:var(--ink-2)">今天已完成 ' + doneToday.length + " 件</p>" +
+            doneToday.map(it => renderItemCard(it, "archived")).join("")
+          : "") +
         "</div>"
       : "";
 
-    const doneHtml = doneToday.length
-      ? '<div class="sec"><div class="sec-head"><div class="sec-title">今天已完成</div><div class="sec-count">' +
-        doneToday.length + "</div></div>" +
-        doneToday.map(it => renderItemCard(it, "archived")).join("") + "</div>"
-      : "";
-
-    $("#homeEmpty").innerHTML = (!dueList.length && !active.length)
-      ? '<div class="empty"><div class="empty-mark">✓</div><h3>此刻很安静</h3>' +
-        "<p>没有需要你注意的事项。已交给系统的未来，会自己在合适的时候回来。</p></div>"
-      : doneHtml;
-
     setBadge(dueList.length);
-    showUpcomingOnHome();
+    // D6/D20：待整理入口 —— 显著时提到最前，弱形态时排在「需要注意」之后
     renderReviewEntry();
+    try {
+      const homeEl = $("#view-home");
+      const reviewHost = $("#homeReview");
+      const dueHost = $("#homeDue");
+      const activeHost = $("#homeActive");
+      if (homeEl && reviewHost && typeof homeEl.insertBefore === "function" && reviewHost.parentNode) {
+        if (inReviewHighlight()) {
+          homeEl.insertBefore(reviewHost, homeEl.firstChild);
+        } else if (activeHost && activeHost.parentNode === homeEl) {
+          homeEl.insertBefore(reviewHost, activeHost.nextSibling);
+        } else if (dueHost && dueHost.parentNode === homeEl) {
+          homeEl.insertBefore(reviewHost, dueHost.nextSibling);
+        }
+      }
+    } catch (e) { /* 测试 mock DOM 可能不支持 insertBefore */ }
     $("#pageTitle").textContent = "安心收件箱";
     $("#pageSub").textContent = dueList.length
       ? "现在有 " + dueList.length + " 件需要你注意"
@@ -1542,6 +1619,14 @@
     $("#swImp").classList.toggle("on", !!state.settings.importantRepeat);
     $("#swSummary").classList.toggle("on", !!state.settings.dailySummary);
     $("#swPrivacy").classList.toggle("on", !!state.settings.privacyNotify);
+    // D25：默认提醒方式
+    const modeSeg = $("#deliveryModeSeg");
+    if (modeSeg) {
+      const mode = state.settings.defaultDeliveryMode === "alarm" ? "alarm" : "notification";
+      $$("#deliveryModeSeg .seg-item").forEach(b => {
+        b.classList.toggle("on", b.dataset.mode === mode);
+      });
+    }
     const sum = $("#summarySub");
     if (sum) sum.textContent = state.settings.dailySummary ? "已开启 · 新增较多时轻量提示" : "默认关闭 · 仅增强可信感";
     renderAiSub();
@@ -2086,20 +2171,25 @@
       "</div>";
   }
 
-  /* low-confidence confirm */
+  /* low-confidence confirm — D15 保留能力，按「必要」条件触发 */
   function openLowConfSheet(defaultTs, rawText) {
-    state.ui.pendingLowConf = defaultTs || (Date.now() + 7 * 86400000);
-    $("#lowConfCustom").value = toLocalInput(state.ui.pendingLowConf);
-    $("#lowConfHint").textContent = "当前：" + fmtTime(state.ui.pendingLowConf);
+    state.ui.pendingLowConf = defaultTs || fallbackTriggerAt();
+    state.ui.pendingLowConfRaw = rawText || "";
+    const custom = $("#lowConfCustom");
+    if (custom) custom.value = toLocalInput(state.ui.pendingLowConf);
+    const hint = $("#lowConfHint");
+    if (hint) hint.textContent = "当前：" + fmtTime(state.ui.pendingLowConf);
     $$("#lowConfChips .chip").forEach(c => c.classList.remove("on"));
     openSheet("sheetLowConf");
   }
 
   let similarTimer = null;
   let pendingFinishSave = null;
+  let lowConfUserPicked = false;
 
   function finishSaveAfterLowConf(ts) {
     if (ts) $("#capTrigger").value = toLocalInput(ts);
+    lowConfUserPicked = true;
     if (pendingFinishSave) {
       const fn = pendingFinishSave;
       pendingFinishSave = null;
@@ -2221,6 +2311,8 @@
         editing.url = $("#capUrl").value.trim();
         editing.projectId = $("#capProject").value || "";
         editing.priority = priority;
+        // D25 编辑重算快照
+        editing.delivery_mode = resolveDeliveryMode(priority);
         editing.triggerAt = triggerAt;
         editing.scheduleBasis = "wall-clock";
         editing.localTrigger = toLocalInput(triggerAt);
@@ -2237,6 +2329,7 @@
         closeSheet("sheetDetail");
         render();
         toast("已保存修改");
+        queueNativeReminderSync();
         return;
       }
 
@@ -2255,7 +2348,8 @@
         windowStart: parsed && parsed.window ? parsed.window.start : null,
         windowEnd: parsed && parsed.window ? parsed.window.end : null,
         repeat,
-        review_status: "READY"
+        review_status: "READY",
+        delivery_mode: resolveDeliveryMode(priority)
       });
       const needs = detectNeedsReview({
         title: item.title,
@@ -2266,10 +2360,12 @@
       });
       if (needs) {
         item.review_status = "NEEDS_REVIEW";
-        if (!item.triggerAt) {
-          item.triggerAt = Date.now() + 7 * 86400000;
+        // D17：未用户确认的兜底时间 → 下一个 Review Window
+        if (!item.triggerAt || (!lowConfUserPicked && parsed && (parsed.confidence === "low" || parsed.confidence === "none"))) {
+          item.triggerAt = fallbackTriggerAt();
           item.scheduleBasis = "wall-clock";
           item.localTrigger = toLocalInput(item.triggerAt);
+          item.isFallbackTrigger = true;
         }
       }
       state.items.push(item);
@@ -2278,6 +2374,7 @@
       resetItemSheet();
       state.ui.tab = "home";
       render();
+      queueNativeReminderSync();
       if (needs) {
         toast("已收下 · 待整理", "去整理", () => openReviewSession());
       } else {
@@ -2290,13 +2387,18 @@
     };
 
     // Capture always succeeds — low confidence becomes NEEDS_REVIEW, not a blocker
+    // D15：仅当「含具体时间词却落到兜底」时才打断（极简选择）；其余静默收下
     if (!editing) {
+      lowConfUserPicked = false;
       const localP = parseChineseTime(raw);
-      if (localP.confidence === "low" || localP.confidence === "none") {
-        // keep default trigger if any; do not force modal
-        if (localP.trigger && !parseLocalInput($("#capTrigger").value)) {
-          $("#capTrigger").value = toLocalInput(localP.trigger);
-        }
+      const low = localP.confidence === "low" || localP.confidence === "none";
+      if (low && hasSpecificTimeWord(raw)) {
+        pendingFinishSave = finishSave;
+        openLowConfSheet(fallbackTriggerAt(), raw);
+        return;
+      }
+      if (low) {
+        // 不把解析器拍的 +7 天写回表单——兜底由 D17 统一处理
         finishSave(localP);
         return;
       }
@@ -2551,13 +2653,29 @@
   }
 
   function handleNativeNotificationAction(event) {
-    if (!event || !event.itemId) return;
+    if (!event) return;
+    // D20：待整理通知点击直达整理会话
+    if (event.itemId === "review-session" || event.managedKind === "review-session") {
+      if (event.action === "ack" || event.action === "snooze" || event.action === "done") {
+        // 快捷动作：完成=开始整理；稍后=30 分钟后再提
+        if (event.action === "done" || event.action === "ack") {
+          openReviewSession();
+        } else {
+          snoozeReview(30 * 60 * 1000, "30 分钟");
+        }
+        return;
+      }
+      openReviewSession();
+      return;
+    }
+    if (!event.itemId) return;
     const id = event.itemId;
     if (event.action === "ack") {
       ackItem(id, true);
       toast("已从通知确认看到");
       hideAlert();
     } else if (event.action === "snooze") {
+      // D11：快捷「稍后」固定 2 小时
       snoozeItem(id, Date.now() + 2 * 3600000);
       hideAlert();
     } else if (event.action === "done") {
@@ -2566,6 +2684,27 @@
     } else {
       openDetail(id);
     }
+  }
+
+  /** 全屏闹钟四动作（D11/D12）：ack / snooze2h / done / close（close 不写 ACK） */
+  function handleAlarmAction(data) {
+    const action = data && (data.action || data.actionId);
+    const itemId = data && (data.itemId || data.item_id);
+    if (!action) return;
+    if (action === "close") {
+      hideAlert();
+      return;
+    }
+    if (!itemId) return;
+    if (action === "ack") {
+      ackItem(itemId, true);
+      toast("已确认看到 · 仍保持未完成");
+    } else if (action === "snooze") {
+      snoozeItem(itemId, Date.now() + 2 * 3600000);
+    } else if (action === "done") {
+      completeItem(itemId);
+    }
+    queueNativeReminderSync();
   }
 
   function systemBridge() {
@@ -2887,46 +3026,7 @@
       "</div></div></div>";
   }
 
-  function showUpcomingOnHome() {
-    const now = Date.now();
-    const horizon = now + 7 * 24 * 60 * 60 * 1000;
-    const upcoming = state.items
-      .filter(it => {
-        if (!it || !it.id) return false;
-        if (it.status !== "waiting" && it.status !== "snoozed") return false;
-        if (!it.triggerAt) return false;
-        return it.triggerAt > now && it.triggerAt <= horizon;
-      })
-      .sort((a, b) => (a.triggerAt || 0) - (b.triggerAt || 0));
-
-    const host = $("#homeUpcoming");
-    if (!host) return;
-    if (!upcoming.length) {
-      host.innerHTML = "";
-      return;
-    }
-    const max = 6;
-    const shown = upcoming.slice(0, max);
-    const rest = upcoming.length - shown.length;
-    host.innerHTML = '<div class="sec"><div class="sec-head">' +
-      '<div class="sec-title">即将到来</div>' +
-      '<div class="sec-count">' + upcoming.length + "</div></div>" +
-      '<p style="font-size:0.78rem;color:var(--muted);margin:-4px 0 10px">未来 7 天未完成事项，按时间排序</p>' +
-      shown.map(it => renderUpcomingRow(it)).join("") +
-      (rest > 0
-        ? '<button class="soft-entry" id="gotoFuture"><span><strong>还有 ' + rest + " 件…</strong></span><span>去托管中 ›</span></button>"
-        : "") +
-      "</div>";
-    const goto = $("#gotoFuture");
-    if (goto) {
-      goto.addEventListener("click", () => {
-        state.ui.tab = "future";
-        state.ui.futureSeg = "waiting";
-        save();
-        render();
-      });
-    }
-  }
+  // D5：首页「即将到来」区块已删除（未来只在「未来」页查看）
 
   async function initializeNativeReminders() {
     if (!NativeReminders.isNativeAndroid || !NativeReminders.isNativeAndroid()) return;
@@ -2944,6 +3044,14 @@
                 save();
               }
               renderMe();
+            }
+          } catch (error) {}
+          // 消费全屏闹钟动作
+          try {
+            const bridge = systemBridge();
+            if (bridge && bridge.consumeAlarmAction) {
+              const r = await bridge.consumeAlarmAction();
+              if (r && r.action) handleAlarmAction(r);
             }
           } catch (error) {}
           refreshNativeScheduleBasis();
@@ -3017,6 +3125,8 @@
     } catch (e) {}
   }
 
+  let alertAutoHideTimer = null;
+
   function showAlert(it) {
     alertItem = it;
     $("#alertTitle").textContent =
@@ -3026,6 +3136,13 @@
     const b = $("#alertBanner");
     b.classList.toggle("crit", it.priority === "critical");
     b.classList.add("show");
+    // D14：挂 10 分钟自动收起（纯展示，不记账、不消耗提醒预算）
+    if (alertAutoHideTimer) clearTimeout(alertAutoHideTimer);
+    alertAutoHideTimer = setTimeout(() => {
+      if (alertItem && alertItem.id === it.id) {
+        hideAlert();
+      }
+    }, 10 * 60 * 1000);
     showSystemNotification({
       title: it.priority === "critical" ? "🚨 关键事项" :
              it.priority === "important" ? "☆ 重要事项" : "安心收件箱提醒",
@@ -3035,7 +3152,7 @@
       data: { itemId: it.id },
       actions: [
         { action: "ack", title: "我知道了" },
-        { action: "snooze", title: "稍后" },
+        { action: "snooze", title: "稍后 2 小时" },
         { action: "done", title: "完成" }
       ]
     });
@@ -3048,10 +3165,15 @@
   }
 
   function hideAlert() {
+    if (alertAutoHideTimer) {
+      clearTimeout(alertAutoHideTimer);
+      alertAutoHideTimer = null;
+    }
     $("#alertBanner").classList.remove("show");
     alertItem = null;
   }
 
+  /** D13：只有点 × 才算关闭（消耗 30 分钟抑制） */
   function dismissAlert() {
     if (alertItem) {
       const now = Date.now();
@@ -3110,6 +3232,7 @@
         quietEnd: state.settings.quietEnd,
         dailySummary: state.settings.dailySummary,
         privacyNotify: state.settings.privacyNotify,
+        defaultDeliveryMode: state.settings.defaultDeliveryMode || "notification",
         // do not export AI secrets
         ai: {
           enabled: !!(state.settings.ai && state.settings.ai.enabled),
@@ -3590,6 +3713,18 @@
     $("#swImp").addEventListener("click", () => {
       state.settings.importantRepeat = !state.settings.importantRepeat; save(); renderMe();
     });
+    // D25：默认提醒方式（只影响之后录入）
+    $$("#deliveryModeSeg .seg-item").forEach(btn => {
+      btn.addEventListener("click", () => {
+        state.settings.defaultDeliveryMode = btn.dataset.mode === "alarm" ? "alarm" : "notification";
+        save();
+        renderMe();
+        queueNativeReminderSync();
+        toast(state.settings.defaultDeliveryMode === "alarm"
+          ? "默认提醒方式：闹钟（仅影响之后录入）"
+          : "默认提醒方式：系统通知（仅影响之后录入）");
+      });
+    });
     $("#swSummary").addEventListener("click", () => {
       state.settings.dailySummary = !state.settings.dailySummary;
       if (state.settings.dailySummary) state.settings.lastSummaryAt = 0;
@@ -3707,12 +3842,8 @@
       hideAlert();
       openSheet("sheetSnooze");
     });
-    $("#app").addEventListener("click", e => {
-      if (!alertItem) return;
-      if (e.target.closest("#alertBanner")) return;
-      if (e.target.closest(".sheet") || e.target.closest(".backdrop")) return;
-      dismissAlert();
-    });
+    // D13：只有点 × 才关闭；点击页面其他区域不关闭（不再绑定 outside dismiss）
+    // 已移除：$("#app") click → dismissAlert
   }
 
   /* ---------- init ---------- */
@@ -3757,6 +3888,10 @@
         const data = event.data || {};
         if (data.type !== "notification-action") return;
         const id = data.itemId;
+        if (id === "review-session" || data.tag === "review-session") {
+          openReviewSession();
+          return;
+        }
         if (!id) return;
         if (data.action === "ack") {
           ackItem(id, true);
@@ -3766,6 +3901,7 @@
           completeItem(id);
           hideAlert();
         } else if (data.action === "snooze") {
+          // D11：快捷稍后固定 2 小时
           snoozeItem(id, Date.now() + 2 * 3600000);
           hideAlert();
         } else {
@@ -3825,6 +3961,17 @@
     if (action === "capture") {
       setTimeout(() => openCapture(), 200);
     }
+    // D20：通知/深链直达整理会话
+    if (action === "review" || params.get("itemId") === "review-session") {
+      state.ui.tab = "home";
+      setTimeout(() => openReviewSession(), 250);
+    }
+    // 全屏闹钟动作回传
+    const alarmAction = params.get("alarmAction");
+    if (alarmAction) {
+      handleAlarmAction({ action: alarmAction, itemId: params.get("alarmItem") });
+      try { history.replaceState(null, "", location.pathname); } catch (e) {}
+    }
   }
 
   async function init() {
@@ -3851,6 +3998,11 @@
       save();
     }
     await initializeNativeReminders();
+    // D11/D12：监听全屏闹钟动作
+    if (NativeReminders.onAlarmAction) {
+      NativeReminders.onAlarmAction(handleAlarmAction);
+    }
+    // 兼容深链：?alarmAction=&alarmItem=
     maybePromptAndroidNotify();
     maybeReviewSession();
     scheduleNextReviewAlarm();
@@ -3900,6 +4052,11 @@
       reopenItem,
       restoreItem,
       seed,
+      hasSpecificTimeWord,
+      fallbackTriggerAt,
+      resolveDeliveryMode,
+      ensureReviewSettings,
+      inReviewHighlight,
       get state() { return state; },
       save,
       load,

@@ -19,6 +19,8 @@ public class AlarmTestReceiver extends BroadcastReceiver {
   public static final String EXTRA_TITLE = "title";
   public static final String EXTRA_BODY = "body";
   public static final String EXTRA_FULL_SCREEN = "fullScreen";
+  public static final String EXTRA_ITEM_ID = "itemId";
+  public static final String EXTRA_LEVEL = "level";
   public static final String CHANNEL_ID = "attention-alarm-v3";
   public static final String CHANNEL_NAME = "提醒闹钟";
 
@@ -28,6 +30,9 @@ public class AlarmTestReceiver extends BroadcastReceiver {
     int id = intent.getIntExtra(EXTRA_ID, 90002);
     String title = intent.getStringExtra(EXTRA_TITLE);
     String body = intent.getStringExtra(EXTRA_BODY);
+    String itemId = intent.getStringExtra(EXTRA_ITEM_ID);
+    String level = intent.getStringExtra(EXTRA_LEVEL);
+    if (itemId == null) itemId = "";
     boolean fullScreen = intent.getBooleanExtra(EXTRA_FULL_SCREEN, true);
     if (title == null || title.isEmpty()) title = "安心收件箱";
     if (body == null || body.isEmpty()) body = "有一条事项需要你确认";
@@ -53,6 +58,8 @@ public class AlarmTestReceiver extends BroadcastReceiver {
           activity.putExtra(AlarmActivity.EXTRA_ID, id);
           activity.putExtra(AlarmActivity.EXTRA_TITLE, title);
           activity.putExtra(AlarmActivity.EXTRA_BODY, body);
+          activity.putExtra(AlarmActivity.EXTRA_ITEM_ID, itemId);
+          if (level != null) activity.putExtra(AlarmActivity.EXTRA_LEVEL, level);
           context.startActivity(activity);
           launched = true;
         } catch (Exception ignored) {}
@@ -89,6 +96,8 @@ public class AlarmTestReceiver extends BroadcastReceiver {
       alarmUi.putExtra(AlarmActivity.EXTRA_ID, id);
       alarmUi.putExtra(AlarmActivity.EXTRA_TITLE, title);
       alarmUi.putExtra(AlarmActivity.EXTRA_BODY, body);
+      alarmUi.putExtra(AlarmActivity.EXTRA_ITEM_ID, itemId);
+      if (level != null) alarmUi.putExtra(AlarmActivity.EXTRA_LEVEL, level);
       PendingIntent contentPi = PendingIntent.getActivity(context, id, alarmUi, flags);
       builder.setContentIntent(contentPi);
       if (fullScreen) builder.setFullScreenIntent(contentPi, true);
@@ -104,6 +113,7 @@ public class AlarmTestReceiver extends BroadcastReceiver {
             main.putExtra("fromAlarm", true);
             main.putExtra("alarmTitle", title);
             main.putExtra("alarmBody", body);
+            main.putExtra("alarmItemId", itemId);
             context.startActivity(main);
           }
         } catch (Exception ignored) {}

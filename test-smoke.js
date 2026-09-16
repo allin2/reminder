@@ -244,6 +244,57 @@ section("3. 稍后 / 再提醒 / 恢复");
   app.restoreItem(item.id);
   ok("restore 回到 waiting", item.status === "waiting");
   ok("restore 清除 completedAt", !item.completedAt);
+  ok("restore 不设 trigger_at（D23）", !item.triggerAt);
+}
+
+/* ---------- 3b. 决策落地：首页 / 兜底 / 投递方式 ---------- */
+section("3b. 决策落地 D5/D7/D17/D23/D25");
+{
+  // D17：NEEDS_REVIEW + Review 开启 → promoteDue 跳过
+  const nr = app.makeItem({
+    title: "模糊记录",
+    status: "waiting",
+    review_status: "NEEDS_REVIEW",
+    triggerAt: Date.now() - 1000,
+    isFallbackTrigger: true
+  });
+  app.state.items.push(nr);
+  app.promoteDue();
+  ok("D17 NEEDS_REVIEW 不进 due", nr.status === "waiting", nr.status);
+
+  // D17：Review 关闭 → 正常晋升
+  const wasEnabled = app.state.settings.review.enabled;
+  app.state.settings.review.enabled = false;
+  nr.status = "waiting";
+  nr.triggerAt = Date.now() - 1000;
+  app.promoteDue();
+  ok("D17 Review 关闭后正常 due", nr.status === "due", nr.status);
+  app.state.settings.review.enabled = wasEnabled;
+
+  // D25：有标记 → delivery_mode=alarm
+  const crit = app.makeItem({ title: "关键", priority: "critical", triggerAt: Date.now() + 3600000 });
+  ok("D25 关键档 delivery_mode=alarm", crit.delivery_mode === "alarm", crit.delivery_mode);
+
+  // D25：未标记取全局默认
+  app.state.settings.defaultDeliveryMode = "notification";
+  const normal = app.makeItem({ title: "普通", priority: "normal", triggerAt: Date.now() + 3600000 });
+  ok("D25 未标记取默认 notification", normal.delivery_mode === "notification", normal.delivery_mode);
+
+  app.state.settings.defaultDeliveryMode = "alarm";
+  const normalAlarm = app.makeItem({ title: "普通闹钟", priority: "normal", triggerAt: Date.now() + 3600000 });
+  ok("D25 默认 alarm 时未标记为 alarm", normalAlarm.delivery_mode === "alarm", normalAlarm.delivery_mode);
+  app.state.settings.defaultDeliveryMode = "notification";
+
+  // D22：补提醒参数 60min × 2
+  const rs = app.state.settings.review;
+  ok("D22 followupMs=60min", rs.followupMs === 60 * 60 * 1000, rs.followupMs);
+  ok("D22 maxFollowups=2", rs.maxFollowups === 2, rs.maxFollowups);
+
+  // hasSpecificTimeWord（D15）
+  if (app.hasSpecificTimeWord) {
+    ok("D15 识别具体时间词", app.hasSpecificTimeWord("下周三给王工回电") === true);
+    ok("D15 模糊词不算具体时间", app.hasSpecificTimeWord("过阵子看看那个") === false);
+  }
 }
 
 /* ---------- 4. Deadline protection ---------- */

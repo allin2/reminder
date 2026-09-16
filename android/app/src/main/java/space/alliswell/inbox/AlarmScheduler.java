@@ -10,6 +10,10 @@ public final class AlarmScheduler {
   private AlarmScheduler() {}
 
   public static void schedule(Context context, long triggerAt, String title, String body, int id) {
+    schedule(context, triggerAt, title, body, id, "", "🚨 关键");
+  }
+
+  public static void schedule(Context context, long triggerAt, String title, String body, int id, String itemId, String level) {
     AlarmManager am = context.getSystemService(AlarmManager.class);
     if (am == null) return;
     if (triggerAt < System.currentTimeMillis() + 500) {
@@ -22,6 +26,8 @@ public final class AlarmScheduler {
     intent.putExtra(AlarmTestReceiver.EXTRA_TITLE, title);
     intent.putExtra(AlarmTestReceiver.EXTRA_BODY, body);
     intent.putExtra(AlarmTestReceiver.EXTRA_FULL_SCREEN, true);
+    intent.putExtra(AlarmTestReceiver.EXTRA_ITEM_ID, itemId == null ? "" : itemId);
+    if (level != null) intent.putExtra(AlarmTestReceiver.EXTRA_LEVEL, level);
 
     int flags = PendingIntent.FLAG_UPDATE_CURRENT;
     if (Build.VERSION.SDK_INT >= 23) flags |= PendingIntent.FLAG_IMMUTABLE;

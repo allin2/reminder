@@ -185,6 +185,18 @@ public class SystemBridgePlugin extends Plugin {
     }
   }
 
+  private String callItemId(PluginCall call) {
+    String itemId = call.getString("itemId");
+    if (itemId == null || itemId.isEmpty()) itemId = call.getString("item_id");
+    return itemId == null ? "" : itemId;
+  }
+
+  private String callLevel(PluginCall call) {
+    String level = call.getString("level");
+    if (level == null || level.isEmpty()) level = "🚨 关键";
+    return level;
+  }
+
   @PluginMethod
   public void scheduleAlarm(PluginCall call) {
     try {
@@ -193,7 +205,7 @@ public class SystemBridgePlugin extends Plugin {
       String title = call.getString("title", "安心收件箱闹钟测试");
       String body = call.getString("body", "这是定时闹钟提醒测试");
       int id = call.getInt("id", 90002);
-      JSObject r = scheduleAlarmInternal(delayMs, title, body, id);
+      JSObject r = scheduleAlarmInternal(delayMs, title, body, id, callItemId(call), callLevel(call));
       call.resolve(r);
     } catch (Exception e) {
       call.reject("设置闹钟失败: " + e.getMessage(), e);
@@ -209,14 +221,36 @@ public class SystemBridgePlugin extends Plugin {
       String body = call.getString("body", "有一条事项需要你确认");
       int id = call.getInt("id", 90100);
       long delayMs = Math.max(500L, at - System.currentTimeMillis());
-      JSObject r = scheduleAlarmInternal(delayMs, title, body, id);
+      JSObject r = scheduleAlarmInternal(delayMs, title, body, id, callItemId(call), callLevel(call));
       call.resolve(r);
     } catch (Exception e) {
       call.reject("设置定时失败: " + e.getMessage(), e);
     }
   }
 
-  private JSObject scheduleAlarmInternal(long delayMs, String title, String body, int id) throws Exception {
+  /** JS 轮询消费全屏闹钟动作（D11/D12） */
+  @PluginMethod
+  public void consumeAlarmAction(PluginCall call) {
+    try {
+      android.content.SharedPreferences prefs =
+        getContext().getSharedPreferences(AlarmActivity.PREFS, android.content.Context.MODE_PRIVATE);
+      String action = prefs.getString(AlarmActivity.KEY_ACTION, null);
+      String itemId = prefs.getString(AlarmActivity.KEY_ITEM_ID, "");
+      JSObject r = new JSObject();
+      if (action != null) {
+        prefs.edit().remove(AlarmActivity.KEY_ACTION).remove(AlarmActivity.KEY_ITEM_ID).apply();
+        r.put("action", action);
+        r.put("itemId", itemId == null ? "" : itemId);
+      } else {
+        r.put("action", "");
+      }
+      call.resolve(r);
+    } catch (Exception e) {
+      call.reject("读取闹钟动作失败", e);
+    }
+  }
+
+  private JSObject scheduleAlarmInternal(long delayMs, String title, String body, int id, String itemId, String level) throws Exception {
     ensureChannel();
     if (delayMs < 500) delayMs = 500;
     long triggerAt = System.currentTimeMillis() + delayMs;
@@ -232,6 +266,8 @@ public class SystemBridgePlugin extends Plugin {
     intent.putExtra(AlarmTestReceiver.EXTRA_TITLE, title);
     intent.putExtra(AlarmTestReceiver.EXTRA_BODY, body);
     intent.putExtra(AlarmTestReceiver.EXTRA_FULL_SCREEN, true);
+    intent.putExtra(AlarmTestReceiver.EXTRA_ITEM_ID, itemId == null ? "" : itemId);
+    if (level != null) intent.putExtra(AlarmTestReceiver.EXTRA_LEVEL, level);
     int flags = PendingIntent.FLAG_UPDATE_CURRENT;
     if (Build.VERSION.SDK_INT >= 23) flags |= PendingIntent.FLAG_IMMUTABLE;
     PendingIntent pi = PendingIntent.getBroadcast(getContext(), id, intent, flags);

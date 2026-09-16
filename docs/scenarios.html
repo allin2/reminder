@@ -1,0 +1,2014 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>安心收件箱 · 全场景演示板</title>
+<style>
+:root{
+  --paper:#f3f4f1; --paper-elev:#fafaf8; --card:#ffffff;
+  --ink:#14181d; --ink-2:#3a424c; --muted:#6f7a86;
+  --line:#e2e7e3; --line-strong:#c8d2cc;
+  --signal:#1b6b4a; --signal-soft:#e4f0ea;
+  --attention:#9a6b12; --attention-soft:#f5ecd6;
+  --critical:#8f3a3a; --critical-soft:#f6e8e8;
+  --future:#3d5a80; --future-soft:#e6edf5;
+  --radius:14px; --radius-sm:10px;
+  --font:system-ui,-apple-system,"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+  --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+  --shadow:0 8px 28px rgba(20,24,29,.07);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:120px}
+body{
+  margin:0;background:var(--paper);color:var(--ink);
+  font-family:var(--font);font-size:15px;line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+}
+a{color:var(--signal)}
+code{font-family:var(--mono);font-size:.86em;background:#eceee9;padding:1px 5px;border-radius:4px}
+
+/* ---------- topbar ---------- */
+.topbar{
+  position:sticky;top:0;z-index:50;background:rgba(243,244,241,.94);
+  backdrop-filter:blur(12px);border-bottom:1px solid var(--line);
+}
+.topbar-inner{max-width:1300px;margin:0 auto;padding:10px 20px;display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:10px;font-weight:650;letter-spacing:-.01em}
+.brand .dot{width:9px;height:9px;border-radius:50%;background:var(--signal)}
+.brand small{font-weight:400;color:var(--muted);font-size:.75rem}
+.spacer{flex:1}
+.tool{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.search{
+  border:1px solid var(--line-strong);background:var(--card);border-radius:999px;
+  padding:6px 14px;font-size:.83rem;min-width:190px;outline:none;font-family:var(--font);
+}
+.search:focus{border-color:var(--signal)}
+.seg{display:flex;border:1px solid var(--line-strong);border-radius:999px;overflow:hidden;background:var(--card)}
+.seg button{
+  border:0;background:none;padding:6px 12px;font-size:.78rem;color:var(--ink-2);
+  cursor:pointer;font-family:var(--font);
+}
+.seg button+button{border-left:1px solid var(--line)}
+.seg button.on{background:var(--signal);color:#fff}
+.jump{display:flex;gap:5px;flex-wrap:wrap}
+.jump a{
+  text-decoration:none;font-size:.74rem;padding:4px 9px;border-radius:999px;
+  border:1px solid var(--line-strong);color:var(--ink-2);background:var(--card);
+}
+.jump a:hover{border-color:var(--signal);color:var(--signal)}
+
+/* ---------- layout ---------- */
+.wrap{max-width:1300px;margin:0 auto;padding:24px 20px 100px}
+.hero{
+  background:var(--card);border:1px solid var(--line);border-radius:18px;
+  padding:26px 28px;box-shadow:var(--shadow);margin-bottom:22px;
+}
+.hero h1{margin:0 0 6px;font-size:1.5rem;letter-spacing:-.02em}
+.hero .sub{color:var(--muted);font-size:.9rem;margin:0 0 16px}
+.tagrow{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px}
+.tag{
+  font-size:.72rem;padding:3px 9px;border-radius:999px;border:1px solid var(--line-strong);
+  color:var(--ink-2);background:var(--paper-elev);
+}
+.tag.sig{border-color:#bcd9cb;background:var(--signal-soft);color:#14573b}
+.tag.warn{border-color:#e3d2a6;background:var(--attention-soft);color:#7a540e}
+.tag.crit{border-color:#e3c3c3;background:var(--critical-soft);color:#7a3030}
+.tag.fut{border-color:#c6d3e4;background:var(--future-soft);color:#32496b}
+
+.callout{
+  border-left:3px solid var(--attention);background:var(--attention-soft);
+  padding:12px 16px;border-radius:0 10px 10px 0;font-size:.86rem;line-height:1.65;color:#5c4110;
+}
+.callout.danger{border-color:var(--critical);background:var(--critical-soft);color:#6d2c2c}
+.callout.ok{border-color:var(--signal);background:var(--signal-soft);color:#14573b}
+.callout b{font-weight:650}
+
+/* ---------- sections ---------- */
+.sec-head{
+  display:flex;align-items:baseline;gap:12px;margin:34px 0 12px;
+  padding-bottom:8px;border-bottom:2px solid var(--ink);
+}
+.sec-head h2{margin:0;font-size:1.05rem;letter-spacing:-.01em}
+.sec-head .cnt{font-size:.75rem;color:var(--muted);font-family:var(--mono)}
+.sec-head .desc{font-size:.8rem;color:var(--muted);margin-left:auto;text-align:right}
+
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(430px,1fr));gap:14px;align-items:start}
+.grid.wide{grid-template-columns:1fr}
+
+.case{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:14px 16px 16px;scroll-margin-top:130px;
+}
+.case.done{border-color:#a8cdb9;background:#f7fbf8}
+.case-grid{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:14px;align-items:start}
+.case-main{min-width:0}
+.case-top{display:flex;align-items:center;gap:8px;margin-bottom:8px;flex-wrap:wrap}
+.cid{
+  font-family:var(--mono);font-size:.72rem;font-weight:700;letter-spacing:.02em;
+  padding:2px 7px;border-radius:6px;background:var(--ink);color:#fff;
+}
+.case-title{font-weight:650;font-size:.92rem;letter-spacing:-.005em}
+.cov{font-size:.68rem;padding:2px 7px;border-radius:999px;border:1px solid var(--line-strong);color:var(--muted);background:var(--paper-elev);white-space:nowrap}
+.cov.y{border-color:#a8cdb9;background:var(--signal-soft);color:#14573b}
+.cov.p{border-color:#e3d2a6;background:var(--attention-soft);color:#7a540e}
+.cov.n{border-color:#c6d3e4;background:var(--future-soft);color:#32496b}
+.row{display:flex;gap:8px;font-size:.83rem;line-height:1.6;margin-bottom:5px}
+.row .k{
+  flex:0 0 42px;color:var(--muted);font-size:.76rem;padding-top:1px;
+}
+.row .v{flex:1;min-width:0;color:var(--ink-2)}
+.row .v strong{color:var(--ink);font-weight:600}
+.row.exp .v{color:var(--ink)}
+.basis{display:flex;gap:4px;flex-wrap:wrap;margin-top:8px}
+.basis span{
+  font-size:.68rem;font-family:var(--mono);padding:1px 6px;border-radius:4px;
+  background:#eef0ec;color:var(--muted);
+}
+.tick{
+  width:22px;height:22px;border-radius:6px;border:1.5px solid var(--line-strong);
+  background:var(--card);cursor:pointer;display:grid;place-items:center;
+  font-size:.72rem;color:transparent;user-select:none;
+}
+.tick.on{background:var(--signal);border-color:var(--signal);color:#fff}
+.vis{margin-top:12px;padding-top:12px;border-top:1px dashed var(--line)}
+.vis-cap{font-size:.7rem;color:var(--muted);margin-bottom:8px;letter-spacing:.02em}
+
+/* ---------- phone mockup ---------- */
+.mock{display:flex;gap:14px;flex-wrap:wrap;align-items:flex-start}
+.phone{
+  width:232px;flex:0 0 auto;border:1px solid var(--line-strong);border-radius:20px;
+  background:var(--card);padding:6px;box-shadow:0 4px 16px rgba(20,24,29,.06);
+}
+.phone.dark{background:#20242a;border-color:#333a44}
+.pbar{
+  display:flex;justify-content:space-between;align-items:center;
+  font-size:.6rem;color:var(--muted);padding:2px 8px 6px;font-family:var(--mono);
+}
+.pbody{background:var(--paper);border-radius:15px;padding:10px 10px 8px;min-height:150px;position:relative;overflow:hidden}
+.pbody.plain{background:var(--card)}
+.phead{margin-bottom:9px}
+.phead h4{margin:0;font-size:.82rem;font-weight:650;letter-spacing:-.01em}
+.phead p{margin:1px 0 0;font-size:.66rem;color:var(--muted)}
+.pnav{
+  display:flex;justify-content:space-around;border-top:1px solid var(--line);
+  margin-top:10px;padding-top:6px;font-size:.6rem;color:var(--muted);position:relative;
+}
+.pnav b{font-weight:600;color:var(--ink);position:relative}
+.pnav b i{
+  position:absolute;top:-4px;right:-11px;background:var(--critical);color:#fff;
+  font-style:normal;font-size:.5rem;min-width:13px;height:13px;border-radius:7px;
+  display:grid;place-items:center;padding:0 3px;font-weight:700;
+}
+.ms{font-size:.6rem;color:var(--muted);margin:7px 0 5px;font-weight:600;letter-spacing:.02em}
+.ms em{font-style:normal;font-family:var(--mono);font-weight:400;margin-left:5px}
+.item{
+  background:var(--card);border:1px solid var(--line);border-radius:9px;
+  padding:7px 9px;margin-bottom:5px;border-left:3px solid var(--line-strong);
+}
+.item .it{font-size:.74rem;font-weight:600;line-height:1.4}
+.item .im{font-size:.62rem;color:var(--muted);margin-top:2px}
+.item.warn{border-left-color:var(--attention)}
+.item.crit{border-left-color:var(--critical)}
+.item.vital{border-left-color:var(--signal)}
+.item.ghost{opacity:.55;border-style:dashed}
+.weakline{
+  font-size:.7rem;color:var(--muted);padding:6px 2px;border-bottom:1px solid var(--line);
+  display:flex;justify-content:space-between;
+}
+.strongline{
+  font-size:.74rem;font-weight:650;color:var(--attention);background:var(--attention-soft);
+  border:1px solid #e3d2a6;border-radius:8px;padding:6px 9px;margin-bottom:8px;
+  display:flex;justify-content:space-between;align-items:center;
+}
+.foldline{
+  font-size:.72rem;color:var(--ink-2);background:var(--card);border:1px solid var(--line);
+  border-radius:8px;padding:6px 9px;display:flex;justify-content:space-between;
+}
+.foldline b{font-weight:650}
+.emptybox{text-align:center;padding:16px 8px;color:var(--muted);font-size:.7rem}
+.emptybox .mk{font-size:1.1rem;color:var(--signal);margin-bottom:3px}
+.emptybox strong{display:block;color:var(--ink);font-size:.8rem;font-weight:650}
+.cnt{
+  font-family:var(--mono);font-size:.58rem;color:var(--muted);
+  background:var(--paper);border:1px solid var(--line);border-radius:99px;padding:0 5px;
+}
+
+/* ---------- banner ---------- */
+.banner{
+  background:var(--card);border:1px solid var(--line-strong);border-left:4px solid var(--attention);
+  border-radius:11px;padding:9px 11px;position:relative;box-shadow:0 6px 18px rgba(20,24,29,.1);
+}
+.banner.crit{border-left-color:var(--critical)}
+.banner.vital{border-left-color:var(--signal)}
+.banner .bt{font-size:.76rem;font-weight:650;padding-right:16px}
+.banner .bm{font-size:.62rem;color:var(--muted);margin-top:2px}
+.banner .bx{
+  position:absolute;top:7px;right:8px;width:17px;height:17px;border-radius:50%;
+  border:1px solid var(--line-strong);display:grid;place-items:center;
+  font-size:.66rem;color:var(--muted);background:var(--paper-elev);cursor:default;
+}
+.acts{display:flex;gap:5px;margin-top:8px;flex-wrap:wrap}
+.acts span{
+  font-size:.64rem;padding:3px 9px;border-radius:99px;border:1px solid var(--line-strong);
+  color:var(--ink-2);background:var(--paper-elev);
+}
+.acts span.pri{background:var(--signal);border-color:var(--signal);color:#fff;font-weight:600}
+.acts span.gh{color:var(--muted);border-style:dashed}
+.dim{opacity:.32;filter:grayscale(.35);margin-top:10px}
+
+/* ---------- alarm ---------- */
+.alarm{
+  background:#232323;border-radius:12px;padding:16px 14px;color:#f2f2f2;
+  border:1px solid #3a3a3a;position:relative;overflow:hidden;
+}
+.alarm::after{
+  content:"";position:absolute;inset:-40% -10% auto -10%;height:120px;
+  background:radial-gradient(closest-side,rgba(220,90,90,.32),transparent);
+}
+.alarm .at{position:relative;font-size:.86rem;font-weight:650}
+.alarm .am{position:relative;font-size:.64rem;color:#a9a9a9;margin-top:3px}
+.alarm .acts{margin-top:14px;position:relative}
+.alarm .acts span{background:#2e2e2e;border-color:#454545;color:#eaeaea}
+.alarm .acts span.pri{background:#c85a5a;border-color:#c85a5a;color:#fff}
+.alarm .acts span.gh{color:#9c9c9c;border-style:dashed}
+.alarm .wave{
+  position:relative;margin-top:12px;display:flex;gap:2px;align-items:flex-end;height:20px;
+}
+.alarm .wave i{width:3px;background:#c85a5a;border-radius:2px;display:block}
+
+/* ---------- notification ---------- */
+.notif{
+  background:var(--card);border:1px solid var(--line-strong);border-radius:11px;
+  padding:9px 11px;box-shadow:0 2px 10px rgba(20,24,29,.06);
+}
+.notif .nh{display:flex;align-items:center;gap:6px;font-size:.6rem;color:var(--muted)}
+.notif .nh .ap{width:13px;height:13px;border-radius:4px;background:var(--signal)}
+.notif .nt{font-size:.74rem;font-weight:600;margin-top:4px}
+.notif .nb{font-size:.66rem;color:var(--muted)}
+.sysbar{
+  background:#e9ebe6;border-radius:99px;height:16px;margin-bottom:10px;
+  display:flex;align-items:center;justify-content:space-between;padding:0 8px;
+  font-size:.55rem;color:var(--muted);font-family:var(--mono);
+}
+
+/* ---------- generic visual blocks ---------- */
+.tl{display:flex;flex-direction:column;gap:0}
+.tl-item{display:flex;gap:9px;position:relative;padding-bottom:11px}
+.tl-item:last-child{padding-bottom:0}
+.tl-item::before{
+  content:"";position:absolute;left:6px;top:15px;bottom:0;width:1px;background:var(--line-strong);
+}
+.tl-item:last-child::before{display:none}
+.tl-dot{
+  width:13px;height:13px;border-radius:50%;flex:0 0 auto;margin-top:3px;
+  border:2px solid var(--line-strong);background:var(--card);z-index:1;
+}
+.tl-dot.alarm{border-color:var(--critical);background:var(--critical)}
+.tl-dot.notif{border-color:var(--attention);background:var(--attention-soft)}
+.tl-dot.ok{border-color:var(--signal);background:var(--signal-soft)}
+.tl-dot.none{border-style:dashed}
+.tl-body{min-width:0;flex:1}
+.tl-t{font-family:var(--mono);font-size:.66rem;color:var(--muted)}
+.tl-l{font-size:.74rem;line-height:1.5}
+.tl-l b{font-weight:650}
+.tl-l small{display:block;color:var(--muted);font-size:.66rem;margin-top:1px}
+
+.flow{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.flow .n{
+  font-size:.68rem;padding:4px 9px;border-radius:8px;border:1px solid var(--line-strong);
+  background:var(--paper-elev);color:var(--ink-2);line-height:1.35;text-align:center;
+}
+.flow .n b{display:block;font-size:.66rem;font-weight:650;color:var(--ink)}
+.flow .n.hi{background:var(--signal-soft);border-color:#a8cdb9;color:#14573b}
+.flow .n.warn{background:var(--attention-soft);border-color:#e3d2a6;color:#7a540e}
+.flow .n.crit{background:var(--critical-soft);border-color:#e3c3c3;color:#7a3030}
+.flow .n.fut{background:var(--future-soft);border-color:#c6d3e4;color:#32496b}
+.flow .n.dead{opacity:.45;text-decoration:line-through}
+.flow .ar{color:var(--line-strong);font-size:.72rem}
+
+table.mini{width:100%;border-collapse:collapse;font-size:.73rem}
+table.mini th{
+  text-align:left;font-weight:600;color:var(--muted);font-size:.66rem;
+  padding:5px 7px;border-bottom:1px solid var(--line-strong);white-space:nowrap;
+}
+table.mini td{padding:5px 7px;border-bottom:1px solid var(--line);vertical-align:top;color:var(--ink-2)}
+table.mini tr:last-child td{border-bottom:0}
+table.mini td b{color:var(--ink);font-weight:650}
+table.mini tr.hl td{background:var(--signal-soft)}
+table.mini tr.hw td{background:var(--attention-soft)}
+table.mini tr.hc td{background:var(--critical-soft)}
+table.mini tr.mut td{opacity:.5}
+.yes{color:var(--signal);font-weight:700}
+.no{color:var(--critical);font-weight:700}
+
+.pans{display:flex;gap:10px;flex-wrap:wrap}
+.pan{
+  flex:1 1 165px;min-width:165px;border:1px solid var(--line);border-radius:10px;
+  padding:9px 11px;background:var(--paper-elev);
+}
+.pan h5{margin:0 0 5px;font-size:.7rem;font-weight:650;color:var(--muted);letter-spacing:.02em}
+.pan.now{border-color:#e3c3c3;background:var(--critical-soft)}
+.pan.next{border-color:#a8cdb9;background:var(--signal-soft)}
+.pan p{margin:0 0 5px;font-size:.73rem;line-height:1.55}
+.pan p:last-child{margin-bottom:0}
+.pan ul{margin:0;padding-left:15px;font-size:.73rem;line-height:1.6}
+
+ul.checks{margin:0;padding:0;list-style:none;font-size:.75rem;line-height:1.65}
+ul.checks li{display:flex;gap:7px;padding:3px 0}
+ul.checks li::before{content:"·";color:var(--muted)}
+ul.checks li.y::before{content:"✓";color:var(--signal);font-weight:700}
+ul.checks li.n::before{content:"✗";color:var(--critical);font-weight:700}
+
+.kv{display:flex;flex-wrap:wrap;gap:5px}
+.kv span{
+  font-size:.68rem;padding:3px 8px;border-radius:999px;background:var(--paper-elev);
+  border:1px solid var(--line-strong);color:var(--ink-2);
+}
+.note{font-size:.71rem;color:var(--muted);margin-top:8px;line-height:1.6}
+
+.legend{
+  display:flex;gap:16px;flex-wrap:wrap;font-size:.75rem;color:var(--muted);
+  padding:12px 16px;background:var(--paper-elev);border:1px solid var(--line);
+  border-radius:12px;margin-bottom:20px;
+}
+.legend b{color:var(--ink)}
+.hidden{display:none !important}
+footer{
+  margin-top:50px;padding-top:18px;border-top:1px solid var(--line);
+  font-size:.75rem;color:var(--muted);line-height:1.8;
+}
+/* ---------- segmented / view toggle / chips ---------- */
+.segbar{display:flex;background:#e9ebe6;border-radius:9px;padding:2px;margin-bottom:8px}
+.segbar span{flex:1;text-align:center;font-size:.68rem;padding:4px 0;border-radius:7px;color:var(--muted)}
+.segbar span.on{background:var(--card);color:var(--ink);font-weight:650;box-shadow:0 1px 3px rgba(20,24,29,.08)}
+.viewbar{display:flex;gap:5px;margin-bottom:8px}
+.viewbar span{font-size:.64rem;padding:3px 10px;border-radius:99px;border:1px solid var(--line-strong);background:var(--paper-elev);color:var(--ink-2)}
+.viewbar span.on{background:var(--ink);border-color:var(--ink);color:#fff;font-weight:600}
+.chipsmini{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:8px}
+.chipsmini span{font-size:.6rem;padding:2px 7px;border-radius:99px;border:1px solid var(--line);color:var(--muted)}
+.chipsmini span.on{border-color:var(--signal);color:var(--signal);font-weight:600;background:var(--signal-soft)}
+
+/* ---------- date group header ---------- */
+.dhead{display:flex;align-items:baseline;gap:7px;margin:9px 0 5px}
+.dhead b{font-size:.68rem;font-weight:650;color:var(--ink);white-space:nowrap}
+.dhead small{font-size:.58rem;color:var(--muted);font-family:var(--mono);white-space:nowrap}
+.dhead::after{content:"";flex:1;height:1px;background:var(--line)}
+
+/* ---------- list rows (review / future share this) ---------- */
+.rrow{
+  background:var(--card);border:1px solid var(--line);border-radius:9px;
+  padding:7px 9px;margin-bottom:5px;display:flex;gap:8px;align-items:flex-start;
+}
+.rrow.warn{border-left:3px solid var(--attention)}
+.rrow .rk{width:14px;height:14px;border-radius:4px;border:1.5px solid var(--line-strong);flex:0 0 auto;margin-top:2px}
+.rrow .rk.on{background:var(--signal);border-color:var(--signal)}
+.rrow .rmain{min-width:0;flex:1}
+.rrow .rt{font-size:.73rem;font-weight:600;line-height:1.4}
+.rrow .rm{font-size:.61rem;color:var(--muted);margin-top:2px;line-height:1.5}
+.rrow .rm b{color:var(--attention);font-weight:650}
+.rrow .rm i{font-style:normal;color:var(--future)}
+.rrow .rwhy{display:flex;gap:4px;flex-wrap:wrap;margin-top:4px}
+.rrow .rwhy span{font-size:.56rem;padding:1px 6px;border-radius:99px;background:var(--attention-soft);border:1px solid #e3d2a6;color:#7a540e}
+.rrow .rgo{font-size:.72rem;color:var(--line-strong);align-self:center}
+
+.primarybtn{background:var(--signal);color:#fff;border-radius:10px;text-align:center;font-size:.72rem;font-weight:650;padding:8px;margin-top:8px}
+.ghostbtn{border:1px solid var(--line-strong);border-radius:10px;text-align:center;font-size:.66rem;padding:6px;margin-top:5px;color:var(--muted)}
+
+/* ---------- mini calendar ---------- */
+.calmini{background:var(--card);border:1px solid var(--line);border-radius:9px;padding:8px}
+.calmini .ch{display:flex;justify-content:space-between;font-size:.66rem;font-weight:650;margin-bottom:6px}
+.calmini .ch span{color:var(--muted);font-weight:400;font-family:var(--mono);font-size:.58rem}
+.calmini .cg{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;text-align:center}
+.calmini .cg i{font-size:.55rem;color:var(--muted);font-style:normal}
+.calmini .cg b{font-size:.6rem;font-weight:500;padding:3px 0;border-radius:5px;display:block;color:var(--ink-2)}
+.calmini .cg b.has{background:var(--future-soft);color:var(--future);font-weight:650}
+.calmini .cg b.due{background:var(--critical-soft);color:var(--critical);font-weight:700}
+.calmini .cg b.sel{outline:1.5px solid var(--ink)}
+.calmini .cg b.tod{text-decoration:underline;text-underline-offset:2px}
+.calmini .cg b.mut{color:#c9cfca;font-weight:400}
+
+@media (max-width:960px){
+  .grid{grid-template-columns:1fr}
+  .case-grid{grid-template-columns:minmax(0,1fr)}
+  .tick{margin-left:auto}
+}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="brand">
+      <span class="dot"></span>
+      安心收件箱 · 全场景演示板
+      <small>V0.2 + A-01 + D1–D25</small>
+    </div>
+    <div class="spacer"></div>
+    <input class="search" id="q" type="search" placeholder="搜索场景 / 编号 / 关键词…" />
+    <div class="seg" id="segFilter">
+      <button data-f="all" class="on">全部</button>
+      <button data-f="ui">界面态</button>
+      <button data-f="beh">行为态</button>
+      <button data-f="gap">未确认</button>
+    </div>
+  </div>
+  <div class="topbar-inner" style="padding-top:0">
+    <div class="jump" id="jump"></div>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <section class="hero">
+    <h1>全场景演示板 —— 请逐条确认是否覆盖</h1>
+    <p class="sub">把基线里的每条要求渲染成一个可见的状态，供你核对「场景是否有遗漏、期望是否符合基线」。</p>
+    <div class="tagrow">
+      <span class="tag sig">依据：V0.2 冻结基线</span>
+      <span class="tag sig">修订：A-01 投递方式</span>
+      <span class="tag sig">裁决：D1–D25</span>
+      <span class="tag fut">A–J 共 88 条（对应 acceptance-cases.md）</span>
+      <span class="tag warn">K–L 共 14 条：本轮新增，待确认</span>
+      <span class="tag warn">状态：目标行为，未落地</span>
+      <span class="tag crit">代码现状另见 product-logic.md</span>
+    </div>
+    <div class="callout danger">
+      <b>读法（很重要）</b>：本页演示的是<b>「决完之后应该长什么样」</b>，不是代码现在的样子。
+      D1–D25 与 A-01 <b>一行代码都还没落地</b>，所以这里所有界面都是<b>目标态</b>。
+      现有测试断言的数字 <code>unit 29 / native 42 / smoke 55</code> 只说明「旧行为被锁住了」，
+      不代表这些目标已实现。
+    </div>
+    <div class="callout" style="margin-top:12px">
+      <b>怎么用</b>：① 扫一遍分组，看<b>有没有整块场景缺失</b>；
+      ② 逐条读「触发 → 期望」，有异议的记下编号；
+      ③ 每张卡右下角勾选框可标记「已确认」，状态存在本机，刷新不丢；
+      ④ 文末<b>「基线覆盖缺口」</b>是我主动找出的、88 条案例<b>没覆盖到</b>的基线条款，请优先看那一节；
+      ⑤ 末尾两组 <b>K · 待整理列表 / L · 未来页展示</b>是<b>本轮新增</b>，不在 88 条里，也未进入决策清单——请优先确认这两组。
+    </div>
+    <div class="legend">
+      <span><b>覆盖列</b>：✅ 现有断言已覆盖 · 🟡 部分覆盖 · ⬜ 待补（沿用 acceptance-cases.md 口径）</span>
+      <span><b>📱 界面态</b> = 有可看的屏幕状态 &nbsp;·&nbsp; <b>⚙ 行为态</b> = 时序 / 状态流转 / 参数</span>
+    </div>
+  </section>
+
+  <section id="matrix-sec">
+    <div class="sec-head">
+      <h2>0 · 决策矩阵速查（投递方式 × 档位）</h2>
+      <span class="cnt">A-01 + D25</span>
+      <span class="desc">本页所有提醒类场景都按这张表判定</span>
+    </div>
+    <div class="case">
+      <div class="row"><span class="k">两条轴</span><span class="v"><strong>档位</strong>（importance）决定<b>频率与显著性</b>；<strong>投递方式</strong>（delivery_mode）只决定<b>首次</b>走什么机制。二者正交。</span></div>
+      <div class="row"><span class="k">快照</span><span class="v"><code>delivery_mode</code> 在<b>录入时</b>写入事项：有标记（☆重要 / 🚨关键）→ 强制 <code>alarm</code>；未标记 → 取<b>当时</b>的全局默认。</span></div>
+      <table class="mini" style="margin-top:10px">
+        <tr><th>档位</th><th>首次提醒</th><th>后续提醒</th><th>总计</th></tr>
+        <tr class="hl"><td><b>普通</b>（未标记）</td><td>取全局默认：<code>notification</code> → 通知；<code>alarm</code> → <b>全屏闹钟</b></td><td>无</td><td><b>1 次</b></td></tr>
+        <tr class="hw"><td><b>☆ 重要</b></td><td><b>全屏闹钟</b>（强制）</td><td>通知 × 3，每 30 分钟</td><td><b>4 次</b></td></tr>
+        <tr class="hc"><td><b>🚨 关键</b></td><td><b>全屏闹钟</b>（强制）</td><td>通知 × 7，每 15 分钟</td><td><b>8 次</b></td></tr>
+      </table>
+      <div class="note">左侧：档位决定「追几次、多显眼」。右侧：投递方式决定「第一次响在哪」。注意 A-01 已接受的三个代价见 §11。</div>
+    </div>
+  </section>
+
+  <div id="cases"></div>
+
+  <!-- ============ 缺口 ============ -->
+  <section id="gaps">
+    <div class="sec-head">
+      <h2>基线覆盖缺口（请优先确认）</h2>
+      <span class="cnt">我的核查结果</span>
+      <span class="desc">下面这些基线条款，88 条案例里<b>没有任何一条</b>覆盖</span>
+    </div>
+    <div class="grid" id="gapGrid"></div>
+  </section>
+
+  <footer>
+    <b>依据链</b>：V0.2 冻结基线（<code>8cd8f56cbdd7e79d</code>） → A-01 投递方式修订 → D1–D25 交互裁决 → 88 条验收案例（A–J）+ 14 条本轮新增展示提案（K–L）。<br />
+    本页只做<b>呈现与核对</b>，不修改任何产品文档，也不改动代码。确认完成后，下一步才是按依赖顺序落地（决策清单 §八）。<br />
+    生成时间 2026-09-16 · 单文件、离线可用、无外部依赖。
+  </footer>
+</div>
+
+<script>
+/* =========================================================
+   场景数据
+   g   : 分组
+   t   : 标题
+   trig: 触发条件
+   exp : 期望效果（目标行为）
+   basis: 依据
+   cov : y 已覆盖 / p 部分 / a 待补
+   vis : 演示，type 见下方渲染器
+   ========================================================= */
+const GROUPS = {
+  A:{n:'A · 捕获与解析',        d:'一句话怎么被收下、怎么被解析、失败怎么办'},
+  B:{n:'B · 生命周期与用户动作', d:'四个动作的语义边界与状态流转'},
+  C:{n:'C · 提醒与投递',        d:'谁响、响在哪、响几次、响不了怎么告知'},
+  D:{n:'D · 待整理（Review）',  d:'信息质量延迟澄清子系统'},
+  E:{n:'E · Deadline',          d:'硬截止的独立保护'},
+  F:{n:'F · 可靠性',            d:'删除 / 重启 / 时区 / 离线 / 积压'},
+  G:{n:'G · 首页信息架构',      d:'首页该有什么、不该有什么'},
+  H:{n:'H · 状态模型',          d:'四维正交，禁止组合爆炸'},
+  I:{n:'I · Onboarding',        d:'首次授权、首次提醒、首次待整理'},
+  J:{n:'J · 工程遗留',          d:'已裁决的清理项'},
+  K:{n:'K · 待整理列表（本轮新增）', d:'把「待整理」从一条入口补成一个可看的列表',
+     warn:'<b>本轮新增，尚未进入 acceptance-cases.md 与决策清单。</b>按 V0.2 §24，' +
+          '新增能力应先记为变更提案再实现。这 7 条是我对「待整理怎么展示」的提案，请逐条确认；' +
+          '确认后我会补一条决策编号（预计 D26）与对应验收案例。代码仍不动。'},
+  L:{n:'L · 未来页展示（本轮新增）', d:'托管中按日期分组，配月历做快速定位',
+     warn:'<b>本轮新增，尚未进入 acceptance-cases.md 与决策清单。</b>' +
+          '「未来」页此前在演示板里完全缺席，这 7 条是补齐。约束来自 §12 / §13 / §1.3 / D5 / INV-07：' +
+          '<b>可以更清楚，但不得更像日历 App，也不得制造「值得天天来看」的钩子。</b>'}
+};
+
+const CASES = [
+/* ---------------- A ---------------- */
+{ id:'A1', g:'A', t:'极速 Capture', cov:'y',
+  trig:'输入「周五提醒我看 Horolog」',
+  exp:'<strong>无需二次确认</strong>即保存，并展示解析结果供修改',
+  basis:['AC-01','§6','D-05','D-13'],
+  vis:{type:'capture', text:'周五提醒我看 Horolog', hint:'已设置：本周五 09:00 · 可修改',
+       toast:'已交给系统 · 周五 09:00　［查看未来］'} },
+
+{ id:'A2', g:'A', t:'模糊 Capture 也必须存下', cov:'p',
+  trig:'输入「Horolog 后面看看」',
+  exp:'<strong>仍必须保存</strong>；使用 Fallback Trigger 并进入 NEEDS_REVIEW',
+  basis:['AC-02','§6.1','INV-01'],
+  vis:{type:'capture', text:'Horolog 后面看看', hint:'已收下 · 待整理（未设定时间）',
+       toast:'已收下 · 待整理　［去整理］', flag:'NEEDS_REVIEW'} },
+
+{ id:'A3', g:'A', t:'含具体时间词却落到兜底 → 当场问一句', cov:'a',
+  trig:'输入含明确时间指向词（下周三 / N 天后 / x 月 x 日），但解析器仍落到兜底值',
+  exp:'弹<b>极简选择</b>（保留 <code>#sheetLowConf</code> 能力）；这是「真正的矛盾」，值得打断一次',
+  basis:['D15','§6.1'],
+  vis:{type:'capture', text:'下周三给王工回个电话', hint:'⚠ 含时间词但未听准 → 采纳兜底',
+       overlay:{title:'确认提醒时间',
+         desc:'没有听出精确时间。选一个，或保持默认。',
+         chips:['今晚 21:30','明晚 21:30','本周末','自定义'],
+         primary:'就按这个时间', secondary:'返回修改'}} },
+
+{ id:'A4', g:'A', t:'纯模糊词 → 静默，不弹任何框', cov:'a',
+  trig:'输入「过阵子」「以后」「回头看看」这类不含具体时间指向的模糊词',
+  exp:'直接收下，<strong>不弹任何确认</strong>，标记 NEEDS_REVIEW 等当晚批量处理',
+  basis:['D15','§6.1'],
+  vis:{type:'capture', text:'过阵子看看那个降噪方案', hint:'已收下 · 待整理',
+       flag:'NEEDS_REVIEW', note:'与 A3 的分界线：输入里有没有「具体时间指向词」'}},
+
+{ id:'A5', g:'A', t:'兜底值 = 下一个 Review Window', cov:'p',
+  trig:'完全解析不出时间（也没有具体时间词）',
+  exp:'兜底值取<b>下一个 Review Window</b>（默认今晚 21:30），<strong>不是 now + 7 天</strong>',
+  basis:['D17','§6.1','§17'],
+  conflict:'现 test-unit「低置信度」与 test-smoke 4–5 断言「一周左右」→ 落地时必须改测试',
+  vis:{type:'pans', pans:[
+    {k:'现在（违反 D17）', cls:'now', items:['兜底 = now + 7 天','用户并不知道自己设了什么','时间与用户的整理节奏无关']},
+    {k:'目标（D17）', cls:'next', items:['兜底 = 下一个 Review Window（今晚 21:30）','与「攒到晚上统一整理」对齐','用户到点收到的是<b>整理</b>，不是事项提醒']}
+  ]}},
+
+{ id:'A6', g:'A', t:'兜底记录不进「需要注意」', cov:'a',
+  trig:'一条兜底记录到点（今晚 21:30）',
+  exp:'不占用首页「需要需要注意」区块，<strong>不发事项提醒</strong>，只触发<b>一次整理提醒</b>',
+  basis:['D17','INV-07'],
+  vis:{type:'home', items:[], blocks:[{k:'strongReview', n:1}],
+       empty:'注意：兜底记录<b>不出现</b>在「现在需要注意」里',
+       navBadge:0, sub:'现在很安静 · 可以放心忘记',
+       note:'它还没有一条真实 Trigger，不该冒充正式事项占用首页（AC-06 保护的是「已存在的」Trigger）'}},
+
+{ id:'A7', g:'A', t:'Review 关闭时的兜底退让', cov:'a',
+  trig:'用户把「待整理」整个关掉，此时又产生一条无时间记录',
+  exp:'退到<b>次日晚间</b>，并按<b>普通事项正常提醒</b>——否则这些记录会永久搁浅',
+  basis:['D17','§9.2'],
+  vis:{type:'timeline', points:[
+    {dot:'notif', t:'今天 14:20', l:'录入「Horolog 后面看看」', s:'无时间 · 兜底 / Review 已关闭'},
+    {dot:'none',  t:'今天 21:30', l:'<b>不发整理提醒</b>', s:'Review 关闭 → 无整理会话'},
+    {dot:'notif', t:'明天 20:00', l:'<b>普通通知</b>：Horolog 后面看看', s:'按普通事项正常提醒，1 次即止 · 走 LocalNotifications'}
+  ]}},
+
+{ id:'A8', g:'A', t:'同 URL 再次保存 → 只轻提示，绝不自动合并', cov:'p',
+  trig:'同一篇内容 / 同一个 URL 被再次 Capture',
+  exp:'允许创建新记录，仅轻提示「可能已有类似记录」；<strong>不得自动合并、删除或覆盖</strong>',
+  basis:['AC-16','§13'],
+  vis:{type:'capture', text:'https://example.com/horolog', hint:'⚠ 可能已有类似记录',
+       flag:'可能重复', note:'相似度阈值：长度 ≥ 4 且字符重合 > 0.72（只提示，不动作）'}},
+
+{ id:'A9', g:'A', t:'从分享进来 → 自动存上下文', cov:'a',
+  trig:'从系统分享面板 / 深链把内容送进来',
+  exp:'自动保存 <b>标题 / URL / 来源 App / 创建时间</b>；「为什么关注」可选，<strong>不强迫</strong>',
+  basis:['§6','D-08','D-11'],
+  vis:{type:'capture', text:'（分享标题自动带入）', hint:'来源已自动保存',
+       kv:['source_title','source_url','source_app','created_at'],
+       note:'用户只需要补一件事：时间。其余都已经替他记下来了。'}},
+
+{ id:'A10', g:'A', t:'冷启动 → 进首页（不跳过）', cov:'a',
+  trig:'用户从桌面图标直接打开 App',
+  exp:'进<b>首页</b>，让「现在需要注意」被看见',
+  basis:['D24','§12'],
+  report:'⚠ 基线内部张力已报告：§6 字面写「打开 App 默认直接进入输入页」，§12 又把「现在需要注意」定为首页第一视觉。按 §22 <b>报告而非自行裁决</b>，本页采用 D24。',
+  vis:{type:'flow', nodes:[
+    {l:'冷启动', n:'桌面图标'},
+    {l:'→', ar:true},
+    {l:'首页', n:'现在需要注意', c:'hi'},
+    {l:'→', ar:true},
+    {l:'点 + 或 FAB', n:'进输入页'}
+  ]}},
+
+{ id:'A11', g:'A', t:'分享 / 快捷入口 → 直达输入页', cov:'a',
+  trig:'从系统分享、桌面快捷方式、锁屏快捷入口进入',
+  exp:'<strong>跳过首页</strong>，直接进输入页——此时用户的意图是「记下来」，不是「看看有什么」',
+  basis:['D24','§6'],
+  vis:{type:'flow', nodes:[
+    {l:'分享面板', n:'分享内容', c:'fut'},
+    {l:'桌面快捷', n:'快速记录', c:'fut'},
+    {l:'锁屏快捷', n:'快速记录', c:'fut'},
+    {l:'→', ar:true},
+    {l:'直接进输入页（带出上下文）', n:'安心记下', c:'hi'}
+  ]}},
+
+{ id:'A12', g:'A', t:'original_capture 可回溯、前台隐藏', cov:'a',
+  trig:'用户改过事项内容之后',
+  exp:'<code>original_capture</code> 仍保留原话可回溯；前台<b>默认隐藏</b>，需要时才展开',
+  basis:['§13','G02'],
+  vis:{type:'pans', pans:[
+    {k:'前台默认（已改过）', cls:'', items:['<b>周五 09:00 看 Horolog 项目进展</b>','—（不显示原话）']},
+    {k:'展开后', cls:'next', items:['<b>周五 09:00 看 Horolog 项目进展</b>','原话：<i>周五提醒我看 Horolog</i>']}
+  ]}},
+
+/* ---------------- B ---------------- */
+{ id:'B1', g:'B', t:'「我知道了」≠ 完成', cov:'y',
+  trig:'用户点「我知道了」',
+  exp:'停止追提醒，进入<b>「已看到未完成」</b>，<strong>绝不变成完成</strong>',
+  basis:['AC-03','INV-04','§7'],
+  vis:{type:'home', blocks:[{k:'due', items:[]}, {k:'active', folded:false,
+        items:[{t:'Horolog 项目进展', m:'已看到 · 未完成', c:'vital'}]}],
+       sub:'现在很安静 · 可以放心忘记', navBadge:0,
+       empty:'「我知道了」把事项从「需要注意」移到「已看到未完成」，仅此而已'}},
+
+{ id:'B2', g:'B', t:'稍后 2 小时', cov:'y',
+  trig:'点「稍后 2 小时」',
+  exp:'旧通知失效，2 小时后<b>重新进入 Attention</b>',
+  basis:['AC-04','D11'],
+  vis:{type:'timeline', points:[
+    {dot:'alarm', t:'14:00', l:'首次提醒（全屏闹钟）', s:'到点进入 due'},
+    {dot:'ok',    t:'14:01', l:'我知道了 → acknowledged', s:'停止追提醒'},
+    {dot:'notif', t:'16:01', l:'稍后 2 小时（elapsed 基准）', s:'旧调度先撤销，再建新调度 · 不双提醒'},
+    {dot:'alarm', t:'16:01', l:'重新进入 Attention', s:'回 WAITING → 到点再 due'}
+  ]}},
+
+{ id:'B3', g:'B', t:'从提醒点「待整理」= ACK + NEEDS_REVIEW', cov:'a',
+  trig:'用户从提醒入口点「待整理」',
+  exp:'<strong>同时</strong>视为 ACK 与进入 NEEDS_REVIEW；<b>不创建重复 Item</b>，不再按「未看到」继续追击',
+  basis:['AC-05','§7'],
+  vis:{type:'flow', nodes:[
+    {l:'提醒', n:'due', c:'crit'},
+    {l:'→', ar:true},
+    {l:'用户点「待整理」', n:'一个动作'},
+    {l:'→', ar:true},
+    {l:'attention_status', n:'ACKNOWLEDGED', c:'hi'},
+    {l:'+', ar:true},
+    {l:'review_status', n:'NEEDS_REVIEW', c:'warn'},
+    {l:'→', ar:true},
+    {l:'同一条 Item', n:'不新建', c:'hi'}
+  ]}},
+
+{ id:'B4', g:'B', t:'完整主路径', cov:'y',
+  trig:'一次完整的生命周期',
+  exp:'解析 → 保存 → Future → 通知 → ACK → 已看到未完成 → 稍后 → 再通知 → 完成 → Archive',
+  basis:['§19'],
+  vis:{type:'flow', nodes:[
+    {l:'1', n:'解析'}, {l:'2', n:'保存'}, {l:'3', n:'Future', c:'fut'},
+    {l:'4', n:'通知', c:'crit'}, {l:'5', n:'ACK', c:'hi'},
+    {l:'6', n:'已看到未完成', c:'hi'}, {l:'7', n:'稍后'},
+    {l:'8', n:'再通知', c:'crit'}, {l:'9', n:'完成'}, {l:'10', n:'Archive', c:'fut'}
+  ], note:'smoke 49–55 已锁死这条路径，落地改动时它是回归基线。'}},
+
+{ id:'B5', g:'B', t:'归档重开 → 不自动提醒', cov:'p',
+  trig:'从归档里点「恢复」某条事项',
+  exp:'回到未完成，但<strong>不设 <code>trigger_at</code></strong>，因此<b>不会自动提醒</b>',
+  basis:['AC-18','D23'],
+  conflict:'现 smoke 25–26 断言「restore 后 status=waiting 且 triggerAt=+1 小时」→ 落地时必须改测试',
+  vis:{type:'timeline', points:[
+    {dot:'ok',   t:'之前', l:'完成 → 归档', s:'completed_at 有值'},
+    {dot:'none', t:'点恢复', l:'回到「未来」页静置', s:'trigger_at = 空 · <b>不排任何提醒</b>'},
+    {dot:'none', t:'——', l:'（无提醒发生）', s:'AC-18 禁止的是「自动」产生提醒'}
+  ]}},
+
+{ id:'B6', g:'B', t:'归档重开 → 给一次极简时间选择', cov:'a',
+  trig:'恢复动作刚完成',
+  exp:'弹一次<b>不阻断</b>的选择：30 分钟 / 今晚 / 明天 / 自定义 / <b>先不提醒</b>；不选就静置',
+  basis:['D23'],
+  vis:{type:'overlay', title:'什么时候再提醒你？',
+       desc:'不选也可以，它会安静地待在「未来」页。',
+       chips:['30 分钟后','今晚','明天','自定义','先不提醒'], primary:'确定', secondary:'先不提醒'}},
+
+{ id:'B7', g:'B', t:'周期事项「完成」只结束本次实例', cov:'p',
+  trig:'点「完成」一条周期事项',
+  exp:'只结束<b>本次实例</b>，后续周期照常；下一周期<b>只在「完成」时生成</b>（不在 ACK 或到点时生成）',
+  basis:['AC-17','§11'],
+  vis:{type:'flow', nodes:[
+    {l:'本次', n:'8/01 实例', c:'hi'},
+    {l:'→ 完成', ar:true},
+    {l:'归档', n:'8/01', c:'fut'},
+    {l:'+ 生成', ar:true},
+    {l:'下一实例', n:'9/01', c:'hi'},
+    {l:'……', ar:true},
+    {l:'规则仍在', n:'每月 1 日'}
+  ]}},
+
+{ id:'B8', g:'B', t:'「停止重复」是二级操作', cov:'a',
+  trig:'用户想终止整个周期规则',
+  exp:'终止规则并归档；且<strong>不放在主按钮位</strong>——避免误终止</b>',
+  basis:['§11','G19'],
+  vis:{type:'pans', pans:[
+    {k:'主按钮位（不给）', cls:'now', items:['✗ 完成','✗ 停止重复（与完成同级）']},
+    {k:'二级（目标）', cls:'next', items:['✓ 完成 ← 主按钮','⋯ 更多 → 停止重复 ← 二级']}
+  ]}},
+
+{ id:'B9', g:'B', t:'弹条只能点 × 关闭', cov:'a',
+  trig:'弹条正在首页顶部展示',
+  exp:'<strong>只有点 × 才关闭</strong>；点页面其他区域不关闭',
+  basis:['D13','P4'],
+  vis:{type:'banner', level:'crit', title:'🚨 关键 · 立刻确认合同条款', meta:'14:02 · 第 1 次提醒',
+       actions:['我知道了','稍后 2 小时','完成'], closable:true,
+       note:'理由：关闭会消耗 30 分钟提醒预算，就必须是一个<strong>明确动作</strong>，不能被环境误触触发。'}},
+
+{ id:'B10', g:'B', t:'弹条 10 分钟自动收起（不记账）', cov:'a',
+  trig:'弹条出现后无人操作，挂满 10 分钟',
+  exp:'自动收起 = <b>纯展示行为</b>，不写 dismissedUntil、不消耗提醒预算，下个 tick 仍可再弹',
+  basis:['D14'],
+  vis:{type:'pans', pans:[
+    {k:'点 ×（用户主动）', cls:'now', items:['dismissedUntil = now + 30 分钟','消耗提醒预算','期间该事项不再打扰']},
+    {k:'自动收起（系统行为）', cls:'next', items:['<b>零记账</b>','不写任何字段','下个 tick 仍可再弹']}
+  ], note:'两者必须严格区分——否则「弹条占着首页」会让首页无法使用，而「挂着不消失」会变成新的注意力负担。'}},
+
+{ id:'B11', g:'B', t:'点其他区域不关闭弹条', cov:'a',
+  trig:'弹条存在时，用户点了首页其他任何地方',
+  exp:'<strong>弹条保持</strong>，不关闭、不抑制',
+  basis:['D13'],
+  vis:{type:'banner', level:'crit', title:'🚨 关键 · 立刻确认合同条款', meta:'14:02 · 第 1 次提醒',
+       actions:['我知道了','稍后 2 小时','完成'], closable:true,
+       clicked:true,
+       note:'现在代码里「点任意非弹条区域即关闭并抑制 30 分钟」——一次误触就压掉关键档的提醒预算（I9）。'}},
+
+{ id:'B12', g:'B', t:'点 × 关闭 → 抑制 30 分钟', cov:'p',
+  trig:'用户主动点了弹条上的 ×',
+  exp:'<code>dismissedUntil = now + 30 分钟</code>，期间不再提醒该事项；<b>但不取消首次提醒</b>（抑制只作用于补充提醒）',
+  basis:['D13','§8.1'],
+  vis:{type:'timeline', points:[
+    {dot:'ok',    t:'14:02', l:'点 × 关闭', s:'dismissedUntil = 14:32'},
+    {dot:'none',  t:'14:02–14:32', l:'该事项被抑制', s:'补充提醒不弹'},
+    {dot:'notif', t:'14:32', l:'恢复参与提醒', s:'若仍未 ACK，继续按档位节奏'}
+  ]}},
+
+{ id:'B13', g:'B', t:'把周五改成周六 → 周五旧提醒不得再出现', cov:'y',
+  trig:'编辑事项时间',
+  exp:'严格三步：<b>取消旧调度 → 保存新数据 → 建立新调度</b>，避免幽灵提醒或双提醒',
+  basis:['AC-12','§14'],
+  vis:{type:'flow', nodes:[
+    {l:'① 先', n:'取消周五调度', c:'crit'},
+    {l:'② 再', ar:true, n:'保存新数据'},
+    {l:'③ 后', ar:true, n:'建立周六调度', c:'hi'},
+    {l:'✗', ar:true, n:'周五旧提醒', c:'crit', cls:'dead'}
+  ]}},
+
+/* ---------------- C ---------------- */
+{ id:'C1', g:'C', t:'🚨 关键档首次 → 全屏闹钟', cov:'a',
+  trig:'关键事项到达 trigger_at',
+  exp:'<b>全屏闹钟</b>：亮屏 + 循环响铃 + 波形震动 + 锁屏直达',
+  basis:['D9','§8','INV-06'],
+  vis:{type:'alarm', level:'crit', title:'🚨 关键 · 立刻确认合同条款',
+       meta:'安心收件箱 · 14:02 · 第 1/8 次',
+       actions:['我知道了','稍后 2 小时','完成','关闭'],
+       note:'完整四出口（D11/D12）。第 2..8 次退回归通知。'}},
+
+{ id:'C2', g:'C', t:'☆ 重要档首次 → 全屏闹钟', cov:'a',
+  trig:'重要事项到达 trigger_at',
+  exp:'<b>全屏闹钟</b>——A-01 把重要档从「更高显著性通知」<b>升为闹钟级</b>',
+  basis:['A-01','D25','§8'],
+  vis:{type:'alarm', level:'warn', title:'☆ 重要 · 报销单今天要提交',
+       meta:'安心收件箱 · 18:30 · 第 1/4 次',
+       actions:['我知道了','稍后 2 小时','完成','关闭'],
+       note:'这是本页<b>最需要你确认</b>的一条：它修订了 V0.2 §8 原文，代价见 §11。'}},
+
+{ id:'C3', g:'C', t:'全局默认 = 通知 → 普通只有通知', cov:'p',
+  trig:'<code>defaultDeliveryMode = notification</code>，一条未标记事项到点',
+  exp:'只有<b>系统通知</b>，无全屏；总计 1 次即止',
+  basis:['A-01','R2'],
+  vis:{type:'notif', title:'安心收件箱', app:'安心收件箱 · 现在',
+       nt:'周四 10:00 跟供应商对一下账期',
+       nb:'点击查看 · 长按可稍后',
+       actions:['我知道了','稍后 2 小时','完成'],
+       note:'普通档 = 1 次（首发算一次，永不重弹）'}},
+
+{ id:'C4', g:'C', t:'全局默认 = 闹钟 → 普通首次也全屏', cov:'a',
+  trig:'<code>defaultDeliveryMode = alarm</code>，一条未标记事项到点',
+  exp:'<b>全屏闹钟</b>——这是 A-01 的直接后果：闹钟级不再是关键档专属',
+  basis:['A-01','R2'],
+  vis:{type:'alarm', level:'warn', title:'周四 10:00 跟供应商对一下账期',
+       meta:'安心收件箱 · 10:00 · 第 1/1 次',
+       actions:['我知道了','稍后 2 小时','完成','关闭'],
+       note:'未标记 + 默认闹钟 = 全屏。用户随手记的一条也会亮屏——这正是 INV-10 要防的场景，已作为知情代价接受。'}},
+
+{ id:'C5', g:'C', t:'第 2..n 次补充提醒回归通知', cov:'p',
+  trig:'重要 / 关键事项首次全屏之后仍未 ACK',
+  exp:'走<b>通知渠道</b>，不再全屏（重要 × 3 / 每 30 分钟；关键 × 7 / 每 15 分钟）',
+  basis:['D25','§17'],
+  vis:{type:'timeline', points:[
+    {dot:'alarm', t:'14:02', l:'<b>第 1 次 · 全屏闹钟</b>', s:'首次 = 亮屏 + 循环响铃'},
+    {dot:'notif', t:'14:17', l:'第 2 次 · 通知', s:'关键：每 15 分钟'},
+    {dot:'notif', t:'14:32', l:'第 3 次 · 通知'},
+    {dot:'notif', t:'14:47', l:'第 4 次 · 通知'},
+    {dot:'none',  t:'15:47', l:'第 8 次后停止', s:'达到上限即停，不无限追击'}
+  ], note:'重要档节奏为 30 分钟，第 2–4 次。'}},
+
+{ id:'C6', g:'C', t:'全屏界面四个出口', cov:'p',
+  trig:'全屏闹钟正在响',
+  exp:'<b>我知道了 / 稍后 2 小时 / 完成 / 关闭</b>；删除原来的 10 分钟硬编码；<code>onBackPressed()</code> 等同「关闭」',
+  basis:['D11','D12'],
+  vis:{type:'pans', pans:[
+    {k:'现在（倒挂）', cls:'now', items:['只有「关闭」和「稍后 10 分钟」','没有「我知道了」、没有「完成」','按返回键退不出去']},
+    {k:'目标', cls:'next', items:['我知道了 / 稍后 2 小时 / 完成 / 关闭','快捷动作固定 2 小时','返回键 = 关闭']}
+  ]}},
+
+{ id:'C7', g:'C', t:'全屏点「关闭」→ 只止响，不表态', cov:'a',
+  trig:'用户在全屏闹钟上点「关闭」',
+  exp:'只停止响铃与震动；<strong>不写 ACK、不停后续补充提醒、不消耗提醒预算</strong>',
+  basis:['D12','INV-03'],
+  vis:{type:'flow', nodes:[
+    {l:'点「关闭」', n:'止响', c:'warn'},
+    {l:'✗', ar:true, n:'不写 ACK', c:'crit', cls:'dead'},
+    {l:'✗', ar:true, n:'不停补充提醒', c:'crit', cls:'dead'},
+    {l:'✗', ar:true, n:'不消耗预算', c:'crit', cls:'dead'}
+  ], note:'理由：一个人只想让闹钟停下时，若唯一出路是「我知道了」，系统就是在<b>逼他谎报「我看到了」</b>——这直接绕过红线 P4。'}},
+
+{ id:'C8', g:'C', t:'改全局默认只影响之后录入的', cov:'a',
+  trig:'用户把全局默认从「系统通知」改为「闹钟提醒」',
+  exp:'<strong>历史事项不受影响</strong>——因为 delivery_mode 是录入时的快照',
+  basis:['A-01','Q2'],
+  vis:{type:'pans', pans:[
+    {k:'改之前录入的 3 条', cls:'', items:['delivery_mode = notification','<b>保持通知</b>，不变']},
+    {k:'改之后录入的 2 条', cls:'next', items:['delivery_mode = alarm','首次走<b>全屏闹钟</b>']}
+  ], note:'快照的代价：用户改完设置后会发现「今天改的没生效」。这是正交轴必须付出的代价——否则历史事项的投递方式会漂移（INV-09）。'}},
+
+{ id:'C9', g:'C', t:'编辑：未标记 → 标记', cov:'a',
+  trig:'编辑一条普通事项，标为 ☆重要',
+  exp:'<code>delivery_mode</code> 变为 <code>alarm</code>',
+  basis:['D25 推定②'],
+  vis:{type:'matrix', cols:['','档位','delivery_mode'], rows:[
+    {l:'编辑前', imp:'普通（未标记）', dm:'notification', hl:''},
+    {l:'编辑后', imp:'☆ 重要', dm:'alarm', hl:'hl'}
+  ]}},
+
+{ id:'C10', g:'C', t:'编辑：标记 → 未标记', cov:'a',
+  trig:'编辑一条 ☆重要 事项，改回普通',
+  exp:'<b>退回当前全局默认</b>，不保留旧的 alarm',
+  basis:['D25 推定②'],
+  vis:{type:'matrix', cols:['','档位','delivery_mode'], rows:[
+    {l:'编辑前', imp:'☆ 重要', dm:'alarm', hl:''},
+    {l:'编辑后', imp:'普通（未标记）', dm:'取当前全局默认', hl:'hw'}
+  ]}},
+
+{ id:'C11', g:'C', t:'☆ 重要 ↔ 🚨 关键 互改', cov:'a',
+  trig:'在重要与关键之间改档位',
+  exp:'<code>delivery_mode</code> <b>保持 <code>alarm</code></b>；只有频率与显著性变化',
+  basis:['D25 推定②'],
+  vis:{type:'matrix', cols:['档位','频次与间隔','投递方式'], rows:[
+    {l:'☆ 重要', imp:'4 次 · 每 30 分钟', dm:'alarm', hl:''},
+    {l:'↕ 互改（档位变、投递不变）', imp:'4 次 ↔ 8 次', dm:'<b>alarm（不变）</b>', hl:'hl'},
+    {l:'🚨 关键', imp:'8 次 · 每 15 分钟', dm:'alarm', hl:''}
+  ]}},
+
+{ id:'C12', g:'C', t:'勿扰只影响普通档', cov:'y',
+  trig:'事项到点，落在勿扰时段（默认 23:00–07:30）',
+  exp:'<strong>只有普通</strong>被顺延到勿扰结束；重要 / 关键照常响',
+  basis:['§15','§9.3'],
+  vis:{type:'matrix', cols:['档位','频次','到点行为'], rows:[
+    {l:'普通（未标记）', imp:'1 次', dm:'<b>顺延</b>到 07:30', hl:'hw'},
+    {l:'☆ 重要', imp:'4 次', dm:'照常响', hl:'hl'},
+    {l:'🚨 关键', imp:'8 次', dm:'照常响', hl:'hl'}
+  ], note:'待整理提醒同样受勿扰约束（D18 / §9.3）。'}},
+
+{ id:'C13', g:'C', t:'通知权限关闭 → 必须明说', cov:'a',
+  trig:'系统通知权限被关闭',
+  exp:'首页<b>明确告知「无法保证提醒」</b>，<strong>不得伪装正常</strong>；恢复权限后自动 Reconcile',
+  basis:['AC-14','INV-06'],
+  vis:{type:'banner', level:'crit', title:'⚠ 无法保证提醒', meta:'通知权限未开启 · 现在只有应用内提醒',
+       actions:['去开启','稍后'], closable:false,
+       note:'文案要求：只说<b>影响履约的实际问题</b>，不做复杂技术健康仪表盘（§16）。'}},
+
+{ id:'C14', g:'C', t:'精确闹钟不可用 → 分级降级', cov:'p',
+  trig:'系统不允许精确闹钟（Android 12+ 未授权「闹钟和提醒」）',
+  exp:'普通 <b>可降级但显式告知</b>；关键 <b>不得偷偷降级</b>',
+  basis:['§14'],
+  vis:{type:'pans', pans:[
+    {k:'普通档', cls:'', items:['允许降级到非精确 AlarmManager','界面标明「时间可能延迟」']},
+    {k:'关键档', cls:'now', items:['<b>不得偷偷降级</b>','必须显式告知用户','（系统允许范围内取最强可用机制）']}
+  ]}},
+
+{ id:'C15', g:'C', t:'同时到点：通知可聚合，闹钟不能', cov:'a',
+  trig:'同一时刻多条事项到点',
+  exp:'走<b>通知</b>的可聚合；走<b>闹钟</b>的不能聚合，会<b>串行弹出</b>',
+  basis:['§17','A-01 代价②'],
+  vis:{type:'pans', pans:[
+    {k:'默认 = 通知', cls:'next', items:['3 条聚合为一条通知','用户一次处理完']},
+    {k:'默认 = 闹钟', cls:'now', items:['全屏一次只能显示一条','<b>三条普通事项 = 连响三次</b>','这就是 A-01 的已知代价②']}
+  ]}},
+
+/* ---------------- D ---------------- */
+{ id:'D1', g:'D', t:'有待整理 → 首页显示弱形态入口', cov:'a',
+  trig:'队列里有 NEEDS_REVIEW 事项，但还没到窗口',
+  exp:'显示一行<b>低对比度文字</b>：<strong>无数字、无强调色</strong>，位置在「现在需要注意」<b>之后</b>',
+  basis:['D6','§12'],
+  vis:{type:'home', sub:'现在有 1 件需要你注意',
+    blocks:[{k:'due', n:1, items:[{t:'周四 10:00 跟供应商对账期', m:'现在 · 普通', c:''}]},
+            {k:'reviewWeak', n:3}],
+    navBadge:1,
+    note:'按 V0.2 §12 修订而来（原决议为「只在窗口内出现」）。入口不存在，「主动进入」就没有落点，只剩搜索——反而增加操作成本。'}},
+
+{ id:'D2', g:'D', t:'进入窗口 ∪ 宽限期 → 入口变显著', cov:'a',
+  trig:'当前时间进入 Review Window（默认 21:30–23:00）或其后 1 小时宽限期',
+  exp:'入口恢复显著性：<b>带数字、提到最前</b>，位于「现在需要注意」之前',
+  basis:['D6','D20'],
+  vis:{type:'home', sub:'现在很安静 · 可以放心忘记',
+    blocks:[{k:'reviewStrong', n:6},
+            {k:'empty', extra:'没有需要你注意的事项。'}],
+    navBadge:0,
+    note:'同一行元素，两种形态：白天弱、窗口内强。变化的是显著性，不是存在性。'}},
+
+{ id:'D3', g:'D', t:'22:50 点「稍后 30 分钟」→ 跨窗仍显著', cov:'a',
+  trig:'22:50 在整理会话里点「稍后 30 分钟」',
+  exp:'23:20 整理通知<b>照发</b>；入口在 <b>1 小时宽限期内保持显著</b>（到 00:20）',
+  basis:['D20'],
+  vis:{type:'timeline', points:[
+    {dot:'ok',    t:'22:50', l:'点「稍后 30 分钟」', s:'snoozedUntil = 23:20'},
+    {dot:'none',  t:'23:00', l:'窗口结束', s:'进入宽限期 · 入口仍是显著形态'},
+    {dot:'notif', t:'23:20', l:'整理通知发出', s:'通知点击<b>直达整理会话</b>，不依赖首页入口'},
+    {dot:'none',  t:'00:20', l:'宽限期结束', s:'入口退回弱形态'}
+  ], note:'宽限期存在的唯一理由：通知照发但入口掉回弱形态时，用户点进来会找不到东西。'}},
+
+{ id:'D4', g:'D', t:'无待整理 → 入口完全不渲染', cov:'a',
+  trig:'队列为空',
+  exp:'入口<b>完全不渲染</b>（不是置灰、不是显示 0）',
+  basis:['D6'],
+  vis:{type:'home', sub:'现在有 1 件需要你注意',
+    blocks:[{k:'due', n:1, items:[{t:'周四 10:00 跟供应商对账期', m:'现在 · 普通', c:''}]},
+            {k:'activeFolded', n:2}],
+    navBadge:1, empty:'对比 D1：没有待整理时，那一行连占位都不存在。'}},
+
+{ id:'D5', g:'D', t:'点整理通知 → 直达整理会话', cov:'a',
+  trig:'用户点击整理通知',
+  exp:'<strong>直接打开整理会话</strong>，不是只打开首页',
+  basis:['D20','§9.3'],
+  vis:{type:'flow', nodes:[
+    {l:'整理通知', n:'21:30', c:'warn'},
+    {l:'→ 点「开始整理」', ar:true},
+    {l:'直达会话', n:'整理 · 6 条', c:'hi'},
+    {l:'✗', ar:true, n:'只打开首页（不要）', c:'crit', cls:'dead'}
+  ]}},
+
+{ id:'D6', g:'D', t:'关掉「本地通知」→ 待整理提醒一并取消', cov:'a',
+  trig:'用户在「我的」页关闭「本地通知」总开关',
+  exp:'待整理提醒<b>一并取消</b>——它不能绕开这个开关',
+  basis:['D18'],
+  vis:{type:'settings', title:'我的 · 提醒', sub:'设置项',
+    items:[{l:'本地通知', v:'关闭'},{l:'待整理时间', v:'21:30 – 23:00'},
+           {l:'整理提醒（受上一项控制）', v:'已取消'}],
+    note:'理由：用户关掉它的语义是「别用系统通知打扰我」。若待整理能绕开，那个开关就不再可信——这是信任问题，不是便利问题。'}},
+
+{ id:'D7', g:'D', t:'勿扰覆盖窗口起点 → 顺延', cov:'a',
+  trig:'Review Window 起点落在勿扰时段内',
+  exp:'整理提醒<b>顺延</b>到勿扰结束；不硬闯',
+  basis:['D18','§9.3'],
+  vis:{type:'timeline', points:[
+    {dot:'none',  t:'21:30', l:'窗口起点', s:'但用户勿扰设为 20:00–23:30'},
+    {dot:'none',  t:'—', l:'不发送', s:'Review Reminder 必须受勿扰/睡眠规则约束'},
+    {dot:'notif', t:'23:30', l:'顺延后发出整理通知', s:'送进窗口剩余时段'}
+  ]}},
+
+{ id:'D8', g:'D', t:'待整理唤醒走普通通知，不用全屏闹钟', cov:'a',
+  trig:'到点唤醒整理会话',
+  exp:'走 <b>LocalNotifications 普通通知</b>；<strong>不触发全屏闹钟</strong>',
+  basis:['D19','D3'],
+  vis:{type:'pans', pans:[
+    {k:'现在（显著性倒挂）', cls:'now', items:['待整理 → <b>全屏闹钟 + 循环响铃</b>','用户随手记的一条模糊记录会点亮手机','而标记「关键」的事项只收到通知']},
+    {k:'目标', cls:'next', items:['待整理 → <b>普通通知</b>（预排一条，21:30 触发）','自动继承开机恢复 / 应用更新恢复 / 权限对账','全屏闹钟<b>仅归</b>关键档与「重要」档首次']}
+  ]}},
+
+{ id:'D9', g:'D', t:'补提醒 60 分钟 × 2 次（当天最多 3 次）', cov:'a',
+  trig:'整理通知发出后用户未响应',
+  exp:'按 <b>60 分钟</b>间隔补 <b>2 次</b>（当天最多 3 次），达上限后<b>滚入下一个窗口</b>',
+  basis:['D22','§17'],
+  vis:{type:'table', cols:['','首发','补提醒 1','补提醒 2','上限'],
+    rows:[
+      {hl:'hw', cells:['现状','21:30','22:15（+45 分钟）','—','当天最多 2 次']},
+      {hl:'hl', cells:['<b>目标</b>','21:30','22:30（+60 分钟）','23:30（+60 分钟）','当天最多 3 次']}
+    ],
+    note:'⚠ <b>请确认一点</b>：窗口默认 21:30–23:00 只有 90 分钟，第 3 次落在 23:30 已在窗外。' +
+         '决策文字写「正好铺满 21:30–23:00」，与「60 分钟 × 2 次」字面对不上。' +
+         '两种可能：① 第 3 次允许出窗发送；② 出窗则滚入下一个窗口（当天实际只发 2 次）。' +
+         '<b>这个歧义需要你裁决</b>，它决定 D22 的实测断言怎么写。'}},
+
+{ id:'D10', g:'D', t:'Review 绝不阻断真实 Trigger', cov:'a',
+  trig:'一条事项既有周五 Trigger 又处于 NEEDS_REVIEW，且用户一直没整理',
+  exp:'<strong>周五仍必须正常提醒</strong>；Review 只是信息质量状态，不是「暂停」',
+  basis:['AC-06','INV-02','§10'],
+  vis:{type:'timeline', points:[
+    {dot:'none',  t:'周一', l:'录入 → 同时有 Trigger + NEEDS_REVIEW', s:'review_status = NEEDS_REVIEW'},
+    {dot:'none',  t:'周一至周五晚上', l:'每天都进整理队列，用户一直跳过', s:'review_status 保持不变'},
+    {dot:'alarm', t:'<b>周五 09:00</b>', l:'<b>正常提醒</b>', s:'INV-02：已存在的 Attention Trigger 不能被 Review 状态阻断'},
+    {dot:'none',  t:'周五晚', l:'它仍在整理队列里', s:'两条轨道互不干扰'}
+  ], note:'这是全页最重要的一条正交性验证：Review 与 Attention 是两条独立轨道，谁也管不了谁。'}},
+
+{ id:'D11', g:'D', t:'6 条待整理 → 只发 1 个通知', cov:'a',
+  trig:'到窗口时有 6 条待整理',
+  exp:'只创建<b>一次 Review Session 通知</b>，<strong>不按 Item 分别轰炸</strong>',
+  basis:['AC-07','§9.3'],
+  vis:{type:'pans', pans:[
+    {k:'错误做法', cls:'now', items:['6 条 = 6 个通知','用户被自己的模糊记录轰炸']},
+    {k:'目标', cls:'next', items:['<b>1 个通知</b>：「有 6 条待整理」','动作：开始整理 / 稍后 / 今天跳过']}
+  ]}},
+
+{ id:'D12', g:'D', t:'整理通知可稍后 / 今天跳过', cov:'a',
+  trig:'整理通知到达，用户当下没空',
+  exp:'通知提供<b>开始整理 / 稍后 / 今天跳过</b>；未处理的数据<b>保留</b>并滚入下一次',
+  basis:['AC-08','§9.3'],
+  vis:{type:'notif', app:'安心收件箱 · 21:30', time:'21:30',
+    nt:'有 6 条待整理', nb:'信息尚未二次确认，不是逾期任务',
+    actions:['开始整理','稍后','今天跳过'],
+    note:'「今天跳过」只滚一次，数据不丢；下次窗口继续出现。'}},
+
+{ id:'D13', g:'D', t:'10 条处理 4 条退出 → 逐条即时持久化', cov:'a',
+  trig:'会话里有 10 条，用户处理 4 条后中途退出',
+  exp:'4 条<b>立即持久化</b>；下次会话<b>只继续剩余 6 条</b>',
+  basis:['AC-09','§9.3'],
+  vis:{type:'flow', nodes:[
+    {l:'进入', n:'10 条'},
+    {l:'→', ar:true},
+    {l:'处理 4 条', n:'逐条即时落库', c:'hi'},
+    {l:'→ 中途退出', ar:true},
+    {l:'下次', n:'只剩 6 条', c:'hi'},
+    {l:'✗', ar:true, n:'重头再来（不要）', c:'crit', cls:'dead'}
+  ], note:'「逐条即时持久化」是硬要求：会话不是一个事务，退出不该丢掉已做的决定。'}},
+
+{ id:'D14', g:'D', t:'卡片必须显式写出系统解析结果', cov:'a',
+  trig:'一条没有任何时间的待整理记录出现在会话里',
+  exp:'卡片显示<b>「系统解析：未设定时间」</b>——不让系统偷偷替用户做了决定',
+  basis:['D16','§13'],
+  vis:{type:'session', cards:[
+    {t:'Horolog 后面看看', m:'系统解析：<b>未设定时间</b>　·　来源：手动录入 09-14 14:20', c:'warn'},
+    {t:'研究一下那个降噪方案', m:'系统解析：<b>未设定时间</b>　·　来源：分享 · 某乎', c:'warn'}
+  ], actions:['删除','确认','保存修改'],
+  foot:'原话保留：Horolog 后面看看',
+  note:'底部的「原话」即 original_capture（A12）。用户改过内容后仍可回溯。'}},
+
+{ id:'D15', g:'D', t:'会话「稍后」的五个选项', cov:'a',
+  trig:'用户在会话里点「稍后」',
+  exp:'选项为 <b>30 分钟 / 2 小时 / 今晚 / 明天 / 下一个整理时间</b>',
+  basis:['D20'],
+  vis:{type:'list', kv:['30 分钟后','2 小时后','今晚','明天','下一个整理时间'],
+    note:'与事项提醒的动作集是两套：事项的主动动作走六选项（D11），整理会话的稍后走这五个。'}},
+
+{ id:'D16', g:'D', t:'单条可「继续待整理」', cov:'a',
+  trig:'用户看了某一条，仍然不知道什么时候该做',
+  exp:'可以选<b>「继续待整理」</b>，<strong>不强迫填写</strong>，它留在队列里',
+  basis:['§9.4','G14'],
+  vis:{type:'session', cards:[
+    {t:'有空研究一下 Horolog 的定价', m:'系统解析：未设定时间 · 已留在队列（第 2 次）', c:'warn'}
+  ], actions:['删除','继续待整理','现在定个时间'],
+  foot:'「继续待整理」不是失败态，它是这个系统允许用户诚实的一种方式。',
+  note:'配合 INV-08：整理只提高信息质量，不升级成任务管理——所以这里没有优先级、没有子任务、没有进度。'}},
+
+/* ---------------- E ---------------- */
+{ id:'E1', g:'E', t:'显式截止 + 提前 N 天', cov:'p',
+  trig:'输入「9 月 30 日截止，提前 5 天提醒」',
+  exp:'解析出 <code>trigger_at = 9/25</code>、<code>deadline_at = 9/30</code>，两者<b>互相独立</b>',
+  basis:['AC-10','§10'],
+  vis:{type:'timeline', points:[
+    {dot:'notif', t:'9/25', l:'首次提醒（trigger_at）', s:'用户语义里的「提前 5 天」'},
+    {dot:'ok',    t:'9/26', l:'用户点了「我知道了」', s:'awareness 完成，但事项未结束'},
+    {dot:'alarm', t:'9/29', l:'Deadline Protection 再次唤醒', s:'deadline_status = PROTECTED'},
+    {dot:'none',  t:'9/30', l:'截止时刻（deadline_at）', s:'与 trigger_at 是两条互不覆盖的时间线'}
+  ]}},
+
+{ id:'E2', g:'E', t:'已 ACK 但未完成 → 临近截止仍可唤醒', cov:'p',
+  trig:'已 ACK 的事项逼近 deadline',
+  exp:'<strong>仍可重新唤醒</strong>——ACK 不等于安全',
+  basis:['AC-10','INV-05'],
+  vis:{type:'flow', nodes:[
+    {l:'9/25', n:'首次提醒', c:'crit'},
+    {l:'→', ar:true},
+    {l:'用户', n:'我知道了', c:'hi'},
+    {l:'→ 但未完成', ar:true},
+    {l:'9/29', n:'重新唤醒', c:'crit'},
+    {l:'✗', ar:true, n:'ACK 后就再也不管', c:'crit', cls:'dead'}
+  ]}},
+
+{ id:'E3', g:'E', t:'较远截止 → 3 天前 + 1 天前分层保护', cov:'a',
+  trig:'截止日期较远（如 30 天后）',
+  exp:'在 <b>3 天前</b>与 <b>1 天前</b>各保护一次；确定性规则，<strong>不用 AI 估难度</strong>',
+  basis:['§10.1','G17'],
+  vis:{type:'timeline', points:[
+    {dot:'notif', t:'D-3', l:'第一次保护', s:'给用户留出真正的处理时间'},
+    {dot:'none',  t:'D-2', l:'静默'},
+    {dot:'alarm', t:'D-1', l:'第二次保护', s:'最后 24 小时'},
+    {dot:'none',  t:'D', l:'截止'}
+  ], note:'不使用 AI 估算任务难度——第一版必须是可预测的常量规则（§22）。'}},
+
+{ id:'E4', g:'E', t:'较近截止 → 至少保留一个 24 小时保护点', cov:'a',
+  trig:'截止日期很近（如 2 天后）',
+  exp:'<b>至少保留一个 24 小时保护点</b>；不能因为没有「3 天前」可排就一个保护点都没有',
+  basis:['§10.1','G17'],
+  vis:{type:'pans', pans:[
+    {k:'✗ 会漏的做法', cls:'now', items:['只按固定 D-3 / D-1 排','D-3 已过 → 只剩 D-1，若 D-1 也过就是零保护']},
+    {k:'✓ 目标', cls:'next', items:['D-1 强制保留','先保证「至少一次 24 小时保护」','再考虑更早的分层']}
+  ]}},
+
+{ id:'E5', g:'E', t:'用户显式「提前 N 天」优先于默认策略', cov:'a',
+  trig:'用户明确说了「提前 5 天」',
+  exp:'<strong>以用户的为准</strong>，默认分层保护不再叠加覆盖',
+  basis:['§10','G18'],
+  vis:{type:'pans', pans:[
+    {k:'默认策略', cls:'', items:['D-3 保护一次','D-1 保护一次']},
+    {k:'用户说了「提前 5 天」', cls:'next', items:['<b>D-5 提醒</b>','默认分层<b>让位</b>，不叠加']}
+  ]}},
+
+{ id:'E6', g:'E', t:'截止已过仍未完成 → 不无限轰炸', cov:'a',
+  trig:'deadline 已过，事项仍未完成',
+  exp:'进入 <code>DEADLINE_PASSED</code> 风险状态；给三个出口：<b>完成 / 重排 / 保留</b>，<strong>不无限轰炸</strong>',
+  basis:['§10','G20'],
+  vis:{type:'flow', nodes:[
+    {l:'9/30 已过', n:'DEADLINE_PASSED', c:'crit'},
+    {l:'→ 三选一', ar:true},
+    {l:'完成', n:'归档', c:'hi'},
+    {l:'重排', n:'新 deadline'},
+    {l:'保留', n:'继续未完成', c:'warn'},
+    {l:'✗', ar:true, n:'每天轰炸', c:'crit', cls:'dead'}
+  ], note:'它与 A-01 的「全屏闹钟变默认」正好互相拉扯——这是 §11 里要你确认的第三个代价。'}},
+
+{ id:'E7', g:'E', t:'NEEDS_REVIEW 不得阻断 Deadline Protection', cov:'a',
+  trig:'一条事项既待整理、又有临近截止',
+  exp:'Deadline 保护<b>照常触发</b>',
+  basis:['§10','INV-02'],
+  vis:{type:'flow', nodes:[
+    {l:'review_status', n:'NEEDS_REVIEW', c:'warn'},
+    {l:'+', ar:true},
+    {l:'deadline_status', n:'PROTECTED', c:'crit'},
+    {l:'→', ar:true},
+    {l:'保护照常唤醒', n:'互不阻断', c:'hi'}
+  ], note:'与 D10 同源：Review 是信息质量轨道，不能扳动 Attention 与 Deadline 两条轨道。'}},
+
+/* ---------------- F ---------------- */
+{ id:'F1', g:'F', t:'删除 → 数据库与所有调度同时撤销', cov:'y',
+  trig:'删除一条事项',
+  exp:'该事项的<b>所有未来通知 / Alarm / 周期 / Deadline 调度</b>必须同时撤销，<strong>不得幽灵提醒</strong>',
+  basis:['AC-11','§14'],
+  vis:{type:'flow', nodes:[
+    {l:'删除', n:'一条事项', c:'crit'},
+    {l:'→ 同时', ar:true},
+    {l:'撤', n:'DB 记录'},
+    {l:'撤', n:'已排通知', c:'hi'},
+    {l:'撤', n:'周期规则'},
+    {l:'撤', n:'Deadline 调度'},
+    {l:'✗', ar:true, n:'幽灵提醒', c:'crit', cls:'dead'}
+  ]}},
+
+{ id:'F2', g:'F', t:'删除 → 短时 Undo', cov:'a',
+  trig:'刚删除完',
+  exp:'提供<b>短时 Undo</b>（普通删除）',
+  basis:['§14','G06'],
+  vis:{type:'banner', level:'vital', title:'已删除「周四 10:00 跟供应商对账期」', meta:'撤销将在数秒后消失',
+    actions:['撤销'], closable:false,
+    note:'Undo 只在短时窗口内有效；它不做「回收站」——那是任务管理器的形态。'}},
+
+{ id:'F3', g:'F', t:'重启 / 应用更新 → Reconcile', cov:'p',
+  trig:'设备重启，或应用被更新',
+  exp:'启动时对账：数据库计划 vs 系统实际调度，<b>缺失补建、多余取消</b>',
+  basis:['AC-13','§14'],
+  vis:{type:'pans', pans:[
+    {k:'数据库想要（真源）', cls:'', items:['A 周四 10:00','B 周五 09:00（周期）','C 9/30 截止保护']},
+    {k:'系统实际（投影）', cls:'next', items:['A ✓ 在','B ✗ 丢了 → <b>补建</b>','D ✗ 多余 → <b>取消</b>']}
+  ], note:'INV-09：数据库是事实来源，系统通知/Alarm 是可重建的执行层。'}},
+
+{ id:'F4', g:'F', t:'时区 / 系统时间变化 → 已错过的必须浮出', cov:'p',
+  trig:'用户跨时区，或手动改了系统时间',
+  exp:'重算未来调度；<strong>已错过且未 ACK 的事项必须浮出到「需要 Attention」</strong>，不得静默跳过',
+  basis:['§14','G08'],
+  vis:{type:'pans', pans:[
+    {k:'墙钟基准 wall-clock', cls:'', items:['「明天 9 点」→ 到新时区仍是<b>当地 9 点</b>','localTrigger 字符串持久化']},
+    {k:'时长基准 elapsed', cls:'', items:['「30 分钟后」→ 就是<b>真实流逝 30 分钟</b>','snoozedAt + snoozeDelayMs 持久化']},
+    {k:'已错过未 ACK', cls:'next', items:['<b>浮出</b>到需要注意','不得静默跳过','这是最容易漏的一条']}
+  ]}},
+
+{ id:'F5', g:'F', t:'断网 → 核心链路全部可用', cov:'p',
+  trig:'设备完全离线',
+  exp:'<b>Capture、提醒、ACK、Snooze、Review、Complete</b> 全部可工作',
+  basis:['AC-15','§14'],
+  vis:{type:'checks', items:[
+    {k:'y', t:'Capture：本地解析 + 落库，不依赖网络'},
+    {k:'y', t:'提醒：LocalNotifications / AlarmManager，本地'},
+    {k:'y', t:'ACK / Snooze / Complete：纯本地状态变更'},
+    {k:'y', t:'Review：本地队列'},
+    {k:'n', t:'AI 理解（BYOK）：会失败 → <b>自动回退本地解析</b>，不得因此保存失败'},
+    {k:'n', t:'云同步：MVP 不做（D-20）'}
+  ], note:'INV-01 与 §22：AI / 云能力只能增强，不能成为单点依赖。'}},
+
+{ id:'F6', g:'F', t:'长期未打开 → 生成摘要，不重放通知', cov:'a',
+  trig:'用户很久没打开过 App，期间积压了十几条到点事项',
+  exp:'<strong>不重放几十条通知</strong>；生成恢复摘要，<b>重要 / 关键单独突出</b>',
+  basis:['§14','G10'],
+  vis:{type:'pans', pans:[
+    {k:'✗ 会发生的坏体验', cls:'now', items:['开机后几十条通知连续弹出','用户被迫逐条划掉','注意力被系统自己占满']},
+    {k:'✓ 目标', cls:'next', items:['一条<b>恢复摘要</b>','「你离开期间有 12 件到点」','<b>重要 / 关键单独列出</b>','其余折叠进需要注意']}
+  ]}},
+
+{ id:'F7', g:'F', t:'旧通知上的动作 → version 校验', cov:'a',
+  trig:'用户点了一条<b>已被编辑过</b>的旧通知上的「我知道了」',
+  exp:'用 <code>version</code> 校验，<strong>旧通知不得覆盖新状态</strong>（动作被拒绝）',
+  basis:['§14','INV-09','G04'],
+  vis:{type:'flow', nodes:[
+    {l:'通知 v1', n:'周五 09:00', c:'warn'},
+    {l:'→ 用户改成周六', ar:true, n:'item.version = 2'},
+    {l:'点通知 v1 的动作', ar:true, n:'携带 version=1', c:'crit'},
+    {l:'→ 校验', ar:true},
+    {l:'拒绝', n:'不覆盖新状态', c:'hi'},
+    {l:'✗', ar:true, n:'把周六也 ACK 掉', c:'crit', cls:'dead'}
+  ], note:'现有 native mock 只断言了一个<b>常量</b> scheduleVersion，不足以防住这个；需要补 per-item version 用例。'}},
+
+{ id:'F8', g:'F', t:'数据库异常 → 可恢复、调度可重建', cov:'a',
+  trig:'本地数据库损坏或读取异常',
+  exp:'数据可恢复；且<b>调度层能完全由数据库重建</b>',
+  basis:['INV-09'],
+  vis:{type:'flow', nodes:[
+    {l:'IDB 异常', n:'读取失败', c:'crit'},
+    {l:'→ 回退', ar:true},
+    {l:'localStorage', n:'双写副本', c:'hi'},
+    {l:'→', ar:true},
+    {l:'重建调度', n:'由 DB 推导', c:'hi'}
+  ], note:'代码现状：IDB 模式会同时写 localStorage 防损坏，且旧键保留作备份不删除。'}},
+
+{ id:'F9', g:'F', t:'关闭弹条不取消首次提醒', cov:'y',
+  trig:'用户点了弹条的 ×，此时首次提醒尚未发出',
+  exp:'<b>不取消首次提醒</b>——抑制只作用于<b>补充提醒</b>',
+  basis:['§8.1'],
+  vis:{type:'timeline', points:[
+    {dot:'ok',    t:'14:00', l:'用户点 × 关闭弹条', s:'dismissedUntil = 14:30'},
+    {dot:'alarm', t:'14:30', l:'<b>首次提醒仍然发生</b>', s:'抑制只压补充提醒，不压首发'},
+    {dot:'notif', t:'15:00', l:'补充提醒按档位节奏继续', s:'前提是仍未 ACK 且已过抑制'}
+  ]}},
+
+/* ---------------- G ---------------- */
+{ id:'G1', g:'G', t:'首页不出现任何未来列表', cov:'a',
+  trig:'Future 里有若干未来 7 天内的事项',
+  exp:'首页<strong>不出现「即将到来 / 未来 7 天」</strong>；未来只在「未来」页查看',
+  basis:['D5','INV-07'],
+  vis:{type:'home', sub:'现在有 1 件需要你注意',
+    blocks:[{k:'due', n:1, items:[{t:'周四 10:00 跟供应商对账期', m:'现在 · 普通', c:''}]},
+            {k:'upcomingGone'},
+            {k:'activeFolded', n:2}],
+    navBadge:1,
+    note:'这是 D5 的核心：§31.4 把「用户主动查看 Future 的频率」定义为<b>不信任信号</b>，理想方向是下降。「即将到来」等于把这个指标写成首页默认内容。'}},
+
+{ id:'G2', g:'G', t:'「已看到未完成」永远折叠成一行', cov:'a',
+  trig:'不论有 1 条还是 10 条',
+  exp:'<strong>永远</strong>折叠成一行（带数量），点击展开；<b>取消「≤3 条直接列出」的阈值</b>',
+  basis:['D7','§12','§17'],
+  vis:{type:'pans', pans:[
+    {k:'现在（有阈值）', cls:'now', items:['≤3 条 → 直接把卡片列出来','首页又多一块','> 3 条才折叠']},
+    {k:'目标（永远折叠）', cls:'next', items:['<b>已看到未完成 · 4　展开 ›</b>','点开才看明细','代价：只有 1 条时也要点一下']}
+  ]}},
+
+{ id:'G3', g:'G', t:'「待整理」入口在「需要注意」之后', cov:'a',
+  trig:'两者同时存在',
+  exp:'顺序固定：<b>现在需要注意 → 待整理 → 已看到未完成</b>',
+  basis:['D6','D5'],
+  vis:{type:'home', sub:'现在有 1 件需要你注意',
+    blocks:[{k:'due', n:1, items:[{t:'周四 10:00 跟供应商对账期', m:'现在 · 普通', c:''}]},
+            {k:'reviewWeak', n:3},
+            {k:'activeFolded', n:2}],
+    navBadge:1,
+    note:'顺序即优先级：真正需要你注意的排第一，待整理是「信息质量问题」，排在其后。'}},
+
+{ id:'G4', g:'G', t:'空态补一句「今天已完成 N 件」', cov:'a',
+  trig:'首页既无需要注意也无待确认',
+  exp:'空态里多一句 <b>纯文字</b>「今天已完成 N 件」：<strong>不可点击、无徽标、无强调色</strong>',
+  basis:['D8','§13'],
+  vis:{type:'home', sub:'现在很安静 · 可以放心忘记',
+    blocks:[{k:'empty', extra:'今天已完成 3 件'}], navBadge:0,
+    note:'§13 反对的是把<b>历史</b>做成年度总结式数字面板。空态里一句<b>当天</b>完成数不属于历史统计，且只在本就不占任何区块时出现，零额外注意力成本。做成可点击入口才会真的变成噪声。'}},
+
+{ id:'G5', g:'G', t:'Badge 只统计「需要确认」的数', cov:'p',
+  trig:'存在未完成 / Future / Archive 若干',
+  exp:'Badge = <b>due 数量</b>；<strong>不统计</strong>全部未完成、Future、Archive',
+  basis:['§12'],
+  vis:{type:'home', sub:'现在有 2 件需要你注意',
+    blocks:[{k:'due', n:2, items:[{t:'合同条款', m:'现在 · 🚨 关键', c:'crit'},{t:'对账期', m:'现在 · 普通', c:''}]},
+            {k:'activeFolded', n:5}],
+    navBadge:2,
+    note:'数据对照：due 2 · 已看到未完成 5 · 托管中 12 · 归档 40 → <b>Badge 显示 2</b>。'}},
+
+{ id:'G6', g:'G', t:'「今天该做的都做完了」不藏当天完成', cov:'a',
+  trig:'需要注意与待确认都清空，但当天有完成记录',
+  exp:'空态<b>不把当天完成记录藏掉</b>——它是当天唯一的正反馈',
+  basis:['D8'],
+  vis:{type:'home', sub:'现在很安静 · 可以放心忘记',
+    blocks:[{k:'empty', extra:'今天已完成 3 件'},
+            {k:'done', n:3, items:[{t:'提交报销单', m:'今天 11:20 完成', c:'vital'},{t:'回王工电话', m:'今天 09:40 完成', c:'vital'}]}],
+    navBadge:0,
+    note:'与 G4 的差别：G4 是「一句纯文字」，G6 是「记录本身仍在」。两者不冲突——纯文字是入口形态，记录是内容。'}},
+
+/* ---------------- H ---------------- */
+{ id:'H1', g:'H', t:'四维正交状态', cov:'a',
+  trig:'任何状态判断',
+  exp:'用四个<b>正交维度</b>表达，<strong>禁止组合爆炸式枚举</strong>',
+  basis:['§5','§22','G01'],
+  vis:{type:'table', cols:['维度','取值','回答什么问题'],
+    rows:[
+      {hl:'hl', cells:['attention_status','WAITING / DELIVERED / ACKNOWLEDGED / SNOOZED','注意力交付到哪一步了']},
+      {hl:'hw', cells:['review_status','READY / NEEDS_REVIEW / REVIEWED','信息质量够不够']},
+      {hl:'', cells:['completion_status','ACTIVE / COMPLETED / ARCHIVED','这件事结束了没有']},
+      {hl:'hc', cells:['deadline_status','NONE / PENDING / PROTECTED / PASSED','硬截止有没有风险']}
+    ],
+    note:'四维各自独立变化 ⇒ 4×3×3×4 = 144 种组合。若塞进单一枚举，就会得到 144 个状态名——这正是 §5 禁止的。'}},
+
+{ id:'H2', g:'H', t:'time_source 三值可追溯', cov:'a',
+  trig:'任何设置过时间的事项',
+  exp:'兜底 → <code>FALLBACK</code>；用户手改 → <code>USER</code>；解析得出 → <code>PARSED</code>',
+  basis:['§5.1','G03'],
+  vis:{type:'table', cols:['来源','写入者','典型场景'],
+    rows:[
+      {hl:'hc', cells:['FALLBACK','系统兜底','解析不出时间 → 下一个 Review Window']},
+      {hl:'hw', cells:['USER','用户手改','在表单或整理会话里指定了时间']},
+      {hl:'hl', cells:['PARSED','自然语言解析','「周五提醒我看 Horolog」']}
+    ],
+    note:'它决定「用户是否知道这个时间是自己定的」——D16 要求把 FALLBACK 显式展示出来，正是靠这个字段。'}},
+
+{ id:'H3', g:'H', t:'delivery_mode 入库并参与对账重建', cov:'a',
+  trig:'原生调度的对账与重建',
+  exp:'<code>delivery_mode</code> 必须入库，并<b>参与原生对账重建</b>；<strong>重建后不得漂移</strong>',
+  basis:['A-01','INV-09'],
+  vis:{type:'pans', pans:[
+    {k:'✗ 不入库（会漂移）', cls:'now', items:['投递方式只在内存里算','重启对账后重建出<b>错误的机制</b>','用户改了默认，历史事项跟着变']},
+    {k:'✓ 入库（快照）', cls:'next', items:['<code>item.delivery_mode</code> 持久化','对账重建后仍是<b>同一机制</b>','历史事项不受后续设置影响']}
+  ], note:'这条是 A-01 在 INV-09 上的唯一硬约束，也是最容易实现错的一条。'}},
+
+/* ---------------- I ---------------- */
+{ id:'I1', g:'I', t:'首次授权后 → 测试提醒 + 一次 ACK', cov:'a',
+  trig:'用户首次授予通知权限',
+  exp:'提供「测试提醒」按钮，并要求用户<b>点一次「我知道了」</b>，验证链路并教育 ACK 概念',
+  basis:['§16','G21'],
+  vis:{type:'settings', title:'提醒能力自检', sub:'首次在 Android 上启动',
+    items:[{l:'① 申请通知权限', v:'待完成'},{l:'② 打开系统通知设置', v:'›'},
+           {l:'③ 允许精确闹钟', v:'›'},{l:'④ 关闭电池优化', v:'›'},
+           {l:'发送测试提醒（要求点「我知道了」）', v:'›'}],
+    note:'诊断只提示<b>影响履约的实际问题</b>，不做复杂的技术健康仪表盘（§16）。'}},
+
+{ id:'I2', g:'I', t:'第一次收到真实提醒 → 说明 ACK ≠ 完成', cov:'a',
+  trig:'用户第一次收到真实的到点提醒',
+  exp:'<b>一次性</b>说明「我知道了 ≠ 完成」；只出现一次',
+  basis:['§16','G21'],
+  vis:{type:'banner', level:'vital', title:'说明一下：「我知道了」不代表完成', meta:'这条提示只出现一次',
+    actions:['明白了'], closable:true,
+    note:'这是产品最核心的语义，必须在真实场景里教育，而不是在欢迎页里讲一遍。'}},
+
+{ id:'I3', g:'I', t:'首次产生 NEEDS_REVIEW → 轻提示窗口', cov:'a',
+  trig:'用户第一次产生一条待整理记录',
+  exp:'轻提示默认 Review Window（21:30–23:00）；<strong>不在首次启动时强制配置</strong>',
+  basis:['§16','G21'],
+  vis:{type:'banner', level:'warn', title:'这条先收下了 · 今晚 21:30 一起整理', meta:'想改时间的话，去「我的 → 整理」',
+    actions:['知道了','改时间'], closable:true,
+    note:'时机选择本身就是设计：用户此时刚体会到「记不清也没关系」，才听得进「晚上会一起问你」。'}},
+
+/* ---------------- J ---------------- */
+{ id:'J1', g:'J', t:'#sheetLowConf 的「必要」判定', cov:'a',
+  trig:'保存时判断是否需要弹极简选择',
+  exp:'含<b>具体时间指向词</b>却落到兜底 → 弹；<b>纯模糊词</b> → 不弹',
+  basis:['D15'],
+  vis:{type:'table', cols:['输入','含具体时间词','落到兜底','弹不弹'],
+    rows:[
+      {hl:'hl', cells:['「下周三给王工回电话」','是','是','<b>弹</b>']},
+      {hl:'hl', cells:['「明天下午处理报价」','是','是','<b>弹</b>']},
+      {hl:'', cells:['「Horolog 后面看看」','否','是','不弹']},
+      {hl:'', cells:['「过阵子研究一下」','否','是','不弹']},
+      {hl:'', cells:['「周五提醒我看 Horolog」','是','否（解析成功）','不弹']}
+    ],
+    note:'这个判定条件<b>可测</b>——这正是它被保留下来的理由。原决议曾想把这块 UI 当死代码删掉，那等于自行裁决产品逻辑（违反 §22）。'}},
+
+{ id:'J2', g:'J', t:'清理两个只写字段', cov:'a',
+  trig:'代码清理',
+  exp:'<code>sessionStatus</code> 与 <code>notifyPrompted</code> 只写不读 → 清理',
+  basis:['E2','E3'],
+  vis:{type:'table', cols:['字段','写入次数','读取点','处置'],
+    rows:[
+      {hl:'hw', cells:['<code>sessionStatus</code>','6 处','<b>0</b>','删除']},
+      {hl:'hw', cells:['<code>notifyPrompted</code>','3 处','<b>0</b>','删除']}
+    ], note:'纯实现问题，不影响产品语义。但它会影响「状态机是否可信」的判断——一个只写不读的字段会让人误以为有状态。'}},
+
+{ id:'J3', g:'J', t:'消除 completed 幽灵状态', cov:'a',
+  trig:'终态判定',
+  exp:'<code>completed</code> 被当终态判断，但 <code>completeItem()</code> 实际写的是 <code>archived</code> → 随 H1 正交建模一并消除',
+  basis:['E4','G01'],
+  vis:{type:'pans', pans:[
+    {k:'现在', cls:'now', items:['<code>isDue()</code> 把 completed 当终态','归档列表把 completed 当终态','<b>但没有任何地方写入它</b>','只可能来自外部导入的旧数据']},
+    {k:'目标', cls:'next', items:['completion_status: ACTIVE / COMPLETED / ARCHIVED','终态由这一维统一表达','不再有「幽灵值」']}
+  ]}},
+
+{ id:'J4', g:'J', t:'通知渠道 -v2 与设备上旧渠道', cov:'a',
+  trig:'应用升级后',
+  exp:'明确处置策略：复用一个固定渠道名，还是清理旧渠道',
+  basis:['E5'],
+  vis:{type:'pans', pans:[
+    {k:'现状（两难）', cls:'now', items:['渠道改名 <code>-v2</code>','旧渠道<b>不复用也不清理</b>','用户之前在旧渠道上的静音设置<b>失效</b>']},
+    {k:'可选策略', cls:'next', items:['A · 保留 -v2，并在升级时<b>显式删除</b>旧渠道','B · 收回改名，复用原渠道名','需要一个决定——目前没有']}
+  ], note:'⚠ 这条我无法替你选：A 会重置用户设置，B 会保留一个语义不清的渠道名。请裁决。'}},
+
+/* ---------------- K · 待整理列表（本轮新增） ---------------- */
+{ id:'K1', g:'K', t:'入口 → 先给列表，再决定开始', cov:'a',
+  trig:'在首页点「待整理 · 6」（弱入口或窗口内的显著入口）',
+  exp:'进入<b>待整理列表</b>：先看全貌（几条、都是什么、什么时候记的），再决定要不要开始；<strong>不再「点一下就被拽进逐条会话」</strong>',
+  basis:['本轮新增','D6','§9.3'],
+  vis:{type:'flow', nodes:[
+    {l:'首页', n:'待整理 · 6', c:'warn'},
+    {l:'→', ar:true},
+    {l:'待整理列表', n:'6 条 · 按日期分组', c:'hi'},
+    {l:'→ 点「开始整理」', ar:true},
+    {l:'逐条会话', n:'一条一张卡'},
+    {l:'↩ 中途退出', ar:true, n:'回列表，剩余条数即时更新'}
+  ], note:'理由：现状是「点入口 = 立刻开始处理」。用户在还没看清有什么之前就被要求逐条做决定——而这件事本来就可以推到今晚。列表把「看一眼」和「开始处理」拆成两步。'}},
+
+{ id:'K2', g:'K', t:'列表行必须显示什么', cov:'a',
+  trig:'列表渲染',
+  exp:'每行：标题 + <b>系统解析结果</b>（D16）+ <b>为什么在这</b>（§9.1）+ 来源 / 录入时间；<strong>不出现</strong>优先级、完成勾选、截止倒计时',
+  basis:['本轮新增','D16','§9.4','INV-08'],
+  vis:{type:'reviewList', n:6, footer:'开始整理（6 条）',
+    groups:[{l:'今天', s:'3 条', items:[
+      {t:'Horolog 后面看看', m:'系统解析：<b>未设定时间</b>　·　手动录入 14:20', why:'无时间|内容模糊', c:'warn'},
+      {t:'https://example.com/pricing', m:'系统解析：未设定时间　·　分享 · 某乎', why:'只有链接'},
+      {t:'过阵子看看那个降噪方案', m:'系统解析：未设定时间　·　手动录入 09:05', why:'内容模糊'}
+    ]}],
+    note:'底部主按钮只有一个动词「开始整理」——它是<b>整理动作</b>，不是任务动作。行上不放「完成」。'}},
+
+{ id:'K3', g:'K', t:'按「我什么时候记的」分组', cov:'a',
+  trig:'队列里跨了多天的记录',
+  exp:'日期表头分组：<b>今天 / 昨天 / 更早</b>；组内仍按录入时间从旧到新（与会话队列顺序一致）',
+  basis:['本轮新增','§9.3'],
+  vis:{type:'reviewList', n:6, footer:'开始整理（6 条）',
+    groups:[
+      {l:'今天', s:'3 条', items:[
+        {t:'Horolog 后面看看', m:'14:20', why:'无时间'},
+        {t:'https://example.com/pricing', m:'11:02 · 分享 · 某乎', why:'只有链接'},
+        {t:'过阵子看看那个降噪方案', m:'09:05', why:'内容模糊'}]},
+      {l:'昨天', s:'9 月 15 日 周二 · 2 条', items:[
+        {t:'有空研究一下 Horolog 的定价', m:'21:40', why:'内容模糊'},
+        {t:'看看这个优惠券能不能用', m:'19:12 · 分享', why:'只有链接'}]},
+      {l:'更早', s:'9 月 12 日 · 1 条', items:[
+        {t:'那个方案再想想', m:'10:30', why:'内容模糊'}]}
+    ],
+    note:'排序依据仍是 <code>createdAt</code> 从旧到新（§9.3）——日期表头只是给这条时间线加了个「我什么时候记的」的锚点，不改变处理顺序。'}},
+
+{ id:'K4', g:'K', t:'列表是入口，会话是处理动作', cov:'a',
+  trig:'从列表点「开始整理」，中途退出',
+  exp:'会话仍是<b>一条一张卡</b>（D14 / D16 形态不变）；退出后回列表，剩余条数<b>即时更新</b>（AC-09 逐条持久化）',
+  basis:['本轮新增','AC-09','D14'],
+  vis:{type:'flow', nodes:[
+    {l:'列表', n:'6 条', c:'hi'},
+    {l:'→ 开始整理', ar:true},
+    {l:'处理 4 条', n:'逐条即时落库', c:'hi'},
+    {l:'→ 中途退出', ar:true},
+    {l:'回列表', n:'剩 2 条', c:'hi'}
+  ], note:'列表<b>不是新的持久层</b>——它只是同一份队列的另一个视图，所以条数天然同步，不需要额外对账。'}},
+
+{ id:'K5', g:'K', t:'通知点击 vs 首页入口：两条路径', cov:'a',
+  trig:'用户从整理通知进入 / 从首页入口进入',
+  exp:'通知点击 → <b>直达会话</b>（D20：此刻来意明确，少一步）；首页入口 → <b>先进列表</b>（还没决定开始）',
+  basis:['本轮新增','D20'],
+  vis:{type:'flow', nodes:[
+    {l:'整理通知', n:'21:30 点「开始整理」', c:'warn'},
+    {l:'→ 直达', ar:true, n:'逐条会话', c:'hi'},
+    {l:'首页入口', n:'待整理 · 6'},
+    {l:'→', ar:true, n:'待整理列表', c:'hi'}
+  ], note:'⚠ 这是对 D20 的<b>边界补充</b>，不是推翻。D20 要的是「通知点了必须能到会话」，并没有要求首页入口也直达。请确认是否按此拆分。'}},
+
+{ id:'K6', g:'K', t:'行上标明「为什么在这」', cov:'a',
+  trig:'记录进入 NEEDS_REVIEW 的原因各不相同',
+  exp:'把 §9.1 的进入条件直接标在行上，用户不必点进去才知道系统为什么拦下它',
+  basis:['本轮新增','§9.1'],
+  vis:{type:'table', cols:['§9.1 的进入条件','行上显示的原因标签'],
+    rows:[
+      {hl:'', cells:['无明确提醒时间','无时间']},
+      {hl:'', cells:['时间解析置信度较低','时间不确定']},
+      {hl:'', cells:['内容过于模糊','内容模糊']},
+      {hl:'', cells:['分享内容缺少有效标题 / 上下文','只有链接']},
+      {hl:'', cells:['用户主动选择「先收着」','你选了先收着']},
+      {hl:'', cells:['从 Reminder 点「待整理」','从提醒转来']}
+    ],
+    note:'§9.1 的六个条件天然就是六种「为什么」。现在它们只活在代码里、用户看不到——D16 已经为「解析结果」做过同样的事，这里是同一个动作。'}},
+
+{ id:'K7', g:'K', t:'列表不得变成任务列表（INV-08 反例）', cov:'a',
+  trig:'设计评审',
+  exp:'不得出现完成勾选 / 优先级 / 截止倒计时 / 进度 / 子任务；行上只能是<b>整理动作</b>',
+  basis:['本轮新增','INV-08','§9.4'],
+  vis:{type:'checks', items:[
+    {k:'n', t:'完成勾选 —— 一加上就变成 Todo 列表'},
+    {k:'n', t:'☆重要 / 🚨关键 档位 —— 那是对「事」的判断；这里只有「信息够不够」'},
+    {k:'n', t:'截止倒计时 —— 「待整理」明确不是逾期任务'},
+    {k:'n', t:'进度 / 子任务 / 分组标签'},
+    {k:'y', t:'定个时间 · 改内容 · 删除 · 留着 —— 四类整理动作（§9.4）'},
+    {k:'y', t:'副标题「信息尚未二次确认，不是逾期任务」必须一直在'}
+  ], note:'判据还是产品三问：它帮用户更放心地忘记未来吗？它让注意力管理更省事吗？它让产品更像 Todo App 吗——是，就拒绝。'}},
+
+/* ---------------- L · 未来页展示（本轮新增） ---------------- */
+{ id:'L1', g:'L', t:'未来页结构总览', cov:'a',
+  trig:'打开「未来」',
+  exp:'分段（<b>托管中 / 已归档</b>）+ 视图切换（<b>列表 / 月历</b>）+ 筛选 chips + 按日期分组的列表',
+  basis:['本轮新增','§12'],
+  vis:{type:'futurePage', title:'未来', sub:'已保存，尚未进入注意力',
+    segs:['托管中','已归档'], segIdx:0, views:['列表','月历'], viewIdx:0,
+    chips:['全部','重要','有截止','周期','有项目'], chipIdx:0,
+    groups:[
+      {l:'今天', s:'9 月 16 日 周三 · 1 条', items:[{t:'跟供应商对账期', m:'23:00 · 普通'}]},
+      {l:'明天', s:'9 月 17 日 周四 · 1 条', items:[{t:'提交季度报销', m:'09:00 · ☆ 重要 · 周期'}]},
+      {l:'本周内', s:'9 月 18 日 – 21 日 · 2 条', items:[
+        {t:'看 Horolog 项目进展', m:'周五 09:00 · 普通'},
+        {t:'给王工回电话', m:'周五 14:30 · 🚨 关键　<i>截止 9/30</i>'}]}
+    ],
+    note:'四层都<b>不新增整块</b>：分段与视图切换收进一行，筛选沿用现有 chips。'}},
+
+{ id:'L2', g:'L', t:'托管中 = 按日期分组的列表', cov:'a',
+  trig:'托管中有跨越多天的事项',
+  exp:'日期表头：<b>今天 / 明天 / 本周内 / 下周 / 月份</b>，每组下是该日事项；时间显示在行内',
+  basis:['本轮新增','§12'],
+  vis:{type:'futurePage', title:'未来', sub:'已保存，尚未进入注意力',
+    segs:['托管中','已归档'], segIdx:0, views:['列表','月历'], viewIdx:0,
+    groups:[
+      {l:'今天', s:'9 月 16 日 周三', items:[{t:'跟供应商对账期', m:'23:00'}]},
+      {l:'明天', s:'9 月 17 日 周四', items:[{t:'提交季度报销', m:'09:00 · ☆ 重要'}]},
+      {l:'本周内', s:'9 月 18 日 – 21 日', items:[
+        {t:'看 Horolog 项目进展', m:'周五 09:00'},
+        {t:'给王工回电话', m:'周五 14:30 · 🚨 关键　<i>截止 9/30</i>'},
+        {t:'整理读书笔记', m:'周日 20:00 · 周期'}]},
+      {l:'下周', s:'9 月 22 日 – 28 日', items:[{t:'续保车险', m:'周二 10:00　<i>截止 10/08</i>'}]},
+      {l:'10 月', s:'更远', items:[{t:'年度体检预约', m:'10 月 12 日 09:00'}]}
+    ],
+    note:'<b>越远越粗</b>：今天 / 明天精确到「日」，本周 / 下周给到「区间」，更远只给「月」。这样一眼扫完，不必逐条心算日期——而「一眼扫完」正是让用户不必天天来看的前提（D2）。'}},
+
+{ id:'L3', g:'L', t:'日期展示的三种形态', cov:'a',
+  trig:'决定未来页怎么表达「日期」',
+  exp:'① 日期分组表头（最轻）② 月历打点 + 点日期筛选（现有实现）③ <b>双视图切换</b>：列表为默认，月历用于快速定位',
+  basis:['本轮新增','§12'],
+  vis:{type:'pans', pans:[
+    {k:'① 只做分组表头', cls:'', items:['未来事项按日期分组','不新增任何一屏','适合「我就看一眼」']},
+    {k:'② 只做月历打点', cls:'', items:['现有实现：有事项的日期打点','到期标红点，点日期筛选','适合「我记得大概是哪几天」']},
+    {k:'③ 双视图切换（推荐）', cls:'next', items:['<b>列表为默认</b>——覆盖日常路径','<b>月历</b>用于「我知道大概是哪周」的定位','两者共用同一份筛选结果，切换视图不重置筛选']}
+  ],
+    calendar:{title:'2026 年 9 月', pad:2, days:[
+      {d:1},{d:2},{d:3},{d:4},{d:5},{d:6},{d:7},{d:8},{d:9},{d:10},
+      {d:11},{d:12},{d:13},{d:14},{d:15},{d:16,c:'tod has'},
+      {d:17,c:'has'},{d:18,c:'due sel'},{d:19},{d:20},{d:21,c:'has'},
+      {d:22,c:'has'},{d:23},{d:24},{d:25},{d:26},{d:27},{d:28,c:'has'},
+      {d:29},{d:30,c:'has'},
+      {d:1,c:'mut'},{d:2,c:'mut'},{d:3,c:'mut'}
+    ]},
+    note:'推荐 ③：列表与月历<b>不是两个页面</b>，是同一份数据的两种投影。用一个只有「列表 / 月历」两个词的切换器，比再加一个底部 tab 便宜得多。'}},
+
+{ id:'L4', g:'L', t:'未来列表行要显示什么', cov:'a',
+  trig:'列表行渲染',
+  exp:'时间（HH:mm / 柔性窗口）+ 档位标记（☆ / 🚨）+ 周期标记 + 截止（D-N）+ 来源；可点进去修改 / 删除',
+  basis:['本轮新增','§12','§13','§10'],
+  vis:{type:'table', cols:['元素','取值','为什么需要'],
+    rows:[
+      {hl:'hl', cells:['时间','09:00 ／ 本周末 ／ 窗口 10:00–18:00','判断「它什么时候会回来找我」']},
+      {hl:'hw', cells:['档位标记','☆ 重要 · 🚨 关键','只有档位能改变提醒强度，必须一眼可见']},
+      {hl:'', cells:['周期标记','每天 / 每周 / 每月 1 日','否则用户会以为它是一次性事项']},
+      {hl:'hc', cells:['截止','截止 9/30 · D-3','截止与提醒时间是<b>两条独立时间线</b>（§10）']},
+      {hl:'', cells:['来源','分享 · 某乎 / 手动录入','恢复认知现场（§13）']}
+    ],
+    note:'行上<b>不放</b>优先级排序、也不放完成按钮——未来页要回答的是「我托管了什么」，不是「我该干什么」。'}},
+
+{ id:'L5', g:'L', t:'已归档：按日回看，不出现统计面板', cov:'a',
+  trig:'切到「已归档」分段',
+  exp:'按日分组（今天 / 昨天 / 9 月 12 日 周六），每行显示完成时间；<strong>不出现完成率、连续天数、年度总结</strong>',
+  basis:['本轮新增','§12','§13'],
+  vis:{type:'futurePage', title:'已归档', sub:'完成过的事项，需要时可回看',
+    segs:['托管中','已归档'], segIdx:1,
+    groups:[
+      {l:'今天', s:'2 件', items:[{t:'提交报销单', m:'11:20 完成'},{t:'回王工电话', m:'09:40 完成'}]},
+      {l:'昨天', s:'9 月 15 日 周二 · 1 件', items:[{t:'交物业费', m:'20:10 完成'}]},
+      {l:'9 月 12 日', s:'周六 · 3 件', items:[
+        {t:'预约体检', m:'10:00 完成'},{t:'买猫粮', m:'15:30 完成'},{t:'整理书架', m:'21:00 完成'}]}
+    ],
+    note:'§13 明确：历史<b>不主动制造</b>「年度总结 / 完成数」这类注意力噪声。按日回看是「找东西」，不是「看成绩」。'}},
+
+{ id:'L6', g:'L', t:'两种空态，落点不同', cov:'a',
+  trig:'托管中为空 / 已归档为空',
+  exp:'各自给一句能落地的解释，不复用同一句空话',
+  basis:['本轮新增','§12'],
+  vis:{type:'pans', pans:[
+    {k:'托管中为空', cls:'', items:['⏱ 没有托管中的未来','「在首页点 +，一句话把未来事项交出去，现在就可以少记挂。」','落点：<b>去做一次 Capture</b>']},
+    {k:'已归档为空', cls:'', items:['✓ 还没有归档','「完成后的内容会收进这里，可随时回看，但不会主动打扰你。」','落点：<b>放心，这里不会长东西</b>']}
+  ], note:'两句的诉求完全相反：前者要推用户去记一笔，后者要告诉用户不必来。用同一句空话会把这两个意图都抹掉。'}},
+
+{ id:'L7', g:'L', t:'未来页的设计红线', cov:'a',
+  trig:'设计评审',
+  exp:'要「<b>一次看够</b>」；不要任何让它值得天天来看的钩子',
+  basis:['本轮新增','D2','INV-07','§1.3','§13'],
+  vis:{type:'checks', items:[
+    {k:'y', t:'一次打开就能看清全部托管内容（分段 + 日期分组 + 筛选）'},
+    {k:'y', t:'与首页严格分离：未来页的一切都不回到首页'},
+    {k:'n', t:'拖拽排程 / 时间轴 / 周视图 —— §1.3 明确「不替用户规划完整日程」'},
+    {k:'n', t:'完成率、连续天数、年度总结 —— §13 禁止的注意力噪声'},
+    {k:'n', t:'「你有 12 件未来事项」这类数字提醒 —— 那是把不信任指标做成内容'},
+    {k:'n', t:'首页出现未来列表的任何形式（D5 已删「即将到来」，不再加回来）'}
+  ], note:'判据是 D2：这个设计会让「用户主动查看 Future 的频率」<b>上升还是下降</b>？未来页做得越「一次看够」，这个频率越会下降——下降才是它做对了的信号。'}},
+];
+
+const GAPS = [
+  {id:'GAP-01', t:'语音输入路径未覆盖', basis:'§6', d:'基线写「语音直接复用系统/第三方输入法」。这决定了输入页是<b>不内置录音</b>还是需要额外入口——88 条案例零覆盖。'},
+  {id:'GAP-02', t:'Capture ≤ 5 秒的目标未覆盖', basis:'§6', d:'「1 次唤起 + 1 句话 + 自动保存，目标耗时 ≤ 5 秒」是明文性能目标，但没有对应验收案例，也没有度量方式。'},
+  {id:'GAP-03', t:'缺一条 ACK 反例', basis:'§8.1 · INV-03', d:'基线逐条列了「解锁 / 进入 App / 通知消失」都<b>不得</b>被推测为 ACK。现有案例只有正向（点「我知道了」算 ACK），没有反例案例来锁住「不算」。'},
+  {id:'GAP-04', t:'Review Window 的「今日临时覆盖」未覆盖', basis:'§9.2', d:'「支持全局默认 + 今日临时覆盖；今日覆盖次日自动恢复」——这条的恢复语义完全没有案例。'},
+  {id:'GAP-05', t:'Review 完全关闭后的数据保全未覆盖', basis:'§9.2', d:'「关闭后 NEEDS_REVIEW 数据仍保存，已有 Trigger 仍正常工作」。D17 只覆盖了「兜底记录的退让」，没覆盖「已有 Trigger 不受影响」。'},
+  {id:'GAP-06', t:'固定窗口 vs 柔性窗口两种形态未区分', basis:'§9.2', d:'基线允许 Review Window 用固定时间或柔性窗口，两种形态的触发时机不同，现有案例默认了固定窗口。'},
+  {id:'GAP-07', t:'Review 单条的「删除 / 修改」未覆盖', basis:'§9.4', d:'§9.4 列了四类单条操作：确认 / 修改 / 删除 / 继续待整理。现有案例只覆盖了「继续待整理」（D16）。'},
+  {id:'GAP-08', t:'ACK-based 周期未覆盖', basis:'§11', d:'「每隔 14 天重新关注」= 从本次 ACK 实际时间起算。B7 只覆盖了固定周期。这类周期与 Snooze 叠加时怎么算也没案例。'},
+  {id:'GAP-09', t:'周期主 Item 的 Review 不重复', basis:'§11', d:'「整理主 Item 的内容和规则，不要求每个周期实例重复 Review」——周期实例是否需要整理，无案例。'},
+  {id:'GAP-10', t:'搜索的覆盖范围未覆盖', basis:'§13', d:'「搜索覆盖 Future、已看到未完成、Archive」三区。这是「我好像记过什么」的唯一兜底路径（D21 撤销后更重要），却零案例。'},
+  {id:'GAP-11', t:'轻量摘要完全未覆盖', basis:'§23 D-12 · 代码已有实现', d:'「默认不做日报；大量新增/重要事项时可轻量摘要」。product-logic 里已有阈值（3 条新增或 1 条重要）与 20 小时节流，但没有任何验收案例——这是<b>已实现却没被验收</b>的功能。'},
+  {id:'GAP-12', t:'柔性窗口的进入时机未覆盖', basis:'§6.1 · §17 · 代码：窗口首日 10:00', d:'「周末」这类 window 事项，系统在该窗口内选时机（代码是窗口首日 10:00）。D17 改动了兜底值，但 window 的语义没被任何案例锁住。'},
+  {id:'GAP-13', t:'INV-08 没有反面案例', basis:'INV-08', d:'「Review 只提高信息质量，不升级为任务管理」——需要一条反例：整理卡片上不得出现优先级/子任务/进度等任务化元素。'},
+  {id:'GAP-14', t:'INV-10 没有反面案例', basis:'INV-10', d:'「自动化宁可保守」——A-01 正好冲击这条（全屏变默认）。建议补一条「设置改错时的兜底」案例，而不只是把它记成知情代价。'},
+  {id:'GAP-15', t:'产品指标埋点未纳入验收', basis:'§20', d:'北极星 ADR 及 8 项指标是否属 MVP 交付物？这决定要不要在 schema 里留埋点字段——现在没有答案。'},
+  {id:'GAP-16', t:'真机集成测试无法执行', basis:'§22', d:'§22 要求 P0 必须有「关键真机集成测试」。本机无 JDK 17 / Android SDK / 模拟器，相关案例<b>只能标 NOT_PERFORMED</b>，这是硬边界。'},
+  {id:'GAP-17', t:'批量 Review（P1）无案例', basis:'§18.2 · §9.4', d:'「一次处理 5/10 条或批量确认清晰事项」属 P1。是否要一并在 schema 里预留，需要你定。'},
+  {id:'GAP-18', t:'「我的」页若干设置项无验收案例', basis:'§14 · 代码', d:'锁屏隐私、后台保活、电池优化白名单——都影响「能否真的提醒到」，但没有对应案例，尤其是它们失败时的告知。'},
+  {id:'GAP-19', t:'笔记 / 项目 / 标签超出 V0.2 范围', basis:'V0.2 未提及', d:'代码里有笔记、项目、标签，V0.2 通篇没写。要么承认它们是历史遗留并降级，要么补一条变更提案——目前处于「无人认领」状态。'}
+];
+
+/* =========================================================
+   渲染器
+   ========================================================= */
+const esc = s => String(s);
+function phone(inner, opt){
+  opt = opt || {};
+  return '<div class="phone' + (opt.dark ? ' dark' : '') + '">' +
+    '<div class="pbar"><span>9:41</span><span>' + (opt.status || '安心收件箱') + '</span><span>▮▮▮</span></div>' +
+    '<div class="pbody">' + inner + '</div></div>';
+}
+function acts(list){
+  return '<div class="acts">' + list.map(a => {
+    const cls = a.cls ? ' ' + a.cls : (/^(我知道了|完成|确定)$/.test(a) ? ' pri' : (/^(关闭|先不提醒)$/.test(a) ? ' gh' : ''));
+    const label = typeof a === 'string' ? a : a.label;
+    return '<span class="' + cls.trim() + '">' + esc(label) + '</span>';
+  }).join('') + '</div>';
+}
+function itemCards(list){
+  return (list || []).map(it =>
+    '<div class="item ' + (it.c || '') + '"><div class="it">' + it.t + '</div>' +
+    (it.m ? '<div class="im">' + it.m + '</div>' : '') + '</div>').join('');
+}
+function homeBlock(b){
+  if (b.k === 'reviewWeak')
+    return b.n === 0 ? '' : '<div class="weakline"><span>待整理</span><span>›</span></div>';
+  if (b.k === 'reviewStrong')
+    return '<div class="strongline"><span>待整理 · ' + b.n + '</span><span>›</span></div>';
+  if (b.k === 'due')
+    return '<div class="ms">现在需要注意<em>' + (b.n || 0) + '</em></div>' + itemCards(b.items);
+  if (b.k === 'dueHead')
+    return '<div class="ms">现在需要注意<em>' + b.n + '</em></div>';
+  if (b.k === 'activeFolded')
+    return '<div class="foldline"><span>已看到未完成 · <b>' + b.n + '</b></span><span>展开 ›</span></div>';
+  if (b.k === 'activeOpen')
+    return '<div class="ms">已看到未完成<em>' + (b.n || 0) + '</em></div>' + itemCards(b.items);
+  if (b.k === 'activeRaw')
+    return itemCards(b.items);
+  if (b.k === 'done')
+    return '<div class="ms">今天已完成<em>' + b.n + '</em></div>' + itemCards(b.items);
+  if (b.k === 'empty')
+    return '<div class="emptybox"><div class="mk">✓</div><strong>此刻很安静</strong>' +
+      '没有需要你注意的事项。<br>' + (b.extra || '') + '</div>';
+  if (b.k === 'notice')
+    return '<div class="banner crit" style="margin-bottom:8px"><div class="bt">⚠ ' + b.text + '</div></div>';
+  if (b.k === 'upcomingGone')
+    return '<div class="weakline" style="text-decoration:line-through;opacity:.4"><span>即将到来</span><span>已删除</span></div>';
+  return '';
+}
+
+const VIS = {
+
+  capture(o){
+    let body = '<div class="phead"><h4>安心记下</h4><p>一句话交给系统</p></div>';
+    body += '<div class="item" style="border-left-color:var(--signal)"><div class="it">' + o.text + '</div></div>';
+    body += '<div class="im" style="font-size:.64rem;color:var(--muted);margin:-1px 0 8px">' + o.hint + '</div>';
+    if (o.flag) body += '<div class="kv" style="margin-bottom:6px"><span style="background:var(--attention-soft);border-color:#e3d2a6;color:#7a540e">' + o.flag + '</span></div>';
+    if (o.kv) body += '<div class="ms">自动保存的上下文</div><div class="kv">' + o.kv.map(k => '<span>' + k + '</span>').join('') + '</div>';
+    if (o.toast) body += '<div class="toastx" style="margin-top:9px;font-size:.66rem;background:var(--signal-soft);border:1px solid #a8cdb9;color:#14573b;border-radius:8px;padding:6px 9px">' + o.toast + '</div>';
+    body += '<div class="pnav"><span>首页</span><span>未来</span><span>笔记</span><span>我的</span></div>';
+    let phone1 = phone(body);
+    if (o.overlay){
+      const ov = '<div style="position:absolute;inset:0;background:rgba(20,24,29,.28);border-radius:15px;display:flex;align-items:flex-end">' +
+        '<div style="background:var(--card);width:100%;border-radius:14px 14px 0 0;padding:12px">' +
+        '<div style="font-size:.76rem;font-weight:650">' + o.overlay.title + '</div>' +
+        '<div style="font-size:.64rem;color:var(--muted);margin:4px 0 8px;line-height:1.5">' + o.overlay.desc + '</div>' +
+        '<div class="acts">' + o.overlay.chips.map((c,i) => '<span class="' + (i === 0 ? 'pri' : '') + '">' + c + '</span>').join('') + '</div>' +
+        '<div class="acts" style="margin-top:9px"><span class="pri">' + o.overlay.primary + '</span><span class="gh">' + o.overlay.secondary + '</span></div>' +
+        '</div></div>';
+      phone1 = phone(body + ov);
+    }
+    return '<div class="mock">' + phone1 + '</div>' + (o.note ? '<div class="note">' + o.note + '</div>' : '');
+  },
+
+  overlay(o){
+    const body = '<div class="phead"><h4>未来</h4><p>刚恢复的事项已静置</p></div>' +
+      '<div class="item ghost"><div class="it">Horolog 项目进展</div><div class="im">未设定时间 · 不会自动提醒</div></div>' +
+      '<div style="position:absolute;inset:0;background:rgba(20,24,29,.28);border-radius:15px;display:flex;align-items:flex-end">' +
+      '<div style="background:var(--card);width:100%;border-radius:14px 14px 0 0;padding:12px">' +
+      '<div style="font-size:.76rem;font-weight:650">' + o.title + '</div>' +
+      '<div style="font-size:.64rem;color:var(--muted);margin:4px 0 8px;line-height:1.5">' + o.desc + '</div>' +
+      '<div class="acts">' + o.chips.map((c,i) => '<span class="' + (i === 0 ? 'pri' : '') + '">' + c + '</span>').join('') + '</div>' +
+      '</div></div>';
+    return '<div class="mock">' + phone(body) + '</div>';
+  },
+
+  home(o){
+    let body = '<div class="phead"><h4>安心收件箱</h4><p>' + (o.sub || '') + '</p></div>';
+    (o.blocks || []).forEach(b => { body += homeBlock(b); });
+    if (o.empty) body += '<div class="note" style="margin:8px 0 0">' + o.empty + '</div>';
+    body += '<div class="pnav"><b>首页' + (o.navBadge ? '<i>' + o.navBadge + '</i>' : '') + '</b><span>未来</span><span>笔记</span><span>我的</span></div>';
+    let out = '<div class="mock">' + phone(body) + '</div>';
+    if (o.extra) out += o.extra;
+    return out + (o.note ? '<div class="note">' + o.note + '</div>' : '');
+  },
+
+  banner(o){
+    let b = '<div class="banner ' + (o.level || '') + '">' +
+      (o.closable === false ? '' : '<div class="bx">×</div>') +
+      '<div class="bt">' + o.title + '</div><div class="bm">' + o.meta + '</div>' +
+      acts(o.actions || []) + '</div>';
+    let behind = '<div class="dim"><div class="ms">现在需要注意</div>' +
+      itemCards([{t:'其他的事项仍在这里', m:'首页内容不受弹条影响', c:''}]) + '</div>';
+    let out = '<div class="mock">' + phone(b + behind) + '</div>';
+    if (o.clicked)
+      out += '<div class="note"><span class="yes">✓ 用户点了这片空白区域</span> → 弹条<b>保持不动</b>，不关闭、不抑制。</div>';
+    if (o.note) out += '<div class="note">' + o.note + '</div>';
+    return out;
+  },
+
+  alarm(o){
+    const wave = '<div class="wave">' + Array.from({length:26}, (_,i) =>
+      '<i style="height:' + (6 + Math.abs(Math.sin(i*1.1)) * 13).toFixed(1) + 'px"></i>').join('') + '</div>';
+    const body = '<div class="alarm">' +
+      '<div class="at">' + o.title + '</div>' +
+      '<div class="am">' + o.meta + '</div>' + wave +
+      acts(o.actions || []) +
+      '</div>';
+    return '<div class="mock">' + phone(body, {dark:true, status:'全屏闹钟'}) + '</div>' +
+      '<div class="note">Android 真机为深色全屏（亮屏 + 循环响铃 + 波形震动 + 锁屏直达）。' + (o.note || '') + '</div>';
+  },
+
+  notif(o){
+    const n = '<div class="sysbar"><span>' + (o.time || '9:41') + '</span><span>安心收件箱</span><span>▮▮▮</span></div>' +
+      '<div class="notif"><div class="nh"><span class="ap"></span>' + o.app + '</div>' +
+      '<div class="nt">' + o.nt + '</div><div class="nb">' + o.nb + '</div>' +
+      acts(o.actions || []) + '</div>';
+    return '<div class="mock">' + phone(n, {status:'系统通知栏'}) + '</div>' +
+      (o.note ? '<div class="note">' + o.note + '</div>' : '');
+  },
+
+  timeline(o){
+    return '<div class="tl">' + o.points.map(p =>
+      '<div class="tl-item"><div class="tl-dot ' + (p.dot || '') + '"></div>' +
+      '<div class="tl-body"><div class="tl-t">' + p.t + '</div>' +
+      '<div class="tl-l">' + p.l + (p.s ? '<small>' + p.s + '</small>' : '') + '</div></div></div>').join('') +
+      '</div>' + (o.note ? '<div class="note">' + o.note + '</div>' : '');
+  },
+
+  flow(o){
+    return '<div class="flow">' + o.nodes.map(n =>
+      n.ar ? '<span class="ar">' + n.l + '</span>'
+           : '<span class="n ' + (n.c || '') + ' ' + (n.cls || '') + '"><b>' + (n.l || '') + '</b>' + (n.n || '') + '</span>').join('') +
+      '</div>' + (o.note ? '<div class="note">' + o.note + '</div>' : '');
+  },
+
+  matrix(o){
+    return '<table class="mini"><tr>' + o.cols.map((c,i) => '<th>' + c + '</th>').join('') + '</tr>' +
+      o.rows.map(r => '<tr class="' + (r.hl || '') + '">' +
+        '<td>' + r.l + '</td><td>' + r.imp + '</td><td>' + r.dm + '</td></tr>').join('') +
+      '</table>' + (o.note ? '<div class="note">' + o.note + '</div>' : '');
+  },
+
+  pans(o){
+    let out = '<div class="pans">' + o.pans.map(p =>
+      '<div class="pan ' + (p.cls || '') + '"><h5>' + p.k + '</h5>' +
+      (Array.isArray(p.items) ? '<ul>' + p.items.map(i => '<li>' + i + '</li>').join('') + '</ul>' : '<p>' + p.items + '</p>') +
+      '</div>').join('') + '</div>';
+    if (o.calendar) out += '<div style="margin-top:12px;max-width:250px">' + VIS.calendar(o.calendar) + '</div>';
+    if (o.note) out += '<div class="note">' + o.note + '</div>';
+    return out;
+  },
+
+  checks(o){
+    return '<ul class="checks">' + o.items.map(i =>
+      typeof i === 'string' ? '<li>' + i + '</li>' : '<li class="' + (i.k || '') + '">' + i.t + '</li>').join('') + '</ul>' +
+      (o.note ? '<div class="note">' + o.note + '</div>' : '');
+  },
+
+  list(o){
+    return '<ul class="checks">' + (o.items || []).map(i => '<li>' + i + '</li>').join('') + '</ul>' +
+      (o.kv ? '<div class="kv" style="margin-top:8px">' + o.kv.map(k => '<span>' + k + '</span>').join('') + '</div>' : '') +
+      (o.note ? '<div class="note">' + o.note + '</div>' : '');
+  },
+
+  table(o){
+    return '<table class="mini"><tr>' + o.cols.map(c => '<th>' + c + '</th>').join('') + '</tr>' +
+      o.rows.map(r => '<tr class="' + (r.hl || '') + '">' + r.cells.map(c => '<td>' + c + '</td>').join('') + '</tr>').join('') +
+      '</table>' + (o.note ? '<div class="note">' + o.note + '</div>' : '');
+  },
+
+  session(o){
+    let cards = o.cards.map(c => '<div class="item ' + (c.c || '') + '"><div class="it">' + c.t + '</div><div class="im">' + c.m + '</div></div>').join('');
+    const body = '<div class="phead"><h4>整理 · 5 条待处理</h4><p>信息尚未二次确认，不是逾期任务</p></div>' +
+      cards + acts(o.actions || ['删除','确认','保存修改']) +
+      '<div class="note" style="font-size:.62rem">' + (o.foot || '') + '</div>';
+    return '<div class="mock">' + phone(body) + '</div>' + (o.note ? '<div class="note">' + o.note + '</div>' : '');
+  },
+
+  settings(o){
+    let rows = o.items.map(i =>
+      '<div style="display:flex;justify-content:space-between;align-items:center;font-size:.72rem;padding:7px 0;border-bottom:1px solid var(--line)">' +
+      '<span>' + i.l + '</span><span style="color:var(--muted);font-size:.66rem">' + (i.v || '›') + '</span></div>').join('');
+    const body = '<div class="phead"><h4>' + (o.title || '我的') + '</h4><p>' + (o.sub || '设置') + '</p></div>' + rows;
+    return '<div class="mock">' + phone(body) + '</div>' + (o.note ? '<div class="note">' + o.note + '</div>' : '');
+  },
+
+  note(o){
+    return '<div class="callout ' + (o.tone || '') + '">' + o.text + '</div>';
+  },
+
+  /* 待整理列表 */
+  reviewList(o){
+    let body = '<div class="phead"><h4>待整理 · ' + o.n + '</h4>' +
+      '<p>信息尚未二次确认，不是逾期任务</p></div>';
+    (o.groups || []).forEach(g => {
+      body += '<div class="dhead"><b>' + g.l + '</b><small>' + (g.s || '') + '</small></div>';
+      body += g.items.map(it =>
+        '<div class="rrow' + (it.c ? ' ' + it.c : '') + '">' +
+          (o.batch ? '<span class="rk' + (it.on ? ' on' : '') + '"></span>' : '') +
+          '<div class="rmain"><div class="rt">' + it.t + '</div>' +
+          (it.m ? '<div class="rm">' + it.m + '</div>' : '') +
+          (it.why ? '<div class="rwhy">' + it.why.split('|').map(w => '<span>' + w + '</span>').join('') + '</div>' : '') +
+          '</div><span class="rgo">›</span></div>').join('');
+    });
+    if (o.footer) body += '<div class="primarybtn">' + o.footer + '</div>';
+    if (o.foot2) body += '<div class="ghostbtn">' + o.foot2 + '</div>';
+    body += '<div class="pnav"><span>首页</span><span>未来</span><span>笔记</span><span>我的</span></div>';
+    return '<div class="mock">' + phone(body) + '</div>' + (o.note ? '<div class="note">' + o.note + '</div>' : '');
+  },
+
+  /* 未来页 */
+  futurePage(o){
+    let body = '<div class="phead"><h4>' + (o.title || '未来') + '</h4><p>' + (o.sub || '') + '</p></div>';
+    if (o.segs) body += '<div class="segbar">' + o.segs.map((s, i) =>
+      '<span class="' + (i === o.segIdx ? 'on' : '') + '">' + s + '</span>').join('') + '</div>';
+    if (o.views) body += '<div class="viewbar">' + o.views.map((s, i) =>
+      '<span class="' + (i === o.viewIdx ? 'on' : '') + '">' + s + '</span>').join('') + '</div>';
+    if (o.chips) body += '<div class="chipsmini">' + o.chips.map((s, i) =>
+      '<span class="' + (i === o.chipIdx ? 'on' : '') + '">' + s + '</span>').join('') + '</div>';
+    if (o.calendar) body += VIS.calendar(o.calendar);
+    (o.groups || []).forEach(g => {
+      body += '<div class="dhead"><b>' + g.l + '</b><small>' + (g.s || '') + '</small></div>';
+      body += g.items.map(it =>
+        '<div class="rrow"><div class="rmain"><div class="rt">' + it.t + '</div>' +
+        (it.m ? '<div class="rm">' + it.m + '</div>' : '') +
+        '</div><span class="rgo">›</span></div>').join('');
+    });
+    if (o.empty) body += '<div class="emptybox"><div class="mk">' + (o.emptyMark || '⏱') + '</div>' +
+      '<strong>' + o.empty + '</strong>' + (o.emptySub || '') + '</div>';
+    body += '<div class="pnav"><span>首页</span><b>未来</b><span>笔记</span><span>我的</span></div>';
+    return '<div class="mock">' + phone(body) + '</div>' + (o.note ? '<div class="note">' + o.note + '</div>' : '');
+  },
+
+  /* 迷你月历 */
+  calendar(o){
+    let cells = '';
+    for (let i = 0; i < (o.pad || 0); i++) cells += '<b class="mut"></b>';
+    (o.days || []).forEach(d => { cells += '<b class="' + (d.c || '') + '">' + d.d + '</b>'; });
+    return '<div class="calmini"><div class="ch"><span>' + (o.title || '') + '</span><span>‹ 今 ›</span></div>' +
+      '<div class="cg">' + ['日','一','二','三','四','五','六'].map(x => '<i>' + x + '</i>').join('') +
+      cells + '</div></div>';
+  }
+};
+
+/* ---------- 渲染 ---------- */
+function renderCase(c){
+  const v = c.vis || {};
+  const fn = VIS[v.type] || VIS.note;
+  let visual = '';
+  try { visual = fn(Object.assign({}, v, {type:undefined})); }
+  catch(e){ visual = '<div class="note">演示渲染失败：' + e.message + '</div>'; }
+  const isUI = ['capture','home','banner','alarm','notif','overlay','session','settings'].indexOf(v.type) >= 0;
+  return '<article class="case" id="' + c.id + '" data-g="' + c.g + '" data-kind="' + (isUI ? 'ui' : 'beh') +
+    '" data-text="' + (c.id + ' ' + c.t + ' ' + c.trig + ' ' + c.exp + ' ' + (c.basis || []).join(' ')).replace(/<[^>]+>/g,'').replace(/"/g,'') + '">' +
+    '<div class="case-grid"><div class="case-main">' +
+      '<div class="case-top"><span class="cid">' + c.id + '</span>' +
+      '<span class="case-title">' + c.t + '</span>' +
+      (c.g === 'K' || c.g === 'L'
+        ? '<span class="cov n">🆕 本轮新增</span>'
+        : '<span class="cov ' + c.cov + '">' + (c.cov === 'y' ? '✅ 已覆盖' : c.cov === 'p' ? '🟡 部分' : '⬜ 待补') + '</span>') + '</div>' +
+      '<div class="row"><span class="k">触发</span><span class="v">' + c.trig + '</span></div>' +
+      '<div class="row exp"><span class="k">期望</span><span class="v">' + c.exp + '</span></div>' +
+      (c.conflict ? '<div class="callout danger" style="margin-top:8px;font-size:.76rem">冲突：' + c.conflict + '</div>' : '') +
+      (c.report ? '<div class="callout" style="margin-top:8px;font-size:.76rem">' + c.report + '</div>' : '') +
+      '<div class="basis">' + (c.basis || []).map(b => '<span>' + b + '</span>').join('') + '</div>' +
+      '<div class="vis"><div class="vis-cap">' + (isUI ? '📱 界面态' : '⚙ 行为态') + '</div>' + visual + '</div>' +
+    '</div><div class="tick" data-tick="' + c.id + '" title="标记为已确认">✓</div></div></article>';
+}
+
+function renderGap(g){
+  return '<article class="case" id="' + g.id + '">' +
+    '<div class="case-top"><span class="cid" style="background:var(--critical)">' + g.id + '</span>' +
+    '<span class="case-title">' + g.t + '</span>' +
+    '<span class="cov p">⬜ 未覆盖</span></div>' +
+    '<div class="row"><span class="k">依据</span><span class="v">' + g.basis + '</span></div>' +
+    '<div class="row exp"><span class="k">说明</span><span class="v">' + g.d + '</span></div></article>';
+}
+
+(function init(){
+  const mount = document.getElementById('cases');
+  const gapsMount = document.getElementById('gapGrid');
+  const jump = document.getElementById('jump');
+
+  // 分组
+  let html = '';
+  Object.keys(GROUPS).forEach(g => {
+    const list = CASES.filter(c => c.g === g);
+    if (!list.length) return;
+    const y = list.filter(c => c.cov === 'y').length, p = list.filter(c => c.cov === 'p').length;
+    const isNew = (g === 'K' || g === 'L');
+    const cnt = isNew
+      ? list.length + ' 条 · 全部待你确认'
+      : list.length + ' 条 · ✅' + y + ' 🟡' + p + ' ⬜' + (list.length - y - p);
+    html += '<section id="g-' + g + '" data-group="' + g + '">' +
+      '<div class="sec-head"><h2>' + GROUPS[g].n + '</h2>' +
+      '<span class="cnt">' + cnt + '</span>' +
+      '<span class="desc">' + GROUPS[g].d + '</span></div>' +
+      (GROUPS[g].warn ? '<div class="callout" style="margin-bottom:14px">' + GROUPS[g].warn + '</div>' : '') +
+      '<div class="grid">' + list.map(renderCase).join('') + '</div></section>';
+  });
+  html += '<section id="g-gap" data-group="gap"><div class="sec-head"><h2>缺口汇总</h2>' +
+    '<span class="cnt">' + GAPS.length + ' 项</span><span class="desc">见第 12 节详解</span></div>' +
+    '<div class="grid">' + GAPS.map(renderGap).join('') + '</div></section>';
+  mount.innerHTML = html;
+  gapsMount.innerHTML = GAPS.map(renderGap).join('');
+
+  // 跳转
+  jump.innerHTML = Object.keys(GROUPS).map(g => '<a href="#g-' + g + '">' + g + '</a>').join('') +
+    '<a href="#gaps" style="border-color:var(--critical);color:var(--critical)">缺口 ' + GAPS.length + '</a>';
+
+  // 勾选
+  const KEY = 'attention-inbox-scenario-review-v1';
+  let done = {};
+  try { done = JSON.parse(localStorage.getItem(KEY) || '{}'); } catch(e){ done = {}; }
+  function paint(){
+    document.querySelectorAll('[data-tick]').forEach(el => {
+      const on = !!done[el.dataset.tick];
+      el.classList.toggle('on', on);
+      el.closest('.case').classList.toggle('done', on);
+    });
+    const total = document.querySelectorAll('[data-tick]').length;
+    const n = Object.keys(done).filter(k => done[k]).length;
+    document.querySelector('.brand small').textContent = 'V0.2 + A-01 + D1–D25 · 已确认 ' + n + '/' + total;
+  }
+  document.addEventListener('click', e => {
+    const t = e.target.closest('[data-tick]');
+    if (!t) return;
+    done[t.dataset.tick] = !done[t.dataset.tick];
+    try { localStorage.setItem(KEY, JSON.stringify(done)); } catch(err){}
+    paint();
+  });
+  paint();
+
+  // 筛选 + 搜索
+  let filter = 'all';
+  const q = document.getElementById('q');
+  function apply(){
+    const kw = q.value.trim().toLowerCase();
+    document.querySelectorAll('.case[data-g]').forEach(el => {
+      const okF = filter === 'all' || el.dataset.kind === filter ||
+        (filter === 'gap' && !done[el.id]);
+      const okQ = !kw || (el.dataset.text || '').toLowerCase().indexOf(kw) >= 0;
+      el.classList.toggle('hidden', !(okF && okQ));
+    });
+    document.querySelectorAll('section[data-group]').forEach(sec => {
+      const any = sec.querySelectorAll('.case:not(.hidden)').length;
+      sec.classList.toggle('hidden', any === 0);
+    });
+  }
+  document.getElementById('segFilter').addEventListener('click', e => {
+    const b = e.target.closest('button'); if (!b) return;
+    filter = b.dataset.f;
+    [...e.currentTarget.children].forEach(x => x.classList.toggle('on', x === b));
+    apply();
+  });
+  q.addEventListener('input', apply);
+  document.addEventListener('click', e => { if (e.target.closest('[data-tick]')) apply(); });
+})();
+</script>
+</body>
+</html>

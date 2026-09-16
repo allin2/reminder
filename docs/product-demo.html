@@ -1,0 +1,1194 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>安心收件箱 · 产品设计 Demo</title>
+<style>
+/* =========================================================
+   设计令牌
+   两层：① 基础层（色 / 字 / 距 / 圆 / 影 / 动效）
+        ② 语义层（把不变量映射成可见的视觉差）
+   ========================================================= */
+:root{
+  /* ---- 基础色 ---- */
+  --paper:#f4f5f2;
+  --surface:#ffffff;
+  --surface-2:#fafbf8;
+  --surface-3:#eef0ec;
+  --ink:#14181d;
+  --ink-2:#4a535d;
+  --muted:#77828d;
+  --line:#e6e9e5;
+  --line-2:#d2d8d2;
+
+  /* ---- 品牌与状态色（每个都有 bg / line 配套，不靠透明度调） ---- */
+  --signal:#1b6b4a;      --signal-bg:#e7f1ec;   --signal-line:#b3d3c3;
+  --attention:#9a6b12;   --attention-bg:#f7efdb; --attention-line:#e5d4a8;
+  --critical:#8f3a3a;    --critical-bg:#f9eaea;  --critical-line:#e5c5c5;
+  --future:#3d5a80;      --future-bg:#e9eef6;    --future-line:#c6d2e4;
+
+  /* ---- 字阶（4 的倍数，中文行高偏松） ---- */
+  --t-display:26px;
+  --t-title:20px;
+  --t-head:17px;
+  --t-body:15px;
+  --t-sub:13px;
+  --t-cap:12px;
+  --t-micro:11px;
+
+  /* ---- 间距（4 基准） ---- */
+  --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:20px; --s6:24px; --s8:32px;
+
+  /* ---- 圆角 ---- */
+  --r-card:16px; --r-ctl:12px; --r-sm:10px; --r-sheet:22px; --r-pill:999px;
+
+  /* ---- 高度与阴影 ---- */
+  --e1:0 1px 2px rgba(20,24,29,.05);
+  --e2:0 4px 14px rgba(20,24,29,.07);
+  --e3:0 12px 32px rgba(20,24,29,.14);
+  --e4:0 24px 64px rgba(20,24,29,.26);
+
+  /* ---- 动效 ---- */
+  --mo-f:150ms cubic-bezier(.32,.72,.28,1);
+  --mo-n:260ms cubic-bezier(.32,.72,.28,1);
+
+  --font:"PingFang SC",system-ui,-apple-system,"Hiragino Sans GB","Microsoft YaHei",sans-serif;
+  --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+  --gutter:16px;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{scroll-behavior:smooth}
+body{
+  margin:0;background:#eceee9;color:var(--ink);font-family:var(--font);
+  font-size:var(--t-body);line-height:1.55;-webkit-font-smoothing:antialiased;
+}
+button{font:inherit;color:inherit;border:0;background:none;cursor:pointer;font-family:inherit}
+h1,h2,h3,h4,p{margin:0}
+:focus-visible{outline:2px solid var(--signal);outline-offset:2px;border-radius:6px}
+
+/* =========================================================
+   舞台：上=场景切换  中=真机原型  两侧=设计交底
+   ========================================================= */
+.stage{max-width:1440px;margin:0 auto;padding:0 20px 80px}
+.head{padding:26px 0 16px}
+.head h1{font-size:26px;font-weight:650;letter-spacing:-.02em}
+.head p{margin-top:5px;font-size:var(--t-sub);color:var(--muted)}
+.head .ver{
+  display:inline-flex;gap:8px;align-items:center;margin-top:12px;flex-wrap:wrap;
+}
+.ver span{
+  font-size:var(--t-micro);padding:3px 10px;border-radius:var(--r-pill);
+  border:1px solid var(--line-2);background:var(--surface-2);color:var(--ink-2);
+}
+.ver span.hi{border-color:var(--signal-line);background:var(--signal-bg);color:#14573b}
+
+.nav{
+  position:sticky;top:0;z-index:30;background:rgba(236,238,233,.9);backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--line-2);margin:0 -20px 20px;padding:9px 20px;
+}
+.nav-row{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.nav-row+.nav-row{margin-top:7px}
+.nav-lb{font-size:var(--t-micro);color:var(--muted);font-weight:650;letter-spacing:.06em;flex:0 0 auto}
+.nav-chips{display:flex;gap:5px;flex-wrap:wrap}
+.nav-chips button{
+  font-size:var(--t-micro);padding:5px 11px;border-radius:var(--r-pill);
+  border:1px solid var(--line-2);background:var(--surface-2);color:var(--ink-2);transition:all var(--mo-f);
+}
+.nav-chips button:hover{border-color:var(--ink-2);color:var(--ink)}
+.nav-chips button.on{background:var(--ink);border-color:var(--ink);color:#fff;font-weight:600}
+
+.grid3{display:grid;grid-template-columns:260px minmax(0,1fr) 320px;gap:26px;align-items:start}
+@media(max-width:1220px){
+  .grid3{grid-template-columns:1fr;gap:20px}
+  .side{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+}
+@media(max-width:760px){ .side{grid-template-columns:1fr} }
+
+.side{position:sticky;top:96px}
+@media(max-width:1220px){ .side{position:static} }
+.card{
+  background:var(--surface);border:1px solid var(--line);border-radius:var(--r-card);
+  padding:16px;margin-bottom:14px;box-shadow:var(--e1);
+}
+.card>h3{
+  font-size:var(--t-cap);font-weight:650;color:var(--muted);letter-spacing:.08em;
+  margin-bottom:12px;
+}
+.card h4{font-size:var(--t-sub);font-weight:650;margin-bottom:6px}
+.card p{font-size:var(--t-cap);line-height:1.7;color:var(--ink-2)}
+.card p+p{margin-top:8px}
+.card .kv2{display:flex;gap:8px;font-size:var(--t-cap);line-height:1.7;margin-top:7px}
+.card .kv2 b{flex:0 0 46px;color:var(--muted);font-weight:400}
+.card .kv2 span{flex:1;color:var(--ink-2)}
+.card ul{margin:0;padding-left:16px;font-size:var(--t-cap);line-height:1.75;color:var(--ink-2)}
+.card li+li{margin-top:3px}
+
+/* 色板 */
+.sw{display:flex;gap:9px;align-items:center;margin-bottom:9px}
+.sw i{width:32px;height:32px;border-radius:var(--r-sm);flex:0 0 auto;border:1px solid rgba(20,24,29,.07)}
+.sw div{min-width:0;flex:1}
+.sw b{display:block;font-size:var(--t-cap);font-weight:650}
+.sw small{display:block;font-size:10px;color:var(--muted);font-family:var(--mono)}
+.sw em{display:block;font-size:10px;color:var(--muted);font-style:normal;margin-top:1px}
+
+/* 字阶 */
+.ts{display:flex;align-items:baseline;gap:10px;padding:6px 0;border-bottom:1px solid var(--line)}
+.ts:last-child{border-bottom:0}
+.ts span{flex:0 0 auto;font-family:var(--mono);font-size:10px;color:var(--muted);width:74px}
+.ts b{font-weight:650;letter-spacing:-.01em}
+
+/* 间距 / 圆角标尺 */
+.scale{display:flex;align-items:flex-end;gap:6px;margin-top:4px}
+.scale i{background:var(--signal-bg);border:1px solid var(--signal-line);border-radius:3px;display:block}
+.scale i.b{background:var(--surface-3);border-color:var(--line-2)}
+.radii{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+.radii i{
+  width:44px;height:44px;background:var(--surface-3);border:1px solid var(--line-2);
+  display:block;position:relative;
+}
+.radii i::after{content:attr(data-r);position:absolute;inset:auto 0 -15px;text-align:center;font-size:9px;color:var(--muted);font-family:var(--mono)}
+
+/* =========================================================
+   真机
+   ========================================================= */
+.stage-phone{display:flex;justify-content:center}
+.device{
+  width:390px;height:844px;border-radius:52px;background:#1b1e22;
+  padding:11px;box-shadow:var(--e4);position:relative;flex:0 0 auto;
+}
+.device::after{ /* 侧键 */
+  content:"";position:absolute;right:-2px;top:180px;width:3px;height:76px;border-radius:2px;background:#2c3036;
+}
+@media(max-width:900px){ .device{transform:scale(.86);transform-origin:top center;margin-bottom:-118px} }
+@media(max-width:520px){ .device{transform:scale(.72);margin-bottom:-236px} }
+
+.screen{
+  width:100%;height:100%;border-radius:42px;overflow:hidden;background:var(--paper);
+  display:flex;flex-direction:column;position:relative;
+}
+.notch{
+  position:absolute;top:11px;left:50%;transform:translateX(-50%);
+  width:112px;height:26px;border-radius:var(--r-pill);background:#0e1013;z-index:20;
+}
+.statusbar{
+  flex:0 0 auto;height:52px;padding:16px 26px 0;display:flex;justify-content:space-between;align-items:center;
+  font-size:var(--t-cap);font-weight:600;letter-spacing:.01em;z-index:10;
+}
+.statusbar .sig{display:flex;gap:4px;align-items:center}
+.statusbar .sig i{width:15px;height:9px;border:1.2px solid currentColor;border-radius:2.5px;display:block;position:relative}
+.statusbar .sig i::after{content:"";position:absolute;inset:1.5px;right:5px;background:currentColor;border-radius:1px}
+
+.appbar{
+  flex:0 0 auto;padding:2px var(--gutter) 12px;display:flex;align-items:flex-start;gap:12px;
+}
+.appbar .tx{flex:1;min-width:0}
+.appbar h2{font-size:var(--t-title);font-weight:650;letter-spacing:-.02em;line-height:1.3}
+.appbar p{font-size:var(--t-sub);color:var(--muted);margin-top:2px}
+.appbar .btn{
+  width:36px;height:36px;border-radius:50%;display:grid;place-items:center;flex:0 0 auto;
+  color:var(--ink-2);transition:background var(--mo-f);
+}
+.appbar .btn:hover{background:var(--surface-3)}
+.appbar .btn.back{transform:rotate(0)}
+.appbar svg{width:21px;height:21px;stroke:currentColor;fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+
+.scroll{
+  flex:1;overflow-y:auto;overflow-x:hidden;padding:0 var(--gutter) 18px;
+  display:flex;flex-direction:column;gap:var(--s3);
+  scrollbar-width:none;
+}
+.scroll::-webkit-scrollbar{display:none}
+.scroll.has-cta{padding-bottom:96px}
+
+/* ---- 区块头 ---- */
+.sec-h{display:flex;align-items:baseline;gap:8px;padding:12px 2px 1px}
+.sec-h b{font-size:var(--t-cap);font-weight:650;color:var(--ink-2);letter-spacing:.05em}
+.sec-h em{
+  font-style:normal;font-family:var(--mono);font-size:var(--t-micro);color:var(--muted);
+  background:var(--surface-3);border-radius:var(--r-pill);padding:1px 7px;font-weight:600;
+}
+
+/* ---- 事项卡 ---- */
+.it{
+  background:var(--surface);border-radius:var(--r-card);box-shadow:var(--e1);
+  padding:14px;position:relative;overflow:hidden;
+  border:1px solid var(--line);
+}
+.it::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--line-2)}
+.it.imp::before{background:var(--attention)}
+.it.cri::before{background:var(--critical)}
+.it.ack::before{background:var(--signal)}
+.it.ack{background:var(--surface-2)}
+.it-h{display:flex;gap:9px;align-items:flex-start;margin-bottom:4px}
+.it-h .t{flex:1;min-width:0;font-size:var(--t-head);font-weight:600;line-height:1.42;letter-spacing:-.01em}
+.it-m{font-size:var(--t-sub);color:var(--muted);display:flex;gap:9px;flex-wrap:wrap;align-items:center}
+.it-m .dl{color:var(--critical);font-weight:600}
+.it-m .rp{color:var(--future);font-weight:600}
+.it-m .src{color:var(--muted)}
+.it-acts{display:flex;gap:8px;margin-top:12px}
+.it-acts button{
+  flex:1;height:38px;border-radius:var(--r-ctl);font-size:var(--t-sub);font-weight:600;
+  border:1px solid var(--line-2);background:var(--surface-2);transition:all var(--mo-f);
+}
+.it-acts button:hover{background:var(--surface-3)}
+.it-acts button.pri{background:var(--signal);border-color:var(--signal);color:#fff;flex:1.3}
+.it-acts button.pri:hover{background:#175a3e}
+
+/* 档位标记 */
+.mk{
+  flex:0 0 auto;font-size:var(--t-micro);font-weight:700;border-radius:var(--r-pill);
+  padding:2px 8px;border:1px solid;line-height:1.5;margin-top:2px;
+}
+.mk.imp{color:var(--attention);background:var(--attention-bg);border-color:var(--attention-line)}
+.mk.cri{color:var(--critical);background:var(--critical-bg);border-color:var(--critical-line)}
+
+/* ---- 弱入口 / 折叠行 ---- */
+.soft{
+  display:flex;align-items:center;gap:8px;padding:13px 2px;width:100%;text-align:left;
+  font-size:var(--t-sub);color:var(--muted);border-radius:var(--r-sm);
+}
+.soft:hover{background:var(--surface-3)}
+.soft .ar{margin-left:auto;color:var(--line-2);font-size:15px}
+.fold{
+  display:flex;align-items:center;gap:9px;width:100%;text-align:left;
+  background:var(--surface);border:1px solid var(--line);border-radius:var(--r-card);
+  padding:14px;box-shadow:var(--e1);
+}
+.fold b{font-size:var(--t-body);font-weight:600}
+.fold em{font-style:normal;font-family:var(--mono);font-size:var(--t-cap);color:var(--muted);margin-left:auto}
+.fold .ar{color:var(--line-2)}
+
+/* 强入口（窗口内） */
+.strong{
+  display:flex;align-items:center;gap:10px;width:100%;text-align:left;
+  background:var(--attention-bg);border:1px solid var(--attention-line);
+  border-radius:var(--r-card);padding:13px 14px;
+}
+.strong b{font-size:var(--t-body);font-weight:650;color:#7a540e}
+.strong em{font-style:normal;font-family:var(--mono);font-size:var(--t-cap);color:#8a6a17;margin-left:auto}
+.strong .ar{color:#c8a961}
+
+/* ---- 空态 ---- */
+.empty{text-align:center;padding:44px 20px 20px}
+.empty .ring{
+  width:64px;height:64px;border-radius:50%;background:var(--signal-bg);border:1px solid var(--signal-line);
+  display:grid;place-items:center;margin:0 auto 16px;color:var(--signal);
+}
+.empty .ring svg{width:30px;height:30px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.empty h3{font-size:var(--t-head);font-weight:650;letter-spacing:-.01em}
+.empty p{font-size:var(--t-sub);color:var(--muted);margin-top:6px;line-height:1.7}
+.empty .quiet{display:block;margin-top:14px;font-size:var(--t-cap);color:var(--muted)}
+
+/* ---- 底部导航 ---- */
+.tabbar{
+  flex:0 0 auto;height:78px;padding:8px 6px 22px;display:flex;
+  background:rgba(250,251,248,.94);backdrop-filter:blur(16px);border-top:1px solid var(--line);
+}
+.tabbar button{
+  flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;position:relative;
+  font-size:var(--t-micro);color:var(--muted);padding-top:5px;border-radius:var(--r-sm);
+}
+.tabbar svg{width:23px;height:23px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.tabbar button.on{color:var(--signal);font-weight:650}
+.tabbar .bdg{
+  position:absolute;top:1px;left:50%;margin-left:7px;background:var(--critical);color:#fff;
+  font-size:10px;font-weight:700;min-width:17px;height:17px;border-radius:var(--r-pill);
+  display:grid;place-items:center;padding:0 5px;font-family:var(--mono);
+}
+.fab{
+  position:absolute;right:18px;bottom:92px;width:56px;height:56px;border-radius:50%;
+  background:var(--signal);color:#fff;display:grid;place-items:center;
+  box-shadow:0 8px 22px rgba(27,107,74,.36);z-index:15;transition:transform var(--mo-f);
+}
+.fab:active{transform:scale(.94)}
+.fab svg{width:26px;height:26px;stroke:currentColor;fill:none;stroke-width:2.2;stroke-linecap:round}
+
+/* ---- 弹条 ---- */
+.banner{
+  position:absolute;left:12px;right:12px;top:58px;z-index:18;
+  background:var(--surface);border-radius:var(--r-card);box-shadow:var(--e3);
+  padding:14px;border-left:4px solid var(--critical);
+  animation:drop var(--mo-n) both;
+}
+@keyframes drop{from{opacity:0;transform:translateY(-14px)}to{opacity:1;transform:none}}
+.banner.imp{border-left-color:var(--attention)}
+.banner.warn{border-left-color:var(--attention)}
+.banner .x{
+  position:absolute;top:10px;right:10px;width:26px;height:26px;border-radius:50%;
+  display:grid;place-items:center;color:var(--muted);background:var(--surface-3);font-size:15px;line-height:1;
+}
+.banner h4{font-size:var(--t-body);font-weight:650;padding-right:32px;line-height:1.45}
+.banner .m{font-size:var(--t-cap);color:var(--muted);margin-top:3px}
+.banner .it-acts{margin-top:11px}
+.banner .it-acts button{height:34px;font-size:var(--t-cap)}
+
+/* ---- 分段控件 / chips ---- */
+.seg{
+  display:flex;background:var(--surface-3);border-radius:var(--r-ctl);padding:3px;gap:3px;
+}
+.seg button{
+  flex:1;height:32px;border-radius:9px;font-size:var(--t-sub);color:var(--muted);transition:all var(--mo-f);
+}
+.seg button.on{background:var(--surface);color:var(--ink);font-weight:650;box-shadow:var(--e1)}
+.seg.mini{width:auto;flex:0 0 auto}
+.seg.mini button{flex:0 0 auto;height:28px;padding:0 15px;font-size:var(--t-cap)}
+.chips{display:flex;gap:7px;flex-wrap:wrap;padding:2px 0}
+.chips button{
+  height:32px;padding:0 13px;border-radius:var(--r-pill);border:1px solid var(--line-2);
+  background:var(--surface-2);font-size:var(--t-cap);color:var(--ink-2);transition:all var(--mo-f);
+}
+.chips button.on{background:var(--ink);border-color:var(--ink);color:#fff;font-weight:600}
+.chips button.gh{border-style:dashed;color:var(--muted)}
+
+/* ---- 日期分组 ---- */
+.dh{display:flex;align-items:baseline;gap:8px;padding:10px 2px 2px}
+.dh b{font-size:var(--t-cap);font-weight:650}
+.dh small{font-size:var(--t-micro);color:var(--muted);font-family:var(--mono)}
+.dh::after{content:"";flex:1;height:1px;background:var(--line);transform:translateY(-4px)}
+
+/* ---- 列表行 ---- */
+.row{
+  display:flex;gap:11px;align-items:flex-start;background:var(--surface);
+  border:1px solid var(--line);border-radius:var(--r-card);padding:13px 14px;box-shadow:var(--e1);
+  width:100%;text-align:left;transition:all var(--mo-f);
+}
+.row:hover{border-color:var(--line-2);box-shadow:var(--e2)}
+.row .rm{flex:1;min-width:0}
+.row .rt{font-size:var(--t-body);font-weight:600;line-height:1.4;letter-spacing:-.005em}
+.row .rs{font-size:var(--t-cap);color:var(--muted);margin-top:3px;line-height:1.55}
+.row .rs b{color:var(--attention);font-weight:650}
+.row .rs i{font-style:normal;color:var(--future)}
+.row .rr{flex:0 0 auto;text-align:right}
+.row .rr time{font-size:var(--t-cap);font-family:var(--mono);color:var(--ink-2);font-weight:600}
+.row .rr .ar{display:block;color:var(--line-2);margin-top:5px;font-size:15px}
+.row .cb{
+  width:19px;height:19px;border-radius:6px;border:1.6px solid var(--line-2);flex:0 0 auto;margin-top:2px;
+}
+.row .cb.on{background:var(--signal);border-color:var(--signal);position:relative}
+.row .cb.on::after{content:"✓";position:absolute;inset:0;display:grid;place-items:center;color:#fff;font-size:11px;font-weight:700}
+.tags{display:flex;gap:5px;flex-wrap:wrap;margin-top:6px}
+.tags span{
+  font-size:10.5px;padding:1.5px 7px;border-radius:var(--r-pill);font-weight:600;
+  background:var(--attention-bg);border:1px solid var(--attention-line);color:#7a540e;
+}
+.tags span.b{background:var(--future-bg);border-color:var(--future-line);color:#32496b}
+.tags span.g{background:var(--signal-bg);border-color:var(--signal-line);color:#14573b}
+
+/* ---- 底部固定 CTA ---- */
+.cta{
+  position:absolute;left:0;right:0;bottom:0;padding:12px var(--gutter) 26px;
+  background:linear-gradient(transparent,var(--paper) 26%);z-index:12;
+}
+.cta button{
+  width:100%;height:50px;border-radius:var(--r-ctl);background:var(--signal);color:#fff;
+  font-size:var(--t-body);font-weight:650;box-shadow:0 6px 18px rgba(27,107,74,.28);
+}
+.cta .hint{text-align:center;font-size:var(--t-micro);color:var(--muted);margin-top:8px}
+
+/* ---- 月历 ---- */
+.cal{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-card);padding:14px;box-shadow:var(--e1)}
+.cal-h{display:flex;align-items:center;justify-content:space-between;margin-bottom:11px}
+.cal-h b{font-size:var(--t-body);font-weight:650}
+.cal-h .n{display:flex;gap:5px}
+.cal-h .n button{width:30px;height:30px;border-radius:50%;background:var(--surface-3);display:grid;place-items:center;font-size:13px;color:var(--ink-2)}
+.cal-g{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;text-align:center}
+.cal-g .dw{font-size:10.5px;color:var(--muted);padding-bottom:5px}
+.cal-g button{
+  height:38px;border-radius:var(--r-sm);font-size:var(--t-sub);color:var(--ink-2);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;position:relative;
+}
+.cal-g button.mut{color:#c8cec8}
+.cal-g button.tod{font-weight:700;color:var(--ink)}
+.cal-g button.has{background:var(--future-bg);color:var(--future);font-weight:650}
+.cal-g button.due{background:var(--critical-bg);color:var(--critical);font-weight:700}
+.cal-g button.sel{background:var(--ink);color:#fff;font-weight:700}
+.cal-g button i{width:4px;height:4px;border-radius:50%;background:currentColor;opacity:.75;display:block}
+.cal-g button.sel i,.cal-g button.due i{background:#fff;opacity:.9}
+
+/* ---- 底部弹层 ---- */
+.scrim{position:absolute;inset:0;background:rgba(20,24,29,.36);z-index:24;animation:fade var(--mo-n) both}
+@keyframes fade{from{opacity:0}to{opacity:1}}
+.sheet{
+  position:absolute;left:0;right:0;bottom:0;z-index:25;background:var(--surface);
+  border-radius:var(--r-sheet) var(--r-sheet) 0 0;padding:10px var(--gutter) 30px;
+  box-shadow:0 -12px 40px rgba(20,24,29,.2);max-height:88%;overflow-y:auto;
+  animation:up var(--mo-n) both;scrollbar-width:none;
+}
+.sheet::-webkit-scrollbar{display:none}
+@keyframes up{from{transform:translateY(102%)}to{transform:none}}
+.grip{width:38px;height:4px;border-radius:2px;background:var(--line-2);margin:0 auto 14px}
+.sheet h3{font-size:var(--t-head);font-weight:650;letter-spacing:-.01em;margin-bottom:4px}
+.sheet .sub{font-size:var(--t-sub);color:var(--muted);margin-bottom:16px}
+.fld{margin-bottom:16px}
+.fld>label{display:block;font-size:var(--t-cap);font-weight:650;color:var(--muted);margin-bottom:7px}
+.inp{
+  width:100%;background:var(--surface-2);border:1px solid var(--line-2);border-radius:var(--r-ctl);
+  padding:13px 14px;font-size:var(--t-head);color:var(--ink);transition:all var(--mo-f);
+}
+.inp:focus{outline:none;border-color:var(--signal);box-shadow:0 0 0 3px rgba(27,107,74,.1);background:var(--surface)}
+.hint{
+  display:flex;gap:8px;align-items:center;font-size:var(--t-sub);color:var(--signal);
+  background:var(--signal-bg);border-radius:var(--r-sm);padding:9px 12px;margin-top:9px;
+}
+.hint.warn{color:#7a540e;background:var(--attention-bg)}
+.sheet-foot{display:flex;gap:10px;margin-top:18px}
+.sheet-foot button{
+  flex:1;height:48px;border-radius:var(--r-ctl);font-size:var(--t-body);font-weight:650;
+  border:1px solid var(--line-2);background:var(--surface-2);
+}
+.sheet-foot button.pri{background:var(--signal);border-color:var(--signal);color:#fff;flex:1.5}
+
+/* ---- 设置行 ---- */
+.set{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-card);overflow:hidden;box-shadow:var(--e1)}
+.set-r{
+  display:flex;align-items:center;gap:12px;padding:14px;width:100%;text-align:left;
+  border-bottom:1px solid var(--line);
+}
+.set-r:last-child{border-bottom:0}
+.set-r .l{flex:1;min-width:0}
+.set-r .l b{display:block;font-size:var(--t-body);font-weight:500}
+.set-r .l small{display:block;font-size:var(--t-cap);color:var(--muted);margin-top:2px;line-height:1.5}
+.set-r .v{font-size:var(--t-cap);color:var(--muted);flex:0 0 auto}
+.sw-t{width:46px;height:28px;border-radius:var(--r-pill);background:var(--line-2);position:relative;flex:0 0 auto;transition:background var(--mo-f)}
+.sw-t::after{content:"";position:absolute;top:3px;left:3px;width:22px;height:22px;border-radius:50%;background:#fff;box-shadow:var(--e1);transition:transform var(--mo-f)}
+.sw-t.on{background:var(--signal)}
+.sw-t.on::after{transform:translateX(18px)}
+.sel-seg{display:flex;background:var(--surface-3);border-radius:var(--r-sm);padding:2px;gap:2px;flex:0 0 auto}
+.sel-seg button{height:28px;padding:0 11px;border-radius:7px;font-size:var(--t-cap);color:var(--muted)}
+.sel-seg button.on{background:var(--surface);color:var(--ink);font-weight:650;box-shadow:var(--e1)}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.stat{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-card);padding:13px;text-align:center;box-shadow:var(--e1)}
+.stat b{display:block;font-size:22px;font-weight:650;font-family:var(--mono);letter-spacing:-.02em}
+.stat small{display:block;font-size:var(--t-micro);color:var(--muted);margin-top:2px}
+.stat.due b{color:var(--critical)}
+
+/* ---- 全屏闹钟 ---- */
+.alarm{
+  position:absolute;inset:0;z-index:40;background:#141517;color:#f3f4f2;
+  display:flex;flex-direction:column;padding:0 26px 34px;
+  animation:fade var(--mo-n) both;
+}
+.alarm::before{
+  content:"";position:absolute;left:50%;top:-120px;width:420px;height:420px;transform:translateX(-50%);
+  background:radial-gradient(closest-side,rgba(200,90,90,.3),transparent);pointer-events:none;
+}
+.alarm .sb{height:52px;padding-top:16px;display:flex;justify-content:space-between;align-items:center;font-size:var(--t-cap);font-weight:600;position:relative}
+.alarm .body{flex:1;display:flex;flex-direction:column;justify-content:center;position:relative}
+.alarm .lvl{display:flex;gap:8px;align-items:center;font-size:var(--t-cap);font-weight:650;color:#e2a3a3;letter-spacing:.06em;margin-bottom:14px}
+.alarm .lvl i{width:8px;height:8px;border-radius:50%;background:#c85a5a;display:block}
+.alarm h2{font-size:27px;font-weight:650;line-height:1.35;letter-spacing:-.02em}
+.alarm .meta{font-size:var(--t-sub);color:#9a9a9a;margin-top:10px}
+.alarm .wave{display:flex;gap:3px;align-items:flex-end;height:34px;margin-top:26px}
+.alarm .wave i{width:3px;background:#c85a5a;border-radius:2px;display:block}
+.alarm .acts{display:flex;flex-direction:column;gap:10px;position:relative}
+.alarm .acts button{
+  height:54px;border-radius:var(--r-ctl);background:#25262a;color:#f0f0f0;
+  font-size:var(--t-head);font-weight:600;border:1px solid #34363a;
+}
+.alarm .acts button.pri{background:#c85a5a;border-color:#c85a5a;color:#fff}
+.alarm .acts button.gh{background:transparent;border-color:#3a3c40;color:#9a9a9a;font-weight:500;height:46px}
+.alarm .row2{display:flex;gap:10px}
+.alarm .row2 button{flex:1}
+
+/* ---- 通知 ---- */
+.lock{background:#20242a;height:100%;padding:0 14px;display:flex;flex-direction:column}
+.lock .lg{text-align:center;color:#fff;padding:56px 0 22px}
+.lock .lg b{display:block;font-size:62px;font-weight:250;letter-spacing:-.03em;line-height:1}
+.lock .lg span{display:block;font-size:var(--t-sub);color:#b9bec6;margin-top:6px}
+.notif{
+  background:rgba(255,255,255,.14);backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,.14);
+  border-radius:18px;padding:13px 14px;color:#fff;margin-bottom:10px;
+}
+.notif .nh{display:flex;align-items:center;gap:7px;font-size:var(--t-micro);color:#c8ccd3;margin-bottom:7px}
+.notif .nh i{width:16px;height:16px;border-radius:5px;background:var(--signal);display:grid;place-items:center;color:#fff;font-size:9px;font-weight:700;font-style:normal}
+.notif .nt{font-size:var(--t-body);font-weight:600}
+.notif .nb{font-size:var(--t-sub);color:#c8ccd3;margin-top:2px}
+.notif .na{display:flex;gap:7px;margin-top:11px;border-top:1px solid rgba(255,255,255,.14);padding-top:10px}
+.notif .na button{flex:1;font-size:var(--t-cap);color:#eaecef;font-weight:600}
+
+/* ---- 会话进度 ---- */
+.prog{height:3px;background:var(--surface-3);border-radius:2px;overflow:hidden;margin:0 var(--gutter) 12px}
+.prog i{display:block;height:100%;background:var(--signal);border-radius:2px;transition:width var(--mo-n)}
+.quote{
+  background:var(--surface-2);border:1px dashed var(--line-2);border-radius:var(--r-sm);
+  padding:11px 13px;font-size:var(--t-sub);color:var(--muted);line-height:1.6;
+}
+.quote b{color:var(--ink-2);font-weight:600}
+.fieldbox{
+  background:var(--surface);border:1px solid var(--line);border-radius:var(--r-card);
+  padding:14px;box-shadow:var(--e1);
+}
+.fieldbox .fl{font-size:var(--t-cap);font-weight:650;color:var(--muted);margin-bottom:10px}
+.opt{
+  display:flex;align-items:center;gap:10px;padding:11px 12px;border-radius:var(--r-sm);
+  border:1px solid var(--line);background:var(--surface-2);width:100%;text-align:left;
+  font-size:var(--t-sub);margin-bottom:7px;transition:all var(--mo-f);
+}
+.opt:last-child{margin-bottom:0}
+.opt:hover{border-color:var(--line-2)}
+.opt.on{border-color:var(--signal);background:var(--signal-bg);font-weight:650}
+.opt .k{
+  font-family:var(--mono);font-size:var(--t-micro);color:var(--muted);width:58px;flex:0 0 auto;
+}
+.opt .ck{margin-left:auto;width:19px;height:19px;border-radius:50%;border:1.6px solid var(--line-2);flex:0 0 auto}
+.opt.on .ck{border-color:var(--signal);background:var(--signal);position:relative}
+.opt.on .ck::after{content:"✓";position:absolute;inset:0;display:grid;place-items:center;color:#fff;font-size:11px}
+
+/* ---- 组头（我的） ---- */
+.gh{font-size:var(--t-cap);font-weight:650;color:var(--muted);letter-spacing:.06em;padding:16px 2px 7px}
+
+/* 设备内的滚动条提示 */
+.scroll-hint{text-align:center;font-size:var(--t-micro);color:var(--muted);padding:2px 0 10px}
+</style>
+</head>
+<body>
+<div class="stage">
+
+  <div class="head">
+    <h1>安心收件箱 · 产品设计 Demo</h1>
+    <p>按 <code>docs/scenarios.html</code> 所定义的目标行为实现的高保真原型。所有界面均为「决完后应该长什么样」，不代表当前代码。</p>
+    <div class="ver">
+      <span class="hi">依据 V0.2 冻结基线</span>
+      <span>A-01 投递方式</span>
+      <span>D1–D25 裁决</span>
+      <span>K 待整理列表</span>
+      <span>L 未来页展示</span>
+      <span>交互可直接点</span>
+    </div>
+  </div>
+
+  <div class="nav">
+    <div class="nav-row">
+      <span class="nav-lb">首页</span>
+      <div class="nav-chips" id="navHome"></div>
+      <span class="nav-lb" style="margin-left:8px">待整理</span>
+      <div class="nav-chips" id="navReview"></div>
+      <span class="nav-lb" style="margin-left:8px">未来</span>
+      <div class="nav-chips" id="navFuture"></div>
+    </div>
+    <div class="nav-row">
+      <span class="nav-lb">录入</span>
+      <div class="nav-chips" id="navCapture"></div>
+      <span class="nav-lb" style="margin-left:8px">提醒</span>
+      <div class="nav-chips" id="navAlarm"></div>
+      <span class="nav-lb" style="margin-left:8px">设置</span>
+      <div class="nav-chips" id="navMe"></div>
+    </div>
+  </div>
+
+  <div class="grid3">
+
+    <!-- ============ 左：设计系统 ============ -->
+    <aside class="side">
+      <div class="card">
+        <h3>色彩语义</h3>
+        <div class="sw"><i style="background:#14181d"></i><div><b>Ink</b><small>#14181D</small><em>正文 / 标题</em></div></div>
+        <div class="sw"><i style="background:#77828d"></i><div><b>Muted</b><small>#77828D</small><em>次要信息</em></div></div>
+        <div class="sw"><i style="background:#1b6b4a"></i><div><b>Signal</b><small>#1B6B4A</small><em>已确认 / 主操作</em></div></div>
+        <div class="sw"><i style="background:#9a6b12"></i><div><b>Attention</b><small>#9A6B12</small><em>☆ 重要 / 待整理</em></div></div>
+        <div class="sw"><i style="background:#8f3a3a"></i><div><b>Critical</b><small>#8F3A3A</small><em>🚨 关键 / 风险</em></div></div>
+        <div class="sw"><i style="background:#3d5a80"></i><div><b>Future</b><small>#3D5A80</small><em>托管中 / 截止</em></div></div>
+        <p style="margin-top:10px">每个语义色都配了 <b>bg</b> 与 <b>line</b> 两个近邻色，不靠透明度叠加——保证在任何底色上对比度都 ≥ 4.5:1。</p>
+      </div>
+
+      <div class="card">
+        <h3>字阶（4 的倍数）</h3>
+        <div class="ts"><span>26 / 650</span><b style="font-size:26px">安静时刻</b></div>
+        <div class="ts"><span>20 / 650</span><b style="font-size:20px">安心收件箱</b></div>
+        <div class="ts"><span>17 / 600</span><b style="font-size:17px">立即确认合同条款</b></div>
+        <div class="ts"><span>15 / 400</span><b style="font-size:15px">跟供应商对一下账期</b></div>
+        <div class="ts"><span>13 / 400</span><b style="font-size:13px;color:#77828d">今天 14:02 · 第 1 次提醒</b></div>
+        <div class="ts"><span>12 / 500</span><b style="font-size:12px;color:#77828d">信息尚未二次确认</b></div>
+        <div class="ts"><span>11 / 600</span><b style="font-size:11px;color:#77828d">☆ 重要</b></div>
+      </div>
+
+      <div class="card">
+        <h3>间距 · 圆角</h3>
+        <div class="scale">
+          <i style="width:4px;height:22px"></i><i style="width:8px;height:22px"></i>
+          <i style="width:12px;height:22px"></i><i style="width:16px;height:22px"></i>
+          <i style="width:20px;height:22px"></i><i style="width:24px;height:22px"></i>
+          <i style="width:32px;height:22px"></i>
+        </div>
+        <p style="margin-top:6px;font-family:var(--mono);font-size:10px">4 · 8 · 12 · 16 · 20 · 24 · 32</p>
+        <div class="radii">
+          <i data-r="10"></i><i data-r="12" class="b"></i><i data-r="16"></i><i data-r="22" class="b"></i><i data-r="999"></i>
+        </div>
+        <p style="margin-top:22px">控件 12 · 卡片 16 · 弹层 22 · 胶囊 999</p>
+      </div>
+
+      <div class="card">
+        <h3>可触达</h3>
+        <ul>
+          <li>所有可点元素 ≥ 44×44（卡片内的次级按钮保底 38 高 + 12 内距）</li>
+          <li>正文 15px / 行高 1.55，中文不压缩字距</li>
+          <li>状态不只用颜色：档位同时给 ☆ / 🚨 字形，需要注意同时给左侧色条与数量</li>
+          <li>支持系统字号放大到 200% 不破版</li>
+        </ul>
+      </div>
+    </aside>
+
+    <!-- ============ 中：真机 ============ -->
+    <div class="stage-phone">
+      <div class="device">
+        <div class="screen" id="screen"></div>
+      </div>
+    </div>
+
+    <!-- ============ 右：本屏说明 ============ -->
+    <aside class="side">
+      <div class="card" id="noteCard"></div>
+      <div class="card">
+        <h3>产品不变量怎么落到视觉上</h3>
+        <div class="kv2"><b>INV-03</b><span>「我知道了」是唯一能停止追击的动作 —— 主按钮，实心绿，与「完成」并列但不同色。</span></div>
+        <div class="kv2"><b>INV-04</b><span>ACK 后卡片左条由红/黄转绿，并移入「已看到未完成」，<b>绝不出现对勾终态</b>。</span></div>
+        <div class="kv2"><b>INV-06</b><span>丧失提醒能力时，首页顶部出现琥珀告警条，不伪装正常。</span></div>
+        <div class="kv2"><b>INV-07</b><span>首页没有任何未来区块；未来页的一切都不回流到首页。</span></div>
+        <div class="kv2"><b>INV-08</b><span>待整理列表没有完成勾选、没有优先级、没有倒计时。</span></div>
+      </div>
+      <div class="card">
+        <h3>还没做的</h3>
+        <p>笔记页超出 V0.2 范围（GAP-19），此处只给占位结构；AI 理解属 BYOK 可选能力，未进主路径。</p>
+      </div>
+    </aside>
+  </div>
+</div>
+
+<script>
+/* =========================================================
+   场景表：每一屏 = 一个目标状态
+   ========================================================= */
+const SCENES = {
+  home:     {label:'有需要注意',      group:'home'},
+  homeWin:  {label:'整理窗口内',      group:'home'},
+  homeQuiet:{label:'安静空态',        group:'home'},
+  homeWarn: {label:'提醒不可用',      group:'home'},
+  homeBanner:{label:'弹条（关键）',   group:'home'},
+  revList:  {label:'待整理列表',      group:'review'},
+  revSession:{label:'整理会话',       group:'review'},
+  revEmpty: {label:'待整理空态',      group:'review'},
+  futList:  {label:'托管中 · 列表',   group:'future'},
+  futCal:   {label:'托管中 · 月历',   group:'future'},
+  futArch:  {label:'已归档',          group:'future'},
+  futEmpty: {label:'未来空态',        group:'future'},
+  cap:      {label:'录入',            group:'capture'},
+  capLow:   {label:'低置信度确认',    group:'capture'},
+  alarm:    {label:'全屏闹钟',        group:'alarm'},
+  notif:    {label:'系统通知',        group:'alarm'},
+  me:       {label:'我的 · 设置',     group:'me'},
+  notes:    {label:'笔记（超范围）',  group:'me'}
+};
+
+const NOTES = {
+  home:['首页第一视觉',
+    '「现在需要注意」是唯一有资格占据首页首屏的内容。每张卡给三个动作，主按钮是「我知道了」——因为它是唯一能停止追击的动作。',
+    '顺序固定：需要注意 → 待整理（弱入口）→ 已看到未完成（永远折叠成一行）。首页<b>不出现任何未来区块</b>。',
+    '底部角标只统计「需要注意」的数量，不是全部未完成。'],
+  homeWin:['待整理窗口内',
+    '进入 Review Window ∪ 1 小时宽限期后，入口由「低对比度一行字」升级为琥珀色卡片，并<b>提到最前</b>。',
+    '变化的是显著性，不是存在性 —— 白天它也在，只是很轻：没有数字、没有强调色。',
+    '这条守的是 §12「弱入口……仅在 Review Window 时提高存在感」，同时避免用户白天被一笔账压着。'],
+  homeQuiet:['安静空态',
+    '空态不是一句「暂无数据」，而是给用户<b>托管成功的正反馈</b>。',
+    '「今天已完成 3 件」用纯文字呈现，不可点击、无徽标、无强调色 —— 它是当天的一句正反馈，不是历史统计面板。',
+    '当天完成的事项仍以卡片列出，因为空态是它们的唯一容身处。'],
+  homeWarn:['提醒能力受损',
+    '通知权限关闭时，首页顶部插入琥珀告警条，直说「无法保证提醒」。',
+    '文案只讲<b>影响履约的实际问题</b>，不做技术健康仪表盘（§16）。恢复权限后自动对账。'],
+  homeBanner:['弹条（关键档首次）',
+    '弹条只能通过点 <b>×</b> 关闭；点页面其他区域不关闭 —— 关闭会消耗 30 分钟提醒预算，必须是明确动作。',
+    '挂 10 分钟后自动收起，但收起是<b>纯展示行为</b>，不记账、不消耗预算。',
+    '关键档首次走全屏闹钟，弹条是回到应用后的持续提醒形态。'],
+  revList:['待整理列表',
+    '从「看一眼」到「开始处理」拆成两步：先进列表看清全貌，再决定开始。不再点一下就被拽进逐条会话。',
+    '每行给四样东西：标题、<b>系统解析结果</b>、<b>为什么在这</b>、来源时间。用户不必点进去才知道系统为什么拦下它。',
+    '按「我什么时候记的」分组（今天 / 昨天 / 更早），但处理顺序仍是 createdAt 从旧到新。',
+    '列表里<b>没有</b>完成勾选、优先级、截止倒计时 —— 它只是信息质量问题。'],
+  revSession:['整理会话',
+    '一条一张卡，逐条即时持久化，中途退出不丢已做的决定。',
+    '顶部进度条给出「还剩多少」，但用「第 1 / 6 条」而不是百分比 —— 用户要的是还要处理几件事。',
+    '「继续待整理」是正当出口，不强迫填写。'],
+  revEmpty:['待整理空态',
+    '没有待整理时，首页那一行入口<b>完全不渲染</b>（连占位都没有）。',
+    '空态里解释这条链路是干什么的，避免用户以为功能坏了。'],
+  futList:['未来 · 列表',
+    '托管中按日期分组，<b>越远越粗</b>：今天明天精确到日，本周下周给区间，更远只给月份。一眼扫完，不必逐条心算日期。',
+    '每行给：时间、档位标记、周期标记、截止（D-N）、来源。截止与提醒是两条独立时间线，必须分开显示。',
+    '目标不是让人天天来看，而是<b>一次看够</b>。'],
+  futCal:['未来 · 月历',
+    '列表与月历不是两个页面，是同一份数据的两种投影：切换视图不重置筛选。',
+    '月历负责「我记得大概是哪几天」的定位；有事项打点、临期标红、选中日高亮。',
+    '刻意不做拖拽排程、不做周视图、不做时间轴 —— 那会把它变成日程应用。'],
+  futArch:['未来 · 已归档',
+    '已归档按日回看，每行给完成时间。',
+    '<b>不出现</b>完成率、连续天数、年度总结 —— §13 明确历史不主动制造注意力噪声。',
+    '按日回看是「找东西」，不是「看成绩」。'],
+  futEmpty:['未来空态',
+    '两种空态诉求相反：托管中为空要推用户去记一笔；已归档为空要告诉用户「这里不会长东西」。',
+    '用同一句空话会把这两个意图都抹掉。'],
+  cap:['录入',
+    '目标路径：1 次唤起 + 1 句话 + 自动保存，≤ 5 秒。默认无需再点确认。',
+    '解析结果实时回填并附「可修改」，中置信度明显展示供修正。',
+    '档位默认「普通」；标 ☆ 或 🚨 本身就是主动选择，不再加一层总开关。'],
+  capLow:['低置信度 · 极简选择',
+    '只在<b>真正的矛盾</b>时才打断：输入里含具体时间指向词（下周三 / N 天后），却仍落到兜底值。',
+    '纯模糊词（过阵子 / 以后）静默收下，当晚批量整理，不弹任何框。',
+    '这是「必要的打断」与「不打扰」之间那条可测的分界线。'],
+  alarm:['全屏闹钟',
+    '仅「关键」档与「重要」档的<b>首次</b>提醒使用；第 2..n 次回归通知渠道。',
+    '四个出口：我知道了 / 稍后 2 小时 / 完成 / 关闭。其中「关闭」只止响、<b>不写 ACK</b>、不停后续补充提醒。',
+    '理由：一个人只想让闹钟停下时，若唯一出路是「我知道了」，系统就是在逼他谎报「我看到了」——那会绕过红线。'],
+  notif:['系统通知',
+    '通知动作按动作深度分两档：快捷（通知栏）= 我知道了 / 稍后 2 小时 / 完成；主动（应用内）= 六种时间选项。',
+    '重要档 4 次（每 30 分钟）、关键档 8 次（每 15 分钟）、普通 1 次即止。',
+    '相同时间多条时，走通知的可聚合，走闹钟的不能 —— 全屏一次只能显示一条。'],
+  me:['我的 · 设置',
+    '顶部三个数字是用户对「托管了多少」的唯一总览，也是设置页的主要用途之一。',
+    '「默认提醒方式」＝ A-01 的 defaultDeliveryMode：未标记的事项按它走，已标记的一律闹钟。<b>录入时快照</b>，改设置不影响历史。',
+    '待整理提醒受「本地通知」总开关控制 —— 它不能绕开这个开关，否则开关就不可信了。'],
+  notes:['笔记（超出 V0.2 范围）',
+    'V0.2 通篇没有笔记 / 项目 / 标签，但代码里有。这是 GAP-19 记录的「无人认领」状态。',
+    '此处只给占位结构，不做视觉投入 —— 需要你先决定它是保留、降级还是移除。']
+};
+
+/* =========================================================
+   图标
+   ========================================================= */
+const I = {
+  back:'<svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg>',
+  close:'<svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg>',
+  plus:'<svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>',
+  home:'<svg viewBox="0 0 24 24"><path d="M3 10.5 12 3l9 7.5V21a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1v-10.5z"/></svg>',
+  clock:'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>',
+  note:'<svg viewBox="0 0 24 24"><path d="M6 4h9l3 3v13a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1z"/><path d="M8 10h8M8 14h6"/></svg>',
+  me:'<svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.5"/><path d="M5 19c1.5-3.5 4-5 7-5s5.5 1.5 7 5"/></svg>',
+  check:'<svg viewBox="0 0 24 24"><path d="M5 13l4.5 4.5L19 7"/></svg>',
+  more:'<svg viewBox="0 0 24 24"><circle cx="12" cy="5.5" r="1.4"/><circle cx="12" cy="12" r="1.4"/><circle cx="12" cy="18.5" r="1.4"/></svg>',
+  clock2:'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7.5V12l3.5 2"/></svg>'
+};
+
+/* =========================================================
+   渲染
+   ========================================================= */
+let cur = 'home';
+const st = { remindMode:'notification', notifOn:true, reviewOn:true, seg:'waiting', view:'list', calSel:18, banner:false, sheet:null };
+
+const $ = h => h;
+function statusbar(dark){
+  return '<div class="statusbar"' + (dark ? ' style="color:#f3f4f2"' : '') + '>' +
+    '<span>9:41</span><span class="sig"><span style="font-size:10px">5G</span><i></i></span></div>';
+}
+function tabbar(active){
+  const t = [['home','首页',I.home],['future','未来',I.clock],['notes','笔记',I.note],['me','我的',I.me]];
+  return '<nav class="tabbar">' + t.map(([k,label,ic]) =>
+    '<button class="' + (active === k ? 'on' : '') + '" data-go="' + k + '">' + ic + label +
+    (k === 'home' ? '<span class="bdg">2</span>' : '') + '</button>').join('') + '</nav>';
+}
+function appbar(title, sub, opt){
+  opt = opt || {};
+  return '<div class="appbar">' +
+    (opt.back ? '<button class="btn" data-go="' + opt.back + '">' + I.back + '</button>' : '') +
+    '<div class="tx"><h2>' + title + '</h2>' + (sub ? '<p>' + sub + '</p>' : '') + '</div>' +
+    (opt.action || '<button class="btn">' + I.more + '</button>') + '</div>';
+}
+function itemCard(o){
+  return '<div class="it ' + (o.cls || '') + '">' +
+    '<div class="it-h">' +
+      (o.mk ? '<span class="mk ' + o.mk + '">' + (o.mk === 'cri' ? '🚨 关键' : '☆ 重要') + '</span>' : '') +
+      '<span class="t">' + o.t + '</span>' +
+    '</div>' +
+    '<div class="it-m">' + o.meta + '</div>' +
+    (o.acts ? '<div class="it-acts">' + o.acts + '</div>' : '') +
+  '</div>';
+}
+const A3 = '<button class="pri" data-go="ack">我知道了</button><button data-sheet="snooze">稍后</button><button>完成</button>';
+
+/* ---------- 首页 ---------- */
+function scHome(){
+  const banner = st.banner ? bannerEl() : '';
+  const warn = cur === 'homeWarn'
+    ? '<div class="it" style="border-left:3px solid var(--attention);background:var(--attention-bg);border-color:var(--attention-line)">' +
+      '<div class="it-h"><span class="t" style="font-size:var(--t-body);color:#7a540e">⚠ 无法保证提醒</span></div>' +
+      '<div class="it-m" style="color:#8a6a17">通知权限未开启 · 现在只有应用内提醒</div>' +
+      '<div class="it-acts"><button style="background:#fff;border-color:var(--attention-line);color:#7a540e">去开启</button></div></div>'
+    : '';
+  const reviewStrong = cur === 'homeWin'
+    ? '<button class="strong" data-go="review"><b>待整理</b><em>6 条</em><span class="ar">›</span></button>'
+    : '';
+  const reviewWeak = (cur === 'homeWin' || cur === 'homeQuiet' || cur === 'homeWarn')
+    ? '' : '<button class="soft" data-go="review"><span>待整理</span><span class="ar">›</span></button>';
+
+  const due = (cur === 'homeQuiet') ? '' :
+    '<div class="sec-h"><b>现在需要注意</b><em>2</em></div>' +
+    itemCard({
+      cls:'cri', mk:'cri', t:'立刻确认合同条款',
+      meta:'<span>今天 14:02 · 第 1 次提醒</span>', acts:A3
+    }) +
+    itemCard({
+      t:'跟供应商对一下账期', meta:'<span>刚到期</span><span class="src">来源：手动录入</span>', acts:A3
+    });
+
+  const quiet = (cur === 'homeQuiet' || cur === 'homeWarn')
+    ? '<div class="empty"><div class="ring">' + I.check + '</div>' +
+      '<h3>此刻很安静</h3><p>没有需要你注意的事项。<br>已交给系统的未来，会自己在合适的时候回来。</p>' +
+      '<span class="quiet">今天已完成 3 件</span></div>' +
+      '<div class="sec-h"><b>今天已完成</b><em>3</em></div>' +
+      itemCard({ cls:'ack', t:'提交报销单', meta:'今天 11:20 完成' }) +
+      itemCard({ cls:'ack', t:'回王工电话', meta:'今天 09:40 完成' }) +
+      itemCard({ cls:'ack', t:'交物业费', meta:'今天 08:15 完成' })
+    : '';
+
+  return statusbar() + banner +
+    appbar('安心收件箱', (cur === 'homeQuiet' || cur === 'homeWarn') ? '现在很安静 · 可以放心忘记' : '现在有 2 件需要你注意') +
+    '<div class="scroll">' + warn + reviewStrong + due + reviewWeak +
+      '<button class="fold"><b>已看到未完成</b><em>4</em><span class="ar">展开 ›</span></button>' +
+      quiet +
+      '<div class="scroll-hint">' + (cur === 'homeBanner' ? '弹条只能点 × 关闭 · 10 分钟自动收起且不记账' : 'Future 不出现在首页 · 请到「未来」查看') + '</div>' +
+    '</div>' +
+    '<button class="fab" data-go="capture">' + I.plus + '</button>' +
+    tabbar('home');
+}
+function bannerEl(){
+  return '<div class="banner"><button class="x" data-close-banner>×</button>' +
+    '<h4>🚨 关键 · 立刻确认合同条款</h4>' +
+    '<div class="m">今天 14:02 · 第 1 次提醒</div>' +
+    '<div class="it-acts"><button class="pri" data-go="ack">我知道了</button><button data-sheet="snooze">稍后 2 小时</button><button>完成</button></div>' +
+  '</div>';
+}
+/* D11 动作集两档：通知栏的「稍后」固定 2 小时；应用内给完整六档 */
+function snoozeSheet(){
+  const o = [
+    ['30 分钟','按真实流逝计时'],
+    ['2 小时','按真实流逝计时'],
+    ['今晚','20:00 · 本地墙钟'],
+    ['明天','09:00 · 本地墙钟'],
+    ['本周末','窗口 10:00 – 18:00'],
+    ['自定义','选一个具体时间']
+  ];
+  return '<div class="scrim" data-sheet-close></div><div class="sheet">' +
+    '<div class="grip"></div>' +
+    '<h3>什么时候再提醒你</h3>' +
+    '<p class="sub">通知栏点「稍后」固定 2 小时；应用内给完整六档</p>' +
+    o.map(x => '<button class="opt" data-sheet-close><span class="k">' + x[0] + '</span><span>' + x[1] + '</span><span class="ck"></span></button>').join('') +
+    '<div class="hint" style="margin-top:14px">先撤销旧调度 → 保存新数据 → 建立新调度，不产生双提醒</div>' +
+    '<div class="sheet-foot"><button data-sheet-close>取消</button></div></div>';
+}
+
+/* ---------- 待整理 ---------- */
+function scRevList(){
+  const g = (label, sub, rows) =>
+    '<div class="dh"><b>' + label + '</b><small>' + sub + '</small></div>' + rows;
+  const row = (t, s, tags) =>
+    '<button class="row" data-go="reviewSession"><div class="rm"><div class="rt">' + t + '</div>' +
+    '<div class="rs">' + s + '</div>' + (tags ? '<div class="tags">' + tags + '</div>' : '') +
+    '</div><div class="rr"><span class="ar">›</span></div></button>';
+  return statusbar() +
+    appbar('待整理 · 6', '信息尚未二次确认，不是逾期任务', {back:'home'}) +
+    '<div class="scroll has-cta">' +
+      g('今天','3 条',
+        row('Horolog 后面看看','系统解析：<b>未设定时间</b> · 手动录入 14:20','<span>无时间</span><span>内容模糊</span>') +
+        row('example.com/pricing','系统解析：未设定时间 · 分享 · 某乎','<span>只有链接</span>') +
+        row('过阵子看看那个降噪方案','系统解析：未设定时间 · 手动录入 09:05','<span>内容模糊</span>')) +
+      g('昨天','9 月 15 日 周二 · 2 条',
+        row('有空研究一下 Horolog 的定价','21:40 · 手动录入','<span>内容模糊</span>') +
+        row('看看这个优惠券能不能用','19:12 · 分享 · 小红书','<span>只有链接</span>')) +
+      g('更早','9 月 12 日 · 1 条',
+        row('那个方案再想想','10:30 · 手动录入','<span>内容模糊</span>')) +
+      '<div class="scroll-hint">排序：录入时间从旧到新 · 日期表头只是「我什么时候记的」的锚点</div>' +
+    '</div>' +
+    '<div class="cta"><button data-go="reviewSession">开始整理（6 条）</button>' +
+    '<div class="hint">不强迫今天做完 · 未处理的会滚入下一次</div></div>';
+}
+function scRevSession(){
+  return statusbar() +
+    appbar('整理', '第 1 / 6 条', {back:'review', action:'<button class="btn" data-go="review">' + I.close + '</button>'}) +
+    '<div class="prog"><i style="width:17%"></i></div>' +
+    '<div class="scroll has-cta">' +
+      '<div class="fieldbox">' +
+        '<div class="rt" style="font-size:var(--t-head);font-weight:650;margin-bottom:10px">Horolog 后面看看</div>' +
+        '<div class="quote"><b>原话</b>：Horolog 后面看看</div>' +
+        '<div class="fl" style="margin-top:14px">系统解析</div>' +
+        '<div class="rs" style="font-size:var(--t-sub);color:var(--attention);font-weight:650">未设定时间 · 已用兜底值（今晚 21:30 的整理窗口）</div>' +
+      '</div>' +
+      '<div class="fieldbox"><div class="fl">什么时候提醒你</div>' +
+        '<button class="opt on"><span class="k">今晚</span><span>21:30 · 与整理窗口一致</span><span class="ck"></span></button>' +
+        '<button class="opt"><span class="k">明天</span><span>09:00</span><span class="ck"></span></button>' +
+        '<button class="opt"><span class="k">本周末</span><span>窗口 10:00–18:00</span><span class="ck"></span></button>' +
+        '<button class="opt"><span class="k">自定义</span><span>选一个具体时间</span><span class="ck"></span></button>' +
+      '</div>' +
+      '<div class="fieldbox"><div class="fl">内容</div><div class="quote">（可改标题 / 加一句备注）</div></div>' +
+      '<div class="scroll-hint">退出不会丢已处理的部分 · 下次只继续剩余 5 条</div>' +
+    '</div>' +
+    '<div class="cta">' +
+      '<div style="display:flex;gap:10px"><button style="flex:1;height:50px;border-radius:var(--r-ctl);border:1px solid var(--line-2);background:var(--surface-2);font-size:var(--t-body);font-weight:600">继续待整理</button>' +
+      '<button style="flex:1.4;height:50px;border-radius:var(--r-ctl);background:var(--signal);color:#fff;font-size:var(--t-body);font-weight:650" data-go="review">确认并下一条</button></div>' +
+    '</div>';
+}
+function scRevEmpty(){
+  return statusbar() + appbar('待整理', '信息二次确认', {back:'home'}) +
+    '<div class="scroll"><div class="empty"><div class="ring">' + I.check + '</div>' +
+    '<h3>没有待整理的记录</h3><p>随手记下但没想清楚的内容会攒到这里，<br>每晚 21:30 一起过一遍。</p>' +
+    '<span class="quiet">首页那一行入口此时完全不渲染</span></div></div>';
+}
+
+/* ---------- 未来 ---------- */
+function segBar(){
+  return '<div class="seg"><button class="' + (st.seg === 'waiting' ? 'on' : '') + '" data-seg="waiting">托管中</button>' +
+    '<button class="' + (st.seg === 'archive' ? 'on' : '') + '" data-seg="archive">已归档</button></div>';
+}
+function viewBar(){
+  if (st.seg === 'archive') return '';
+  return '<div style="display:flex;align-items:center;gap:10px">' +
+    '<div class="seg mini">' +
+      '<button class="' + (st.view === 'list' ? 'on' : '') + '" data-view="list">列表</button>' +
+      '<button class="' + (st.view === 'cal' ? 'on' : '') + '" data-view="cal">月历</button>' +
+    '</div>' +
+    '<span style="font-size:var(--t-micro);color:var(--muted);margin-left:auto">两种视图共用同一份数据</span>' +
+  '</div>';
+}
+function chipBar(){
+  if (st.seg === 'archive' || st.view === 'cal') return '';
+  return '<div class="chips"><button class="on">全部</button><button>重要</button><button>有截止</button><button>周期</button><button>有项目</button></div>';
+}
+function frow(t, time, sub){
+  return '<button class="row"><div class="rm"><div class="rt">' + t + '</div>' + (sub ? '<div class="rs">' + sub + '</div>' : '') +
+    '</div><div class="rr"><time>' + time + '</time><span class="ar">›</span></div></button>';
+}
+function calendar(){
+  const days = [];
+  for (let i = 0; i < 2; i++) days.push('<button class="mut"></button>');
+  for (let d = 1; d <= 30; d++) {
+    const cls = [];
+    if (d === 16) cls.push('tod');
+    if ([16,17,21,22,28,30].indexOf(d) >= 0) cls.push('has');
+    if (d === 18) cls.push('due');
+    if (d === st.calSel) cls.push('sel');
+    days.push('<button class="' + cls.join(' ') + '">' + d + (cls.indexOf('has') >= 0 || cls.indexOf('due') >= 0 ? '<i></i>' : '') + '</button>');
+  }
+  for (let i = 0; i < 3; i++) days.push('<button class="mut"></button>');
+  const [y,m,dd] = ['2026','9 月', st.calSel];
+  return '<div class="cal"><div class="cal-h"><b>2026 年 9 月</b>' +
+    '<span class="n"><button>‹</button><button>今</button><button>›</button></span></div>' +
+    '<div class="cal-g">' + ['日','一','二','三','四','五','六'].map(x => '<span class="dw">' + x + '</span>').join('') +
+    days.join('') + '</div></div>' +
+    '<div class="dh"><b>' + m + ' ' + dd + ' 日</b><small>选中日 · 2 件</small></div>' +
+    frow('看 Horolog 项目进展','09:00','周五 · 普通') +
+    frow('给王工回电话','14:30','🚨 关键 · <i style="color:var(--future)">截止 9/30</i>');
+}
+function scFuture(){
+  const isArch = st.seg === 'archive';
+  let body = '';
+  if (isArch) {
+    body = '<div class="dh"><b>今天</b><small>2 件</small></div>' +
+      frow('提交报销单','11:20','今天完成') + frow('回王工电话','09:40','今天完成') +
+      '<div class="dh"><b>昨天</b><small>9 月 15 日 周二 · 1 件</small></div>' +
+      frow('交物业费','20:10','昨天完成') +
+      '<div class="dh"><b>9 月 12 日</b><small>周六 · 3 件</small></div>' +
+      frow('预约体检','10:00','9 月 12 日完成') + frow('买猫粮','15:30','9 月 12 日完成') +
+      '<div class="scroll-hint">不出现完成率 / 连续天数 / 年度总结</div>';
+  } else if (st.view === 'cal') {
+    body = calendar();
+  } else {
+    body = '<div class="dh"><b>今天</b><small>9 月 16 日 周三</small></div>' + frow('跟供应商对账期','23:00') +
+      '<div class="dh"><b>明天</b><small>9 月 17 日 周四</small></div>' + frow('提交季度报销','09:00','☆ 重要 · 周期') +
+      '<div class="dh"><b>本周内</b><small>9 月 18 – 21 日</small></div>' +
+      frow('看 Horolog 项目进展','周五 09:00') +
+      frow('给王工回电话','周五 14:30','🚨 关键 · <i style="color:var(--future)">截止 9/30</i>') +
+      frow('整理读书笔记','周日 20:00','周期 · 每周') +
+      '<div class="dh"><b>下周</b><small>9 月 22 – 28 日</small></div>' +
+      frow('续保车险','周二 10:00','<i style="color:var(--future)">截止 10/08</i>') +
+      '<div class="dh"><b>10 月</b><small>更远</small></div>' + frow('年度体检预约','10/12 09:00') +
+      '<div class="scroll-hint">越远越粗：日 → 周区间 → 月</div>';
+  }
+  const empty = (cur === 'futEmpty');
+  return statusbar() +
+    appbar('未来', isArch ? '完成过的事项，需要时可回看' : '已保存，尚未进入注意力') +
+    '<div style="padding:0 var(--gutter) 10px;display:flex;flex-direction:column;gap:8px">' + segBar() + viewBar() + chipBar() + '</div>' +
+    '<div class="scroll">' +
+      (empty
+        ? (isArch
+          ? '<div class="empty"><div class="ring">' + I.check + '</div><h3>还没有归档</h3><p>完成后的内容会收进这里，<br>可随时回看，但不会主动打扰你。</p></div>'
+          : '<div class="empty"><div class="ring">' + I.clock2 + '</div><h3>没有托管中的未来</h3><p>在首页点 +，一句话把未来事项交出去，<br>现在就可以少记挂。</p></div>')
+        : body) +
+    '</div>' +
+    '<button class="fab" data-go="capture">' + I.plus + '</button>' +
+    tabbar('future');
+}
+
+/* ---------- 录入 ---------- */
+function scCapture(){
+  const low = cur === 'capLow';
+  const sheet = low
+    ? '<div class="scrim"></div><div class="sheet"><div class="grip"></div>' +
+      '<h3>确认提醒时间</h3><p class="sub">输入里出现了时间词，但没解析准。选一个，或保持默认。</p>' +
+      '<div class="chips" style="margin-bottom:16px"><button class="on">今晚 21:30</button><button>明晚 21:30</button><button>本周末</button><button class="gh">自定义</button></div>' +
+      '<div class="hint warn">纯模糊词（过阵子 / 以后）不会弹这个框，会直接静默收下</div>' +
+      '<div class="sheet-foot"><button>返回修改</button><button class="pri" data-go="home">就按这个时间</button></div></div>'
+    : '<div class="scrim"></div><div class="sheet"><div class="grip"></div>' +
+      '<h3>安心记下</h3><p class="sub">一句话交给系统，自动解析时间</p>' +
+      '<div class="fld"><input class="inp" value="周五提醒我看 Horolog" /></div>' +
+      '<div class="hint">' + I.clock2 + '已设置：本周五 09:00 · 可修改</div>' +
+      '<div class="fld" style="margin-top:16px"><label>重要程度</label>' +
+      '<div class="chips"><button class="on">普通</button><button>☆ 重要</button><button>🚨 关键</button></div></div>' +
+      '<div class="fld"><label>提醒时间</label><div class="opt on"><span class="k">9/18</span><span>周五 09:00</span><span class="ck"></span></div></div>' +
+      '<div class="sheet-foot"><button data-go="home">取消</button><button class="pri" data-go="home">交给系统</button></div></div>';
+  return statusbar() + appbar('安心收件箱', '现在有 2 件需要你注意') +
+    '<div class="scroll">' + itemCard({ t:'跟供应商对一下账期', meta:'<span>刚到期</span>', acts:A3 }) + '</div>' +
+    '<button class="fab">' + I.plus + '</button>' + tabbar('home') + sheet;
+}
+
+/* ---------- 提醒 ---------- */
+function scAlarm(){
+  const wave = Array.from({length:30}, (_,i) =>
+    '<i style="height:' + (7 + Math.abs(Math.sin(i * .9)) * 24).toFixed(1) + 'px"></i>').join('');
+  return '<div class="alarm">' +
+    '<div class="sb"><span>9:41</span><span class="sig"><span style="font-size:10px">5G</span><i></i></span></div>' +
+    '<div class="body">' +
+      '<div class="lvl"><i></i>关键 · 绝不能错过</div>' +
+      '<h2>立刻确认合同条款</h2>' +
+      '<div class="meta">安心收件箱 · 第 1 / 8 次提醒</div>' +
+      '<div class="wave">' + wave + '</div>' +
+    '</div>' +
+    '<div class="acts">' +
+      '<button class="pri" data-go="home">我知道了</button>' +
+      '<div class="row2"><button>稍后 2 小时</button><button>完成</button></div>' +
+      '<button class="gh" data-go="home">关闭（只止响，不代表已看到）</button>' +
+    '</div></div>';
+}
+function scNotif(){
+  return '<div class="lock">' +
+    '<div class="lg"><b>9:41</b><span>9 月 16 日 周三</span></div>' +
+    '<div class="notif"><div class="nh"><i>安</i>安心收件箱 · 现在</div>' +
+      '<div class="nt">🚨 关键 · 立刻确认合同条款</div>' +
+      '<div class="nb">第 1 / 8 次 · 点击查看</div>' +
+      '<div class="na"><button data-go="ack">我知道了</button><button>稍后 2 小时</button><button>完成</button></div>' +
+    '</div>' +
+    '<div class="notif" style="opacity:.6"><div class="nh"><i>安</i>安心收件箱 · 21:30</div>' +
+      '<div class="nt">有 6 条待整理</div>' +
+      '<div class="nb">信息尚未二次确认，不是逾期任务</div>' +
+      '<div class="na"><button data-go="review">开始整理</button><button>稍后</button><button>今天跳过</button></div>' +
+    '</div>' +
+    '<div class="scroll-hint" style="color:#8b9199;padding-top:14px">通知动作只给三档快捷项 · 六种时间选项在应用内</div>' +
+  '</div>';
+}
+
+/* ---------- 我的 ---------- */
+function scMe(){
+  const seg = v => '<div class="sel-seg">' +
+    '<button class="' + (st.remindMode === 'notification' ? 'on' : '') + '" data-mode="notification">系统通知</button>' +
+    '<button class="' + (st.remindMode === 'alarm' ? 'on' : '') + '" data-mode="alarm">闹钟提醒</button></div>';
+  const sw = (on, k) => '<span class="sw-t ' + (on ? 'on' : '') + '" data-sw="' + k + '"></span>';
+  return statusbar() + appbar('我的', '本地优先 · 数据只在本机') +
+    '<div class="scroll">' +
+      '<div class="stats">' +
+        '<div class="stat due"><b>2</b><small>待确认</small></div>' +
+        '<div class="stat"><b>4</b><small>已看到</small></div>' +
+        '<div class="stat"><b>12</b><small>托管中</small></div>' +
+      '</div>' +
+      '<div class="gh">提醒</div>' +
+      '<div class="set">' +
+        '<div class="set-r"><div class="l"><b>默认提醒方式</b><small>未标记的事项按它走；标了 ☆ 或 🚨 的一律用闹钟</small></div>' + seg() + '</div>' +
+        '<div class="set-r"><div class="l"><b>本地通知</b><small>关闭后所有系统提醒停止</small></div>' + sw(st.notifOn, 'notif') + '</div>' +
+        '<button class="set-r"><div class="l"><b>精确闹钟权限</b><small>未授权时提醒时间可能延迟</small></div><span class="v">去设置 ›</span></button>' +
+        '<button class="set-r"><div class="l"><b>提醒能力自检</b><small>发一条测试提醒，验证链路</small></div><span class="v">›</span></button>' +
+      '</div>' +
+      '<div class="gh">整理</div>' +
+      '<div class="set">' +
+        '<div class="set-r"><div class="l"><b>待整理</b><small>关闭后已有提醒仍正常工作</small></div>' + sw(st.reviewOn, 'review') + '</div>' +
+        '<button class="set-r"><div class="l"><b>整理时间</b><small>每晚集中处理一次</small></div><span class="v">21:30 – 23:00</span></button>' +
+      '</div>' +
+      '<div class="gh">数据</div>' +
+      '<div class="set">' +
+        '<button class="set-r"><div class="l"><b>导出数据</b><small>JSON · 保存在本机</small></div><span class="v">›</span></button>' +
+        '<button class="set-r"><div class="l"><b>载入示例数据</b></div><span class="v">›</span></button>' +
+      '</div>' +
+      '<div class="scroll-hint">改「默认提醒方式」只影响之后录入的事项 · 已有事项保持录入时的快照</div>' +
+    '</div>' + tabbar('me');
+}
+function scNotes(){
+  return statusbar() + appbar('笔记', '超出 V0.2 范围 · 待裁决') +
+    '<div class="scroll"><div class="empty"><div class="ring">' + I.note + '</div>' +
+    '<h3>笔记（占位）</h3><p>V0.2 基线通篇没有「笔记 / 项目 / 标签」，<br>但代码里有 —— 这是 GAP-19 的「无人认领」状态。</p>' +
+    '<span class="quiet">需要你先决定：保留 / 降级 / 移除</span></div></div>' + tabbar('notes');
+}
+
+/* =========================================================
+   路由
+   ========================================================= */
+const SCN = {
+  home:scHome, homeWin:scHome, homeQuiet:scHome, homeWarn:scHome, homeBanner:scHome,
+  revList:scRevList, revSession:scRevSession, revEmpty:scRevEmpty,
+  futList:scFuture, futCal:scFuture, futArch:scFuture, futEmpty:scFuture,
+  cap:scCapture, capLow:scCapture,
+  alarm:scAlarm, notif:scNotif,
+  me:scMe, notes:scNotes
+};
+const TABMAP = {home:'home', future:'futList', notes:'notes', me:'me'};
+
+function render(){
+  if (cur === 'futList' || cur === 'futCal' || cur === 'futArch' || cur === 'futEmpty') {
+    st.seg = cur === 'futArch' ? 'archive' : 'waiting';
+    if (cur === 'futCal') st.view = 'cal';
+    else if (cur === 'futList' || cur === 'futEmpty') st.view = 'list';
+  }
+  if (cur === 'homeBanner') st.banner = true; else st.banner = false;
+  let html = (SCN[cur] || scHome)();
+  if (st.sheet === 'snooze') html += snoozeSheet();
+  document.getElementById('screen').innerHTML = html;
+  paintNav(); paintNote();
+}
+function paintNav(){
+  const groups = {home:'navHome', review:'navReview', future:'navFuture', capture:'navCapture', alarm:'navAlarm', me:'navMe'};
+  Object.keys(groups).forEach(g => {
+    document.getElementById(groups[g]).innerHTML = Object.keys(SCENES)
+      .filter(k => SCENES[k].group === g)
+      .map(k => '<button data-scene="' + k + '" class="' + (k === cur ? 'on' : '') + '">' + SCENES[k].label + '</button>').join('');
+  });
+}
+function paintNote(){
+  const n = NOTES[cur] || NOTES.home;
+  document.getElementById('noteCard').innerHTML =
+    '<h3>本屏要点</h3><h4 style="font-size:var(--t-head);margin-bottom:9px">' + n[0] + '</h4>' +
+    n.slice(1).map(p => '<p>' + p + '</p>').join('');
+}
+function go(id){ if (SCENES[id]) { cur = id; st.sheet = null; render(); document.getElementById('screen').scrollTop = 0; } }
+
+document.addEventListener('click', e => {
+  const sc = e.target.closest('[data-scene]');
+  if (sc) { go(sc.dataset.scene); return; }
+  if (e.target.closest('[data-close-banner]')) { st.banner = false; render(); return; }
+  const sh = e.target.closest('[data-sheet]');
+  if (sh) { st.sheet = sh.dataset.sheet; render(); return; }
+  if (e.target.closest('[data-sheet-close]')) { st.sheet = null; render(); return; }
+
+  const segBtn = e.target.closest('[data-seg]');
+  if (segBtn) { st.seg = segBtn.dataset.seg; cur = st.seg === 'archive' ? 'futArch' : 'futList'; render(); return; }
+  const viewBtn = e.target.closest('[data-view]');
+  if (viewBtn) { st.view = viewBtn.dataset.view; cur = st.view === 'cal' ? 'futCal' : 'futList'; render(); return; }
+  const mode = e.target.closest('[data-mode]');
+  if (mode) { st.remindMode = mode.dataset.mode; render(); return; }
+  const swt = e.target.closest('[data-sw]');
+  if (swt) {
+    if (swt.dataset.sw === 'notif') st.notifOn = !st.notifOn;
+    if (swt.dataset.sw === 'review') st.reviewOn = !st.reviewOn;
+    render(); return;
+  }
+  const day = e.target.closest('.cal-g button');
+  if (day && day.textContent.trim()) { st.calSel = parseInt(day.textContent, 10); render(); return; }
+
+  const g = e.target.closest('[data-go]');
+  if (g) {
+    const v = g.dataset.go;
+    if (v === 'review') go('revList');
+    else if (v === 'reviewSession') go('revSession');
+    else if (v === 'capture') go('cap');
+    else if (v === 'ack') { go('home'); alert('「我知道了」= 停止追提醒，移入「已看到未完成」\n\n它不会变成完成 —— ACK ≠ Complete'); }
+    else if (TABMAP[v]) go(TABMAP[v]);
+    return;
+  }
+});
+render();
+</script>
+</body>
+</html>
