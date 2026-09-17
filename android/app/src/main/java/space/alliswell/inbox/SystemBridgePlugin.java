@@ -15,6 +15,7 @@ import android.os.PowerManager;
 import android.provider.Settings;
 
 import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
 
 import com.getcapacitor.JSObject;
@@ -48,9 +49,14 @@ public class SystemBridgePlugin extends Plugin {
   public static final String PREFS_SCHEDULES = "attention_alarm_schedules";
   public static final String KEY_ALARMS = "alarms";
 
-  /** P1-4：记录一条已排闹钟（同 id 覆盖） */
+  /** P1-4：记录一条已排闹钟（同 id 覆盖）。V02：一并持久化数据版本 */
   static synchronized void persistAlarm(Context context, int id, long triggerAt,
                                         String title, String body, String itemId, String level) {
+    persistAlarm(context, id, triggerAt, title, body, itemId, level, "0");
+  }
+
+  static synchronized void persistAlarm(Context context, int id, long triggerAt, String title,
+                                        String body, String itemId, String level, String itemRev) {
     try {
       SharedPreferences prefs = context.getSharedPreferences(PREFS_SCHEDULES, Context.MODE_PRIVATE);
       JSONArray arr = new JSONArray(prefs.getString(KEY_ALARMS, "[]"));
@@ -66,6 +72,7 @@ public class SystemBridgePlugin extends Plugin {
       entry.put("body", body == null ? "" : body);
       entry.put("itemId", itemId == null ? "" : itemId);
       entry.put("level", level == null ? "" : level);
+      entry.put("itemRev", itemRev == null || itemRev.isEmpty() ? "0" : itemRev);
       out.put(entry);
       prefs.edit().putString(KEY_ALARMS, out.toString()).apply();
     } catch (Exception ignored) {}
@@ -98,17 +105,105 @@ public class SystemBridgePlugin extends Plugin {
         int id = o.optInt("id", 0);
         long triggerAt = o.optLong("triggerAt", 0L);
         if (id == 0 || triggerAt <= now) continue;
+        String rev = o.optString("itemRev", "0");
         AlarmScheduler.schedule(context, triggerAt, o.optString("title"), o.optString("body"),
-          id, o.optString("itemId"), o.optString("level"));
+          id, o.optString("itemId"), o.optString("level"),
+          rev == null || rev.isEmpty() ? "0" : rev);
         kept.put(o);
       }
       prefs.edit().putString(KEY_ALARMS, kept.toString()).apply();
     } catch (Exception ignored) {}
   }
 
+  /* ---------- 全屏闹钟动作队列（取代单槽位 lastAction/lastItemId） ---------- */
+
+  /**
+   * 旧实现只用一个槽位存「最后一次动作」，且在 JS 读取时立即删除 ——
+   * 连续动作（比如先「稍后」再「完成」）或消费过程中崩溃都会丢操作。
+   * 改为 FIFO 队列：写入追加，消费只移除队首。
+   */
+  static synchronized void enqueueAlarmAction(Context context, String action, String itemId, String itemRev) {
+    try {
+      SharedPreferences prefs = context.getSharedPreferences(AlarmActivity.PREFS, Context.MODE_PRIVATE);
+      JSONArray arr = new JSONArray(prefs.getString(AlarmActivity.KEY_ACTIONS, "[]"));
+      JSONObject entry = new JSONObject();
+      entry.put("id", "a" + System.currentTimeMillis() + "_" + arr.length() + "_" + (int) (Math.random() * 100000));
+      entry.put("action", action == null ? "" : action);
+      entry.put("itemId", itemId == null ? "" : itemId);
+      entry.put("itemRev", itemRev == null ? "0" : itemRev);
+      arr.put(entry);
+      prefs.edit().putString(AlarmActivity.KEY_ACTIONS, arr.toString()).apply();
+    } catch (Exception ignored) {}
+  }
+
+  /**
+   * V09：**只读不删**。
+   * 「取出即删」在 JS 处理完之前崩溃就会永久丢掉这次动作；改为由 JS 处理并落库后
+   * 再调 `ackAlarmAction` 显式确认删除。兼容旧的 lastAction/lastItemId 单槽位残留。
+   */
+  static synchronized JSONObject peekAlarmAction(Context context) {
+    try {
+      SharedPreferences prefs = context.getSharedPreferences(AlarmActivity.PREFS, Context.MODE_PRIVATE);
+      JSONArray arr = new JSONArray(prefs.getString(AlarmActivity.KEY_ACTIONS, "[]"));
+      if (arr.length() > 0) {
+        JSONObject head = arr.optJSONObject(0);
+        if (head != null) return head;
+      }
+      String legacyAction = prefs.getString(AlarmActivity.KEY_ACTION, null);
+      if (legacyAction != null) {
+        String legacyItem = prefs.getString(AlarmActivity.KEY_ITEM_ID, "");
+        JSONObject entry = new JSONObject();
+        entry.put("id", "legacy_" + legacyAction + "_" + (legacyItem == null ? "" : legacyItem));
+        entry.put("action", legacyAction);
+        entry.put("itemId", legacyItem == null ? "" : legacyItem);
+        entry.put("itemRev", "0");
+        return entry;
+      }
+    } catch (Exception ignored) {}
+    return null;
+  }
+
+  /** V09：JS 处理完成并落库后确认删除；同时清掉旧单槽位残留 */
+  static synchronized void ackAlarmAction(Context context, String id) {
+    try {
+      SharedPreferences prefs = context.getSharedPreferences(AlarmActivity.PREFS, Context.MODE_PRIVATE);
+      if (id == null || id.indexOf("legacy_") == 0) {
+        prefs.edit().remove(AlarmActivity.KEY_ACTION).remove(AlarmActivity.KEY_ITEM_ID).apply();
+        return;
+      }
+      JSONArray arr = new JSONArray(prefs.getString(AlarmActivity.KEY_ACTIONS, "[]"));
+      JSONArray out = new JSONArray();
+      for (int i = 0; i < arr.length(); i++) {
+        JSONObject o = arr.optJSONObject(i);
+        if (o == null) continue;
+        if (id.equals(o.optString("id", ""))) continue;
+        out.put(o);
+      }
+      prefs.edit().putString(AlarmActivity.KEY_ACTIONS, out.toString()).apply();
+    } catch (Exception ignored) {}
+  }
+
+  /** R3：minSdk 22 —— 一律用字符串形式的 getSystemService，避免 API 23+ 的 Class 重载 */
+  private static <T> T systemService(Context context, String name, Class<T> type) {
+    Object svc = context.getSystemService(name);
+    return type.isInstance(svc) ? type.cast(svc) : null;
+  }
+
+  private NotificationManager notificationManager() {
+    return systemService(getContext(), Context.NOTIFICATION_SERVICE, NotificationManager.class);
+  }
+
+  private AlarmManager alarmManager() {
+    return systemService(getContext(), Context.ALARM_SERVICE, AlarmManager.class);
+  }
+
+  private PowerManager powerManager() {
+    return systemService(getContext(), Context.POWER_SERVICE, PowerManager.class);
+  }
+
   private void ensureChannel() {
     if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) return;
-    NotificationManager nm = getContext().getSystemService(NotificationManager.class);
+    NotificationManager nm = notificationManager();
     if (nm == null) return;
     createChannelIfMissing(nm, CHANNEL_ID, CHANNEL_NAME);
     createChannelIfMissing(nm, AlarmTestReceiver.CHANNEL_ID, AlarmTestReceiver.CHANNEL_NAME);
@@ -136,9 +231,16 @@ public class SystemBridgePlugin extends Plugin {
     nm.createNotificationChannel(channel);
   }
 
+  /**
+   * R3：`areNotificationsEnabled()` 是 API 24 才有的 NotificationManager 方法，
+   * minSdk 22 上直接调用会 NoSuchMethodError（catch(Exception) 兜不住 Error）。
+   * 改用 androidx 的 NotificationManagerCompat，在所有版本上都有定义。
+   */
   private boolean notificationsEnabled() {
-    NotificationManager nm = getContext().getSystemService(NotificationManager.class);
-    return nm != null && nm.areNotificationsEnabled();
+    try {
+      return NotificationManagerCompat.from(getContext()).areNotificationsEnabled();
+    } catch (Exception ignored) {}
+    return true;
   }
 
   private boolean hasPostNotifications() {
@@ -149,7 +251,7 @@ public class SystemBridgePlugin extends Plugin {
 
   private boolean canExactAlarm() {
     if (Build.VERSION.SDK_INT < 31) return true;
-    AlarmManager am = getContext().getSystemService(AlarmManager.class);
+    AlarmManager am = alarmManager();
     if (am == null) return false;
     try {
       if (am.canScheduleExactAlarms()) return true;
@@ -159,7 +261,7 @@ public class SystemBridgePlugin extends Plugin {
 
   private boolean ignoringBatteryOptimizations() {
     if (Build.VERSION.SDK_INT < 23) return true;
-    PowerManager pm = getContext().getSystemService(PowerManager.class);
+    PowerManager pm = powerManager();
     return pm != null && pm.isIgnoringBatteryOptimizations(getContext().getPackageName());
   }
 
@@ -172,8 +274,8 @@ public class SystemBridgePlugin extends Plugin {
     result.put("postNotificationsGranted", hasPostNotifications());
     result.put("canExactAlarm", canExactAlarm());
     result.put("ignoringBatteryOptimizations", ignoringBatteryOptimizations());
-    result.put("alarmManagerAvailable", getContext().getSystemService(AlarmManager.class) != null);
-    result.put("notificationManagerAvailable", getContext().getSystemService(NotificationManager.class) != null);
+    result.put("alarmManagerAvailable", alarmManager() != null);
+    result.put("notificationManagerAvailable", notificationManager() != null);
     call.resolve(result);
   }
 
@@ -236,7 +338,7 @@ public class SystemBridgePlugin extends Plugin {
         if (Build.VERSION.SDK_INT >= 23) flags |= PendingIntent.FLAG_IMMUTABLE;
         builder.setContentIntent(PendingIntent.getActivity(getContext(), id, intent, flags));
       }
-      NotificationManager nm = getContext().getSystemService(NotificationManager.class);
+      NotificationManager nm = notificationManager();
       if (nm == null) {
         call.reject("NotificationManager 不可用");
         return;
@@ -263,6 +365,12 @@ public class SystemBridgePlugin extends Plugin {
     return level;
   }
 
+  /** L04：投递时的事项数据版本，用于识别「已被改写的旧通知」 */
+  private String callItemRev(PluginCall call) {
+    Number rev = call.getInt("itemRev", 0);
+    return String.valueOf(rev == null ? 0 : rev.intValue());
+  }
+
   @PluginMethod
   public void scheduleAlarm(PluginCall call) {
     try {
@@ -271,7 +379,7 @@ public class SystemBridgePlugin extends Plugin {
       String title = call.getString("title", "安心收件箱闹钟测试");
       String body = call.getString("body", "这是定时闹钟提醒测试");
       int id = call.getInt("id", 90002);
-      JSObject r = scheduleAlarmInternal(delayMs, title, body, id, callItemId(call), callLevel(call));
+      JSObject r = scheduleAlarmInternal(delayMs, title, body, id, callItemId(call), callLevel(call), callItemRev(call));
       call.resolve(r);
     } catch (Exception e) {
       call.reject("设置闹钟失败: " + e.getMessage(), e);
@@ -287,26 +395,28 @@ public class SystemBridgePlugin extends Plugin {
       String body = call.getString("body", "有一条事项需要你确认");
       int id = call.getInt("id", 90100);
       long delayMs = Math.max(500L, at - System.currentTimeMillis());
-      JSObject r = scheduleAlarmInternal(delayMs, title, body, id, callItemId(call), callLevel(call));
+      JSObject r = scheduleAlarmInternal(delayMs, title, body, id, callItemId(call), callLevel(call), callItemRev(call));
       call.resolve(r);
     } catch (Exception e) {
       call.reject("设置定时失败: " + e.getMessage(), e);
     }
   }
 
-  /** JS 轮询消费全屏闹钟动作（D11/D12） */
+  /**
+   * JS 轮询消费全屏闹钟动作（D11/D12）。
+   * V09：只**读取**队首并带回事件 id，不在这里删除 —— 由 `ackAlarmAction` 在 JS 落库后确认。
+   */
   @PluginMethod
   public void consumeAlarmAction(PluginCall call) {
     try {
-      android.content.SharedPreferences prefs =
-        getContext().getSharedPreferences(AlarmActivity.PREFS, android.content.Context.MODE_PRIVATE);
-      String action = prefs.getString(AlarmActivity.KEY_ACTION, null);
-      String itemId = prefs.getString(AlarmActivity.KEY_ITEM_ID, "");
+      JSONObject head = peekAlarmAction(getContext());
       JSObject r = new JSObject();
-      if (action != null) {
-        prefs.edit().remove(AlarmActivity.KEY_ACTION).remove(AlarmActivity.KEY_ITEM_ID).apply();
-        r.put("action", action);
-        r.put("itemId", itemId == null ? "" : itemId);
+      if (head != null) {
+        r.put("action", head.optString("action", ""));
+        r.put("itemId", head.optString("itemId", ""));
+        String rev = head.optString("itemRev", "0");
+        r.put("itemRev", rev.isEmpty() ? "0" : rev);
+        r.put("id", head.optString("id", ""));
       } else {
         r.put("action", "");
       }
@@ -316,12 +426,41 @@ public class SystemBridgePlugin extends Plugin {
     }
   }
 
-  private JSObject scheduleAlarmInternal(long delayMs, String title, String body, int id, String itemId, String level) throws Exception {
+  /** V09：JS 成功处理并持久化后确认删除该事件 */
+  @PluginMethod
+  public void ackAlarmAction(PluginCall call) {
+    try {
+      String id = call.getString("id");
+      ackAlarmAction(getContext(), id);
+      JSObject r = new JSObject();
+      r.put("ok", true);
+      call.resolve(r);
+    } catch (Exception e) {
+      call.reject("确认闹钟动作失败: " + e.getMessage(), e);
+    }
+  }
+
+  /** R8 / R7：撤销闹钟时同步清掉可能已投递的通知 */
+  @PluginMethod
+  public void cancelNotification(PluginCall call) {
+    try {
+      int id = call.getInt("id", 90002);
+      NotificationManager nm = notificationManager();
+      if (nm != null) nm.cancel(id);
+      JSObject r = new JSObject();
+      r.put("ok", true);
+      call.resolve(r);
+    } catch (Exception e) {
+      call.reject("取消通知失败: " + e.getMessage(), e);
+    }
+  }
+
+  private JSObject scheduleAlarmInternal(long delayMs, String title, String body, int id, String itemId, String level, String itemRev) throws Exception {
     ensureChannel();
     if (delayMs < 500) delayMs = 500;
     long triggerAt = System.currentTimeMillis() + delayMs;
 
-    AlarmManager am = getContext().getSystemService(AlarmManager.class);
+    AlarmManager am = alarmManager();
     if (am == null) {
       throw new IllegalStateException("AlarmManager 不可用");
     }
@@ -334,6 +473,7 @@ public class SystemBridgePlugin extends Plugin {
     intent.putExtra(AlarmTestReceiver.EXTRA_FULL_SCREEN, true);
     intent.putExtra(AlarmTestReceiver.EXTRA_ITEM_ID, itemId == null ? "" : itemId);
     if (level != null) intent.putExtra(AlarmTestReceiver.EXTRA_LEVEL, level);
+    if (itemRev != null) intent.putExtra(AlarmTestReceiver.EXTRA_ITEM_REV, itemRev);
     int flags = PendingIntent.FLAG_UPDATE_CURRENT;
     if (Build.VERSION.SDK_INT >= 23) flags |= PendingIntent.FLAG_IMMUTABLE;
     PendingIntent pi = PendingIntent.getBroadcast(getContext(), id, intent, flags);
@@ -390,8 +530,8 @@ public class SystemBridgePlugin extends Plugin {
     r.put("mode", mode);
     r.put("triggerAt", triggerAt);
     r.put("delayMs", delayMs);
-    // P1-4：落盘，供开机恢复
-    persistAlarm(getContext(), id, triggerAt, title, body, itemId, level);
+    // P1-4：落盘，供开机恢复（V02：带上数据版本）
+    persistAlarm(getContext(), id, triggerAt, title, body, itemId, level, itemRev);
     return r;
   }
 
@@ -399,7 +539,7 @@ public class SystemBridgePlugin extends Plugin {
   public void cancelAlarm(PluginCall call) {
     try {
       int id = call.getInt("id", 90002);
-      AlarmManager am = getContext().getSystemService(AlarmManager.class);
+      AlarmManager am = alarmManager();
       Intent intent = new Intent(getContext(), AlarmTestReceiver.class);
       intent.setAction("space.alliswell.inbox.ACTION_TEST_ALARM");
       int flags = PendingIntent.FLAG_UPDATE_CURRENT;

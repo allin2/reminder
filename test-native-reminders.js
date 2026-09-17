@@ -4,6 +4,7 @@
 const path = require("path");
 const { spawnSync } = require("child_process");
 const native = require(path.join(__dirname, "lib/native-reminders.js"));
+const reminderLib = require(path.join(__dirname, "lib/reminder.js"));
 
 let passed = 0;
 let failed = 0;
@@ -203,11 +204,19 @@ async function run() {
     deadlineAt: now + 3 * 86400000
   });
   const lifecycleInitial = native.buildDesired([lifecycle], { notify: true }, now);
-  ok("关键事项包含常规与 Deadline 排程", lifecycleInitial.length === 9 && lifecycleInitial.some(n => n.extra.event === "deadline"));
+  // V03：截止保护按阶段预排，p24 与 p2 各一条（此前只有 deadline-24h 一个点）
+  ok("关键事项包含常规与 Deadline 排程",
+    lifecycleInitial.length === 10 &&
+    lifecycleInitial.filter(n => n.extra.event === "deadline").length === 2,
+    String(lifecycleInitial.length));
+  ok("V03 两个保护阶段各有独立身份",
+    new Set(lifecycleInitial.filter(n => n.extra.event === "deadline").map(n => n.extra.stageKey)).size === 2);
   const acknowledged = native.buildDesired([
     Object.assign({}, lifecycle, { status: "acknowledged" })
   ], { notify: true }, now);
-  ok("ACK 取消常规补充但保留独立 Deadline", acknowledged.length === 1 && acknowledged[0].extra.event === "deadline");
+  ok("ACK 取消常规补充但保留独立 Deadline",
+    acknowledged.length === 2 && acknowledged.every(n => n.extra.event === "deadline"),
+    String(acknowledged.length));
   const completed = native.buildDesired([
     Object.assign({}, lifecycle, { status: "archived" })
   ], { notify: true }, now);
@@ -299,7 +308,10 @@ async function run() {
     ok("D22 补提醒间隔 60 分钟", rd[1].schedule.at.getTime() - rd[0].schedule.at.getTime() === 60 * 60 * 1000);
     ok("D22 窗口起点 21:30", rd[0].schedule.at.getHours() === 21 && rd[0].schedule.at.getMinutes() === 30);
     ok("P1-6 待整理走普通渠道", rd.every(n => n.channelId === native.CHANNELS.normal));
-    ok("D12 待整理通知带快捷动作类型", rd.every(n => n.actionTypeId === native.ACTION_TYPE_ID));
+    // L06：待整理必须使用自己的动作集，不能复用事项的「我知道了 / 稍后 2 小时 / 完成」
+    ok("L06 待整理使用独立动作类型",
+      rd.every(n => n.actionTypeId === native.REVIEW_ACTION_TYPE_ID) &&
+      native.REVIEW_ACTION_TYPE_ID !== native.ACTION_TYPE_ID);
     ok("关闭整理功能则不排", native.buildReviewDesired(2, { enabled: false }, now, { notify: true }).length === 0);
 
     const beforeWindow = new Date(2026, 0, 15, 20, 0, 0).getTime();
@@ -333,6 +345,193 @@ async function run() {
     ok("P0-1 未传待整理上下文时不排", srNone.desired === 0);
   }
 
+  section("regressions: review / window / dnd / deadline / ledger");
+  {
+    // L01 / R5 / D17：只有「系统兜底时间」的待整理不发事项提醒
+    const onSettings = { notify: true, review: { enabled: true } };
+    const fallback = item("nr-fb", "normal", now + 3600000, {
+      review_status: "NEEDS_REVIEW", isFallbackTrigger: true
+    });
+    const realTime = item("nr-real", "normal", now + 3600000, {
+      review_status: "NEEDS_REVIEW", isFallbackTrigger: false
+    });
+    const dOn = native.buildDesired([fallback, realTime], onSettings, now);
+    ok("L01 兜底待整理不发事项提醒", !dOn.some(n => n.extra.itemId === "nr-fb"));
+    ok("L01 有真实时间的待整理照常提醒", dOn.some(n => n.extra.itemId === "nr-real"));
+    const dOff = native.buildDesired([fallback], { notify: true, review: { enabled: false } }, now);
+    ok("R5 关闭整理后待整理按普通事项排程", dOff.some(n => n.extra.itemId === "nr-fb"));
+    const nrDeadline = item("nr-dl", "normal", now + 3600000, {
+      review_status: "NEEDS_REVIEW", isFallbackTrigger: true, deadlineAt: now + 3 * 86400000
+    });
+    ok("L01 待整理不阻断截止保护（INV-05）",
+      native.buildDesired([nrDeadline], onSettings, now)
+        .some(n => n.extra.itemId === "nr-dl" && n.extra.event === "deadline"));
+
+    // R4：窗口起点刚过，当晚剩余槽位不得被整体挪到明天
+    const rs = {
+      enabled: true, hour: 21, minute: 30, windowEndHour: 23, windowEndMinute: 0,
+      followupMs: 60 * 60 * 1000, maxFollowups: 2
+    };
+    const t2125 = new Date(2026, 8, 16, 21, 25, 0).getTime();
+    const t2135 = new Date(2026, 8, 16, 21, 35, 0).getTime();
+    const at2125 = native.buildReviewDesired(2, rs, t2125, { notify: true });
+    const at2135 = native.buildReviewDesired(2, rs, t2135, { notify: true });
+    const tsOf = list => list.map(n => n.schedule.at.getTime());
+    ok("R4 21:25 排出当晚三档", at2125.length === 3, String(at2125.length));
+    ok("R4 21:35 仍保留当晚末两档",
+      tsOf(at2135).join(",") === [
+        new Date(2026, 8, 16, 22, 30, 0).getTime(),
+        new Date(2026, 8, 16, 23, 30, 0).getTime()
+      ].join(","),
+      at2135.map(n => n.schedule.at.toLocaleString()).join(" | "));
+    const keyOf = (list, ts) => (list.find(n => n.schedule.at.getTime() === ts) || {}).extra.scheduleKey;
+    ok("R4 槽位身份稳定（不随前面槽位过去而改变）",
+      !!keyOf(at2135, new Date(2026, 8, 16, 22, 30, 0).getTime()) &&
+      keyOf(at2135, new Date(2026, 8, 16, 22, 30, 0).getTime()) ===
+      keyOf(at2125, new Date(2026, 8, 16, 22, 30, 0).getTime()));
+
+    // L07 / D18：补提醒不得穿透勿扰；越窗的档位滚入下一个窗口
+    const withDnd = native.buildReviewDesired(2, rs, now, { dnd: true, quietStart: "23:00", quietEnd: "07:30" });
+    ok("L07 补提醒不穿透勿扰",
+      withDnd.every(n => n.schedule.at.getHours() < 23 && n.schedule.at.getHours() >= 7),
+      withDnd.map(n => n.schedule.at.toLocaleString()).join(" | "));
+    ok("L07 次数是上限而非必须发满", withDnd.length === 2, String(withDnd.length));
+
+    // R6 / L02：截止保护的排程身份必须稳定，且已消费的阶段不再排
+    const dlItem = item("dl", "normal", now + 30 * 86400000, { deadlineAt: now + 12 * 3600000 });
+    const d1 = native.buildDesired([dlItem], { notify: true }, now).find(n => n.extra.event === "deadline");
+    const d2 = native.buildDesired([dlItem], { notify: true }, now + 20000).find(n => n.extra.event === "deadline");
+    ok("R6 进入保护窗口后排一条立即提醒", !!d1 && d1.schedule.at.getTime() - now <= 5000);
+    ok("R6 反复对账身份稳定（不再生成新提醒）",
+      !!d2 && d1.id === d2.id && d1.extra.scheduleKey === d2.extra.scheduleKey);
+    const stageKey = reminderLib.deadlineStageKey(dlItem.deadlineAt, now);
+    ok("R6 投影与 lib/reminder.js 使用同一阶段身份",
+      !!stageKey && native.deadlineStageKey(dlItem.deadlineAt, now) === stageKey);
+    const consumedItem = Object.assign({}, dlItem, { deadlineStageKey: stageKey });
+    const consumedDesired = native.buildDesired([consumedItem], { notify: true }, now);
+    ok("R6 已消费的阶段不再重复提醒",
+      !consumedDesired.some(n => n.extra.stageKey === stageKey),
+      consumedDesired.map(n => n.extra.stageKey).join("|"));
+    ok("V03 消费 p24 后仍预排 p2",
+      consumedDesired.some(n => n.extra.stageKey === "p2@" + dlItem.deadlineAt),
+      consumedDesired.map(n => n.extra.stageKey).join("|"));
+    // V03 / F1 / G3：已排期但投递时刻已过 → 保持待定（不重复排、也不补发）。
+    // 「时刻已过」不是送达证据，所以这里不再假设上层会把它落库为 delivered。
+    const scheduledAt = d1.schedule.at.getTime();
+    const notified = Object.assign({}, dlItem, {
+      deadlineEvents: (function () {
+        const t = {};
+        t[stageKey] = { at: scheduledAt, state: "scheduled" };
+        return t;
+      })()
+    });
+    ok("V03 已排期但未到投递时刻时身份与时刻保持原样",
+      native.buildDesired([notified], { notify: true }, now)
+        .some(n => n.extra.stageKey === stageKey && n.schedule.at.getTime() === scheduledAt));
+    const delivered = Object.assign({}, dlItem, {
+      deadlineEvents: (function () {
+        const t = {};
+        t[stageKey] = { at: scheduledAt, state: "delivered" };
+        return t;
+      })()
+    });
+    ok("F1 标记为已送达后不再重排",
+      !native.buildDesired([delivered], { notify: true }, now + 15000)
+        .some(n => n.extra.stageKey === stageKey),
+      JSON.stringify(native.buildDesired([delivered], { notify: true }, now + 15000)
+        .map(n => n.extra.stageKey)));
+    // F1：两个阶段必须**同时**存在，不能互相覆盖（此前只有一组字段轮流写）
+    ok("F1 两个阶段的记录互不覆盖",
+      native.deadlineEventOf({ deadlineEvents: { a: { at: 1, state: "scheduled" }, b: { at: 2, state: "delivered" } } }, "a").state === "scheduled" &&
+      native.deadlineEventOf({ deadlineEvents: { a: { at: 1, state: "scheduled" }, b: { at: 2, state: "delivered" } } }, "b").state === "delivered");
+    const pausedItem = Object.assign({}, dlItem, { deadlinePaused: true });
+    ok("D23 暂停截止保护后不排任何截止提醒",
+      !native.buildDesired([pausedItem], { notify: true }, now).some(n => n.extra.event === "deadline"));
+
+    // V06：整理确认后（REVIEWED）但兜底标记仍在的记录，原生不得排出正式提醒
+    const confirmedFallback = item("cf", "normal", now + 3600000, {
+      review_status: "REVIEWED", isFallbackTrigger: true
+    });
+    ok("V06 确认后的兜底记录原生仍不排正式提醒",
+      !native.buildDesired([confirmedFallback], onSettings, now).some(n => n.extra.itemId === "cf"));
+    const confirmedReal = item("cr2", "normal", now + 3600000, {
+      review_status: "REVIEWED", isFallbackTrigger: false
+    });
+    ok("V06 确认且有真实时间的事项照常提醒",
+      native.buildDesired([confirmedReal], onSettings, now).some(n => n.extra.itemId === "cr2"));
+
+    // V07：「今天跳过」必须清空当晚排程
+    const skippedRs = Object.assign({}, rs, { skippedUntil: new Date(2026, 8, 17, 21, 30, 0).getTime() });
+    ok("V07 今天跳过 → 当晚不排任何待整理提醒",
+      native.buildReviewDesired(2, skippedRs, new Date(2026, 8, 16, 21, 35, 0).getTime(), { notify: true }).length === 0,
+      String(native.buildReviewDesired(2, skippedRs, new Date(2026, 8, 16, 21, 35, 0).getTime(), { notify: true }).length));
+
+    // L08：稍后开启新一轮 → 原生从 attempt=0 重新排满
+    const roundItem = Object.assign({}, item("round", "critical", now + 2 * 3600000),
+      { status: "snoozed", remindCount: 8 });
+    const roundDesired = native.buildDesired([roundItem], { notify: true }, now);
+    ok("L08 稍后开启新一轮：原生从 attempt=0 重排",
+      roundDesired.length === 8 && roundDesired[0].extra.attempt === 0 && roundDesired[0].extra.event === "primary",
+      String(roundDesired.length));
+
+    // R7：撤销失败必须保留台账，成功重试后才移除
+    await native._resetForTests();
+    const env = createEnvironment();
+    const bridgeMock = global.Capacitor.Plugins.SystemBridge;
+    const realCancel = bridgeMock.cancelAlarm;
+    bridgeMock.cancelAlarm = async () => { throw new Error("cancel failed"); };
+    const ghost = item("ghost", "critical", now + 3600000);
+    const scheduled = await native.reconcile([ghost], { notify: true }, now, null);
+    const failed = await native.reconcile([], { notify: true, scheduledAlarmIds: scheduled.scheduledAlarmIds }, now, null);
+    ok("R7 撤销失败时保留台账 id",
+      failed.alarmCancelled === 0 && failed.scheduledAlarmIds.length === 1,
+      JSON.stringify(failed.scheduledAlarmIds));
+    ok("R7 状态带出失败原因", (failed.errors || []).some(e => /^cancel:/.test(e)), JSON.stringify(failed.errors));
+    bridgeMock.cancelAlarm = realCancel;
+    const retried = await native.reconcile([], { notify: true, scheduledAlarmIds: failed.scheduledAlarmIds }, now, null);
+    ok("R7 重试成功后才移除台账",
+      retried.alarmCancelled === 1 && retried.scheduledAlarmIds.length === 0,
+      JSON.stringify(retried.scheduledAlarmIds));
+
+    // V03：对账必须把「已排的截止事件」回给上层落库，作为原生送达消费的依据
+    await native._resetForTests();
+    createEnvironment();
+    const dlRec = item("dl-rec", "normal", now + 30 * 86400000, { deadlineAt: now + 12 * 3600000 });
+    const dlStatus = await native.reconcile([dlRec], { notify: true }, now, null);
+    ok("V03 对账回传已排的截止事件",
+      (dlStatus.deadlineEvents || []).length === 2 &&
+      (dlStatus.deadlineEvents || []).every(e => e.itemId === "dl-rec" && !!e.stageKey && e.at > now),
+      JSON.stringify(dlStatus.deadlineEvents));
+
+    // V08 / F4：排程或撤销失败必须改变用户可见状态，即使 notify 关闭也不能显示"精确就绪"或"应用内"
+    await native._resetForTests();
+    createEnvironment();
+    const bridgeMock2 = global.Capacitor.Plugins.SystemBridge;
+    const realSchedule = bridgeMock2.scheduleAlarm;
+    bridgeMock2.scheduleAlarm = async () => { throw new Error("schedule failed"); };
+    const alarmOnly = item("alarm-fail", "critical", now + 3600000);
+    const failStatus = await native.reconcile([alarmOnly], { notify: true }, now, null);
+    ok("V08 排程失败 → reliability=error",
+      failStatus.reliability === "error" && (failStatus.errors || []).some(e => /^schedule:/.test(e)),
+      failStatus.reliability + " " + JSON.stringify(failStatus.errors));
+    bridgeMock2.scheduleAlarm = realSchedule;
+
+    const origCancel = bridgeMock2.cancelAlarm;
+    bridgeMock2.cancelAlarm = async () => { throw new Error("cancel failed"); };
+    // 开启通知时撤销失败
+    const cancelFailStatus = await native.reconcile([], { notify: true, scheduledAlarmIds: [999] }, now, null);
+    ok("F4 开启通知时撤销失败 → reliability=error",
+      cancelFailStatus.reliability === "error" && (cancelFailStatus.errors || []).some(e => /^cancel:/.test(e)),
+      cancelFailStatus.reliability + " " + JSON.stringify(cancelFailStatus.errors));
+    // 关闭通知时撤销失败（enabled=false，此前会被覆盖成 in-app）
+    const cancelFailDisabledStatus = await native.reconcile([], { notify: false, scheduledAlarmIds: [999] }, now, null);
+    ok("F4 关闭通知时撤销失败 → reliability=error（旧闹钟残留不可隐藏）",
+      cancelFailDisabledStatus.reliability === "error" && (cancelFailDisabledStatus.errors || []).some(e => /^cancel:/.test(e)),
+      cancelFailDisabledStatus.reliability + " " + JSON.stringify(cancelFailDisabledStatus.errors));
+    bridgeMock2.cancelAlarm = origCancel;
+    void env;
+  }
+
   section("actions and resume");
   await native._resetForTests();
   const events = [];
@@ -342,6 +541,17 @@ async function run() {
   const registeredActions = actionEnv.calls.actionTypes[0].types[0].actions;
   ok("注册三项通知操作", registeredActions.length === 3);
   ok("通知 Snooze 固定为 2 小时", registeredActions.some(a => a.id === "snooze" && (a.title === "稍后 2 小时" || a.title === "2 小时后")));
+  // L06 / V0.2 §9.3：待整理动作必须与标签语义一致
+  const reviewType = actionEnv.calls.actionTypes[0].types[1];
+  const reviewActions = reviewType ? reviewType.actions : [];
+  ok("L06 单独注册待整理动作集",
+    !!reviewType && reviewType.id === native.REVIEW_ACTION_TYPE_ID && reviewActions.length === 3,
+    JSON.stringify(reviewActions));
+  ok("L06 待整理动作为 开始整理 / 稍后 30 分钟 / 今天跳过",
+    reviewActions.some(a => a.id === "review_start" && a.title === "开始整理") &&
+    reviewActions.some(a => a.id === "review_snooze" && a.title === "稍后 30 分钟") &&
+    reviewActions.some(a => a.id === "review_skip" && a.title === "今天跳过"),
+    JSON.stringify(reviewActions.map(a => a.title)));
   ok("创建三个通知渠道", actionEnv.calls.channels.length === 3);
   ok("渠道显式开启声音和震动", actionEnv.calls.channels.every(c => c.sound === "attention_reminder" && c.vibration));
   actionEnv.fireAction({ actionId: "ack", notification: { id: 123, extra: { itemId: "x" } } });
@@ -354,6 +564,37 @@ async function run() {
   ok("Snooze、完成与普通点击动作保持独立", events[1].action === "snooze" && events[2].action === "done" && events[3].action === "tap");
   actionEnv.resume();
   ok("恢复前台触发对账", resumed === 1);
+
+  // U1：通知栏动作与业务提交使用同一个 Promise 边界；失败不能先移除系统通知。
+  await native._resetForTests();
+  let rejectAction;
+  const failedAction = new Promise((_resolve, reject) => { rejectAction = reject; });
+  const guardedEnv = createEnvironment();
+  await native.initialize({ onAction: () => failedAction });
+  guardedEnv.fireAction({ actionId: "ack", notification: { id: 202, extra: { itemId: "guarded" } } });
+  await new Promise(resolve => setTimeout(resolve, 0));
+  ok("U1 通知动作提交未完成前不得移除已送达通知", guardedEnv.calls.deliveredRemoved.length === 0);
+  rejectAction(new Error("authoritative commit failed"));
+  await new Promise(resolve => setTimeout(resolve, 0));
+  ok("U1 通知动作提交失败后仍保留已送达通知供重试", guardedEnv.calls.deliveredRemoved.length === 0);
+
+  // F2：排空动作队列 —— handler 抛错时不调用 ackAlarmAction，成功才确认
+  const bridge = global.Capacitor.Plugins.SystemBridge;
+  let queueItem = { id: 101, action: "ack", itemId: "item-f2", itemRev: 1 };
+  let ackCalled = [];
+  bridge.consumeAlarmAction = async () => {
+    const item = queueItem;
+    queueItem = null;
+    return item;
+  };
+  bridge.ackAlarmAction = async (payload) => { ackCalled.push(payload.id); };
+  // 1) 模拟存储失败 / 处理失败
+  await native.drainAlarmActions(async () => { throw new Error("database disk full"); });
+  ok("F2 处理抛错时不确认删除原生事件", ackCalled.length === 0);
+  // 2) 重新放回并成功处理
+  queueItem = { id: 101, action: "ack", itemId: "item-f2", itemRev: 1 };
+  await native.drainAlarmActions(async () => { /* 成功落库 */ });
+  ok("F2 处理成功后才调用 ackAlarmAction 确认删除", ackCalled.length === 1 && ackCalled[0] === 101);
 
   await native._resetForTests();
   delete global.Capacitor;

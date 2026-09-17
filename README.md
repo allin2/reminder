@@ -59,6 +59,7 @@
 | `docs/baseline/` | **唯一业务基线**（V0.2 冻结版）与对齐分析 |
 | `prd.html` | 产品需求文档 **V0.1（历史详述）**，依赖同目录 `styles.css`、`app.js` |
 | `test-smoke.js` | Node 集成冒烟（生命周期主路径） |
+| `test-regressions.js` | Node 定向回归（提交边界 / 隔离草稿 / 稳定派生身份 / 撤销≠送达 / 停止重复 / 权威持久化 / 表驱动交错 / 重启一致性） |
 | `test-unit.js` | Node 单元测试（解析/周期/提醒/存储） |
 | `test-native-reminders.js` | Android 原生提醒投影与权限 mock 测试 |
 | `docs/compose/spec/` | Compose 特性规格 |
@@ -75,9 +76,42 @@ npm test
 
 预期：
 - `test-unit.js`：**29 项全部通过**
-- `test-native-reminders.js`：**69 项全部通过**（含 D9/D25 首次全屏路由、P0-2 闹钟撤销、P0-1 待整理排程）
-- `test-smoke.js`：**96 项全部通过**（含 D5/D6/D7/D8 首页架构、D12/D13/D14 弹条与全屏语义、
-  D15/D17/D22/D23/D25 落地断言、P0-3 整理会话出口回归）
+- `test-native-reminders.js`：**105 项全部通过**（含 D9/D25 首次全屏路由、P0-2 闹钟撤销、P0-1 待整理排程，
+  以及 L01/R5 待整理抑制、R4 窗口槽位、L07 勿扰、V03 截止阶段预排与送达消费、R7 台账失败保留、V08 失败可见）
+- `test-smoke.js`：**161 项全部通过**（含 D5/D6/D7/D8 首页架构、D12/D13/D14 弹条与全屏语义、
+  D15/D17/D22/D23/D25 落地断言、P0-3 整理会话出口回归、3h 段 L01–L08 / D23 及 V04/V05/V06 业务逻辑回归）
+- `test-regressions.js`：**559 项全部通过**（复核修复的定向回归：并发提交边界、隔离草稿、撤销≠送达、
+  停止重复保留历史、初始化就绪契约，**持久化权威后端**、**提交期间不丢用户操作**、
+  **提交隔离边界**（后到的动作不得污染先到的保存、先到的保存也不得把后到的动作提前提交），
+  以及**隔离发布语义**：原生动作先在不可见草稿执行，IndexedDB 成功后才发布；提交期间接受的命令
+  按稳定 id 与 `repeatParentId` 重放到草稿，不靠字段相等、随机 id 或数组位置猜归属；
+  用同一块「设备磁盘」再启一个实例来模拟重启，直接断言「重启后与用户看到的一致」。
+  T1、表驱动命令/故障序列，以及原生 3 动作 × UI 6 命令 × 提交成功/失败的 36 组合矩阵，
+  同时检查操作接受或拒绝、反馈、内存、权威快照、重载、事件台账与周期唯一性。
+  合计 `29+105+161+559 = **854**`）
+
+`test-smoke.js` / `test-regressions.js` 都**先 `await app.ready()`** 再准备状态 ——
+`init()` 的 `loadAsync → applyParsedState` 会整体替换 `state.items`，
+不等就绪就改 `app.state` 会让断言落在已被丢弃的对象上。
+`save()` / `load()` 是**异步契约**，要断言「落库之后」的状态请 `await app.saveAsync()`。
+提交过一个 **FIFO 闸门**（快照在轮到自己时才生成），原生动作的**校验 + 草稿变更 + 派生 + 台账 + 权威提交 + 发布**
+整体都在闸门内完成：提交成功前不改变可见 state；回归 harness 用 `boot()` 排空启动期提交，
+用 `releaseCommits(n, mode)` 按创建顺序**逐笔放行并逐笔指定成败**。
+窗口期命令在最后确认状态上执行并记账；动作成功后才重放到已提交草稿，失败则根本无需回滚可见状态。
+断言必须落在**磁盘快照**与**重启读回**上，而不是只看内存。
+
+本轮审查修复（2026-09-16）的两条规则裁决记录在
+`docs/decisions/review-fixes-2026-09-16.md`（D26 Review 补提醒与勿扰、D27 恢复归档与截止保护）；
+第三轮复核修复（2026-09-17）在 `docs/decisions/review-round3-fixes-2026-09-17.md`（D30 停止重复语义、D31 截止保护三态）；
+第四轮复核修复（2026-09-17）在 `docs/decisions/review-round4-fixes-2026-09-17.md`（D32 持久化权威后端、D33 提交期间不丢用户操作）；
+第五轮复核修复（2026-09-17）在 `docs/decisions/review-round5-fixes-2026-09-17.md`（D34 提交隔离边界）；
+第六轮复核修复（2026-09-17）在 `docs/decisions/review-round6-fixes-2026-09-17.md`（D35 隔离边界覆盖业务变更与提交）；
+第七轮复核修复（2026-09-17）在 `docs/decisions/review-round7-fixes-2026-09-17.md`（D36 回滚逐字段撤销 + 重放被破坏的业务意图）；
+第八轮复核修复（2026-09-17）在 `docs/decisions/review-round8-fixes-2026-09-17.md`（D37 回滚整体还原 + 重放用户操作，废除逐字段比值）；
+第九轮复核修复（2026-09-17）在 `docs/decisions/review-round9-fixes-2026-09-17.md`（D38 撤销范围=整个窗口期，重放复用派生实例 id）；
+第十轮复核修复（2026-09-17）在 `docs/decisions/review-round10-fixes-2026-09-17.md`（D39 撤销范围按归属界定 + 日志参数按 id 寻址 + 新建入口入账）；
+第十一轮复核修复（2026-09-17）在 `docs/decisions/review-round11-fixes-2026-09-17.md`（D40 已删的基线事项按基线恢复，删除由重放按序执行）。
+统一事务修复在 `docs/decisions/unified-transaction-model-2026-09-17.md`（D41 隔离草稿、提交后发布、稳定派生身份）。
 
 UI 手测建议顺序：示例载入 → 导航 → 录入 → 到期弹条 → 我知道了 → 完成 → 归档。
 
@@ -205,7 +239,7 @@ npm run cap:open      # 用 Android Studio 打开 android/
 ## 开发说明
 
 - 纯静态，无 npm 构建；改完刷新即可  
-- 改动 `app-core.js` 后请跑 `node test-smoke.js`  
+- 改动 `app-core.js` 后请跑 `node test-smoke.js` 与 `node test-regressions.js`
 - Service Worker 为网络优先，避免旧脚本缓存；调试时可强制刷新  
 - 控制台兜底：`seedAttentionInbox()` 可强制载入示例数据  
 

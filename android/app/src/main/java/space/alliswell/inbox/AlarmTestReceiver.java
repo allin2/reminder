@@ -21,6 +21,8 @@ public class AlarmTestReceiver extends BroadcastReceiver {
   public static final String EXTRA_FULL_SCREEN = "fullScreen";
   public static final String EXTRA_ITEM_ID = "itemId";
   public static final String EXTRA_LEVEL = "level";
+  /** L04：投递时的事项数据版本 */
+  public static final String EXTRA_ITEM_REV = "itemRev";
   public static final String CHANNEL_ID = "attention-alarm-v3";
   public static final String CHANNEL_NAME = "提醒闹钟";
 
@@ -32,12 +34,16 @@ public class AlarmTestReceiver extends BroadcastReceiver {
     String body = intent.getStringExtra(EXTRA_BODY);
     String itemId = intent.getStringExtra(EXTRA_ITEM_ID);
     String level = intent.getStringExtra(EXTRA_LEVEL);
+    String itemRev = intent.getStringExtra(EXTRA_ITEM_REV);
     if (itemId == null) itemId = "";
+    if (itemRev == null || itemRev.isEmpty()) itemRev = "0";
     boolean fullScreen = intent.getBooleanExtra(EXTRA_FULL_SCREEN, true);
     if (title == null || title.isEmpty()) title = "安心收件箱";
     if (body == null || body.isEmpty()) body = "有一条事项需要你确认";
 
-    PowerManager pm = context.getSystemService(PowerManager.class);
+    // R3：minSdk 22 —— 用字符串形式的 getSystemService，避免 API 23+ 的 Class 重载
+    Object pmObj = context.getSystemService(Context.POWER_SERVICE);
+    PowerManager pm = pmObj instanceof PowerManager ? (PowerManager) pmObj : null;
     PowerManager.WakeLock wl = null;
     if (pm != null) {
       wl = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "attention:alarm");
@@ -59,6 +65,7 @@ public class AlarmTestReceiver extends BroadcastReceiver {
           activity.putExtra(AlarmActivity.EXTRA_TITLE, title);
           activity.putExtra(AlarmActivity.EXTRA_BODY, body);
           activity.putExtra(AlarmActivity.EXTRA_ITEM_ID, itemId);
+          activity.putExtra(AlarmActivity.EXTRA_ITEM_REV, itemRev);
           if (level != null) activity.putExtra(AlarmActivity.EXTRA_LEVEL, level);
           context.startActivity(activity);
           launched = true;
@@ -66,7 +73,8 @@ public class AlarmTestReceiver extends BroadcastReceiver {
       }
 
       // 2) Always post high-priority alarm notification (backup if activity blocked)
-      NotificationManager nm = context.getSystemService(NotificationManager.class);
+      Object nmObj = context.getSystemService(Context.NOTIFICATION_SERVICE);
+      NotificationManager nm = nmObj instanceof NotificationManager ? (NotificationManager) nmObj : null;
       if (nm == null) return;
       ensureChannel(context, nm);
 
@@ -97,6 +105,7 @@ public class AlarmTestReceiver extends BroadcastReceiver {
       alarmUi.putExtra(AlarmActivity.EXTRA_TITLE, title);
       alarmUi.putExtra(AlarmActivity.EXTRA_BODY, body);
       alarmUi.putExtra(AlarmActivity.EXTRA_ITEM_ID, itemId);
+      alarmUi.putExtra(AlarmActivity.EXTRA_ITEM_REV, itemRev);
       if (level != null) alarmUi.putExtra(AlarmActivity.EXTRA_LEVEL, level);
       PendingIntent contentPi = PendingIntent.getActivity(context, id, alarmUi, flags);
       builder.setContentIntent(contentPi);

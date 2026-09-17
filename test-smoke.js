@@ -155,6 +155,14 @@ function section(title) {
   console.log("\n== " + title + " ==");
 }
 
+async function run() {
+/* ---------- 0. 先等应用初始化完成（G5） ----------
+ * init() 是异步的：loadAsync → applyParsedState 会**整体替换** state.items / state.settings，
+ * 并重建全部事项对象。在这之前直接改 app.state，写入的对象会被这次恢复丢掉，
+ * 后续断言就落在「已经不在库里的孤儿对象」上（表现为动作看着成功、状态却没变）。
+ * 所以：先等就绪，再准备测试自己的状态。 */
+await app.ready();
+
 /* ---------- 1. Chinese NL parse ---------- */
 section("1. 自然语言时间解析");
 {
@@ -422,9 +430,10 @@ section("3e. 弹条与全屏动作语义 D12/D13/D14");
 
   // D12：全屏闹钟「关闭」只止响
   app.clearAlert();
-  app.handleAlarmAction({ action: "close", itemId: it.id });
+  await app.handleAlarmAction({ action: "close", itemId: it.id });
   ok("D12 全屏「关闭」不写 ACK", it.status === "due" && !it.acknowledgedAt);
-  app.handleAlarmAction({ action: "ack", itemId: it.id });
+  // 真实原生链路会携带数据版本（F5：改状态的动作必须有可知且匹配的版本）
+  await app.handleAlarmAction({ action: "ack", itemId: it.id, itemRev: it.rev });
   ok("D12 全屏「我知道了」写 ACK 且不归档", it.status === "acknowledged" && it.status !== "archived");
 }
 
@@ -490,6 +499,428 @@ section("3g. 环境判断健壮性");
   // 随后访问 Notification.permission 抛错。本仓统一改用真值判断。
   ok("不再使用 `\"Notification\" in window` 判断", src.indexOf('"Notification" in window') === -1);
   ok("showSystemNotification 走真值判断", /const N = typeof window !== "undefined" \? window\.Notification : null/.test(src));
+}
+
+/* ---------- 3h. 业务逻辑回归（2026-09-16 审查 L01–L08 / D23） ---------- */
+section("3h. 业务逻辑回归（L01–L08 / D23）");
+{
+  /* ---- L01：用户手选时间不得被解析器或系统兜底覆盖 ---- */
+  app.state.items = [];
+  app.state.settings.review.enabled = true;
+  getNode("#capText").value = "买牛奶";
+  getNode("#capTrigger").value = "2026-10-01T09:00";
+  getNode("#capDeadline").value = "";
+  app.markTriggerPicked(true);
+  app.saveItemFromForm();
+  const picked = app.state.items[0];
+  ok("L01 手选时间原样保存",
+    !!picked && picked.triggerAt === new Date(2026, 9, 1, 9, 0, 0).getTime(),
+    picked ? new Date(picked.triggerAt).toString() : "no item");
+  ok("L01 手选时间不落兜底标记", !!picked && picked.isFallbackTrigger === false);
+  ok("L01 低置信度仍进入待整理（内容质量）",
+    !!picked && picked.review_status === "NEEDS_REVIEW");
+
+  app.state.items = [];
+  getNode("#capText").value = "买牛奶";
+  getNode("#capTrigger").value = "";
+  app.markTriggerPicked(false);
+  app.saveItemFromForm();
+  const noPick = app.state.items[0];
+  ok("L01 无时间且无手选 → 兜底为下一个整理窗口",
+    !!noPick && noPick.isFallbackTrigger === true && noPick.triggerAt > Date.now(),
+    noPick ? new Date(noPick.triggerAt).toString() : "no item");
+
+  // L01：有真实时间的待整理记录照常进 due（Review 只管内容质量）
+  const real = app.makeItem({
+    title: "有真实时间的待整理", status: "waiting", review_status: "NEEDS_REVIEW",
+    triggerAt: Date.now() - 1000, isFallbackTrigger: false
+  });
+  app.state.items = [real];
+  app.promoteDue();
+  ok("L01 有真实时间的待整理照常进 due", real.status === "due", real.status);
+
+  /* ---- L02：截止保护分阶段，ACK 后不得被立刻拉回 ---- */
+  const dl = app.makeItem({
+    title: "截止事项", status: "acknowledged", acknowledgedAt: Date.now(),
+    deadlineAt: Date.now() + 12 * 3600000
+  });
+  app.state.items = [dl];
+  app.promoteDue();
+  ok("L02 截止临近 → 重新唤醒为 due", dl.status === "due", dl.status);
+  ok("L02 已记录阶段身份", !!dl.deadlineStageKey, String(dl.deadlineStageKey));
+  app.ackItem(dl.id, true);
+  ok("L02 ACK → acknowledged", dl.status === "acknowledged");
+  app.promoteDue();
+  app.promoteDue();
+  ok("L02 同一阶段内 ACK 不再被拉回 due", dl.status === "acknowledged", dl.status);
+  dl.deadlineAt = Date.now() + 3600000;
+  app.promoteDue();
+  ok("L02 到下一保护阶段才再次唤醒", dl.status === "due", dl.status);
+
+  /* ---- L03：两种周期分开兑现承诺 ---- */
+  const monthly = app.makeItem({
+    title: "交房租", status: "waiting", priority: "normal",
+    triggerAt: new Date(2026, 8, 1, 10, 0, 0).getTime(),
+    repeat: { mode: "calendar", every: "month" }
+  });
+  app.state.items = [monthly];
+  app.ackItem(monthly.id, true);
+  ok("L03 calendar 周期 ACK 不改原定日期",
+    monthly.triggerAt === new Date(2026, 8, 1, 10, 0, 0).getTime(),
+    new Date(monthly.triggerAt).toString());
+  app.completeItem(monthly.id);
+  const spawned = app.state.items[app.state.items.length - 1];
+  ok("L03 完成后生成下期", app.state.items.length === 2 && spawned !== monthly);
+  ok("L03 锚定原定日期（10月1日而非完成日的下月）",
+    !!spawned && new Date(spawned.triggerAt).getMonth() === 9 &&
+    new Date(spawned.triggerAt).getDate() === 1,
+    spawned ? new Date(spawned.triggerAt).toString() : "none");
+
+  const biweek = app.makeItem({
+    title: "给爸妈打电话", status: "due", priority: "important",
+    triggerAt: new Date(2026, 8, 5, 10, 0, 0).getTime(),
+    repeat: { mode: "ack", every: "biweek" }
+  });
+  app.state.items = [biweek];
+  const beforeAck = app.state.items.length;
+  app.ackItem(biweek.id, true);
+  const ackD = new Date(biweek.acknowledgedAt);
+  const expectedNext = new Date(ackD.getFullYear(), ackD.getMonth(), ackD.getDate() + 14, 10, 0, 0).getTime();
+  ok("L03 ACK 保持 acknowledged（确认不等于完成）", biweek.status === "acknowledged");
+  ok("L03 ACK 周期确认后生成下一期实例",
+    app.state.items.length === beforeAck + 1,
+    String(app.state.items.length));
+  const nextInst = app.state.items[app.state.items.length - 1];
+  ok("L03 下一期按 ACK 时刻 +14 天并保留原时刻",
+    nextInst.triggerAt === expectedNext && nextInst.status === "waiting",
+    new Date(nextInst.triggerAt).toString());
+  app.completeItem(biweek.id);
+  const alive = app.state.items.filter(x =>
+    x.status === "waiting" || x.status === "snoozed" || x.status === "due");
+  ok("V04 ACK 后完成，仍保留一个活跃的下一期（不归零）",
+    alive.length === 1 && alive[0] === nextInst,
+    String(alive.length));
+
+  const monthEndNext = app.nextRepeatTrigger({
+    repeat: { every: "monthEnd", mode: "calendar" },
+    triggerAt: new Date(2026, 0, 31, 12, 0, 0).getTime()
+  });
+  ok("L03 月末不因 setMonth 溢出跳月",
+    new Date(monthEndNext).getMonth() === 1 && new Date(monthEndNext).getDate() === 28,
+    new Date(monthEndNext).toString());
+
+  const stopRule = app.makeItem({
+    title: "周期规则", status: "waiting",
+    triggerAt: Date.now() + 86400000, repeat: { mode: "calendar", every: "day" }
+  });
+  app.state.items = [stopRule];
+  app.stopRepeat(stopRule.id);
+  // V0.2 §417：停止重复 = 终止整个周期规则**并归档**
+  ok("V04 「停止重复」终止规则并归档当前实例",
+    !stopRule.repeat && stopRule.status === "archived" && !!stopRule.completedAt,
+    stopRule.status);
+
+  // F3：ACK 周期确认生成下一期后，从原事项执行「停止重复」，必须连同未来实例一并终止归档
+  const ackRepeatItem = app.makeItem({
+    title: "ACK周期事项", status: "due",
+    triggerAt: Date.now() - 1000, repeat: { mode: "ack", every: "day" }
+  });
+  app.state.items = [ackRepeatItem];
+  app.ackItem(ackRepeatItem.id);
+  ok("F3 ACK 后已派生下一期", app.state.items.length === 2 && app.state.items.some(x => x.status === "waiting"));
+  app.stopRepeat(ackRepeatItem.id);
+  const activeRepeatItems = app.state.items.filter(x => x.repeat || (x.status !== "archived" && x.status !== "completed"));
+  ok("F3 「停止重复」终止系列后无未归档或带 repeat 的活跃事项",
+    activeRepeatItems.length === 0,
+    JSON.stringify(activeRepeatItems.map(x => ({ title: x.title, status: x.status, repeat: x.repeat }))));
+  const spawnedFuture = app.state.items.find(x => x.id !== ackRepeatItem.id);
+  ok("F3 未来实例未完成不虚增已完成数（completedAt 为空）",
+    spawnedFuture && spawnedFuture.status === "archived" && !spawnedFuture.completedAt && !spawnedFuture.repeat);
+
+  // F3：日历周期事项完成后，从历史入口（已归档的事项）执行「停止重复」，同样能终止未来排程
+  const calRepeatItem = app.makeItem({
+    title: "日历周期事项", status: "due",
+    triggerAt: Date.now() - 1000, repeat: { mode: "calendar", every: "day" }
+  });
+  app.state.items = [calRepeatItem];
+  app.completeItem(calRepeatItem.id);
+  ok("F3 完成后生成了下一期", app.state.items.length === 2 && app.state.items.some(x => x.status === "waiting"));
+  // 从已归档的历史记录触发停止重复
+  app.stopRepeat(calRepeatItem.id);
+  const remainingActiveCal = app.state.items.filter(x => x.repeat || (x.status !== "archived" && x.status !== "completed"));
+  ok("F3 从历史已完成入口停止重复，未来实例同样被终止",
+    remainingActiveCal.length === 0 && !calRepeatItem.repeat);
+
+  // V04：原定 09:00 的月末周期不得原地打转（此前 1/31 09:00 → 1/31 09:00）
+  const monthEnd0900 = app.nextRepeatTrigger({
+    repeat: { every: "monthEnd", mode: "calendar" },
+    triggerAt: new Date(2026, 0, 31, 9, 0, 0).getTime()
+  });
+  ok("V04 月末 09:00 严格推进到下一期",
+    monthEnd0900 > new Date(2026, 0, 31, 9, 0, 0).getTime() &&
+    new Date(monthEnd0900).getMonth() === 1 && new Date(monthEnd0900).getHours() === 9,
+    new Date(monthEnd0900).toString());
+
+  /* ---- L04：旧通知与重复动作不得改变已完成事项 ---- */
+  const rep = app.makeItem({
+    title: "周期事项", status: "due", priority: "normal",
+    triggerAt: Date.now() - 1000, repeat: { mode: "calendar", every: "week" }
+  });
+  app.state.items = [rep];
+  const rev0 = rep.rev;
+  await app.handleAlarmAction({ action: "done", itemId: rep.id, itemRev: rev0 });
+  const afterFirst = app.state.items.length;
+  await app.handleAlarmAction({ action: "done", itemId: rep.id, itemRev: rev0 });
+  ok("L04 同一完成事件重复投递只推进一次周期", app.state.items.length === afterFirst,
+    app.state.items.length + " vs " + afterFirst);
+  await app.handleAlarmAction({ action: "ack", itemId: rep.id, itemRev: rev0 });
+  ok("L04 已完成事项不接受旧 ACK", rep.status === "archived" && !!rep.completedAt);
+
+  // F5：版本未知/缺失时不得改动状态（只能打开详情）
+  const f5Item = app.makeItem({
+    title: "版本校验", status: "due", priority: "normal", triggerAt: Date.now() - 1000
+  });
+  app.state.items = [f5Item];
+  await app.handleAlarmAction({ action: "done", itemId: f5Item.id });
+  ok("F5 版本缺失的闹钟动作不改动状态", f5Item.status === "due", f5Item.status);
+  await app.handleAlarmAction({ action: "done", itemId: f5Item.id, itemRev: 0 });
+  ok("F5 版本为 0 的闹钟动作不改动状态", f5Item.status === "due", f5Item.status);
+  await app.handleAlarmAction({ action: "done", itemId: f5Item.id, itemRev: f5Item.rev });
+  ok("F5 版本匹配的闹钟动作正常执行", f5Item.status === "archived", f5Item.status);
+
+  // F2：同一事件 id 只处理一次（崩溃重放保护）
+  const f2Item = app.makeItem({
+    title: "事件去重", status: "due", priority: "normal", triggerAt: Date.now() - 1000
+  });
+  app.state.items = [f2Item];
+  await app.handleAlarmAction({ action: "ack", itemId: f2Item.id, itemRev: f2Item.rev, alarmEventId: "evt-1" });
+  ok("F2 首次事件执行", f2Item.status === "acknowledged", f2Item.status);
+  const f2Rev = f2Item.rev;
+  await app.handleAlarmAction({ action: "done", itemId: f2Item.id, itemRev: f2Rev, alarmEventId: "evt-1" });
+  ok("F2 重放的同一事件被跳过", f2Item.status === "acknowledged", f2Item.status);
+
+  // F2：持久化失败时向外上抛异常，不提前记入已落库事件台账，不污染内存去重以支持重试
+  const f2FailItem = app.makeItem({
+    title: "持久化失败", status: "due", priority: "normal", triggerAt: Date.now() - 1000
+  });
+  app.state.items = [f2FailItem];
+  const origSetItem = localStorage.setItem;
+  localStorage.setItem = () => { throw new Error("quota exceeded"); };
+  let caughtSaveErr = null;
+  try {
+    await app.handleAlarmAction({ action: "ack", itemId: f2FailItem.id, itemRev: f2FailItem.rev, alarmEventId: "evt-fail" });
+  } catch (e) {
+    caughtSaveErr = e;
+  }
+  localStorage.setItem = origSetItem;
+  ok("F2 持久化失败时向外上抛异常", !!caughtSaveErr && /quota exceeded/.test(caughtSaveErr.message));
+  ok("F2 持久化失败时未记录 alarmEventLog", !app.alarmEventSeen("evt-fail"));
+  // 恢复存储后，重试该动作能成功执行
+  await app.handleAlarmAction({ action: "ack", itemId: f2FailItem.id, itemRev: f2FailItem.rev, alarmEventId: "evt-fail" });
+  ok("F2 存储恢复后重试成功", f2FailItem.status === "acknowledged" && app.alarmEventSeen("evt-fail"),
+    "status=" + f2FailItem.status + " seen=" + app.alarmEventSeen("evt-fail") + " rev=" + f2FailItem.rev);
+
+  /* ---- L05：逐条「留着待整理」，确认不悄悄生成立即到期提醒 ---- */
+  app.state.items = [
+    app.makeItem({
+      title: "第一条想不清", status: "waiting", review_status: "NEEDS_REVIEW",
+      triggerAt: new Date(2026, 8, 15, 21, 30, 0).getTime(), isFallbackTrigger: true
+    }),
+    app.makeItem({
+      title: "第二条已清楚", status: "waiting", review_status: "NEEDS_REVIEW",
+      triggerAt: new Date(2026, 8, 20, 10, 0, 0).getTime(), isFallbackTrigger: false
+    })
+  ];
+  app.openReviewSession();
+  ok("L05 会话含两条队列", app.state.ui.reviewQueue.length === 2);
+  getNode("#reviewTrigger").value = "";
+  app.markReviewTriggerPicked(false);
+  app.reviewConfirm();
+  const kept = app.state.items.find(x => x.title === "第一条想不清");
+  ok("L05 兜底记录确认后顺延到下一个整理窗口",
+    !!kept && kept.triggerAt > Date.now() && kept.isFallbackTrigger === true,
+    kept ? new Date(kept.triggerAt).toString() : "none");
+  ok("L05 确认后前进到下一条", app.state.ui.reviewIndex === 1);
+  app.reviewKeepCurrent();
+  ok("L05 「留着待整理」保留本条状态并前进",
+    app.state.items.find(x => x.title === "第二条已清楚").review_status === "NEEDS_REVIEW");
+
+  // 用户在整理卡片里明确改时间 → 采用并解除兜底标记
+  app.state.ui.reviewIndex = 0;
+  app.renderReviewCard();
+  getNode("#reviewTrigger").value = "2026-10-05T09:00";
+  app.markReviewTriggerPicked(true);
+  app.reviewConfirm();
+  const adopted = app.state.items.find(x => x.title === "第一条想不清");
+  ok("L05 明确采用的时间被采纳且解除兜底",
+    !!adopted && adopted.triggerAt === new Date(2026, 9, 5, 9, 0, 0).getTime() &&
+    adopted.isFallbackTrigger === false,
+    adopted ? new Date(adopted.triggerAt).toString() : "none");
+
+  /* ---- L06：待整理通知动作与标签语义一致 ---- */
+  app.state.items = [
+    app.makeItem({
+      title: "待整理", status: "waiting", review_status: "NEEDS_REVIEW",
+      triggerAt: Date.now() + 86400000
+    })
+  ];
+  const rsL06 = app.ensureReviewSettings();
+  rsL06.enabled = true;
+  await app.handleNativeNotificationAction({
+    action: "review_snooze", itemId: "review-session", managedKind: "review-session"
+  });
+  ok("L06 「稍后 30 分钟」按 30 分钟生效",
+    rsL06.snoozedUntil - Date.now() > 29 * 60000 && rsL06.snoozedUntil - Date.now() <= 30 * 60000,
+    String(rsL06.snoozedUntil - Date.now()));
+  await app.handleNativeNotificationAction({
+    action: "review_skip", itemId: "review-session", managedKind: "review-session"
+  });
+  ok("L06 「今天跳过」到下一个整理窗口前不再提醒", rsL06.skippedUntil > Date.now());
+
+  /* ---- V05：编辑改期必须推进版本，旧通知不得覆盖新安排 ---- */
+  const editItem = app.makeItem({
+    title: "待改期", status: "waiting", priority: "normal",
+    triggerAt: Date.now() + 3600000
+  });
+  editItem.remindCount = 3;
+  app.state.items = [editItem];
+  const revBefore = editItem.rev;
+  getNode("#capText").value = "待改期";
+  getNode("#capTrigger").value = "2026-10-01T09:00";
+  getNode("#capDeadline").value = "";
+  getNode("#capNote").value = "";
+  getNode("#capUrl").value = "";
+  getNode("#capTags").value = "";
+  getNode("#capProject").value = "";
+  app.markTriggerPicked(false);
+  app.state.ui.editItemId = editItem.id;
+  app.saveItemFromForm();
+  app.state.ui.editItemId = null;
+  ok("V05 编辑保存推进数据版本", editItem.rev > revBefore, revBefore + " → " + editItem.rev);
+  ok("V05 编辑改期重置追提醒轮次（L08 缺口）", editItem.remindCount === 0, String(editItem.remindCount));
+  await app.handleAlarmAction({ action: "done", itemId: editItem.id, itemRev: revBefore });
+  ok("V05 旧版本的通知动作被拒绝", editItem.status !== "archived", editItem.status);
+
+  /* ---- F1：截止事件按阶段记账，稳定对账不得反复写库 ---- */
+  const f1Item = app.makeItem({
+    title: "截止记账", status: "acknowledged", priority: "normal",
+    deadlineAt: Date.now() + 12 * 3600000
+  });
+  app.state.items = [f1Item];
+  const f1Dl = f1Item.deadlineAt;
+  const p24Key = "p24@" + f1Dl;
+  const p2Key = "p2@" + f1Dl;
+  const f1At = Date.now() + 86400000;
+  const f1Events = [
+    { itemId: f1Item.id, stageKey: p24Key, at: f1At },
+    { itemId: f1Item.id, stageKey: p2Key, at: f1At + 3600000 }
+  ];
+  ok("F1 首次记账写库", app.applyDeadlineEvents(f1Events, Date.now()) === true);
+  ok("F1 两个阶段同时在表（不互相覆盖）",
+    Object.keys(f1Item.deadlineEvents).length === 2 &&
+    f1Item.deadlineEvents[p24Key].state === "scheduled" &&
+    f1Item.deadlineEvents[p2Key].state === "scheduled",
+    JSON.stringify(f1Item.deadlineEvents));
+  ok("F1 计划未变时不再写库（不再持续对账）",
+    app.applyDeadlineEvents(f1Events, Date.now()) === false);
+  // G3：「计划时刻已过」不是送达证据。没有系统送达回调，就只能是待定。
+  ok("G3 投递时刻已过也不推断为已送达（保持待定）",
+    app.applyDeadlineEvents(f1Events, f1At + 1000) === false &&
+    f1Item.deadlineEvents[p24Key].state === "scheduled",
+    JSON.stringify(f1Item.deadlineEvents));
+  ok("F1 待定阶段不再重复对账写库", app.applyDeadlineEvents(f1Events, f1At + 2000) === false);
+  // 只有真实送达证据（系统回调）才落库为 delivered
+  ok("F1 系统送达回调才落库为已送达",
+    app.markDeadlineDelivered({ itemId: f1Item.id, stageKey: p24Key }) === true &&
+    f1Item.deadlineEvents[p24Key].state === "delivered",
+    JSON.stringify(f1Item.deadlineEvents));
+  ok("F1 已送达的阶段不再重排", app.applyDeadlineEvents(f1Events, f1At + 3000) === false);
+
+  // G3：对账回传空列表（例如已过去的阶段未再重排）时，经历计划时刻不得被推断为送达
+  const f1AdvanceItem = app.makeItem({
+    title: "空列表推进送达", status: "acknowledged", priority: "normal",
+    deadlineAt: Date.now() + 10 * 3600000
+  });
+  const advStage = "p24@" + f1AdvanceItem.deadlineAt;
+  f1AdvanceItem.deadlineEvents = {
+    [advStage]: { at: Date.now() - 5000, state: "scheduled" }
+  };
+  app.state.items = [f1AdvanceItem];
+  app.applyDeadlineEvents([], Date.now());
+  ok("G3 空计划下已过去的排程保持待定，不得推断为已送达",
+    f1AdvanceItem.deadlineEvents[advStage].state === "scheduled",
+    JSON.stringify(f1AdvanceItem.deadlineEvents));
+
+  // G3：原生确认撤销（且撤销发生在投递时刻之前）→ 记为已撤销，重新开启后可补提醒
+  const cancelStage = "p2@" + f1AdvanceItem.deadlineAt;
+  f1AdvanceItem.deadlineEvents[cancelStage] = { at: Date.now() + 60000, state: "scheduled" };
+  app.applyDeadlineEvents([], Date.now(), [
+    { itemId: f1AdvanceItem.id, stageKey: cancelStage, at: Date.now() + 60000 }
+  ]);
+  ok("G3 原生确认撤销的排程记为 cancelled",
+    f1AdvanceItem.deadlineEvents[cancelStage].state === "cancelled",
+    JSON.stringify(f1AdvanceItem.deadlineEvents));
+  ok("G3 撤销不得覆盖已送达的终态",
+    (function () {
+      f1AdvanceItem.deadlineEvents[advStage] = { at: Date.now() + 60000, state: "delivered" };
+      app.applyDeadlineEvents([], Date.now(), [
+        { itemId: f1AdvanceItem.id, stageKey: advStage, at: Date.now() + 60000 }
+      ]);
+      return f1AdvanceItem.deadlineEvents[advStage].state === "delivered";
+    })());
+
+  // 截止清除后，历史事件记录被清理
+  f1AdvanceItem.deadlineAt = null;
+  app.applyDeadlineEvents([], Date.now());
+  ok("F1 截止时间清除后历史阶段记录被清理", !f1AdvanceItem.deadlineEvents);
+
+  /* ---- V06：兜底判定在前台 / 首页 / 原生必须一致 ---- */
+  app.state.settings.review.enabled = true;
+  const fbWithDeadline = app.makeItem({
+    title: "兜底记录带截止", status: "waiting", review_status: "NEEDS_REVIEW",
+    triggerAt: Date.now() - 1000, isFallbackTrigger: true, deadlineAt: Date.now() + 3600000
+  });
+  app.state.items = [fbWithDeadline];
+  app.promoteDue();
+  ok("V06 兜底记录仍被截止保护拉起（INV-05）", fbWithDeadline.status === "due", fbWithDeadline.status);
+
+  app.state.items = [
+    app.makeItem({
+      title: "过期兜底", status: "waiting", review_status: "NEEDS_REVIEW",
+      triggerAt: Date.now() - 3600000, isFallbackTrigger: true
+    })
+  ];
+  app.renderHome();
+  ok("V06 过期兜底不出现在「需要注意」",
+    !/过期兜底/.test(getNode("#homeDue").innerHTML),
+    getNode("#homeDue").innerHTML.slice(0, 60));
+
+  /* ---- L08：稍后开启新一轮，重置追提醒预算 ---- */
+  const sno = app.makeItem({
+    title: "稍后预算", status: "due", priority: "critical", triggerAt: Date.now() - 1000
+  });
+  sno.remindCount = 8;
+  sno.lastRemindAt = Date.now();
+  sno.lastAlertShownAt = Date.now();
+  app.state.items = [sno];
+  app.snoozeItem(sno.id, Date.now() + 2 * 3600000);
+  ok("L08 稍后重置轮次与预算",
+    sno.remindCount === 0 && !sno.lastRemindAt && !sno.lastAlertShownAt,
+    JSON.stringify({ c: sno.remindCount, l: sno.lastRemindAt }));
+
+  /* ---- D23：恢复归档暂停截止保护，可显式恢复 ---- */
+  const rst = app.makeItem({
+    title: "重开事项", status: "archived", completedAt: Date.now(),
+    triggerAt: Date.now() - 86400000, deadlineAt: Date.now() + 12 * 3600000
+  });
+  app.state.items = [rst];
+  app.restoreItem(rst.id);
+  ok("D23 重开不设 trigger_at", !rst.triggerAt && rst.status === "waiting");
+  ok("D23 重开默认暂停截止保护", rst.deadlinePaused === true);
+  app.promoteDue();
+  ok("D23 暂停期间不因截止被拉回 due", rst.status === "waiting", rst.status);
+  app.resumeDeadlineProtection(rst.id);
+  ok("D23 显式恢复后保护重新生效", rst.deadlinePaused === false && rst.status === "due", rst.status);
 }
 
 section("4. Deadline Protection");
@@ -598,7 +1029,8 @@ section("8. 本地持久化（模拟离线）");
   app.state.items = [
     app.makeItem({ title: "离线事项", status: "waiting", triggerAt: Date.now() + 100000 })
   ];
-  app.save();
+  // save 是异步契约（F2：返回真实持久化 Promise），断言「落库之后」的状态必须等它
+  await app.saveAsync();
   const raw = localStorage.getItem("attention-inbox-v2");
   ok("已写入 localStorage", !!raw);
   app.state.items = [];
@@ -659,13 +1091,19 @@ section("10. PRD 验收主路径");
   ok("⑥ 完成 → archived", item.status === "archived");
   ok("⑦ ACK 过程中从未自动变成 complete", item.completedAt && item.acknowledgedAt);
 }
-
-/* ---------- summary ---------- */
-console.log("\n========== 结果 ==========");
-console.log("通过: " + passed + "  失败: " + failed);
-if (failed) {
-  console.log("失败项:");
-  failures.forEach(f => console.log("  - " + f));
-  process.exit(1);
 }
-console.log("全部通过。");
+
+run().then(() => {
+  /* ---------- summary ---------- */
+  console.log("\n========== 结果 ==========");
+  console.log("通过: " + passed + "  失败: " + failed);
+  if (failed) {
+    console.log("失败项:");
+    failures.forEach(f => console.log("  - " + f));
+    process.exit(1);
+  }
+  console.log("全部通过。");
+}).catch(err => {
+  console.error(err && err.stack ? err.stack : err);
+  process.exit(1);
+});

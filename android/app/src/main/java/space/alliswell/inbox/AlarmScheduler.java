@@ -10,11 +10,23 @@ public final class AlarmScheduler {
   private AlarmScheduler() {}
 
   public static void schedule(Context context, long triggerAt, String title, String body, int id) {
-    schedule(context, triggerAt, title, body, id, "", "🚨 关键");
+    schedule(context, triggerAt, title, body, id, "", "🚨 关键", "0");
   }
 
-  public static void schedule(Context context, long triggerAt, String title, String body, int id, String itemId, String level) {
-    AlarmManager am = context.getSystemService(AlarmManager.class);
+  public static void schedule(Context context, long triggerAt, String title, String body,
+                              int id, String itemId, String level) {
+    schedule(context, triggerAt, title, body, id, itemId, level, "0");
+  }
+
+  /**
+   * V02：数据版本必须一路带到 Receiver → Activity → JS，
+   * 否则「开机恢复」和「稍后重排」这两条路径的动作会带着 rev=0 被判为过期。
+   */
+  public static void schedule(Context context, long triggerAt, String title, String body,
+                              int id, String itemId, String level, String itemRev) {
+    // R3：minSdk 22 —— 不用 API 23+ 的 getSystemService(Class) 重载
+    Object svc = context.getSystemService(Context.ALARM_SERVICE);
+    AlarmManager am = svc instanceof AlarmManager ? (AlarmManager) svc : null;
     if (am == null) return;
     if (triggerAt < System.currentTimeMillis() + 500) {
       triggerAt = System.currentTimeMillis() + 500;
@@ -27,6 +39,7 @@ public final class AlarmScheduler {
     intent.putExtra(AlarmTestReceiver.EXTRA_BODY, body);
     intent.putExtra(AlarmTestReceiver.EXTRA_FULL_SCREEN, true);
     intent.putExtra(AlarmTestReceiver.EXTRA_ITEM_ID, itemId == null ? "" : itemId);
+    intent.putExtra(AlarmTestReceiver.EXTRA_ITEM_REV, itemRev == null || itemRev.isEmpty() ? "0" : itemRev);
     if (level != null) intent.putExtra(AlarmTestReceiver.EXTRA_LEVEL, level);
 
     int flags = PendingIntent.FLAG_UPDATE_CURRENT;
@@ -55,7 +68,8 @@ public final class AlarmScheduler {
   }
 
   public static void cancel(Context context, int id) {
-    AlarmManager am = context.getSystemService(AlarmManager.class);
+    Object svc = context.getSystemService(Context.ALARM_SERVICE);
+    AlarmManager am = svc instanceof AlarmManager ? (AlarmManager) svc : null;
     Intent intent = new Intent(context, AlarmTestReceiver.class);
     intent.setAction("space.alliswell.inbox.ACTION_TEST_ALARM");
     int flags = PendingIntent.FLAG_UPDATE_CURRENT;

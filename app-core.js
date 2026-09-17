@@ -17,6 +17,9 @@
   let schemaMigrationNeeded = false;
   let nativeReady = false;
   let nativeSyncTimer = null;
+  // L01 / L05：时间来源必须可区分 —— 「用户手选」不能被解析器或系统兜底悄悄覆盖
+  let triggerUserPicked = false;
+  let reviewTriggerUserPicked = false;
   let nativeReminderStatus = {
     native: false,
     notifications: "unknown",
@@ -133,10 +136,12 @@
 
   function nthWeekdayOfNextMonth(from, nth, dow, hour, minute) {
     const base = from instanceof Date ? new Date(from.getTime()) : new Date(from);
+    // V04：按「日」比较（与 lib/repeat.js 同一实现）
+    const baseDay = new Date(base.getFullYear(), base.getMonth(), base.getDate()).getTime();
     let y = base.getFullYear(), m = base.getMonth();
     let d = nthWeekdayInMonth(y, m, nth, dow);
     d.setHours(10, 0, 0, 0);
-    if (d.getTime() <= base.getTime()) {
+    if (new Date(d.getFullYear(), d.getMonth(), d.getDate()).getTime() <= baseDay) {
       m += 1;
       if (m > 11) { m = 0; y += 1; }
       d = nthWeekdayInMonth(y, m, nth, dow);
@@ -511,25 +516,248 @@
     }
   };
 
-  function save() {
-    const payload = {
+  function currentPayload() {
+    return {
       schema: SCHEMA,
       items: state.items,
       notes: state.notes,
       projects: state.projects,
       settings: state.settings
     };
+  }
+
+  /**
+   * 把整个状态写一份快照到权威后端。**不加闸门**，只做「取快照 + 写」这一件事。
+   *
+   *  · **H2 权威后端**：能用 IndexedDB 就以它为准（storage.save 内部把 localStorage 当镜像
+   *    尽力写），没有可用后端时才由 localStorage 拍板。判定只看**权威后端**的提交结果 ——
+   *    镜像写失败不能把已经提交的事务说成没提交，否则内存回滚、磁盘却留着新数据。
+   *  · **H1 独立快照**：一次提交只序列化一次，再解析出**独立副本**交给后端。
+   *    IndexedDB 的 `put` 发生在 microtask 之后，直接传活对象会让期间的内存改动混进
+   *    这次提交的内容，让「这笔到底写了什么」不可预测。
+   */
+  async function writeSnapshot(payload, options) {
+    const json = JSON.stringify(payload || currentPayload());
     if (storage && storageReady) {
-      storage.save(payload).catch(() => {
-        try { localStorage.setItem(KEY, JSON.stringify(payload)); } catch (e) {}
-      });
-      queueNativeReminderSync();
-      return;
+      await storage.save(JSON.parse(json)); // 权威提交：失败即本次提交失败
+      if (!(options && options.deferNativeSync)) queueNativeReminderSync();
+      return true;
     }
+    // 没有可用存储后端：localStorage 就是权威
+    localStorage.setItem(KEY, json);
+    if (!(options && options.deferNativeSync)) queueNativeReminderSync();
+    return true;
+  }
+
+  /**
+   * **提交闸门**：同一时刻只有一笔权威提交在跑，轮到谁谁才取快照。
+   * 原生动作的校验、草稿变更、提交与发布整体在闸门内；普通保存排在它的结果之后，
+   * 失败不会锁死后续提交，成功前也不会把未确认动作混入其它快照。
+   */
+  let commitChain = Promise.resolve();
+
+  function runCommit(job) {
+    // 前一笔不论成败都要放行下一笔，否则一次失败会永久卡住后续所有保存
+    const next = commitChain.then(job, job);
+    commitChain = next.then(() => {}, () => {});
+    return next;
+  }
+
+  /**
+   * F2 / I1：返回**真实的持久化 Promise**（过闸门）。
+   *
+   * 原生动作队列必须在数据真正落库之后才确认删除，所以不能再「发起了 save 就当已保存」——
+   * 那样 handler 一返回原生就把事件删了，此时 IndexedDB 事务可能还没提交，崩溃即丢操作。
+   */
+  async function saveAsync() {
+    return runCommit(writeSnapshot);
+  }
+
+  /**
+   * H1：**只**抑制「动作同步变更体内部」的重复保存。
+   *
+   * `ackItem` / `completeItem` / `snoozeItem` 内部各自会 `save()`。当草稿 reducer 复用它们时，
+   * 必须抑制内部保存，由事务出口一次提交完整草稿。
+   *
+   * 这个标记**只在同步变更体内为真**，所以丢弃是安全的：那个窗口是同步的，
+   * 期间任何改动都在内存里，会被事务出口的快照一并提交。
+   * 而提交期间的其它保存（用户点了完成 / 稍后 / 新建）**绝不能吞掉** ——
+   * 它们会各自排进闸门，在前一笔定成败之后按当时的状态取快照。
+   * （此前的计数器跨越 await 持续为正，会把这类保存静默丢弃。）
+   */
+  let suppressInnerSave = false;
+
+  function save() {
+    if (suppressInnerSave) return;
+    const pending = saveAsync();
+    pending.catch(error => {
+      toast("保存失败 · 修改仍保留在本机内存，下一次保存会重试");
+      console.error("State save failed:", error && error.message ? error.message : error);
+    });
+    return pending;
+  }
+
+  /* ---------- 统一事务：提交在途期的「后续状态命令」日志 ---------- */
+
+  /**
+   * 原生动作在不可见草稿上执行；提交尚未定成败时，UI 继续显示最后确认状态。
+   * 同一事项或同一周期的用户命令在这个窗口内明确拒绝，避免它在旧状态上显示成功、
+   * 却因新状态的业务前置条件变化而在重放时失效。无关事项的状态命令仍按顺序记录：
+   * 提交成功后重放到草稿再发布，提交失败则可见状态本来就只含这些无关命令。
+   */
+  let inflightActionDepth = 0; // > 0 表示有动作的提交尚未定成败
+  let pendingUserOps = [];     // 窗口期内接受的状态命令（按发生顺序）
+  let suppressUserFeedback = false; // 重放期间不再重复弹提示
+  let replayCreatedIds = null; // 当前命令重放时可复用的稳定业务 id
+  let activeActionScope = null; // 尚未定成败的原生动作事务域（事项或整个周期）
+  let applyingActionDraft = false;
+
+  function itemConflictsWithActiveAction(item) {
+    if (!item || !activeActionScope) return false;
+    if (item.id === activeActionScope.itemId) return true;
+    if (activeActionScope.seriesId && item.seriesId === activeActionScope.seriesId) return true;
+    return item.repeatParentId === activeActionScope.itemId;
+  }
+
+  function isItemActionPending(id) {
+    const item = state.items.find(x => x.id === id);
+    return itemConflictsWithActiveAction(item);
+  }
+
+  function rejectPendingItemCommand() {
+    toast("这条事项正在保存 · 请稍后重试");
+    return false;
+  }
+
+  function commandConflicts(args, options) {
+    if (!activeActionScope || !options || !options.userFacing) return false;
+    if (options.globalConflict) return true;
+    const index = options.itemArg == null ? 0 : options.itemArg;
+    const arg = args[index];
+    const id = arg && typeof arg === "object" ? (arg.id || arg.__itemRef) : arg;
+    const item = state.items.find(x => x.id === id);
+    return itemConflictsWithActiveAction(item);
+  }
+
+  /**
+   * 执行一次状态命令并（若原生草稿正在提交）记进日志。
+   *
+   * 不在窗口期时零额外开销：直接调用，不做任何扫描。
+   * 记录时保存的 `fn` 是**原始函数**：重放不会再次经过这里，也就不会被重复记录。
+   *
+   * 记录自足化参数，以及这次命令新建实例的稳定 id / 父实例身份。
+   */
+  function runUserOp(fn, args, options) {
+    if (!applyingActionDraft && commandConflicts(args, options)) return rejectPendingItemCommand();
+    if (inflightActionDepth <= 0) return fn.apply(null, args);
+    const beforeIds = new Set(state.items.map(x => x.id));
+    // 参数在**调用之前**自足化：此刻「参数是否指向现有事项」的判断才准
+    // （新建时传入的字段包还没进 state.items，必须按值快照存，不能记成引用）
+    const recorded = args.map(recordArg);
+    const result = fn.apply(null, args);
+    // false 是业务拒绝（缺对象、终态保护、幂等无效果），不是已接受命令。
+    if (result === false) return false;
+    const createdItems = state.items.filter(x => !beforeIds.has(x.id));
+    const created = createdItems.map(x => x.id);
+    const createdRecords = createdItems.map(x => ({
+      id: x.id,
+      repeatParentId: x.repeatParentId || null
+    }));
+    pendingUserOps.push({
+      fn: fn,
+      name: (options && options.name) || fn.name || "command",
+      args: recorded,
+      created: created,
+      createdRecords: createdRecords
+    });
+    return result;
+  }
+
+  function takeReplayCreatedId() {
+    if (!replayCreatedIds || !replayCreatedIds.length) return null;
+    return replayCreatedIds.shift();
+  }
+
+  /**
+   * 日志里的参数必须是**自足的值**，不能留发布草稿后可能被替换掉的对象引用。
+   *
+   * 发布草稿时事项对象可能重建（id 不变，对象引用变化）。
+   * 若日志里存的是当初那个对象的引用，后续编辑就会写到已经离开 `state.items` 的旧对象上，
+   * 用户保存的内容静默丢失。
+   *  · 指向**现有事项**的参数 → 记成 id 引用，重放时按 id 重新解析；
+   *  · 其它对象参数 → 存一份值快照（深拷贝），不受后续改动影响。
+   */
+  function recordArg(a) {
+    if (!a || typeof a !== "object") return a;
+    if (state.items.indexOf(a) >= 0) return { __itemRef: a.id };
     try {
-      localStorage.setItem(KEY, JSON.stringify(payload));
-    } catch (e) { /* quota */ }
-    queueNativeReminderSync();
+      return JSON.parse(JSON.stringify(a));
+    } catch (error) {
+      return a;
+    }
+  }
+
+  function resolveArg(a) {
+    if (a && typeof a === "object" && a.__itemRef) {
+      return state.items.find(x => x.id === a.__itemRef) || null;
+    }
+    return a;
+  }
+
+  function wrapUserOp(fn, options) {
+    return function () {
+      return runUserOp(fn, Array.prototype.slice.call(arguments), options);
+    };
+  }
+
+  /**
+   * 按原顺序把窗口期命令施加到已提交草稿。
+   * 参数按 id 重新解析；任何无法解析、执行抛错或未消费的创建 id 都是事务错误，必须上抛，
+   * 不能吞掉后继续并伪装成成功。派生 id 在创建时直接注入，不再靠「按数组顺序事后改 id」。
+   */
+  function replayUserOps(ops) {
+    if (!ops || !ops.length) return 0;
+    const prevSave = suppressInnerSave;
+    const prevFeedback = suppressUserFeedback;
+    suppressInnerSave = true;
+    suppressUserFeedback = true;
+    try {
+      ops.forEach(op => {
+        const specs = op.args || [];
+        const args = [];
+        for (let i = 0; i < specs.length; i++) {
+          const value = resolveArg(specs[i]);
+          if (value === null && specs[i] && specs[i].__itemRef) {
+            throw new Error("transaction-replay-missing-item:" + specs[i].__itemRef);
+          }
+          args.push(value);
+        }
+        replayCreatedIds = (op.created || []).slice();
+        // 若动作草稿已经建立了同一父实例的周期投影，采用用户命令首次执行时的稳定 id。
+        // 这是按明确 parent identity 合并，不按数组顺序或触发时间猜测。
+        (op.createdRecords || []).forEach(record => {
+          if (!record || !record.repeatParentId) return;
+          const existing = state.items.find(x => x.repeatParentId === record.repeatParentId);
+          if (!existing || existing.id === record.id || state.items.some(x => x.id === record.id)) return;
+          existing.id = record.id;
+          const index = replayCreatedIds.indexOf(record.id);
+          if (index >= 0) replayCreatedIds.splice(index, 1);
+        });
+        const applied = op.fn.apply(null, args);
+        if (applied === false) {
+          throw new Error("transaction-replay-business-rejected:" + (op.name || op.fn.name || "command"));
+        }
+        if (replayCreatedIds.length) {
+          throw new Error("transaction-replay-unused-created-id:" + replayCreatedIds[0]);
+        }
+        replayCreatedIds = null;
+      });
+    } finally {
+      replayCreatedIds = null;
+      suppressUserFeedback = prevFeedback;
+      suppressInnerSave = prevSave;
+    }
+    return ops.length;
   }
 
   function applyParsedState(parsed) {
@@ -626,7 +854,23 @@
       sourceTitle: it.sourceTitle || "",
       sourceApp: it.sourceApp || "",
       delivery_mode: it.delivery_mode || null,
-      isFallbackTrigger: !!it.isFallbackTrigger
+      isFallbackTrigger: !!it.isFallbackTrigger,
+      // L02：截止保护的阶段消费状态（key = 阶段 + 截止时间）
+      deadlineStageKey: it.deadlineStageKey || null,
+      // F1：按阶段记账的截止事件表 { "p24@<deadline>": { at, state } }
+      // state: "scheduled" 已排期 / "delivered" 已送达（不再重排）
+      deadlineEvents: it.deadlineEvents && typeof it.deadlineEvents === "object"
+        ? it.deadlineEvents : {},
+      // D23：归档重开暂停截止保护时置位，需用户显式恢复
+      deadlinePaused: !!it.deadlinePaused,
+      // L03：ACK 周期已推进过的标记，避免完成时再生成一条下期
+      ackAdvancedAt: it.ackAdvancedAt || null,
+      // L04：数据版本 —— 通知事件据此识别「已被改写的旧通知」
+      rev: it.rev == null ? 1 : Number(it.rev),
+      // F3：周期系列身份 —— 「停止重复」要能找到同系列的未来实例
+      seriesId: it.seriesId || (it.repeat && it.repeat.every ? "s_" + uid() : null),
+      // 稳定的周期依赖身份：同一父实例至多派生一个下一期，不能靠时刻或数组位置猜。
+      repeatParentId: it.repeatParentId || null
     };
     if (!item.delivery_mode) {
       item.delivery_mode = (item.priority === "important" || item.priority === "critical")
@@ -652,6 +896,67 @@
 
   function projectById(id) {
     return state.projects.find(p => p.id === id) || null;
+  }
+
+  /**
+   * L04：任何会改变「时间 / 状态」的写入都推进版本号。
+   * 通知事件携带投递时的版本，回来时对不上就说明它是「已经过期的旧通知」，
+   * 不得再覆盖新状态、也不得再推进一次周期。
+   */
+  function bumpRev(it) {
+    if (!it) return;
+    it.rev = (Number(it.rev) || 0) + 1;
+  }
+
+  /**
+   * 截止保护的阶段身份（L02 / INV-05）。
+   * 规范实现在 lib/reminder.js；这里只做转发 + 兜底，避免两份规则各自漂移。
+   */
+  function deadlineStageKeyOf(deadlineAt, now) {
+    if (Lib.deadlineStageKey) return Lib.deadlineStageKey(deadlineAt, now);
+    const dl = Number(deadlineAt) || 0;
+    if (!dl) return null;
+    const left = dl - Number(now == null ? Date.now() : now);
+    if (left > 24 * 3600000 || left <= -24 * 3600000) return null;
+    return (left <= 2 * 3600000 ? "p2" : "p24") + "@" + dl;
+  }
+
+  /** 已完成 / 已归档是终态：只允许通过明确的恢复动作重开（L04） */
+  function isTerminal(it) {
+    return !!it && (it.status === "archived" || it.status === "completed");
+  }
+
+  /**
+   * L04：事件里的数据版本是否「可知」。
+   * 缺失 / 0 / 非数字都当作未知 —— 这时不做版本校验，
+   * 避免整条原生链路丢版本后所有通知按钮集体失效（V02）。
+   */
+  function hasKnownRev(rev) {
+    if (rev == null || rev === "") return false;
+    const n = Number(rev);
+    return Number.isFinite(n) && n > 0;
+  }
+
+  /**
+   * L01 / R5 / D17：只有「系统兜底时间」的记录不发事项提醒。
+   *  · 用户手选或解析出的真实时间照常生效（Review 只管内容质量）；
+   *  · Review 关闭后一律按普通事项正常提醒（V0.2 §9.2）。
+   */
+  function isFallbackSuppressed(it) {
+    return !!it && !!it.isFallbackTrigger && ensureReviewSettings().enabled;
+  }
+
+  /**
+   * V06：首页「需要注意」的判定，与原生投影共用同一套兜底语义。
+   *
+   * 三处判断此前各不相同（前台一律抑制、首页只看 isDue、原生只看 NEEDS_REVIEW），
+   * 于是出现「已过期的兜底记录出现在需要注意」而「确认后的兜底记录原生又排正式提醒」。
+   * 兜底记录只有一种方式进入需要注意：**被截止保护拉起**（那时 status 才会变成 due）。
+   */
+  function isAttentionDue(it, now) {
+    if (!it || isTerminal(it)) return false;
+    if (isFallbackSuppressed(it)) return it.status === "due";
+    return isDue(it, now) || it.status === "due";
   }
 
   /* ---------- Deferred Clarification / 延迟澄清 ---------- */
@@ -886,6 +1191,8 @@
     const idx = state.ui.reviewIndex;
     const progress = $("#reviewProgress");
     const body = $("#reviewBody");
+    // 每张卡片是独立的一次「采用/不采用时间」判断，不能继承上一条的选择
+    reviewTriggerUserPicked = false;
     if (!body) return;
     if (idx >= total) {
       if (progress) progress.textContent = "全部处理完成";
@@ -902,9 +1209,12 @@
     }
     if (progress) progress.textContent = (idx + 1) + " / " + total;
     // D16：显式展示系统解析结果；无时间时必须写「未设定时间」
-    const parsedHint = it.isFallbackTrigger || !it.triggerAt
-      ? "未设定时间 · 已用兜底值（" + fmtTime(it.triggerAt || fallbackTriggerAt()) + " 的整理窗口）"
-      : fmtTime(it.triggerAt) + (it.deadlineAt ? " · 截止 " + fmtDate(it.deadlineAt) : "");
+    // L05：兜底值本身不是「已定时间」，说清楚确认后会顺延到下一个整理窗口
+    const parsedHint = it.isFallbackTrigger
+      ? "未设定时间 · 确认后顺延到下一个整理窗口（" + fmtTime(fallbackTriggerAt()) + "）"
+      : (!it.triggerAt
+        ? "未设定时间"
+        : fmtTime(it.triggerAt) + (it.deadlineAt ? " · 截止 " + fmtDate(it.deadlineAt) : ""));
     const sourceBits = [];
     if (it.sourceTitle) sourceBits.push(escapeHtml(it.sourceTitle));
     if (it.url) sourceBits.push(escapeHtml(it.url));
@@ -920,8 +1230,17 @@
       (sourceBits.length ? '<div class="detail-row"><dt>来源</dt><dd>' + sourceBits.join("<br>") + "</dd></div>" : "") +
       "</dl>" +
       '<div class="field"><label for="reviewTitle">标题</label><input id="reviewTitle" type="text" value="' + escapeHtml(it.title || "") + '" /></div>' +
-      '<div class="field"><label for="reviewTrigger">提醒时间</label><input id="reviewTrigger" type="datetime-local" value="' + toLocalInput(it.triggerAt) + '" /></div>' +
+      // L05：兜底记录不再把兜底值预填进输入框 —— 预填会让「确认」看起来像采用了那个时间
+      '<div class="field"><label for="reviewTrigger">提醒时间</label><input id="reviewTrigger" type="datetime-local" value="' +
+      (it.isFallbackTrigger ? "" : toLocalInput(it.triggerAt)) + '"' +
+      (it.isFallbackTrigger ? ' placeholder="未设定 · 不选则顺延到下一个整理窗口"' : "") + " /></div>" +
       '<div class="field"><label for="reviewNote">备注（可选）</label><input id="reviewNote" type="text" value="' + escapeHtml(it.note || "") + '" placeholder="例如：主要想看它的调度机制" /></div>';
+
+    // L05：只有用户真的手动改过提醒时间，才算「明确采用这个时间」
+    const trigInput = $("#reviewTrigger");
+    if (trigInput && trigInput.addEventListener) {
+      trigInput.addEventListener("change", () => { reviewTriggerUserPicked = true; });
+    }
 
     // P0-3：「稍后 / 跳过本次」必须随每次渲染重建 —— 整块替换 innerHTML 会把静态节点连监听器一起丢掉
     const foot = $("#reviewFoot");
@@ -929,21 +1248,39 @@
       foot.innerHTML =
         '<button class="btn secondary" id="reviewSnooze">稍后</button>' +
         '<button class="btn secondary" id="reviewSkip">跳过本次</button>' +
+        '<button class="btn secondary" id="reviewKeep">留着待整理</button>' +
         '<button class="btn secondary" id="reviewDelete">删除</button>' +
         '<button class="btn secondary" id="reviewConfirm">确认</button>' +
         '<button class="btn primary" id="reviewSave">保存修改</button>';
       $("#reviewSnooze").onclick = () => openSheet("sheetReviewSnooze");
       $("#reviewSkip").onclick = skipReviewThisTime;
+      // L05：逐条保留并前进 —— 「稍后 / 跳过本次」管的是整场会话，不是单条
+      $("#reviewKeep").onclick = reviewKeepCurrent;
       $("#reviewDelete").onclick = reviewDelete;
       $("#reviewConfirm").onclick = reviewConfirm;
       $("#reviewSave").onclick = reviewSaveEdit;
     }
   }
 
+  /**
+   * L05：确认 ≠ 采用系统兜底时间。三种来源分开处理 ——
+   *  · 用户在卡片里明确改过时间 → 采用，并解除兜底标记；
+   *  · 记录本来就有真实时间 → 保留；
+   *  · 只有兜底值（或时间已过期）→ 顺延到下一个整理窗口，**不生成立即到期提醒**。
+   */
+  function resolveReviewTrigger(it) {
+    const input = $("#reviewTrigger");
+    const typed = input ? parseLocalInput(input.value) : null;
+    if (reviewTriggerUserPicked && typed) return { triggerAt: typed, keepFallback: false };
+    if (it.isFallbackTrigger) return { triggerAt: fallbackTriggerAt(), keepFallback: true };
+    if (it.triggerAt) return { triggerAt: it.triggerAt, keepFallback: false };
+    return { triggerAt: fallbackTriggerAt(), keepFallback: true };
+  }
+
   function markReviewDone(item, extra) {
+    if (!item) return false;
     item.review_status = "REVIEWED";
     item.reviewed_at = Date.now();
-    item.isFallbackTrigger = false;
     if (extra && extra.triggerAt != null) {
       item.triggerAt = extra.triggerAt;
       item.scheduleBasis = "wall-clock";
@@ -952,17 +1289,19 @@
         item.status = "waiting";
       }
     }
+    // 只有「用户明确采用了一个时间」才解除兜底标记（L01）
+    if (!(extra && extra.keepFallback)) item.isFallbackTrigger = false;
     if (extra && extra.title != null) item.title = extra.title;
     if (extra && extra.note != null) item.note = extra.note;
+    bumpRev(item);
+    return true;
   }
 
   function reviewConfirm() {
     const it = currentReviewItem();
     if (!it) return;
-    const triggerInput = $("#reviewTrigger");
-    const triggerAt = triggerInput ? parseLocalInput(triggerInput.value) : it.triggerAt;
-    // D17：无时间时兜底为下一个 Review Window，而不是 now+7 天
-    markReviewDone(it, { triggerAt: triggerAt || fallbackTriggerAt() });
+    const resolved = resolveReviewTrigger(it);
+    if (markReviewDone(it, { triggerAt: resolved.triggerAt, keepFallback: resolved.keepFallback }) === false) return;
     save();
     state.ui.reviewIndex += 1;
     queueNativeReminderSync();
@@ -974,9 +1313,14 @@
     const it = currentReviewItem();
     if (!it) return;
     const title = ($("#reviewTitle") && $("#reviewTitle").value.trim()) || it.title;
-    const triggerAt = parseLocalInput($("#reviewTrigger") ? $("#reviewTrigger").value : "") || it.triggerAt;
+    const resolved = resolveReviewTrigger(it);
     const note = $("#reviewNote") ? $("#reviewNote").value.trim() : it.note;
-    markReviewDone(it, { title, triggerAt: triggerAt || fallbackTriggerAt(), note });
+    if (markReviewDone(it, {
+      title,
+      triggerAt: resolved.triggerAt,
+      keepFallback: resolved.keepFallback,
+      note
+    }) === false) return;
     save();
     state.ui.reviewIndex += 1;
     queueNativeReminderSync();
@@ -984,15 +1328,25 @@
     render();
   }
 
+  /**
+   * L05 / V0.2 §9.4「中途退出：逐条即时持久化，下次只继续剩余项」。
+   * 「稍后 / 跳过本次」管的是整场会话，不能拿来处理「这一条我还想不清」——
+   * 于是需要一个逐条的「留着待整理」出口：本条留在队列里，先处理下一条。
+   */
+  function reviewKeepCurrent() {
+    const it = currentReviewItem();
+    if (!it) return;
+    state.ui.reviewIndex += 1;
+    renderReviewCard();
+    toast("已保留这条 · 下次整理再处理");
+  }
+
   function reviewDelete() {
     const it = currentReviewItem();
     if (!it) return;
-    state.items = state.items.filter(x => x.id !== it.id);
-    save();
+    if (deleteItem(it.id) === false) return;
     state.ui.reviewIndex += 1;
     renderReviewCard();
-    render();
-    toast("已删除该条记录");
   }
 
   function snoozeReview(ms, label) {
@@ -1103,14 +1457,16 @@
   }
 
   function promoteDue(now) {
+    // 隔离草稿尚未提交时，可见 state 仍是最后确认状态；自动推进下一拍即可重算。
+    if (inflightActionDepth > 0) return false;
     now = now || Date.now();
-    const reviewEnabled = ensureReviewSettings().enabled;
     let changed = false;
     state.items.forEach(it => {
-      // D17：Review 开启时，NEEDS_REVIEW 兜底记录永不进 due；
-      // Review 关闭时退为普通事项，正常提醒
-      if (reviewEnabled && it.review_status === "NEEDS_REVIEW") return;
-      if (it.status === "waiting" || it.status === "snoozed") {
+      // D17：Review 开启时，只有「系统兜底时间」的记录不因其兜底时间进 due；
+      // 有真实时间的待整理记录照常提醒，Review 关闭时兜底记录也退为普通事项。
+      // V06：抑制只作用于**普通提醒**，绝不能连截止保护一起跳过（INV-05）。
+      const fallbackSuppressed = isFallbackSuppressed(it);
+      if (!fallbackSuppressed && (it.status === "waiting" || it.status === "snoozed")) {
         // 柔性窗口：仅对 waiting 生效，避免覆盖用户 snooze
         if (it.status === "waiting" && Lib.applyWindowTrigger && (it.windowStart || it.windowEnd)) {
           const winTs = Lib.applyWindowTrigger(it, now);
@@ -1130,14 +1486,20 @@
           changed = true;
         }
       }
-      if (it.status === "acknowledged" && it.deadlineAt) {
-        const daysLeft = (it.deadlineAt - now) / 86400000;
-        if (daysLeft <= 1.05 && daysLeft > -1) {
+      // L02 / INV-05：截止保护**分阶段**，每个阶段有稳定身份与消费状态。
+      // ACK 结束当前阶段的事件，只有到下一个保护点才会再次唤醒 ——
+      // 否则「临近截止时点我知道了」会在下一次 render 里立刻变回 due，确认按钮形同虚设。
+      if (it.deadlineAt && !it.deadlinePaused && !isTerminal(it)) {
+        const stageKey = deadlineStageKeyOf(it.deadlineAt, now);
+        if (stageKey && it.deadlineStageKey !== stageKey) {
+          it.deadlineStageKey = stageKey;
           it.status = "due";
           it.deliveredAt = now;
           it.remindCount = 0;
           it.lastRemindAt = now;
           it.lastAlertShownAt = null;
+          it.dismissedUntil = null;
+          bumpRev(it);
           changed = true;
         }
       }
@@ -1145,35 +1507,45 @@
     if (changed) save();
   }
 
+  /* L03：与 lib/repeat.js 保持同一实现（本文件内的副本仅作 Lib 缺失时的兜底） */
   function nextRepeatTrigger(it, fromTs) {
-    const from = fromTs || it.acknowledgedAt || Date.now();
-    const every = it.repeat && it.repeat.every;
+    const rep = (it && it.repeat) || {};
+    const every = rep.every;
+    if (!every) return null;
+    const ackBased = rep.mode === "ack";
+    const from = fromTs != null
+      ? Number(fromTs)
+      : (ackBased
+        ? (it.acknowledgedAt || Date.now())
+        : (it.triggerAt || it.acknowledgedAt || Date.now()));
+    if (!Number.isFinite(from)) return null;
     if (every === "day") return applyClock(addDays(new Date(from), 1), it.triggerAt);
     if (every === "week") return applyClock(addDays(new Date(from), 7), it.triggerAt);
     if (every === "biweek") return applyClock(addDays(new Date(from), 14), it.triggerAt);
     if (every === "month") {
-      const d = new Date(from);
-      d.setMonth(d.getMonth() + 1);
-      return applyClock(d, it.triggerAt);
+      const base = new Date(from);
+      const m = base.getMonth() + 1;
+      const ny = base.getFullYear() + Math.floor(m / 12);
+      const nm = ((m % 12) + 12) % 12;
+      const day = Math.min(base.getDate(), new Date(ny, nm + 1, 0).getDate());
+      return applyClock(new Date(ny, nm, day), it.triggerAt);
     }
     if (every === "monthEnd") {
+      // V04：按「日」比较（与 lib/repeat.js 同一实现）
       const base = new Date(from);
+      const baseDay = new Date(base.getFullYear(), base.getMonth(), base.getDate()).getTime();
       let d = lastDayOfMonth(base);
-      d.setHours(10, 0, 0, 0);
-      if (d.getTime() <= from) {
-        const n = new Date(base);
-        n.setMonth(n.getMonth() + 1);
-        d = lastDayOfMonth(n);
-        d.setHours(10, 0, 0, 0);
+      if (new Date(d.getFullYear(), d.getMonth(), d.getDate()).getTime() <= baseDay) {
+        d = lastDayOfMonth(new Date(base.getFullYear(), base.getMonth() + 1, 1));
       }
       return applyClock(d, it.triggerAt);
     }
     if (every === "nthWeekday") {
-      const s = it.triggerAt ? new Date(it.triggerAt) : new Date();
+      const s = new Date(it.triggerAt || from);
       return nthWeekdayOfNextMonth(
         from,
-        it.repeat.nth || 1,
-        it.repeat.dow != null ? it.repeat.dow : 1,
+        rep.nth || 1,
+        rep.dow != null ? rep.dow : 1,
         s.getHours(),
         s.getMinutes()
       );
@@ -1181,15 +1553,113 @@
     return null;
   }
 
+  /**
+   * F3：保证周期事项有稳定的系列身份。
+   * 「停止重复」必须能找到 ACK 生成的未来实例 —— 否则它会带着 repeat 继续提醒、
+   * 继续派生周期，界面却提示「周期已终止并归档」。
+   */
+  function ensureSeriesId(it) {
+    if (!it) return null;
+    if (!it.repeat || !it.repeat.every) return it.seriesId || null;
+    if (!it.seriesId) it.seriesId = "s_" + uid();
+    return it.seriesId;
+  }
+
+  function seriesMembers(seriesId, exceptId, sourceItem) {
+    if (seriesId) {
+      return state.items.filter(x =>
+        x && x.id !== exceptId && x.seriesId === seriesId && !isTerminal(x));
+    }
+    if (sourceItem && sourceItem.repeat && sourceItem.repeat.every) {
+      return state.items.filter(x =>
+        x && x.id !== exceptId && !isTerminal(x) &&
+        x.title === sourceItem.title &&
+        x.projectId === sourceItem.projectId &&
+        x.repeat && x.repeat.every === sourceItem.repeat.every);
+    }
+    return [];
+  }
+
+  /**
+   * G4：该实例是否「尚未开始」—— 规则派生出来、用户还**从未接触过**。
+   *
+   * 停止重复时要区分两类同系列事项：
+   *  · 未开始的未来实例：只是规则的投影，随规则一起归档（不写 completedAt）；
+   *  · 已经交付/确认过的历史实例：用户真的处理过，必须原样保留业务状态。
+   * 判据用生命周期证据（确认时间 / 送达时间 / 稍后时间）而不是时钟 ——
+   * 「时刻已过」不代表用户已经看过（红线：通知送达 ≠ 用户看到）。
+   */
+  function isUnstartedInstance(it) {
+    if (!it || isTerminal(it)) return false;
+    if (it.acknowledgedAt || it.deliveredAt || it.snoozedAt) return false;
+    return it.status === "waiting";
+  }
+
+  /**
+   * L03：生成周期的下一条实例 —— 「完成本次实例」，原记录不被改写。
+   * 返回新事项，未生成时返回 null。
+   */
+  function spawnNextInstance(it, fromTs) {
+    const nextTrigger = nextRepeatTrigger(it, fromTs);
+    if (!nextTrigger) return null;
+    const preferredId = takeReplayCreatedId();
+    const existing = state.items.find(x => x.repeatParentId === it.id);
+    if (existing) {
+      if (preferredId && existing.id !== preferredId && !state.items.some(x => x.id === preferredId)) {
+        existing.id = preferredId;
+      }
+      return existing;
+    }
+    const next = makeItem({
+      id: preferredId || uid(),
+      title: it.title,
+      note: it.note,
+      tags: it.tags.slice(),
+      url: it.url,
+      projectId: it.projectId,
+      priority: it.priority,
+      status: "waiting",
+      repeat: it.repeat,
+      seriesId: ensureSeriesId(it),
+      repeatParentId: it.id,
+      triggerAt: nextTrigger,
+      scheduleBasis: "wall-clock",
+      localTrigger: toLocalInput(nextTrigger),
+      deadlineAt: null,
+      // 下一周期继承投递方式快照（有标记仍为 alarm）
+      delivery_mode: resolveDeliveryMode(it.priority)
+    });
+    state.items.push(next);
+    return next;
+  }
+
+  /**
+   * 我知道了 —— 只表示「看到了」，不等于完成（红线：Acknowledged ≠ Completed）。
+   *
+   * L03：周期分两种语义，必须分开兑现承诺
+   *  · `mode: "ack"`   「ACK 后计时」→ 由**确认**推进到下一周期
+   *  · `mode: "calendar"`「日历规则」→ 由**完成**推进，ACK 不改变原定日期
+   * V04：ACK 推进必须**新建实例**。就地把 triggerAt 改到下一期会把「本次实例」与
+   *      「下一期」混成同一条记录 —— 随后完成本次实例时，下一期会被一起归档（活跃实例归零）。
+   * L04：终态保护 —— 已完成 / 已归档的事项不接受旧通知的 ACK。
+   */
   function ackItem(id, silent) {
     const it = state.items.find(x => x.id === id);
-    if (!it) return;
+    if (!it) return false;
+    if (isTerminal(it)) return false;
+    const now = Date.now();
     it.status = "acknowledged";
-    it.acknowledgedAt = Date.now();
+    it.acknowledgedAt = now;
     it.lastRemindAt = null;
+    it.dismissedUntil = null;
+    if (it.repeat && it.repeat.every && it.repeat.mode === "ack") {
+      if (spawnNextInstance(it, now)) it.ackAdvancedAt = now;
+    }
+    bumpRev(it);
     save();
     if (!silent) toast("已确认看到 · 仍保持未完成");
     render();
+    return true;
   }
 
   // Prefer lib implementations when loaded (single source of truth)
@@ -1198,40 +1668,57 @@
   if (Lib.repeatLabel) repeatLabel = Lib.repeatLabel;
   if (Lib.nextRepeatPreview) nextRepeatPreview = Lib.nextRepeatPreview;
 
+  /**
+   * 完成 —— 归档当前实例。
+   *
+   * L03：`calendar` 周期从这里推进，且锚定**原定日期**而不是完成时刻
+   *      （否则「每月 1 日」会因为晚几天完成而漂成每月 5 日）。
+   *      `ack` 周期已经由 ACK 推进过，不再重复生成下期。
+   * L04：终态保护 —— 同一条完成事件重复投递时只能推进一次周期。
+   */
+  /**
+   * 归档一条事项时，周期是否需要顺延到下一期。
+   *
+   * `calendar` 由**完成**推进；`ack` 由**确认**推进 —— 已经由 ACK 推进过（`ackAdvancedAt`）
+   * 就不再重复推进（V04：否则活跃实例归零）。
+   *
+   * K1：这条规则有两个调用方 —— 用户点「完成」，以及原生草稿提交成功后重放该命令。
+   * 必须共用一处实现，否则两边的判断会各自漂移。
+   */
+  function advanceSeriesOnArchive(it) {
+    if (!it || !it.repeat || !it.repeat.every) return null;
+    const ackBased = it.repeat.mode === "ack";
+    if (ackBased && it.ackAdvancedAt) return null;
+    return spawnNextInstance(it, ackBased ? (it.acknowledgedAt || Date.now()) : null);
+  }
+
   function completeItem(id) {
     const it = state.items.find(x => x.id === id);
-    if (!it) return;
+    if (!it) return false;
+    if (isTerminal(it)) return false;
     it.status = "archived";
     it.completedAt = Date.now();
-    if (it.repeat && it.repeat.every) {
-      const nextTrigger = nextRepeatTrigger(it, it.acknowledgedAt || Date.now());
-      if (nextTrigger) {
-        state.items.push(makeItem({
-          title: it.title,
-          note: it.note,
-          tags: it.tags.slice(),
-          url: it.url,
-          projectId: it.projectId,
-          priority: it.priority,
-          status: "waiting",
-          repeat: it.repeat,
-          triggerAt: nextTrigger,
-          scheduleBasis: "wall-clock",
-          localTrigger: toLocalInput(nextTrigger),
-          deadlineAt: null,
-          // 下一周期继承投递方式快照（有标记仍为 alarm）
-          delivery_mode: resolveDeliveryMode(it.priority)
-        }));
-      }
-    }
+    it.dismissedUntil = null;
+    advanceSeriesOnArchive(it);
+    bumpRev(it);
     save();
     toast(it.repeat ? "已完成 · 下一周期已生成" : "已完成并归档");
     render();
+    return true;
   }
 
+  /**
+   * 稍后 —— 进入新一轮。
+   *
+   * L04：终态保护；已完成的事项不接受旧通知的「稍后」。
+   * L08：稍后开启新一轮时重置追提醒预算与轮次状态，让前台与应用后台使用同一份轮次。
+   *      否则旧计数会跟着新时间走，用户点完稍后反而更早静音
+   *      （原生投影从 attempt=0 重排，前台却按旧上限判断）。
+   */
   function snoozeItem(id, when, basis) {
     const it = state.items.find(x => x.id === id);
-    if (!it) return;
+    if (!it) return false;
+    if (isTerminal(it)) return false;
     const snoozedAt = Date.now();
     it.status = "snoozed";
     it.triggerAt = when;
@@ -1241,21 +1728,29 @@
     it.snoozeDelayMs = it.scheduleBasis === "elapsed" ? Math.max(0, when - snoozedAt) : null;
     it.dismissedUntil = null;
     it.snoozeCount = (it.snoozeCount || 0) + 1;
+    it.remindCount = 0;
+    it.lastRemindAt = null;
+    it.lastAlertShownAt = null;
+    it.deliveredAt = null;
+    bumpRev(it);
     save();
     toast("已改到 " + fmtTime(when));
     render();
+    return true;
   }
 
   function deleteItem(id) {
+    if (!state.items.some(x => x.id === id)) return false;
     state.items = state.items.filter(x => x.id !== id);
     save();
     toast("已删除");
     render();
+    return true;
   }
 
   function reopenItem(id) {
     const it = state.items.find(x => x.id === id);
-    if (!it) return;
+    if (!it) return false;
     const snoozedAt = Date.now();
     it.status = "snoozed";
     it.triggerAt = snoozedAt + 2 * 3600000;
@@ -1264,15 +1759,28 @@
     it.snoozedAt = snoozedAt;
     it.snoozeDelayMs = 2 * 3600000;
     it.dismissedUntil = null;
+    // 「再提醒」同样开启新一轮，与 snoozeItem 保持同一份轮次语义
+    it.remindCount = 0;
+    it.lastRemindAt = null;
+    it.lastAlertShownAt = null;
+    it.deliveredAt = null;
+    bumpRev(it);
     save();
     toast("将在 2 小时后再次提醒");
     render();
+    return true;
   }
 
-  /** D23：归档重开不设 trigger_at（不自动提醒），可选给一次极简时间选择 */
+  /**
+   * D23：归档重开不设 trigger_at（不自动提醒），可选给一次极简时间选择。
+   *
+   * 承诺一致性：重开时同时**暂停截止保护**。截止保护同样是「自动提醒」，
+   * 而原实现会让原生投影在恢复后立刻补一条截止提醒，与「不会自动提醒」直接冲突。
+   * 暂停是显式可见的，用户可以在卡片/详情里一键恢复。
+   */
   function restoreItem(id) {
     const it = state.items.find(x => x.id === id);
-    if (!it) return;
+    if (!it) return false;
     it.status = "waiting";
     it.completedAt = null;
     it.triggerAt = null;
@@ -1281,12 +1789,81 @@
     it.snoozedAt = null;
     it.snoozeDelayMs = null;
     it.dismissedUntil = null;
+    it.remindCount = 0;
+    it.lastRemindAt = null;
+    it.lastAlertShownAt = null;
+    it.deliveredAt = null;
+    it.deadlinePaused = true;
+    bumpRev(it);
     save();
     toast("已恢复 · 不会自动提醒", "设置时间", () => {
       state.ui.snoozeId = it.id;
       openSheet("sheetSnooze");
     });
     render();
+    return true;
+  }
+
+  /** D23 例外必须由用户显式解除：恢复归档时被暂停的截止保护 */
+  function resumeDeadlineProtection(id) {
+    const it = state.items.find(x => x.id === id);
+    if (!it) return false;
+    it.deadlinePaused = false;
+    it.deadlineStageKey = null;
+    // 一并清掉暂停前的原生排期记录，否则恢复后会被判成「已送达」而不再排程
+    it.deadlineEvents = {};
+    bumpRev(it);
+    save();
+    toast(it.deadlineAt ? "截止保护已恢复 · 截止 " + fmtTime(it.deadlineAt) : "截止保护已恢复");
+    render();
+    return true;
+  }
+
+  /**
+   * L03 / V0.2 §417：停止重复 = **终止整个周期规则并归档当前实例**。
+   *
+   * F3：终止的是**整个系列**。
+   * G4：但「终止规则」与「归档实例」是两件事，必须分开 ——
+   *  1. 整个系列（含历史实例）一律摘掉 `repeat`，从此不再派生、不再按周期提醒；
+   *  2. 用户明确操作的那一条归档（这是「归档当前实例」的语义）；
+   *  3. 同系列里**尚未开始**的未来实例随规则一起归档，不写 `completedAt`
+   *     （它们从未被用户处理过，不应计入「今天已完成 N 件」）；
+   *  4. 已经确认/交付过的历史实例**保留业务状态** —— 之前把 `acknowledged` 的
+   *     上一条也一并归档且 `completedAt=null`，它会从待处理列表里凭空消失。
+   */
+  function stopRepeat(id) {
+    const it = state.items.find(x => x.id === id);
+    if (!it) return false;
+    const seriesId = it.seriesId || null;
+    const members = seriesMembers(seriesId, id, it);
+    // 1) 先终止规则：历史与未来实例都不再属于这个周期
+    const all = [it].concat(members);
+    all.forEach(m => {
+      m.repeat = null;
+      m.ackAdvancedAt = null;
+      m.dismissedUntil = null;
+    });
+    // 2) 归档当前实例
+    if (!isTerminal(it)) {
+      it.status = "archived";
+      it.completedAt = Date.now();
+    }
+    // 3) 只归档「尚未开始」的未来实例；4) 已确认/已交付的历史保留业务状态
+    const archived = [];
+    members.forEach(m => {
+      if (!isUnstartedInstance(m)) return;
+      m.status = "archived";
+      m.completedAt = null; // 未真正完成，只随规则终止
+      archived.push(m);
+    });
+    all.forEach(m => bumpRev(m));
+    save();
+    queueNativeReminderSync();
+    toast(archived.length
+      ? "已停止重复 · 周期已终止并归档（含 " + archived.length + " 个未开始的未来实例）"
+      : "已停止重复 · 周期已终止并归档");
+    render();
+    return true;
   }
 
   /* ---------- item card ---------- */
@@ -1313,6 +1890,8 @@
       pills.push('<span class="pill">未设定时间</span>');
     }
     if (it.deadlineAt) pills.push('<span class="pill warn">截止 ' + fmtDate(it.deadlineAt) + "</span>");
+    // D23：恢复归档后截止保护被暂停 —— 风险必须明确展示，不能默默替用户决定
+    if (it.deadlineAt && it.deadlinePaused) pills.push('<span class="pill">截止保护已暂停</span>');
     if (it.repeat && it.repeat.every) {
       pills.push('<span class="pill future">' + escapeHtml(repeatLabel(it.repeat)) +
         (it.repeat.mode === "ack" ? " · ACK后" : "") + "</span>");
@@ -1382,10 +1961,10 @@
     promoteDue();
     const now = Date.now();
     const dueMap = new Map();
-    const reviewEnabled = ensureReviewSettings().enabled;
     state.items.forEach(it => {
-      if (reviewEnabled && it.review_status === "NEEDS_REVIEW") return;
-      if (isDue(it, now) || it.status === "due") dueMap.set(it.id, it);
+      // L01 / D17 / V06：与原生投影同一套判定 —— 兜底记录不因其兜底时间进「需要注意」，
+      // 但被截止保护拉起的兜底记录必须能看到。
+      if (isAttentionDue(it, now)) dueMap.set(it.id, it);
     });
     const dueList = Array.from(dueMap.values()).sort((a, b) => {
       const pr = priorityRank(a.priority) - priorityRank(b.priority);
@@ -1684,7 +2263,9 @@
     if (native) {
       const notificationGranted = nativeReminderStatus.notifications === "granted";
       const exactGranted = nativeReminderStatus.exactAlarm === "granted";
-      const reliability = state.settings.notify ? nativeReminderStatus.reliability : "in-app";
+      const alarmErrors = nativeReminderStatus.errors || [];
+      const hasErrors = alarmErrors.length > 0 || nativeReminderStatus.reliability === "error";
+      const reliability = hasErrors ? "error" : (state.settings.notify ? nativeReminderStatus.reliability : "in-app");
       if (exactRow) exactRow.disabled = !notificationGranted;
       if (exactSub) {
         exactSub.textContent = !notificationGranted ? "先开启通知权限" :
@@ -1698,10 +2279,15 @@
         reliability === "inexact" ? "降级" :
         reliability === "error" ? "异常" : "应用内";
       pill.className = "pill " + (reliability === "exact" ? "time" : "warn");
+      // F4：撤销失败意味着「旧闹钟可能仍在」，这句话必须让用户看得见
+      const cancelFailed = alarmErrors.some(e => /^cancel:/.test(String(e)));
       sub.textContent = reliability === "exact" ? "原生精确提醒已就绪 · 数据本地保存" :
         reliability === "inexact" ? "原生提醒已开 · 时间可能延迟" :
-        reliability === "error" ? "原生提醒同步失败 · 请重新打开设置" :
-        "通知未授权 · 仅应用内提醒";
+        reliability === "error"
+          ? (cancelFailed
+              ? "原生提醒同步失败 · 部分旧闹钟可能仍在，请重开应用重试"
+              : "原生提醒同步失败 · 请重新打开设置")
+          : "通知未授权 · 仅应用内提醒";
       return;
     }
     const online = navigator.onLine;
@@ -2047,6 +2633,8 @@
 
   let toastTimer = null;
   function toast(msg, actionLabel, onAction) {
+    // M1：重放用户操作时不重复弹提示 —— 那一次提示在用户操作时已经弹过了
+    if (suppressUserFeedback) return;
     const t = $("#toast"), a = $("#toastAction");
     $("#toastText").textContent = msg;
     if (actionLabel) {
@@ -2067,6 +2655,9 @@
   function resetItemSheet() {
     state.ui.editItemId = null;
     state.ui.pendingLowConf = null;
+    // L01：换一张表单就是新的一次判断，不能继承上一条的手选状态
+    triggerUserPicked = false;
+    lowConfUserPicked = false;
     $("#sheetItemTitle").textContent = "安心记下";
     $("#capText").value = "";
     $("#capNote").value = "";
@@ -2270,12 +2861,16 @@
     if (!text) {
       $("#capHint").textContent = "输入内容后自动解析时间";
       $("#capHint").classList.add("muted");
-      $("#capTrigger").value = "";
+      if (!triggerUserPicked) {
+        $("#capTrigger").value = "";
+      }
       $("#capDeadline").value = "";
       return;
     }
     const p = parseChineseTime(text);
-    $("#capTrigger").value = toLocalInput(p.trigger);
+    // L01：用户手选的时间优先 —— 继续输入正文不得把它覆盖掉
+    const picked = triggerUserPicked ? parseLocalInput($("#capTrigger").value) : null;
+    if (!picked) $("#capTrigger").value = toLocalInput(p.trigger);
     $("#capDeadline").value = toLocalInput(p.deadline);
     if (p.repeat) {
       $("#capRepeat").value = p.repeat.every;
@@ -2286,16 +2881,76 @@
       }
     }
     let msg;
-    if (p.confidence === "high" || p.confidence === "mid") {
+    if (picked) {
+      msg = "已保留你选择的时间：" + fmtTime(picked) + " · 可修改";
+    } else if (p.confidence === "high" || p.confidence === "mid") {
       msg = "已设置：" + fmtTime(p.trigger);
       if (p.deadline) msg += " · 截止 " + fmtDate(p.deadline);
       if (p.repeat) msg += " · " + repeatLabel(p.repeat);
       msg += " · 可修改";
     } else {
-      msg = "未识别精确时间，默认一周后：" + fmtTime(p.trigger) + " · 保存前请确认";
+      // D17/D15：低置信度不再拍一个「一周后」，而是静默收下并在当晚整理时澄清
+      msg = "未识别精确时间 · 先收下，稍后整理时再确认";
     }
     $("#capHint").textContent = msg;
     $("#capHint").classList.remove("muted");
+  }
+
+  /**
+   * M1：编辑保存对事项造成的字段改动。
+   *
+   * 抽成独立函数是为了让「动作提交在途期间发生的编辑」也能进日志、被重放 ——
+   * `saveItemFromForm` 本身要读表单，而重放时表单早已关闭，不能直接重放它。
+   * 这里接收的是**取值完成的字段快照**，所以重放结果与当时完全一致。
+   */
+  function applyItemEdit(it, values) {
+    if (!it) return false;
+    const prevTrigger = it.triggerAt;
+    it.title = values.title;
+    it.note = values.note;
+    it.tags = values.tags;
+    it.url = values.url;
+    it.projectId = values.projectId;
+    it.priority = values.priority;
+    // D25 编辑重算快照
+    it.delivery_mode = resolveDeliveryMode(values.priority);
+    it.triggerAt = values.triggerAt;
+    it.scheduleBasis = "wall-clock";
+    it.localTrigger = toLocalInput(values.triggerAt);
+    it.snoozedAt = null;
+    it.snoozeDelayMs = null;
+    it.dismissedUntil = null;
+    it.deadlineAt = values.deadlineAt;
+    it.repeat = values.repeat;
+    if (values.triggerAt && values.triggerAt !== prevTrigger) {
+      // L08：改期等于开启新一轮 —— 轮次与预算一并重置（与 snoozeItem 同一语义）
+      it.remindCount = 0;
+      it.lastRemindAt = null;
+      it.lastAlertShownAt = null;
+      it.deliveredAt = null;
+    }
+    if (values.triggerAt && values.triggerAt > Date.now() && (it.status === "due" || it.status === "acknowledged")) {
+      it.status = "waiting";
+    }
+    // V05：编辑保存必须推进版本，否则旧通知的事件版本与当前一致，仍会覆盖新安排
+    bumpRev(it);
+    return true;
+  }
+
+  /**
+   * P1-A：**新建**一条事项的实际写入。
+   *
+   * 抽成参数自足的纯写入（稳定 id + 已解析字段快照），它才能进入命令日志并可靠重放。
+   * id 由调用方给定 —— 重放沿用同一个 id，后续针对它的编辑/删除/稍后都能命中。
+   * 幂等：同 id 已存在时直接返回，不会插入第二条。
+   */
+  function applyNewItem(id, fields) {
+    const replayId = takeReplayCreatedId();
+    if (replayId) id = replayId;
+    if (!id) return false;
+    if (state.items.some(x => x.id === id)) return false;
+    state.items.push(normalizeItem(Object.assign({}, fields, { id: id })));
+    return true;
   }
 
   function saveItemFromForm() {
@@ -2328,7 +2983,16 @@
       const parsedTags = parsed ? (parsed.tags || []) : [];
       const tags = Array.from(new Set(parsedTags.concat(extraTags)));
       const priority = ($$("#capPriority .chip.on")[0] || { dataset: { p: "normal" } }).dataset.p || "normal";
-      const triggerAt = parseLocalInput($("#capTrigger").value) || (parsed ? parsed.trigger || parsed.triggerAt : null);
+      // L01：时间来源优先级固定为「用户明确选择 > 有效解析 > 兜底」
+      //  · explicitTime  = 用户手选（时间输入框 / 低置信度极简选择）
+      //  · parsedTrigger = 解析器给出的真实时间（低置信度时不算「真实时间」）
+      //  · formTrigger   = 表单当前值，可能是解析器写进去的，因此排在解析结果之后
+      const formTrigger = parseLocalInput($("#capTrigger").value);
+      const parsedTrigger = parsed ? (parsed.trigger || parsed.triggerAt) : null;
+      const userPicked = triggerUserPicked || lowConfUserPicked;
+      const explicitTime = userPicked ? formTrigger : null;
+      const parsedLow = !!(parsed && (parsed.confidence === "low" || parsed.confidence === "none"));
+      const triggerAt = explicitTime || (parsedLow ? null : (parsedTrigger || formTrigger)) || null;
       const deadlineAt = parseLocalInput($("#capDeadline").value) || (parsed ? parsed.deadline || parsed.deadlineAt : null);
       const repeat = formRepeat() || (parsed && parsed.repeat
         ? (parsed.repeat.every === "nthWeekday"
@@ -2337,32 +3001,26 @@
         : null);
 
       if (editing) {
-        editing.title = title;
-        editing.note = $("#capNote").value.trim();
-        editing.tags = tags;
-        editing.url = $("#capUrl").value.trim();
-        editing.projectId = $("#capProject").value || "";
-        editing.priority = priority;
-        // D25 编辑重算快照
-        editing.delivery_mode = resolveDeliveryMode(priority);
-        editing.triggerAt = triggerAt;
-        editing.scheduleBasis = "wall-clock";
-        editing.localTrigger = toLocalInput(triggerAt);
-        editing.snoozedAt = null;
-        editing.snoozeDelayMs = null;
-        editing.dismissedUntil = null;
-        editing.deadlineAt = deadlineAt;
-        editing.repeat = repeat;
-        if (triggerAt && triggerAt > Date.now() && (editing.status === "due" || editing.status === "acknowledged")) {
-          editing.status = "waiting";
-        }
+        // 编辑保存记录在案：原生草稿提交成功后按原值重放。
+        const applied = runUserOp(applyItemEdit, [editing, {
+          title: title,
+          note: $("#capNote").value.trim(),
+          tags: tags,
+          url: $("#capUrl").value.trim(),
+          projectId: $("#capProject").value || "",
+          priority: priority,
+          triggerAt: triggerAt,
+          deadlineAt: deadlineAt,
+          repeat: repeat
+        }], { userFacing: true, itemArg: 0, name: "editItem" });
+        if (applied === false) return false;
         save();
         closeSheet("sheetItem");
         closeSheet("sheetDetail");
         render();
         toast("已保存修改");
         queueNativeReminderSync();
-        return;
+        return true;
       }
 
       const item = makeItem({
@@ -2392,15 +3050,17 @@
       });
       if (needs) {
         item.review_status = "NEEDS_REVIEW";
-        // D17：未用户确认的兜底时间 → 下一个 Review Window
-        if (!item.triggerAt || (!lowConfUserPicked && parsed && (parsed.confidence === "low" || parsed.confidence === "none"))) {
+        // D17 / L01：**只有**「用户明确时间、解析真实时间都没有」时才落到兜底值。
+        // 用户手选的时间被解析器或兜底覆盖，是这一轮最典型的「动作已明确、系统却按另一种含义执行」。
+        if (!item.triggerAt) {
           item.triggerAt = fallbackTriggerAt();
           item.scheduleBasis = "wall-clock";
           item.localTrigger = toLocalInput(item.triggerAt);
           item.isFallbackTrigger = true;
         }
       }
-      state.items.push(item);
+      // 新建也走命令日志（稳定 id + 已解析字段快照），草稿发布后沿用同一业务身份。
+      runUserOp(applyNewItem, [item.id, item]);
       save();
       closeSheet("sheetItem");
       resetItemSheet();
@@ -2416,6 +3076,7 @@
           render();
         });
       }
+      return true;
     };
 
     // Capture always succeeds — low confidence becomes NEEDS_REVIEW, not a blocker
@@ -2431,8 +3092,7 @@
       }
       if (low) {
         // 不把解析器拍的 +7 天写回表单——兜底由 D17 统一处理
-        finishSave(localP);
-        return;
+        return finishSave(localP);
       }
     }
 
@@ -2464,7 +3124,7 @@
       return;
     }
 
-    finishSave(null);
+    return finishSave(null);
   }
 
   /* ---------- detail ---------- */
@@ -2490,6 +3150,10 @@
       '<dl class="detail-rows">' +
       '<div class="detail-row"><dt>提醒时间</dt><dd>' + (it.triggerAt ? fmtTime(it.triggerAt) : "未设定") + "</dd></div>" +
       (it.deadlineAt ? '<div class="detail-row"><dt>截止</dt><dd>' + fmtTime(it.deadlineAt) + "</dd></div>" : "") +
+      // D23：暂停状态必须明确展示，否则「不自动提醒」会变成看不见的风险
+      (it.deadlineAt && it.deadlinePaused
+        ? '<div class="detail-row"><dt>截止保护</dt><dd>已暂停 · 归档重开默认不自动提醒，可随时恢复</dd></div>'
+        : "") +
       (it.repeat && it.repeat.every
         ? '<div class="detail-row"><dt>周期</dt><dd>' +
           escapeHtml(repeatLabel(it.repeat)) +
@@ -2517,7 +3181,16 @@
       foot = '<button class="btn secondary" data-act="restore" data-id="' + it.id + '">恢复</button>' +
         '<button class="btn danger" data-act="delete" data-id="' + it.id + '">删除</button>';
     }
-    $("#detailFoot").innerHTML = foot;
+    // L03 / D23：规则级的二级操作与「恢复截止保护」——
+    // 不能用「删除当前记录」冒充整条重复规则的终止，也不能让暂停状态没有回去的路。
+    const extras = [];
+    if (it.repeat && it.repeat.every) {
+      extras.push('<button class="btn secondary" data-act="stopRepeat" data-id="' + it.id + '">停止重复</button>');
+    }
+    if (it.deadlineAt && it.deadlinePaused && !isTerminal(it)) {
+      extras.push('<button class="btn secondary" data-act="resumeDeadline" data-id="' + it.id + '">恢复截止保护</button>');
+    }
+    $("#detailFoot").innerHTML = extras.join("") + foot;
     openSheet("sheetDetail");
   }
 
@@ -2635,12 +3308,24 @@
   }
 
   function deleteProject(id) {
+    const affected = state.items.filter(it => it.projectId === id);
+    if (affected.some(itemConflictsWithActiveAction)) return rejectPendingItemCommand();
     state.projects = state.projects.filter(p => p.id !== id);
-    state.items.forEach(it => { if (it.projectId === id) it.projectId = ""; });
+    runUserOp(applyProjectRemovalToItems, [id]);
     state.notes.forEach(n => { if (n.projectId === id) n.projectId = ""; });
     save();
     renderProjectsSheet();
     toast("已删除项目");
+    return true;
+  }
+
+  function applyProjectRemovalToItems(id) {
+    state.items.forEach(it => {
+      if (it.projectId !== id) return;
+      it.projectId = "";
+      bumpRev(it);
+    });
+    return true;
   }
 
   /* ---------- notifications ---------- */
@@ -2668,6 +3353,110 @@
     return true;
   }
 
+  /**
+   * F1 / G3：把对账回传的截止事件按**阶段**写回事项的事件表。
+   *
+   * 关键约束：只有状态真的变化时才 save。此前两个阶段共用一个槽位，
+   * 每轮都在 p24 / p2 之间来回覆盖 → changed 永远为真 → 持续写库并触发下一轮对账。
+   *
+   * 三种状态，语义必须分开（G3）：
+   *  · `scheduled` 已请求系统投递、还没有证据 → 保持待定，**不因为时刻过了就算送达**；
+   *  · `delivered` 有**真实送达证据**（`markDeadlineDelivered`，来自系统回调）；
+   *  · `cancelled` 排程被成功撤销（`cancelledEvents`，来自原生本轮真正取消的排程）
+   *    → 重新开启通知后允许补提醒。
+   *
+   * 之前「当前计划不含某阶段」时仅凭 `at <= now` 就改写为 `delivered`：
+   * 排程后关掉通知、或撤销成功，越过原计划时刻再开启，这条**已被取消**的记录会被
+   * 当成已送达，`buildDesired` 随后直接排除该阶段 —— 用户永远收不到这次保护提醒。
+   *
+   * @param {Array} events 本轮计划中的截止事件（已排程）
+   * @param {number} now
+   * @param {Array} cancelledEvents 本轮被原生确认撤销的截止排程（可选）
+   */
+  function applyDeadlineEvents(events, now, cancelledEvents) {
+    const planned = new Map();
+    (events || []).forEach(ev => {
+      if (!ev || !ev.itemId || !ev.stageKey) return;
+      if (!planned.has(ev.itemId)) planned.set(ev.itemId, new Map());
+      planned.get(ev.itemId).set(ev.stageKey, Number(ev.at));
+    });
+    // G3：本轮原生**确认撤销**的排程，按事项分组
+    const cancelledKeys = new Map();
+    (cancelledEvents || []).forEach(ev => {
+      if (!ev || !ev.itemId || !ev.stageKey) return;
+      if (!cancelledKeys.has(ev.itemId)) cancelledKeys.set(ev.itemId, new Set());
+      cancelledKeys.get(ev.itemId).add(ev.stageKey);
+    });
+    let changed = false;
+    const targetItemIds = new Set(planned.keys());
+    cancelledKeys.forEach((_v, itemId) => targetItemIds.add(itemId));
+    state.items.forEach(it => {
+      if (it && it.deadlineEvents && typeof it.deadlineEvents === "object") {
+        targetItemIds.add(it.id);
+      }
+    });
+    targetItemIds.forEach(itemId => {
+      const it = state.items.find(x => x.id === itemId);
+      if (!it) return;
+      const stages = planned.get(itemId) || new Map();
+      const cancelled = cancelledKeys.get(itemId) || null;
+      const dl = Number(it.deadlineAt) || 0;
+      const prev = it.deadlineEvents && typeof it.deadlineEvents === "object" ? it.deadlineEvents : {};
+      const next = {};
+      const keep = (key, value) => { next[key] = value; };
+      // 1) 本轮计划中的阶段：以原生回传的**实际排程时刻**为准
+      stages.forEach((at, stageKey) => {
+        if (!dl || String(stageKey).indexOf("@" + dl) < 0) return; // 只保留属于当前截止时间的阶段
+        const old = prev[stageKey];
+        // 已送达是终态：真实送达证据不能被后续对账抹掉
+        if (old && typeof old === "object" && old.state === "delivered") { keep(stageKey, old); return; }
+        keep(stageKey, { at: at, state: "scheduled" });
+      });
+      // 2) 保留当前截止时间下已有的历史记录
+      Object.keys(prev).forEach(stageKey => {
+        if (next[stageKey]) return;
+        if (!dl || String(stageKey).indexOf("@" + dl) < 0) return;
+        const old = prev[stageKey];
+        if (!old || typeof old !== "object") return;
+        if (old.state === "delivered" || old.state === "cancelled") { keep(stageKey, old); return; }
+        const at = Number(old.at) || 0;
+        // 只有「原生确认撤销」且撤销发生在**投递时刻之前**才算撤销：
+        // 若已越过投递时刻，无法判定是否已经送达，保持待定（不补发、也不谎报送达）
+        if (at > now && cancelled && cancelled.has(stageKey)) {
+          keep(stageKey, { at: at, state: "cancelled" });
+          return;
+        }
+        keep(stageKey, old);
+      });
+      if (JSON.stringify(prev) !== JSON.stringify(next)) {
+        if (Object.keys(next).length > 0) {
+          it.deadlineEvents = next;
+        } else {
+          delete it.deadlineEvents;
+        }
+        changed = true;
+      }
+    });
+    if (changed) save();
+    return changed;
+  }
+
+  /** F1：系统送达回调 —— 真实的送达证据，直接标记 delivered */
+  function markDeadlineDelivered(event) {
+    if (!event || !event.itemId || !event.stageKey) return false;
+    const it = state.items.find(x => x.id === event.itemId);
+    if (!it) return false;
+    if (!it.deadlineEvents || typeof it.deadlineEvents !== "object") it.deadlineEvents = {};
+    const old = it.deadlineEvents[event.stageKey];
+    if (old && old.state === "delivered") return false;
+    it.deadlineEvents[event.stageKey] = {
+      at: old && Number(old.at) ? Number(old.at) : Date.now(),
+      state: "delivered"
+    };
+    save();
+    return true;
+  }
+
   async function syncNativeRemindersNow() {
     if (!nativeReady || !NativeReminders.reconcile) return nativeReminderStatus;
     try {
@@ -2678,6 +3467,11 @@
       };
       const status = await NativeReminders.reconcile(state.items, state.settings, Date.now(), review);
       setNativeReminderStatus(status);
+      // V03 / F1 / G3：把本轮已排的截止事件按阶段记账；
+      // 同时把本轮**被撤销**的排程记成 cancelled（撤销 ≠ 送达）
+      if (status && Array.isArray(status.deadlineEvents)) {
+        applyDeadlineEvents(status.deadlineEvents, Date.now(), status.cancelledDeadlineEvents);
+      }
       // P0-2：记住本轮排下的全屏闹钟 id，供下一轮撤销不再需要的闹钟。
       // 仅在集合真变化时 save()，否则 save → queue → reconcile 会自激成死循环。
       if (status && Array.isArray(status.scheduledAlarmIds) &&
@@ -2702,42 +3496,170 @@
     }, 80);
   }
 
-  function handleNativeNotificationAction(event) {
+  async function handleNativeNotificationAction(event) {
     if (!event) return;
     // D20：待整理通知点击直达整理会话
     if (event.itemId === "review-session" || event.managedKind === "review-session") {
-      if (event.action === "ack" || event.action === "snooze" || event.action === "done") {
-        // 快捷动作：完成=开始整理；稍后=30 分钟后再提
-        if (event.action === "done" || event.action === "ack") {
-          openReviewSession();
-        } else {
-          snoozeReview(30 * 60 * 1000, "30 分钟");
-        }
+      // L06 / V0.2 §9.3：动作语义 = 开始整理 / 稍后 30 分钟 / 今天跳过，
+      // 通知上的标签与这里执行的效果必须一一对应。
+      if (event.action === "review_snooze") {
+        snoozeReview(30 * 60 * 1000, "30 分钟");
         return;
       }
+      if (event.action === "review_skip") {
+        skipReviewThisTime();
+        return;
+      }
+      // review_start / tap / 旧版本动作（ack、done）一律进入会话
       openReviewSession();
       return;
     }
     if (!event.itemId) return;
     const id = event.itemId;
+    const it = state.items.find(x => x.id === id);
+    if (!it) return;
+    // L04 / F5：改状态的动作必须有**可知且匹配**的版本。
+    // 版本未知时只允许打开详情 —— 把「未知」当有效匹配会让旧通知覆盖改期后的当前状态。
+    if (event.action !== "tap") {
+      if (!hasKnownRev(event.itemRev) || Number(it.rev || 0) !== Number(event.itemRev)) {
+        toast(event.itemRev == null || event.itemRev === ""
+          ? "无法确认这条提醒是否为最新 · 请在应用内处理"
+          : "这条提醒已过期 · 未作改动");
+        return;
+      }
+    }
     if (event.action === "ack") {
-      ackItem(id, true);
-      toast("已从通知确认看到");
       hideAlert();
     } else if (event.action === "snooze") {
-      // D11：快捷「稍后」固定 2 小时
-      snoozeItem(id, Date.now() + 2 * 3600000);
       hideAlert();
     } else if (event.action === "done") {
-      completeItem(id);
       hideAlert();
     } else {
       openDetail(id);
+      return;
+    }
+    const notificationId = event.notification && event.notification.id != null
+      ? String(event.notification.id) : "unknown";
+    // 通知栏与全屏闹钟共用同一隔离/持久化/事件幂等边界。
+    return handleAlarmAction({
+      action: event.action,
+      itemId: id,
+      itemRev: event.itemRev,
+      alarmEventId: notificationId === "unknown"
+        ? ""
+        : "notification:" + notificationId + ":" + event.action + ":" + event.itemRev
+    });
+  }
+
+  /** L04：同一事件重复投递的短窗口去重（系统重发 / 冷启动重复消费） */
+  const recentAlarmActions = Object.create(null);
+  const ALARM_ACTION_DEDUP_MS = 5000;
+
+  /**
+   * F2：已处理过的原生事件 id（持久化）。
+   * 崩溃重放时靠它跳过**已经落库**的操作；与 5 秒内存去重互补 ——
+   * 内存去重只防系统重发，事件 id 才防「已提交却被重放」。
+   */
+  const ALARM_EVENT_LOG_LIMIT = 50;
+  /**
+   * 单调递增的记账时刻。
+   *
+   * 事件 id 可能来自原生（数字型字符串），而 JS 对象对「整数型键」会按数值升序排列，
+   * 不再保持插入顺序；同时整套动作可能在**同一毫秒**内完成。
+   * 若直接按 `Date.now()` 排序裁剪，刚写入的那条可能被排进「最旧」的一批而被立刻删掉 ——
+   * 于是崩溃重放保护失效，同一个事件会被处理两次（重复 ACK / 重复派生下一期）。
+   */
+  let alarmEventClock = 0;
+  function alarmEventSeen(id) {
+    if (!id) return false;
+    const log = state.settings.alarmEventLog;
+    return !!(log && typeof log === "object" && log[id]);
+  }
+  function rememberAlarmEvent(id) {
+    if (!id) return;
+    if (!state.settings.alarmEventLog || typeof state.settings.alarmEventLog !== "object") {
+      state.settings.alarmEventLog = {};
+    }
+    const log = state.settings.alarmEventLog;
+    const stamp = Math.max(Date.now(), alarmEventClock + 1);
+    alarmEventClock = stamp;
+    log[id] = stamp;
+    const keys = Object.keys(log);
+    if (keys.length > ALARM_EVENT_LOG_LIMIT) {
+      keys.sort((a, b) => log[a] - log[b]);
+      keys.slice(0, keys.length - ALARM_EVENT_LOG_LIMIT).forEach(k => { delete log[k]; });
     }
   }
 
-  /** 全屏闹钟四动作（D11/D12）：ack / snooze2h / done / close（close 不写 ACK） */
-  function handleAlarmAction(data) {
+  /* ---------- 原生动作的隔离草稿事务 ---------- */
+
+  function clonePayload(payload) {
+    return JSON.parse(JSON.stringify(payload || currentPayload()));
+  }
+
+  /** 在一个不可见草稿上同步执行 reducer；JS 单线程保证引用切换不会被其它事件打断。 */
+  function withDraftState(draft, job) {
+    const live = {
+      items: state.items,
+      notes: state.notes,
+      projects: state.projects,
+      settings: state.settings
+    };
+    state.items = draft.items;
+    state.notes = draft.notes;
+    state.projects = draft.projects;
+    state.settings = draft.settings;
+    try {
+      return job();
+    } finally {
+      // reducer 可能用 filter/导入等方式替换数组引用，必须把新引用收回草稿。
+      draft.items = state.items;
+      draft.notes = state.notes;
+      draft.projects = state.projects;
+      draft.settings = state.settings;
+      state.items = live.items;
+      state.notes = live.notes;
+      state.projects = live.projects;
+      state.settings = live.settings;
+    }
+  }
+
+  /**
+   * 事务成功后才发布草稿。动作只拥有 items 与 alarmEventLog；其它 settings/notes/projects
+   * 继续使用可见状态，避免覆盖提交等待期间的无关设置写入。
+   */
+  function publishActionDraft(draft) {
+    const liveById = new Map(state.items.map(item => [item.id, item]));
+    state.items = draft.items.map(committed => {
+      const live = liveById.get(committed.id);
+      if (!live) return committed;
+      Object.keys(live).forEach(key => {
+        if (!(key in committed)) delete live[key];
+      });
+      Object.keys(committed).forEach(key => { live[key] = committed[key]; });
+      return live;
+    });
+    state.settings.alarmEventLog = JSON.parse(JSON.stringify(draft.settings.alarmEventLog || {}));
+  }
+
+  /**
+   * G1：**提交中**的闹钟事件（事件 id → 提交 Promise）。
+   *
+   * 之前同一个事件被并发消费时，第二个调用看到内存里的「已见过」标记就立刻返回成功，
+   * 调用方（原生队列 drain）据此确认删除原生事件 —— 而此时第一次提交还在路上。
+   * 提交一旦失败，这条动作就永久丢了。现在改为复用同一个提交 Promise：
+   * 只有**真的落库完成**才算处理过，失败则两个调用一起失败、原生事件保留待重试。
+   */
+  const inflightAlarmActions = new Map();
+
+  /**
+   * 全屏闹钟四动作（D11/D12）：ack / snooze / done / close（close 不写 ACK）。
+   * L04：终态保护（已完成事项不接受旧动作）+ 版本校验 + 事件去重，
+   *      同一条完成事件最多推进一次周期。
+   * G1：同一事件并发消费必须落到**同一次提交**上。
+   * 返回持久化 Promise：调用方（原生队列的 drain）**必须**等它完成再确认删除事件。
+   */
+  async function handleAlarmAction(data) {
     const action = data && (data.action || data.actionId);
     const itemId = data && (data.itemId || data.item_id);
     if (!action) return;
@@ -2746,15 +3668,123 @@
       return;
     }
     if (!itemId) return;
-    if (action === "ack") {
-      ackItem(itemId, true);
-      toast("已确认看到 · 仍保持未完成");
-    } else if (action === "snooze") {
-      snoozeItem(itemId, Date.now() + 2 * 3600000);
-    } else if (action === "done") {
-      completeItem(itemId);
+    const eventId = data && data.alarmEventId ? String(data.alarmEventId) : "";
+    if (eventId) {
+      // 顺序有意为之：**先看提交中，再看已落库**。
+      // 台账条目是与状态变更同一次写入的，所以在提交落地之前它已经在内存里了；
+      // 若先查台账，并发到达的第二个调用会被这个内存标记骗成「已处理过」而立刻返回成功。
+      const inflight = inflightAlarmActions.get(eventId);
+      if (inflight) return inflight;      // 提交中：复用同一次提交
+      if (alarmEventSeen(eventId)) return; // 已落库：幂等重放，直接跳过
     }
+    const running = performAlarmAction(data, action, itemId, eventId);
+    if (eventId) {
+      inflightAlarmActions.set(eventId, running);
+      const release = () => {
+        if (inflightAlarmActions.get(eventId) === running) inflightAlarmActions.delete(eventId);
+      };
+      running.then(release, release); // 失败也要释放，否则该事件永远无法重试
+    }
+    return running;
+  }
+
+  /** 整笔原生动作是一个闸门任务；权威提交成功前，草稿不发布到可见 state。 */
+  async function performAlarmAction(data, action, itemId, eventId) {
+    // 注意：这里**没有**任何先于队列的状态变更 —— 全部在闸门任务内完成
+    return runCommit(() => applyAlarmAction(data, action, itemId, eventId));
+  }
+
+  async function applyAlarmAction(data, action, itemId, eventId) {
+    const it = state.items.find(x => x.id === itemId);
+    if (!it) return;
+    const terminal = isTerminal(it);
+    if (!terminal && (!hasKnownRev(data.itemRev) || Number(it.rev || 0) !== Number(data.itemRev))) {
+      toast(data.itemRev == null || data.itemRev === ""
+        ? "无法确认这条提醒是否为最新 · 请在应用内处理"
+        : "这条提醒已过期 · 未作改动");
+      openDetail(itemId);
+      return;
+    }
+    const now = Date.now();
+    Object.keys(recentAlarmActions).forEach(k => {
+      if (now - recentAlarmActions[k] > ALARM_ACTION_DEDUP_MS) delete recentAlarmActions[k];
+    });
+    const key = itemId + "|" + action;
+    if (recentAlarmActions[key] && now - recentAlarmActions[key] < ALARM_ACTION_DEDUP_MS) {
+      return;
+    }
+
+    const previousScope = activeActionScope;
+    activeActionScope = { itemId: it.id, seriesId: it.seriesId || null };
+    try {
+    // 草稿从「轮到本动作时的已确认可见状态」复制；动作 reducer 不碰共享 state。
+    const draft = clonePayload(currentPayload());
+    const prevSave = suppressInnerSave;
+    const prevFeedback = suppressUserFeedback;
+    const prevApplyingDraft = applyingActionDraft;
+    suppressInnerSave = true;
+    suppressUserFeedback = true;
+    applyingActionDraft = true;
+    try {
+      withDraftState(draft, () => {
+        if (eventId) rememberAlarmEvent(eventId);
+        if (terminal) return;
+        if (action === "ack") ackItem(itemId, true);
+        else if (action === "snooze") snoozeItem(itemId, Date.now() + 2 * 3600000);
+        else if (action === "done") completeItem(itemId);
+      });
+    } finally {
+      applyingActionDraft = prevApplyingDraft;
+      suppressUserFeedback = prevFeedback;
+      suppressInnerSave = prevSave;
+      // reducer 内部可能调用 render；在让出事件循环前恢复最后确认状态的 DOM。
+      render();
+    }
+
+    let userOps = [];
+    pendingUserOps = [];
+    inflightActionDepth++;
+    try {
+      // IndexedDB 是唯一权威；提交前不发布草稿，也不按未提交草稿对账原生排程。
+      await writeSnapshot(draft, { deferNativeSync: true });
+    } catch (error) {
+      delete recentAlarmActions[key];
+      throw error;
+    } finally {
+      inflightActionDepth--;
+      userOps = pendingUserOps;
+      pendingUserOps = [];
+    }
+
+    // 提交等待期间的命令原先作用在最后确认状态上；现在按原顺序重放到已提交草稿。
+    // 重放失败不是可忽略分支：用可见状态做补偿写并向外报错，原生事件不提前确认。
+    try {
+      withDraftState(draft, () => replayUserOps(userOps));
+    } catch (replayError) {
+      try {
+        await writeSnapshot(currentPayload(), { deferNativeSync: true });
+      } catch (compensationError) {
+        replayError.compensationError = compensationError;
+      }
+      delete recentAlarmActions[key];
+      throw replayError;
+    }
+
+    publishActionDraft(draft);
+    recentAlarmActions[key] = now;
     queueNativeReminderSync();
+    render();
+    if (terminal) toast("该事项已完成 · 本次提醒已忽略");
+    else if (action === "ack") toast("已确认看到 · 仍保持未完成");
+    else if (action === "snooze") {
+      const committed = state.items.find(x => x.id === itemId);
+      toast(committed ? "已改到 " + fmtTime(committed.triggerAt) : "提醒操作已保存 · 后续删除也已保留");
+    }
+    else if (action === "done") toast(it.repeat ? "已完成 · 下一周期已生成" : "已完成并归档");
+    return true;
+    } finally {
+      activeActionScope = previousScope;
+    }
   }
 
   function systemBridge() {
@@ -2833,11 +3863,8 @@
     $("#labBattery").textContent = batteryOk ? "已忽略电池优化" : "未加入白名单 · 后台可能被限制";
     setPill($("#labBatteryPill"), batteryOk ? "正常" : "建议开启", batteryOk, !batteryOk);
 
-    if (notifyOk && state.settings.notify === false) {
-      state.settings.notify = true;
-      save();
-      renderMe();
-    }
+    // R1：系统权限已授予 ≠ 用户想开通知。
+    // 只有用户主动「申请权限 / 打开开关」（labRequestNotify / swNotify）才写 settings.notify。
     labLog("诊断完成 · SDK " + diag.sdkInt +
       " · 通知 " + (notifyOk ? "OK" : "NO") +
       " · 精确闹钟 " + (exactOk ? "OK" : "降级"));
@@ -3080,25 +4107,24 @@
     try {
       const status = await NativeReminders.initialize({
         onAction: handleNativeNotificationAction,
+        // F1：系统确实送达时的回调，用于记录真实送达而不是靠时刻推断
+        onDelivered: markDeadlineDelivered,
         onStatusChange: setNativeReminderStatus,
         onResume: async () => {
           try {
             if (NativeReminders.getPermissionState) {
               const status = await NativeReminders.getPermissionState();
               setNativeReminderStatus(status);
-              if (status.notifications === "granted" && !state.settings.notify) {
-                state.settings.notify = true;
-                save();
-              }
+              // R1：系统权限状态与「用户主动开关」是两件事。
+              // 恢复前台只刷新能力信息，绝不替用户把他亲手关掉的通知开关再打开 ——
+              // 否则「关闭通知」这个动作会在下一次切回应用时被静默撤销。
               renderMe();
             }
           } catch (error) {}
-          // 消费全屏闹钟动作
+          // 消费全屏闹钟动作（V09：排空队列，处理成功并落库后才确认删除）
           try {
-            const bridge = systemBridge();
-            if (bridge && bridge.consumeAlarmAction) {
-              const r = await bridge.consumeAlarmAction();
-              if (r && r.action) handleAlarmAction(r);
+            if (NativeReminders.drainAlarmActions) {
+              await NativeReminders.drainAlarmActions(handleAlarmAction);
             }
           } catch (error) {}
           refreshNativeScheduleBasis();
@@ -3227,12 +4253,26 @@
   function dismissAlert() {
     if (alertItem) {
       const now = Date.now();
+      const applied = runUserOp(
+        applyAlertDismissal,
+        [alertItem.id, now + 30 * 60 * 1000],
+        { userFacing: true, itemArg: 0, name: "dismissAlert" }
+      );
+      if (applied === false) return false;
       dismissedAlerts[alertItem.id] = now;
-      alertItem.dismissedUntil = now + 30 * 60 * 1000;
       save();
     }
     hideAlert();
     toast("已关闭提醒 · 事项仍在首页");
+    return true;
+  }
+
+  function applyAlertDismissal(itemId, until) {
+    const item = state.items.find(x => x.id === itemId);
+    if (!item) return false;
+    item.dismissedUntil = until;
+    bumpRev(item);
+    return true;
   }
 
   function tick() {
@@ -3314,6 +4354,10 @@
         if (!data || !Array.isArray(data.items)) throw new Error("bad format");
         const okImp = await confirmDialog("导入将覆盖当前数据，继续？", "导入数据");
         if (!okImp) return;
+        if (inflightActionDepth > 0) {
+          toast("提醒操作正在保存 · 请稍后重新导入");
+          return;
+        }
         state.items = data.items.map(normalizeItem);
         state.notes = Array.isArray(data.notes) ? data.notes : [];
         state.projects = Array.isArray(data.projects) ? data.projects : [];
@@ -3330,6 +4374,10 @@
 
   /* ---------- seed ---------- */
   function seed() {
+    if (inflightActionDepth > 0) {
+      toast("提醒操作正在保存 · 请稍后再载入示例数据");
+      return false;
+    }
     const now = new Date();
     state.projects = [
       { id: "p_work", name: "工作", color: "#1b6b4a" },
@@ -3489,7 +4537,11 @@
     $("#capRepeatMode").addEventListener("change", updateRepeatPreview);
     $("#capNth").addEventListener("change", updateRepeatPreview);
     $("#capWeekday").addEventListener("change", updateRepeatPreview);
-    $("#capTrigger").addEventListener("change", updateRepeatPreview);
+    $("#capTrigger").addEventListener("change", () => {
+      // L01：只有用户真的动过这个字段，才算「明确选择的时间」
+      triggerUserPicked = true;
+      updateRepeatPreview();
+    });
 
     document.addEventListener("click", e => {
       const sim = e.target.closest("[data-open-similar]");
@@ -3526,9 +4578,14 @@
       if (actBtn) {
         const id = actBtn.dataset.id;
         const act = actBtn.dataset.act;
-        if (act === "ack") { ackItem(id); closeSheet("sheetDetail"); hideAlert(); }
-        else if (act === "done") { completeItem(id); closeSheet("sheetDetail"); hideAlert(); }
+        if (act === "ack") {
+          if (ackItem(id) !== false) { closeSheet("sheetDetail"); hideAlert(); }
+        }
+        else if (act === "done") {
+          if (completeItem(id) !== false) { closeSheet("sheetDetail"); hideAlert(); }
+        }
         else if (act === "snooze") {
+          if (isItemActionPending(id)) { rejectPendingItemCommand(); return; }
           state.ui.snoozeId = id;
           snoozePick = null;
           snoozeBasis = "elapsed";
@@ -3537,16 +4594,21 @@
           closeSheet("sheetDetail");
           openSheet("sheetSnooze");
         }
-        else if (act === "reopen") { reopenItem(id); closeSheet("sheetDetail"); }
+        else if (act === "reopen") { if (reopenItem(id) !== false) closeSheet("sheetDetail"); }
         else if (act === "delete") {
           const okDel = await confirmDialog("确定删除这条事项？", "删除");
           if (okDel) {
-            deleteItem(id);
-            closeSheet("sheetDetail");
-            hideAlert();
+            if (deleteItem(id) !== false) {
+              closeSheet("sheetDetail");
+              hideAlert();
+            }
           }
         }
-        else if (act === "restore") { restoreItem(id); closeSheet("sheetDetail"); }
+        else if (act === "restore") { if (restoreItem(id) !== false) closeSheet("sheetDetail"); }
+        // L03：停止重复（保留当前这条，只结束规则）
+        else if (act === "stopRepeat") { if (stopRepeat(id) !== false) closeSheet("sheetDetail"); }
+        // D23：显式恢复被暂停的截止保护
+        else if (act === "resumeDeadline") { if (resumeDeadlineProtection(id) !== false) closeSheet("sheetDetail"); }
         else if (act === "open") openDetail(id);
         else if (act === "edit") openEditItem(id);
         return;
@@ -3676,7 +4738,7 @@
         snoozeBasis = "wall-clock";
       }
       if (!when) { toast("请选择时间"); return; }
-      snoozeItem(id, when, snoozeBasis);
+      if (snoozeItem(id, when, snoozeBasis) === false) return;
       closeSheet("sheetSnooze");
       hideAlert();
       snoozePick = null;
@@ -3866,6 +4928,10 @@
     $("#btnClear").addEventListener("click", async () => {
       const ok = await confirmDialog("确定清空本机全部事项、笔记与项目？", "清空数据");
       if (!ok) return;
+      if (inflightActionDepth > 0) {
+        toast("提醒操作正在保存 · 请稍后再清空数据");
+        return;
+      }
       state.items = []; state.notes = []; state.projects = [];
       save(); render(); toast("已清空");
     });
@@ -3876,15 +4942,18 @@
       dismissAlert();
     });
     $("#alertAck").addEventListener("click", () => {
-      if (alertItem) { ackItem(alertItem.id, true); toast("已确认看到"); }
+      if (!alertItem) return;
+      if (ackItem(alertItem.id, true) === false) return;
+      toast("已确认看到");
       hideAlert();
     });
     $("#alertDone").addEventListener("click", () => {
-      if (alertItem) completeItem(alertItem.id);
+      if (!alertItem || completeItem(alertItem.id) === false) return;
       hideAlert();
     });
     $("#alertSnooze").addEventListener("click", () => {
       if (!alertItem) return;
+      if (isItemActionPending(alertItem.id)) { rejectPendingItemCommand(); return; }
       state.ui.snoozeId = alertItem.id;
       snoozePick = null;
       snoozeBasis = "elapsed";
@@ -3945,15 +5014,15 @@
         }
         if (!id) return;
         if (data.action === "ack") {
-          ackItem(id, true);
+          if (ackItem(id, true) === false) return;
           toast("已从通知确认看到");
           hideAlert();
         } else if (data.action === "done") {
-          completeItem(id);
+          if (completeItem(id) === false) return;
           hideAlert();
         } else if (data.action === "snooze") {
           // D11：快捷稍后固定 2 小时
-          snoozeItem(id, Date.now() + 2 * 3600000);
+          if (snoozeItem(id, Date.now() + 2 * 3600000) === false) return;
           hideAlert();
         } else {
           openDetail(id);
@@ -4020,7 +5089,11 @@
     // 全屏闹钟动作回传
     const alarmAction = params.get("alarmAction");
     if (alarmAction) {
-      handleAlarmAction({ action: alarmAction, itemId: params.get("alarmItem") });
+      handleAlarmAction({
+        action: alarmAction,
+        itemId: params.get("alarmItem") || params.get("alarmItemId"),
+        itemRev: params.get("alarmItemRev") || params.get("itemRev")
+      });
       try { history.replaceState(null, "", location.pathname); } catch (e) {}
     }
   }
@@ -4076,10 +5149,62 @@
     updateAppBadge();
   }
 
+  /**
+   * G5：**初始化完成信号**。
+   *
+   * 冷启动的 init() 是异步的：`loadAsync()` 恢复持久化状态时，`applyParsedState`
+   * 会**整体替换** `state.items` / `state.settings`（并重建全部事项对象）。
+   * 任何在它完成之前对 `state` 的写入都会被这次恢复覆盖 —— 写入者手里的引用
+   * 也随之变成「不在库里的孤儿对象」。
+   *
+   * 所以「脚本已加载」≠「应用已就绪」。测试与调试代码必须先 `await ready()` 再准备状态。
+   */
+  let readyPromise = null;
+
+  function startApp() {
+    // 同步启动，保持与之前一致的启动时机；只把结果包成一个总是兑现的 Promise
+    const running = init();
+    readyPromise = running.then(() => true, err => {
+      console.error("App init failed:", err && err.message ? err.message : err);
+      return false;
+    });
+    return readyPromise;
+  }
+
+  /* ---------- 给可重放状态命令装上统一日志 ---------- */
+
+  /**
+   * 单个事项上、用户能直接触发的**业务操作**在这里统一包一层。
+   *
+   * 这些入口只改事项状态，参数是**自足的值**（id / 时间戳 / 字段快照）。
+   * 同事务域的入口在提交未决时拒绝；不相关事项的入口可按原顺序重放。
+   *
+   * 刻意**不包**：
+   *  · `promoteDue` / 渲染 —— 自动推进在提交窗口延后，下一拍会自己重算；展示不写状态；
+   *  · `saveItemFromForm` —— 它要读表单，重放时表单已关；改为在内部单独记录
+   *    `applyItemEdit`（见该函数）。
+   *
+   * `markReviewDone(item, extra)` 一并包上：它是**参数自足的纯字段写入**（不碰别的状态），
+   * 整理确认、截止对账、真实送达回调和原生时间迁移也写同一 items 状态，因此同样纳入。
+   */
+  const itemCommand = { userFacing: true, itemArg: 0 };
+  ackItem = wrapUserOp(ackItem, Object.assign({ name: "ackItem" }, itemCommand));
+  snoozeItem = wrapUserOp(snoozeItem, Object.assign({ name: "snoozeItem" }, itemCommand));
+  completeItem = wrapUserOp(completeItem, Object.assign({ name: "completeItem" }, itemCommand));
+  reopenItem = wrapUserOp(reopenItem, Object.assign({ name: "reopenItem" }, itemCommand));
+  restoreItem = wrapUserOp(restoreItem, Object.assign({ name: "restoreItem" }, itemCommand));
+  resumeDeadlineProtection = wrapUserOp(resumeDeadlineProtection, Object.assign({ name: "resumeDeadlineProtection" }, itemCommand));
+  deleteItem = wrapUserOp(deleteItem, Object.assign({ name: "deleteItem" }, itemCommand));
+  stopRepeat = wrapUserOp(stopRepeat, Object.assign({ name: "stopRepeat" }, itemCommand));
+  markReviewDone = wrapUserOp(markReviewDone, Object.assign({ name: "markReviewDone" }, itemCommand));
+  applyDeadlineEvents = wrapUserOp(applyDeadlineEvents);
+  markDeadlineDelivered = wrapUserOp(markDeadlineDelivered);
+  refreshNativeScheduleBasis = wrapUserOp(refreshNativeScheduleBasis);
+
   if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", function () { init(); });
+    document.addEventListener("DOMContentLoaded", function () { startApp(); });
   } else {
-    init();
+    startApp();
   }
 
   // Dev/test hook — no user-facing effect
@@ -4102,6 +5227,7 @@
       snoozeItem,
       reopenItem,
       restoreItem,
+      deleteItem,
       seed,
       hasSpecificTimeWord,
       fallbackTriggerAt,
@@ -4116,13 +5242,34 @@
       maybeReviewSession,
       needsReviewItems,
       detectNeedsReview,
+      // L05：整理会话出口与时间来源判断
+      reviewConfirm,
+      reviewSaveEdit,
+      reviewKeepCurrent,
+      resolveReviewTrigger,
+      markReviewDone,
+      markReviewTriggerPicked: (v) => { reviewTriggerUserPicked = !!v; },
+      // L03 / D23：规则级二级操作与截止保护恢复
+      stopRepeat,
+      resumeDeadlineProtection,
+      // F1：截止事件按阶段记账
+      applyDeadlineEvents,
+      markDeadlineDelivered,
       showAlert,
       hideAlert,
       dismissAlert,
       handleAlarmAction,
+      alarmEventSeen,
+      // G5：初始化完成信号（loadAsync/applyParsedState 已不再改动 state）
+      ready: () => readyPromise || Promise.resolve(true),
+      handleNativeNotificationAction,
+      saveItemFromForm,
+      markTriggerPicked: (v) => { triggerUserPicked = !!v; },
       clearAlert: () => { alertItem = null; },
       get state() { return state; },
       save,
+      // 真实的持久化 Promise：测试要断言「落库之后」的状态就必须等它
+      saveAsync,
       load,
       normalizeAiResult,
       extractJson,
