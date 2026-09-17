@@ -1,0 +1,232 @@
+{
+  "schema": 1,
+  "runId": "20260917T164225Z-f6-guidance",
+  "candidateSha256": "7813017e5d7f9454bdafb5ead8ccfc5417f44c1242f096647eb16cf7032fa1c9",
+  "files": [
+    {
+      "path": "background-target.png",
+      "bytes": 257646,
+      "sha256": "9decb3b108e2bb42aab61a7878e997b2b1e863bf8d65dbd0a955d5f5ec0b803c"
+    },
+    {
+      "path": "background-target.txt",
+      "bytes": 120871,
+      "sha256": "ef703de1bf5b8fbc2a00974a0e748622a3a06f967c312fd55b87228bc1d046f0"
+    },
+    {
+      "path": "build-f6b.log",
+      "bytes": 11317,
+      "sha256": "ebbd3294c4427361c7b9a25ab922f7384eab48490d4598f9df0593b3c1b1a745"
+    },
+    {
+      "path": "build-f6c.log",
+      "bytes": 11317,
+      "sha256": "7fe2cc2c1a08b02a17583505f3323c21bc35b993f3c09ce25532b40d6f39b58f"
+    },
+    {
+      "path": "build.log",
+      "bytes": 11252,
+      "sha256": "5fb75463c5dfc0b9dbd5710c32b82f65796517055af3f4fce42d28bf1a4e9fd0"
+    },
+    {
+      "path": "candidate-f6b-sha256.txt",
+      "bytes": 65,
+      "sha256": "174da1fe7eb8915d4c3257d1cffa8bca25749dff0196017a2e4a6410fa9b6c0b"
+    },
+    {
+      "path": "candidate-f6c-sha256.txt",
+      "bytes": 65,
+      "sha256": "cc7b7940156936dc3cc0cf8ed5c54e0c7e7a9f64ae3fef8fafa3f22f2eaba230"
+    },
+    {
+      "path": "candidate-sha256.txt",
+      "bytes": 121,
+      "sha256": "4c87c9b2c187bdef3cb82684b301d00e9a190554bd943f2c968139ab6910e886"
+    },
+    {
+      "path": "cdp-f6b-port.txt",
+      "bytes": 5,
+      "sha256": "7ebb8b16b0c1bf18269a2411875e9818dcd2c651b728564b7f5c7fa112f15530"
+    },
+    {
+      "path": "cdp-port.txt",
+      "bytes": 5,
+      "sha256": "fa903feeee4ab3cdcca050ecd0afab9987f833c87e1834e76c841b2384af94ed"
+    },
+    {
+      "path": "changes.patch",
+      "bytes": 18304,
+      "sha256": "72818bd26b83eaef5362f728860eac599afc018912c7bb4f9e432579ed76a99f"
+    },
+    {
+      "path": "guide-f6b.png",
+      "bytes": 321451,
+      "sha256": "50b812b9287fab5f222f9342769973fa34d9148c81d12ab0053b678485fcd7d9"
+    },
+    {
+      "path": "guide-final.png",
+      "bytes": 261993,
+      "sha256": "69bebe72732824c89d6c1de7effe7ee8fc10b26ac628786a1ccbf445b8350c19"
+    },
+    {
+      "path": "guide-initial.png",
+      "bytes": 324383,
+      "sha256": "6f1565c6ca37dc93c2f8eaac9629cac64ce07fb01834efc31fed819e60e517bf"
+    },
+    {
+      "path": "guide-return.png",
+      "bytes": 269664,
+      "sha256": "a122e257ed62b04566d4ff8bd8449748098d750af86cf3842c98c98b38dd9c24"
+    },
+    {
+      "path": "install-f6b-ui.xml",
+      "bytes": 20590,
+      "sha256": "ccb2719dda42695270aeeffc4068bceca96a6610380abef23f798ace834bf3db"
+    },
+    {
+      "path": "install-f6b.log",
+      "bytes": 8,
+      "sha256": "7fc0023a6402c7bd7abd98bb3e580968de4833eed07d88d1cc8d70819d69c7a0"
+    },
+    {
+      "path": "install-f6c-ui.xml",
+      "bytes": 20590,
+      "sha256": "c9a12cd9b6e97ac94b3ae4dbd87953ae6a37a978b3fd3fb857418aabf7e0818d"
+    },
+    {
+      "path": "install-f6c.log",
+      "bytes": 8,
+      "sha256": "7fc0023a6402c7bd7abd98bb3e580968de4833eed07d88d1cc8d70819d69c7a0"
+    },
+    {
+      "path": "install-ui.xml",
+      "bytes": 20590,
+      "sha256": "a5242e2ba9988706530140f17678d378b6ce43b357a1e23ff8e3766f0abf6ede"
+    },
+    {
+      "path": "install.log",
+      "bytes": 8,
+      "sha256": "7fc0023a6402c7bd7abd98bb3e580968de4833eed07d88d1cc8d70819d69c7a0"
+    },
+    {
+      "path": "installed-f6b-sha256.txt",
+      "bytes": 159,
+      "sha256": "1815f81ff839c88a7ffe87f90430fc9cfa2be28ad9673a329d99cfee12c755b7"
+    },
+    {
+      "path": "installed-f6c-sha256.txt",
+      "bytes": 159,
+      "sha256": "9ed0762e2640a02e79edb344691f568a5b7041ef239d86b0fdac684c1f97f5f7"
+    },
+    {
+      "path": "installed-sha256.txt",
+      "bytes": 159,
+      "sha256": "6f5a509919d752f2770ba2b84e0c5ec7fbc3c441627ac7d2e14d6d6bd2cd3dd6"
+    },
+    {
+      "path": "items-before.json",
+      "bytes": 7034,
+      "sha256": "56319a5d33660bfc3465542fb7b7e9a71118d98b47e74d02ab4e131e5f03b599"
+    },
+    {
+      "path": "metadata.json",
+      "bytes": 309,
+      "sha256": "49adc8c880d932897baef26c34ff39b06848ef9b1e75647985654e4b851a6fda"
+    },
+    {
+      "path": "native-tests.log",
+      "bytes": 11781,
+      "sha256": "35ce74daccb666a732a432c083165e987f1c30094be841f293d550f888e37b4a"
+    },
+    {
+      "path": "old-permission-page.txt",
+      "bytes": 115950,
+      "sha256": "b16da2d74abbab8b935f3b73e36001eb23668cc6c5dc91cac37364dd07870fdd"
+    },
+    {
+      "path": "permissions-target.txt",
+      "bytes": 110059,
+      "sha256": "cbd8ef963f94374e2d7b9bae758b893a291a1564ecd06576ba86c53ce478daba"
+    },
+    {
+      "path": "permissions-target.xml",
+      "bytes": 21675,
+      "sha256": "4a668f3c1ee7df8a838867c84179c85e158be9eeb28fcf11888e973362dd4593"
+    },
+    {
+      "path": "regression-tests.log",
+      "bytes": 39405,
+      "sha256": "d505cff1fa36eb86c8f2fb276eaa2fc7ee733232701121b702d594200cc29bce"
+    },
+    {
+      "path": "smoke-tests.log",
+      "bytes": 8119,
+      "sha256": "47830f5e4426454c603ac860d3f9166dbc83bb76c3b2531454266e54162577d7"
+    },
+    {
+      "path": "source-after/android/app/src/main/java/space/alliswell/inbox/SystemBridgePlugin.java",
+      "bytes": 40342,
+      "sha256": "9af5d5845236e4311bb09e1f62587ed0f0aa6ae3b075af2d6257613c47437d08"
+    },
+    {
+      "path": "source-after/app-core.js",
+      "bytes": 247591,
+      "sha256": "c08b37a31a155e74e705b8aebf0eac57ff1a823c82cd216ce861b6ed91cd2886"
+    },
+    {
+      "path": "source-after/index.html",
+      "bytes": 65109,
+      "sha256": "1a6c177e1b2490e27a31c123b6f85fb2ce8a3f80041d8a332bf1d7acf2aa140d"
+    },
+    {
+      "path": "source-after/test-native-reminders.js",
+      "bytes": 68565,
+      "sha256": "c6e43835814b23554051ba2099f5b60dc9bb99e917fff37d7c131669cf5587b7"
+    },
+    {
+      "path": "source-before/android/app/src/main/java/space/alliswell/inbox/SystemBridgePlugin.java",
+      "bytes": 39914,
+      "sha256": "3b4b4288e8d2310711eca2f5cc79a6453665cc97976390b2daa103a3fadff9f4"
+    },
+    {
+      "path": "source-before/app-core.js",
+      "bytes": 244859,
+      "sha256": "2c49d70358a2ddb776876a901a0b74237817b61333d08fb7769527066eee8870"
+    },
+    {
+      "path": "source-before/index.html",
+      "bytes": 63625,
+      "sha256": "a44b2f8196bd9ebe8ec0c8726def7e561dd57e58fab563ea49cafacc31a62b83"
+    },
+    {
+      "path": "source-before/test-native-reminders.js",
+      "bytes": 65703,
+      "sha256": "9152e0e6ee9c4cad0b6eb22b89698c01f7329b26ab2795053c71af79e964de89"
+    },
+    {
+      "path": "ui-complete.json",
+      "bytes": 7058,
+      "sha256": "713fda1c165ed33635c0cdd53fd1a6ef0ac78f146baa8b6b1b5589d52fe606eb"
+    },
+    {
+      "path": "ui-final.json",
+      "bytes": 10939,
+      "sha256": "a387da4d9bc0a57afa981d0e90dfca148d847c65d14e4c4fd2f894e701d239e0"
+    },
+    {
+      "path": "ui-initial.json",
+      "bytes": 7297,
+      "sha256": "5661ba28b6af698e946a4cdd53df4f6c029cde80de4c0a90133ec3216426fc0a"
+    },
+    {
+      "path": "ui-return.json",
+      "bytes": 7232,
+      "sha256": "5c9f217b61f2a5a071b39e2142151e96278555f96f0e36c07ef794f63b686f13"
+    },
+    {
+      "path": "unit-tests.log",
+      "bytes": 4987,
+      "sha256": "00e942bb2d3334fe13584a747d2fdf81bbff2af1aaeba0201f2294a6493e07ca"
+    }
+  ]
+}

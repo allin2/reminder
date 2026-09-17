@@ -1,0 +1,15 @@
+<?xml version='1.0' encoding='utf-8' standalone='yes' ?>
+<map>
+    <string name="deliveryLevel">☆ 重要</string>
+    <boolean name="deliveryVisible" value="true" />
+    <boolean name="deliveryInCall" value="false" />
+    <long name="deliveryShownAt" value="1789657502323" />
+    <string name="deliveryTitle">☆ 重要事项</string>
+    <long name="deliveryAt" value="1789657501963" />
+    <boolean name="deliveryAttempted" value="true" />
+    <string name="deliveryPath">direct</string>
+    <boolean name="deliveryScreenOn" value="true" />
+    <long name="deliveryHiddenAt" value="0" />
+    <boolean name="deliveryLocked" value="false" />
+    <boolean name="deliveryOverlay" value="true" />
+</map>

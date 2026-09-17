@@ -1,0 +1,12 @@
+<?xml version='1.0' encoding='utf-8' standalone='yes' ?>
+<map>
+    <string name="deliveryLevel">提醒</string>
+    <boolean name="deliveryInCall" value="false" />
+    <long name="deliveryShownAt" value="1789630758018" />
+    <string name="deliveryTitle">安心收件箱提醒</string>
+    <long name="deliveryAt" value="1789630757500" />
+    <boolean name="deliveryAttempted" value="true" />
+    <boolean name="deliveryScreenOn" value="false" />
+    <boolean name="deliveryLocked" value="false" />
+    <boolean name="deliveryOverlay" value="false" />
+</map>

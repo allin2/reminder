@@ -1,0 +1,42 @@
+本地通知总开关：开 · 本轮对账：exact
+
+关键手选时间验证
+i_yb75vsphmu5bkqc3 · critical · due · rev 1
+事项时间：9/17/2026, 5:22:00 PM
+提醒方式：alarm · 兜底时间：false
+原生计划：9/17/2026, 5:22:00 PM
+广播：9/17/2026, 5:22:00 PM
+界面前台：9/17/2026, 5:22:02 PM
+撤销/替换：9/17/2026, 5:22:02 PM · cancel API succeeded
+
+报名截止，提前确认材料
+i_crg4xn0qmu56wrdr · important · waiting · rev 1
+事项时间：9/18/2026, 3:10:00 PM
+提醒方式：alarm · 兜底时间：false
+原生计划：9/18/2026, 3:10:00 PM
+广播：未记录
+界面前台：未记录
+
+交房租
+i_cea5u3hemu56wrdr · normal · waiting · rev 1
+事项时间：9/20/2026, 3:10:00 PM
+提醒方式：notification · 兜底时间：false
+原生计划：无匹配记录（不代表从未排程）
+广播：未记录
+界面前台：未记录
+
+给爸妈打电话
+i_3fiu5i8imu56wrdr · important · waiting · rev 1
+事项时间：9/19/2026, 10:00:00 AM
+提醒方式：alarm · 兜底时间：false
+原生计划：9/19/2026, 10:00:00 AM
+广播：未记录
+界面前台：未记录
+
+看看那篇注意力管理文章
+i_wej4hy8bmu56wrdr · normal · waiting · rev 1
+事项时间：9/19/2026, 10:00:00 AM
+提醒方式：notification · 兜底时间：false
+原生计划：无匹配记录（不代表从未排程）
+广播：未记录
+界面前台：未记录

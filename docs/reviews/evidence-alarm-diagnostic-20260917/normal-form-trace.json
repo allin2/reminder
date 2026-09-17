@@ -1,0 +1,74 @@
+[
+  {
+    "token": "1356330884:f257ed5c-f321-49d2-9997-09d2c57c7c61",
+    "stage": "requested",
+    "at": 1789633907378,
+    "detail": "delayMs=72654"
+  },
+  {
+    "token": "1356330884:f257ed5c-f321-49d2-9997-09d2c57c7c61",
+    "stage": "scheduled",
+    "at": 1789633907444,
+    "detail": "triggerAt=1789633980073;mode=alarmClock"
+  },
+  {
+    "token": "1356330884:f257ed5c-f321-49d2-9997-09d2c57c7c61",
+    "stage": "cancelled",
+    "at": 1789633909811,
+    "detail": "replaced by new schedule"
+  },
+  {
+    "token": "1356330884:f7dced03-67b8-41b1-a742-087de84e407e",
+    "stage": "requested",
+    "at": 1789633909906,
+    "detail": "delayMs=70216"
+  },
+  {
+    "token": "1356330884:f7dced03-67b8-41b1-a742-087de84e407e",
+    "stage": "scheduled",
+    "at": 1789633910224,
+    "detail": "triggerAt=1789633980178;mode=alarmClock"
+  },
+  {
+    "token": "1356330884:f7dced03-67b8-41b1-a742-087de84e407e",
+    "stage": "received",
+    "at": 1789633980246,
+    "detail": ""
+  },
+  {
+    "token": "1356330884:f7dced03-67b8-41b1-a742-087de84e407e",
+    "stage": "environment",
+    "at": 1789633980308,
+    "detail": "screenOn=false;locked=false;inCall=false"
+  },
+  {
+    "token": "1356330884:f7dced03-67b8-41b1-a742-087de84e407e",
+    "stage": "launchRequested",
+    "at": 1789633980369,
+    "detail": "not proof of visibility"
+  },
+  {
+    "token": "1356330884:f7dced03-67b8-41b1-a742-087de84e407e",
+    "stage": "notifyReturned",
+    "at": 1789633980421,
+    "detail": "notify returned; not proof of display"
+  },
+  {
+    "token": "1356330884:f7dced03-67b8-41b1-a742-087de84e407e",
+    "stage": "resumed",
+    "at": 1789633980980,
+    "detail": "Activity resumed"
+  },
+  {
+    "token": "1356330884:f7dced03-67b8-41b1-a742-087de84e407e",
+    "stage": "resumed",
+    "at": 1789633981111,
+    "detail": "Activity resumed"
+  },
+  {
+    "token": "1356330884:f7dced03-67b8-41b1-a742-087de84e407e",
+    "stage": "cancelled",
+    "at": 1789633984575,
+    "detail": "cancel API succeeded"
+  }
+]

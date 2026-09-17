@@ -1,0 +1,7 @@
+Starting: Intent { act=android.settings.IGNORE_BATTERY_OPTIMIZATION_SETTINGS flg=0x14000000 }
+Status: ok
+LaunchState: WARM
+Activity: com.iqoo.powersaving/.BackgroundHighUsageActivity
+TotalTime: 307
+WaitTime: 317
+Complete

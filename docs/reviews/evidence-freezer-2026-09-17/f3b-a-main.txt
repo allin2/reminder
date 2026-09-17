@@ -1,0 +1,36 @@
+--------- beginning of main
+09-17 23:18:05.863 I/HWUI    (31887): [trimMemory] TrimMemory will destroy render context, mode: 40.
+09-17 23:18:05.869 I/alliswell.inbox(31887): vart_dgc,  GetCoefficient 17
+09-17 23:18:05.966 I/alliswell.inbox(31887): CollectorTransition concurrent copying GC freed 705KB AllocSpace bytes, 19(772KB) LOS objects, 62% free, 3761KB(1676KB_120KB)/9905KB, 2Bd, itvl 13.651s, cpu 75.589ms, paused 236us,89us total 95.216ms
+09-17 23:18:09.354 E/cmd     ( 8371): BBinder_init Processname  cmd  
+09-17 23:18:09.354 E/cmd     ( 8371): BBinder_init hasGetProcessName  cmd
+--------- beginning of system
+09-17 23:18:09.662 D/BatteryStatsService( 1843): noteVideoSurfaceChanged  noteWhich: 49,arg1: -2, arg2: -1, arg3: 3303, arg4: 72071780314908379, name: com.vivo.systemuiplugin
+09-17 23:18:09.663 D/BatteryStatsService( 1843): noteVideoSurfaceChanged  noteWhich: 49,arg1: -2, arg2: -1, arg3: 3303, arg4: 72071780314907517, name: com.vivo.systemuiplugin
+09-17 23:18:09.804 D/BatteryStatsService( 1843): noteVideoSurfaceChanged  noteWhich: 49,arg1: 1080, arg2: 2400, arg3: 3303, arg4: 72071780314906804, name: com.android.systemui
+09-17 23:18:09.806 D/BatteryStatsService( 1843): noteVideoSurfaceChanged  noteWhich: 49,arg1: 1080, arg2: 2400, arg3: 3303, arg4: 72071780314908379, name: com.vivo.systemuiplugin
+09-17 23:18:09.807 D/BatteryStatsService( 1843): noteVideoSurfaceChanged  noteWhich: 49,arg1: 1080, arg2: 2400, arg3: 3303, arg4: 72071780314907517, name: com.vivo.systemuiplugin
+09-17 23:18:12.469 E/dumpsys ( 9603): BBinder_init Processname  dumpsys  
+09-17 23:18:12.470 E/dumpsys ( 9603): BBinder_init hasGetProcessName  dumpsys
+09-17 23:18:12.470 W/dumpsys ( 9603): Thread Pool max thread count is 0. Cannot cache binder as linkToDeath cannot be implemented. serviceName: power
+09-17 23:18:12.670 E/dumpsys ( 9698): BBinder_init Processname  dumpsys  
+09-17 23:18:12.670 E/dumpsys ( 9698): BBinder_init hasGetProcessName  dumpsys
+09-17 23:18:12.670 W/dumpsys ( 9698): Thread Pool max thread count is 0. Cannot cache binder as linkToDeath cannot be implemented. serviceName: window
+09-17 23:19:06.339 W/BatteryStatsService( 1843): Unknown sensor handle 0 received in noteWakeupSensorEvent
+09-17 23:19:16.388 W/BatteryStatsService( 1843): Unknown sensor handle 0 received in noteWakeupSensorEvent
+09-17 23:19:26.461 W/BatteryStatsService( 1843): Unknown sensor handle 0 received in noteWakeupSensorEvent
+09-17 23:19:36.509 W/BatteryStatsService( 1843): Unknown sensor handle 0 received in noteWakeupSensorEvent
+09-17 23:19:44.192 D/BatteryStatsService( 1843): noteFpsPipe  : POWER_ID_FPS_PIPE initFps=2,fpsPipe=1
+09-17 23:19:51.019 D/BatteryStatsService( 1843): noteVideoSurfaceChanged  noteWhich: 49,arg1: 1080, arg2: 2400, arg3: 3303, arg4: 72071780314908379, name: com.vivo.systemuiplugin
+09-17 23:19:51.021 D/BatteryStatsService( 1843): noteVideoSurfaceChanged  noteWhich: 49,arg1: 1080, arg2: 2400, arg3: 3303, arg4: 72071780314907517, name: com.vivo.systemuiplugin
+09-17 23:19:52.217 D/BatteryStatsService( 1843): noteFpsPipe  : POWER_ID_FPS_PIPE initFps=2,fpsPipe=1
+09-17 23:19:53.405 D/BatteryStatsService( 1843): noteFpsPipe  : POWER_ID_FPS_PIPE initFps=2,fpsPipe=1
+09-17 23:20:14.710 E/dumpsys (24110): BBinder_init Processname  dumpsys  
+09-17 23:20:14.711 E/dumpsys (24110): BBinder_init hasGetProcessName  dumpsys
+09-17 23:20:14.711 W/dumpsys (24110): Thread Pool max thread count is 0. Cannot cache binder as linkToDeath cannot be implemented. serviceName: notification
+09-17 23:20:15.925 E/dumpsys (24484): BBinder_init Processname  dumpsys  
+09-17 23:20:15.925 E/dumpsys (24484): BBinder_init hasGetProcessName  dumpsys
+09-17 23:20:15.926 W/dumpsys (24484): Thread Pool max thread count is 0. Cannot cache binder as linkToDeath cannot be implemented. serviceName: alarm
+09-17 23:20:16.093 E/dumpsys (24533): BBinder_init Processname  dumpsys  
+09-17 23:20:16.093 E/dumpsys (24533): BBinder_init hasGetProcessName  dumpsys
+09-17 23:20:16.093 W/dumpsys (24533): Thread Pool max thread count is 0. Cannot cache binder as linkToDeath cannot be implemented. serviceName: alarm

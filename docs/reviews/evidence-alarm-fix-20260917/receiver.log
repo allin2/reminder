@@ -1,0 +1,7 @@
+--------- beginning of main
+09-17 15:02:25.987 12448 12448 I AttentionAlarm: deliver fullScreen=true screenOn=true locked=false inCall=false canDrawOverlays=true
+09-17 15:03:41.917 12448 12448 I AttentionAlarm: deliver fullScreen=true screenOn=true locked=false inCall=false canDrawOverlays=true
+09-17 15:05:01.131 12448 12448 I AttentionAlarm: deliver fullScreen=true screenOn=true locked=false inCall=false canDrawOverlays=true
+09-17 15:11:57.670 13666 13666 I AttentionAlarm: deliver fullScreen=true screenOn=true locked=false inCall=false canDrawOverlays=false
+09-17 15:13:39.754 14033 14033 I AttentionAlarm: deliver fullScreen=true screenOn=true locked=false inCall=false canDrawOverlays=false
+09-17 15:39:17.502 14747 14747 I AttentionAlarm: deliver fullScreen=true screenOn=false locked=false inCall=false canDrawOverlays=false

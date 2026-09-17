@@ -1,0 +1,57 @@
+[00:20:39] === F3 试验 r1-battery · SCREEN=off LEAD=75s ===
+[00:20:52] 前置: PID=17494 wakefulness=Awake
+[00:20:59] 设置结果: {"triggerAt":1789662128331,"targetLocal":"00:22:08","nowLocal":"00:20:59","scheduled":4}
+[00:21:02] 排程回读: 广播条目=11 前台服务条目=9
+    149:    RTC_WAKEUP #8: Alarm{9da2952 type 0 origWhen 1789662128365 flags 3 windowLength 0 whenElapsed 229546477 maxWhenElapsed 229546477 repeatInterval 0 tag=*walarm*:space.alliswell.inbox.ACTION_TEST_ALARM originWhenElapsed 229546477 originWindowLength 0 setAtTime=2026-09-17 16:20:53 policyWhenElapsed:[229546477, 229472048, 0, 0, 0] procName=space.alliswell.inbox space.alliswell.inbox}
+    150:      tag=*walarm*:space.alliswell.inbox.ACTION_TEST_ALARM
+    159:    RTC_WAKEUP #9: Alarm{5165d20 type 0 origWhen 1789662128365 flags 3 windowLength 0 whenElapsed 229546478 maxWhenElapsed 229546478 repeatInterval 0 tag=*walarm*:space.alliswell.inbox/.AlarmRingService originWhenElapsed 229546478 originWindowLength 0 setAtTime=2026-09-17 16:20:53 policyWhenElapsed:[229546478, 229472051, 0, 0, 0] procName=space.alliswell.inbox space.alliswell.inbox}
+    160:      tag=*walarm*:space.alliswell.inbox/.AlarmRingService
+    1068:    RTC_WAKEUP #152: Alarm{ec4b262 type 0 origWhen 1789735860027 flags 3 windowLength 0 whenElapsed 303278139 maxWhenElapsed 303278139 repeatInterval 0 tag=*walarm*:space.alliswell.inbox/.AlarmRingService originWhenElapsed 303278139 originWindowLength 0 setAtTime=2026-09-17 16:20:53 policyWhenElapsed:[303278139, 229472098, 0, 0, 0] procName=space.alliswell.inbox space.alliswell.inbox}
+    1069:      tag=*walarm*:space.alliswell.inbox/.AlarmRingService
+    1078:    RTC_WAKEUP #153: Alarm{88a6557 type 0 origWhen 1789735860027 flags 3 windowLength 0 whenElapsed 303278140 maxWhenElapsed 303278140 repeatInterval 0 tag=*walarm*:space.alliswell.inbox.ACTION_TEST_ALARM originWhenElapsed 303278140 originWindowLength 0 setAtTime=2026-09-17 16:20:53 policyWhenElapsed:[303278140, 229472097, 0, 0, 0] procName=space.alliswell.inbox space.alliswell.inbox}
+    1079:      tag=*walarm*:space.alliswell.inbox.ACTION_TEST_ALARM
+[00:21:02] shared_prefs: ACTION_TYPE_STOREattention-actions.xml ACTION_TYPE_STOREattention-review-actions.xml AwOriginVisitLoggerPrefs.xml CapWebViewSettings.xml NOTIFICATION_STORE.xml WebViewChromiumPrefs.xml alarm_trace.xml attention_alarm.xml attention_alarm_schedules.xml 
+[00:21:12] 关屏: mWakefulness=Asleep 锁屏=true
+[00:21:12] 等到点…（现在 00:21:12，目标约 75s 后）
+[00:23:14] --- 到点后 00:23:14 ---
+[00:23:14] 证据1 进程被拉起: [17494]
+[00:23:16] 证据2 通知条数: 0
+[00:23:16] 证据3 屏幕: Asleep
+[00:23:17] 证据4 队列残留: 广播=7 服务=7
+[00:23:17] 台账文件: r1-battery-alarm-before.txt(283664) r1-battery-alarm_delivery.xml(0) r1-battery-attention_alarm.xml(754) r1-battery-attention_delivery.xml(0) r1-battery-events.txt(177169) r1-battery-main.txt(16700) r1-battery-prefs-list.txt(251) r1-battery-trace-after.xml(31385) r1-battery-trace-before.xml(31402) 
+
+[00:23:17] --- events 缓冲（冻结/解冻/唤醒/Activity）---
+             1789662128.703  1843  1843 I sysui_multi_action: [757,1501,758,1,793,217,794,0,795,217,796,1365176345,806,space.alliswell.inbox,857,attention-alarm-v3,858,4,947,0,1500,0,1641,alarm,1688,1,1745,2098068913]
+             1789662128.704  1843  1843 I sysui_multi_action: [757,199,758,1,759,3,793,218,794,0,795,218,796,1365176345,806,space.alliswell.inbox,857,attention-alarm-v3,858,4,947,0,1500,1,1641,alarm,1688,1,1745,2098068913]
+             1789662128.733  3303  3303 I sysui_fullscreen_notification: 0|space.alliswell.inbox|1365176345|null|10190
+             1789662128.896  1843  3752 I wm_create_activity: [0,125185341,60,space.alliswell.inbox/.AlarmActivity,NULL,NULL,NULL,880803840]
+             1789662128.902  1843  2149 I am_app_unfrozen: [0,10039,com.baidu.input_vivo,screen on]
+             1789662129.062  1843  2149 I am_app_unfrozen: [0,10085,com.vivo.weather.provider,Provider]
+             1789662129.292  1843  2056 I sysui_multi_action: [319,0,321,206,322,446,325,147466,757,761,758,8,759,3,806,space.alliswell.inbox,871,space.alliswell.inbox.AlarmActivity,904,space.alliswell.inbox,905,0,1320,4,1321,102]
+             1789662134.561  1843  2149 I am_app_frozen: [0,10085,com.vivo.weather.provider,from fast_freezer]
+             1789662141.120  1843  2149 I am_app_frozen: [0,10039,com.baidu.input_vivo,from fast_freezer]
+             1789662143.252  1843  1843 I sysui_multi_action: [757,128,758,5,759,8,793,14766,794,0,795,14766,796,1365176345,806,space.alliswell.inbox,857,attention-alarm-v3,858,4,947,0,1500,14549,1641,alarm,1688,1,1745,2098068913]
+             1789662152.423  1843  2149 I am_app_frozen: [0,10278,com.vivo.game,from fast_freezer]
+             1789662156.187  1843  2149 I am_app_unfrozen: [0,10278,com.vivo.game,package died]
+             1789662156.740  1843  2149 I am_app_unfrozen: [0,10317,com.vivo.cardstore,Provider]
+             1789662156.879  1843  2149 I am_app_unfrozen: [0,10088,com.bbk.theme,deliver Broadcast to system app]
+             1789662156.892  1843  2149 I am_app_unfrozen: [0,10048,com.android.contacts,deliver Broadcast to system app]
+             1789662162.029  1843  2149 I am_app_frozen: [0,10317,com.vivo.cardstore,from fast_freezer]
+             1789662162.342  1843  2149 I am_app_frozen: [0,10088,com.bbk.theme,from fast_freezer]
+             1789662162.359  1843  2149 I am_app_frozen: [0,10048,com.android.contacts,from fast_freezer]
+             1789662173.622  1843  2149 I am_app_unfrozen: [0,10170,com.vivo.wallet,package died]
+             1789662175.791  1843  2149 I am_app_unfrozen: [0,10083,com.android.filemanager,package died]
+             1789662180.266  1843  2149 I am_app_unfrozen: [0,10066,com.vivo.smartanswer,package died]
+             1789662182.622  1843  2149 I am_app_unfrozen: [0,10124,com.vivo.recents,package died]
+             1789662182.639  1843  2149 I am_app_unfrozen: [0,10171,com.vivo.space,package died]
+             1789662186.446  1843  2149 I am_app_unfrozen: [0,10238,com.android.bbksoundrecorder,package died]
+             1789662186.464  1843  2149 I am_app_unfrozen: [0,10084,com.android.BBKClock,package died]
+             1789662186.483  1843  2149 I am_app_unfrozen: [0,10116,com.vivo.ai.copilot,package died]
+             1789662186.493  1843  2149 I am_app_unfrozen: [0,10056,com.vivo.numbermark,package died]
+             1789662188.376  1843  2149 I am_app_unfrozen: [0,10164,com.vivo.xspace,package died]
+             1789662190.337  1843  2149 I am_app_unfrozen: [0,10037,com.vivo.agent,package died]
+             1789662193.796  1843  2149 I am_app_frozen: [0,10258,com.vivo.puresearch,from fast_freezer]
+
+[00:23:17] --- main/system 关键行 ---
+    09-18 00:22:08.454 I/AttentionAlarm(17494): deliver path=fsi+direct fullScreen=true screenOn=false locked=true inCall=false canDrawOverlays=true
+[00:23:17] === 结束，日志: /Users/qlyf/Developer/reminder/docs/reviews/verification-runs/20260917T161905Z-r1-settings/battery-trial/r1-battery-*.txt ===

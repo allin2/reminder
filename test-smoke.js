@@ -160,8 +160,18 @@ async function run() {
  * init() 是异步的：loadAsync → applyParsedState 会**整体替换** state.items / state.settings，
  * 并重建全部事项对象。在这之前直接改 app.state，写入的对象会被这次恢复丢掉，
  * 后续断言就落在「已经不在库里的孤儿对象」上（表现为动作看着成功、状态却没变）。
- * 所以：先等就绪，再准备测试自己的状态。 */
-await app.ready();
+ * 所以：先等就绪，再准备测试自己的状态。
+ *
+ * Q1：**必须断言 ready() 的结果，不能只 await 掉。**
+ * init() 中途抛错时它会兑现成 false（startApp 把失败吞成一个布尔值），
+ * 只 await 就等于把现成的「启动链是否跑完」探测器丢掉 ——
+ * addListener 契约不符导致的 `TypeError: ....catch is not a function`
+ * 就是这样在 854 项全绿的测试里活下来的。 */
+{
+  const ok0 = await app.ready();
+  ok("Q1 启动链完整跑完（ready() === true）", ok0 === true,
+    "false 表示 init() 中途抛错：seed / render / 15 秒心跳都不会执行");
+}
 
 /* ---------- 1. Chinese NL parse ---------- */
 section("1. 自然语言时间解析");
@@ -499,6 +509,41 @@ section("3g. 环境判断健壮性");
   // 随后访问 Notification.permission 抛错。本仓统一改用真值判断。
   ok("不再使用 `\"Notification\" in window` 判断", src.indexOf('"Notification" in window') === -1);
   ok("showSystemNotification 走真值判断", /const N = typeof window !== "undefined" \? window\.Notification : null/.test(src));
+}
+
+/* Relative-time capture uses the real parser and save path. */
+section("相对时间实际录入保存");
+{
+  for (const raw of ["三分钟以后提醒我", "三分钟以后提醒我喝水"]) {
+    app.state.items = [];
+    getNode("#capText").value = raw;
+    getNode("#capTrigger").value = "";
+    getNode("#capDeadline").value = "";
+    app.markTriggerPicked(false);
+    const before = Date.now();
+    app.saveItemFromForm();
+    const after = Date.now();
+    const item = app.state.items[0];
+    ok(raw + " 保存为三分钟后", !!item && item.triggerAt >= before + 180000 && item.triggerAt <= after + 180000);
+    ok(raw + " 不落兜底", !!item && item.isFallbackTrigger === false);
+    ok(raw + " 保留有效标题", !!item && item.title === (raw.includes("喝水") ? "喝水" : raw));
+    ok(raw + " 使用相对时长调度", !!item && item.scheduleBasis === "elapsed" && item.localTrigger === null);
+    if (item) {
+      const native = require(path.join(ROOT, "lib/native-reminders.js"));
+      const exactTrigger = item.triggerAt;
+      native.migrateItem(item);
+      ok(raw + " 原生对账不截断秒数", item.triggerAt === exactTrigger);
+      const scheduled = native.buildDesired([item], { notify: true }, before);
+      ok(raw + " 原生排程保持三分钟", scheduled.length === 1 && scheduled[0].schedule.at.getTime() === exactTrigger);
+    }
+  }
+  app.state.items = [];
+  getNode("#capText").value = "三分钟以后提醒我喝水";
+  getNode("#capTrigger").value = "2026-12-31T09:00";
+  app.markTriggerPicked(true);
+  app.saveItemFromForm();
+  const override = app.state.items[0];
+  ok("手选时间仍覆盖相对表达", !!override && override.triggerAt === new Date(2026, 11, 31, 9).getTime() && override.scheduleBasis === "wall-clock");
 }
 
 /* ---------- 3h. 业务逻辑回归（2026-09-16 审查 L01–L08 / D23） ---------- */

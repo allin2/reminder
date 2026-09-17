@@ -1,0 +1,291 @@
+{
+  "notifications": [
+    {
+      "id": 57763003,
+      "title": "☆ 重要事项",
+      "body": "报名截止，提前确认材料",
+      "schedule": {
+        "at": "Fri Sep 18 21:51:00 GMT+08:00 2026",
+        "count": 1,
+        "repeats": false
+      },
+      "extra": {
+        "managedKind": "attention-reminder",
+        "scheduleVersion": 2,
+        "itemId": "i_87wsnzxnmu5j3pv5",
+        "itemRev": 1,
+        "event": "realert",
+        "attempt": 2,
+        "scheduleKey": "2|i_87wsnzxnmu5j3pv5|1|realert|2|1789739460000|☆ 重要事项|报名截止，提前确认材料|attention-important-v2"
+      }
+    },
+    {
+      "id": 751195578,
+      "title": "☆ 重要事项",
+      "body": "交房租",
+      "schedule": {
+        "at": "Sun Sep 20 21:21:00 GMT+08:00 2026",
+        "count": 1,
+        "repeats": false
+      },
+      "extra": {
+        "managedKind": "attention-reminder",
+        "scheduleVersion": 2,
+        "itemId": "i_8zju7b9emu5j3pv6",
+        "itemRev": 2,
+        "event": "realert",
+        "attempt": 1,
+        "scheduleKey": "2|i_8zju7b9emu5j3pv6|2|realert|1|1789910460000|☆ 重要事项|交房租|attention-important-v2"
+      }
+    },
+    {
+      "id": 970871997,
+      "title": "☆ 重要事项",
+      "body": "F6c 按钮测试 snooze",
+      "schedule": {
+        "at": "Fri Sep 18 04:33:52 GMT+08:00 2026",
+        "count": 1,
+        "repeats": false
+      },
+      "extra": {
+        "managedKind": "attention-reminder",
+        "scheduleVersion": 2,
+        "itemId": "f6c_action_snooze_1789664595",
+        "itemRev": 2,
+        "event": "realert",
+        "attempt": 3,
+        "scheduleKey": "2|f6c_action_snooze_1789664595|2|realert|3|1789677232862|☆ 重要事项|F6c 按钮测试 snooze|attention-important-v2"
+      }
+    },
+    {
+      "id": 1795282634,
+      "title": "☆ 重要事项",
+      "body": "报名截止，提前确认材料",
+      "schedule": {
+        "at": "Fri Sep 18 21:21:00 GMT+08:00 2026",
+        "count": 1,
+        "repeats": false
+      },
+      "extra": {
+        "managedKind": "attention-reminder",
+        "scheduleVersion": 2,
+        "itemId": "i_87wsnzxnmu5j3pv5",
+        "itemRev": 1,
+        "event": "realert",
+        "attempt": 1,
+        "scheduleKey": "2|i_87wsnzxnmu5j3pv5|1|realert|1|1789737660000|☆ 重要事项|报名截止，提前确认材料|attention-important-v2"
+      }
+    },
+    {
+      "id": 501017040,
+      "title": "☆ 重要事项",
+      "body": "给爸妈打电话",
+      "schedule": {
+        "at": "Sat Sep 19 11:30:00 GMT+08:00 2026",
+        "count": 1,
+        "repeats": false
+      },
+      "extra": {
+        "managedKind": "attention-reminder",
+        "scheduleVersion": 2,
+        "itemId": "i_cyhim30gmu5j3pv6",
+        "itemRev": 1,
+        "event": "realert",
+        "attempt": 3,
+        "scheduleKey": "2|i_cyhim30gmu5j3pv6|1|realert|3|1789788600000|☆ 重要事项|给爸妈打电话|attention-important-v2"
+      }
+    },
+    {
+      "id": 1316317679,
+      "title": "☆ 重要事项",
+      "body": "F6c 按钮测试 snooze",
+      "schedule": {
+        "at": "Fri Sep 18 03:33:52 GMT+08:00 2026",
+        "count": 1,
+        "repeats": false
+      },
+      "extra": {
+        "managedKind": "attention-reminder",
+        "scheduleVersion": 2,
+        "itemId": "f6c_action_snooze_1789664595",
+        "itemRev": 2,
+        "event": "realert",
+        "attempt": 1,
+        "scheduleKey": "2|f6c_action_snooze_1789664595|2|realert|1|1789673632862|☆ 重要事项|F6c 按钮测试 snooze|attention-important-v2"
+      }
+    },
+    {
+      "id": 81932500,
+      "title": "安心收件箱提醒",
+      "body": "看看那篇注意力管理文章",
+      "schedule": {
+        "at": "Sat Sep 19 10:00:00 GMT+08:00 2026",
+        "count": 1,
+        "repeats": false
+      },
+      "extra": {
+        "managedKind": "attention-reminder",
+        "scheduleVersion": 2,
+        "itemId": "i_qoh76zsxmu5j3pv7",
+        "itemRev": 1,
+        "event": "primary",
+        "attempt": 0,
+        "scheduleKey": "2|i_qoh76zsxmu5j3pv7|1|primary|0|1789783200000|安心收件箱提醒|看看那篇注意力管理文章|attention-normal-v2"
+      }
+    },
+    {
+      "id": 229904301,
+      "title": "☆ 重要事项",
+      "body": "给爸妈打电话",
+      "schedule": {
+        "at": "Sat Sep 19 10:30:00 GMT+08:00 2026",
+        "count": 1,
+        "repeats": false
+      },
+      "extra": {
+        "managedKind": "attention-reminder",
+        "scheduleVersion": 2,
+        "itemId": "i_cyhim30gmu5j3pv6",
+        "itemRev": 1,
+        "event": "realert",
+        "attempt": 1,
+        "scheduleKey": "2|i_cyhim30gmu5j3pv6|1|realert|1|1789785000000|☆ 重要事项|给爸妈打电话|attention-important-v2"
+      }
+    },
+    {
+      "id": 1626975076,
+      "title": "☆ 重要事项",
+      "body": "报名截止，提前确认材料",
+      "schedule": {
+        "at": "Tue Sep 22 21:59:59 GMT+08:00 2026",
+        "count": 1,
+        "repeats": false
+      },
+      "extra": {
+        "managedKind": "attention-reminder",
+        "scheduleVersion": 2,
+        "itemId": "i_87wsnzxnmu5j3pv5",
+        "itemRev": 1,
+        "event": "deadline",
+        "attempt": 0,
+        "scheduleKey": "2|i_87wsnzxnmu5j3pv5|1|deadline|0|1790085599999|☆ 重要事项|报名截止，提前确认材料|attention-important-v2",
+        "stageKey": "p2@1790092799999"
+      }
+    },
+    {
+      "id": 7600846,
+      "title": "☆ 重要事项",
+      "body": "F6c 按钮测试 snooze",
+      "schedule": {
+        "at": "Fri Sep 18 04:03:52 GMT+08:00 2026",
+        "count": 1,
+        "repeats": false
+      },
+      "extra": {
+        "managedKind": "attention-reminder",
+        "scheduleVersion": 2,
+        "itemId": "f6c_action_snooze_1789664595",
+        "itemRev": 2,
+        "event": "realert",
+        "attempt": 2,
+        "scheduleKey": "2|f6c_action_snooze_1789664595|2|realert|2|1789675432862|☆ 重要事项|F6c 按钮测试 snooze|attention-important-v2"
+      }
+    },
+    {
+      "id": 699042348,
+      "title": "☆ 重要事项",
+      "body": "交房租",
+      "schedule": {
+        "at": "Sun Sep 20 22:21:00 GMT+08:00 2026",
+        "count": 1,
+        "repeats": false
+      },
+      "extra": {
+        "managedKind": "attention-reminder",
+        "scheduleVersion": 2,
+        "itemId": "i_8zju7b9emu5j3pv6",
+        "itemRev": 2,
+        "event": "realert",
+        "attempt": 3,
+        "scheduleKey": "2|i_8zju7b9emu5j3pv6|2|realert|3|1789914060000|☆ 重要事项|交房租|attention-important-v2"
+      }
+    },
+    {
+      "id": 726010301,
+      "title": "☆ 重要事项",
+      "body": "报名截止，提前确认材料",
+      "schedule": {
+        "at": "Fri Sep 18 22:21:00 GMT+08:00 2026",
+        "count": 1,
+        "repeats": false
+      },
+      "extra": {
+        "managedKind": "attention-reminder",
+        "scheduleVersion": 2,
+        "itemId": "i_87wsnzxnmu5j3pv5",
+        "itemRev": 1,
+        "event": "realert",
+        "attempt": 3,
+        "scheduleKey": "2|i_87wsnzxnmu5j3pv5|1|realert|3|1789741260000|☆ 重要事项|报名截止，提前确认材料|attention-important-v2"
+      }
+    },
+    {
+      "id": 2143783577,
+      "title": "☆ 重要事项",
+      "body": "给爸妈打电话",
+      "schedule": {
+        "at": "Sat Sep 19 11:00:00 GMT+08:00 2026",
+        "count": 1,
+        "repeats": false
+      },
+      "extra": {
+        "managedKind": "attention-reminder",
+        "scheduleVersion": 2,
+        "itemId": "i_cyhim30gmu5j3pv6",
+        "itemRev": 1,
+        "event": "realert",
+        "attempt": 2,
+        "scheduleKey": "2|i_cyhim30gmu5j3pv6|1|realert|2|1789786800000|☆ 重要事项|给爸妈打电话|attention-important-v2"
+      }
+    },
+    {
+      "id": 827967551,
+      "title": "☆ 重要事项",
+      "body": "报名截止，提前确认材料",
+      "schedule": {
+        "at": "Mon Sep 21 23:59:59 GMT+08:00 2026",
+        "count": 1,
+        "repeats": false
+      },
+      "extra": {
+        "managedKind": "attention-reminder",
+        "scheduleVersion": 2,
+        "itemId": "i_87wsnzxnmu5j3pv5",
+        "itemRev": 1,
+        "event": "deadline",
+        "attempt": 0,
+        "scheduleKey": "2|i_87wsnzxnmu5j3pv5|1|deadline|0|1790006399999|☆ 重要事项|报名截止，提前确认材料|attention-important-v2",
+        "stageKey": "p24@1790092799999"
+      }
+    },
+    {
+      "id": 130073715,
+      "title": "☆ 重要事项",
+      "body": "交房租",
+      "schedule": {
+        "at": "Sun Sep 20 21:51:00 GMT+08:00 2026",
+        "count": 1,
+        "repeats": false
+      },
+      "extra": {
+        "managedKind": "attention-reminder",
+        "scheduleVersion": 2,
+        "itemId": "i_8zju7b9emu5j3pv6",
+        "itemRev": 2,
+        "event": "realert",
+        "attempt": 2,
+        "scheduleKey": "2|i_8zju7b9emu5j3pv6|2|realert|2|1789912260000|☆ 重要事项|交房租|attention-important-v2"
+      }
+    }
+  ]
+}

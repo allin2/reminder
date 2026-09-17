@@ -1,0 +1,8 @@
+serial=10ACBF2D3D000RS
+package=space.alliswell.inbox
+item=f6c_20260917t165157z
+lead=1830
+screen=off
+hold=unused
+watch=unused
+started_utc=2026-09-17T16:59:02Z

@@ -1,0 +1,35 @@
+[22:58:38] === F3 试验 f3-a · SCREEN=off LEAD=75s ===
+[22:58:52] 前置: PID=10701 wakefulness=Awake
+[22:58:59] 设置结果: {"triggerAt":1789657208301,"targetLocal":"23:00:08","nowLocal":"22:58:59","scheduled":3}
+[22:59:02] 排程回读: 广播条目=9 前台服务条目=6
+    188:    RTC_WAKEUP #14: Alarm{2cfad50 type 0 origWhen 1789657208337 flags 9 windowLength 0 whenElapsed 224626449 maxWhenElapsed 224626449 repeatInterval 0 tag=*walarm*:space.alliswell.inbox/.AlarmRingService originWhenElapsed 224626449 originWindowLength 0 setAtTime=2026-09-17 14:58:53 policyWhenElapsed:[224626449, 224551999, 0, 0, 0] procName=space.alliswell.inbox space.alliswell.inbox}
+    189:      tag=*walarm*:space.alliswell.inbox/.AlarmRingService
+    195:    RTC_WAKEUP #15: Alarm{b4f7713 type 0 origWhen 1789657208337 flags 3 windowLength 0 whenElapsed 224626450 maxWhenElapsed 224626450 repeatInterval 0 tag=*walarm*:space.alliswell.inbox.ACTION_TEST_ALARM originWhenElapsed 224626450 originWindowLength 0 setAtTime=2026-09-17 14:58:53 policyWhenElapsed:[224626450, 224551997, 0, 0, 0] procName=space.alliswell.inbox space.alliswell.inbox}
+    196:      tag=*walarm*:space.alliswell.inbox.ACTION_TEST_ALARM
+    1185:    RTC_WAKEUP #171: Alarm{bd415d6 type 0 origWhen 1789735860022 flags 3 windowLength 0 whenElapsed 303278134 maxWhenElapsed 303278134 repeatInterval 0 tag=*walarm*:space.alliswell.inbox.ACTION_TEST_ALARM originWhenElapsed 303278134 originWindowLength 0 setAtTime=2026-09-17 14:58:53 policyWhenElapsed:[303278134, 224552037, 0, 0, 0] procName=space.alliswell.inbox space.alliswell.inbox}
+    1186:      tag=*walarm*:space.alliswell.inbox.ACTION_TEST_ALARM
+    1195:    RTC_WAKEUP #172: Alarm{67c744 type 0 origWhen 1789735860022 flags 9 windowLength 0 whenElapsed 303278134 maxWhenElapsed 303278134 repeatInterval 0 tag=*walarm*:space.alliswell.inbox/.AlarmRingService originWhenElapsed 303278134 originWindowLength 0 setAtTime=2026-09-17 14:58:53 policyWhenElapsed:[303278134, 224552039, 0, 0, 0] procName=space.alliswell.inbox space.alliswell.inbox}
+    1196:      tag=*walarm*:space.alliswell.inbox/.AlarmRingService
+[22:59:02] shared_prefs: ACTION_TYPE_STOREattention-actions.xml ACTION_TYPE_STOREattention-review-actions.xml AwOriginVisitLoggerPrefs.xml CapWebViewSettings.xml NOTIFICATION_STORE.xml WebViewChromiumPrefs.xml alarm_trace.xml attention_alarm.xml attention_alarm_schedules.xml 
+[22:59:14] 关屏: mWakefulness=Asleep 锁屏=true
+[22:59:14] 等到点…（现在 22:59:14，目标约 75s 后）
+[23:01:15] --- 到点后 23:01:15 ---
+[23:01:16] 证据1 进程被拉起: [10701]
+[23:01:16] 证据2 通知条数: 0
+[23:01:17] 证据3 屏幕: Asleep
+[23:01:17] 证据4 队列残留: 广播=5 服务=1
+[23:01:18] 台账文件: (269944) (0) (715) (0) (29089) (3299) (251) (28539) (28539) 
+
+[23:01:18] --- events 缓冲（冻结/解冻/唤醒/Activity）---
+             1789657149.374  1843  2149 I am_app_frozen: [0,10278,com.vivo.game,from fast_freezer]
+             1789657149.931  1843  2149 I am_app_frozen: [0,10190,space.alliswell.inbox,from fast_freezer]
+             1789657151.723  1843  2149 I am_app_unfrozen: [0,10037,com.vivo.agent,deliver Broadcast to system app]
+             1789657151.939  1843  2149 I am_app_unfrozen: [0,10164,com.vivo.xspace,deliver Broadcast to system app]
+             1789657156.184  1843  2149 I am_app_frozen: [0,10039,com.baidu.input_vivo,from fast_freezer]
+             1789657157.403  1843  2149 I am_app_frozen: [0,10164,com.vivo.xspace,from fast_freezer]
+             1789657157.506  1843  2149 I am_app_frozen: [0,10037,com.vivo.agent,from fast_freezer]
+             1789657208.338  1843  2390 I device_idle_wake_from_idle: [0,*walarm*:space.alliswell.inbox.ACTION_TEST_ALARM]
+             1789657211.682  1843  2149 I am_app_frozen: [0,10258,com.vivo.puresearch,from fast_freezer]
+
+[23:01:18] --- main/system 关键行 ---
+[23:01:18] === 结束，日志: /tmp/vivo-f3/f3-a-*.txt ===

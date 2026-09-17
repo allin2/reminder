@@ -1,0 +1,201 @@
+
+== browser fallback ==
+  ✓ 非 Android 不启用原生适配
+  ✓ Web 状态保持 web
+
+== 到点边界与通道故障隔离 ==
+  ✗ 到点前 500ms 仍保留首次闹钟
+  ✗ 到点前对账不撤销首次闹钟
+  ✗ 到点前 500ms 普通通知仍可排程
+  ✓ 删除事项仍可撤销即将到期闹钟
+  ✗ 普通通知排程失败不阻止首次闹钟
+  ✗ 通道失败返回闹钟台账
+  ✗ 通道失败明确报告错误
+
+== schedule policies ==
+  ✓ 普通事项 1 次
+  ✓ 重要事项共 4 次
+  ✓ 关键事项共 8 次
+  ✓ 重要事项间隔 30 分钟
+  ✓ 关键事项间隔 15 分钟
+  ✓ 渠道按优先级区分
+  ✓ 关闭持续提醒后重要事项仅 1 次
+
+== quiet hours, privacy, deadline ==
+  ✓ 勿扰时普通事项延后到次日 07:30
+  ✓ 重要事项不被应用勿扰延后
+  ✓ 锁屏隐私隐藏正文
+  ✓ Deadline Protection 独立排程
+
+== dismiss and stable ids ==
+  ✓ 关闭弹条不取消首次提醒
+  ✓ 30 分钟内补充提醒被屏蔽
+  ✓ 排程携带显式版本
+  ✓ 通知 ID 与事项顺序无关
+
+== mixed time semantics ==
+  ✓ 旧事项迁移为墙钟时间
+  ✓ 相对 Snooze 保持实际时长
+  ✓ 墙钟时间可往返
+  ✓ 跨时区仍保持本地墙钟
+  ✓ 跨时区相对 Snooze 不改变等待时长
+
+== lifecycle projection ==
+  ✓ 关键事项包含常规与 Deadline 排程
+  ✓ V03 两个保护阶段各有独立身份
+  ✓ ACK 取消常规补充但保留独立 Deadline
+  ✓ 完成取消全部剩余排程
+  ✓ 删除事项后没有投影
+  ✓ Snooze 重新排到新时间
+  ✓ 恢复事项重新生成排程
+
+== permission and reconciliation ==
+  ✓ 首次对账创建排程
+  ✓ 重复对账不重复排程
+  ✓ 陈旧排程被取消
+  ✓ 编辑时间会取消旧排程并创建新排程
+  ✓ 通知拒绝时仅应用内提醒
+  ✓ 精确权限拒绝时保留非精确排程
+
+== alarm first delivery (D9 / D25 / A-01) ==
+  ✓ D25 重要档首次走全屏闹钟
+  ✓ D25 关键档首次走全屏闹钟
+  ✓ A-01 默认通知的普通档首次不走闹钟
+  ✓ A-01 delivery_mode=alarm 的普通档首次走闹钟
+  ✓ D25 重要档后续 3 次仍走通知
+  ✓ D25 关键档后续 7 次仍走通知
+
+== alarm reconciliation (P0-2) ==
+  ✓ 首次对账排下全屏闹钟
+  ✓ 对账回报已排闹钟 id
+  ✓ 重复对账不误撤闹钟
+  ✓ 删除事项撤销全屏闹钟
+  ✓ 撤销后不再持有 alarm id
+  ✓ 关闭「本地通知」后撤销全屏闹钟
+  ✓ 关闭后不再新排闹钟
+
+== Q2 排程时刻回读校验 ==
+  ✓ Q2 原生照单排程时不误报
+  ✓ Q2 正常路径确实排下了全屏闹钟
+  ✓ Q2 原生忽略 delayMs 时必须报出回读偏差
+  ✓ Q2 偏差要带出可诊断的 drift 数值
+  ✓ Q2 契约漂移必须让 reliability 变成 error
+  ✓ Q2 漂移的闹钟仍要入账（否则事后撤不掉）
+  ✓ Q2 漂移不影响 alarmScheduled 计数
+
+== Q3 全屏权限与投递台账契约 ==
+  ✓ Manifest 声明 SYSTEM_ALERT_WINDOW（解锁亮屏弹全屏的前提）
+  ✓ Manifest 仍声明 USE_FULL_SCREEN_INTENT（锁屏弹全屏的前提）
+  ✓ 台账键名由 receiver 定义、activity 与 plugin 复用同一常量
+  ✓ receiver 先落「尝试」台账再起全屏（顺序反了会覆盖 shownAt）
+  ✓ activity 启动时记录「全屏真的起来了」
+  ✓ plugin 能回读投递结局 + 两项全屏权限
+  ✓ plugin 暴露悬浮窗 / 全屏通知 / 自启动三个跳转
+  ✓ 自检面板 labOpenOverlay 在 HTML 与 app-core 两侧都接线
+  ✓ 自检面板 labOpenFsi 在 HTML 与 app-core 两侧都接线
+  ✓ 自检面板 labOpenAutoStart 在 HTML 与 app-core 两侧都接线
+  ✓ 自检面板 labFullScreen 在 HTML 与 app-core 两侧都接线
+  ✓ 自检面板 labDelivery 在 HTML 与 app-core 两侧都接线
+  ✓ 自检面板把投递结局翻成人话（缺这一段就只会说「还是弹通知」）
+  ✓ receiver 有通话闸门：解锁 + 通话中不放行直起全屏
+  ✓ receiver 用 AudioManager.getMode() 判通话（无需 READ_PHONE_STATE 权限）
+  ✓ 通话状态随台账落盘并回读
+  ✓ 通话中被跳过时自检说「按设计」而不是报故障
+
+== Q6 原生链路静默失败与可观测性 ==
+  ✓ isNativeAndroidRuntime 有定义（此前被 3 处调用却从未定义）
+  ✓ waitForNativeBridge 有定义
+  ✓ renderBackgroundVerdict 有定义
+  ✓ init 不再阻塞等待原生初始化（V1 同类：静默中断启动链）
+  ✓ 桥未就绪时改为等待 + 留下可见失败记录（不再静默 return）
+  ✓ 安卓运行时不走 Web 通知分支（否则造出「开关开着却没权限」的假象）
+  ✓ 自检面板 labVerdict 在 HTML 与 app-core 两侧都接线
+  ✓ 自检面板 labBackground 在 HTML 与 app-core 两侧都接线
+  ✓ 自检面板 labScheduled 在 HTML 与 app-core 两侧都接线
+  ✓ 自检面板 labResync 在 HTML 与 app-core 两侧都接线
+  ✓ 结论区分「总开关未开」与「权限未授予」（此前共用一句「通知未授权」把人带偏）
+  ✓ 能区分「原生对账从未执行」这种静默失败
+  ✓ 结论用 getPending 的实数，而不是只报「打算排几条」
+  ✓ 没有「当守卫调用却没定义」的函数（本次缺陷类别）：无
+  ✓ queueNativeReminderSync 在桥未就绪时补做初始化，而不是丢弃请求
+  ✓ 原生初始化幂等且可重试（in-flight promise 跑完置回 null）
+  ✓ init 改走 ensureNativeReminders（不阻塞、可重试）
+  ✓ 非安卓容器直接返回，不误报「桥未就绪」（保护 Web 版）
+  ✓ 切回前台会补做原生初始化
+
+== review projection (P0-1 / P1-6 / D18 / D22) ==
+  ✓ D22 待整理当天共 3 次
+  ✓ D22 补提醒间隔 60 分钟
+  ✓ D22 窗口起点 21:30
+  ✓ P1-6 待整理走普通渠道
+  ✓ L06 待整理使用独立动作类型
+  ✓ 关闭整理功能则不排
+  ✓ D18 窗口起点落入勿扰 → 顺延到勿扰结束
+  ✓ D18 补提醒按顺延后锚点固定间隔，不被各自顺延压成一条
+  ✓ D20 稍后时刻被排进待整理通知
+  ✓ D20 已过去的稍后不再占槽位
+  ✓ P0-1 待整理并入同一次对账
+  ✓ D18 关闭通知总开关后待整理排程被撤销
+  ✓ D18 关闭整理功能后不排待整理
+  ✓ P0-1 未传待整理上下文时不排
+
+== regressions: review / window / dnd / deadline / ledger ==
+  ✓ L01 兜底待整理不发事项提醒
+  ✓ L01 有真实时间的待整理照常提醒
+  ✓ R5 关闭整理后待整理按普通事项排程
+  ✓ L01 待整理不阻断截止保护（INV-05）
+  ✓ R4 21:25 排出当晚三档
+  ✓ R4 21:35 仍保留当晚末两档
+  ✓ R4 槽位身份稳定（不随前面槽位过去而改变）
+  ✓ L07 补提醒不穿透勿扰
+  ✓ L07 次数是上限而非必须发满
+  ✓ R6 进入保护窗口后排一条立即提醒
+  ✓ R6 反复对账身份稳定（不再生成新提醒）
+  ✓ R6 投影与 lib/reminder.js 使用同一阶段身份
+  ✓ R6 已消费的阶段不再重复提醒
+  ✓ V03 消费 p24 后仍预排 p2
+  ✓ V03 已排期但未到投递时刻时身份与时刻保持原样
+  ✓ F1 标记为已送达后不再重排
+  ✓ F1 两个阶段的记录互不覆盖
+  ✓ D23 暂停截止保护后不排任何截止提醒
+  ✓ V06 确认后的兜底记录原生仍不排正式提醒
+  ✓ V06 确认且有真实时间的事项照常提醒
+  ✓ V07 今天跳过 → 当晚不排任何待整理提醒
+  ✓ L08 稍后开启新一轮：原生从 attempt=0 重排
+  ✓ R7 撤销失败时保留台账 id
+  ✓ R7 状态带出失败原因
+  ✓ R7 重试成功后才移除台账
+  ✓ V03 对账回传已排的截止事件
+  ✓ V08 排程失败 → reliability=error
+  ✓ F4 开启通知时撤销失败 → reliability=error
+  ✓ F4 关闭通知时撤销失败 → reliability=error（旧闹钟残留不可隐藏）
+
+== actions and resume ==
+  ✓ 注册三项通知操作
+  ✓ 通知 Snooze 固定为 2 小时
+  ✓ L06 单独注册待整理动作集
+  ✓ L06 待整理动作为 开始整理 / 稍后 30 分钟 / 今天跳过
+  ✓ 创建三个通知渠道
+  ✓ 渠道显式开启声音和震动
+  ✓ 通知 ACK 映射事项
+  ✓ 操作按钮移除已送达通知
+  ✓ Snooze、完成与普通点击动作保持独立
+  ✓ 恢复前台触发对账
+  ✓ U1 通知动作提交未完成前不得移除已送达通知
+  ✓ U1 通知动作提交失败后仍保留已送达通知供重试
+  ✓ F2 处理抛错时不确认删除原生事件
+  ✓ F2 处理成功后才调用 ackAlarmAction 确认删除
+  ✓ Q1 真机契约（同步句柄）下 onAlarmAction 不得抛错
+  ✓ Q1 两个监听都注册上了：SystemBridge.alarmAction + App.appStateChange
+  ✓ Q1 恢复前台会触发一次闹钟动作排空（监听真的生效，不是空注册）
+  ✓ Q1 Promise 契约下 onAlarmAction 同样不得抛错
+  ✓ Q1 平台注册同步抛错时必须被隔离（否则会拖垮整个 init）
+
+========== native reminder results ==========
+通过: 154  失败: 6
+- 到点前 500ms 仍保留首次闹钟
+- 到点前对账不撤销首次闹钟
+- 到点前 500ms 普通通知仍可排程
+- 普通通知排程失败不阻止首次闹钟
+- 通道失败返回闹钟台账
+- 通道失败明确报告错误

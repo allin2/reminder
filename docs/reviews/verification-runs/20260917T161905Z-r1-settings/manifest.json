@@ -1,0 +1,587 @@
+{
+  "schema": 1,
+  "runId": "20260917T161905Z-r1-settings",
+  "candidateSha256": "68cd6203db96118423faa4daa0b69ffddcbdfee8ba3bf21f30dbbc1e1a80b246",
+  "files": [
+    {
+      "path": "all-permissions.xml",
+      "bytes": 31538,
+      "sha256": "6d7a6bc61091f2cb80e168547d4d41b712b13246cc71abb95628b4a7645a6301"
+    },
+    {
+      "path": "android.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "android.txt",
+      "bytes": 3,
+      "sha256": "e6c21e8d260fe71882debdb339d2402a2ca7648529bc2303f48649bce0380017"
+    },
+    {
+      "path": "api-level.txt",
+      "bytes": 3,
+      "sha256": "a4b2c5db15348c29451e18b8307e5ef81625ea638e807935f39ceaa8d9ac7758"
+    },
+    {
+      "path": "app-details-return.xml",
+      "bytes": 21675,
+      "sha256": "44a133011eb8edf5f14f7675385f2beeda944ff16db19a7813ba5c88ce80dca4"
+    },
+    {
+      "path": "app-details.xml",
+      "bytes": 21675,
+      "sha256": "3599a92d8562137a7d61f5ef9187491ad72500e8fc90bd4c5418182455d510b5"
+    },
+    {
+      "path": "app-permissions.xml",
+      "bytes": 21675,
+      "sha256": "3599a92d8562137a7d61f5ef9187491ad72500e8fc90bd4c5418182455d510b5"
+    },
+    {
+      "path": "attention-before.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "attention-before.txt",
+      "bytes": 749,
+      "sha256": "a78089e0f32dfbe25062812d47132cbfbf3626bbe066aa3c3ffa2516d98ea537"
+    },
+    {
+      "path": "autostart-after.png",
+      "bytes": 176761,
+      "sha256": "e738a88884342332e5bc73c6c725e4563dc59e2e85eb563348165a4c971dfcd3"
+    },
+    {
+      "path": "autostart-after.xml",
+      "bytes": 31536,
+      "sha256": "c324ece0b40dc579347fce1dbe319d9eae68dfdd83e560eb274d75399d66f9df"
+    },
+    {
+      "path": "autostart-before.xml",
+      "bytes": 31537,
+      "sha256": "5faccbb36fa25c69086573653ebd316412638acdb7e606b27f25d662118f62be"
+    },
+    {
+      "path": "autostart-trial/deadline-capture.json",
+      "bytes": 851,
+      "sha256": "3ec31d44d7cbd5b9b75c59a6b0409944b2fabbb204ca53ce195c46191d522f0d"
+    },
+    {
+      "path": "autostart-trial/deadline-delivery.xml",
+      "bytes": 753,
+      "sha256": "1d77572314633e81463d6fb230f979489c28986744a756a03fbd5038cf01346b"
+    },
+    {
+      "path": "autostart-trial/deadline-notification.txt",
+      "bytes": 343289,
+      "sha256": "d482d56384c05684f2308e3c2d173e56d53de3c2977ae55cd79884a97856e30f"
+    },
+    {
+      "path": "autostart-trial/deadline-screen.png",
+      "bytes": 127025,
+      "sha256": "869558e56d6baa0f671e7f55856ccf5dd559f6ab4e33d175230419dad331ed17"
+    },
+    {
+      "path": "autostart-trial/deadline-trace.xml",
+      "bytes": 31497,
+      "sha256": "a91371ec78f0b47e8c8407a1e947d3ceda8040852612083ca658bb6469610a41"
+    },
+    {
+      "path": "autostart-trial/deadline-window.txt",
+      "bytes": 91772,
+      "sha256": "e817f2b7754002e73b787dace1b15d5d93da8467ad131fc52cc9f8f25366a0cc"
+    },
+    {
+      "path": "autostart-trial/r1-autostart-alarm.txt",
+      "bytes": 290237,
+      "sha256": "8c25d0b86d6d67b089c02543b1482de0d7439938df57943e45d21293c4e945dd"
+    },
+    {
+      "path": "autostart-trial/r1-autostart-delivery.xml",
+      "bytes": 753,
+      "sha256": "1d77572314633e81463d6fb230f979489c28986744a756a03fbd5038cf01346b"
+    },
+    {
+      "path": "autostart-trial/r1-autostart-events.txt",
+      "bytes": 113963,
+      "sha256": "53e73f80326b9f8c129edb302c5e57a6291ec1c4fa5aa71ef2bf49ba2403714f"
+    },
+    {
+      "path": "autostart-trial/r1-autostart-trace-before.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "autostart-trial/r1-autostart-trace-before.xml",
+      "bytes": 31373,
+      "sha256": "040881e137ea474f669f3f87e71d30af2c87cb0a1b71da6cd0a1f50fdac6984c"
+    },
+    {
+      "path": "autostart-trial/r1-autostart-trace.xml",
+      "bytes": 31497,
+      "sha256": "a91371ec78f0b47e8c8407a1e947d3ceda8040852612083ca658bb6469610a41"
+    },
+    {
+      "path": "autostart-trial/r1-autostart.log",
+      "bytes": 1534,
+      "sha256": "7f7bd31471a5e294e00bf81d0e4cdb74d6387f98c2183ef657792b3a152a06ba"
+    },
+    {
+      "path": "autostart-trial/run-metadata.txt",
+      "bytes": 154,
+      "sha256": "abf41e0a36ae859499a708544f053748f5d309f54f85002e0d7c1bb16d2daa96"
+    },
+    {
+      "path": "autostart-trial/summary.json",
+      "bytes": 3383,
+      "sha256": "51b6f068f2583914f6bc2f6c4e7b1659c0243c32af70decc4b8b55ad937ef4dd"
+    },
+    {
+      "path": "background-deeplink-clear-top.txt",
+      "bytes": 221,
+      "sha256": "1cea378e234b19c1f44b32c6b5374d80855198adb5a5c4dd4cf81c17e2eb955b"
+    },
+    {
+      "path": "background-final-clear-top.xml",
+      "bytes": 30707,
+      "sha256": "e5727a45894c627d9f22e74394f851f291227d5f21e73aefd464ea08a019a232"
+    },
+    {
+      "path": "background-final-confirmed.xml",
+      "bytes": 31520,
+      "sha256": "683898a965ba3d8cd9513e015b30b59ef2b92f920c57072a97bd3da4cdca69c4"
+    },
+    {
+      "path": "background-final-list.xml",
+      "bytes": 31520,
+      "sha256": "683898a965ba3d8cd9513e015b30b59ef2b92f920c57072a97bd3da4cdca69c4"
+    },
+    {
+      "path": "background-list-before.xml",
+      "bytes": 30701,
+      "sha256": "620c63c6e89c5f5bf3507cb83d3b28dcaa98fbba977a06ae9a5fe1980c0f34d2"
+    },
+    {
+      "path": "background-options-after.png",
+      "bytes": 111381,
+      "sha256": "62c56552f563fbbd8c1322ed83782b04beecd1e2e6b1817dfd5b47bd6d9b7efb"
+    },
+    {
+      "path": "background-options-after.xml",
+      "bytes": 12764,
+      "sha256": "5899d5fc55ffdfed2d043a6b6f1eab495ba9e7e90acac3eb8f3464847635c018"
+    },
+    {
+      "path": "background-options-before.png",
+      "bytes": 111829,
+      "sha256": "6282d0d3b09e5649cb473f810482eec1a4596175a496ce66d8bdb5165bc89a85"
+    },
+    {
+      "path": "background-options-before.xml",
+      "bytes": 12764,
+      "sha256": "649dc115c3b6cec2e1eee9e248148de6afcb24da22fe1afac53a2aea41fd0ae7"
+    },
+    {
+      "path": "battery-trial/deadline-delivery.xml",
+      "bytes": 754,
+      "sha256": "a96f87fd005a4620c9f2d6ca8f1b5f827246aef16fff86d22da333f0db681175"
+    },
+    {
+      "path": "battery-trial/deadline-notification.txt",
+      "bytes": 338465,
+      "sha256": "eafff5a3ad3f117b3f997a0b47c80770069aca37549c3a61c733a0759920c83a"
+    },
+    {
+      "path": "battery-trial/deadline-screen.png",
+      "bytes": 15580,
+      "sha256": "c35bacdb98b522206335afa5b9baffd2e4e3352a40749bb747e469cd403af514"
+    },
+    {
+      "path": "battery-trial/deadline-trace.xml",
+      "bytes": 31379,
+      "sha256": "4be6e60540581bad0b7d5275eef510c5b2c04114207274fc2d291d11a0e8477a"
+    },
+    {
+      "path": "battery-trial/deadline-window.txt",
+      "bytes": 87272,
+      "sha256": "a735abaeb86163a9aee460b48532d0e6ec19142265393288042a9b76b36f0956"
+    },
+    {
+      "path": "battery-trial/r1-battery-alarm-before.txt",
+      "bytes": 283664,
+      "sha256": "e478fd933127298247137ba550220d1f23fb3385f24d99f76075cea8d730e572"
+    },
+    {
+      "path": "battery-trial/r1-battery-alarm_delivery.xml",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "battery-trial/r1-battery-attention_alarm.xml",
+      "bytes": 754,
+      "sha256": "a96f87fd005a4620c9f2d6ca8f1b5f827246aef16fff86d22da333f0db681175"
+    },
+    {
+      "path": "battery-trial/r1-battery-attention_delivery.xml",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "battery-trial/r1-battery-events.txt",
+      "bytes": 177169,
+      "sha256": "d19ae2f37b1c5a59c799776db35a7dfd0311a4aa27dac0dc419baf3ced29f26a"
+    },
+    {
+      "path": "battery-trial/r1-battery-main.txt",
+      "bytes": 16700,
+      "sha256": "c80c05e7ebc805df743ad6f0710401aed9026ec22fb9e50bfda560ac2d6450de"
+    },
+    {
+      "path": "battery-trial/r1-battery-prefs-list.txt",
+      "bytes": 251,
+      "sha256": "cd94e45239b5544dc2394f3b153b0007b2688d9518cf2bcf4411e8cac88b92f4"
+    },
+    {
+      "path": "battery-trial/r1-battery-trace-after.xml",
+      "bytes": 31385,
+      "sha256": "3572e733f0202e12309b9eeb5420902c07580968730a176ee703b1dff9e04bbd"
+    },
+    {
+      "path": "battery-trial/r1-battery-trace-before.xml",
+      "bytes": 31402,
+      "sha256": "740370c54291973fb209583ab313ec145e8e4759de8fdaaaa6d78e000a5855db"
+    },
+    {
+      "path": "battery-trial/r1-battery.log",
+      "bytes": 7118,
+      "sha256": "106fe1e8536e9d99d93ac9143cca02edc48a7318f3a7ae2420bfdd8c452baa77"
+    },
+    {
+      "path": "battery-trial/run-metadata.txt",
+      "bytes": 151,
+      "sha256": "911fd148891b3584b04b82302b95959f723e52d69f51cba81f962a14b64e1777"
+    },
+    {
+      "path": "battery-trial/summary.json",
+      "bytes": 3360,
+      "sha256": "5b680a1ca796d3cba19e243a08a1377ae74f18818474c9579bbc4805ef09768e"
+    },
+    {
+      "path": "cleanup-verification.json",
+      "bytes": 246,
+      "sha256": "d04d4ba6172313b0a7d95e9bf5c213c1e1cc159f9d9949c8c521b2753755ddc5"
+    },
+    {
+      "path": "cold-trial/deadline-capture.json",
+      "bytes": 850,
+      "sha256": "f5a79ac4488561f9672603dbbed3b618c84ab96a132ca957b8253014c97a4907"
+    },
+    {
+      "path": "cold-trial/deadline-delivery.xml",
+      "bytes": 753,
+      "sha256": "ac61b90cb7b7058b56726de388c6e7b57c696e7842b6a36111104146856287ca"
+    },
+    {
+      "path": "cold-trial/deadline-notification.txt",
+      "bytes": 336583,
+      "sha256": "d1841363d9111e6303c9922b529e8e7425a6fbd0c62d3a3c31bc11fb69c7a61a"
+    },
+    {
+      "path": "cold-trial/deadline-screen.png",
+      "bytes": 15580,
+      "sha256": "c35bacdb98b522206335afa5b9baffd2e4e3352a40749bb747e469cd403af514"
+    },
+    {
+      "path": "cold-trial/deadline-trace.xml",
+      "bytes": 31248,
+      "sha256": "94539753fd1c892111ace2a6dfa3c506e4798bb2cbf9cdac074eda3758c6feb3"
+    },
+    {
+      "path": "cold-trial/deadline-window.txt",
+      "bytes": 85893,
+      "sha256": "82cdf17973c9a97994b0730dfd8b08a02db8a28559ebeaea5a5e10c1c0e01990"
+    },
+    {
+      "path": "cold-trial/r1-cold-alarm.txt",
+      "bytes": 282224,
+      "sha256": "e99889d508cff73a8f36ba27e67e34f18031f2c076f9670bdead149f91f1fc97"
+    },
+    {
+      "path": "cold-trial/r1-cold-delivery.xml",
+      "bytes": 753,
+      "sha256": "ac61b90cb7b7058b56726de388c6e7b57c696e7842b6a36111104146856287ca"
+    },
+    {
+      "path": "cold-trial/r1-cold-events.txt",
+      "bytes": 50686,
+      "sha256": "a3e8dd4aff47dd44a3e990c4294bf5f7ba2e8b3f8c220c9fcbdc31770a69319b"
+    },
+    {
+      "path": "cold-trial/r1-cold-trace-before.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "cold-trial/r1-cold-trace-before.xml",
+      "bytes": 31248,
+      "sha256": "94539753fd1c892111ace2a6dfa3c506e4798bb2cbf9cdac074eda3758c6feb3"
+    },
+    {
+      "path": "cold-trial/r1-cold-trace.xml",
+      "bytes": 31248,
+      "sha256": "94539753fd1c892111ace2a6dfa3c506e4798bb2cbf9cdac074eda3758c6feb3"
+    },
+    {
+      "path": "cold-trial/r1-cold.log",
+      "bytes": 1163,
+      "sha256": "03961172aa425f067524f598bd416da9c19dab68cba54955edaf4cb8b10d77f5"
+    },
+    {
+      "path": "cold-trial/run-metadata.txt",
+      "bytes": 154,
+      "sha256": "bd39a738ed8123e757336b86646149c9846f789fbabb4a22297236d6a55b3551"
+    },
+    {
+      "path": "cold-trial/summary.json",
+      "bytes": 1949,
+      "sha256": "f73c33656d407ca6cebdf328dc3ddb38f97683b67f8f5df57ac966a491b896da"
+    },
+    {
+      "path": "device-time.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "device-time.txt",
+      "bytes": 29,
+      "sha256": "fcc7ebcc7ba3ba161828add1f057dac41064769f75830deebb5245c367e11a31"
+    },
+    {
+      "path": "deviceidle.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "deviceidle.txt",
+      "bytes": 1633,
+      "sha256": "5ad2ae92b9836d1b334acca3bfa899c88d00e9b397177306ddb46121333c8f84"
+    },
+    {
+      "path": "installed-apk-sha256.txt",
+      "bytes": 159,
+      "sha256": "91a5ac02f3a4a377519a435a10f6bde31f983b544d4fa540d44e962ce33819f1"
+    },
+    {
+      "path": "items-after.json",
+      "bytes": 7125,
+      "sha256": "a4297fe7945da406d95b788d49151ca3dc6278cde8c484dc17946352fdf1195b"
+    },
+    {
+      "path": "items-before.json",
+      "bytes": 6229,
+      "sha256": "2cb2d7025a63e7e1419792ac7c13b32c75eee7cb17f4cce6350d9eb368631980"
+    },
+    {
+      "path": "lockscreen-after.png",
+      "bytes": 171408,
+      "sha256": "aad60f1700a6550eb234c95019dc5f69ae8954abc206a8765465f36d3647a538"
+    },
+    {
+      "path": "lockscreen-after.xml",
+      "bytes": 31537,
+      "sha256": "5faccbb36fa25c69086573653ebd316412638acdb7e606b27f25d662118f62be"
+    },
+    {
+      "path": "lockscreen-alarm-ui.xml",
+      "bytes": 7776,
+      "sha256": "8a84720df07309e86298dd8731be8bd1b31e36041a5d406fdf1c2ee934bb66ee"
+    },
+    {
+      "path": "lockscreen-trial/deadline-capture.json",
+      "bytes": 851,
+      "sha256": "7921cff7fac5d9659b4301978bd94ed9e330f11b32e6cb0b02218c430a934f4c"
+    },
+    {
+      "path": "lockscreen-trial/deadline-delivery.xml",
+      "bytes": 753,
+      "sha256": "ac61b90cb7b7058b56726de388c6e7b57c696e7842b6a36111104146856287ca"
+    },
+    {
+      "path": "lockscreen-trial/deadline-notification.txt",
+      "bytes": 341630,
+      "sha256": "0612cf1dacf137325feeec2d4aeb1b19fe7cd06c817ed97bf6d726f259c2cf7a"
+    },
+    {
+      "path": "lockscreen-trial/deadline-screen.png",
+      "bytes": 126892,
+      "sha256": "68832ba9c977f49239a8f392c54ad318f0f7955e73ce945c714b2d51469b5971"
+    },
+    {
+      "path": "lockscreen-trial/deadline-trace.xml",
+      "bytes": 31435,
+      "sha256": "aae8b21cda3bc82670e68b2338f0702a72b1a90893d044c41533e68f568f71ea"
+    },
+    {
+      "path": "lockscreen-trial/deadline-window.txt",
+      "bytes": 90091,
+      "sha256": "154d811b79f023abc04f424b79dbcec6022b46b8a2bb9acb2e63764242a477f9"
+    },
+    {
+      "path": "lockscreen-trial/r1-lockscreen-alarm-before.txt",
+      "bytes": 281557,
+      "sha256": "522cce5861b52f03a3eaaa3f6bacea4590f420df82a7018bdb83b7d69bf1a20a"
+    },
+    {
+      "path": "lockscreen-trial/r1-lockscreen-alarm_delivery.xml",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "lockscreen-trial/r1-lockscreen-attention_alarm.xml",
+      "bytes": 753,
+      "sha256": "ac61b90cb7b7058b56726de388c6e7b57c696e7842b6a36111104146856287ca"
+    },
+    {
+      "path": "lockscreen-trial/r1-lockscreen-attention_delivery.xml",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "lockscreen-trial/r1-lockscreen-events.txt",
+      "bytes": 110305,
+      "sha256": "e47e19525a7be8bfdb46ab0a769f83a0129eb9552e3213151f13185bd343caf0"
+    },
+    {
+      "path": "lockscreen-trial/r1-lockscreen-main.txt",
+      "bytes": 64015,
+      "sha256": "7966f1ffa98d31e0b27a91d5f7babce29e91419aeb67355e6109fbb27694bed4"
+    },
+    {
+      "path": "lockscreen-trial/r1-lockscreen-prefs-list.txt",
+      "bytes": 251,
+      "sha256": "cd94e45239b5544dc2394f3b153b0007b2688d9518cf2bcf4411e8cac88b92f4"
+    },
+    {
+      "path": "lockscreen-trial/r1-lockscreen-trace-after.xml",
+      "bytes": 31508,
+      "sha256": "c1a126a1854f0492443c4d6de19b47392df3e0a83086b0c0e9bc6c50e1361424"
+    },
+    {
+      "path": "lockscreen-trial/r1-lockscreen-trace-before.xml",
+      "bytes": 31363,
+      "sha256": "2bc3db876a13a9a1f5325b7df322f9c9b8a568f74cfbc5043db184ea3e30320a"
+    },
+    {
+      "path": "lockscreen-trial/r1-lockscreen.log",
+      "bytes": 5860,
+      "sha256": "1e5346f3541baad933996ccaadb0d1dee50a55743cdd2f5c6738af350ffea737"
+    },
+    {
+      "path": "lockscreen-trial/run-metadata.txt",
+      "bytes": 151,
+      "sha256": "e3893bb32908ae24a7d7128933dd507718d5e657fd6d556e2a09fb429fdbe013"
+    },
+    {
+      "path": "lockscreen-trial/summary.json",
+      "bytes": 3505,
+      "sha256": "13ba8259442951e3f1e3ba7d91989d3bacfdec19b62c78612fb49c2de823d49f"
+    },
+    {
+      "path": "metadata.json",
+      "bytes": 291,
+      "sha256": "68bbbd1ddfa58c7a53d0b36e7689eb1b23c3f236efe72930f6423c7ad3268317"
+    },
+    {
+      "path": "model.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "model.txt",
+      "bytes": 7,
+      "sha256": "b3bbcf20c2ea95464d1cadf28733e902df512a6e16e82459909e2ec0e5e5ec0a"
+    },
+    {
+      "path": "notification-after.txt",
+      "bytes": 337345,
+      "sha256": "d6eef7b15612b52ba0784b8ca7d6854fc1f4cd1f3a135967328a4c90f4912531"
+    },
+    {
+      "path": "package.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "package.txt",
+      "bytes": 10901,
+      "sha256": "11b92a5c181cfc3ebfc6126c0c421a47132ac6207e9efc4866c3e3f039687280"
+    },
+    {
+      "path": "permissions-before.png",
+      "bytes": 167082,
+      "sha256": "71ab230e449521b5bff819b8245586aac5461d847ef66087bab47bcdd6c49587"
+    },
+    {
+      "path": "power-before.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "power-before.txt",
+      "bytes": 70914,
+      "sha256": "1aec68f77b1e0c07183161b4a518808ca852fea4e0d2aae9590904a68a50b02d"
+    },
+    {
+      "path": "schedules-after.xml",
+      "bytes": 1562,
+      "sha256": "9abfbf6535a0f0c05175c3963b2ff0191ec5c73c8591363e63c8e1a8367777dc"
+    },
+    {
+      "path": "test-complete-before.xml",
+      "bytes": 7776,
+      "sha256": "cf0ed0349fb9bc1507349ce827e52292d2d1df04054693d6642d05e4724ae8d4"
+    },
+    {
+      "path": "test-item-created.json",
+      "bytes": 892,
+      "sha256": "46c068ea5524be6dd06a78d691c0c0b8e1cb416e79d11c3aeda794dbcb57fefc"
+    },
+    {
+      "path": "tools-used/android-cdp-eval.py",
+      "bytes": 2202,
+      "sha256": "0818a695892bfc526f531bb212b5a72a715456bdcb53c2b7e98623f70c0d78ae"
+    },
+    {
+      "path": "tools-used/capture-alarm-deadline.py",
+      "bytes": 2707,
+      "sha256": "3d1bda86501dad68ae451db60baf69650e9fe02b468228e7f79b7a9bddb5692f"
+    },
+    {
+      "path": "tools-used/vivo-alarm-screenoff-trial.sh",
+      "bytes": 8260,
+      "sha256": "99f9aa63ee1714085cc6aeddbbecbec5dbdfb8ea089b335d69b5130d92bf31ef"
+    },
+    {
+      "path": "tools-used/vivo-selfkill-trial.sh",
+      "bytes": 5493,
+      "sha256": "8ad0d99e76c69898d03e51273830f5fe376374a5daf95b49892e8b62ba38e801"
+    },
+    {
+      "path": "trace-before.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "trace-before.txt",
+      "bytes": 31303,
+      "sha256": "3af5941f8e5284733d8f75cfa995202824bbda668435704d4b2fd5e38ec45bd1"
+    },
+    {
+      "path": "trace-final.xml",
+      "bytes": 31329,
+      "sha256": "311449a41734d846dc4edf18e2038dc00dd668dbb27c00165fe30b39624c3dc8"
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "gitHead": "acbe3c539c88f00d836d448dafc31addf1496c90",
+  "scope": "F6 background and lockscreen guidance; preserve dirty worktree",
+  "sourceBefore": [
+    "app-core.js",
+    "index.html",
+    "android/app/src/main/java/space/alliswell/inbox/SystemBridgePlugin.java",
+    "test-native-reminders.js"
+  ]
+}

@@ -44,6 +44,52 @@ section("parse-cn");
   ok("nthWeekday", p6.repeat && p6.repeat.every === "nthWeekday" && p6.repeat.nth === 2 && p6.repeat.dow === 2);
 }
 
+/* Relative reminders: fixed reference, including seconds and date rollover. */
+section("relative Chinese time");
+{
+  const now = new Date(2026, 11, 31, 23, 59, 42, 321);
+  const cases = [
+    ["三分钟以后提醒我", 180000],
+    ["三分钟后提醒我喝水", 180000],
+    ["3分钟之后提醒我喝水", 180000],
+    ["３ 分钟以后提醒我喝水", 180000],
+    ["过三分钟提醒我喝水", 180000],
+    ["再过 3 分钟提醒我喝水", 180000],
+    ["提醒我三分钟后喝水", 180000],
+    ["半小时后提醒我喝水", 1800000],
+    ["半个小时以后提醒我喝水", 1800000],
+    ["一个半小时之后提醒我喝水", 5400000],
+    ["一个小时半后提醒我喝水", 5400000],
+    ["一小时三十分钟后提醒我喝水", 5400000],
+    ["一小时零五分钟后提醒我喝水", 3900000],
+    ["四十五分钟后提醒我喝水", 2700000],
+    ["一百二十分钟后提醒我喝水", 7200000],
+    ["1.5小时后提醒我喝水", 5400000],
+    ["三十秒后提醒我喝水", 30000],
+    ["两分钟三十秒后提醒我喝水", 150000],
+    ["半分钟后提醒我喝水", 30000],
+    ["两个钟头后提醒我喝水", 7200000]
+  ];
+  for (const [text, elapsed] of cases) {
+    const p = parse.parseChineseTime(text, now);
+    ok(text + " 精确时长", p.trigger === now.getTime() + elapsed && p.confidence === "high");
+    ok(text + " 具体时间判定", parse.hasSpecificTimeWord(text));
+    ok(text + " 保留原文及标题", p.raw === text && p.title === (text.includes("喝水") ? "喝水" : text));
+  }
+  for (const text of ["零分钟后提醒我", "负三分钟后提醒我", "-3分钟后提醒我", "几分钟后提醒我", "三分钟后五分钟后提醒我", "三分钟后明天提醒我", "过三分钟前提醒我", "一小时半半后提醒我", "三分钟后9点提醒我", "以后提醒我喝水", "看三分钟视频", "每三分钟后提醒我"]) {
+    ok(text + " 不冒充精确识别", parse.parseChineseTime(text, now).confidence === "low");
+  }
+  const day = parse.parseChineseTime("三天以后提醒我喝水", now);
+  const expectedDay = new Date(now); expectedDay.setDate(expectedDay.getDate() + 3);
+  ok("三天以后按日历天且保留时刻", day.trigger === expectedDay.getTime() && day.confidence === "high");
+  const clock = parse.parseChineseTime("三天后下午三点提醒我喝水", now);
+  expectedDay.setHours(15, 0, 0, 0);
+  ok("天数可组合明确钟点", clock.trigger === expectedDay.getTime());
+  const tag = parse.parseChineseTime("三分钟以后提醒我喝水 #健康", now);
+  ok("清除时间但保留事项和标签", tag.title === "喝水" && tag.tags[0] === "健康");
+  ok("正文含月报不误判为日期冲突", parse.parseChineseTime("三分钟后提醒我写月报", now).confidence === "high");
+}
+
 /* repeat */
 section("repeat");
 {

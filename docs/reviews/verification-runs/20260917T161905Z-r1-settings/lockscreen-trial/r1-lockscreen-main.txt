@@ -1,0 +1,454 @@
+--------- beginning of main
+09-18 00:25:18.939 E/GPUAUX  (17494): [AUX]GuiExtAuxCheckAuxPath:667: Null anb
+09-18 00:25:18.940 E/GPUAUX  (17494): [AUX]GuiExtAuxCheckAuxPath:667: Null anb
+09-18 00:25:18.940 E/GPUAUX  (17494): [AUX]GuiExtAuxCheckAuxPath:667: Null anb
+09-18 00:25:18.940 E/GPUAUX  (17494): [AUX]GuiExtAuxCheckAuxPath:667: Null anb
+09-18 00:25:18.940 E/GPUAUX  (17494): [AUX]GuiExtAuxCheckAuxPath:667: Null anb
+09-18 00:25:18.952 V/Capacitor/AppPlugin(17494): Notifying listeners for event pause
+09-18 00:25:18.952 D/Capacitor/AppPlugin(17494): No listeners found for event pause
+09-18 00:25:18.952 D/Capacitor(17494): App paused
+09-18 00:25:22.988 E/cmd     (30463): BBinder_init Processname  cmd  
+09-18 00:25:22.988 E/cmd     (30463): BBinder_init hasGetProcessName  cmd
+09-18 00:25:23.146 I/alliswell.inbox(17494): vart_dgc,  GetCoefficient 57
+09-18 00:25:23.217 I/HWUI    (17494): [trimMemory] TrimMemory will destroy render context, mode: 40.
+09-18 00:25:23.264 W/alliswell.inbox(17494): Cleared Reference was only reachable from finalizer (only reported once)
+--------- beginning of system
+09-18 00:25:23.280 D/BatteryStatsService( 1843): noteVideoSurfaceChanged  noteWhich: 49,arg1: -2, arg2: -1, arg3: 3303, arg4: 72071780314908379, name: com.vivo.systemuiplugin
+09-18 00:25:23.280 D/BatteryStatsService( 1843): noteVideoSurfaceChanged  noteWhich: 49,arg1: -2, arg2: -1, arg3: 3303, arg4: 72071780314907517, name: com.vivo.systemuiplugin
+09-18 00:25:23.342 I/alliswell.inbox(17494): CollectorTransition concurrent copying GC freed 22MB AllocSpace bytes, 692(25MB) LOS objects, 62% free, 3756KB(1676KB_132KB)/9900KB, 2Bd, itvl 269.089s, cpu 139.275ms, paused 1.880ms,71us total 196.078ms
+09-18 00:25:23.346 I/HWUI    (17494): [destroy] CanvasContext will be destroyed.
+09-18 00:25:23.374 W/BatteryStatsService( 1843): Unknown sensor handle 0 received in noteWakeupSensorEvent
+09-18 00:25:23.459 D/BatteryStatsService( 1843): noteVideoSurfaceChanged  noteWhich: 49,arg1: 1080, arg2: 2400, arg3: 3303, arg4: 72071780314906804, name: com.android.systemui
+09-18 00:25:23.463 D/BatteryStatsService( 1843): noteVideoSurfaceChanged  noteWhich: 49,arg1: 1080, arg2: 2400, arg3: 3303, arg4: 72071780314908379, name: com.vivo.systemuiplugin
+09-18 00:25:23.463 D/BatteryStatsService( 1843): noteVideoSurfaceChanged  noteWhich: 49,arg1: 1080, arg2: 2400, arg3: 3303, arg4: 72071780314907517, name: com.vivo.systemuiplugin
+09-18 00:25:26.090 E/dumpsys (31521): BBinder_init Processname  dumpsys  
+09-18 00:25:26.090 E/dumpsys (31521): BBinder_init hasGetProcessName  dumpsys
+09-18 00:25:26.091 W/dumpsys (31521): Thread Pool max thread count is 0. Cannot cache binder as linkToDeath cannot be implemented. serviceName: power
+09-18 00:25:26.308 E/dumpsys (31619): BBinder_init Processname  dumpsys  
+09-18 00:25:26.308 E/dumpsys (31619): BBinder_init hasGetProcessName  dumpsys
+09-18 00:25:26.309 W/dumpsys (31619): Thread Pool max thread count is 0. Cannot cache binder as linkToDeath cannot be implemented. serviceName: window
+09-18 00:26:22.539 I/AttentionAlarm(17494): deliver path=fsi+direct fullScreen=true screenOn=false locked=true inCall=false canDrawOverlays=true
+09-18 00:26:23.089 I/alliswell.inbox(17494): AssetManager2(0xb400007863c3f8d8) locale list changing from [] to [zh-CN]
+09-18 00:26:23.091 I/alliswell.inbox(17494): AssetManager2(0xb400007863c3dcb8) locale list changing from [] to [zh-CN]
+09-18 00:26:23.111 I/alliswell.inbox(17494): AssetManager2(0xb400007863c21dd8) locale list changing from [] to [zh-CN]
+09-18 00:26:23.166 V/ActivityThread(17494): updateVmProcessStateForGc sceneId =1000 state=-2038431744
+09-18 00:26:23.166 I/alliswell.inbox(17494): vart_impl, update 109051904, state=109051904
+09-18 00:26:23.172 D/BatteryStatsService( 1843): noteFpsPipe  : POWER_ID_FPS_PIPE initFps=2,fpsPipe=1
+09-18 00:26:23.180 D/ViewRootImpl(17494): AppSizeAfterRelayout, size: Point(1080, 2400), rotation: ROTATION_0
+09-18 00:26:23.180 D/BufferQueueConsumer(17494): [](id:445600000003,api:0,p:-1,c:17494) connect: controlledByApp=false
+09-18 00:26:23.181 D/BLASTBufferQueue(17494): [VRI[AlarmActivity,type=1]#3](f:0,a:0) constructor()
+09-18 00:26:23.181 D/BLASTBufferQueue(17494): [VRI[AlarmActivity,type=1]#3](f:0,a:0) update width=1080 height=2400 format=-1 mTransformHint=0
+09-18 00:26:23.185 W/BLASTBufferQueue(17494): Unable to open /proc/vivo_rsc/frame_set_priority: No such file or directory
+09-18 00:26:23.185 I/BLASTBufferQueue(17494): QoSAllocBuff Successful. Ret 0 
+09-18 00:26:23.212 D/BLASTBufferQueue(17494): [VRI[AlarmActivity,type=1]#3](f:0,a:1) acquireNextBufferLocked size=1080x2400 mFrameNumber=1 applyTransaction=true mTimestamp=147721131393496(auto) mPendingTransactions.size=0 graphicBufferId=75136157876245 transform=0
+09-18 00:26:23.268 I/ActivityTaskManager( 1843): Displayed space.alliswell.inbox/.AlarmActivity for user 0: +328ms
+09-18 00:26:23.327 D/BatteryStatsService( 1843): noteVideoSurfaceChanged  noteWhich: 49,arg1: -2, arg2: -1, arg3: 3303, arg4: 72071780314906804, name: com.android.systemui
+09-18 00:26:23.328 D/BatteryStatsService( 1843): noteVideoSurfaceChanged  noteWhich: 49,arg1: -2, arg2: -1, arg3: 3303, arg4: 72071780314908379, name: com.vivo.systemuiplugin
+09-18 00:26:23.328 D/BatteryStatsService( 1843): noteVideoSurfaceChanged  noteWhich: 49,arg1: -2, arg2: -1, arg3: 3303, arg4: 72071780314907517, name: com.vivo.systemuiplugin
+09-18 00:26:23.366 V/ImeFocusController(17494): onWindowFocus: com.android.internal.policy.DecorView{e862f06 V.E...... R....... 0,0-1080,2400}[AlarmActivity] softInputMode=STATE_UNSPECIFIED|ADJUST_PAN|IS_FORWARD_NAVIGATION
+09-18 00:26:23.371 I/ImeTracker(17494): space.alliswell.inbox:bf972252: onCancelled at PHASE_CLIENT_ALREADY_HIDDEN
+09-18 00:26:28.196 W/binder:17494_5(17494): type=1400 audit(0.0:396211): avc:  denied  { ioctl } for  path="/proc/fas/render" dev="proc" ino=4026532234 ioctlcmd=0x6609 scontext=u:r:untrusted_app:s0:c190,c256,c512,c768 tcontext=u:object_r:proc_fas:s0 tclass=file permissive=0 app=space.alliswell.inbox
+09-18 00:26:29.220 W/binder:17494_5(17494): type=1400 audit(0.0:396214): avc:  denied  { ioctl } for  path="/proc/fas/render" dev="proc" ino=4026532234 ioctlcmd=0x6609 scontext=u:r:untrusted_app:s0:c190,c256,c512,c768 tcontext=u:object_r:proc_fas:s0 tclass=file permissive=0 app=space.alliswell.inbox
+09-18 00:26:30.212 W/binder:17494_5(17494): type=1400 audit(0.0:396218): avc:  denied  { ioctl } for  path="/proc/fas/render" dev="proc" ino=4026532234 ioctlcmd=0x6609 scontext=u:r:untrusted_app:s0:c190,c256,c512,c768 tcontext=u:object_r:proc_fas:s0 tclass=file permissive=0 app=space.alliswell.inbox
+09-18 00:26:30.762 E/screencap(25094): BBinder_init Processname  screencap  
+09-18 00:26:30.762 E/screencap(25094): BBinder_init hasGetProcessName  screencap
+09-18 00:26:30.783 W/screencap(25094): Thread Pool max thread count is 0. Cannot cache binder as linkToDeath cannot be implemented. serviceName: SurfaceFlingerAIDL
+09-18 00:26:30.783 W/BpBinder(25094): Linking to death on android.gui.ISurfaceComposer but there are no threads (yet?) listening to incoming transactions. See ProcessState::startThreadPool and ProcessState::setThreadPoolMaxThreadCount. Generally you should setup the binder threadpool before other initialization steps.
+09-18 00:26:30.784 W/ProcessState(25094): Extra binder thread started, but 0 threads requested. Do not use *startThreadPool when zero threads are requested.
+09-18 00:26:30.819 I/DMABUFHEAPS(25094): Using DMA-BUF heap named: mtk_mm
+09-18 00:26:30.819 I/DMABUFHEAPS(25094): Using DMA-BUF heap named: mtk_mm-uncached
+09-18 00:26:30.819 I/DMABUFHEAPS(25094): Using DMA-BUF heap named: mtk_svp_page-uncached
+09-18 00:26:30.819 I/DMABUFHEAPS(25094): Using DMA-BUF heap named: mtk_prot_region
+09-18 00:26:30.819 I/DMABUFHEAPS(25094): Using DMA-BUF heap named: mtk_2d_fr_region
+09-18 00:26:30.819 I/DMABUFHEAPS(25094): Using DMA-BUF heap named: mtk_wfd_page-uncached
+09-18 00:26:30.820 D/HWUI    (25094): Bitmap::compress format:Png w:1080 h:2400 quality:100 app_apk:screencap 
+09-18 00:26:30.820 W/libc    (25094): Access denied finding property "vendor.vivo.imageencoder.dump"
+09-18 00:26:31.116 W/RefBase (25094): RefBase: Explicit destruction, weak count = 0 (in 0x79debf99a8). Use sp<> to manage this object. Note - if weak count is 0, this leaks mRefs (weakref_impl).
+09-18 00:26:31.122 D/RefBase (25094):   #00 pc 00000000000bc290  /apex/com.android.runtime/lib64/bionic/libc.so (__cxa_finalize+224) (BuildId: cafe04917347c9e7897b8bec9057522e)
+09-18 00:26:31.122 D/RefBase (25094):   #01 pc 00000000000c1294  /apex/com.android.runtime/lib64/bionic/libc.so (exit+36) (BuildId: cafe04917347c9e7897b8bec9057522e)
+09-18 00:26:31.122 D/RefBase (25094):   #02 pc 00000000000b486c  /apex/com.android.runtime/lib64/bionic/libc.so (__libc_init+124) (BuildId: cafe04917347c9e7897b8bec9057522e)
+09-18 00:26:31.199 E/dumpsys (25574): BBinder_init Processname  dumpsys  
+09-18 00:26:31.199 E/dumpsys (25574): BBinder_init hasGetProcessName  dumpsys
+09-18 00:26:31.199 W/dumpsys (25574): Thread Pool max thread count is 0. Cannot cache binder as linkToDeath cannot be implemented. serviceName: window
+09-18 00:26:31.212 W/binder:17494_5(17494): type=1400 audit(0.0:396220): avc:  denied  { ioctl } for  path="/proc/fas/render" dev="proc" ino=4026532234 ioctlcmd=0x6609 scontext=u:r:untrusted_app:s0:c190,c256,c512,c768 tcontext=u:object_r:proc_fas:s0 tclass=file permissive=0 app=space.alliswell.inbox
+09-18 00:26:31.416 E/dumpsys (25682): BBinder_init Processname  dumpsys  
+09-18 00:26:31.416 E/dumpsys (25682): BBinder_init hasGetProcessName  dumpsys
+09-18 00:26:31.416 W/dumpsys (25682): Thread Pool max thread count is 0. Cannot cache binder as linkToDeath cannot be implemented. serviceName: notification
+09-18 00:26:32.224 W/binder:17494_5(17494): type=1400 audit(0.0:396224): avc:  denied  { ioctl } for  path="/proc/fas/render" dev="proc" ino=4026532234 ioctlcmd=0x6609 scontext=u:r:untrusted_app:s0:c190,c256,c512,c768 tcontext=u:object_r:proc_fas:s0 tclass=file permissive=0 app=space.alliswell.inbox
+09-18 00:26:34.220 W/binder:17494_5(17494): type=1400 audit(0.0:396229): avc:  denied  { ioctl } for  path="/proc/fas/render" dev="proc" ino=4026532234 ioctlcmd=0x6609 scontext=u:r:untrusted_app:s0:c190,c256,c512,c768 tcontext=u:object_r:proc_fas:s0 tclass=file permissive=0 app=space.alliswell.inbox
+09-18 00:26:35.220 W/binder:17494_5(17494): type=1400 audit(0.0:396232): avc:  denied  { ioctl } for  path="/proc/fas/render" dev="proc" ino=4026532234 ioctlcmd=0x6609 scontext=u:r:untrusted_app:s0:c190,c256,c512,c768 tcontext=u:object_r:proc_fas:s0 tclass=file permissive=0 app=space.alliswell.inbox
+09-18 00:26:36.236 W/binder:17494_5(17494): type=1400 audit(0.0:396235): avc:  denied  { ioctl } for  path="/proc/fas/render" dev="proc" ino=4026532234 ioctlcmd=0x6609 scontext=u:r:untrusted_app:s0:c190,c256,c512,c768 tcontext=u:object_r:proc_fas:s0 tclass=file permissive=0 app=space.alliswell.inbox
+09-18 00:26:37.236 W/binder:17494_5(17494): type=1400 audit(0.0:396237): avc:  denied  { ioctl } for  path="/proc/fas/render" dev="proc" ino=4026532234 ioctlcmd=0x6609 scontext=u:r:untrusted_app:s0:c190,c256,c512,c768 tcontext=u:object_r:proc_fas:s0 tclass=file permissive=0 app=space.alliswell.inbox
+09-18 00:26:38.248 W/binder:17494_4(17494): type=1400 audit(0.0:396241): avc:  denied  { ioctl } for  path="/proc/fas/render" dev="proc" ino=4026532234 ioctlcmd=0x6609 scontext=u:r:untrusted_app:s0:c190,c256,c512,c768 tcontext=u:object_r:proc_fas:s0 tclass=file permissive=0 app=space.alliswell.inbox
+09-18 00:26:39.244 W/binder:17494_4(17494): type=1400 audit(0.0:396245): avc:  denied  { ioctl } for  path="/proc/fas/render" dev="proc" ino=4026532234 ioctlcmd=0x6609 scontext=u:r:untrusted_app:s0:c190,c256,c512,c768 tcontext=u:object_r:proc_fas:s0 tclass=file permissive=0 app=space.alliswell.inbox
+09-18 00:26:40.244 W/binder:17494_4(17494): type=1400 audit(0.0:396248): avc:  denied  { ioctl } for  path="/proc/fas/render" dev="proc" ino=4026532234 ioctlcmd=0x6609 scontext=u:r:untrusted_app:s0:c190,c256,c512,c768 tcontext=u:object_r:proc_fas:s0 tclass=file permissive=0 app=space.alliswell.inbox
+09-18 00:26:41.244 W/binder:17494_4(17494): type=1400 audit(0.0:396250): avc:  denied  { ioctl } for  path="/proc/fas/render" dev="proc" ino=4026532234 ioctlcmd=0x6609 scontext=u:r:untrusted_app:s0:c190,c256,c512,c768 tcontext=u:object_r:proc_fas:s0 tclass=file permissive=0 app=space.alliswell.inbox
+09-18 00:26:42.260 W/binder:17494_4(17494): type=1400 audit(0.0:396254): avc:  denied  { ioctl } for  path="/proc/fas/render" dev="proc" ino=4026532234 ioctlcmd=0x6609 scontext=u:r:untrusted_app:s0:c190,c256,c512,c768 tcontext=u:object_r:proc_fas:s0 tclass=file permissive=0 app=space.alliswell.inbox
+09-18 00:26:43.252 W/binder:17494_4(17494): type=1400 audit(0.0:396258): avc:  denied  { ioctl } for  path="/proc/fas/render" dev="proc" ino=4026532234 ioctlcmd=0x6609 scontext=u:r:untrusted_app:s0:c190,c256,c512,c768 tcontext=u:object_r:proc_fas:s0 tclass=file permissive=0 app=space.alliswell.inbox
+09-18 00:26:44.252 W/binder:17494_4(17494): type=1400 audit(0.0:396261): avc:  denied  { ioctl } for  path="/proc/fas/render" dev="proc" ino=4026532234 ioctlcmd=0x6609 scontext=u:r:untrusted_app:s0:c190,c256,c512,c768 tcontext=u:object_r:proc_fas:s0 tclass=file permissive=0 app=space.alliswell.inbox
+09-18 00:26:45.256 W/binder:17494_4(17494): type=1400 audit(0.0:396264): avc:  denied  { ioctl } for  path="/proc/fas/render" dev="proc" ino=4026532234 ioctlcmd=0x6609 scontext=u:r:untrusted_app:s0:c190,c256,c512,c768 tcontext=u:object_r:proc_fas:s0 tclass=file permissive=0 app=space.alliswell.inbox
+09-18 00:26:47.264 W/binder:17494_4(17494): type=1400 audit(0.0:396271): avc:  denied  { ioctl } for  path="/proc/fas/render" dev="proc" ino=4026532234 ioctlcmd=0x6609 scontext=u:r:untrusted_app:s0:c190,c256,c512,c768 tcontext=u:object_r:proc_fas:s0 tclass=file permissive=0 app=space.alliswell.inbox
+09-18 00:26:48.280 W/binder:17494_5(17494): type=1400 audit(0.0:396276): avc:  denied  { ioctl } for  path="/proc/fas/render" dev="proc" ino=4026532234 ioctlcmd=0x6609 scontext=u:r:untrusted_app:s0:c190,c256,c512,c768 tcontext=u:object_r:proc_fas:s0 tclass=file permissive=0 app=space.alliswell.inbox
+09-18 00:26:49.276 W/binder:17494_5(17494): type=1400 audit(0.0:396279): avc:  denied  { ioctl } for  path="/proc/fas/render" dev="proc" ino=4026532234 ioctlcmd=0x6609 scontext=u:r:untrusted_app:s0:c190,c256,c512,c768 tcontext=u:object_r:proc_fas:s0 tclass=file permissive=0 app=space.alliswell.inbox
+09-18 00:26:50.280 W/binder:17494_5(17494): type=1400 audit(0.0:396281): avc:  denied  { ioctl } for  path="/proc/fas/render" dev="proc" ino=4026532234 ioctlcmd=0x6609 scontext=u:r:untrusted_app:s0:c190,c256,c512,c768 tcontext=u:object_r:proc_fas:s0 tclass=file permissive=0 app=space.alliswell.inbox
+09-18 00:26:51.292 W/binder:17494_5(17494): type=1400 audit(0.0:396285): avc:  denied  { ioctl } for  path="/proc/fas/render" dev="proc" ino=4026532234 ioctlcmd=0x6609 scontext=u:r:untrusted_app:s0:c190,c256,c512,c768 tcontext=u:object_r:proc_fas:s0 tclass=file permissive=0 app=space.alliswell.inbox
+09-18 00:26:52.288 W/binder:17494_5(17494): type=1400 audit(0.0:396288): avc:  denied  { ioctl } for  path="/proc/fas/render" dev="proc" ino=4026532234 ioctlcmd=0x6609 scontext=u:r:untrusted_app:s0:c190,c256,c512,c768 tcontext=u:object_r:proc_fas:s0 tclass=file permissive=0 app=space.alliswell.inbox
+09-18 00:26:53.292 W/binder:17494_5(17494): type=1400 audit(0.0:396290): avc:  denied  { ioctl } for  path="/proc/fas/render" dev="proc" ino=4026532234 ioctlcmd=0x6609 scontext=u:r:untrusted_app:s0:c190,c256,c512,c768 tcontext=u:object_r:proc_fas:s0 tclass=file permissive=0 app=space.alliswell.inbox
+09-18 00:26:53.706 W/BatteryStatsService( 1843): Unknown sensor handle 0 received in noteWakeupSensorEvent
+09-18 00:26:54.296 W/binder:17494_4(17494): type=1400 audit(0.0:396294): avc:  denied  { ioctl } for  path="/proc/fas/render" dev="proc" ino=4026532234 ioctlcmd=0x6609 scontext=u:r:untrusted_app:s0:c190,c256,c512,c768 tcontext=u:object_r:proc_fas:s0 tclass=file permissive=0 app=space.alliswell.inbox
+09-18 00:26:55.296 W/binder:17494_4(17494): type=1400 audit(0.0:396297): avc:  denied  { ioctl } for  path="/proc/fas/render" dev="proc" ino=4026532234 ioctlcmd=0x6609 scontext=u:r:untrusted_app:s0:c190,c256,c512,c768 tcontext=u:object_r:proc_fas:s0 tclass=file permissive=0 app=space.alliswell.inbox
+09-18 00:26:56.300 W/binder:17494_4(17494): type=1400 audit(0.0:396299): avc:  denied  { ioctl } for  path="/proc/fas/render" dev="proc" ino=4026532234 ioctlcmd=0x6609 scontext=u:r:untrusted_app:s0:c190,c256,c512,c768 tcontext=u:object_r:proc_fas:s0 tclass=file permissive=0 app=space.alliswell.inbox
+09-18 00:26:57.300 W/binder:17494_5(17494): type=1400 audit(0.0:396302): avc:  denied  { ioctl } for  path="/proc/fas/render" dev="proc" ino=4026532234 ioctlcmd=0x6609 scontext=u:r:untrusted_app:s0:c190,c256,c512,c768 tcontext=u:object_r:proc_fas:s0 tclass=file permissive=0 app=space.alliswell.inbox
+09-18 00:26:58.320 W/binder:17494_5(17494): type=1400 audit(0.0:396304): avc:  denied  { ioctl } for  path="/proc/fas/render" dev="proc" ino=4026532234 ioctlcmd=0x6609 scontext=u:r:untrusted_app:s0:c190,c256,c512,c768 tcontext=u:object_r:proc_fas:s0 tclass=file permissive=0 app=space.alliswell.inbox
+09-18 00:26:59.312 W/binder:17494_5(17494): type=1400 audit(0.0:396306): avc:  denied  { ioctl } for  path="/proc/fas/render" dev="proc" ino=4026532234 ioctlcmd=0x6609 scontext=u:r:untrusted_app:s0:c190,c256,c512,c768 tcontext=u:object_r:proc_fas:s0 tclass=file permissive=0 app=space.alliswell.inbox
+09-18 00:27:00.328 W/binder:17494_5(17494): type=1400 audit(0.0:396311): avc:  denied  { ioctl } for  path="/proc/fas/render" dev="proc" ino=4026532234 ioctlcmd=0x6609 scontext=u:r:untrusted_app:s0:c190,c256,c512,c768 tcontext=u:object_r:proc_fas:s0 tclass=file permissive=0 app=space.alliswell.inbox
+09-18 00:27:01.340 W/binder:17494_5(17494): type=1400 audit(0.0:396313): avc:  denied  { ioctl } for  path="/proc/fas/render" dev="proc" ino=4026532234 ioctlcmd=0x6609 scontext=u:r:untrusted_app:s0:c190,c256,c512,c768 tcontext=u:object_r:proc_fas:s0 tclass=file permissive=0 app=space.alliswell.inbox
+09-18 00:27:02.320 W/binder:17494_5(17494): type=1400 audit(0.0:396316): avc:  denied  { ioctl } for  path="/proc/fas/render" dev="proc" ino=4026532234 ioctlcmd=0x6609 scontext=u:r:untrusted_app:s0:c190,c256,c512,c768 tcontext=u:object_r:proc_fas:s0 tclass=file permissive=0 app=space.alliswell.inbox
+09-18 00:27:03.324 W/binder:17494_5(17494): type=1400 audit(0.0:396319): avc:  denied  { ioctl } for  path="/proc/fas/render" dev="proc" ino=4026532234 ioctlcmd=0x6609 scontext=u:r:untrusted_app:s0:c190,c256,c512,c768 tcontext=u:object_r:proc_fas:s0 tclass=file permissive=0 app=space.alliswell.inbox
+09-18 00:27:03.757 W/BatteryStatsService( 1843): Unknown sensor handle 0 received in noteWakeupSensorEvent
+09-18 00:27:04.336 W/binder:17494_5(17494): type=1400 audit(0.0:396322): avc:  denied  { ioctl } for  path="/proc/fas/render" dev="proc" ino=4026532234 ioctlcmd=0x6609 scontext=u:r:untrusted_app:s0:c190,c256,c512,c768 tcontext=u:object_r:proc_fas:s0 tclass=file permissive=0 app=space.alliswell.inbox
+09-18 00:27:05.336 W/binder:17494_4(17494): type=1400 audit(0.0:396325): avc:  denied  { ioctl } for  path="/proc/fas/render" dev="proc" ino=4026532234 ioctlcmd=0x6609 scontext=u:r:untrusted_app:s0:c190,c256,c512,c768 tcontext=u:object_r:proc_fas:s0 tclass=file permissive=0 app=space.alliswell.inbox
+09-18 00:27:06.332 W/binder:17494_4(17494): type=1400 audit(0.0:396329): avc:  denied  { ioctl } for  path="/proc/fas/render" dev="proc" ino=4026532234 ioctlcmd=0x6609 scontext=u:r:untrusted_app:s0:c190,c256,c512,c768 tcontext=u:object_r:proc_fas:s0 tclass=file permissive=0 app=space.alliswell.inbox
+09-18 00:27:07.348 W/binder:17494_4(17494): type=1400 audit(0.0:396332): avc:  denied  { ioctl } for  path="/proc/fas/render" dev="proc" ino=4026532234 ioctlcmd=0x6609 scontext=u:r:untrusted_app:s0:c190,c256,c512,c768 tcontext=u:object_r:proc_fas:s0 tclass=file permissive=0 app=space.alliswell.inbox
+09-18 00:27:08.348 W/binder:17494_4(17494): type=1400 audit(0.0:396336): avc:  denied  { ioctl } for  path="/proc/fas/render" dev="proc" ino=4026532234 ioctlcmd=0x6609 scontext=u:r:untrusted_app:s0:c190,c256,c512,c768 tcontext=u:object_r:proc_fas:s0 tclass=file permissive=0 app=space.alliswell.inbox
+09-18 00:27:09.348 W/binder:17494_4(17494): type=1400 audit(0.0:396338): avc:  denied  { ioctl } for  path="/proc/fas/render" dev="proc" ino=4026532234 ioctlcmd=0x6609 scontext=u:r:untrusted_app:s0:c190,c256,c512,c768 tcontext=u:object_r:proc_fas:s0 tclass=file permissive=0 app=space.alliswell.inbox
+09-18 00:27:10.344 W/binder:17494_4(17494): type=1400 audit(0.0:396340): avc:  denied  { ioctl } for  path="/proc/fas/render" dev="proc" ino=4026532234 ioctlcmd=0x6609 scontext=u:r:untrusted_app:s0:c190,c256,c512,c768 tcontext=u:object_r:proc_fas:s0 tclass=file permissive=0 app=space.alliswell.inbox
+09-18 00:27:10.661 E/app_process(10142): BBinder_init Processname  app_process  
+09-18 00:27:10.661 E/app_process(10142): BBinder_init hasGetProcessName  app_process
+09-18 00:27:10.674 E/appproc (10142): checkAndSetEnv get_baksize open file /data/dalvik-cache/classpath failed , error(Permission denied)
+09-18 00:27:10.674 E/appproc (10142): checkAndSetEnv write_classpathbak open file failed:Permission denied
+09-18 00:27:10.674 E/appproc (10142): checkAndSetEnv get_baksize open file /data/dalvik-cache/classpath2 failed , error(Permission denied)
+09-18 00:27:10.674 E/appproc (10142): checkAndSetEnv write_classpathbak open file failed:Permission denied
+09-18 00:27:10.674 E/appproc (10142): checkAndSetEnv get_baksize open file /data/dalvik-cache/classpath3 failed , error(Permission denied)
+09-18 00:27:10.674 E/appproc (10142): checkAndSetEnv write_classpathbak open file failed:Permission denied
+09-18 00:27:10.674 E/appproc (10142): checkAndSetEnv get_baksize open file /data/dalvik-cache/classpath4 failed , error(Permission denied)
+09-18 00:27:10.674 E/appproc (10142): checkAndSetEnv write_classpathbak open file failed:Permission denied
+09-18 00:27:10.675 W/app_process(10142): Thread Pool max thread count is 0. Cannot cache binder as linkToDeath cannot be implemented. serviceName: vivo_common_service
+09-18 00:27:10.676 D/AndroidRuntime(10142): >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
+09-18 00:27:10.689 I/AndroidRuntime(10142): Using default boot image
+09-18 00:27:10.689 I/AndroidRuntime(10142): Leaving lock profiling enabled
+09-18 00:27:10.694 I/app_process(10142): Using CollectorTypeCC GC.
+09-18 00:27:10.694 I/app_process(10142): MMAP_TRYLOCK is supported in uffd errno:2 addr:0x7e3bc82000 size:4096
+09-18 00:27:10.862 D/nativeloader(10142): InitDefaultPublicLibraries for_preload=1: libandroid.so:libaaudio.so:libamidi.so:libbinder_ndk.so:libc.so:libcamera2ndk.so:libdl.so:libEGL.so:libGLESv1_CM.so:libGLESv2.so:libGLESv3.so:libicu.so:libicui18n.so:libicuuc.so:libjnigraphics.so:liblog.so:libmediandk.so:libm.so:libnativehelper.so:libnativewindow.so:libOpenMAXAL.so:libOpenSLES.so:libRS.so:libstdc++.so:libsync.so:libvulkan.so:libwebviewchromium_plat_support.so:libz.so
+09-18 00:27:10.911 D/nativeloader(10142): Load libicu_jni.so using APEX ns com_android_art for caller /apex/com.android.art/javalib/core-oj.jar: ok
+09-18 00:27:10.912 D/app_process(10142): u_setTimeZoneFilesDirectory("/apex/com.android.tzdata/etc/tz/versioned/9/icu") succeeded. 
+09-18 00:27:10.912 D/app_process(10142): I18n APEX ICU file found: /apex/com.android.i18n/etc/icu/icudt76l.dat
+09-18 00:27:10.913 D/nativeloader(10142): Load libjavacore.so using APEX ns com_android_art for caller /apex/com.android.art/javalib/core-oj.jar: ok
+09-18 00:27:10.917 D/nativeloader(10142): Load libopenjdk.so using APEX ns com_android_art for caller /apex/com.android.art/javalib/core-oj.jar: ok
+09-18 00:27:10.921 E/app_process(10142): No implementation found for boolean android.os.Trace.nativeIsTagEnabled(long) (tried Java_android_os_Trace_nativeIsTagEnabled and Java_android_os_Trace_nativeIsTagEnabled__J) - is the library loaded, e.g. System.loadLibrary?
+09-18 00:27:10.921 E/app_process(10142): No implementation found for boolean android.os.Trace.nativeIsTagEnabled(long) (tried Java_android_os_Trace_nativeIsTagEnabled and Java_android_os_Trace_nativeIsTagEnabled__J) - is the library loaded, e.g. System.loadLibrary?
+09-18 00:27:10.921 E/System  (10142): openDexFile load detect error
+09-18 00:27:10.922 E/System  (10142): java.lang.reflect.InvocationTargetException
+09-18 00:27:10.922 E/System  (10142): 	at java.lang.reflect.Method.invoke(Native Method)
+09-18 00:27:10.922 E/System  (10142): 	at dalvik.system.DexFile.openDexFile(DexFile.java:422)
+09-18 00:27:10.922 E/System  (10142): 	at dalvik.system.DexFile.<init>(DexFile.java:133)
+09-18 00:27:10.922 E/System  (10142): 	at dalvik.system.DexFile.<init>(DexFile.java:106)
+09-18 00:27:10.922 E/System  (10142): 	at dalvik.system.DexPathList.loadDexFile(DexPathList.java:438)
+09-18 00:27:10.922 E/System  (10142): 	at dalvik.system.DexPathList.makeDexElements(DexPathList.java:397)
+09-18 00:27:10.922 E/System  (10142): 	at dalvik.system.DexPathList.<init>(DexPathList.java:166)
+09-18 00:27:10.922 E/System  (10142): 	at dalvik.system.BaseDexClassLoader.<init>(BaseDexClassLoader.java:160)
+09-18 00:27:10.922 E/System  (10142): 	at dalvik.system.BaseDexClassLoader.<init>(BaseDexClassLoader.java:105)
+09-18 00:27:10.922 E/System  (10142): 	at dalvik.system.PathClassLoader.<init>(PathClassLoader.java:71)
+09-18 00:27:10.922 E/System  (10142): 	at java.lang.ClassLoader.createSystemClassLoader(ClassLoader.java:267)
+09-18 00:27:10.922 E/System  (10142): 	at java.lang.ClassLoader.-$$Nest$smcreateSystemClassLoader(Unknown Source:0)
+09-18 00:27:10.922 E/System  (10142): 	at java.lang.ClassLoader$SystemClassLoader.<clinit>(ClassLoader.java:217)
+09-18 00:27:10.922 E/System  (10142): 	at java.lang.ClassLoader.getSystemClassLoader(ClassLoader.java:1907)
+09-18 00:27:10.922 E/System  (10142): Caused by: java.lang.UnsatisfiedLinkError: No implementation found for boolean android.os.Trace.nativeIsTagEnabled(long) (tried Java_android_os_Trace_nativeIsTagEnabled and Java_android_os_Trace_nativeIsTagEnabled__J) - is the library loaded, e.g. System.loadLibrary?
+09-18 00:27:10.922 E/System  (10142): 	at android.os.Trace.nativeIsTagEnabled(Native Method)
+09-18 00:27:10.922 E/System  (10142): 	at android.os.Trace.isTagEnabled(Trace.java:182)
+09-18 00:27:10.922 E/System  (10142): 	at android.os.Trace.endSection(Trace.java:483)
+09-18 00:27:10.922 E/System  (10142): 	at com.vivo.framework.securitydetect.DynamicLoadDetectManager.reportDexLoaded(DynamicLoadDetectManager.java:156)
+09-18 00:27:10.922 E/System  (10142): 	... 14 more
+09-18 00:27:10.923 W/app_process(10142): ClassLoaderContext shared library size mismatch. Expected=2, found=0 (PCL[]{PCL[/system/framework/android.test.base.jar*2789897741]#PCL[/system/framework/android.test.mock.jar*3361312393]} | PCL[])
+09-18 00:27:10.925 E/app_process(10142): No implementation found for boolean android.os.Trace.nativeIsTagEnabled(long) (tried Java_android_os_Trace_nativeIsTagEnabled and Java_android_os_Trace_nativeIsTagEnabled__J) - is the library loaded, e.g. System.loadLibrary?
+09-18 00:27:10.926 E/app_process(10142): No implementation found for boolean android.os.Trace.nativeIsTagEnabled(long) (tried Java_android_os_Trace_nativeIsTagEnabled and Java_android_os_Trace_nativeIsTagEnabled__J) - is the library loaded, e.g. System.loadLibrary?
+09-18 00:27:10.926 E/System  (10142): openDexFile load detect error
+09-18 00:27:10.926 E/System  (10142): java.lang.reflect.InvocationTargetException
+09-18 00:27:10.926 E/System  (10142): 	at java.lang.reflect.Method.invoke(Native Method)
+09-18 00:27:10.926 E/System  (10142): 	at dalvik.system.DexFile.openDexFile(DexFile.java:422)
+09-18 00:27:10.926 E/System  (10142): 	at dalvik.system.DexFile.<init>(DexFile.java:133)
+09-18 00:27:10.926 E/System  (10142): 	at dalvik.system.DexFile.<init>(DexFile.java:106)
+09-18 00:27:10.926 E/System  (10142): 	at dalvik.system.DexPathList.loadDexFile(DexPathList.java:438)
+09-18 00:27:10.926 E/System  (10142): 	at dalvik.system.DexPathList.makeDexElements(DexPathList.java:397)
+09-18 00:27:10.926 E/System  (10142): 	at dalvik.system.DexPathList.<init>(DexPathList.java:166)
+09-18 00:27:10.926 E/System  (10142): 	at dalvik.system.BaseDexClassLoader.<init>(BaseDexClassLoader.java:160)
+09-18 00:27:10.926 E/System  (10142): 	at dalvik.system.BaseDexClassLoader.<init>(BaseDexClassLoader.java:105)
+09-18 00:27:10.926 E/System  (10142): 	at dalvik.system.PathClassLoader.<init>(PathClassLoader.java:71)
+09-18 00:27:10.926 E/System  (10142): 	at java.lang.ClassLoader.createSystemClassLoader(ClassLoader.java:267)
+09-18 00:27:10.926 E/System  (10142): 	at java.lang.ClassLoader.-$$Nest$smcreateSystemClassLoader(Unknown Source:0)
+09-18 00:27:10.926 E/System  (10142): 	at java.lang.ClassLoader$SystemClassLoader.<clinit>(ClassLoader.java:217)
+09-18 00:27:10.926 E/System  (10142): 	at java.lang.ClassLoader.getSystemClassLoader(ClassLoader.java:1907)
+09-18 00:27:10.926 E/System  (10142): Caused by: java.lang.UnsatisfiedLinkError: No implementation found for boolean android.os.Trace.nativeIsTagEnabled(long) (tried Java_android_os_Trace_nativeIsTagEnabled and Java_android_os_Trace_nativeIsTagEnabled__J) - is the library loaded, e.g. System.loadLibrary?
+09-18 00:27:10.926 E/System  (10142): 	at android.os.Trace.nativeIsTagEnabled(Native Method)
+09-18 00:27:10.926 E/System  (10142): 	at android.os.Trace.isTagEnabled(Trace.java:182)
+09-18 00:27:10.926 E/System  (10142): 	at android.os.Trace.endSection(Trace.java:483)
+09-18 00:27:10.926 E/System  (10142): 	at com.vivo.framework.securitydetect.DynamicLoadDetectManager.reportDexLoaded(DynamicLoadDetectManager.java:156)
+09-18 00:27:10.926 E/System  (10142): 	... 14 more
+09-18 00:27:10.929 W/app_process(10142): ClassLoaderContext classpath size mismatch. expected=0, found=1 (PCL[]{PCL[/system/framework/android.test.runner.jar*895143020]#PCL[/system/framework/android.test.base.jar*2789897741]} | PCL[/system/framework/android.test.runner.jar*895143020])
+09-18 00:27:10.939 W/libc    (10142): Access denied finding property "ro.vendor.mtk.hbt_binfmt_misc_support"
+09-18 00:27:10.936 W/main    (10142): type=1400 audit(0.0:396342): avc:  denied  { read } for  name="u:object_r:system_mtk_app32_boost_prop:s0" dev="tmpfs" ino=402 scontext=u:r:shell:s0 tcontext=u:object_r:system_mtk_app32_boost_prop:s0 tclass=file permissive=0
+09-18 00:27:10.936 W/main    (10142): type=1400 audit(0.0:396343): avc:  denied  { read } for  name="u:object_r:system_mtk_app32_boost_prop:s0" dev="tmpfs" ino=402 scontext=u:r:shell:s0 tcontext=u:object_r:system_mtk_app32_boost_prop:s0 tclass=file permissive=0
+09-18 00:27:10.940 W/libc    (10142): Access denied finding property "persist.vendor.mtk.hbt_dyn_type"
+09-18 00:27:10.936 W/main    (10142): type=1400 audit(0.0:396344): avc:  denied  { read } for  name="u:object_r:system_mtk_app32_boost_prop:s0" dev="tmpfs" ino=402 scontext=u:r:shell:s0 tcontext=u:object_r:system_mtk_app32_boost_prop:s0 tclass=file permissive=0
+09-18 00:27:10.941 E/VivoConfigStore(10142): the feature vivo.software.commonradius is used in zygote, but you did't add attribute is_support_zygote=1 in vivo_config.ini ,please play attention to check your vivo_config.ini for the feature!!!
+09-18 00:27:10.941 I/VivoSystemFrameworkFactory(10142): Instance implClass com.vivo.VivoSystemFrameworkFactoryImpl
+09-18 00:27:10.958 W/libc    (10142): Access denied finding property "ro.vendor.mtk.hbt_binfmt_misc_support"
+09-18 00:27:10.956 W/main    (10142): type=1400 audit(0.0:396345): avc:  denied  { read } for  name="u:object_r:system_mtk_app32_boost_prop:s0" dev="tmpfs" ino=402 scontext=u:r:shell:s0 tcontext=u:object_r:system_mtk_app32_boost_prop:s0 tclass=file permissive=0
+09-18 00:27:10.959 E/VivoConfigStore(10142): it is Zygote,don't need init
+09-18 00:27:10.959 E/VivoConfigStore(10142): the feature vivo.hardware.display.xdr is used in zygote, but you did't add attribute is_support_zygote=1 in vivo_config.ini ,please play attention to check your vivo_config.ini for the feature!!!
+09-18 00:27:10.977 D/nativeloader(10142): Load libframework-connectivity-tiramisu-jni.so using APEX ns com_android_tethering for caller /apex/com.android.tethering/javalib/framework-connectivity-t.jar: ok
+09-18 00:27:10.978 D/AndroidRuntime(10142): Calling main entry com.android.commands.uiautomator.Launcher
+09-18 00:27:10.986 I/AconfigPackage(10142): com.android.adservices.flags is mapped to com.android.adservices
+09-18 00:27:10.986 I/AconfigPackage(10142): com.android.sdksandbox.flags is mapped to com.android.adservices
+09-18 00:27:10.987 I/AconfigPackage(10142): com.android.permission.flags is mapped to com.android.permission
+09-18 00:27:10.987 I/AconfigPackage(10142): com.android.uwb.flags is mapped to com.android.uwb
+09-18 00:27:10.987 I/AconfigPackage(10142): com.android.ranging.flags is mapped to com.android.uwb
+09-18 00:27:10.987 I/AconfigPackage(10142): com.android.org.conscrypt.flags is mapped to com.android.conscrypt
+09-18 00:27:10.988 I/AconfigPackage(10142): com.android.appsearch.flags is mapped to com.android.appsearch
+09-18 00:27:10.988 I/AconfigPackage(10142): android.media.swcodec.flags is mapped to com.android.media.swcodec
+09-18 00:27:10.989 I/AconfigPackage(10142): android.uprobestats.mainline.flags is mapped to com.android.uprobestats
+09-18 00:27:10.989 I/AconfigPackage(10142): com.android.icu is mapped to com.android.i18n
+09-18 00:27:10.989 I/AconfigPackage(10142): com.android.devicelock.flags is mapped to com.android.devicelock
+09-18 00:27:10.990 I/AconfigPackage(10142): com.android.art.flags is mapped to com.android.art
+09-18 00:27:10.990 I/AconfigPackage(10142): com.android.libcore is mapped to com.android.art
+09-18 00:27:10.990 I/AconfigPackage(10142): android.graphics.pdf.flags is mapped to com.android.mediaprovider
+09-18 00:27:10.990 I/AconfigPackage(10142): com.android.providers.media.flags is mapped to com.android.mediaprovider
+09-18 00:27:10.990 I/AconfigPackage(10142): android.graphics.pdf.flags.readonly is mapped to com.android.mediaprovider
+09-18 00:27:10.990 I/AconfigPackage(10142): com.android.ipsec.flags is mapped to com.android.ipsec
+09-18 00:27:10.990 I/AconfigPackage(10142): com.android.media.extractor.flags is mapped to com.android.media
+09-18 00:27:10.990 I/AconfigPackage(10142): com.android.media.mainline.flags is mapped to com.android.media
+09-18 00:27:10.991 I/AconfigPackage(10142): com.android.wifi.flags is mapped to com.android.wifi
+09-18 00:27:10.991 I/AconfigPackage(10142): com.android.system.virtualmachine.flags is mapped to com.android.virt
+09-18 00:27:10.991 I/AconfigPackage(10142): android.provider.flags is mapped to com.android.configinfrastructure
+09-18 00:27:10.991 I/AconfigPackage(10142): com.android.server.deviceconfig is mapped to com.android.configinfrastructure
+09-18 00:27:10.991 I/AconfigPackage(10142): com.android.net.ct.flags is mapped to com.android.tethering
+09-18 00:27:10.991 I/AconfigPackage(10142): com.android.net.flags is mapped to com.android.tethering
+09-18 00:27:10.991 I/AconfigPackage(10142): android.net.vcn is mapped to com.android.tethering
+09-18 00:27:10.991 I/AconfigPackage(10142): com.android.nearby.flags is mapped to com.android.tethering
+09-18 00:27:10.991 I/AconfigPackage(10142): android.net.http is mapped to com.android.tethering
+09-18 00:27:10.991 I/AconfigPackage(10142): com.android.net.thread.flags is mapped to com.android.tethering
+09-18 00:27:10.992 I/AconfigPackage(10142): com.android.settings.flags is mapped to system_ext
+09-18 00:27:10.992 I/AconfigPackage(10142): com.android.launcher3 is mapped to system_ext
+09-18 00:27:10.992 I/AconfigPackage(10142): com.android.systemui.accessibility.accessibilitymenu is mapped to system_ext
+09-18 00:27:10.992 I/AconfigPackage(10142): android.app.admin.flags is mapped to system
+09-18 00:27:10.992 I/AconfigPackage(10142): android.database.sqlite is mapped to system
+09-18 00:27:10.992 I/AconfigPackage(10142): com.android.server.power.feature.flags is mapped to system
+09-18 00:27:10.992 I/AconfigPackage(10142): com.android.media.performance.flags is mapped to system
+09-18 00:27:10.992 I/AconfigPackage(10142): android.app.contextualsearch.flags is mapped to system
+09-18 00:27:10.992 I/AconfigPackage(10142): android.app.ondeviceintelligence.flags is mapped to system
+09-18 00:27:10.992 I/AconfigPackage(10142): com.android.media.projection.flags is mapped to system
+09-18 00:27:10.992 I/AconfigPackage(10142): android.companion is mapped to system
+09-18 00:27:10.992 I/AconfigPackage(10142): android.service.controls.flags is mapped to system
+09-18 00:27:10.992 I/AconfigPackage(10142): com.android.text.flags is mapped to system
+09-18 00:27:10.992 I/AconfigPackage(10142): android.companion.virtualdevice.flags is mapped to system
+09-18 00:27:10.992 I/AconfigPackage(10142): android.uprobestats.flags is mapped to system
+09-18 00:27:10.992 I/AconfigPackage(10142): com.android.net.thread.platform.flags is mapped to system
+09-18 00:27:10.992 I/AconfigPackage(10142): android.view.contentprotection.flags is mapped to system
+09-18 00:27:10.992 I/AconfigPackage(10142): com.android.server.dreams is mapped to system
+09-18 00:27:10.992 I/AconfigPackage(10142): com.android.graphics.surfaceflinger.flags is mapped to system
+09-18 00:27:10.992 I/AconfigPackage(10142): com.android.hardware.input is mapped to system
+09-18 00:27:10.992 I/AconfigPackage(10142): android.sdk is mapped to system
+09-18 00:27:10.993 I/AconfigPackage(10142): com.android.input.flags is mapped to system
+09-18 00:27:10.993 I/AconfigPackage(10142): android.tracing is mapped to system
+09-18 00:27:10.993 I/AconfigPackage(10142): com.android.server.biometrics is mapped to system
+09-18 00:27:10.993 I/AconfigPackage(10142): android.view.contentcapture.flags is mapped to system
+09-18 00:27:10.993 I/AconfigPackage(10142): android.app.job is mapped to system
+09-18 00:27:10.993 I/AconfigPackage(10142): android.content.res is mapped to system
+09-18 00:27:10.993 I/AconfigPackage(10142): android.net.platform.flags is mapped to system
+09-18 00:27:10.993 I/AconfigPackage(10142): com.android.aconfig.flags is mapped to system
+09-18 00:27:10.993 I/AconfigPackage(10142): com.android.graphics.flags is mapped to system
+09-18 00:27:10.993 I/AconfigPackage(10142): android.server.app is mapped to system
+09-18 00:27:10.993 I/AconfigPackage(10142): android.speech.flags is mapped to system
+09-18 00:27:10.993 I/AconfigPackage(10142): com.android.server.stats is mapped to system
+09-18 00:27:10.993 I/AconfigPackage(10142): android.hardware.biometrics is mapped to system
+09-18 00:27:10.993 I/AconfigPackage(10142): android.car.feature is mapped to system
+09-18 00:27:10.993 I/AconfigPackage(10142): android.adpf is mapped to system
+09-18 00:27:10.993 I/AconfigPackage(10142): android.location.flags is mapped to system
+09-18 00:27:10.993 I/AconfigPackage(10142): com.android.settingslib.flags is mapped to system
+09-18 00:27:10.993 I/AconfigPackage(10142): com.android.managedprovisioning.flags is mapped to system
+09-18 00:27:10.993 I/AconfigPackage(10142): android.app.assist.flags is mapped to system
+09-18 00:27:10.993 I/AconfigPackage(10142): com.android.server.net is mapped to system
+09-18 00:27:10.993 I/AconfigPackage(10142): com.android.settingslib.widget.flags is mapped to system
+09-18 00:27:10.993 I/AconfigPackage(10142): com.android.internal.camera.flags is mapped to system
+09-18 00:27:10.993 I/AconfigPackage(10142): com.android.hardware.libsensor.flags is mapped to system
+09-18 00:27:10.993 I/AconfigPackage(10142): com.android.internal.jank is mapped to system
+09-18 00:27:10.993 I/AconfigPackage(10142): com.android.providers.settings is mapped to system
+09-18 00:27:10.993 I/AconfigPackage(10142): android.multiuser is mapped to system
+09-18 00:27:10.993 I/AconfigPackage(10142): com.android.server.power.optimization is mapped to system
+09-18 00:27:10.993 I/AconfigPackage(10142): com.android.media.flags is mapped to system
+09-18 00:27:10.993 I/AconfigPackage(10142): com.android.server.flags is mapped to system
+09-18 00:27:10.993 I/AconfigPackage(10142): com.android.graphics.libvulkan.flags is mapped to system
+09-18 00:27:10.993 I/AconfigPackage(10142): android.app.appfunctions.flags is mapped to system
+09-18 00:27:10.993 I/AconfigPackage(10142): android.app.smartspace.flags is mapped to system
+09-18 00:27:10.993 I/AconfigPackage(10142): com.android.shell.flags is mapped to system
+09-18 00:27:10.993 I/AconfigPackage(10142): com.android.media.aaudio is mapped to system
+09-18 00:27:10.993 I/AconfigPackage(10142): android.hardware.radio is mapped to system
+09-18 00:27:10.993 I/AconfigPackage(10142): suspend_service.flags is mapped to system
+09-18 00:27:10.993 I/AconfigPackage(10142): android.media.midi is mapped to system
+09-18 00:27:10.993 I/AconfigPackage(10142): com.android.libcore.readonly is mapped to system
+09-18 00:27:10.993 I/AconfigPackage(10142): com.android.settingslib.widget.selectorwithwidgetpreference.flags is mapped to system
+09-18 00:27:10.993 I/AconfigPackage(10142): android.service.notification is mapped to system
+09-18 00:27:10.993 I/AconfigPackage(10142): com.android.systemui.shared is mapped to system
+09-18 00:27:10.993 I/AconfigPackage(10142): android.app.jank is mapped to system
+09-18 00:27:10.993 I/AconfigPackage(10142): android.app.wearable is mapped to system
+09-18 00:27:10.993 I/AconfigPackage(10142): com.android.media.audio is mapped to system
+09-18 00:27:10.993 I/AconfigPackage(10142): android.service.chooser is mapped to system
+09-18 00:27:10.993 I/AconfigPackage(10142): com.android.server.compat is mapped to system
+09-18 00:27:10.993 I/AconfigPackage(10142): com.android.server.alarm is mapped to system
+09-18 00:27:10.993 I/AconfigPackage(10142): com.android.apex.flags is mapped to system
+09-18 00:27:10.993 I/AconfigPackage(10142): android.service.quickaccesswallet is mapped to system
+09-18 00:27:10.993 I/AconfigPackage(10142): android.app.usage is mapped to system
+09-18 00:27:10.993 I/AconfigPackage(10142): com.android.server.accessibility is mapped to system
+09-18 00:27:10.993 I/AconfigPackage(10142): android.app.supervision.flags is mapped to system
+09-18 00:27:10.993 I/AconfigPackage(10142): com.android.server.utils is mapped to system
+09-18 00:27:10.993 I/AconfigPackage(10142): android.chre.flags is mapped to system
+09-18 00:27:10.993 I/AconfigPackage(10142): android.content.flags is mapped to system
+09-18 00:27:10.993 I/AconfigPackage(10142): android.media.codec is mapped to system
+09-18 00:27:10.993 I/AconfigPackage(10142): com.android.internal.os is mapped to system
+09-18 00:27:10.993 I/AconfigPackage(10142): android.app is mapped to system
+09-18 00:27:10.993 I/AconfigPackage(10142): android.security.keystore2 is mapped to system
+09-18 00:27:10.993 I/AconfigPackage(10142): android.crashrecovery.flags is mapped to system
+09-18 00:27:10.993 I/AconfigPackage(10142): com.android.tradeinmode.flags is mapped to system
+09-18 00:27:10.993 I/AconfigPackage(10142): android.hardware.flags is mapped to system
+09-18 00:27:10.993 I/AconfigPackage(10142): com.android.server.telecom.flags is mapped to system
+09-18 00:27:10.993 I/AconfigPackage(10142): com.android.settingslib.media.flags is mapped to system
+09-18 00:27:10.993 I/AconfigPackage(10142): com.android.server.policy is mapped to system
+09-18 00:27:10.993 I/AconfigPackage(10142): android.media.audiopolicy is mapped to system
+09-18 00:27:10.993 I/AconfigPackage(10142): com.android.egg.flags is mapped to system
+09-18 00:27:10.993 I/AconfigPackage(10142): com.android.internal.compat.flags is mapped to system
+09-18 00:27:10.993 I/AconfigPackage(10142): android.security is mapped to system
+09-18 00:27:10.993 I/AconfigPackage(10142): android.service.autofill is mapped to system
+09-18 00:27:10.993 I/AconfigPackage(10142): com.example.android.aconfig.demo.flags is mapped to system
+09-18 00:27:10.993 I/AconfigPackage(10142): android.view.flags is mapped to system
+09-18 00:27:10.993 I/AconfigPackage(10142): android.companion.virtual.flags is mapped to system
+09-18 00:27:10.993 I/AconfigPackage(10142): com.android.aconfig_new_storage is mapped to system
+09-18 00:27:10.993 I/AconfigPackage(10142): com.android.server.feature.flags is mapped to system
+09-18 00:27:10.993 I/AconfigPackage(10142): com.android.systemui is mapped to system
+09-18 00:27:10.993 I/AconfigPackage(10142): com.android.server.power.batterysaver is mapped to system
+09-18 00:27:10.993 I/AconfigPackage(10142): android.widget.flags is mapped to system
+09-18 00:27:10.993 I/AconfigPackage(10142): com.android.media.editing.flags is mapped to system
+09-18 00:27:10.993 I/AconfigPackage(10142): com.android.media.codec.flags is mapped to system
+09-18 00:27:10.994 I/AconfigPackage(10142): com.android.server.powerstats is mapped to system
+09-18 00:27:10.994 I/AconfigPackage(10142): com.android.graphics.egl.flags is mapped to system
+09-18 00:27:10.994 I/AconfigPackage(10142): com.android.media.audioserver is mapped to system
+09-18 00:27:10.994 I/AconfigPackage(10142): com.android.server.deviceidle is mapped to system
+09-18 00:27:10.994 I/AconfigPackage(10142): android.nfc is mapped to system
+09-18 00:27:10.994 I/AconfigPackage(10142): android.permission.flags is mapped to system
+09-18 00:27:10.994 I/AconfigPackage(10142): android.service.voice.flags is mapped to system
+09-18 00:27:10.994 I/AconfigPackage(10142): android.content.pm is mapped to system
+09-18 00:27:10.994 I/AconfigPackage(10142): com.android.server.power.hint is mapped to system
+09-18 00:27:10.994 I/AconfigPackage(10142): android.os is mapped to system
+09-18 00:27:10.994 I/AconfigPackage(10142): android.service.dreams is mapped to system
+09-18 00:27:10.994 I/AconfigPackage(10142): com.android.graphics.libgui.flags is mapped to system
+09-18 00:27:10.994 I/AconfigPackage(10142): android.hardware.usb.flags is mapped to system
+09-18 00:27:10.994 I/AconfigPackage(10142): android.provider is mapped to system
+09-18 00:27:10.994 I/AconfigPackage(10142): com.android.server.job is mapped to system
+09-18 00:27:10.994 I/AconfigPackage(10142): com.android.internal.foldables.flags is mapped to system
+09-18 00:27:10.994 I/AconfigPackage(10142): com.android.internal.telephony.flags is mapped to system
+09-18 00:27:10.994 I/AconfigPackage(10142): android.webkit is mapped to system
+09-18 00:27:10.994 I/AconfigPackage(10142): android.credentials.flags is mapped to system
+09-18 00:27:10.994 I/AconfigPackage(10142): com.android.server.display.feature.flags is mapped to system
+09-18 00:27:10.994 I/AconfigPackage(10142): com.android.server.notification is mapped to system
+09-18 00:27:10.994 I/AconfigPackage(10142): android.appwidget.flags is mapped to system
+09-18 00:27:10.994 I/AconfigPackage(10142): com.android.frameworks.sensorservice.flags is mapped to system
+09-18 00:27:10.994 I/AconfigPackage(10142): com.android.window.flags is mapped to system
+09-18 00:27:10.994 I/AconfigPackage(10142): android.adaptiveauth is mapped to system
+09-18 00:27:10.994 I/AconfigPackage(10142): android.net.wifi.flags is mapped to system
+09-18 00:27:10.994 I/AconfigPackage(10142): android.media.tv.flags is mapped to system
+09-18 00:27:10.994 I/AconfigPackage(10142): com.android.server.usb.flags is mapped to system
+09-18 00:27:10.994 I/AconfigPackage(10142): android.os.vibrator is mapped to system
+09-18 00:27:10.994 I/AconfigPackage(10142): android.hardware.devicestate.feature.flags is mapped to system
+09-18 00:27:10.994 I/AconfigPackage(10142): com.android.server.usage is mapped to system
+09-18 00:27:10.994 I/AconfigPackage(10142): android.server is mapped to system
+09-18 00:27:10.994 I/AconfigPackage(10142): com.android.wm.shell is mapped to system
+09-18 00:27:10.994 I/AconfigPackage(10142): android.view.inputmethod is mapped to system
+09-18 00:27:10.994 I/AconfigPackage(10142): com.android.graphics.hwui.flags is mapped to system
+09-18 00:27:10.994 I/AconfigPackage(10142): com.android.server.backup is mapped to system
+09-18 00:27:10.994 I/AconfigPackage(10142): com.android.internal.pm.pkg.component.flags is mapped to system
+09-18 00:27:10.994 I/AconfigPackage(10142): android.view.accessibility is mapped to system
+09-18 00:27:10.994 I/AconfigPackage(10142): android.media.audio is mapped to system
+09-18 00:27:10.994 I/AconfigPackage(10142): com.android.server.am is mapped to system
+09-18 00:27:10.994 I/AconfigPackage(10142): com.android.media.playback.flags is mapped to system
+09-18 00:27:10.994 I/AconfigPackage(10142): com.android.os.statsd.flags is mapped to com.android.os.statsd
+09-18 00:27:10.994 I/AconfigPackage(10142): com.android.healthfitness.flags is mapped to com.android.healthfitness
+09-18 00:27:10.995 I/AconfigPackage(10142): android.os.profiling is mapped to com.android.profiling
+09-18 00:27:10.995 I/AconfigPackage(10142): com.android.adservices.ondevicepersonalization.flags is mapped to com.android.ondevicepersonalization
+09-18 00:27:10.995 I/AconfigPackage(10142): com.android.bluetooth.flags is mapped to com.android.bt
+09-18 00:27:10.995 E/FeatureFlagsImplExport(10142): android.os.flagging.AconfigStorageReadException: ERROR_PACKAGE_NOT_FOUND: package android.xr cannot be found on the device
+09-18 00:27:10.998 D/UiAutomationConnection(10142): Created on user UserHandle{0}
+09-18 00:27:10.999 I/UiAutomation(10142): Initialized for user 0 on display 0
+09-18 00:27:10.999 W/UiAutomation(10142): Created with deprecatead constructor, assumes DEFAULT_DISPLAY
+09-18 00:27:11.356 W/binder:17494_4(17494): type=1400 audit(0.0:396347): avc:  denied  { ioctl } for  path="/proc/fas/render" dev="proc" ino=4026532234 ioctlcmd=0x6609 scontext=u:r:untrusted_app:s0:c190,c256,c512,c768 tcontext=u:object_r:proc_fas:s0 tclass=file permissive=0 app=space.alliswell.inbox
+09-18 00:27:12.073 W/libc    (10142): Access denied finding property "qemu.sf.lcd_density"
+09-18 00:27:12.073 W/libc    (10142): Access denied finding property "qemu.sf.lcd_density"
+09-18 00:27:12.068 W/uiautomator(10142): type=1400 audit(0.0:396350): avc:  denied  { read } for  name="u:object_r:qemu_sf_lcd_density_prop:s0" dev="tmpfs" ino=353 scontext=u:r:shell:s0 tcontext=u:object_r:qemu_sf_lcd_density_prop:s0 tclass=file permissive=0
+09-18 00:27:12.072 W/uiautomator(10142): type=1400 audit(0.0:396351): avc:  denied  { read } for  name="u:object_r:qemu_sf_lcd_density_prop:s0" dev="tmpfs" ino=353 scontext=u:r:shell:s0 tcontext=u:object_r:qemu_sf_lcd_density_prop:s0 tclass=file permissive=0
+09-18 00:27:12.097 W/AccessibilityNodeInfoDumper(10142): Fetch time: 21ms
+09-18 00:27:12.111 W/IPCThreadState(10142): call to talkWithDriver in joinThreadPool returned error: -9 (Bad file descriptor), FD: -1
+09-18 00:27:12.111 W/IPCThreadState(10142): call to talkWithDriver in joinThreadPool returned error: -9 (Bad file descriptor), FD: -1
+09-18 00:27:12.111 W/IPCThreadState(10142): call to talkWithDriver in joinThreadPool returned error: -9 (Bad file descriptor), FD: -1
+09-18 00:27:12.111 D/AndroidRuntime(10142): Shutting down VM
+09-18 00:27:12.360 W/binder:17494_4(17494): type=1400 audit(0.0:396352): avc:  denied  { ioctl } for  path="/proc/fas/render" dev="proc" ino=4026532234 ioctlcmd=0x6609 scontext=u:r:untrusted_app:s0:c190,c256,c512,c768 tcontext=u:object_r:proc_fas:s0 tclass=file permissive=0 app=space.alliswell.inbox
+09-18 00:27:12.972 W/RefBase (10142): RefBase: Explicit destruction, weak count = 0 (in 0x7e08ff19a8). Use sp<> to manage this object. Note - if weak count is 0, this leaks mRefs (weakref_impl).
+09-18 00:27:12.978 D/RefBase (10142):   #00 pc 00000000000bc290  /apex/com.android.runtime/lib64/bionic/libc.so (__cxa_finalize+224) (BuildId: cafe04917347c9e7897b8bec9057522e)
+09-18 00:27:12.978 D/RefBase (10142):   #01 pc 00000000000c1294  /apex/com.android.runtime/lib64/bionic/libc.so (exit+36) (BuildId: cafe04917347c9e7897b8bec9057522e)
+09-18 00:27:12.978 D/RefBase (10142):   #02 pc 00000000000b486c  /apex/com.android.runtime/lib64/bionic/libc.so (__libc_init+124) (BuildId: cafe04917347c9e7897b8bec9057522e)
+09-18 00:27:13.356 W/binder:17494_4(17494): type=1400 audit(0.0:396356): avc:  denied  { ioctl } for  path="/proc/fas/render" dev="proc" ino=4026532234 ioctlcmd=0x6609 scontext=u:r:untrusted_app:s0:c190,c256,c512,c768 tcontext=u:object_r:proc_fas:s0 tclass=file permissive=0 app=space.alliswell.inbox
+09-18 00:27:13.806 W/BatteryStatsService( 1843): Unknown sensor handle 0 received in noteWakeupSensorEvent
+09-18 00:27:14.352 W/binder:17494_4(17494): type=1400 audit(0.0:396359): avc:  denied  { ioctl } for  path="/proc/fas/render" dev="proc" ino=4026532234 ioctlcmd=0x6609 scontext=u:r:untrusted_app:s0:c190,c256,c512,c768 tcontext=u:object_r:proc_fas:s0 tclass=file permissive=0 app=space.alliswell.inbox
+09-18 00:27:15.368 W/binder:17494_4(17494): type=1400 audit(0.0:396363): avc:  denied  { ioctl } for  path="/proc/fas/render" dev="proc" ino=4026532234 ioctlcmd=0x6609 scontext=u:r:untrusted_app:s0:c190,c256,c512,c768 tcontext=u:object_r:proc_fas:s0 tclass=file permissive=0 app=space.alliswell.inbox
+09-18 00:27:16.368 W/binder:17494_4(17494): type=1400 audit(0.0:396367): avc:  denied  { ioctl } for  path="/proc/fas/render" dev="proc" ino=4026532234 ioctlcmd=0x6609 scontext=u:r:untrusted_app:s0:c190,c256,c512,c768 tcontext=u:object_r:proc_fas:s0 tclass=file permissive=0 app=space.alliswell.inbox
+09-18 00:27:17.364 W/binder:17494_4(17494): type=1400 audit(0.0:396370): avc:  denied  { ioctl } for  path="/proc/fas/render" dev="proc" ino=4026532234 ioctlcmd=0x6609 scontext=u:r:untrusted_app:s0:c190,c256,c512,c768 tcontext=u:object_r:proc_fas:s0 tclass=file permissive=0 app=space.alliswell.inbox
+09-18 00:27:18.380 W/binder:17494_4(17494): type=1400 audit(0.0:396374): avc:  denied  { ioctl } for  path="/proc/fas/render" dev="proc" ino=4026532234 ioctlcmd=0x6609 scontext=u:r:untrusted_app:s0:c190,c256,c512,c768 tcontext=u:object_r:proc_fas:s0 tclass=file permissive=0 app=space.alliswell.inbox
+09-18 00:27:19.380 W/binder:17494_4(17494): type=1400 audit(0.0:396378): avc:  denied  { ioctl } for  path="/proc/fas/render" dev="proc" ino=4026532234 ioctlcmd=0x6609 scontext=u:r:untrusted_app:s0:c190,c256,c512,c768 tcontext=u:object_r:proc_fas:s0 tclass=file permissive=0 app=space.alliswell.inbox
+09-18 00:27:20.380 W/binder:17494_4(17494): type=1400 audit(0.0:396380): avc:  denied  { ioctl } for  path="/proc/fas/render" dev="proc" ino=4026532234 ioctlcmd=0x6609 scontext=u:r:untrusted_app:s0:c190,c256,c512,c768 tcontext=u:object_r:proc_fas:s0 tclass=file permissive=0 app=space.alliswell.inbox
+09-18 00:27:21.089 V/Capacitor/Plugin(17494): To native (Capacitor plugin): callbackId: 95780888, pluginId: SystemBridge, methodName: diagnose
+09-18 00:27:21.090 V/Capacitor(17494): callback: 95780888, pluginId: SystemBridge, methodName: diagnose, methodData: {}
+09-18 00:27:21.101 V/Capacitor/Plugin(17494): To native (Capacitor plugin): callbackId: 95780889, pluginId: LocalNotifications, methodName: getPending
+09-18 00:27:21.101 V/Capacitor(17494): callback: 95780889, pluginId: LocalNotifications, methodName: getPending, methodData: {}
+09-18 00:27:21.117 V/Capacitor/Plugin(17494): To native (Capacitor plugin): callbackId: 95780890, pluginId: SystemBridge, methodName: cancelAlarm
+09-18 00:27:21.117 V/Capacitor(17494): callback: 95780890, pluginId: SystemBridge, methodName: cancelAlarm, methodData: {"id":400246606}
+09-18 00:27:21.138 V/Capacitor/Plugin(17494): To native (Capacitor plugin): callbackId: 95780891, pluginId: SystemBridge, methodName: cancelNotification
+09-18 00:27:21.138 V/Capacitor(17494): callback: 95780891, pluginId: SystemBridge, methodName: cancelNotification, methodData: {"id":400246606}
+09-18 00:27:21.149 I/alliswell.inbox(17494): vart_dgc, 8192KB,32MB,0.5
+09-18 00:27:21.149 I/alliswell.inbox(17494): Background young concurrent copying GC freed 3091KB AllocSpace bytes, 69(2648KB) LOS objects, 95% free, 4436KB(1888KB_132KB)/100MB, 2Fd, itvl 117.976s, cpu 22.523ms, paused 53us,29us total 26.131ms
+09-18 00:27:21.149 V/Capacitor/Plugin(17494): To native (Capacitor plugin): callbackId: 95780892, pluginId: SystemBridge, methodName: scheduleAlarm
+09-18 00:27:21.149 V/Capacitor(17494): callback: 95780892, pluginId: SystemBridge, methodName: scheduleAlarm, methodData: {"delayMs":73418859,"title":"☆ 重要事项","body":"报名截止，提前确认材料","id":1648318806,"itemId":"i_87wsnzxnmu5j3pv5","itemRev":1,"level":"☆ 重要"}
+09-18 00:27:21.196 V/Capacitor/Plugin(17494): To native (Capacitor plugin): callbackId: 95780893, pluginId: SystemBridge, methodName: scheduleAlarm
+09-18 00:27:21.196 V/Capacitor(17494): callback: 95780893, pluginId: SystemBridge, methodName: scheduleAlarm, methodData: {"delayMs":120758806,"title":"☆ 重要事项","body":"给爸妈打电话","id":925311845,"itemId":"i_cyhim30gmu5j3pv6","itemRev":1,"level":"☆ 重要"}
+09-18 00:27:21.252 V/Capacitor/Plugin(17494): To native (Capacitor plugin): callbackId: 95780894, pluginId: SystemBridge, methodName: scheduleAlarm
+09-18 00:27:21.252 V/Capacitor(17494): callback: 95780894, pluginId: SystemBridge, methodName: scheduleAlarm, methodData: {"delayMs":246218752,"title":"☆ 重要事项","body":"交房租","id":1354819241,"itemId":"i_8zju7b9emu5j3pv6","itemRev":2,"level":"☆ 重要"}
+09-18 00:27:21.392 W/binder:17494_4(17494): type=1400 audit(0.0:396385): avc:  denied  { ioctl } for  path="/proc/fas/render" dev="proc" ino=4026532234 ioctlcmd=0x6609 scontext=u:r:untrusted_app:s0:c190,c256,c512,c768 tcontext=u:object_r:proc_fas:s0 tclass=file permissive=0 app=space.alliswell.inbox
+09-18 00:27:22.087 V/Capacitor/Plugin(17494): To native (Capacitor plugin): callbackId: 95780895, pluginId: SystemBridge, methodName: diagnose
+09-18 00:27:22.087 V/Capacitor(17494): callback: 95780895, pluginId: SystemBridge, methodName: diagnose, methodData: {}
+09-18 00:27:22.102 V/Capacitor/Plugin(17494): To native (Capacitor plugin): callbackId: 95780896, pluginId: LocalNotifications, methodName: getPending
+09-18 00:27:22.103 V/Capacitor(17494): callback: 95780896, pluginId: LocalNotifications, methodName: getPending, methodData: {}
+09-18 00:27:22.126 V/Capacitor/Plugin(17494): To native (Capacitor plugin): callbackId: 95780897, pluginId: SystemBridge, methodName: scheduleAlarm
+09-18 00:27:22.126 V/Capacitor(17494): callback: 95780897, pluginId: SystemBridge, methodName: scheduleAlarm, methodData: {"delayMs":73417878,"title":"☆ 重要事项","body":"报名截止，提前确认材料","id":1648318806,"itemId":"i_87wsnzxnmu5j3pv5","itemRev":1,"level":"☆ 重要"}
+09-18 00:27:22.181 V/Capacitor/Plugin(17494): To native (Capacitor plugin): callbackId: 95780898, pluginId: SystemBridge, methodName: scheduleAlarm
+09-18 00:27:22.181 V/Capacitor(17494): callback: 95780898, pluginId: SystemBridge, methodName: scheduleAlarm, methodData: {"delayMs":120757823,"title":"☆ 重要事项","body":"给爸妈打电话","id":925311845,"itemId":"i_cyhim30gmu5j3pv6","itemRev":1,"level":"☆ 重要"}
+09-18 00:27:22.230 V/Capacitor/Plugin(17494): To native (Capacitor plugin): callbackId: 95780899, pluginId: SystemBridge, methodName: scheduleAlarm
+09-18 00:27:22.231 V/Capacitor(17494): callback: 95780899, pluginId: SystemBridge, methodName: scheduleAlarm, methodData: {"delayMs":246217774,"title":"☆ 重要事项","body":"交房租","id":1354819241,"itemId":"i_8zju7b9emu5j3pv6","itemRev":2,"level":"☆ 重要"}
+09-18 00:27:22.392 W/binder:17494_4(17494): type=1400 audit(0.0:396387): avc:  denied  { ioctl } for  path="/proc/fas/render" dev="proc" ino=4026532234 ioctlcmd=0x6609 scontext=u:r:untrusted_app:s0:c190,c256,c512,c768 tcontext=u:object_r:proc_fas:s0 tclass=file permissive=0 app=space.alliswell.inbox
+09-18 00:27:23.392 W/binder:17494_4(17494): type=1400 audit(0.0:396388): avc:  denied  { ioctl } for  path="/proc/fas/render" dev="proc" ino=4026532234 ioctlcmd=0x6609 scontext=u:r:untrusted_app:s0:c190,c256,c512,c768 tcontext=u:object_r:proc_fas:s0 tclass=file permissive=0 app=space.alliswell.inbox
+09-18 00:27:23.837 W/BatteryStatsService( 1843): Unknown sensor handle 0 received in noteWakeupSensorEvent
+09-18 00:27:24.404 W/binder:17494_4(17494): type=1400 audit(0.0:396389): avc:  denied  { ioctl } for  path="/proc/fas/render" dev="proc" ino=4026532234 ioctlcmd=0x6609 scontext=u:r:untrusted_app:s0:c190,c256,c512,c768 tcontext=u:object_r:proc_fas:s0 tclass=file permissive=0 app=space.alliswell.inbox
+09-18 00:27:25.404 W/binder:17494_4(17494): type=1400 audit(0.0:396390): avc:  denied  { ioctl } for  path="/proc/fas/render" dev="proc" ino=4026532234 ioctlcmd=0x6609 scontext=u:r:untrusted_app:s0:c190,c256,c512,c768 tcontext=u:object_r:proc_fas:s0 tclass=file permissive=0 app=space.alliswell.inbox
+09-18 00:27:26.404 W/binder:17494_4(17494): type=1400 audit(0.0:396392): avc:  denied  { ioctl } for  path="/proc/fas/render" dev="proc" ino=4026532234 ioctlcmd=0x6609 scontext=u:r:untrusted_app:s0:c190,c256,c512,c768 tcontext=u:object_r:proc_fas:s0 tclass=file permissive=0 app=space.alliswell.inbox
+09-18 00:27:27.416 W/binder:17494_4(17494): type=1400 audit(0.0:396394): avc:  denied  { ioctl } for  path="/proc/fas/render" dev="proc" ino=4026532234 ioctlcmd=0x6609 scontext=u:r:untrusted_app:s0:c190,c256,c512,c768 tcontext=u:object_r:proc_fas:s0 tclass=file permissive=0 app=space.alliswell.inbox
+09-18 00:27:28.432 W/binder:17494_4(17494): type=1400 audit(0.0:396396): avc:  denied  { ioctl } for  path="/proc/fas/render" dev="proc" ino=4026532234 ioctlcmd=0x6609 scontext=u:r:untrusted_app:s0:c190,c256,c512,c768 tcontext=u:object_r:proc_fas:s0 tclass=file permissive=0 app=space.alliswell.inbox
+09-18 00:27:28.714 E/dumpsys (18005): BBinder_init Processname  dumpsys  
+09-18 00:27:28.714 E/dumpsys (18005): BBinder_init hasGetProcessName  dumpsys
+09-18 00:27:28.714 W/dumpsys (18005): Thread Pool max thread count is 0. Cannot cache binder as linkToDeath cannot be implemented. serviceName: notification
+09-18 00:27:29.266 E/dumpsys (18224): BBinder_init Processname  dumpsys  
+09-18 00:27:29.266 E/dumpsys (18224): BBinder_init hasGetProcessName  dumpsys
+09-18 00:27:29.267 W/dumpsys (18224): Thread Pool max thread count is 0. Cannot cache binder as linkToDeath cannot be implemented. serviceName: power
+09-18 00:27:29.382 E/dumpsys (18309): BBinder_init Processname  dumpsys  
+09-18 00:27:29.382 E/dumpsys (18309): BBinder_init hasGetProcessName  dumpsys
+09-18 00:27:29.383 W/dumpsys (18309): Thread Pool max thread count is 0. Cannot cache binder as linkToDeath cannot be implemented. serviceName: alarm
+09-18 00:27:29.408 W/binder:17494_4(17494): type=1400 audit(0.0:396398): avc:  denied  { ioctl } for  path="/proc/fas/render" dev="proc" ino=4026532234 ioctlcmd=0x6609 scontext=u:r:untrusted_app:s0:c190,c256,c512,c768 tcontext=u:object_r:proc_fas:s0 tclass=file permissive=0 app=space.alliswell.inbox
+09-18 00:27:29.483 E/dumpsys (18403): BBinder_init Processname  dumpsys  
+09-18 00:27:29.483 E/dumpsys (18403): BBinder_init hasGetProcessName  dumpsys
+09-18 00:27:29.484 W/dumpsys (18403): Thread Pool max thread count is 0. Cannot cache binder as linkToDeath cannot be implemented. serviceName: alarm
+09-18 00:27:30.412 W/binder:17494_4(17494): type=1400 audit(0.0:396401): avc:  denied  { ioctl } for  path="/proc/fas/render" dev="proc" ino=4026532234 ioctlcmd=0x6609 scontext=u:r:untrusted_app:s0:c190,c256,c512,c768 tcontext=u:object_r:proc_fas:s0 tclass=file permissive=0 app=space.alliswell.inbox
+09-18 00:27:31.428 W/binder:17494_4(17494): type=1400 audit(0.0:396403): avc:  denied  { ioctl } for  path="/proc/fas/render" dev="proc" ino=4026532234 ioctlcmd=0x6609 scontext=u:r:untrusted_app:s0:c190,c256,c512,c768 tcontext=u:object_r:proc_fas:s0 tclass=file permissive=0 app=space.alliswell.inbox

@@ -1,0 +1,6 @@
+{
+  "status": "PASS",
+  "evidence": "deadline-screen.png",
+  "observed": "Native alarm shows F6c dedicated test title and all four buttons; captured without waking phone manually",
+  "audio": "NOT_PERFORMED"
+}

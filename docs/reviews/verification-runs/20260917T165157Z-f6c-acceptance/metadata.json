@@ -1,0 +1,16 @@
+{
+  "runId": "20260917T165157Z-f6c-acceptance",
+  "candidateSha256": "7813017e5d7f9454bdafb5ead8ccfc5417f44c1242f096647eb16cf7032fa1c9",
+  "serial": "10ACBF2D3D000RS",
+  "plan": [
+    "screenoff 75s",
+    "cold 75s",
+    "screenoff lead1830s for >=30m screenoff"
+  ],
+  "limitations": [
+    "USB attached; not unplugged deep-doze acceptance",
+    "no actual audio recording",
+    "no reboot or force-stop"
+  ],
+  "createdUtc": "2026-09-17T16:52:01.529855+00:00"
+}

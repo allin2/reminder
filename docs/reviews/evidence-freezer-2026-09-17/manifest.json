@@ -1,0 +1,326 @@
+{
+  "schema": 1,
+  "archived_on": "2026-09-18",
+  "git_head_at_archive": "acbe3c539c88f00d836d448dafc31addf1496c90",
+  "note": "Dirty working tree; HEAD does not identify F5 source. Empty files are preserved, not proof of absent delivery.",
+  "files": [
+    {
+      "path": "alarm-now.txt",
+      "bytes": 251308,
+      "sha256": "7fc9c9fe5797f424ecf83bc47ea05802a3d6a2d4ec54a2b4c5fdae1780fd532d",
+      "source": "/tmp/vivo-f3/alarm-now.txt"
+    },
+    {
+      "path": "events-now.txt",
+      "bytes": 60685,
+      "sha256": "c02cdefefd371efa450d288e8e0bbb89661ba4a3eb9ab50cdae96a6a2eb115e3",
+      "source": "/tmp/vivo-f3/events-now.txt"
+    },
+    {
+      "path": "f3-a-alarm-before.txt",
+      "bytes": 269944,
+      "sha256": "3f648ee739b02a73807ba876fc57f5f79553f694deb5523281503d0a662237fd",
+      "source": "/tmp/vivo-f3/f3-a-alarm-before.txt"
+    },
+    {
+      "path": "f3-a-alarm_delivery.xml",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source": "/tmp/vivo-f3/f3-a-alarm_delivery.xml"
+    },
+    {
+      "path": "f3-a-attention_alarm.xml",
+      "bytes": 715,
+      "sha256": "f65334c30f816e95c82a537a30b4ccc142eed9ecdd2d401c0398910e9bbf6e2a",
+      "source": "/tmp/vivo-f3/f3-a-attention_alarm.xml"
+    },
+    {
+      "path": "f3-a-attention_delivery.xml",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source": "/tmp/vivo-f3/f3-a-attention_delivery.xml"
+    },
+    {
+      "path": "f3-a-events.txt",
+      "bytes": 29089,
+      "sha256": "fbeefd49d4463c64fd1239ace184793d3e368792f1733cbefc21d9c749854a9b",
+      "source": "/tmp/vivo-f3/f3-a-events.txt"
+    },
+    {
+      "path": "f3-a-main.txt",
+      "bytes": 3299,
+      "sha256": "b8fbcd0f4ef7f929669d1cbffc1f4e9c1332802a583f6e4bb6d3fb8aaadd7c77",
+      "source": "/tmp/vivo-f3/f3-a-main.txt"
+    },
+    {
+      "path": "f3-a-prefs-list.txt",
+      "bytes": 251,
+      "sha256": "cd94e45239b5544dc2394f3b153b0007b2688d9518cf2bcf4411e8cac88b92f4",
+      "source": "/tmp/vivo-f3/f3-a-prefs-list.txt"
+    },
+    {
+      "path": "f3-a-trace-after.xml",
+      "bytes": 28539,
+      "sha256": "f96a99269f191519568f4557e4848aac406ed1097c518696e2fa0b4b06630c5b",
+      "source": "/tmp/vivo-f3/f3-a-trace-after.xml"
+    },
+    {
+      "path": "f3-a-trace-before.xml",
+      "bytes": 28539,
+      "sha256": "f96a99269f191519568f4557e4848aac406ed1097c518696e2fa0b4b06630c5b",
+      "source": "/tmp/vivo-f3/f3-a-trace-before.xml"
+    },
+    {
+      "path": "f3-a.log",
+      "bytes": 3957,
+      "sha256": "1ac25859e9e5f236e2f0077ebe38b6139b4e04af0a4d094ace3703af4265ad4a",
+      "source": "/tmp/vivo-f3/f3-a.log"
+    },
+    {
+      "path": "f3-ctl-alarm-before.txt",
+      "bytes": 271388,
+      "sha256": "39d4c3fb5b20987e5eb90d4d317fb014349deb9f58a385d26249db99a2930140",
+      "source": "/tmp/vivo-f3/f3-ctl-alarm-before.txt"
+    },
+    {
+      "path": "f3-ctl-delivery.xml",
+      "bytes": 703,
+      "sha256": "7c6a200b236b181531f534c8c08907bd78cff38f4381774a9a6b4b18dd519537",
+      "source": "/tmp/vivo-f3/f3-ctl-delivery.xml"
+    },
+    {
+      "path": "f3-ctl-events.txt",
+      "bytes": 62095,
+      "sha256": "80d15d48e989a1de285686f8f504a7c774ac1d4ed199b8a55f84488667205e47",
+      "source": "/tmp/vivo-f3/f3-ctl-events.txt"
+    },
+    {
+      "path": "f3-ctl-trace-after.xml",
+      "bytes": 31258,
+      "sha256": "752a139d3f2dcb4a1283d937410f6c5c19f42487a67ec6b0fd05c3575fed0e30",
+      "source": "/tmp/vivo-f3/f3-ctl-trace-after.xml"
+    },
+    {
+      "path": "f3-ctl.log",
+      "bytes": 497,
+      "sha256": "28a4809a9ffea67aec959effa4607a2e4f08c72e993578dba3c2c5674fabe370",
+      "source": "/tmp/vivo-f3/f3-ctl.log"
+    },
+    {
+      "path": "f3b-a-alarm-before.txt",
+      "bytes": 272358,
+      "sha256": "be230bbca56633b488d93b64d740ab35821f0f4b6bbb5f88163a34655ef5163c",
+      "source": "/tmp/vivo-f3/f3b-a-alarm-before.txt"
+    },
+    {
+      "path": "f3b-a-alarm_delivery.xml",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source": "/tmp/vivo-f3/f3b-a-alarm_delivery.xml"
+    },
+    {
+      "path": "f3b-a-attention_alarm.xml",
+      "bytes": 703,
+      "sha256": "7c6a200b236b181531f534c8c08907bd78cff38f4381774a9a6b4b18dd519537",
+      "source": "/tmp/vivo-f3/f3b-a-attention_alarm.xml"
+    },
+    {
+      "path": "f3b-a-attention_delivery.xml",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source": "/tmp/vivo-f3/f3b-a-attention_delivery.xml"
+    },
+    {
+      "path": "f3b-a-events.txt",
+      "bytes": 53101,
+      "sha256": "867c092b3f9c61b39820e27f05d8328d2193d62b5505f032d13fc1da5e887606",
+      "source": "/tmp/vivo-f3/f3b-a-events.txt"
+    },
+    {
+      "path": "f3b-a-main.txt",
+      "bytes": 4116,
+      "sha256": "ac510fa4329925b4ca56f03f84a57a06ea8637a10d52e61a2d44d40cd04758b7",
+      "source": "/tmp/vivo-f3/f3b-a-main.txt"
+    },
+    {
+      "path": "f3b-a-prefs-list.txt",
+      "bytes": 251,
+      "sha256": "cd94e45239b5544dc2394f3b153b0007b2688d9518cf2bcf4411e8cac88b92f4",
+      "source": "/tmp/vivo-f3/f3b-a-prefs-list.txt"
+    },
+    {
+      "path": "f3b-a-trace-after.xml",
+      "bytes": 31381,
+      "sha256": "3907e70f02358b618d0c8eb031e43d8262ee840c5a464ea555686003c77bb2e6",
+      "source": "/tmp/vivo-f3/f3b-a-trace-after.xml"
+    },
+    {
+      "path": "f3b-a-trace-before.xml",
+      "bytes": 31381,
+      "sha256": "3907e70f02358b618d0c8eb031e43d8262ee840c5a464ea555686003c77bb2e6",
+      "source": "/tmp/vivo-f3/f3b-a-trace-before.xml"
+    },
+    {
+      "path": "f3b-a.log",
+      "bytes": 4713,
+      "sha256": "3bfd81139b1cb47a7f4746a6035251ac9bb3208f8ae635a68c65d00e617941f0",
+      "source": "/tmp/vivo-f3/f3b-a.log"
+    },
+    {
+      "path": "f3c-ctl-alarm-before.txt",
+      "bytes": 268333,
+      "sha256": "4c469b5a7c03ea19db50465a3c774fbfb0b625b60440e9bd297e57e175cf23cd",
+      "source": "/tmp/vivo-f3/f3c-ctl-alarm-before.txt"
+    },
+    {
+      "path": "f3c-ctl-delivery.xml",
+      "bytes": 703,
+      "sha256": "97d70489b98bc04eb04e3635ffbbbb988d928168e7521818539687222e9b3a13",
+      "source": "/tmp/vivo-f3/f3c-ctl-delivery.xml"
+    },
+    {
+      "path": "f3c-ctl-events.txt",
+      "bytes": 55911,
+      "sha256": "89e6ee79d3abd675874d794c813ecf1cac0d1c04315160dae46cdf6572fcd96f",
+      "source": "/tmp/vivo-f3/f3c-ctl-events.txt"
+    },
+    {
+      "path": "f3c-ctl-trace-after.xml",
+      "bytes": 31389,
+      "sha256": "3a084e096d44abd99299463e2fb847d1de8f6b51f3378b63bc867dfeab2ed1c0",
+      "source": "/tmp/vivo-f3/f3c-ctl-trace-after.xml"
+    },
+    {
+      "path": "f3c-ctl.log",
+      "bytes": 640,
+      "sha256": "687ccf572d5f5e0f703ce55ecbf05e2c6b6688b9997e612957f0c6e18efdd13c",
+      "source": "/tmp/vivo-f3/f3c-ctl.log"
+    },
+    {
+      "path": "fgs-exempt-events.txt",
+      "bytes": 14536,
+      "sha256": "96038b073dfeca971bc5aa617cd7fb29fabea5d89ab688541069e1781a16c9bf",
+      "source": "/tmp/vivo-f3/fgs-exempt-events.txt"
+    },
+    {
+      "path": "fgs-exempt-long.log",
+      "bytes": 536,
+      "sha256": "a14f5b1788290745bb9146144722a013b4872dacfe81e5f88625f257854b848b",
+      "source": "/tmp/vivo-f3/fgs-exempt-long.log"
+    },
+    {
+      "path": "fgs-exempt.log",
+      "bytes": 5206,
+      "sha256": "7c3103abd201dc3eb45de9924d9cc8c66fd138acab0f18b246b0611f6d237af4",
+      "source": "/tmp/vivo-f3/fgs-exempt.log"
+    },
+    {
+      "path": "fgs-long-events.txt",
+      "bytes": 30794,
+      "sha256": "06706941d8c6271d3cd5906da97c0b029f3651758d290bb6623ce82e24d27ca2",
+      "source": "/tmp/vivo-f3/fgs-long-events.txt"
+    },
+    {
+      "path": "original-scripts/vivo-f3-control.sh",
+      "bytes": 3430,
+      "sha256": "a214efb906bbc226d9b966750f5b0439bc6bc3207948b7407d951af68d3cb956",
+      "source": "/tmp/vivo-f3-control.sh"
+    },
+    {
+      "path": "original-scripts/vivo-f3-trial.sh",
+      "bytes": 6942,
+      "sha256": "dbfa1470aeb208c08440e7680778344e6f1c558a54f9a9be4bad9f4e312946b2",
+      "source": "/tmp/vivo-f3-trial.sh"
+    },
+    {
+      "path": "original-scripts/vivo-fgs-exempt-long.sh",
+      "bytes": 2410,
+      "sha256": "b283c16ac9120cf57c9fa31f875fd3c4ca6a2e81890fd296c0a7e7cc2fb59777",
+      "source": "/tmp/vivo-fgs-exempt-long.sh"
+    },
+    {
+      "path": "original-scripts/vivo-selfkill-trial.sh",
+      "bytes": 3897,
+      "sha256": "f1b5f09861f0eed2a966ca3d2c48c8d152a3ef26f53b44c65759304344040568",
+      "source": "/tmp/vivo-selfkill-trial.sh"
+    },
+    {
+      "path": "probe-events.txt",
+      "bytes": 30883,
+      "sha256": "4d725384db56c3d82c06b25c7b5e8bc88faa7c1404c39c8b6a28013c88a6e9b6",
+      "source": "/tmp/vivo-f3/probe-events.txt"
+    },
+    {
+      "path": "probe3-events.txt",
+      "bytes": 34852,
+      "sha256": "e5e6958e8143148e77b2fe6ea1737739a1d364eb1f74c2bc0940cb320c671ab4",
+      "source": "/tmp/vivo-f3/probe3-events.txt"
+    },
+    {
+      "path": "sk-a-alarm.txt",
+      "bytes": 278797,
+      "sha256": "4fcb3b303b0344740d0c157d81bb9155029c5aa4610fb12de4788e8941f61175",
+      "source": "/tmp/vivo-f3/sk-a-alarm.txt"
+    },
+    {
+      "path": "sk-a-delivery.xml",
+      "bytes": 749,
+      "sha256": "a78089e0f32dfbe25062812d47132cbfbf3626bbe066aa3c3ffa2516d98ea537",
+      "source": "/tmp/vivo-f3/sk-a-delivery.xml"
+    },
+    {
+      "path": "sk-a-events.txt",
+      "bytes": 51620,
+      "sha256": "5bc2fa2cb6581aac1362c208573e4164d8beb049bfb822eb8bfd50e81a9526a0",
+      "source": "/tmp/vivo-f3/sk-a-events.txt"
+    },
+    {
+      "path": "sk-a-trace.xml",
+      "bytes": 31303,
+      "sha256": "3af5941f8e5284733d8f75cfa995202824bbda668435704d4b2fd5e38ec45bd1",
+      "source": "/tmp/vivo-f3/sk-a-trace.xml"
+    },
+    {
+      "path": "sk-a.log",
+      "bytes": 1034,
+      "sha256": "990515b9a6cd66ba1abaf682f0202782a1c1025a9cafff58e60da04d9b528ce4",
+      "source": "/tmp/vivo-f3/sk-a.log"
+    },
+    {
+      "path": "tr2.xml",
+      "bytes": 31393,
+      "sha256": "3481f7f08824c4fcbe713f2c9b650898376bd22437a9c0b36a3cbf9a321266f6",
+      "source": "/tmp/vivo-f3/tr2.xml"
+    },
+    {
+      "path": "tr3.xml",
+      "bytes": 31375,
+      "sha256": "9c95b7f447759c25921b0e348d7c3d25083ec64d671e176bfcb730422e32d5c0",
+      "source": "/tmp/vivo-f3/tr3.xml"
+    },
+    {
+      "path": "tr3b.xml",
+      "bytes": 31375,
+      "sha256": "9c95b7f447759c25921b0e348d7c3d25083ec64d671e176bfcb730422e32d5c0",
+      "source": "/tmp/vivo-f3/tr3b.xml"
+    },
+    {
+      "path": "trace-now.xml",
+      "bytes": 31389,
+      "sha256": "0081c4b8df79b0836eeee6e944df4846fab8a00de43ed2ff9aa7ec608c73cbe1",
+      "source": "/tmp/vivo-f3/trace-now.xml"
+    },
+    {
+      "path": "trace-probe.xml",
+      "bytes": 31389,
+      "sha256": "46b27644bd15256ee9023912c06db990738d3fa4425cf2a42071830bcfbf9e5d",
+      "source": "/tmp/vivo-f3/trace-probe.xml"
+    },
+    {
+      "path": "trace-probe2.xml",
+      "bytes": 31389,
+      "sha256": "46b27644bd15256ee9023912c06db990738d3fa4425cf2a42071830bcfbf9e5d",
+      "source": "/tmp/vivo-f3/trace-probe2.xml"
+    }
+  ]
+}

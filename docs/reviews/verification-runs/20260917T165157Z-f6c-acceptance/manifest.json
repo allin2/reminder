@@ -1,0 +1,354 @@
+{
+  "files": [
+    {
+      "path": "battery-before.txt",
+      "bytes": 888,
+      "sha256": "14e339b3da60933649b6a672aac73e1d0302ad5b2863e953179995e26ac7be57"
+    },
+    {
+      "path": "cold/cleanup-ui.xml",
+      "bytes": 7770,
+      "sha256": "b9fff4cc9d62e828b0d48381f5b2742898434a51e4db946af4291d0ddadcdd47"
+    },
+    {
+      "path": "cold/cleanup.json",
+      "bytes": 122,
+      "sha256": "762b9c4a3626fbe5c7a550d0938e9d4b2c80dbd132ba5f01d841c173649fed97"
+    },
+    {
+      "path": "cold/cold-alarm.txt",
+      "bytes": 289758,
+      "sha256": "b3dcb80e66602468d1995009af772f86efd08c1d96aa052c84fbbb30c92eeed0"
+    },
+    {
+      "path": "cold/cold-delivery.xml",
+      "bytes": 753,
+      "sha256": "210b930fddc9b074003f55f5e20908a7e61406e1a5e9df61bc269219222285dd"
+    },
+    {
+      "path": "cold/cold-events.txt",
+      "bytes": 273704,
+      "sha256": "1a2b94d238ebcf3dcdc79736ad5271f6bae70e7ff82930e3f6728a230c648b42"
+    },
+    {
+      "path": "cold/cold-trace-before.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "cold/cold-trace-before.xml",
+      "bytes": 31368,
+      "sha256": "5e44b96fadd66fbee6b800ec6f82c45edc301567a6759766ef302afd74d99f1b"
+    },
+    {
+      "path": "cold/cold-trace.xml",
+      "bytes": 31507,
+      "sha256": "56a3cd6332700dab04955fcd0310d2f86085a5d899e591d2e51e49e60de74871"
+    },
+    {
+      "path": "cold/cold.log",
+      "bytes": 1523,
+      "sha256": "c5e6dd57e56ad24820e93356f09764ebdcc06108fcadfd33c91f6ca1e5edd930"
+    },
+    {
+      "path": "cold/deadline-capture.json",
+      "bytes": 851,
+      "sha256": "d3ac000042b879327f3dec7a3d7852d47fbb67d57e618a1e7e4871c74061acc4"
+    },
+    {
+      "path": "cold/deadline-delivery.xml",
+      "bytes": 753,
+      "sha256": "210b930fddc9b074003f55f5e20908a7e61406e1a5e9df61bc269219222285dd"
+    },
+    {
+      "path": "cold/deadline-notification.txt",
+      "bytes": 354473,
+      "sha256": "7a793549bd17d87c3cbd6354afe831cd269a297c835093afb5403047b4898a99"
+    },
+    {
+      "path": "cold/deadline-screen.png",
+      "bytes": 126825,
+      "sha256": "03712f2338220d8c52b63cde006ed9045b107cfae359cea5d30b26c007523692"
+    },
+    {
+      "path": "cold/deadline-trace.xml",
+      "bytes": 31507,
+      "sha256": "56a3cd6332700dab04955fcd0310d2f86085a5d899e591d2e51e49e60de74871"
+    },
+    {
+      "path": "cold/deadline-window.txt",
+      "bytes": 92093,
+      "sha256": "3b412881b7403ea15ed9a3c478dbcc70ce43f1bdd9c1c0699826db0d66fefc1b"
+    },
+    {
+      "path": "cold/power-1789664227.txt",
+      "bytes": 72082,
+      "sha256": "e267e94934708783dc408f4ecaddee62cad88ec6b0a72c52e2f4db37617a4520"
+    },
+    {
+      "path": "cold/power-1789664287.txt",
+      "bytes": 74578,
+      "sha256": "3ec128104ce5674e56cc7c18deb625140a20d7acc6d3fbe2825663f8e74ade8a"
+    },
+    {
+      "path": "cold/run-metadata.txt",
+      "bytes": 156,
+      "sha256": "c4631620abde3c117ebf8643b824740047460e82e846d055eb8c6fa052952103"
+    },
+    {
+      "path": "cold/schedules-after.xml",
+      "bytes": 964,
+      "sha256": "0b0b431fbf03501cb5f9de0e72ad1ca7b15e2bab087a6dce1011ff8460a915bb"
+    },
+    {
+      "path": "cold/state-after.json",
+      "bytes": 11100,
+      "sha256": "9a3deaedc549eef26be5a7eed676bf5dfde69deba664edc1ac8185627f92ca05"
+    },
+    {
+      "path": "cold/summary.json",
+      "bytes": 3958,
+      "sha256": "163399e7b336d9dbab9d4c4963af787db19f9c7dbc2701e057fa6d1a1fbd2285"
+    },
+    {
+      "path": "cold/visual-review.json",
+      "bytes": 210,
+      "sha256": "dc362f157305130583a081d5440f275fc687e4889802a6bbd2c95b681e05ba54"
+    },
+    {
+      "path": "cold-capture.log",
+      "bytes": 172,
+      "sha256": "3ff83e9eb78c1ecb497d825c5ded90977297a150e1018ca4bc2bdb89fb289c51"
+    },
+    {
+      "path": "cold-runner.log",
+      "bytes": 1523,
+      "sha256": "c5e6dd57e56ad24820e93356f09764ebdcc06108fcadfd33c91f6ca1e5edd930"
+    },
+    {
+      "path": "device-time.txt",
+      "bytes": 29,
+      "sha256": "120e3d9cab96c304a374a795821f1f6e7d46f6d18013a8c377fc6d9c686b0e66"
+    },
+    {
+      "path": "deviceidle-before.txt",
+      "bytes": 7680,
+      "sha256": "38becefbb4e8cfe80045ce2d343240656f1735962dfca69acdafc1a941b15a2f"
+    },
+    {
+      "path": "installed-sha256.txt",
+      "bytes": 159,
+      "sha256": "9ed0762e2640a02e79edb344691f568a5b7041ef239d86b0fdac684c1f97f5f7"
+    },
+    {
+      "path": "long-standby-deferred.json",
+      "bytes": 155,
+      "sha256": "8f6600a4b014481ad4c5a30ff1ddedd69b41666ba561e01794e586bfdf382dbd"
+    },
+    {
+      "path": "metadata.json",
+      "bytes": 464,
+      "sha256": "d76a46484452cf30d0a28ab180e8ded4f1e3f5fac8a681fe3bf4598d28a7de7c"
+    },
+    {
+      "path": "package-before.txt",
+      "bytes": 12346,
+      "sha256": "b028be5761ab65537b5cc7ff2e72d87c3dde3b7daddd9734f5b9bfde30d98273"
+    },
+    {
+      "path": "power-before.txt",
+      "bytes": 69623,
+      "sha256": "0fb15e53662f734192b2bb1500245551755ec973ddf7b5a6f8dfe75f75ee11bf"
+    },
+    {
+      "path": "screenoff/cleanup-ui.xml",
+      "bytes": 7770,
+      "sha256": "8c09f0c00c7a372003b8413f4b2018c08bf363427936e52a482afe277c36bab7"
+    },
+    {
+      "path": "screenoff/cleanup.json",
+      "bytes": 122,
+      "sha256": "762b9c4a3626fbe5c7a550d0938e9d4b2c80dbd132ba5f01d841c173649fed97"
+    },
+    {
+      "path": "screenoff/deadline-capture.json",
+      "bytes": 851,
+      "sha256": "9ecbee265d0d26d0cd6062a3137bf5e43ecf0638c66bcecd66d7f98acabe6da7"
+    },
+    {
+      "path": "screenoff/deadline-delivery.xml",
+      "bytes": 753,
+      "sha256": "7150840ed3b835bfe55d47aa2e3f1d3801b351f06915f0da6e694c51baa29760"
+    },
+    {
+      "path": "screenoff/deadline-notification.txt",
+      "bytes": 348855,
+      "sha256": "4f49a6c41f4bc624fe6359c4af51734c45c8aadcb70b51be4c7df00f9428cea6"
+    },
+    {
+      "path": "screenoff/deadline-screen.png",
+      "bytes": 121934,
+      "sha256": "c1edd3aabd82b607627541b7ac644251b733a69ce4395d0088406ec7281f387a"
+    },
+    {
+      "path": "screenoff/deadline-trace.xml",
+      "bytes": 31630,
+      "sha256": "b8df1e454d523f9e7500da4a711370f0b0bc81c5bc84df8bb624e60e3e49c594"
+    },
+    {
+      "path": "screenoff/deadline-window.txt",
+      "bytes": 93960,
+      "sha256": "dc7495ded8d4e24f7b322fdcb26215415160f896a7de4378890bdf0802d8df53"
+    },
+    {
+      "path": "screenoff/power-1789664060.txt",
+      "bytes": 72200,
+      "sha256": "c1e3a32f10165305a3825e61915da53fe220cbf46f403b2b50a3337816181929"
+    },
+    {
+      "path": "screenoff/power-1789664120.txt",
+      "bytes": 72684,
+      "sha256": "f427b38fab96d865601364180fd7e7cada1a9929889bf68984a0e7d983fca57d"
+    },
+    {
+      "path": "screenoff/run-metadata.txt",
+      "bytes": 156,
+      "sha256": "e5b1e6c5645977543faf4b8a5528f383195c3cebdbbb2104eaf8985168977faf"
+    },
+    {
+      "path": "screenoff/schedules-after.xml",
+      "bytes": 964,
+      "sha256": "4d1dcb7edc1dafc2b3bf0b85d4eb4f25c1ad8c9690a9d0fb9ea1ab8ff467ee08"
+    },
+    {
+      "path": "screenoff/screenoff-alarm-before.txt",
+      "bytes": 290267,
+      "sha256": "bef1bdbfe7c0127e094eae6820f5172abb92acb34943344b824dd10baf608a0d"
+    },
+    {
+      "path": "screenoff/screenoff-alarm_delivery.xml",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "screenoff/screenoff-attention_alarm.xml",
+      "bytes": 753,
+      "sha256": "7150840ed3b835bfe55d47aa2e3f1d3801b351f06915f0da6e694c51baa29760"
+    },
+    {
+      "path": "screenoff/screenoff-attention_delivery.xml",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "screenoff/screenoff-events.txt",
+      "bytes": 393523,
+      "sha256": "c5b690932ede2df406528446db2b67efbf2c77876164b6e129baa626db550a56"
+    },
+    {
+      "path": "screenoff/screenoff-main.txt",
+      "bytes": 285491,
+      "sha256": "0621e37a684b5ff634efb5fd5fa9522c4266d114350e761cb4fd009039254d66"
+    },
+    {
+      "path": "screenoff/screenoff-prefs-list.txt",
+      "bytes": 251,
+      "sha256": "cd94e45239b5544dc2394f3b153b0007b2688d9518cf2bcf4411e8cac88b92f4"
+    },
+    {
+      "path": "screenoff/screenoff-trace-after.xml",
+      "bytes": 31539,
+      "sha256": "d77dbf6e1ca52e6412e9a606b6d3828bb3b30fab211ddbd7b27f8ea9d6ad0181"
+    },
+    {
+      "path": "screenoff/screenoff-trace-before.xml",
+      "bytes": 31577,
+      "sha256": "c7537365843d0fe80a7d50f0448f27c9d98b533e01f31f79928ed4bd60af06ee"
+    },
+    {
+      "path": "screenoff/screenoff.log",
+      "bytes": 6477,
+      "sha256": "3bc27822eae68041e3c77fe28585695a8d2013732a60016c57d94794094c94c7"
+    },
+    {
+      "path": "screenoff/state-after.json",
+      "bytes": 11109,
+      "sha256": "c655b8c374f2385cdf353817038555bfd08cc8cd237756c4b439d9f9b2fa582c"
+    },
+    {
+      "path": "screenoff/summary.json",
+      "bytes": 3712,
+      "sha256": "41b2cad552a1b09528b025847f20a9fe1b49bdf9adb3e8c54324a43a00e29b11"
+    },
+    {
+      "path": "screenoff/visual-review.json",
+      "bytes": 210,
+      "sha256": "dc362f157305130583a081d5440f275fc687e4889802a6bbd2c95b681e05ba54"
+    },
+    {
+      "path": "screenoff-capture.log",
+      "bytes": 172,
+      "sha256": "8c571648bf15c3a6b76304864e6a3989fd5e63bb01598d5c9dcd99d04f99fb64"
+    },
+    {
+      "path": "screenoff-runner.log",
+      "bytes": 6477,
+      "sha256": "3bc27822eae68041e3c77fe28585695a8d2013732a60016c57d94794094c94c7"
+    },
+    {
+      "path": "standby30m/run-metadata.txt",
+      "bytes": 158,
+      "sha256": "19774e965a4adb484eaa28c972f76900de063f9787d25b657e527c84d572f860"
+    },
+    {
+      "path": "standby30m/standby30m.log",
+      "bytes": 65,
+      "sha256": "cd7cb0822a6b766edcae269e14c3ac933977ab9ec1b8d2f967dfe7f3ab9fbea1"
+    },
+    {
+      "path": "standby30m-capture.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "standby30m-runner.log",
+      "bytes": 65,
+      "sha256": "cd7cb0822a6b766edcae269e14c3ac933977ab9ec1b8d2f967dfe7f3ab9fbea1"
+    },
+    {
+      "path": "state-before.json",
+      "bytes": 7058,
+      "sha256": "8d097099596fa6fc44f4749c6e8bc51cd8ffdff5cde935a0196db30b6af5a991"
+    },
+    {
+      "path": "test-item.json",
+      "bytes": 833,
+      "sha256": "a96b003eb29654519c900e843ea1aa11532fa1f9dbb7610d5eb69fbd4dfe1404"
+    },
+    {
+      "path": "tools-used/android-cdp-eval.py",
+      "bytes": 2202,
+      "sha256": "0818a695892bfc526f531bb212b5a72a715456bdcb53c2b7e98623f70c0d78ae"
+    },
+    {
+      "path": "tools-used/capture-alarm-deadline.py",
+      "bytes": 2707,
+      "sha256": "3d1bda86501dad68ae451db60baf69650e9fe02b468228e7f79b7a9bddb5692f"
+    },
+    {
+      "path": "tools-used/run-f6c-acceptance.py",
+      "bytes": 9541,
+      "sha256": "d9e999d5870c876afb3f67f9c7425218ac8f2e6dbd666a11374bf151dc27aad6"
+    },
+    {
+      "path": "tools-used/vivo-alarm-screenoff-trial.sh",
+      "bytes": 8260,
+      "sha256": "99f9aa63ee1714085cc6aeddbbecbec5dbdfb8ea089b335d69b5130d92bf31ef"
+    },
+    {
+      "path": "tools-used/vivo-selfkill-trial.sh",
+      "bytes": 5493,
+      "sha256": "8ad0d99e76c69898d03e51273830f5fe376374a5daf95b49892e8b62ba38e801"
+    }
+  ]
+}

@@ -1,0 +1,310 @@
+--- before/app-core.js
++++ after/app-core.js
+@@ -3953,14 +3953,14 @@
+     let reason;
+     if (background) {
+       reason = fsiOk
+-        ? "权限齐备，但系统没有展示这次全屏 · 请把这一行发给开发者"
++        ? "权限齐备，但系统没有展示这次全屏 · 请检查「后台与锁屏设置」中的锁屏显示"
+         : "缺「全屏通知」权限 · 锁屏/息屏只能出横幅";
+     } else if (!overlayAt) {
+       reason = "缺「显示在其他应用上层」· 解锁亮屏下后台启动界面被系统拦下";
+     } else {
+-      reason = "权限齐备，但界面没有被系统展示 · 请把这一行发给开发者";
+-    }
+-    return { text: "只出了通知横幅 · " + when + " · " + reason, label: "仅通知", ok: false, warn: false };
++      reason = "权限齐备，但界面没有被系统展示 · 请检查后台运行及界面显示限制";
++    }
++    return { text: "未确认显示全屏 · " + when + " · " + reason, label: "仅通知", ok: false, warn: false };
+   }
+ 
+   /**
+@@ -4019,6 +4019,9 @@
+       text = "原生对账失败 · 提醒可能不会按时到达：" +
+         ((s.errors && s.errors[0]) || "未知原因");
+       label = "对账异常"; ok = false; warn = false;
++    } else if (pending == null) {
++      text = "无法读取系统排程 · 请刷新诊断后重试，不能据此判断后台提醒已就绪。";
++      label = "未知"; ok = false; warn = true;
+     } else if (pending === 0 && desired > 0) {
+       text = "对账要求排 " + desired + " 条，系统里却是 0 条 · 排程没有落地。请点「立即重排后台提醒」。";
+       label = "零排程"; ok = false; warn = false;
+@@ -4026,9 +4029,9 @@
+       text = "系统里当前没有待发的提醒（当前也没有需要提醒的事项）。";
+       label = "待命中"; ok = true; warn = false;
+     } else {
+-      text = "系统里已挂 " + pending + " 条提醒（全屏闹钟 " + alarmCount + " 条）· 排程已经落到系统里。";
+-      label = "已就绪"; ok = true; warn = false;
+-      // V2：排程落地只证明「会响」，不证明「会可见」。上一次投递若没能把界面送到眼前，
++      text = "系统里已挂 " + pending + " 条提醒（全屏闹钟 " + alarmCount + " 条）· 排程已登记，仍需确认后台耗电、自启动和锁屏显示，并完成息屏测试。";
++      label = "已排程"; ok = false; warn = true;
++      // V2：排程落地只证明登记成功，不证明会投递或可见。上一次投递若没能把界面送到眼前，
+       // 这里的结论必须降级，不能继续写「关掉也不影响」这种无条件承诺。
+       if (lastHidden) {
+         text = "排程已经落到系统里（" + pending + " 条），但上一次到点没能把界面弹出来 —— 见上面「投递」一行。";
+@@ -4106,7 +4109,7 @@
+     setPill($("#labExactPill"), exactOk ? "精确" : "降级", exactOk, !exactOk);
+ 
+     const batteryOk = !!diag.ignoringBatteryOptimizations;
+-    $("#labBattery").textContent = batteryOk ? "已忽略电池优化" : "未加入白名单 · 后台可能被限制";
++    $("#labBattery").textContent = batteryOk ? "已忽略系统电池优化 · 厂商开关仍需手动确认" : "未加入系统白名单 · 请同时检查厂商后台设置";
+     setPill($("#labBatteryPill"), batteryOk ? "正常" : "建议开启", batteryOk, !batteryOk);
+ 
+     // Q3：全屏闹钟的两道门 —— 解锁亮屏靠「显示在其他应用上层」，锁屏靠「全屏通知」
+@@ -4326,6 +4329,44 @@
+     }
+   }
+ 
++  // 厂商开关不可读；导航成功只说明设置请求被接受，不代表权限已开启。
++  async function openBackgroundGuide(kind) {
++    const buttons = [$("#labOpenBackground"), $("#labOpenAutoStart")].filter(Boolean);
++    if (buttons.some(button => button.disabled)) return;
++    const feedback = $("#labSettingsFeedback");
++    const report = text => {
++      if (feedback) feedback.textContent = text;
++      labLog(text);
++    };
++    buttons.forEach(button => { button.disabled = true; });
++    report("正在打开系统设置…");
++    try {
++      const bridge = systemBridge();
++      const appSet = appSettingsPlugin();
++      if (kind === "background" && bridge && bridge.openBackgroundSettings) {
++        const result = await bridge.openBackgroundSettings();
++        if (result && result.ok === false) throw new Error("设置请求失败");
++        if (result && result.opened === "batteryOptimization") {
++          report("已请求打开后台耗电设置。请找到安心收件箱并允许后台耗电；返回不代表开关已开启。");
++        } else {
++          report("请在应用信息中查找电池或后台运行设置；若未到对应页面，可从手机设置手动进入。开关仍需手动确认。");
++        }
++      } else {
++        if (bridge && bridge.openAppDetailsSettings) await bridge.openAppDetailsSettings();
++        else if (appSet && appSet.openAppDetailsSettings) await appSet.openAppDetailsSettings();
++        else throw new Error("设置入口不可用");
++        report(kind === "background"
++          ? "已请求打开应用信息，请查找电池或后台运行设置，允许后台耗电。开关仍需手动确认。"
++          : "已请求打开应用信息。vivo 请点「查看所有权限」，确认「自启动」和「锁屏显示」；其他手机请查找相近选项。返回不代表已授权。");
++      }
++    } catch (error) {
++      report("未能打开设置。请手动进入手机设置 → 应用 → 安心收件箱，检查后台耗电、自启动、锁屏显示。");
++      toast("未能打开设置，请按面板说明手动检查");
++    } finally {
++      buttons.forEach(button => { button.disabled = false; });
++    }
++  }
++
+   async function openSystemSetting(kind) {
+     const bridge = systemBridge();
+     const appSet = appSettingsPlugin();
+@@ -4385,7 +4426,9 @@
+     const openFsi = $("#labOpenFsi");
+     if (openFsi) openFsi.addEventListener("click", () => openSystemSetting("fsi"));
+     const openAutoStart = $("#labOpenAutoStart");
+-    if (openAutoStart) openAutoStart.addEventListener("click", () => openSystemSetting("autoStart"));
++    if (openAutoStart) openAutoStart.addEventListener("click", () => openBackgroundGuide("permissions"));
++    const openBackground = $("#labOpenBackground");
++    if (openBackground) openBackground.addEventListener("click", () => openBackgroundGuide("background"));
+     const traceTest = $("#labTraceTest");
+     if (traceTest) traceTest.addEventListener("click", labTraceTest);
+     const testNow = $("#labTestNow");
+--- before/index.html
++++ after/index.html
+@@ -541,6 +541,7 @@
+       text-align: left;
+     }
+     .set-row:last-child { border-bottom: 0; }
++    #sheetNotifyLab .set-row > .pill { flex-shrink: 0; white-space: nowrap; }
+     .set-row .sub { font-size: 0.78rem; color: var(--muted); margin-top: 2px; }
+     .switch {
+       width: 46px; height: 28px;
+@@ -1562,7 +1563,7 @@
+     <div class="sheet-body">
+       <div class="hint-bar" id="labIntro">
+         安心收件箱依赖系统通知与闹钟。首次使用请完成下面检查，并做一次真实测试。
+-        若测试收不到，请打开系统设置授权后再试。
++        后台提醒受系统权限和厂商限制影响；完成设置后仍需息屏测试。
+       </div>
+       <!-- Q6：把「关掉 App 后到底会不会响」从推测变成结论。
+            此前该项只有「排了几条」的内部状态，界面上完全不可见 ——
+@@ -1570,6 +1571,27 @@
+       <div class="hint-bar" id="labVerdict" hidden></div>
+       <div class="set-group" style="margin-bottom:14px">
+         <div class="set-row">
++          <div style="min-width:0">
++            <div>后台与锁屏设置</div>
++            <div class="sub" id="labVendorPermissions">请在系统设置确认：允许后台耗电、自启动、锁屏显示。应用无法自动读取这些厂商开关。</div>
++          </div>
++          <span class="pill warn" style="flex-shrink:0;white-space:nowrap">需确认</span>
++        </div>
++        <div class="set-row"><div style="min-width:0;width:100%">
++          <div class="sub">后台耗电：减少后台投递受限；自启动：允许进程退出后被唤起；锁屏显示：允许息屏时显示闹钟界面。不同手机的名称可能不同。</div>
++        </div></div>
++        <button class="set-row" id="labOpenBackground" aria-describedby="labVendorPermissions">
++          <div><div>检查后台耗电设置</div><div class="sub">vivo：找到安心收件箱，选择「允许后台耗电」</div></div>
++          <span aria-hidden="true" style="color:var(--muted)">›</span>
++        </button>
++        <button class="set-row" id="labOpenAutoStart" aria-describedby="labVendorPermissions">
++          <div><div>检查自启动与锁屏显示</div><div class="sub">应用信息 → 查看所有权限 → 自启动、锁屏显示</div></div>
++          <span aria-hidden="true" style="color:var(--muted)">›</span>
++        </button>
++        <div class="set-row"><div class="sub" id="labSettingsFeedback" role="status" aria-live="polite">返回后会刷新可读取的诊断；以上三项仍需你在系统设置中确认。</div></div>
++      </div>
++      <div class="set-group" style="margin-bottom:14px">
++        <div class="set-row">
+           <div>
+             <div>后台提醒</div>
+             <div class="sub" id="labBackground">检测中…</div>
+@@ -1606,7 +1628,7 @@
+         </div>
+         <div class="set-row">
+           <div>
+-            <div>电池优化白名单</div>
++            <div>系统电池优化白名单</div>
+             <div class="sub" id="labBattery">检测中…</div>
+           </div>
+           <span class="pill" id="labBatteryPill">…</span>
+@@ -1645,7 +1667,7 @@
+         <button class="set-row" id="labOpenBattery">
+           <div>
+             <div>4. 关闭电池优化</div>
+-            <div class="sub">避免后台被杀导致漏提醒</div>
++            <div class="sub">系统白名单不等于厂商已允许后台运行</div>
+           </div>
+           <span style="color:var(--muted)">›</span>
+         </button>
+@@ -1660,13 +1682,6 @@
+           <div>
+             <div>6. 允许「全屏通知」</div>
+             <div class="sub">Android 14+ 锁屏/息屏弹全屏的必要条件</div>
+-          </div>
+-          <span style="color:var(--muted)">›</span>
+-        </button>
+-        <button class="set-row" id="labOpenAutoStart">
+-          <div>
+-            <div>7. 自启动 / 后台弹出界面</div>
+-            <div class="sub">国产系统专有开关，按厂商跳转</div>
+           </div>
+           <span style="color:var(--muted)">›</span>
+         </button>
+--- before/android/app/src/main/java/space/alliswell/inbox/SystemBridgePlugin.java
++++ after/android/app/src/main/java/space/alliswell/inbox/SystemBridgePlugin.java
+@@ -710,7 +710,7 @@
+   public void openBatterySettings(PluginCall call) {
+     try {
+       Intent intent = new Intent(Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS);
+-      intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
++      intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+       getContext().startActivity(intent);
+       call.resolve();
+     } catch (Exception e) {
+@@ -722,13 +722,16 @@
+    * R-1：把用户送到「允许本应用后台运行」的厂商设置页。
+    *
+    * **为什么必须有它** —— 真机取证（vivo V2238A / OriginOS 16，2026-09-17）证明，
+-   * 这类 ROM 上应用侧**没有任何**手段能在后台被唤醒：
++   * 未放行时，以下两种受测场景均未能唤醒应用：
+    *   ① 进程活着 → 被 `fast_freezer` 冻进 cgroup，冻结态下广播 / 前台服务 / Activity 全进不来；
+    *   ② 进程被杀掉 → 系统连重新拉起都不做（`device_idle_wake_from_idle` 照常触发，进程仍为空、
+    *      通知 0 条，events 里没有 `am_proc_start`）。
+    * 而厂商的「自启动 / 后台运行 / 高耗电」白名单**没有可读状态位**（appops 里查不到，
+    * `getAppStandbyBucket()` 返回厂商自定义值，`isBackgroundRestricted()` 恒为 false），
+-   * 所以只能**引导用户手动放行**，不能靠应用自己猜。
++   * 所以引导用户在系统设置确认，不能靠应用自己猜。
++   * 2026-09-18 R-1：后台耗电 + 锁屏显示恢复息屏全屏，自启动放行后冷启动通过。
++   * NEW_TASK 单独使用可能只带回旧权限页；本机 CLEAR_TOP 已验证回到目标设置页。
++   * 返回 opened 仅描述请求路径，不证明实际页面或厂商开关状态。
+    *
+    * ## 深链必须用**实测能启动**的，不能用「查得到组件」的
+    *
+@@ -757,7 +760,7 @@
+     String opened = null;
+     try {
+       Intent battery = new Intent(Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS);
+-      battery.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
++      battery.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+       getContext().startActivity(battery);
+       opened = "batteryOptimization";
+     } catch (Exception ignored) {}
+@@ -765,7 +768,7 @@
+       try {
+         Intent details = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+         details.setData(Uri.parse("package:" + getContext().getPackageName()));
+-        details.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
++        details.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+         getContext().startActivity(details);
+         opened = "appDetails";
+       } catch (Exception e) {
+@@ -784,7 +787,7 @@
+     try {
+       Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+       intent.setData(Uri.parse("package:" + getContext().getPackageName()));
+-      intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
++      intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+       getContext().startActivity(intent);
+       call.resolve();
+     } catch (Exception e) {
+--- before/test-native-reminders.js
++++ after/test-native-reminders.js
+@@ -566,7 +566,7 @@
+     ok("F2 INSISTENT 循环的就是渠道音（渠道没声音则 INSISTENT 无效）",
+       /channel\.setSound\(alarmSound\(context\)/.test(receiver));
+ 
+-    // R-1：真机已证明应用侧**没有**任何手段能在后台被唤醒 ——
++    // R-1：以下是放行前的历史失败；2026-09-18 已验证三个独立设置后恢复。
+     //   ① 进程活着 → 被 fast_freezer 冻进 cgroup，冻结态下广播/前台服务/Activity 全进不来；
+     //   ② 进程被杀掉 → 系统连重新拉起都不做（device_idle_wake_from_idle 照常，但无 am_proc_start）。
+     // 而厂商白名单**没有可读状态位**，只能引导用户手动放行 —— 所以这个入口必须存在、且能兜底。
+@@ -583,6 +583,53 @@
+       /com\.iqoo\.powersaving\/\.BackgroundHighUsageActivity/.test(plugin));
+     ok("R-1 注释保留「冻/杀两条都走不通」的取证，避免后人以为能自行绕过",
+       /fast_freezer/.test(plugin) && /am_proc_start/.test(plugin) && /没有可读状态位/.test(plugin));
++  }
++
++  section("F6 后台设置引导运行时行为");
++  {
++    const fs = require("fs");
++    const vm = require("vm");
++    const source = fs.readFileSync(path.join(__dirname, "app-core.js"), "utf8");
++    const start = source.indexOf("  async function openBackgroundGuide(kind)");
++    const end = source.indexOf("  async function openSystemSetting(kind)", start);
++    const nodes = new Map();
++    const $ = id => {
++      if (!nodes.has(id)) nodes.set(id, { disabled: false, textContent: "" });
++      return nodes.get(id);
++    };
++    let bridge = null, fallback = null, calls = 0, release;
++    const guide = vm.runInNewContext("(" + source.slice(start, end).trim() + ")", {
++      $, systemBridge: () => bridge, appSettingsPlugin: () => fallback,
++      labLog() {}, toast() {}
++    });
++    const feedback = () => $("#labSettingsFeedback").textContent;
++    bridge = { openBackgroundSettings: () => { calls++; return new Promise(resolve => { release = resolve; }); } };
++    const pending = guide("background");
++    ok("F6 打开设置期间禁用两个入口并给即时反馈",
++      $("#labOpenBackground").disabled && $("#labOpenAutoStart").disabled && /正在打开/.test(feedback()));
++    await guide("background");
++    ok("F6 连点不重复启动设置", calls === 1);
++    release({ ok: true, opened: "batteryOptimization" });
++    await pending;
++    ok("F6 成功只表示已请求跳转，不冒充开关已开启", /已请求/.test(feedback()) && /不代表开关已开启/.test(feedback()));
++    ok("F6 请求完成恢复入口", !$("#labOpenBackground").disabled && !$("#labOpenAutoStart").disabled);
++    bridge = { openBackgroundSettings: async () => ({ ok: true, opened: "appDetails" }) };
++    await guide("background");
++    ok("F6 原生回退应用详情时给正确的手动路径", /应用信息/.test(feedback()) && /手动确认/.test(feedback()));
++    bridge = { openBackgroundSettings: async () => { throw new Error("denied"); } };
++    await guide("background");
++    ok("F6 跳转异常显示失败及手动恢复路径", /未能打开/.test(feedback()) && /手机设置/.test(feedback()) && !$("#labOpenBackground").disabled);
++    bridge = null;
++    await guide("permissions");
++    ok("F6 桥缺失不伪报成功", /未能打开/.test(feedback()));
++    let details = 0;
++    bridge = { openAppDetailsSettings: async () => { details++; } };
++    await guide("permissions");
++    ok("F6 权限入口直达应用信息并说明两个独立开关", details === 1 && /查看所有权限/.test(feedback()) && /自启动/.test(feedback()) && /锁屏显示/.test(feedback()));
++    bridge = null;
++    fallback = { openAppDetailsSettings: async () => { details++; } };
++    await guide("background");
++    ok("F6 旧桥可退应用详情且仍需手动确认", details === 2 && /后台耗电/.test(feedback()) && /手动确认/.test(feedback()));
+   }
+ 
+   // Q6：原生链路「静默失败」的可观测性。

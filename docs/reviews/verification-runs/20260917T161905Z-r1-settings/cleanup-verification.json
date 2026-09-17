@@ -1,0 +1,13 @@
+{
+  "originalItems": 7,
+  "originalItemDifferences": [],
+  "testItemStatus": "archived",
+  "testCompletedAt": 1789662828681,
+  "notifyBefore": true,
+  "notifyAfter": true,
+  "scheduledAfter": [
+    925311845,
+    1354819241,
+    1648318806
+  ]
+}

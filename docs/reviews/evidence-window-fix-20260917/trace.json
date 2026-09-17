@@ -1,0 +1,146 @@
+[
+  {
+    "token": "190617823:c69820e1-291e-4a08-9c27-2c84e282ad88",
+    "stage": "requested",
+    "at": 1789637985943,
+    "detail": "delayMs=74139"
+  },
+  {
+    "token": "190617823:c69820e1-291e-4a08-9c27-2c84e282ad88",
+    "stage": "item",
+    "at": 1789637986045,
+    "detail": "i_0ny8bdfimu5c8z5a"
+  },
+  {
+    "token": "190617823:c69820e1-291e-4a08-9c27-2c84e282ad88",
+    "stage": "scheduled",
+    "at": 1789637986228,
+    "detail": "triggerAt=1789638060281;mode=alarmClock"
+  },
+  {
+    "token": "190617823:c69820e1-291e-4a08-9c27-2c84e282ad88",
+    "stage": "cancelled",
+    "at": 1789637988409,
+    "detail": "replaced by new schedule"
+  },
+  {
+    "token": "190617823:e27eb96c-096e-4710-ac51-b82f27ae8771",
+    "stage": "requested",
+    "at": 1789637988555,
+    "detail": "delayMs=71638"
+  },
+  {
+    "token": "190617823:e27eb96c-096e-4710-ac51-b82f27ae8771",
+    "stage": "item",
+    "at": 1789637989189,
+    "detail": "i_0ny8bdfimu5c8z5a"
+  },
+  {
+    "token": "190617823:e27eb96c-096e-4710-ac51-b82f27ae8771",
+    "stage": "scheduled",
+    "at": 1789637989737,
+    "detail": "triggerAt=1789638061147;mode=alarmClock"
+  },
+  {
+    "token": "190617823:e27eb96c-096e-4710-ac51-b82f27ae8771",
+    "stage": "received",
+    "at": 1789638061218,
+    "detail": ""
+  },
+  {
+    "token": "190617823:e27eb96c-096e-4710-ac51-b82f27ae8771",
+    "stage": "environment",
+    "at": 1789638061294,
+    "detail": "screenOn=false;locked=false;inCall=false"
+  },
+  {
+    "token": "190617823:e27eb96c-096e-4710-ac51-b82f27ae8771",
+    "stage": "launchRequested",
+    "at": 1789638061348,
+    "detail": "not proof of visibility"
+  },
+  {
+    "token": "190617823:e27eb96c-096e-4710-ac51-b82f27ae8771",
+    "stage": "notifyReturned",
+    "at": 1789638061410,
+    "detail": "notify returned; not proof of display"
+  },
+  {
+    "token": "190617823:e27eb96c-096e-4710-ac51-b82f27ae8771",
+    "stage": "created",
+    "at": 1789638061792,
+    "detail": "test=false"
+  },
+  {
+    "token": "190617823:e27eb96c-096e-4710-ac51-b82f27ae8771",
+    "stage": "audioState",
+    "at": 1789638061979,
+    "detail": "alarmVolume=6;max=7;mode=0"
+  },
+  {
+    "token": "190617823:e27eb96c-096e-4710-ac51-b82f27ae8771",
+    "stage": "audioStarted",
+    "at": 1789638062083,
+    "detail": "isPlaying=true;not acoustic proof"
+  },
+  {
+    "token": "190617823:e27eb96c-096e-4710-ac51-b82f27ae8771",
+    "stage": "resumed",
+    "at": 1789638062167,
+    "detail": "lifecycle only"
+  },
+  {
+    "token": "190617823:e27eb96c-096e-4710-ac51-b82f27ae8771",
+    "stage": "paused",
+    "at": 1789638062283,
+    "detail": "finishing=false"
+  },
+  {
+    "token": "190617823:e27eb96c-096e-4710-ac51-b82f27ae8771",
+    "stage": "resumed",
+    "at": 1789638062326,
+    "detail": "lifecycle only"
+  },
+  {
+    "token": "190617823:e27eb96c-096e-4710-ac51-b82f27ae8771",
+    "stage": "focus",
+    "at": 1789638062820,
+    "detail": "true"
+  },
+  {
+    "token": "190617823:e27eb96c-096e-4710-ac51-b82f27ae8771",
+    "stage": "cancelled",
+    "at": 1789638063080,
+    "detail": "cancel API succeeded"
+  },
+  {
+    "token": "190617823:e27eb96c-096e-4710-ac51-b82f27ae8771",
+    "stage": "windowSample",
+    "at": 1789638063550,
+    "detail": "focus=true;shown=true;visibility=0;playing=true"
+  },
+  {
+    "token": "190617823:e27eb96c-096e-4710-ac51-b82f27ae8771",
+    "stage": "windowSample",
+    "at": 1789638063727,
+    "detail": "focus=true;shown=true;visibility=0;playing=true"
+  },
+  {
+    "token": "190617823:e27eb96c-096e-4710-ac51-b82f27ae8771",
+    "stage": "userAction",
+    "at": 1789638088102,
+    "detail": "close"
+  },
+  {
+    "token": "190617823:e27eb96c-096e-4710-ac51-b82f27ae8771",
+    "stage": "effectsStopped",
+    "at": 1789638088148,
+    "detail": ""
+  },
+  {
+    "token": "190617823:e27eb96c-096e-4710-ac51-b82f27ae8771",
+    "stage": "paused",
+    "at": 1789638088225,
+    "detail": "finishing=true"
+  }
+]

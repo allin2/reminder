@@ -1,0 +1,79 @@
+--------- beginning of events
+         1789658462.932 31887 31887 I auditd  : type=1400 audit(0.0:374208): avc:  denied  { ioctl } for  comm="binder:31887_6" path="/proc/fas/render" dev="proc" ino=4026532234 ioctlcmd=0x6609 scontext=u:r:untrusted_app:s0:c190,c256,c512,c768 tcontext=u:object_r:proc_fas:s0 tclass=file permissive=0 app=space.alliswell.inbox
+         1789658463.596  1843  2383 I am_freeze: [10704,com.google.android.webview:sandboxed_process0:org.chromium.content.app.SandboxedProcessService0:0]
+         1789658463.928 31887 31887 I auditd  : type=1400 audit(0.0:374209): avc:  denied  { ioctl } for  comm="binder:31887_6" path="/proc/fas/render" dev="proc" ino=4026532234 ioctlcmd=0x6609 scontext=u:r:untrusted_app:s0:c190,c256,c512,c768 tcontext=u:object_r:proc_fas:s0 tclass=file permissive=0 app=space.alliswell.inbox
+         1789658464.242  1843  3492 I netstats_mobile_sample: [23878020973,4264117386,26204115,14640425,23634718550,4264088037,21557757,14639941,1789658464560]
+         1789658464.242  1843  3492 I netstats_wifi_sample: [3220980989,420036789,3849032,2199034,3220939018,420033400,3848455,2198974,1789658464560]
+         1789658464.296  3303  3303 I auditd  : type=1400 audit(0.0:374210): avc:  denied  { ioctl } for  comm="binder:3303_6" path="/proc/fas/render" dev="proc" ino=4026532234 ioctlcmd=0x6609 scontext=u:r:platform_app:s0:c512,c768 tcontext=u:object_r:proc_fas:s0 tclass=file permissive=0 app=com.vivo.systemuiplugin
+         1789658464.948 31887 31887 I auditd  : type=1400 audit(0.0:374211): avc:  denied  { ioctl } for  comm="binder:31887_6" path="/proc/fas/render" dev="proc" ino=4026532234 ioctlcmd=0x6609 scontext=u:r:untrusted_app:s0:c190,c256,c512,c768 tcontext=u:object_r:proc_fas:s0 tclass=file permissive=0 app=space.alliswell.inbox
+         1789658465.586  1843  3768 I netstats_mobile_sample: [23878029064,4264123410,26204150,14640464,23634726589,4264094061,21557791,14639980,1789658465903]
+         1789658465.587  1843  3768 I netstats_wifi_sample: [3220980989,420036789,3849032,2199034,3220939018,420033400,3848455,2198974,1789658465903]
+         1789658465.940 31887 31887 I auditd  : type=1400 audit(0.0:374212): avc:  denied  { ioctl } for  comm="binder:31887_6" path="/proc/fas/render" dev="proc" ino=4026532234 ioctlcmd=0x6609 scontext=u:r:untrusted_app:s0:c190,c256,c512,c768 tcontext=u:object_r:proc_fas:s0 tclass=file permissive=0 app=space.alliswell.inbox
+         1789658466.364  3303  3303 I sysui_multi_action: [757,207,758,2]
+         1789658466.369  1843  2057 I wm_task_moved: [1,1,0,1,8]
+         1789658466.369  1843  2057 I wm_task_to_front: [0,6,0]
+         1789658466.370  1843  2057 I wm_task_moved: [6,1,0,1,2147483647]
+         1789658466.370  1843  2057 I wm_focused_root_task: [0,0,1,51,bringingFoundTaskToFront]
+         1789658466.370  1843  2057 I wm_new_intent: [0,43810202,6,com.bbk.launcher2/.Launcher,android.intent.action.MAIN,NULL,NULL,270532864]
+         1789658466.371  1843  2057 I wm_pause_activity: [0,139699747,space.alliswell.inbox/.AlarmActivity,userLeaving=true,pauseBackTasks]
+         1789658466.376  1843  1843 I auditd  : type=1400 audit(0.0:374213): avc:  denied  { read } for  comm="android.ui" name="u:object_r:vendor_default_prop:s0" dev="tmpfs" ino=548 scontext=u:r:system_server:s0 tcontext=u:object_r:vendor_default_prop:s0 tclass=file permissive=0
+         1789658466.373  1843  2057 I wm_add_to_stopping: [0,139699747,space.alliswell.inbox/.AlarmActivity,makeInvisible]
+         1789658466.374  1843  2056 I sysui_multi_action: [757,803,799,window_time_0,802,13]
+         1789658466.384  1843  1843 I auditd  : type=1400 audit(0.0:374214): avc:  denied  { read } for  comm="binder:1843_16" name="u:object_r:vendor_default_prop:s0" dev="tmpfs" ino=548 scontext=u:r:system_server:s0 tcontext=u:object_r:vendor_default_prop:s0 tclass=file permissive=0
+         1789658466.388  1843  1843 I auditd  : type=1400 audit(0.0:374215): avc:  denied  { ioctl } for  comm="binder:1843_16" path="/proc/fas/render" dev="proc" ino=4026532234 ioctlcmd=0x6609 scontext=u:r:system_server:s0 tcontext=u:object_r:proc_fas:s0 tclass=file permissive=0
+         1789658466.408  1843  1843 I auditd  : type=1400 audit(0.0:374216): avc:  denied  { ioctl } for  comm="binder:1843_13" path="/proc/fas/render" dev="proc" ino=4026532234 ioctlcmd=0x6609 scontext=u:r:system_server:s0 tcontext=u:object_r:proc_fas:s0 tclass=file permissive=0
+         1789658466.375  1843  2057 I wm_set_resumed_activity: [0,com.bbk.launcher2/.Launcher,resumeTopActivity - onActivityStateChanged]
+         1789658466.379   663   663 I auditd  : avc:  denied  { find } for pid=1843 uid=1000 name=vendor.mediatek.hardware.gpuserv.IGpuService/default scontext=u:r:system_server:s0 tcontext=u:object_r:default_android_service:s0 tclass=service_manager permissive=0
+         1789658466.380  1843  2057 I wm_resume_activity: [0,43810202,6,com.bbk.launcher2/.Launcher]
+         1789658466.385 31887 31887 I wm_on_top_resumed_lost_called: [139699747,space.alliswell.inbox.AlarmActivity,topStateChangedWhenResumed]
+         1789658466.386  3172  3172 I wm_on_restart_called: [43810202,com.bbk.launcher2.Launcher,performRestart,0]
+         1789658466.387  3172  3172 I wm_on_start_called: [43810202,com.bbk.launcher2.Launcher,handleStartActivity,1]
+         1789658466.388   663   663 I auditd  : avc:  denied  { find } for pid=1843 uid=1000 name=vendor.mediatek.hardware.gpuserv.IGpuService/default scontext=u:r:system_server:s0 tcontext=u:object_r:default_android_service:s0 tclass=service_manager permissive=0
+         1789658466.393  3172  3172 I wm_on_resume_called: [43810202,com.bbk.launcher2.Launcher,RESUME_ACTIVITY,3]
+         1789658466.395 31887 31887 I wm_on_paused_called: [139699747,space.alliswell.inbox.AlarmActivity,performPause,6]
+         1789658466.395  1843  2061 I input_focus: [Requesting to set focus to null window,reason=UpdateInputWindows]
+         1789658466.410 15726 15726 I viewroot_draw_event: [VRI[HiBoard,type=2],Start draw after previous draw not visible]
+         1789658466.442  1843  2416 I input_focus: [Focus leaving Window:ea2d4b7 type=1 space.alliswell.inbox/space.alliswell.inbox.AlarmActivity,reason=Waiting for window because NO_WINDOW]
+         1789658466.415  1843  2061 I input_focus: [Focus request Window:30233ef type=1 com.bbk.launcher2/com.bbk.launcher2.Launcher,reason=UpdateInputWindows]
+         1789658466.417  3172  3172 I viewroot_draw_event: [VRI[Launcher,type=1],Start draw after previous draw not visible]
+         1789658466.422  3172  4944 I viewroot_draw_event: [VRI[Launcher,type=1],Received frameDrawingCallback syncResult=0 frameNum=1 syncBuffer = false]
+         1789658466.430  1843  2061 I wm_wallpaper_surface: [0,1,Window{30233ef u0 com.bbk.launcher2/com.bbk.launcher2.Launcher type=1 }]
+         1789658466.431  3172  4588 I viewroot_draw_event: [VRI[Launcher,type=1],Received frameCommittedCallback lastAttemptedDrawFrameNum=1 didProduceBuffer=true]
+         1789658466.432  3172  3172 I viewroot_draw_event: [VRI[Launcher,type=1],reportDrawFinished seqId=0 mAppVisible = true mStopped = false]
+         1789658466.432  3172  3172 I wm_on_top_resumed_gained_called: [43810202,com.bbk.launcher2.Launcher,topStateChangedWhenResumed]
+         1789658466.459 15726 15726 I viewroot_draw_event: [VRI[HiBoard,type=2],reportDrawFinished seqId=0 mAppVisible = true mStopped = false]
+         1789658466.494  1843  2416 I input_focus: [Focus entering Window:30233ef type=1 com.bbk.launcher2/com.bbk.launcher2.Launcher,reason=Window became focusable. Previous reason: NOT_VISIBLE]
+         1789658466.947  1843  2381 I commit_sys_config_file: [settings-2-0,8]
+         1789658466.972  1843  3752 I netstats_mobile_sample: [23878037644,4264129320,26204185,14640502,23634734945,4264099971,21557822,14640018,1789658467290]
+         1789658466.972  1843  3752 I netstats_wifi_sample: [3220980989,420036789,3849032,2199034,3220939018,420033400,3848455,2198974,1789658467290]
+         1789658467.460  1843  3752 I wm_add_to_stopping: [0,139699747,space.alliswell.inbox/.AlarmActivity,makeInvisible]
+         1789658467.467  1843  2056 I sysui_multi_action: [319,96,322,1105,325,143804,757,761,758,9,759,2,806,com.bbk.launcher2,871,com.bbk.launcher2.Launcher,905,0,1320,8,1321,5]
+         1789658467.471   663   663 I auditd  : avc:  denied  { find } for pid=1843 uid=1000 name=vendor.mediatek.hardware.gpuserv.IGpuService/default scontext=u:r:system_server:s0 tcontext=u:object_r:default_android_service:s0 tclass=service_manager permissive=0
+         1789658467.471  1843  2060 I wm_stop_activity: [0,139699747,space.alliswell.inbox/.AlarmActivity]
+         1789658467.496  1843  1843 I auditd  : type=1400 audit(0.0:374257): avc:  denied  { read } for  comm="TaskSnapshotPer" name="u:object_r:vendor_default_prop:s0" dev="tmpfs" ino=548 scontext=u:r:system_server:s0 tcontext=u:object_r:vendor_default_prop:s0 tclass=file permissive=0
+         1789658467.496  1843  1843 I auditd  : type=1400 audit(0.0:374258): avc:  denied  { read } for  comm="TaskSnapshotPer" name="u:object_r:vendor_default_prop:s0" dev="tmpfs" ino=548 scontext=u:r:system_server:s0 tcontext=u:object_r:vendor_default_prop:s0 tclass=file permissive=0
+         1789658467.512  3172  3172 I auditd  : type=1400 audit(0.0:374259): avc:  denied  { ioctl } for  comm="binder:3172_4" path="/proc/fas/render" dev="proc" ino=4026532234 ioctlcmd=0x6609 scontext=u:r:platform_app:s0:c512,c768 tcontext=u:object_r:proc_fas:s0 tclass=file permissive=0 app=com.bbk.launcher2
+         1789658467.517 31887 31887 I viewroot_draw_event: [VRI[AlarmActivity,type=1],Not drawing due to not visible. Reason=!mAppVisible && !mForceDecorViewVisibility]
+         1789658467.540  1843  1843 I auditd  : type=1400 audit(0.0:374260): avc:  denied  { read } for  comm="TaskSnapshotPer" name="u:object_r:vendor_default_prop:s0" dev="tmpfs" ino=548 scontext=u:r:system_server:s0 tcontext=u:object_r:vendor_default_prop:s0 tclass=file permissive=0
+         1789658467.551 31887 31887 I wm_on_stop_called: [139699747,space.alliswell.inbox.AlarmActivity,STOP_ACTIVITY_ITEM,29]
+         1789658468.000  1843  2409 I liblog  : 449
+         1789658468.088  1843  2381 I commit_sys_config_file: [settings-2-0,10]
+         1789658469.418  3172  4586 I liblog  : 129
+         1789658469.518  1843  2442 I netstats_mobile_sample: [23878421960,4264202723,26204637,14640891,23635117597,4264173374,21558242,14640407,1789658469836]
+         1789658469.519  1843  2442 I netstats_wifi_sample: [3220980989,420036789,3849032,2199034,3220939018,420033400,3848455,2198974,1789658469836]
+         1789658469.980  1843  9104 I netstats_mobile_sample: [23878425224,4264207210,26204662,14640932,23635120809,4264177861,21558266,14640448,1789658470298]
+         1789658469.981  1843  9104 I netstats_wifi_sample: [3220980989,420036789,3849032,2199034,3220939018,420033400,3848455,2198974,1789658470298]
+         1789658470.296  1843  4604 I netstats_mobile_sample: [23878434634,4264210861,26204685,14640953,23635130024,4264181448,21558288,14640468,1789658470613]
+         1789658470.296  1843  4604 I netstats_wifi_sample: [3220980989,420036789,3849032,2199034,3220939018,420033400,3848455,2198974,1789658470613]
+         1789658470.352  3303  3303 I auditd  : type=1400 audit(0.0:374263): avc:  denied  { ioctl } for  comm="binder:3303_6" path="/proc/fas/render" dev="proc" ino=4026532234 ioctlcmd=0x6609 scontext=u:r:platform_app:s0:c512,c768 tcontext=u:object_r:proc_fas:s0 tclass=file permissive=0 app=com.vivo.systemuiplugin
+         1789658472.981  1843  2140 I am_uid_idle: 10190
+         1789658473.010  1843  2149 I am_app_frozen: [0,10190,space.alliswell.inbox,from fast_freezer]
+         1789658473.356  3303  3303 I auditd  : type=1400 audit(0.0:374264): avc:  denied  { ioctl } for  comm="binder:3303_A" path="/proc/fas/render" dev="proc" ino=4026532234 ioctlcmd=0x6609 scontext=u:r:platform_app:s0:c512,c768 tcontext=u:object_r:proc_fas:s0 tclass=file permissive=0 app=com.vivo.systemuiplugin
+         1789658474.972  3172  3172 I auditd  : type=1400 audit(0.0:374265): avc:  denied  { ioctl } for  comm="binder:3172_6" path="/proc/fas/render" dev="proc" ino=4026532234 ioctlcmd=0x6609 scontext=u:r:platform_app:s0:c512,c768 tcontext=u:object_r:proc_fas:s0 tclass=file permissive=0 app=com.bbk.launcher2
+         1789658475.004  3172  3172 I auditd  : type=1400 audit(0.0:374266): avc:  denied  { ioctl } for  comm="binder:3172_6" path="/proc/fas/render" dev="proc" ino=4026532234 ioctlcmd=0x6609 scontext=u:r:platform_app:s0:c512,c768 tcontext=u:object_r:proc_fas:s0 tclass=file permissive=0 app=com.bbk.launcher2
+         1789658475.028  3172  3172 I auditd  : type=1400 audit(0.0:374267): avc:  denied  { ioctl } for  comm="binder:3172_6" path="/proc/fas/render" dev="proc" ino=4026532234 ioctlcmd=0x6609 scontext=u:r:platform_app:s0:c512,c768 tcontext=u:object_r:proc_fas:s0 tclass=file permissive=0 app=com.bbk.launcher2
+         1789658475.044  3172  3172 I auditd  : type=1400 audit(0.0:374268): avc:  denied  { ioctl } for  comm="binder:3172_6" path="/proc/fas/render" dev="proc" ino=4026532234 ioctlcmd=0x6609 scontext=u:r:platform_app:s0:c512,c768 tcontext=u:object_r:proc_fas:s0 tclass=file permissive=0 app=com.bbk.launcher2
+         1789658475.060  3172  3172 I auditd  : type=1400 audit(0.0:374269): avc:  denied  { ioctl } for  comm="binder:3172_6" path="/proc/fas/render" dev="proc" ino=4026532234 ioctlcmd=0x6609 scontext=u:r:platform_app:s0:c512,c768 tcontext=u:object_r:proc_fas:s0 tclass=file permissive=0 app=com.bbk.launcher2
+         1789658475.076  3172  3172 I auditd  : type=1400 audit(0.0:374270): avc:  denied  { ioctl } for  comm="binder:3172_6" path="/proc/fas/render" dev="proc" ino=4026532234 ioctlcmd=0x6609 scontext=u:r:platform_app:s0:c512,c768 tcontext=u:object_r:proc_fas:s0 tclass=file permissive=0 app=com.bbk.launcher2
+         1789658475.096  3172  3172 I auditd  : type=1400 audit(0.0:374271): avc:  denied  { ioctl } for  comm="binder:3172_6" path="/proc/fas/render" dev="proc" ino=4026532234 ioctlcmd=0x6609 scontext=u:r:platform_app:s0:c512,c768 tcontext=u:object_r:proc_fas:s0 tclass=file permissive=0 app=com.bbk.launcher2
+         1789658475.112  3172  3172 I auditd  : type=1400 audit(0.0:374272): avc:  denied  { ioctl } for  comm="binder:3172_6" path="/proc/fas/render" dev="proc" ino=4026532234 ioctlcmd=0x6609 scontext=u:r:platform_app:s0:c512,c768 tcontext=u:object_r:proc_fas:s0 tclass=file permissive=0 app=com.bbk.launcher2

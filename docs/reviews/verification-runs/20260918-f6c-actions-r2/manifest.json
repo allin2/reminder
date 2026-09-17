@@ -1,0 +1,84 @@
+{
+  "files": [
+    {
+      "path": "close/activity-after.txt",
+      "bytes": 110109,
+      "sha256": "b4276c80baf84c562c38c9c73d33e2ff18c440b5c8e63daf416f383a0129e3a6"
+    },
+    {
+      "path": "close/after.png",
+      "bytes": 263228,
+      "sha256": "f367957170eef9df61036061222ca77fae3158d7ca2baa0b6ecce4afe43a9775"
+    },
+    {
+      "path": "close/before.png",
+      "bytes": 117537,
+      "sha256": "5266b58ebf9adebd1ee9e9860b1421be308f3db85db36027b37ee3f90f785a71"
+    },
+    {
+      "path": "close/item-before.json",
+      "bytes": 972,
+      "sha256": "acd8eaac69cc438c11d84263ca58e7595a2a0d128952c9ad964ea1f26fbb7064"
+    },
+    {
+      "path": "close/notification-after.txt",
+      "bytes": 345046,
+      "sha256": "3a6d6b7559a9a8b0f561782cc764cb6add01ab54a30933fe9b358401b5c98fc1"
+    },
+    {
+      "path": "close/queue-after.xml",
+      "bytes": 753,
+      "sha256": "2c7bb2e95cfb4b942c1d4fc4cb2da49b93c3714d814ac4050402c2ac7b9d18bf"
+    },
+    {
+      "path": "close/result.json",
+      "bytes": 1524,
+      "sha256": "d96c83f15b2693dcb4a4e42e356ad65f6aab4cd6cd12af578a695b71ec7d92a9"
+    },
+    {
+      "path": "close/schedules-after.xml",
+      "bytes": 964,
+      "sha256": "a29b3322811e58e881534612a5f29c2e205dcc4db81303a5e39dbde04741a8cf"
+    },
+    {
+      "path": "close/state-after-action.json",
+      "bytes": 14521,
+      "sha256": "70e2c7ff9dc84884e93f64dc8f47df65909979d1e22ca65327cec652f228d1a1"
+    },
+    {
+      "path": "close/trace-after.xml",
+      "bytes": 31246,
+      "sha256": "860febc34a102086724e833e484f96c72676eabc9edbdfd0abae8dad8ac9c0e3"
+    },
+    {
+      "path": "close/trace-before.xml",
+      "bytes": 31501,
+      "sha256": "9bccad2efcaf494b888cb9b0843a4d6838742c11af65e0b1ce19de69a77cfb91"
+    },
+    {
+      "path": "close/ui-before.xml",
+      "bytes": 7764,
+      "sha256": "c250354354e30f2c70f0ee75287a08ca1b1f3583c37c2e229b707e5d3250083a"
+    },
+    {
+      "path": "metadata.json",
+      "bytes": 245,
+      "sha256": "ae36380ad3b01e43c29ed53b7f7435252996c6e83992272f86b1b99bbe82dff3"
+    },
+    {
+      "path": "results.json",
+      "bytes": 1646,
+      "sha256": "08d29450fd494ec7ad832636b8b960218bde2e1257a5b0a60b615e616afa87e5"
+    },
+    {
+      "path": "review.json",
+      "bytes": 230,
+      "sha256": "0498f85b483bd77426c59167ac0c70b96a00902b8283aa722062a3dac4383410"
+    },
+    {
+      "path": "state-before.json",
+      "bytes": 13370,
+      "sha256": "f09f5d97ec4db8a4529d96822de9a4d0956a3d84dc1626f342ec7eb41a7e57f8"
+    }
+  ]
+}

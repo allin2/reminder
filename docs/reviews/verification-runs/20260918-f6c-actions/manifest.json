@@ -1,0 +1,34 @@
+{
+  "files": [
+    {
+      "path": "close/before.png",
+      "bytes": 124843,
+      "sha256": "de0a8c3a8ff64dec86c89025d16d011384997ce5b7f81ca009ff70e7cf5393d4"
+    },
+    {
+      "path": "close/item-before.json",
+      "bytes": 972,
+      "sha256": "d5b1ca1dc1cfd756b6055450e53be73b34090b79af3280459a10119657becf6a"
+    },
+    {
+      "path": "collection-error.json",
+      "bytes": 170,
+      "sha256": "96a11ff78f06da31a4a66ead956d349d0a421952ddbc65cca396b7c67e300cce"
+    },
+    {
+      "path": "interrupted-ui.xml",
+      "bytes": 7764,
+      "sha256": "c250354354e30f2c70f0ee75287a08ca1b1f3583c37c2e229b707e5d3250083a"
+    },
+    {
+      "path": "metadata.json",
+      "bytes": 245,
+      "sha256": "b54de9586e5ed3aab7fe25ab48bf772012565392121c242d8218a9b08255f844"
+    },
+    {
+      "path": "state-before.json",
+      "bytes": 12149,
+      "sha256": "dff2373b760e9c715353d678b62491690509ef17e45523bc1efc6dca2f9584e2"
+    }
+  ]
+}

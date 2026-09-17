@@ -1,0 +1,115 @@
+{
+  "itemId": "r1_20260918_001",
+  "token": "1365176345:fcc2f300-376d-4333-acc0-b84ae639722f",
+  "targetAt": 1789662128365,
+  "receivedAt": 1789662128427,
+  "receivedLagMs": 62,
+  "windowVisibleAt": null,
+  "windowVisibleLagMs": null,
+  "matchingNotificationRecordAtSnapshot": true,
+  "appFrozenEvents": [],
+  "eventsForToken": [
+    {
+      "token": "1365176345:fcc2f300-376d-4333-acc0-b84ae639722f",
+      "stage": "requested",
+      "at": 1789662053921,
+      "detail": "delayMs=74432"
+    },
+    {
+      "token": "1365176345:fcc2f300-376d-4333-acc0-b84ae639722f",
+      "stage": "item",
+      "at": 1789662053930,
+      "detail": "r1_20260918_001"
+    },
+    {
+      "token": "1365176345:fcc2f300-376d-4333-acc0-b84ae639722f",
+      "stage": "unfreezerScheduled",
+      "at": 1789662053940,
+      "detail": "triggerAt=1789662128365;mode=alarmClock"
+    },
+    {
+      "token": "1365176345:fcc2f300-376d-4333-acc0-b84ae639722f",
+      "stage": "scheduled",
+      "at": 1789662053948,
+      "detail": "triggerAt=1789662128365;mode=alarmClock"
+    },
+    {
+      "token": "1365176345:fcc2f300-376d-4333-acc0-b84ae639722f",
+      "stage": "received",
+      "at": 1789662128427,
+      "detail": ""
+    },
+    {
+      "token": "1365176345:fcc2f300-376d-4333-acc0-b84ae639722f",
+      "stage": "environment",
+      "at": 1789662128447,
+      "detail": "screenOn=false;locked=true;inCall=false;path=fsi+direct"
+    },
+    {
+      "token": "1365176345:fcc2f300-376d-4333-acc0-b84ae639722f",
+      "stage": "launchRequested",
+      "at": 1789662128471,
+      "detail": "direct launch alongside full-screen intent"
+    },
+    {
+      "token": "1365176345:fcc2f300-376d-4333-acc0-b84ae639722f",
+      "stage": "notifyReturned",
+      "at": 1789662128490,
+      "detail": "insistent; notify returned; not proof of display"
+    },
+    {
+      "token": "1365176345:fcc2f300-376d-4333-acc0-b84ae639722f",
+      "stage": "unfreezerStarted",
+      "at": 1789662128501,
+      "detail": "foreground service torn down the freezer"
+    },
+    {
+      "token": "1365176345:fcc2f300-376d-4333-acc0-b84ae639722f",
+      "stage": "created",
+      "at": 1789662128985,
+      "detail": "test=false"
+    },
+    {
+      "token": "1365176345:fcc2f300-376d-4333-acc0-b84ae639722f",
+      "stage": "resumed",
+      "at": 1789662129051,
+      "detail": "lifecycle only"
+    },
+    {
+      "token": "1365176345:fcc2f300-376d-4333-acc0-b84ae639722f",
+      "stage": "paused",
+      "at": 1789662129111,
+      "detail": "finishing=true"
+    },
+    {
+      "token": "1365176345:fcc2f300-376d-4333-acc0-b84ae639722f",
+      "stage": "stopped",
+      "at": 1789662129304,
+      "detail": "finishing=true"
+    },
+    {
+      "token": "1365176345:fcc2f300-376d-4333-acc0-b84ae639722f",
+      "stage": "destroyed",
+      "at": 1789662129312,
+      "detail": "finishing=true"
+    },
+    {
+      "token": "1365176345:fcc2f300-376d-4333-acc0-b84ae639722f",
+      "stage": "windowHidden",
+      "at": 1789662129317,
+      "detail": "never visible within 1500ms"
+    },
+    {
+      "token": "1365176345:fcc2f300-376d-4333-acc0-b84ae639722f",
+      "stage": "effectsStopped",
+      "at": 1789662129321,
+      "detail": ""
+    },
+    {
+      "token": "1365176345:fcc2f300-376d-4333-acc0-b84ae639722f",
+      "stage": "unfreezerStopped",
+      "at": 1789662136690,
+      "detail": "hold=8000ms"
+    }
+  ]
+}

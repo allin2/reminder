@@ -1,0 +1,42 @@
+{
+  "itemId": "r1_20260918_001",
+  "token": "1288883457:6a6a1df5-e3b1-456f-868d-11d871b3ab74",
+  "targetAt": 1789662551490,
+  "receivedAt": null,
+  "windowVisibleAt": null,
+  "status": "FAIL_NO_PROCESS_START_IN_OBSERVATION_WINDOW",
+  "eventsForToken": [
+    {
+      "token": "1288883457:6a6a1df5-e3b1-456f-868d-11d871b3ab74",
+      "stage": "requested",
+      "at": 1789662477091,
+      "detail": "delayMs=74385"
+    },
+    {
+      "token": "1288883457:6a6a1df5-e3b1-456f-868d-11d871b3ab74",
+      "stage": "item",
+      "at": 1789662477101,
+      "detail": "r1_20260918_001"
+    },
+    {
+      "token": "1288883457:6a6a1df5-e3b1-456f-868d-11d871b3ab74",
+      "stage": "unfreezerScheduled",
+      "at": 1789662477114,
+      "detail": "triggerAt=1789662551490;mode=alarmClock"
+    },
+    {
+      "token": "1288883457:6a6a1df5-e3b1-456f-868d-11d871b3ab74",
+      "stage": "scheduled",
+      "at": 1789662477120,
+      "detail": "triggerAt=1789662551490;mode=alarmClock"
+    }
+  ],
+  "frameworkEvents": [
+    "         1789662485.918  1843  1941 I am_schedule_service_restart: [0,space.alliswell.inbox/org.chromium.content.app.SandboxedProcessService0:0,1000]",
+    "         1789662485.979  1843  4482 I am_proc_died: [0,17494,space.alliswell.inbox,0,2]",
+    "         1789662485.988  1843  4482 I wm_finish_activity: [0,105655936,59,space.alliswell.inbox/.MainActivity,proc died without state saved]",
+    "         1789662485.996  1843  4482 I wm_task_removed: [59,59,0,removeChild, last child = ActivityRecord{105655936 u0 space.alliswell.inbox/.MainActivity t-1 d-1 f}} in Task{385b2ac #59 type=standard A=10190:space.alliswell.inbox U=0 displayId=0 mode=fullscreen sz=0 mLayerRank=1}]",
+    "         1789662551.490  1843  2390 I device_idle_wake_from_idle: [0,*walarm*:space.alliswell.inbox/.AlarmRingService]",
+    "         1789662551.490  1843  2390 I device_idle_wake_from_idle: [0,*walarm*:space.alliswell.inbox.ACTION_TEST_ALARM]"
+  ]
+}

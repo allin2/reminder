@@ -1,0 +1,21 @@
+[00:56:27] === 自尽避冻结实验 cold · LEAD=75s ===
+[00:56:41] PID=18017
+[00:56:47] 设置结果: {"triggerAt":1789664276503,"targetLocal":"00:57:56"}
+[00:56:49] 排程回读: 广播=11 服务=9
+[00:56:50] --- 自尽：以应用自身 uid 发 SIGKILL（不是 am kill、不是 force-stop）---
+[00:56:52] kill 后进程: []
+[00:56:53] User 0 行:     User 0: ceDataInode=263265 deDataInode=204514 installed=true hidden=false vHidden=1 suspended=false distractionFlags=0 stopped=false vStopped=false notLaunched=false enabled=0 instant=false virtual=false quarantined=false
+[00:56:55] 关屏: Asleep
+[00:56:55] 等到点…
+[00:58:51] --- 到点后 ---
+[00:58:51] 进程: [25905]
+[00:58:52] 通知条数: 3
+[00:58:52] 屏幕: Awake
+
+[00:58:52] --- events（进程生死 / 唤醒 / 冻结）---
+             1789664211.050  1843  3751 I am_proc_died: [0,18017,space.alliswell.inbox,0,2]
+             1789664276.535  1843  2390 I device_idle_wake_from_idle: [0,*walarm*:space.alliswell.inbox.ACTION_TEST_ALARM]
+             1789664276.556  1843  2390 I device_idle_wake_from_idle: [0,*walarm*:space.alliswell.inbox/.AlarmRingService]
+             1789664276.570  1843  2127 I am_proc_start: [0,25905,10190,space.alliswell.inbox,broadcast,{space.alliswell.inbox/space.alliswell.inbox.AlarmTestReceiver}, {action = space.alliswell.inbox.ACTION_TEST_ALARM}]
+             1789664277.960  1843  3616 I wm_create_activity: [0,3725626,72,space.alliswell.inbox/.AlarmActivity,NULL,NULL,NULL,880803840]
+[00:58:52] === 结束 ===

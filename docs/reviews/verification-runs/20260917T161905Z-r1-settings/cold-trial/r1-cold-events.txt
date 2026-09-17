@@ -1,0 +1,283 @@
+--------- beginning of events
+         1789662483.963  1843  4482 I netstats_wifi_sample: [4585657534,424819295,4778524,2256251,4585005349,424814606,4777183,2256162,1789662484281]
+         1789662485.092  3303  3303 I auditd  : type=1400 audit(0.0:396500): avc:  denied  { ioctl } for  comm="binder:3303_B" path="/proc/fas/render" dev="proc" ino=4026532234 ioctlcmd=0x6609 scontext=u:r:platform_app:s0:c512,c768 tcontext=u:object_r:proc_fas:s0 tclass=file permissive=0 app=com.vivo.systemuiplugin
+         1789662485.887  1843  2061 I input_focus: [Requesting to set focus to null window,reason=UpdateInputWindows]
+         1789662485.911  1843  1941 I am_proc_died: [0,5946,com.google.android.webview:sandboxed_process0:org.chromium.content.app.SandboxedProcessService0:0,1,3]
+         1789662485.912  1843  1843 I auditd  : type=1400 audit(0.0:396501): avc:  denied  { read } for  comm="binder:1843_1" name="u:object_r:vendor_default_prop:s0" dev="tmpfs" ino=548 scontext=u:r:system_server:s0 tcontext=u:object_r:vendor_default_prop:s0 tclass=file permissive=0
+         1789662485.916   663   663 I auditd  : avc:  denied  { find } for pid=1843 uid=1000 name=vendor.mediatek.hardware.gpuserv.IGpuService/default scontext=u:r:system_server:s0 tcontext=u:object_r:default_android_service:s0 tclass=service_manager permissive=0
+         1789662485.928  3526  3526 I auditd  : type=1400 audit(0.0:396502): avc:  denied  { ioctl } for  comm="binder:3526_1" path="/proc/fas/render" dev="proc" ino=4026532234 ioctlcmd=0x6609 scontext=u:r:system_app:s0 tcontext=u:object_r:proc_fas:s0 tclass=file permissive=0
+         1789662485.918  1843  1941 I am_schedule_service_restart: [0,space.alliswell.inbox/org.chromium.content.app.SandboxedProcessService0:0,1000]
+         1789662485.918  1843  1941 I am_uid_stopped: 99019
+         1789662485.979  1843  4482 I am_proc_died: [0,17494,space.alliswell.inbox,0,2]
+         1789662485.980  1843  1843 I auditd  : type=1400 audit(0.0:396503): avc:  denied  { read } for  comm="binder:1843_19" name="u:object_r:vendor_default_prop:s0" dev="tmpfs" ino=548 scontext=u:r:system_server:s0 tcontext=u:object_r:vendor_default_prop:s0 tclass=file permissive=0
+         1789662485.985   663   663 I auditd  : avc:  denied  { find } for pid=1843 uid=1000 name=vendor.mediatek.hardware.gpuserv.IGpuService/default scontext=u:r:system_server:s0 tcontext=u:object_r:default_android_service:s0 tclass=service_manager permissive=0
+         1789662485.986  1843  4482 I am_uid_stopped: 10190
+         1789662485.988  1843  4482 I wm_finish_activity: [0,105655936,59,space.alliswell.inbox/.MainActivity,proc died without state saved]
+         1789662485.996  1843  4482 I wm_task_removed: [59,59,0,removeChild, last child = ActivityRecord{105655936 u0 space.alliswell.inbox/.MainActivity t-1 d-1 f}} in Task{385b2ac #59 type=standard A=10190:space.alliswell.inbox U=0 displayId=0 mode=fullscreen sz=0 mLayerRank=1}]
+         1789662486.004  1843  1843 I auditd  : type=1400 audit(0.0:396504): avc:  denied  { read } for  comm="binder:1843_19" name="u:object_r:vendor_default_prop:s0" dev="tmpfs" ino=548 scontext=u:r:system_server:s0 tcontext=u:object_r:vendor_default_prop:s0 tclass=file permissive=0
+         1789662486.005  1843  4482 I wm_set_resumed_activity: [0,com.bbk.launcher2/.Launcher,resumeTopActivity - onActivityStateChanged]
+         1789662486.008  1843  1843 I auditd  : type=1400 audit(0.0:396505): avc:  denied  { read } for  comm="binder:1843_19" name="u:object_r:vendor_default_prop:s0" dev="tmpfs" ino=548 scontext=u:r:system_server:s0 tcontext=u:object_r:vendor_default_prop:s0 tclass=file permissive=0
+         1789662486.008   663   663 I auditd  : avc:  denied  { find } for pid=1843 uid=1000 name=vendor.mediatek.hardware.gpuserv.IGpuService/default scontext=u:r:system_server:s0 tcontext=u:object_r:default_android_service:s0 tclass=service_manager permissive=0
+         1789662486.011   663   663 I auditd  : avc:  denied  { find } for pid=1843 uid=1000 name=vendor.mediatek.hardware.gpuserv.IGpuService/default scontext=u:r:system_server:s0 tcontext=u:object_r:default_android_service:s0 tclass=service_manager permissive=0
+         1789662486.012  1843  4482 I wm_resume_activity: [0,43810202,6,com.bbk.launcher2/.Launcher]
+         1789662486.019  3172  3172 I wm_on_restart_called: [43810202,com.bbk.launcher2.Launcher,performRestart,0]
+         1789662486.019  3172  3172 I wm_on_start_called: [43810202,com.bbk.launcher2.Launcher,handleStartActivity,0]
+         1789662486.020  1843  1843 I auditd  : type=1400 audit(0.0:396506): avc:  denied  { ioctl } for  comm="binder:1843_19" path="/proc/fas/render" dev="proc" ino=4026532234 ioctlcmd=0x6609 scontext=u:r:system_server:s0 tcontext=u:object_r:proc_fas:s0 tclass=file permissive=0
+         1789662486.020  1843  1843 I auditd  : type=1400 audit(0.0:396507): avc:  denied  { ioctl } for  comm="binder:1843_19" path="/proc/fas/render" dev="proc" ino=4026532234 ioctlcmd=0x6609 scontext=u:r:system_server:s0 tcontext=u:object_r:proc_fas:s0 tclass=file permissive=0
+         1789662486.022  3172  3172 I wm_on_resume_called: [43810202,com.bbk.launcher2.Launcher,RESUME_ACTIVITY,1]
+         1789662486.022  3172  3172 I wm_on_top_resumed_gained_called: [43810202,com.bbk.launcher2.Launcher,topWhenResuming]
+         1789662486.047  1843  2061 I input_focus: [Focus request Window:30233ef type=1 com.bbk.launcher2/com.bbk.launcher2.Launcher,reason=UpdateInputWindows]
+         1789662486.050  3172  3172 I viewroot_draw_event: [VRI[Launcher,type=1],Start draw after previous draw not visible]
+         1789662486.057  3172  4946 I viewroot_draw_event: [VRI[Launcher,type=1],Received frameDrawingCallback syncResult=0 frameNum=1 syncBuffer = false]
+         1789662486.104  1843  2110 I am_pss  : [8699,10209,com.android.rkpdapp,0,0,0,100638720,0,19,7]
+         1789662486.105  1843  2416 I input_focus: [Focus entering Window:30233ef type=1 com.bbk.launcher2/com.bbk.launcher2.Launcher,reason=Window became focusable. Previous reason: NOT_VISIBLE]
+         1789662486.067  3172  4588 I viewroot_draw_event: [VRI[Launcher,type=1],Received frameCommittedCallback lastAttemptedDrawFrameNum=1 didProduceBuffer=true]
+         1789662486.067  1843  2061 I wm_wallpaper_surface: [0,1,Window{30233ef u0 com.bbk.launcher2/com.bbk.launcher2.Launcher type=1 }]
+         1789662486.068  3172  3172 I viewroot_draw_event: [VRI[Launcher,type=1],reportDrawFinished seqId=0 mAppVisible = true mStopped = false]
+         1789662486.068 15726 15726 I viewroot_draw_event: [VRI[HiBoard,type=2],Start draw after previous draw not visible]
+         1789662486.106 15726 15726 I viewroot_draw_event: [VRI[HiBoard,type=2],reportDrawFinished seqId=0 mAppVisible = true mStopped = false]
+         1789662486.508  1843  2381 I commit_sys_config_file: [settings-2-0,10]
+         1789662486.538  1843  3337 I am_uid_active: 10258
+         1789662486.546  1843  2149 I am_app_unfrozen: [0,10258,com.vivo.puresearch,bind service]
+         1789662486.842  1843  4497 I am_uid_active: 10156
+         1789662486.843  1843  2383 I am_unfreeze: [16208,com.vivo.widget.gallery,6]
+         1789662486.968  1843  2381 I commit_sys_config_file: [settings-2-0,9]
+         1789662488.000  1843  2409 I liblog  : 163
+         1789662488.259  1843  3768 I power_sleep_requested: 0
+         1789662488.287  3303  3303 I sysui_multi_action: [757,207,758,2]
+         1789662488.310  1843  2181 I sysui_multi_action: [757,1696,758,6,759,0]
+         1789662488.321  3172  3172 I wm_on_top_resumed_lost_called: [43810202,com.bbk.launcher2.Launcher,topStateChangedWhenResumed]
+         1789662488.321  1843  2181 I wm_pause_activity: [0,43810202,com.bbk.launcher2/.Launcher,userLeaving=false,sleep]
+         1789662488.322  3172  3172 I wm_on_paused_called: [43810202,com.bbk.launcher2.Launcher,performPause,0]
+         1789662488.324  1843  3788 I wm_add_to_stopping: [0,43810202,com.bbk.launcher2/.Launcher,completePauseLocked]
+         1789662488.329  1843  2056 I sysui_multi_action: [757,803,799,window_time_0,802,26]
+         1789662488.335  1843  2061 I input_focus: [Requesting to set focus to null window,reason=UpdateInputWindows]
+         1789662488.340  3303  3303 I sysui_multi_action: [757,207,758,2]
+         1789662488.341  1843  2061 I wm_wallpaper_surface: [0,0,null]
+         1789662488.345  1843  2110 I am_pss  : [10694,10120,com.iqoo.secure:releasable,0,0,0,136646656,0,19,10]
+         1789662488.351 15726 15726 I viewroot_draw_event: [VRI[HiBoard,type=2],Not drawing due to not visible. Reason=!mAppVisible && !mForceDecorViewVisibility]
+         1789662488.356  1843  1843 I auditd  : type=1400 audit(0.0:396524): avc:  denied  { read } for  comm="android.display" name="u:object_r:vendor_default_prop:s0" dev="tmpfs" ino=548 scontext=u:r:system_server:s0 tcontext=u:object_r:vendor_default_prop:s0 tclass=file permissive=0
+         1789662488.359   663   663 I auditd  : avc:  denied  { find } for pid=1843 uid=1000 name=vendor.mediatek.hardware.gpuserv.IGpuService/default scontext=u:r:system_server:s0 tcontext=u:object_r:default_android_service:s0 tclass=service_manager permissive=0
+         1789662488.359  1843  2060 I wm_stop_activity: [0,43810202,com.bbk.launcher2/.Launcher]
+         1789662488.387  3172  3172 I viewroot_draw_event: [VRI[Launcher,type=1],Not drawing due to not visible. Reason=!mAppVisible && !mForceDecorViewVisibility]
+         1789662488.397  3172  3172 I wm_on_stop_called: [43810202,com.bbk.launcher2.Launcher,STOP_ACTIVITY_ITEM,7]
+         1789662488.401  1843  2126 I am_wtf  : [0,1843,system_server,-1,ActivityManager,Sending non-protected broadcast com.internal.telephony.airplane.external.info.ntf from system 4362:com.android.phone/1001 pkg com.android.phone Caller=com.android.server.am.BroadcastController.broadcastIntentLockedTraced:1919 com.android.server.am.BroadcastController.broadcastIntentLocked:857 com.android.server.am.BroadcastController.broadcastIntentWithFeature:790 com.android.server.am.ActivityManagerService.broadcastIntentWithFeature:16504 android.app.IActivityManager$Stub.onTransact$broadcastIntentWithFeature$:13887 android.app.IActivityManager$Stub.onTransact:3583 com.android.server.am.ActivityManagerService.onTransact:3304 android.os.Binder.execTransactInternal:1441 android.os.Binder.execTransact:1380 <bottom of call stack> ]
+         1789662488.404 15799 15799 I auditd  : type=1400 audit(0.0:396525): avc:  denied  { search } for  comm="vivo.puresearch" name="zram0" dev="sysfs" ino=101940 scontext=u:r:platform_app:s0:c512,c768 tcontext=u:object_r:sysfs_zram:s0 tclass=dir permissive=0 app=com.vivo.puresearch
+         1789662488.408 15799 15799 I auditd  : type=1400 audit(0.0:396526): avc:  denied  { search } for  comm="vivo.puresearch" name="zram0" dev="sysfs" ino=101940 scontext=u:r:platform_app:s0:c512,c768 tcontext=u:object_r:sysfs_zram:s0 tclass=dir permissive=0 app=com.vivo.puresearch
+         1789662488.408 15799 15799 I auditd  : type=1400 audit(0.0:396527): avc:  denied  { read } for  comm="vivo.puresearch" name="zcache" dev="proc" ino=4026533487 scontext=u:r:platform_app:s0:c512,c768 tcontext=u:object_r:proc_zcache:s0 tclass=file permissive=0 app=com.vivo.puresearch
+         1789662488.408 15799 15799 I auditd  : type=1400 audit(0.0:396528): avc:  denied  { search } for  comm="vivo.puresearch" name="zram0" dev="sysfs" ino=101940 scontext=u:r:platform_app:s0:c512,c768 tcontext=u:object_r:sysfs_zram:s0 tclass=dir permissive=0 app=com.vivo.puresearch
+         1789662488.478  1843  2381 I commit_sys_config_file: [settings-2-0,7]
+         1789662488.564  1843  2381 I commit_sys_config_file: [settings-1-0,10]
+         1789662488.650  1843  2767 I screen_toggled: 0
+         1789662488.650  1843  2767 I sysui_multi_action: [757,804,799,screen_timeout,801,600,802,1]
+         1789662488.653  1843  1843 I power_screen_broadcast_send: 1
+         1789662488.658  1843  2416 I input_focus: [Focus leaving Window:30233ef type=1 com.bbk.launcher2/com.bbk.launcher2.Launcher,reason=Waiting for window because NO_WINDOW]
+         1789662488.678  1843  2347 I wm_set_keyguard_shown: [0,1,0,0,0,setKeyguardShown]
+         1789662488.684  1843  2767 I sysui_multi_action: [757,1594,758,4,759,-2147483648,1359,105409]
+         1789662488.690  1843  2767 I sysui_multi_action: [757,198,758,2,759,2,1359,395,1695,6]
+         1789662488.690  1843  2767 I power_screen_state: [0,2,0,0,395]
+         1789662488.691  1843  2767 I power_screen_state: [0,6,0,0]
+         1789662488.696  1843  2347 I wm_set_keyguard_shown: [90000,1,0,0,0,setKeyguardShown]
+         1789662488.707  1843  3337 I am_wtf  : [0,3303,com.android.systemui,549993997,RefactorFlagAssert,New code path expects SceneContainerFlag to be enabled.]
+         1789662488.710  1843  2337 I am_wtf  : [0,3303,com.android.systemui,549993997,RefactorFlagAssert,New code path expects SceneContainerFlag to be enabled.]
+         1789662488.712  1843  3767 I am_wtf  : [0,3303,com.android.systemui,549993997,RefactorFlagAssert,New code path expects SceneContainerFlag to be enabled.]
+         1789662488.719  3303  3303 I sysui_multi_action: [757,196,758,1,759,0]
+         1789662488.719  3303  3303 I sysui_status_bar_state: [1,1,0,0,0,1]
+         1789662488.733  3526  3526 I viewroot_draw_event: [VRI[SideSlideGestureBar-Bottom,type=2024],Not drawing due to screen off]
+         1789662488.745  1843  2126 I am_wtf  : [0,1843,system_server,-1,ActivityManager,Sending non-protected broadcast android.net.qosmonitor.NETQOS_CHANGE from system 1843:system/1000 pkg android Caller=com.android.server.am.BroadcastController.broadcastIntentLockedTraced:1919 com.android.server.am.BroadcastController.broadcastIntentLocked:857 com.android.server.am.BroadcastController.broadcastIntentWithFeature:790 com.android.server.am.ActivityManagerService.broadcastIntentWithFeature:16504 android.app.ContextImpl.sendBroadcastAsUser:1531 android.content.ContextWrapper.sendBroadcastAsUser:603 com.android.server.wifi.qosmonitor.WlanNetworkQosMonitor.sendNetQosChangedBroadcast:5645 com.android.server.wifi.qosmonitor.WlanNetworkQosMonitor.sendNetQosChangedBroadcastWhenIpv6Disabled:5621 com.android.server.wifi.qosmonitor.WlanMonitorStateMachine.clearTcpIpv6Records:2720 com.android.server.wifi.qosmonitor.WlanMonitorStateMachine.-$$Nest$mclearTcpIpv6Records:0 ]
+         1789662488.756  1843  2126 I am_wtf  : [0,1843,system_server,-1,ActivityManager,Sending non-protected broadcast com.vivo.action.KEYGUARD_STATE_CHANGED from system 3303:com.android.systemui/u0a67 pkg com.android.systemui Caller=com.android.server.am.BroadcastController.broadcastIntentLockedTraced:1919 com.android.server.am.BroadcastController.broadcastIntentLocked:857 com.android.server.am.BroadcastController.broadcastIntentWithFeature:790 com.android.server.am.ActivityManagerService.broadcastIntentWithFeature:16504 android.app.IActivityManager$Stub.onTransact$broadcastIntentWithFeature$:13887 android.app.IActivityManager$Stub.onTransact:3583 com.android.server.am.ActivityManagerService.onTransact:3304 android.os.Binder.execTransactInternal:1441 android.os.Binder.execTransact:1380 <bottom of call stack> ]
+         1789662488.758  3526  3526 I viewroot_draw_event: [VRI[SideSlideGestureBar-Left,type=2024],Not drawing due to not visible. Reason=View.GONE]
+         1789662488.776  3526  3526 I viewroot_draw_event: [VRI[SideSlideGestureBar-Right,type=2024],Not drawing due to not visible. Reason=View.GONE]
+         1789662488.803  1843  2060 I user_activity_timeout_override: 7000
+         1789662488.819  1843  2061 I input_focus: [Focus request Window:816f387 type=2040 NotificationShade,reason=UpdateInputWindows]
+         1789662488.869  3303  3303 I viewroot_draw_event: [VRI[NotificationShade,type=2040],reportDrawFinished seqId=15 mAppVisible = true mStopped = false]
+         1789662488.838  3303  3303 I viewroot_draw_event: [VRI[NotificationShade,type=2040],Start draw after previous draw not visible]
+         1789662488.889  3303  3303 I viewroot_draw_event: [VRI[StatusBar,type=2000],Not drawing due to screen off]
+         1789662488.893  3303  3303 I viewroot_draw_event: [VRI[NotificationShade,type=2040],Not drawing due to screen off]
+         1789662488.935  1843  2416 I input_focus: [Focus entering Window:816f387 type=2040 NotificationShade,reason=Window became focusable. Previous reason: NOT_VISIBLE]
+         1789662488.975  1843  2381 I commit_sys_config_file: [settings-0-0,6]
+         1789662488.997  1843  1843 I battery_saving_stats: [0,1,0,105589,0,0,9652983,-72000,-1]
+         1789662489.015  1843  2056 I power_screen_broadcast_done: [0,362,1]
+         1789662489.098  1843  2381 I commit_sys_config_file: [settings-2-0,6]
+         1789662490.175  1843  2149 I am_app_unfrozen: [0,10073,com.vivo.browser,sync-binder call]
+         1789662491.547  1843  2442 I netstats_mobile_sample: [24156095990,4284972263,26449240,14769262,23911743605,4284942914,21783175,14768778,1789662491865]
+         1789662491.547  1843  2442 I netstats_wifi_sample: [4596437018,425012259,4785854,2259752,4595676729,425006658,4784439,2259645,1789662491865]
+         1789662492.789  1843  2442 I netstats_mobile_sample: [24156095990,4284972263,26449240,14769262,23911743605,4284942914,21783175,14768778,1789662493106]
+         1789662492.789  1843  2442 I netstats_wifi_sample: [4599551739,425044196,4787962,2260331,4598899490,425039427,4786620,2260240,1789662493106]
+         1789662493.386  1843  2149 I am_app_frozen: [0,10039,com.baidu.input_vivo,from fast_freezer]
+         1789662494.026  1843  3788 I netstats_mobile_sample: [24156095990,4284972263,26449240,14769262,23911743605,4284942914,21783175,14768778,1789662494344]
+         1789662494.026  1843  3788 I netstats_wifi_sample: [4599551739,425044196,4787962,2260331,4598899490,425039427,4786620,2260240,1789662494344]
+         1789662494.950  1843  2058 I commit_sys_config_file: [package-session,16]
+         1789662494.953  1843  2058 I commit_sys_config_file: [package-session,3]
+         1789662495.646  1843  2345 I commit_sys_config_file: [package-session,4]
+         1789662495.701  1843  2149 I am_app_frozen: [0,10073,com.vivo.browser,from fast_freezer]
+         1789662496.201  1843  2058 I commit_sys_config_file: [package-session,6]
+         1789662496.264   660   660 I auditd  : type=1400 audit(0.0:396934): avc:  denied  { getattr } for  comm="logd.writer" scontext=u:r:logd:s0 tcontext=u:r:installd:s0 tclass=process permissive=0
+         1789662496.377  1843  2226 I installer_clear_app_data_caller: [1843,1000,com.vivo.space,39]
+         1789662496.377  1843  2226 I installer_clear_app_data_call_stack: [clearAppData,com.android.server.pm.Installer,Installer.java,793]
+         1789662496.377  1843  2226 I installer_clear_app_data_call_stack: [clearAppDataLeafLIF,com.android.server.pm.AppDataHelper,AppDataHelper.java,612]
+         1789662496.377  1843  2226 I installer_clear_app_data_call_stack: [clearAppDataLIF,com.android.server.pm.AppDataHelper,AppDataHelper.java,596]
+         1789662496.377  1843  2226 I installer_clear_app_data_call_stack: [prepPerformDexoptIfNeeded,com.android.server.pm.InstallPackageHelper,InstallPackageHelper.java,1415]
+         1789662496.377  1843  2226 I installer_clear_app_data_call_stack: [installPackagesTraced,com.android.server.pm.InstallPackageHelper,InstallPackageHelper.java,1230]
+         1789662496.377  1843  2226 I installer_clear_app_data_call_stack: [installPackagesTraced,com.android.server.pm.PackageManagerService,PackageManagerService.java,9464]
+         1789662496.377  1843  2226 I installer_clear_app_data_call_stack: [processApkInstallRequests,com.android.server.pm.InstallingSession,InstallingSession.java,607]
+         1789662496.377  1843  2226 I installer_clear_app_data_call_stack: [processInstallRequests,com.android.server.pm.InstallingSession,InstallingSession.java,593]
+         1789662496.377  1843  2226 I installer_clear_app_data_call_stack: [lambda$processPendingInstall$0,com.android.server.pm.InstallingSession,InstallingSession.java,343]
+         1789662496.377  1843  2226 I installer_clear_app_data_call_stack: [$r8$lambda$3YxEVU-qWs8li-YcaWhP_DprQyQ,com.android.server.pm.InstallingSession,InstallingSession.java,0]
+         1789662496.377  1843  2226 I installer_clear_app_data_call_stack: [run,com.android.server.pm.InstallingSession$$ExternalSyntheticLambda3,R8$$SyntheticClass,0]
+         1789662496.377  1843  2226 I installer_clear_app_data_call_stack: [handleCallback,android.os.Handler,Handler.java,1051]
+         1789662496.377  1843  2226 I installer_clear_app_data_call_stack: [dispatchMessage,android.os.Handler,Handler.java,107]
+         1789662496.377  1843  2226 I installer_clear_app_data_call_stack: [loopOnce,android.os.Looper,Looper.java,266]
+         1789662496.377  1843  2226 I installer_clear_app_data_call_stack: [loop,android.os.Looper,Looper.java,361]
+         1789662496.377  1843  2226 I installer_clear_app_data_call_stack: [run,android.os.HandlerThread,HandlerThread.java,103]
+         1789662496.377  1843  2226 I installer_clear_app_data_call_stack: [run,com.android.server.ServiceThread,ServiceThread.java,49]
+         1789662496.379  1843  2226 I installer_clear_app_data_caller: [1843,1000,com.vivo.space,39]
+         1789662496.380  1843  2226 I installer_clear_app_data_call_stack: [clearAppData,com.android.server.pm.Installer,Installer.java,793]
+         1789662496.380  1843  2226 I installer_clear_app_data_call_stack: [clearAppDataLeafLIF,com.android.server.pm.AppDataHelper,AppDataHelper.java,612]
+         1789662496.380  1843  2226 I installer_clear_app_data_call_stack: [clearAppDataLIF,com.android.server.pm.AppDataHelper,AppDataHelper.java,596]
+         1789662496.380  1843  2226 I installer_clear_app_data_call_stack: [prepPerformDexoptIfNeeded,com.android.server.pm.InstallPackageHelper,InstallPackageHelper.java,1415]
+         1789662496.380  1843  2226 I installer_clear_app_data_call_stack: [installPackagesTraced,com.android.server.pm.InstallPackageHelper,InstallPackageHelper.java,1230]
+         1789662496.380  1843  2226 I installer_clear_app_data_call_stack: [installPackagesTraced,com.android.server.pm.PackageManagerService,PackageManagerService.java,9464]
+         1789662496.380  1843  2226 I installer_clear_app_data_call_stack: [processApkInstallRequests,com.android.server.pm.InstallingSession,InstallingSession.java,607]
+         1789662496.380  1843  2226 I installer_clear_app_data_call_stack: [processInstallRequests,com.android.server.pm.InstallingSession,InstallingSession.java,593]
+         1789662496.380  1843  2226 I installer_clear_app_data_call_stack: [lambda$processPendingInstall$0,com.android.server.pm.InstallingSession,InstallingSession.java,343]
+         1789662496.380  1843  2226 I installer_clear_app_data_call_stack: [$r8$lambda$3YxEVU-qWs8li-YcaWhP_DprQyQ,com.android.server.pm.InstallingSession,InstallingSession.java,0]
+         1789662496.380  1843  2226 I installer_clear_app_data_call_stack: [run,com.android.server.pm.InstallingSession$$ExternalSyntheticLambda3,R8$$SyntheticClass,0]
+         1789662496.380  1843  2226 I installer_clear_app_data_call_stack: [handleCallback,android.os.Handler,Handler.java,1051]
+         1789662496.380  1843  2226 I installer_clear_app_data_call_stack: [dispatchMessage,android.os.Handler,Handler.java,107]
+         1789662496.380  1843  2226 I installer_clear_app_data_call_stack: [loopOnce,android.os.Looper,Looper.java,266]
+         1789662496.380  1843  2226 I installer_clear_app_data_call_stack: [loop,android.os.Looper,Looper.java,361]
+         1789662496.380  1843  2226 I installer_clear_app_data_call_stack: [run,android.os.HandlerThread,HandlerThread.java,103]
+         1789662496.380  1843  2226 I installer_clear_app_data_call_stack: [run,com.android.server.ServiceThread,ServiceThread.java,49]
+         1789662496.784   660   660 I auditd  : type=1400 audit(0.0:396935): avc:  denied  { getattr } for  comm="logd.writer" scontext=u:r:logd:s0 tcontext=u:r:profman:s0 tclass=process permissive=0
+         1789662496.868   660   660 I auditd  : type=1400 audit(0.0:396936): avc:  denied  { getattr } for  comm="logd.writer" scontext=u:r:logd:s0 tcontext=u:r:artd:s0 tclass=process permissive=0
+         1789662503.689  1843  2226 I commit_sys_config_file: [package,58]
+         1789662503.708  1843  2212 I commit_sys_config_file: [package-user-0,19]
+         1789662503.722  1843  2226 I unknown_sources_enabled: 1
+         1789662503.724  1843  2212 I commit_sys_config_file: [package-user-666,35]
+         1789662503.728  1843  1843 I auditd  : type=1400 audit(0.0:396937): avc:  denied  { getattr } for  comm="PmsUtilsHandler" path="/sys/ufs/ufsid" dev="sysfs" ino=82656 scontext=u:r:system_server:s0 tcontext=u:object_r:sysfs:s0 tclass=file permissive=0
+         1789662503.794  3172  3172 I force_gc: bg
+         1789662503.883  1843  2383 I am_unfreeze: [27939,com.vivo.voicerecognition,10]
+         1789662503.894  1843  2422 I commit_sys_config_file: [app-recorder,15]
+         1789662503.908  1843  2126 I am_wtf  : [0,1843,system_server,-1,ActivityManager,Sending non-protected broadcast com.vivo.services.security.client.PACKAGE_PERMISSION_REMOVED from system 1843:system/1000 pkg android Caller=com.android.server.am.BroadcastController.broadcastIntentLockedTraced:1919 com.android.server.am.BroadcastController.broadcastIntentLocked:857 com.android.server.am.BroadcastController.broadcastIntentWithFeature:790 com.android.server.am.ActivityManagerService.broadcastIntentWithFeature:16504 android.app.ContextImpl.sendBroadcastAsUser:1531 com.vivo.services.security.server.VivoPermissionReceiver.sendBroadcast:83 com.vivo.services.security.server.VivoPermissionReceiver.onReceive:63 android.app.LoadedApk$ReceiverDispatcher$Args.lambda$getRunnable$0:1893 android.app.LoadedApk$ReceiverDispatcher$Args.$r8$lambda$mcNAAl1SQ4MyJPyDg8TJ2x2h0Rk:0 android.app.LoadedApk$ReceiverDispatcher$Args$$ExternalSyntheticLambda0.run:0 ]
+         1789662503.920  1843  2383 I am_unfreeze: [10155,com.vivo.nightpearl,10]
+         1789662503.930  1843  2126 I am_wtf  : [0,1843,system_server,-1,ActivityManager,Sending non-protected broadcast vivo.intent.action.data.saver.apps.removed from system 4280:com.vivo.daemonService/1000 pkg com.vivo.daemonService Caller=com.android.server.am.BroadcastController.broadcastIntentLockedTraced:1919 com.android.server.am.BroadcastController.broadcastIntentLocked:857 com.android.server.am.BroadcastController.broadcastIntentWithFeature:790 com.android.server.am.ActivityManagerService.broadcastIntentWithFeature:16504 android.app.IActivityManager$Stub.onTransact$broadcastIntentWithFeature$:13887 android.app.IActivityManager$Stub.onTransact:3583 com.android.server.am.ActivityManagerService.onTransact:3304 android.os.Binder.execTransactInternal:1436 android.os.Binder.execTransact:1380 <bottom of call stack> ]
+         1789662503.948  1843  2350 I commit_sys_config_file: [overlays,9]
+         1789662504.016  1843  2149 I am_app_unfrozen: [0,10278,com.vivo.game,deliver Broadcast to system app]
+         1789662504.034  1843  2383 I am_unfreeze: [28674,com.android.keychain,10]
+         1789662504.040  1843  2126 I am_wtf  : [0,1843,system_server,-1,ActivityManager,Sending non-protected broadcast com.vivo.services.security.client.PACKAGE_PERMISSION_REMOVED from system 4362:com.android.phone/1001 pkg com.android.phone Caller=com.android.server.am.BroadcastController.broadcastIntentLockedTraced:1919 com.android.server.am.BroadcastController.broadcastIntentLocked:857 com.android.server.am.BroadcastController.broadcastIntentWithFeature:790 com.android.server.am.ActivityManagerService.broadcastIntentWithFeature:16504 android.app.IActivityManager$Stub.onTransact$broadcastIntentWithFeature$:13887 android.app.IActivityManager$Stub.onTransact:3583 com.android.server.am.ActivityManagerService.onTransact:3304 android.os.Binder.execTransactInternal:1441 android.os.Binder.execTransact:1380 <bottom of call stack> ]
+         1789662504.040  1843  2126 I am_wtf  : [0,1843,system_server,-1,ActivityManager,Sending non-protected broadcast vivo.intent.action.data.saver.apps.added from system 4280:com.vivo.daemonService/1000 pkg com.vivo.daemonService Caller=com.android.server.am.BroadcastController.broadcastIntentLockedTraced:1919 com.android.server.am.BroadcastController.broadcastIntentLocked:857 com.android.server.am.BroadcastController.broadcastIntentWithFeature:790 com.android.server.am.ActivityManagerService.broadcastIntentWithFeature:16504 android.app.IActivityManager$Stub.onTransact$broadcastIntentWithFeature$:13887 android.app.IActivityManager$Stub.onTransact:3583 com.android.server.am.ActivityManagerService.onTransact:3304 android.os.Binder.execTransactInternal:1436 android.os.Binder.execTransact:1380 <bottom of call stack> ]
+         1789662504.056  1843  3767 I am_uid_active: 10317
+         1789662504.064  1843  4497 I netstats_mobile_sample: [24156095990,4284972263,26449240,14769262,23911743605,4284942914,21783175,14768778,1789662504382]
+         1789662504.064  1843  4497 I netstats_wifi_sample: [4599558596,425049597,4787982,2260367,4598906235,425044828,4786638,2260276,1789662504382]
+         1789662504.139  1843  1843 I notification_cancel_all: [1000,1843,com.vivo.space,0,0,0,5,NULL]
+         1789662504.163  1843  3029 I am_uid_active: 10212
+         1789662504.185  1843  2383 I am_unfreeze: [24999,com.android.permissioncontroller,6]
+         1789662504.186  1843  1843 I notification_cancel_all: [1000,1843,com.vivo.space,666,0,0,5,NULL]
+         1789662504.190  1843  1843 I notification_cancel_all: [1000,1843,com.vivo.space,0,0,0,5,NULL]
+         1789662504.190 28091 28091 I force_gc: bg
+         1789662504.213  3526  3526 I force_gc: bg
+         1789662504.215  3576  3576 I force_gc: bg
+         1789662504.220 16917 16917 I force_gc: bg
+         1789662504.472   662   662 I auditd  : type=1400 audit(0.0:396938): avc:  denied  { search } for  comm="lmkd" name="rsc" dev="sysfs" ino=62349 scontext=u:r:lmkd:s0 tcontext=u:object_r:sysfs_rsc:s0 tclass=dir permissive=0
+         1789662504.472   662   662 I auditd  : type=1400 audit(0.0:396939): avc:  denied  { search } for  comm="lmkd" name="mtk_mali" dev="proc" ino=4026533858 scontext=u:r:lmkd:s0 tcontext=u:object_r:proc_mali:s0 tclass=dir permissive=0
+         1789662504.401  1843  2345 I commit_sys_config_file: [package-session,3]
+         1789662504.422  1843  2127 I am_proc_start: [0,11135,10157,com.vivo.sdkplugin,broadcast,{com.vivo.sdkplugin/com.vivo.sdkplugin.apkchannel.smart.PackageRemoveReceiver}, {action = vivo_android.intent.action.PACKAGE_REMOVED}]
+         1789662504.453  1843  2149 I am_app_unfrozen: [0,10048,com.android.contacts,deliver Broadcast to system app]
+         1789662504.503  1843  2149 I am_app_unfrozen: [0,10088,com.bbk.theme,deliver Broadcast to system app]
+         1789662504.572   662   662 I auditd  : type=1400 audit(0.0:396940): avc:  denied  { search } for  comm="lmkd" name="rsc" dev="sysfs" ino=62349 scontext=u:r:lmkd:s0 tcontext=u:object_r:sysfs_rsc:s0 tclass=dir permissive=0
+         1789662504.572   662   662 I auditd  : type=1400 audit(0.0:396941): avc:  denied  { search } for  comm="lmkd" name="mtk_mali" dev="proc" ino=4026533858 scontext=u:r:lmkd:s0 tcontext=u:object_r:proc_mali:s0 tclass=dir permissive=0
+         1789662504.740   662   662 I auditd  : type=1400 audit(0.0:396942): avc:  denied  { search } for  comm="lmkd" name="rsc" dev="sysfs" ino=62349 scontext=u:r:lmkd:s0 tcontext=u:object_r:sysfs_rsc:s0 tclass=dir permissive=0
+         1789662504.740   662   662 I auditd  : type=1400 audit(0.0:396943): avc:  denied  { search } for  comm="lmkd" name="mtk_mali" dev="proc" ino=4026533858 scontext=u:r:lmkd:s0 tcontext=u:object_r:proc_mali:s0 tclass=dir permissive=0
+         1789662504.248  1843  2149 I am_app_unfrozen: [0,10317,com.vivo.cardstore,Provider]
+         1789662504.279  3576  3576 I force_gc: bg
+         1789662504.631  1843  2149 I am_app_unfrozen: [0,10073,com.vivo.browser,deliver Broadcast to system app]
+         1789662504.334  1843  2126 I am_wtf  : [0,1843,system_server,-1,ActivityManager,Sending non-protected broadcast com.vivo.services.security.client.PACKAGE_PERMISSION_REPLACED from system 1843:system/1000 pkg android Caller=com.android.server.am.BroadcastController.broadcastIntentLockedTraced:1919 com.android.server.am.BroadcastController.broadcastIntentLocked:857 com.android.server.am.BroadcastController.broadcastIntentWithFeature:790 com.android.server.am.ActivityManagerService.broadcastIntentWithFeature:16504 android.app.ContextImpl.sendBroadcastAsUser:1531 com.vivo.services.security.server.VivoPermissionReceiver.sendBroadcast:83 com.vivo.services.security.server.VivoPermissionReceiver.onReceive:71 android.app.LoadedApk$ReceiverDispatcher$Args.lambda$getRunnable$0:1893 android.app.LoadedApk$ReceiverDispatcher$Args.$r8$lambda$mcNAAl1SQ4MyJPyDg8TJ2x2h0Rk:0 android.app.LoadedApk$ReceiverDispatcher$Args$$ExternalSyntheticLambda0.run:0 ]
+         1789662504.694  1843  2347 I am_proc_bound: [0,11135,com.vivo.sdkplugin]
+         1789662504.357  1843  2126 I am_uid_running: 10157
+         1789662504.382  1843  2058 I commit_sys_config_file: [package-session,17]
+         1789662505.496   662   662 I auditd  : type=1400 audit(0.0:396948): avc:  denied  { search } for  comm="lmkd" name="rsc" dev="sysfs" ino=62349 scontext=u:r:lmkd:s0 tcontext=u:object_r:sysfs_rsc:s0 tclass=dir permissive=0
+         1789662505.500   662   662 I auditd  : type=1400 audit(0.0:396949): avc:  denied  { search } for  comm="lmkd" name="mtk_mali" dev="proc" ino=4026533858 scontext=u:r:lmkd:s0 tcontext=u:object_r:proc_mali:s0 tclass=dir permissive=0
+         1789662505.552   662   662 I auditd  : type=1400 audit(0.0:396950): avc:  denied  { search } for  comm="lmkd" name="rsc" dev="sysfs" ino=62349 scontext=u:r:lmkd:s0 tcontext=u:object_r:sysfs_rsc:s0 tclass=dir permissive=0
+         1789662505.552   662   662 I auditd  : type=1400 audit(0.0:396951): avc:  denied  { search } for  comm="lmkd" name="mtk_mali" dev="proc" ino=4026533858 scontext=u:r:lmkd:s0 tcontext=u:object_r:proc_mali:s0 tclass=dir permissive=0
+         1789662505.652   662   662 I auditd  : type=1400 audit(0.0:396952): avc:  denied  { search } for  comm="lmkd" name="rsc" dev="sysfs" ino=62349 scontext=u:r:lmkd:s0 tcontext=u:object_r:sysfs_rsc:s0 tclass=dir permissive=0
+         1789662505.567  1843  2381 I commit_sys_config_file: [settings-2-0,3]
+         1789662506.564   662   662 I auditd  : type=1400 audit(0.0:396960): avc:  denied  { search } for  comm="lmkd" name="rsc" dev="sysfs" ino=62349 scontext=u:r:lmkd:s0 tcontext=u:object_r:sysfs_rsc:s0 tclass=dir permissive=0
+         1789662506.564   662   662 I auditd  : type=1400 audit(0.0:396961): avc:  denied  { search } for  comm="lmkd" name="mtk_mali" dev="proc" ino=4026533858 scontext=u:r:lmkd:s0 tcontext=u:object_r:proc_mali:s0 tclass=dir permissive=0
+         1789662506.636   662   662 I auditd  : type=1400 audit(0.0:396962): avc:  denied  { search } for  comm="lmkd" name="rsc" dev="sysfs" ino=62349 scontext=u:r:lmkd:s0 tcontext=u:object_r:sysfs_rsc:s0 tclass=dir permissive=0
+         1789662506.636   662   662 I auditd  : type=1400 audit(0.0:396963): avc:  denied  { search } for  comm="lmkd" name="mtk_mali" dev="proc" ino=4026533858 scontext=u:r:lmkd:s0 tcontext=u:object_r:proc_mali:s0 tclass=dir permissive=0
+         1789662506.000   665   665 I liblog  : 222
+         1789662506.152  1843  2409 I liblog  : 2044
+         1789662506.736   662   662 I auditd  : type=1400 audit(0.0:396964): avc:  denied  { search } for  comm="lmkd" name="rsc" dev="sysfs" ino=62349 scontext=u:r:lmkd:s0 tcontext=u:object_r:sysfs_rsc:s0 tclass=dir permissive=0
+         1789662507.644   662   662 I auditd  : type=1400 audit(0.0:396972): avc:  denied  { search } for  comm="lmkd" name="rsc" dev="sysfs" ino=62349 scontext=u:r:lmkd:s0 tcontext=u:object_r:sysfs_rsc:s0 tclass=dir permissive=0
+         1789662507.644   662   662 I auditd  : type=1400 audit(0.0:396973): avc:  denied  { search } for  comm="lmkd" name="mtk_mali" dev="proc" ino=4026533858 scontext=u:r:lmkd:s0 tcontext=u:object_r:proc_mali:s0 tclass=dir permissive=0
+         1789662507.819  1843  2126 I am_wtf  : [0,1843,system_server,-1,ActivityManager,Sending non-protected broadcast com.vivo.pem.temperature_has_changed from system 4180:com.vivo.pem/1000 pkg com.vivo.pem Caller=com.android.server.am.BroadcastController.broadcastIntentLockedTraced:1919 com.android.server.am.BroadcastController.broadcastIntentLocked:857 com.android.server.am.BroadcastController.broadcastIntentWithFeature:790 com.android.server.am.ActivityManagerService.broadcastIntentWithFeature:16504 android.app.IActivityManager$Stub.onTransact$broadcastIntentWithFeature$:13887 android.app.IActivityManager$Stub.onTransact:3583 com.android.server.am.ActivityManagerService.onTransact:3304 android.os.Binder.execTransactInternal:1441 android.os.Binder.execTransact:1380 <bottom of call stack> ]
+         1789662508.000   665 12876 I liblog  : 132
+         1789662508.001  1843  2409 I liblog  : 486
+         1789662509.283  1843  2126 I am_wtf  : [0,1843,system_server,-1,ActivityManager,Sending non-protected broadcast com.vivo.applicationbehaviorengine.power.refreshList from system 3576:com.vivo.abe/1000 pkg com.vivo.abe Caller=com.android.server.am.BroadcastController.broadcastIntentLockedTraced:1919 com.android.server.am.BroadcastController.broadcastIntentLocked:857 com.android.server.am.BroadcastController.broadcastIntentWithFeature:790 com.android.server.am.ActivityManagerService.broadcastIntentWithFeature:16504 android.app.IActivityManager$Stub.onTransact$broadcastIntentWithFeature$:13887 android.app.IActivityManager$Stub.onTransact:3583 com.android.server.am.ActivityManagerService.onTransact:3304 android.os.Binder.execTransactInternal:1441 android.os.Binder.execTransact:1380 <bottom of call stack> ]
+         1789662509.899  1843  2149 I am_app_frozen: [0,10317,com.vivo.cardstore,from fast_freezer]
+         1789662509.912  1843  2149 I am_app_frozen: [0,10048,com.android.contacts,from fast_freezer]
+         1789662509.920  1843  2149 I am_app_frozen: [0,10088,com.bbk.theme,from fast_freezer]
+         1789662510.148  1843  2149 I am_app_frozen: [0,10073,com.vivo.browser,from fast_freezer]
+         1789662514.104  1843  1941 I netstats_mobile_sample: [24156095990,4284972263,26449240,14769262,23911743605,4284942914,21783175,14768778,1789662514421]
+         1789662514.104  1843  1941 I netstats_wifi_sample: [4599629439,425085714,4788161,2260563,4598976974,425080945,4786815,2260472,1789662514421]
+         1789662515.905  1843  2212 I commit_sys_config_file: [package-user-0,13]
+         1789662517.826  1843  2126 I am_wtf  : [0,1843,system_server,-1,ActivityManager,Sending non-protected broadcast com.vivo.pem.temperature_has_changed from system 4180:com.vivo.pem/1000 pkg com.vivo.pem Caller=com.android.server.am.BroadcastController.broadcastIntentLockedTraced:1919 com.android.server.am.BroadcastController.broadcastIntentLocked:857 com.android.server.am.BroadcastController.broadcastIntentWithFeature:790 com.android.server.am.ActivityManagerService.broadcastIntentWithFeature:16504 android.app.IActivityManager$Stub.onTransact$broadcastIntentWithFeature$:13887 android.app.IActivityManager$Stub.onTransact:3583 com.android.server.am.ActivityManagerService.onTransact:3304 android.os.Binder.execTransactInternal:1441 android.os.Binder.execTransact:1380 <bottom of call stack> ]
+         1789662524.141  1843  2347 I netstats_mobile_sample: [24156095990,4284972263,26449240,14769262,23911743605,4284942914,21783175,14768778,1789662524458]
+         1789662524.141  1843  2347 I netstats_wifi_sample: [4599630655,425086724,4788181,2260579,4598978150,425081955,4786834,2260488,1789662524458]
+         1789662524.866  1843  2383 I am_freeze: [24999,com.android.permissioncontroller]
+         1789662534.187  1843  2347 I netstats_mobile_sample: [24156095990,4284972263,26449240,14769262,23911743605,4284942914,21783175,14768778,1789662534504]
+         1789662534.187  1843  2347 I netstats_wifi_sample: [4599630743,425087064,4788182,2260584,4598978238,425082295,4786835,2260493,1789662534504]
+         1789662534.800  1843  2127 I am_proc_start: [0,22624,1000,com.vivo.aiengine:subCommonAbility,service,{com.vivo.aiengine/com.vivo.aiengine.subcommonabilitys.easyprocess.SubCommonAbilityService}, {callerPackage = com.vivo.aiengine, callerUid = 1000}]
+         1789662534.892  1843  2347 I am_proc_bound: [0,22624,com.vivo.aiengine:subCommonAbility]
+         1789662535.602  1843  2126 I am_wtf  : [0,1843,system_server,-1,ActivityManager,Sending non-protected broadcast com.vivo.assistant.combwd.rec.action from system uid 1000 pkg com.vivo.assistant Caller=com.android.server.am.BroadcastController.broadcastIntentLockedTraced:1919 com.android.server.am.BroadcastController.broadcastIntentLocked:857 com.android.server.am.BroadcastController.broadcastIntentInPackage:824 com.android.server.am.ActivityManagerService$LocalService.broadcastIntentInPackage:19554 com.android.server.am.PendingIntentRecord.sendInner:834 com.android.server.am.PendingIntentRecord.sendWithResult:417 com.android.server.am.ActivityManagerService.sendIntentSender:6863 android.app.IActivityManager$Stub.onTransact$sendIntentSender$:14987 android.app.IActivityManager$Stub.onTransact:5099 com.android.server.am.ActivityManagerService.onTransact:3304 ]
+         1789662543.914  1843  2383 I am_freeze: [10155,com.vivo.nightpearl]
+         1789662543.919  1843  2383 I am_freeze: [27939,com.vivo.voicerecognition]
+         1789662543.922  1843  2383 I am_freeze: [28674,com.android.keychain]
+         1789662544.231  1843  1941 I netstats_mobile_sample: [24156095990,4284972263,26449240,14769262,23911743605,4284942914,21783175,14768778,1789662544548]
+         1789662544.231  1843  1941 I netstats_wifi_sample: [4599637146,425093566,4788195,2260611,4598984505,425088797,4786846,2260520,1789662544548]
+         1789662545.361  1843  1941 I am_proc_died: [0,22624,com.vivo.aiengine:subCommonAbility,0,10]
+         1789662545.364  1843  1843 I auditd  : type=1400 audit(0.0:396974): avc:  denied  { read } for  comm="binder:1843_1" name="u:object_r:vendor_default_prop:s0" dev="tmpfs" ino=548 scontext=u:r:system_server:s0 tcontext=u:object_r:vendor_default_prop:s0 tclass=file permissive=0
+         1789662545.369   663   663 I auditd  : avc:  denied  { find } for pid=1843 uid=1000 name=vendor.mediatek.hardware.gpuserv.IGpuService/default scontext=u:r:system_server:s0 tcontext=u:object_r:default_android_service:s0 tclass=service_manager permissive=0
+         1789662548.927  1843  3766 I netstats_mobile_sample: [24156095990,4284972263,26449240,14769262,23911743605,4284942914,21783175,14768778,1789662549245]
+         1789662548.927  1843  3766 I netstats_wifi_sample: [4599638251,425096432,4788203,2260621,4598985610,425091663,4786854,2260530,1789662549245]
+         1789662548.935  1843  2140 I am_uid_idle: 10258
+         1789662548.954  1843  2149 I am_app_frozen: [0,10258,com.vivo.puresearch,from fast_freezer]
+         1789662551.490  1843  2390 I device_idle_wake_from_idle: [0,*walarm*:space.alliswell.inbox/.AlarmRingService]
+         1789662551.490  1843  2390 I device_idle_wake_from_idle: [0,*walarm*:space.alliswell.inbox.ACTION_TEST_ALARM]
+         1789662551.737  1843  2381 I commit_sys_config_file: [settings-1-0,10]
+         1789662554.280  1843  3317 I netstats_mobile_sample: [24156095990,4284972263,26449240,14769262,23911743605,4284942914,21783175,14768778,1789662554597]
+         1789662554.281  1843  3317 I netstats_wifi_sample: [4599641219,425101936,4788239,2260655,4598988578,425097167,4786890,2260564,1789662554597]
+         1789662558.497  1843  2383 I am_freeze: [16208,com.vivo.widget.gallery]
+         1789662561.704  1843  2110 I am_pss  : [22328,10043,com.vivo.connbase.deviceaccessory,0,0,0,95850496,0,5,14]
+         1789662562.594  1843  2126 I am_wtf  : [0,1843,system_server,-1,ActivityManager,Sending non-protected broadcast com.vivo.pem.PEM_ELAPSED_REALTIME_WAKEUP from system uid 1000 pkg com.vivo.pem Caller=com.android.server.am.BroadcastController.broadcastIntentLockedTraced:1919 com.android.server.am.BroadcastController.broadcastIntentLocked:857 com.android.server.am.BroadcastController.broadcastIntentInPackage:824 com.android.server.am.ActivityManagerService$LocalService.broadcastIntentInPackage:19554 com.android.server.am.PendingIntentRecord.sendInner:834 com.android.server.am.PendingIntentRecord.sendWithResult:417 com.android.server.am.ActivityManagerService.sendIntentSender:6863 android.app.PendingIntent.sendAndReturnResult:1116 android.app.PendingIntent.send:1082 com.android.server.alarm.AlarmManagerService$DeliveryTracker.deliverLocked:6167 ]
+         1789662562.601  1843  2383 I am_unfreeze: [10155,com.vivo.nightpearl,10]
+         1789662562.607  1843  2383 I am_unfreeze: [27939,com.vivo.voicerecognition,10]
+         1789662562.607  1843  2383 I am_unfreeze: [28674,com.android.keychain,10]
+         1789662562.621  1843  2110 I am_pss  : [30673,1000,com.vivo.voicewakeup,0,0,0,113577984,0,10,12]
+         1789662562.652  1843  3337 I netstats_mobile_sample: [24156095990,4284972263,26449240,14769262,23911743605,4284942914,21783175,14768778,1789662562969]
+         1789662562.652  1843  3337 I netstats_wifi_sample: [4599641446,425102288,4788243,2260661,4598988805,425097519,4786894,2260570,1789662562969]
+         1789662562.661  1843  2126 I am_wtf  : [0,1843,system_server,-1,ActivityManager,Sending non-protected broadcast action.vivo.powercontrol from system 4180:com.vivo.pem/1000 pkg com.vivo.pem Caller=com.android.server.am.BroadcastController.broadcastIntentLockedTraced:1919 com.android.server.am.BroadcastController.broadcastIntentLocked:857 com.android.server.am.BroadcastController.broadcastIntentWithFeature:790 com.android.server.am.ActivityManagerService.broadcastIntentWithFeature:16504 android.app.IActivityManager$Stub.onTransact$broadcastIntentWithFeature$:13887 android.app.IActivityManager$Stub.onTransact:3583 com.android.server.am.ActivityManagerService.onTransact:3304 android.os.Binder.execTransactInternal:1441 android.os.Binder.execTransact:1380 <bottom of call stack> ]
+         1789662562.684  1843  2126 I am_wtf  : [0,1843,system_server,-1,ActivityManager,Sending non-protected broadcast action.topinfo from system 4180:com.vivo.pem/1000 pkg com.vivo.pem Caller=com.android.server.am.BroadcastController.broadcastIntentLockedTraced:1919 com.android.server.am.BroadcastController.broadcastIntentLocked:857 com.android.server.am.BroadcastController.broadcastIntentWithFeature:790 com.android.server.am.ActivityManagerService.broadcastIntentWithFeature:16504 android.app.IActivityManager$Stub.onTransact$broadcastIntentWithFeature$:13887 android.app.IActivityManager$Stub.onTransact:3583 com.android.server.am.ActivityManagerService.onTransact:3304 android.os.Binder.execTransactInternal:1441 android.os.Binder.execTransact:1380 <bottom of call stack> ]
+         1789662564.331  1843  3337 I netstats_mobile_sample: [24156095990,4284972263,26449240,14769262,23911743605,4284942914,21783175,14768778,1789662564648]
+         1789662564.331  1843  3337 I netstats_wifi_sample: [4599641597,425102460,4788246,2260664,4598988956,425097691,4786897,2260573,1789662564648]
+         1789662564.723  1843  2126 I am_uid_idle: 10157
+         1789662571.192  1843  2149 I am_app_frozen: [0,10278,com.vivo.game,from fast_freezer]
+         1789662571.597  1843  2126 I am_uid_idle: 10317
+         1789662574.371  1843  3337 I netstats_mobile_sample: [24156095990,4284972263,26449240,14769262,23911743605,4284942914,21783175,14768778,1789662574689]
+         1789662574.372  1843  3337 I netstats_wifi_sample: [4599642308,425103027,4788257,2260673,4598989603,425098258,4786907,2260582,1789662574689]
+         1789662574.806  1843  2126 I am_uid_idle: 10212
+         1789662582.666  1843  2383 I am_freeze: [10155,com.vivo.nightpearl]
+         1789662582.670  1843  2383 I am_freeze: [27939,com.vivo.voicerecognition]
+         1789662582.673  1843  2383 I am_freeze: [28674,com.android.keychain]
+         1789662584.416  1843  3337 I netstats_mobile_sample: [24156095990,4284972263,26449240,14769262,23911743605,4284942914,21783175,14768778,1789662584733]
+         1789662584.418  1843  3337 I netstats_wifi_sample: [4599642308,425103027,4788257,2260673,4598989603,425098258,4786907,2260582,1789662584733]
+         1789662594.468  1843  2347 I netstats_mobile_sample: [24156095990,4284972263,26449240,14769262,23911743605,4284942914,21783175,14768778,1789662594785]
+         1789662594.468  1843  2347 I netstats_wifi_sample: [4599642308,425103027,4788257,2260673,4598989603,425098258,4786907,2260582,1789662594785]
+         1789662600.055  1843  2126 I am_wtf  : [0,1843,system_server,-1,ActivityManager,Sending non-protected broadcast intent.action.update_location_alarm from system uid 1027 pkg com.android.nfc Caller=com.android.server.am.BroadcastController.broadcastIntentLockedTraced:1919 com.android.server.am.BroadcastController.broadcastIntentLocked:857 com.android.server.am.BroadcastController.broadcastIntentInPackage:824 com.android.server.am.ActivityManagerService$LocalService.broadcastIntentInPackage:19554 com.android.server.am.PendingIntentRecord.sendInner:834 com.android.server.am.PendingIntentRecord.sendWithResult:417 com.android.server.am.ActivityManagerService.sendIntentSender:6863 android.app.PendingIntent.sendAndReturnResult:1116 android.app.PendingIntent.send:1082 com.android.server.alarm.AlarmManagerService$DeliveryTracker.deliverLocked:6167 ]
+         1789662600.082  1843  3879 I request_location_update: [network,8F3459F5,1027,14820,com.android.nfc]
+         1789662600.134  1843  3317 I request_location_remove: [network,8F3459F5,1027,14820,com.android.nfc]
+         1789662600.760  4362  4362 I service_manager_stats: [100,12,214897]
+         1789662602.168  2924  2924 I auditd  : type=1400 audit(0.0:396975): avc:  denied  { read } for  comm="wifi@1.0-servic" name="u:object_r:persist_vendor_debug_wifi_prop:s0" dev="tmpfs" ino=339 scontext=u:r:hal_wifi_default:s0 tcontext=u:object_r:persist_vendor_debug_wifi_prop:s0 tclass=file permissive=0
+         1789662604.516  1843  4482 I netstats_mobile_sample: [24156095990,4284972263,26449240,14769262,23911743605,4284942914,21783175,14768778,1789662604833]
+         1789662604.517  1843  4482 I netstats_wifi_sample: [4599657497,425112671,4788299,2260723,4599004792,425107902,4786949,2260632,1789662604833]

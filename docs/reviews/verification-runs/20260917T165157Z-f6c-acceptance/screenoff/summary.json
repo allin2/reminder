@@ -1,0 +1,124 @@
+{
+  "itemId": "f6c_20260917t165157z",
+  "token": "990144015:e1ee4b06-eb64-45db-b4a8-c78ff0ec6e84",
+  "targetAt": 1789664109713,
+  "receivedLagMs": 90,
+  "visibleLagMs": 886,
+  "machineCriteria": {
+    "captureValid": true,
+    "receivedWithin10s": true,
+    "visibleWithin10s": true,
+    "notificationRecord": true,
+    "asleepBeforeAlarm": true,
+    "processDiedBeforeAlarm": true,
+    "systemStartedProcess": true
+  },
+  "machineCriteriaPass": true,
+  "screenshotReview": "PENDING",
+  "processStarts": [],
+  "freezes": [],
+  "events": [
+    {
+      "token": "990144015:e1ee4b06-eb64-45db-b4a8-c78ff0ec6e84",
+      "stage": "requested",
+      "at": 1789664035268,
+      "detail": "delayMs=74434"
+    },
+    {
+      "token": "990144015:e1ee4b06-eb64-45db-b4a8-c78ff0ec6e84",
+      "stage": "item",
+      "at": 1789664035276,
+      "detail": "f6c_20260917t165157z"
+    },
+    {
+      "token": "990144015:e1ee4b06-eb64-45db-b4a8-c78ff0ec6e84",
+      "stage": "unfreezerScheduled",
+      "at": 1789664035289,
+      "detail": "triggerAt=1789664109713;mode=alarmClock"
+    },
+    {
+      "token": "990144015:e1ee4b06-eb64-45db-b4a8-c78ff0ec6e84",
+      "stage": "scheduled",
+      "at": 1789664035297,
+      "detail": "triggerAt=1789664109713;mode=alarmClock"
+    },
+    {
+      "token": "990144015:e1ee4b06-eb64-45db-b4a8-c78ff0ec6e84",
+      "stage": "unfreezerStarted",
+      "at": 1789664109775,
+      "detail": "foreground service torn down the freezer"
+    },
+    {
+      "token": "990144015:e1ee4b06-eb64-45db-b4a8-c78ff0ec6e84",
+      "stage": "received",
+      "at": 1789664109803,
+      "detail": ""
+    },
+    {
+      "token": "990144015:e1ee4b06-eb64-45db-b4a8-c78ff0ec6e84",
+      "stage": "environment",
+      "at": 1789664109823,
+      "detail": "screenOn=false;locked=true;inCall=false;path=fsi+direct"
+    },
+    {
+      "token": "990144015:e1ee4b06-eb64-45db-b4a8-c78ff0ec6e84",
+      "stage": "launchRequested",
+      "at": 1789664109850,
+      "detail": "direct launch alongside full-screen intent"
+    },
+    {
+      "token": "990144015:e1ee4b06-eb64-45db-b4a8-c78ff0ec6e84",
+      "stage": "notifyReturned",
+      "at": 1789664109871,
+      "detail": "insistent; notify returned; not proof of display"
+    },
+    {
+      "token": "990144015:e1ee4b06-eb64-45db-b4a8-c78ff0ec6e84",
+      "stage": "created",
+      "at": 1789664110264,
+      "detail": "test=false"
+    },
+    {
+      "token": "990144015:e1ee4b06-eb64-45db-b4a8-c78ff0ec6e84",
+      "stage": "resumed",
+      "at": 1789664110390,
+      "detail": "lifecycle only"
+    },
+    {
+      "token": "990144015:e1ee4b06-eb64-45db-b4a8-c78ff0ec6e84",
+      "stage": "focus",
+      "at": 1789664110592,
+      "detail": "true"
+    },
+    {
+      "token": "990144015:e1ee4b06-eb64-45db-b4a8-c78ff0ec6e84",
+      "stage": "windowVisible",
+      "at": 1789664110599,
+      "detail": "via=focus;focused=true;shown=true"
+    },
+    {
+      "token": "990144015:e1ee4b06-eb64-45db-b4a8-c78ff0ec6e84",
+      "stage": "windowSample",
+      "at": 1789664110699,
+      "detail": "after=300ms;focus=true;shown=true;visibility=0;playing=false"
+    },
+    {
+      "token": "990144015:e1ee4b06-eb64-45db-b4a8-c78ff0ec6e84",
+      "stage": "windowSample",
+      "at": 1789664111198,
+      "detail": "after=800ms;focus=true;shown=true;visibility=0;playing=false"
+    },
+    {
+      "token": "990144015:e1ee4b06-eb64-45db-b4a8-c78ff0ec6e84",
+      "stage": "windowSample",
+      "at": 1789664111899,
+      "detail": "after=1500ms;focus=true;shown=true;visibility=0;playing=false"
+    },
+    {
+      "token": "990144015:e1ee4b06-eb64-45db-b4a8-c78ff0ec6e84",
+      "stage": "unfreezerStopped",
+      "at": 1789664117823,
+      "detail": "hold=8000ms"
+    }
+  ]
+}

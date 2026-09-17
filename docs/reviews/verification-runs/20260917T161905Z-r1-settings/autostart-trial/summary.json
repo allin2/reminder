@@ -1,0 +1,105 @@
+{
+  "itemId": "r1_20260918_001",
+  "token": "1445069485:f7237e56-3eac-451c-afb7-0ccb3a8538db",
+  "targetAt": 1789662754096,
+  "receivedAt": 1789662754910,
+  "receivedLagMs": 814,
+  "windowVisibleAt": 1789662756680,
+  "windowVisibleLagMs": 2584,
+  "matchingNotificationRecordAtSnapshot": true,
+  "processStartEvents": [
+    "         1789662754.134  1843  2127 I am_proc_start: [0,16238,10190,space.alliswell.inbox,broadcast,{space.alliswell.inbox/space.alliswell.inbox.AlarmTestReceiver}, {action = space.alliswell.inbox.ACTION_TEST_ALARM}]"
+  ],
+  "eventsForToken": [
+    {
+      "token": "1445069485:f7237e56-3eac-451c-afb7-0ccb3a8538db",
+      "stage": "requested",
+      "at": 1789662679702,
+      "detail": "delayMs=74381"
+    },
+    {
+      "token": "1445069485:f7237e56-3eac-451c-afb7-0ccb3a8538db",
+      "stage": "item",
+      "at": 1789662679711,
+      "detail": "r1_20260918_001"
+    },
+    {
+      "token": "1445069485:f7237e56-3eac-451c-afb7-0ccb3a8538db",
+      "stage": "unfreezerScheduled",
+      "at": 1789662679726,
+      "detail": "triggerAt=1789662754096;mode=alarmClock"
+    },
+    {
+      "token": "1445069485:f7237e56-3eac-451c-afb7-0ccb3a8538db",
+      "stage": "scheduled",
+      "at": 1789662679735,
+      "detail": "triggerAt=1789662754096;mode=alarmClock"
+    },
+    {
+      "token": "1445069485:f7237e56-3eac-451c-afb7-0ccb3a8538db",
+      "stage": "received",
+      "at": 1789662754910,
+      "detail": ""
+    },
+    {
+      "token": "1445069485:f7237e56-3eac-451c-afb7-0ccb3a8538db",
+      "stage": "environment",
+      "at": 1789662755231,
+      "detail": "screenOn=false;locked=true;inCall=false;path=fsi+direct"
+    },
+    {
+      "token": "1445069485:f7237e56-3eac-451c-afb7-0ccb3a8538db",
+      "stage": "launchRequested",
+      "at": 1789662755566,
+      "detail": "direct launch alongside full-screen intent"
+    },
+    {
+      "token": "1445069485:f7237e56-3eac-451c-afb7-0ccb3a8538db",
+      "stage": "notifyReturned",
+      "at": 1789662755854,
+      "detail": "insistent; notify returned; not proof of display"
+    },
+    {
+      "token": "1445069485:f7237e56-3eac-451c-afb7-0ccb3a8538db",
+      "stage": "created",
+      "at": 1789662756276,
+      "detail": "test=false"
+    },
+    {
+      "token": "1445069485:f7237e56-3eac-451c-afb7-0ccb3a8538db",
+      "stage": "resumed",
+      "at": 1789662756461,
+      "detail": "lifecycle only"
+    },
+    {
+      "token": "1445069485:f7237e56-3eac-451c-afb7-0ccb3a8538db",
+      "stage": "focus",
+      "at": 1789662756655,
+      "detail": "true"
+    },
+    {
+      "token": "1445069485:f7237e56-3eac-451c-afb7-0ccb3a8538db",
+      "stage": "windowVisible",
+      "at": 1789662756680,
+      "detail": "via=focus;focused=true;shown=true"
+    },
+    {
+      "token": "1445069485:f7237e56-3eac-451c-afb7-0ccb3a8538db",
+      "stage": "windowSample",
+      "at": 1789662756786,
+      "detail": "after=300ms;focus=true;shown=true;visibility=0;playing=false"
+    },
+    {
+      "token": "1445069485:f7237e56-3eac-451c-afb7-0ccb3a8538db",
+      "stage": "windowSample",
+      "at": 1789662757284,
+      "detail": "after=800ms;focus=true;shown=true;visibility=0;playing=false"
+    },
+    {
+      "token": "1445069485:f7237e56-3eac-451c-afb7-0ccb3a8538db",
+      "stage": "windowSample",
+      "at": 1789662757976,
+      "detail": "after=1500ms;focus=true;shown=true;visibility=0;playing=false"
+    }
+  ]
+}

@@ -1,0 +1,130 @@
+--------- beginning of main
+09-18 00:21:03.976 W/binder:17494_4(17494): type=1400 audit(0.0:390564): avc:  denied  { ioctl } for  path="/proc/fas/render" dev="proc" ino=4026532234 ioctlcmd=0x6609 scontext=u:r:untrusted_app:s0:c190,c256,c512,c768 tcontext=u:object_r:proc_fas:s0 tclass=file permissive=0 app=space.alliswell.inbox
+09-18 00:21:03.949 E/GPUAUX  (17494): [AUX]GuiExtAuxCheckAuxPath:667: Null anb
+09-18 00:21:03.949 E/GPUAUX  (17494): [AUX]GuiExtAuxCheckAuxPath:667: Null anb
+09-18 00:21:03.949 E/GPUAUX  (17494): [AUX]GuiExtAuxCheckAuxPath:667: Null anb
+09-18 00:21:03.950 E/GPUAUX  (17494): [AUX]GuiExtAuxCheckAuxPath:667: Null anb
+09-18 00:21:04.868 V/Capacitor/AppPlugin(17494): Notifying listeners for event pause
+09-18 00:21:04.868 D/Capacitor/AppPlugin(17494): No listeners found for event pause
+09-18 00:21:04.868 D/Capacitor(17494): App paused
+09-18 00:21:08.936 E/cmd     ( 9813): BBinder_init Processname  cmd  
+09-18 00:21:08.937 E/cmd     ( 9813): BBinder_init hasGetProcessName  cmd
+09-18 00:21:09.141 I/alliswell.inbox(17494): vart_dgc,  GetCoefficient 57
+09-18 00:21:09.162 I/HWUI    (17494): [trimMemory] TrimMemory will destroy render context, mode: 40.
+--------- beginning of system
+09-18 00:21:09.390 D/BatteryStatsService( 1843): noteVideoSurfaceChanged  noteWhich: 49,arg1: 1080, arg2: 2400, arg3: 3303, arg4: 72071780314906804, name: com.android.systemui
+09-18 00:21:09.390 D/BatteryStatsService( 1843): noteVideoSurfaceChanged  noteWhich: 49,arg1: 1080, arg2: 2400, arg3: 3303, arg4: 72071780314908379, name: com.vivo.systemuiplugin
+09-18 00:21:09.391 D/BatteryStatsService( 1843): noteVideoSurfaceChanged  noteWhich: 49,arg1: 1080, arg2: 2400, arg3: 3303, arg4: 72071780314907517, name: com.vivo.systemuiplugin
+09-18 00:21:12.051 E/dumpsys (11480): BBinder_init Processname  dumpsys  
+09-18 00:21:12.053 E/dumpsys (11480): BBinder_init hasGetProcessName  dumpsys
+09-18 00:21:12.054 W/dumpsys (11480): Thread Pool max thread count is 0. Cannot cache binder as linkToDeath cannot be implemented. serviceName: power
+09-18 00:21:12.168 W/BatteryStatsService( 1843): Unknown sensor handle 0 received in noteWakeupSensorEvent
+09-18 00:21:12.340 E/dumpsys (11617): BBinder_init Processname  dumpsys  
+09-18 00:21:12.341 E/dumpsys (11617): BBinder_init hasGetProcessName  dumpsys
+09-18 00:21:12.341 W/dumpsys (11617): Thread Pool max thread count is 0. Cannot cache binder as linkToDeath cannot be implemented. serviceName: window
+09-18 00:21:15.330 D/TMSDK_SK_HB(13174): closeIfNeed:Socket[address=/111.206.148.107,port=8002,localPort=54284]:close
+09-18 00:21:15.338 D/TMSDK_SK(13174): cancelAlarm:[com.vivo.third.numbermark_TMF_TMS-Main_action.ka.ase]
+09-18 00:21:15.341 D/TMSDK_SK(13174): mKeepAliveRunnable-doRun
+09-18 00:21:20.349 D/TMSDK_SK(13174): tryCloseConnectionAsyn, refCount:[0]
+09-18 00:21:22.220 W/BatteryStatsService( 1843): Unknown sensor handle 0 received in noteWakeupSensorEvent
+09-18 00:21:25.156 D/ActivityThread(17494): Package [com.bbk.appstore] reported as REPLACED, but missing application info. Assuming REMOVED.
+09-18 00:21:25.192 D/ActivityThread( 8580): Package [com.bbk.appstore] reported as REPLACED, but missing application info. Assuming REMOVED.
+09-18 00:21:25.266 D/ActivityThread(17494): Package [com.bbk.appstore] reported as REPLACED, but missing application info. Assuming REMOVED.
+09-18 00:21:25.371 D/ActivityThread( 8580): Package [com.bbk.appstore] reported as REPLACED, but missing application info. Assuming REMOVED.
+09-18 00:21:25.570 D/ActivityThread(17494): Package [com.bbk.appstore] reported as REPLACED, but missing application info. Assuming REMOVED.
+09-18 00:21:25.602 D/ActivityThread( 8580): Package [com.bbk.appstore] reported as REPLACED, but missing application info. Assuming REMOVED.
+09-18 00:21:52.380 W/BatteryStatsService( 1843): Unknown sensor handle 0 received in noteWakeupSensorEvent
+09-18 00:22:02.426 W/BatteryStatsService( 1843): Unknown sensor handle 0 received in noteWakeupSensorEvent
+09-18 00:22:08.454 I/AttentionAlarm(17494): deliver path=fsi+direct fullScreen=true screenOn=false locked=true inCall=false canDrawOverlays=true
+09-18 00:22:08.960 I/alliswell.inbox(17494): AssetManager2(0xb400007863c3f8d8) locale list changing from [] to [zh-CN]
+09-18 00:22:08.964 I/alliswell.inbox(17494): AssetManager2(0xb400007863c1dc38) locale list changing from [] to [zh-CN]
+09-18 00:22:08.974 I/libEGL  (17494): skip_priority_level=0, isWorkaroundEnable=1
+09-18 00:22:08.993 I/alliswell.inbox(17494): AssetManager2(0xb400007863c3bd78) locale list changing from [] to [zh-CN]
+09-18 00:22:09.082 D/BatteryStatsService( 1843): noteFpsPipe  : POWER_ID_FPS_PIPE initFps=2,fpsPipe=1
+09-18 00:22:09.146 D/ViewRootImpl(17494): AppSizeAfterRelayout, size: Point(1080, 2400), rotation: ROTATION_0
+09-18 00:22:09.147 D/BufferQueueConsumer(17494): [](id:445600000001,api:0,p:-1,c:17494) connect: controlledByApp=false
+09-18 00:22:09.147 D/BLASTBufferQueue(17494): [VRI[AlarmActivity,type=1]#1](f:0,a:0) constructor()
+09-18 00:22:09.147 D/BLASTBufferQueue(17494): [VRI[AlarmActivity,type=1]#1](f:0,a:0) update width=1080 height=2400 format=-1 mTransformHint=0
+09-18 00:22:09.149 W/BLASTBufferQueue(17494): Unable to open /proc/vivo_rsc/frame_set_priority: No such file or directory
+09-18 00:22:09.149 I/BLASTBufferQueue(17494): QoSAllocBuff Successful. Ret 0 
+09-18 00:22:09.294 I/ActivityTaskManager( 1843): Displayed space.alliswell.inbox/.AlarmActivity for user 0: +446ms
+09-18 00:22:09.280 D/BLASTBufferQueue(17494): [VRI[AlarmActivity,type=1]#1](f:0,a:1) acquireNextBufferLocked size=1080x2400 mFrameNumber=1 applyTransaction=true mTimestamp=147467199060635(auto) mPendingTransactions.size=0 graphicBufferId=75136157876231 transform=0
+09-18 00:22:09.298 I/HWUI    (17494): [setStopped] CanvasContext will be destroyed.
+09-18 00:22:09.326 W/WindowOnBackDispatcher(17494): sendCancelIfRunning: isInProgress=false callback=android.view.ViewRootImpl$$ExternalSyntheticLambda13@f0f3217
+09-18 00:22:09.340 D/BLASTBufferQueue(17494): [VRI[AlarmActivity,type=1]#1](f:0,a:2) destructor()
+09-18 00:22:09.340 D/BufferQueueConsumer(17494): [VRI[AlarmActivity,type=1]#1(BLAST Consumer)1](id:445600000001,api:0,p:-1,c:17494) disconnect
+09-18 00:22:09.341 I/HWUI    (17494): [destroy] CanvasContext will be destroyed.
+09-18 00:22:09.341 D/ViewRootImpl(17494): Skipping stats log for color mode
+09-18 00:22:16.090 D/BatteryStatsService( 1843): noteVideoSurfaceChanged  noteWhich: 49,arg1: 1080, arg2: 2400, arg3: 3303, arg4: 72071780314908379, name: com.vivo.systemuiplugin
+09-18 00:22:16.090 D/BatteryStatsService( 1843): noteVideoSurfaceChanged  noteWhich: 49,arg1: 1080, arg2: 2400, arg3: 3303, arg4: 72071780314907517, name: com.vivo.systemuiplugin
+09-18 00:22:16.973 E/screencap( 8485): BBinder_init Processname  screencap  
+09-18 00:22:16.974 E/screencap( 8485): BBinder_init hasGetProcessName  screencap
+09-18 00:22:17.014 W/screencap( 8485): Thread Pool max thread count is 0. Cannot cache binder as linkToDeath cannot be implemented. serviceName: SurfaceFlingerAIDL
+09-18 00:22:17.020 W/BpBinder( 8485): Linking to death on android.gui.ISurfaceComposer but there are no threads (yet?) listening to incoming transactions. See ProcessState::startThreadPool and ProcessState::setThreadPoolMaxThreadCount. Generally you should setup the binder threadpool before other initialization steps.
+09-18 00:22:17.021 W/ProcessState( 8485): Extra binder thread started, but 0 threads requested. Do not use *startThreadPool when zero threads are requested.
+09-18 00:22:17.061 I/DMABUFHEAPS( 8485): Using DMA-BUF heap named: mtk_mm
+09-18 00:22:17.061 I/DMABUFHEAPS( 8485): Using DMA-BUF heap named: mtk_mm-uncached
+09-18 00:22:17.061 I/DMABUFHEAPS( 8485): Using DMA-BUF heap named: mtk_svp_page-uncached
+09-18 00:22:17.061 I/DMABUFHEAPS( 8485): Using DMA-BUF heap named: mtk_prot_region
+09-18 00:22:17.061 I/DMABUFHEAPS( 8485): Using DMA-BUF heap named: mtk_2d_fr_region
+09-18 00:22:17.061 I/DMABUFHEAPS( 8485): Using DMA-BUF heap named: mtk_wfd_page-uncached
+09-18 00:22:17.062 D/HWUI    ( 8485): Bitmap::compress format:Png w:1080 h:2400 quality:100 app_apk:screencap 
+09-18 00:22:17.062 W/libc    ( 8485): Access denied finding property "vendor.vivo.imageencoder.dump"
+09-18 00:22:17.388 W/RefBase ( 8485): RefBase: Explicit destruction, weak count = 0 (in 0x75d8bef9a8). Use sp<> to manage this object. Note - if weak count is 0, this leaks mRefs (weakref_impl).
+09-18 00:22:17.408 D/RefBase ( 8485):   #00 pc 00000000000bc290  /apex/com.android.runtime/lib64/bionic/libc.so (__cxa_finalize+224) (BuildId: cafe04917347c9e7897b8bec9057522e)
+09-18 00:22:17.408 D/RefBase ( 8485):   #01 pc 00000000000c1294  /apex/com.android.runtime/lib64/bionic/libc.so (exit+36) (BuildId: cafe04917347c9e7897b8bec9057522e)
+09-18 00:22:17.408 D/RefBase ( 8485):   #02 pc 00000000000b486c  /apex/com.android.runtime/lib64/bionic/libc.so (__libc_init+124) (BuildId: cafe04917347c9e7897b8bec9057522e)
+09-18 00:22:17.513 E/dumpsys ( 9113): BBinder_init Processname  dumpsys  
+09-18 00:22:17.513 E/dumpsys ( 9113): BBinder_init hasGetProcessName  dumpsys
+09-18 00:22:17.513 W/dumpsys ( 9113): Thread Pool max thread count is 0. Cannot cache binder as linkToDeath cannot be implemented. serviceName: window
+09-18 00:22:17.646 E/dumpsys ( 9181): BBinder_init Processname  dumpsys  
+09-18 00:22:17.646 E/dumpsys ( 9181): BBinder_init hasGetProcessName  dumpsys
+09-18 00:22:17.647 W/dumpsys ( 9181): Thread Pool max thread count is 0. Cannot cache binder as linkToDeath cannot be implemented. serviceName: notification
+09-18 00:22:23.100 V/Capacitor/Plugin(17494): To native (Capacitor plugin): callbackId: 95780837, pluginId: SystemBridge, methodName: diagnose
+09-18 00:22:23.101 V/Capacitor(17494): callback: 95780837, pluginId: SystemBridge, methodName: diagnose, methodData: {}
+09-18 00:22:23.128 V/Capacitor/Plugin(17494): To native (Capacitor plugin): callbackId: 95780838, pluginId: LocalNotifications, methodName: getPending
+09-18 00:22:23.129 V/Capacitor(17494): callback: 95780838, pluginId: LocalNotifications, methodName: getPending, methodData: {}
+09-18 00:22:23.188 V/Capacitor/Plugin(17494): To native (Capacitor plugin): callbackId: 95780839, pluginId: SystemBridge, methodName: cancelAlarm
+09-18 00:22:23.189 V/Capacitor(17494): callback: 95780839, pluginId: SystemBridge, methodName: cancelAlarm, methodData: {"id":1365176345}
+09-18 00:22:23.245 V/Capacitor/Plugin(17494): To native (Capacitor plugin): callbackId: 95780840, pluginId: SystemBridge, methodName: cancelNotification
+09-18 00:22:23.245 V/Capacitor(17494): callback: 95780840, pluginId: SystemBridge, methodName: cancelNotification, methodData: {"id":1365176345}
+09-18 00:22:23.265 V/Capacitor/Plugin(17494): To native (Capacitor plugin): callbackId: 95780841, pluginId: SystemBridge, methodName: scheduleAlarm
+09-18 00:22:23.269 V/Capacitor(17494): callback: 95780841, pluginId: SystemBridge, methodName: scheduleAlarm, methodData: {"delayMs":73716748,"title":"☆ 重要事项","body":"报名截止，提前确认材料","id":1648318806,"itemId":"i_87wsnzxnmu5j3pv5","itemRev":1,"level":"☆ 重要"}
+09-18 00:22:23.495 V/Capacitor/Plugin(17494): To native (Capacitor plugin): callbackId: 95780842, pluginId: SystemBridge, methodName: scheduleAlarm
+09-18 00:22:23.495 V/Capacitor(17494): callback: 95780842, pluginId: SystemBridge, methodName: scheduleAlarm, methodData: {"delayMs":121056512,"title":"☆ 重要事项","body":"给爸妈打电话","id":925311845,"itemId":"i_cyhim30gmu5j3pv6","itemRev":1,"level":"☆ 重要"}
+09-18 00:22:23.676 V/Capacitor/Plugin(17494): To native (Capacitor plugin): callbackId: 95780843, pluginId: SystemBridge, methodName: scheduleAlarm
+09-18 00:22:23.677 V/Capacitor(17494): callback: 95780843, pluginId: SystemBridge, methodName: scheduleAlarm, methodData: {"delayMs":246516330,"title":"☆ 重要事项","body":"交房租","id":1354819241,"itemId":"i_8zju7b9emu5j3pv6","itemRev":2,"level":"☆ 重要"}
+09-18 00:22:24.096 V/Capacitor/Plugin(17494): To native (Capacitor plugin): callbackId: 95780844, pluginId: SystemBridge, methodName: diagnose
+09-18 00:22:24.096 V/Capacitor(17494): callback: 95780844, pluginId: SystemBridge, methodName: diagnose, methodData: {}
+09-18 00:22:24.119 V/Capacitor/Plugin(17494): To native (Capacitor plugin): callbackId: 95780845, pluginId: LocalNotifications, methodName: getPending
+09-18 00:22:24.120 V/Capacitor(17494): callback: 95780845, pluginId: LocalNotifications, methodName: getPending, methodData: {}
+09-18 00:22:24.178 V/Capacitor/Plugin(17494): To native (Capacitor plugin): callbackId: 95780846, pluginId: SystemBridge, methodName: scheduleAlarm
+09-18 00:22:24.178 V/Capacitor(17494): callback: 95780846, pluginId: SystemBridge, methodName: scheduleAlarm, methodData: {"delayMs":73715828,"title":"☆ 重要事项","body":"报名截止，提前确认材料","id":1648318806,"itemId":"i_87wsnzxnmu5j3pv5","itemRev":1,"level":"☆ 重要"}
+09-18 00:22:24.423 V/Capacitor/Plugin(17494): To native (Capacitor plugin): callbackId: 95780847, pluginId: SystemBridge, methodName: scheduleAlarm
+09-18 00:22:24.425 V/Capacitor(17494): callback: 95780847, pluginId: SystemBridge, methodName: scheduleAlarm, methodData: {"delayMs":121055585,"title":"☆ 重要事项","body":"给爸妈打电话","id":925311845,"itemId":"i_cyhim30gmu5j3pv6","itemRev":1,"level":"☆ 重要"}
+09-18 00:22:24.692 V/Capacitor/Plugin(17494): To native (Capacitor plugin): callbackId: 95780848, pluginId: SystemBridge, methodName: scheduleAlarm
+09-18 00:22:24.693 V/Capacitor(17494): callback: 95780848, pluginId: SystemBridge, methodName: scheduleAlarm, methodData: {"delayMs":246515322,"title":"☆ 重要事项","body":"交房租","id":1354819241,"itemId":"i_8zju7b9emu5j3pv6","itemRev":2,"level":"☆ 重要"}
+09-18 00:22:36.598 D/ActivityThread( 8580): Package [com.vivo.game] reported as REPLACED, but missing application info. Assuming REMOVED.
+09-18 00:22:36.689 D/ActivityThread( 8580): Package [com.vivo.game] reported as REPLACED, but missing application info. Assuming REMOVED.
+09-18 00:22:36.747 D/ActivityThread( 8580): Package [com.vivo.game] reported as REPLACED, but missing application info. Assuming REMOVED.
+09-18 00:22:36.939 D/ActivityThread(17494): Package [com.vivo.game] reported as REPLACED, but missing application info. Assuming REMOVED.
+09-18 00:22:36.965 D/ActivityThread(17494): Package [com.vivo.game] reported as REPLACED, but missing application info. Assuming REMOVED.
+09-18 00:22:36.967 D/ActivityThread(17494): Package [com.vivo.game] reported as REPLACED, but missing application info. Assuming REMOVED.
+09-18 00:22:42.606 W/BatteryStatsService( 1843): Unknown sensor handle 0 received in noteWakeupSensorEvent
+09-18 00:23:02.704 W/BatteryStatsService( 1843): Unknown sensor handle 0 received in noteWakeupSensorEvent
+09-18 00:23:12.733 W/BatteryStatsService( 1843): Unknown sensor handle 0 received in noteWakeupSensorEvent
+09-18 00:23:12.926 D/ActivityThread( 8580): Package [com.vivo.browser] reported as REPLACED, but missing application info. Assuming REMOVED.
+09-18 00:23:12.939 D/ActivityThread( 8580): Package [com.vivo.browser] reported as REPLACED, but missing application info. Assuming REMOVED.
+09-18 00:23:12.997 D/ActivityThread( 8580): Package [com.vivo.browser] reported as REPLACED, but missing application info. Assuming REMOVED.
+09-18 00:23:13.638 D/ActivityThread(17494): Package [com.vivo.browser] reported as REPLACED, but missing application info. Assuming REMOVED.
+09-18 00:23:13.641 D/ActivityThread(17494): Package [com.vivo.browser] reported as REPLACED, but missing application info. Assuming REMOVED.
+09-18 00:23:13.643 D/ActivityThread(17494): Package [com.vivo.browser] reported as REPLACED, but missing application info. Assuming REMOVED.
+09-18 00:23:14.863 E/dumpsys (32351): BBinder_init Processname  dumpsys  
+09-18 00:23:14.864 E/dumpsys (32351): BBinder_init hasGetProcessName  dumpsys
+09-18 00:23:14.864 W/dumpsys (32351): Thread Pool max thread count is 0. Cannot cache binder as linkToDeath cannot be implemented. serviceName: notification
+09-18 00:23:16.819 E/dumpsys ( 1406): BBinder_init Processname  dumpsys  
+09-18 00:23:16.820 E/dumpsys ( 1406): BBinder_init hasGetProcessName  dumpsys
+09-18 00:23:16.820 W/dumpsys ( 1406): Thread Pool max thread count is 0. Cannot cache binder as linkToDeath cannot be implemented. serviceName: alarm
+09-18 00:23:17.075 E/dumpsys ( 1537): BBinder_init Processname  dumpsys  
+09-18 00:23:17.075 E/dumpsys ( 1537): BBinder_init hasGetProcessName  dumpsys
+09-18 00:23:17.075 W/dumpsys ( 1537): Thread Pool max thread count is 0. Cannot cache binder as linkToDeath cannot be implemented. serviceName: alarm

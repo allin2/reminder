@@ -1,0 +1,13 @@
+<?xml version='1.0' encoding='utf-8' standalone='yes' ?>
+<map>
+    <string name="deliveryLevel">🚨 关键</string>
+    <boolean name="deliveryInCall" value="false" />
+    <long name="deliveryShownAt" value="0" />
+    <string name="deliveryTitle">亮屏后台弹框验证</string>
+    <long name="deliveryAt" value="1789631417597" />
+    <boolean name="deliveryAttempted" value="true" />
+    <boolean name="deliveryScreenOn" value="true" />
+    <string name="pendingActions">[]</string>
+    <boolean name="deliveryLocked" value="false" />
+    <boolean name="deliveryOverlay" value="false" />
+</map>

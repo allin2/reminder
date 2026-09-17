@@ -1,0 +1,19 @@
+[00:27:42] === 自尽避冻结实验 r1-cold · LEAD=75s ===
+[00:27:56] PID=17494
+[00:28:02] 设置结果: {"triggerAt":1789662551450,"targetLocal":"00:29:11"}
+[00:28:04] 排程回读: 广播=12 服务=10
+[00:28:05] --- 自尽：以应用自身 uid 发 SIGKILL（不是 am kill、不是 force-stop）---
+[00:28:07] kill 后进程: []
+[00:28:08] User 0 行:     User 0: ceDataInode=263265 deDataInode=204514 installed=true hidden=false vHidden=1 suspended=false distractionFlags=0 stopped=false vStopped=false notLaunched=false enabled=0 instant=false virtual=false quarantined=false
+[00:28:10] 关屏: Asleep
+[00:28:10] 等到点…
+[00:30:06] --- 到点后 ---
+[00:30:06] 进程: []
+[00:30:07] 通知条数: 0
+[00:30:07] 屏幕: Asleep
+
+[00:30:07] --- events（进程生死 / 唤醒 / 冻结）---
+             1789662485.979  1843  4482 I am_proc_died: [0,17494,space.alliswell.inbox,0,2]
+             1789662551.490  1843  2390 I device_idle_wake_from_idle: [0,*walarm*:space.alliswell.inbox/.AlarmRingService]
+             1789662551.490  1843  2390 I device_idle_wake_from_idle: [0,*walarm*:space.alliswell.inbox.ACTION_TEST_ALARM]
+[00:30:07] === 结束 ===

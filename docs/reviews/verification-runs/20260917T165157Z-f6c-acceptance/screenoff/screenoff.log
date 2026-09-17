@@ -1,0 +1,49 @@
+[00:53:40] === F3 试验 screenoff · SCREEN=off LEAD=75s ===
+[00:53:54] 前置: PID=18017 wakefulness=Awake
+[00:54:00] 设置结果: {"triggerAt":1789664109678,"targetLocal":"00:55:09","nowLocal":"00:54:00","scheduled":4}
+[00:54:03] 排程回读: 广播条目=11 前台服务条目=9
+    143:    RTC_WAKEUP #7: Alarm{e6b47e type 0 origWhen 1789664109713 flags 3 windowLength 0 whenElapsed 231527825 maxWhenElapsed 231527825 repeatInterval 0 tag=*walarm*:space.alliswell.inbox.ACTION_TEST_ALARM originWhenElapsed 231527825 originWindowLength 0 setAtTime=2026-09-17 16:53:55 policyWhenElapsed:[231527825, 231453397, 0, 0, 0] procName=space.alliswell.inbox space.alliswell.inbox}
+    144:      tag=*walarm*:space.alliswell.inbox.ACTION_TEST_ALARM
+    153:    RTC_WAKEUP #8: Alarm{ecbea2c type 0 origWhen 1789664109713 flags 3 windowLength 0 whenElapsed 231527825 maxWhenElapsed 231527825 repeatInterval 0 tag=*walarm*:space.alliswell.inbox/.AlarmRingService originWhenElapsed 231527825 originWindowLength 0 setAtTime=2026-09-17 16:53:55 policyWhenElapsed:[231527825, 231453399, 0, 0, 0] procName=space.alliswell.inbox space.alliswell.inbox}
+    154:      tag=*walarm*:space.alliswell.inbox/.AlarmRingService
+    1078:    RTC_WAKEUP #153: Alarm{167ad90 type 0 origWhen 1789735860025 flags 3 windowLength 0 whenElapsed 303278137 maxWhenElapsed 303278137 repeatInterval 0 tag=*walarm*:space.alliswell.inbox.ACTION_TEST_ALARM originWhenElapsed 303278137 originWindowLength 0 setAtTime=2026-09-17 16:53:55 policyWhenElapsed:[303278137, 231453445, 0, 0, 0] procName=space.alliswell.inbox space.alliswell.inbox}
+    1079:      tag=*walarm*:space.alliswell.inbox.ACTION_TEST_ALARM
+    1088:    RTC_WAKEUP #154: Alarm{aeae68e type 0 origWhen 1789735860025 flags 3 windowLength 0 whenElapsed 303278137 maxWhenElapsed 303278137 repeatInterval 0 tag=*walarm*:space.alliswell.inbox/.AlarmRingService originWhenElapsed 303278137 originWindowLength 0 setAtTime=2026-09-17 16:53:55 policyWhenElapsed:[303278137, 231453448, 0, 0, 0] procName=space.alliswell.inbox space.alliswell.inbox}
+    1089:      tag=*walarm*:space.alliswell.inbox/.AlarmRingService
+[00:54:03] shared_prefs: ACTION_TYPE_STOREattention-actions.xml ACTION_TYPE_STOREattention-review-actions.xml AwOriginVisitLoggerPrefs.xml CapWebViewSettings.xml NOTIFICATION_STORE.xml WebViewChromiumPrefs.xml alarm_trace.xml attention_alarm.xml attention_alarm_schedules.xml 
+[00:54:13] 关屏: mWakefulness=Asleep 锁屏=true
+[00:54:13] 等到点…（现在 00:54:13，目标约 75s 后）
+[00:56:15] --- 到点后 00:56:15 ---
+[00:56:15] 证据1 进程被拉起: [18017]
+[00:56:16] 证据2 通知条数: 0
+[00:56:16] 证据3 屏幕: Awake
+[00:56:16] 证据4 队列残留: 广播=7 服务=7
+[00:56:17] 台账文件: screenoff-alarm-before.txt(290267) screenoff-alarm_delivery.xml(0) screenoff-attention_alarm.xml(753) screenoff-attention_delivery.xml(0) screenoff-events.txt(90622) screenoff-main.txt(32697) screenoff-prefs-list.txt(251) screenoff-trace-after.xml(31539) screenoff-trace-before.xml(31577) 
+
+[00:56:17] --- events 缓冲（冻结/解冻/唤醒/Activity）---
+             1789664051.022  1843  2149 I am_app_unfrozen: [0,10164,com.vivo.xspace,deliver Broadcast to system app]
+             1789664055.419  1843  2149 I am_app_frozen: [0,10039,com.baidu.input_vivo,from fast_freezer]
+             1789664056.490  1843  2149 I am_app_frozen: [0,10164,com.vivo.xspace,from fast_freezer]
+             1789664109.713  1843  2390 I device_idle_wake_from_idle: [0,*walarm*:space.alliswell.inbox/.AlarmRingService]
+             1789664109.713  1843  2390 I device_idle_wake_from_idle: [0,*walarm*:space.alliswell.inbox.ACTION_TEST_ALARM]
+             1789664110.072  1843  1843 I sysui_multi_action: [757,1501,758,1,793,205,794,0,795,205,796,990144015,806,space.alliswell.inbox,857,attention-alarm-v3,858,4,947,0,1500,0,1641,alarm,1688,1,1745,2098068913]
+             1789664110.075  1843  1843 I sysui_multi_action: [757,1501,758,1,793,208,794,0,795,208,796,990144015,806,space.alliswell.inbox,857,attention-alarm-v3,858,4,947,0,1500,0,1641,alarm,1688,1,1745,2098068913]
+             1789664110.075  1843  1843 I sysui_multi_action: [757,199,758,1,759,3,793,208,794,0,795,208,796,990144015,806,space.alliswell.inbox,857,attention-alarm-v3,858,4,947,0,1500,0,1641,alarm,1688,1,1745,2098068913]
+             1789664110.087  3303  3303 I sysui_fullscreen_notification: 0|space.alliswell.inbox|990144015|null|10190
+             1789664110.132  1843  2149 I am_app_unfrozen: [0,10073,com.vivo.browser,notification]
+             1789664110.164  1843  4533 I wm_create_activity: [0,168960788,71,space.alliswell.inbox/.AlarmActivity,NULL,NULL,NULL,880803840]
+             1789664110.479  1843  2149 I am_app_unfrozen: [0,10039,com.baidu.input_vivo,screen on]
+             1789664110.585  1843  2149 I am_app_unfrozen: [0,10085,com.vivo.weather.provider,Provider]
+             1789664110.643  1843  2056 I sysui_multi_action: [319,208,321,168,322,382,325,149448,757,761,758,8,759,1,806,space.alliswell.inbox,871,space.alliswell.inbox.AlarmActivity,904,space.alliswell.inbox,905,0,1320,12,1321,1]
+             1789664110.724  1843  2149 I am_app_unfrozen: [0,10164,com.vivo.xspace,deliver Broadcast to system app]
+             1789664111.027  1843  2149 I am_app_frozen: [0,10258,com.vivo.puresearch,from fast_freezer]
+             1789664115.958  1843  2149 I am_app_frozen: [0,10085,com.vivo.weather.provider,from fast_freezer]
+             1789664116.064  1843  2149 I am_app_frozen: [0,10164,com.vivo.xspace,from fast_freezer]
+             1789664123.169  1843  1843 I sysui_multi_action: [757,128,758,5,759,8,793,13301,794,0,795,13301,796,990144015,806,space.alliswell.inbox,857,attention-alarm-v3,858,4,947,0,1500,13093,1641,alarm,1688,1,1745,2098068913]
+             1789664144.921  1843  2149 I am_app_unfrozen: [0,10260,com.vivo.third.numbermark,pending intent broadcast]
+             1789664150.423  1843  2149 I am_app_frozen: [0,10260,com.vivo.third.numbermark,from fast_freezer]
+             1789664170.628  1843  2149 I am_app_frozen: [0,10073,com.vivo.browser,from fast_freezer]
+
+[00:56:17] --- main/system 关键行 ---
+    09-18 00:55:09.830 I/AttentionAlarm(18017): deliver path=fsi+direct fullScreen=true screenOn=false locked=true inCall=false canDrawOverlays=true
+[00:56:17] === 结束，日志: /Users/qlyf/Developer/reminder/docs/reviews/verification-runs/20260917T165157Z-f6c-acceptance/screenoff/screenoff-*.txt ===

@@ -188,11 +188,20 @@ function createApp(options) {
     return setTimeout(fn, ms);
   };
 
+  // Q1：`setInterval` 原先是个纯 stub（恒返回 0），于是「15 秒心跳有没有被装上」
+  // 在测试里完全不可观测。记录调用参数即可断言 —— 心跳是 init() 最后几步之一，
+  // 它存在就证明整条启动链跑到了底。
+  const sandboxIntervals = [];
+  const sandboxSetInterval = (fn, ms) => {
+    sandboxIntervals.push({ fn, ms: Number(ms) });
+    return sandboxIntervals.length;
+  };
+
   const sandbox = {
     console, Date, Math, JSON, Object, Array, String, Number, Boolean, Set, Map, Promise, Error, RegExp,
     parseInt, parseFloat, isNaN, encodeURIComponent, decodeURIComponent, URLSearchParams,
     Blob: function () {}, File: function () {}, FileReader: function () {},
-    setTimeout: sandboxSetTimeout, clearTimeout, setInterval: () => 0, clearInterval,
+    setTimeout: sandboxSetTimeout, clearTimeout, setInterval: sandboxSetInterval, clearInterval,
     history: { replaceState() {} },
     location: { search: "", pathname: "/index.html", href: "http://localhost/index.html" },
     localStorage, indexedDB, document,
@@ -244,6 +253,8 @@ function createApp(options) {
     },
     /** 被沙箱拦下的长延时定时器（仅供诊断，不参与断言） */
     get parkedTimers() { return parkedTimers; },
+    /** 沙箱内被装上的周期定时器（Q1：用于断言 15 秒心跳确实装上了） */
+    get intervals() { return sandboxIntervals; },
     setCommitFailure(on) { disk.mode = on ? "fail" : "ok"; },
     /** 扣住写事务（观察「提交尚未完成」的窗口）；默认自动放行 */
     holdCommits(on) { disk.hold = !!on; },
@@ -329,7 +340,11 @@ function installCapacitor(options) {
     async changeExactNotificationSetting() { return { exact_alarm: "granted" }; },
     async createChannel(channel) { calls.channels = (calls.channels || []).concat(channel); },
     async registerActionTypes() {},
-    async addListener() { return { async remove() {} }; },
+    // Q1：真机契约是**同步返回 `{ remove }` 句柄**（Android `JSExport.getPluginJS()`
+    // 注入的 t.addListener 直接转发到 native-bridge 的 cap.addListener，后者 return 一个
+    // 普通对象）。**绝不能写成 async** —— 那样会返回 Promise，比真机宽松，
+    // 于是「.catch is not a function」这类只在真机复现的缺陷会被 mock 掩盖（V1 就是这么漏的）。
+    addListener() { return { async remove() {} }; },
     async getPending() { return { notifications: pending.slice() }; },
     async schedule(value) {
       calls.scheduled.push(value.notifications.slice());
@@ -365,7 +380,7 @@ function installCapacitor(options) {
 
   global.Capacitor = {
     getPlatform() { return "android"; },
-    Plugins: { LocalNotifications: local, SystemBridge: bridge, App: { async addListener() { return { async remove() {} }; } } }
+    Plugins: { LocalNotifications: local, SystemBridge: bridge, App: { addListener() { return { async remove() {} }; } } }
   };
 
   return {
@@ -2168,6 +2183,91 @@ async function run() {
       !!h2.app.state.items[0] && h2.app.state.items[0].id !== orphan.id,
       JSON.stringify(h2.app.state.items.map(x => x.id)));
   }
+
+/* ----------------------------------------------------------------- *
+ * Q1：启动链完整性 —— `addListener` 的返回契约
+ *
+ * 真机（Android）：插件方法由原生 `JSExport.getPluginJS()` 注入 ——
+ *     t.addListener = function (eventName, callback) {
+ *       return w.Capacitor.addListener('<pluginId>', eventName, callback);
+ *     }
+ * 而 `native-bridge.js` 的 `cap.addListener` **同步 return 一个 `{ remove }` 普通对象**，
+ * 它没有 `.then` / `.catch`。（官方 `@capacitor/core` 的 `capacitor.js` 确实返回 Promise
+ * 并把 `.remove` 挂在上面，但本仓库没有打包器，那条路径在真机上根本不存在。）
+ *
+ * 所以 `lib/native-reminders.js` 里的 `addListener(...).catch(...)` 在真机上抛
+ * `TypeError: app.addListener(...).catch is not a function`；又因为 `onAlarmAction()`
+ * 是同步函数，异常会直接冒泡出 `init()`，使第 5129 行之后的 seed / render / 15 秒心跳
+ * 全部不执行 —— 而且不崩溃、不弹错，界面照常可点。
+ *
+ * 此前 854 项测试全绿却漏掉它，有两个叠加原因，本用例同时堵住：
+ *   ① 没有任何测试调用过 `onAlarmAction()`（那段注册代码在测试里是死代码）；
+ *   ② 平台 mock 的 `addListener` 写成 `async`，契约比真机宽松。
+ * 下面的断言先证「注册真的被调用到了」，避免用例自己在空转。
+ *
+ * 平台用**宿主** `global.Capacitor` 复刻：`lib/native-reminders.js` 是在 createApp 里被
+ * require 进来的，它的闭包 root 是宿主 globalThis，所以它读的平台就是宿主 global。
+ * ----------------------------------------------------------------- */
+section("Q1. 启动链完整性 / addListener 返回契约");
+{
+  const withPlatform = async (addListenerImpl) => {
+    const calls = { appListener: 0, bridgeListener: 0 };
+    const record = which => (...args) => { calls[which]++; return addListenerImpl(...args); };
+    global.Capacitor = {
+      // 刻意返回 "web"：本用例只关心 onAlarmAction 的注册路径，
+      // 不希望任何 native-only 分支（isNativeAndroid）被激活。
+      getPlatform: () => "web",
+      Plugins: {
+        App: { addListener: record("appListener") },
+        SystemBridge: {
+          addListener: record("bridgeListener"),
+          consumeAlarmAction: async () => null,
+          ackAlarmAction: async () => {}
+        }
+      }
+    };
+    try {
+      const h = createApp();
+      const app = await h.boot();
+      return { h, app, calls, ready: await app.ready() };
+    } finally {
+      delete global.Capacitor;
+    }
+  };
+
+  // ① 真机契约：同步返回 `{ remove }` 句柄（没有 .catch）—— 这正是崩溃的那条路径
+  {
+    const { h, app, calls, ready } = await withPlatform(() => ({ async remove() {} }));
+    ok("Q1 真机契约：addListener 确实被调用到了（否则本用例在空转）",
+      calls.appListener === 1 && calls.bridgeListener === 1,
+      "app=" + calls.appListener + " bridge=" + calls.bridgeListener);
+    ok("Q1 真机契约（同步句柄）：ready() === true，init 未被中断", ready === true);
+    ok("Q1 真机契约：seed 生效 —— 证明 init 第 5129 行之后的代码真的跑了",
+      app.state.items.length > 0, "items=" + app.state.items.length);
+    ok("Q1 真机契约：15 秒心跳已装上（启动链跑到底的标志）",
+      h.intervals.some(x => x.ms === 15000), JSON.stringify(h.intervals.map(x => x.ms)));
+  }
+
+  // ② 官方 capacitor.js 契约：返回 Promise（并把 .remove 挂在上面）—— 归一化后同样必须可用
+  {
+    const { app, calls, ready } = await withPlatform(() => {
+      const p = Promise.resolve({ remove: async () => {} });
+      p.remove = async () => {};
+      return p;
+    });
+    ok("Q1 Promise 契约：同样能注册且不中断启动",
+      calls.appListener === 1 && ready === true);
+    ok("Q1 Promise 契约：seed 与心跳照常", app.state.items.length > 0);
+  }
+
+  // ③ 平台同步抛错：注册失败必须被隔离，不能拖垮整条启动链
+  {
+    const { app, ready } = await withPlatform(() => { throw new Error("plugin not registered"); });
+    ok("Q1 注册同步抛错：错误被隔离，ready() 仍为 true", ready === true);
+    ok("Q1 注册同步抛错：其余启动动作照常完成（seed 生效）",
+      app.state.items.length > 0, "items=" + app.state.items.length);
+  }
+}
 }
 
 run().then(() => {

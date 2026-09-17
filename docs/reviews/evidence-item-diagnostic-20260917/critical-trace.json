@@ -1,0 +1,86 @@
+[
+  {
+    "token": "1375269217:d06909bc-4872-4872-8fef-5ad5bd37fe13",
+    "stage": "requested",
+    "at": 1789636854547,
+    "detail": "delayMs=65476"
+  },
+  {
+    "token": "1375269217:d06909bc-4872-4872-8fef-5ad5bd37fe13",
+    "stage": "item",
+    "at": 1789636854578,
+    "detail": "i_yb75vsphmu5bkqc3"
+  },
+  {
+    "token": "1375269217:d06909bc-4872-4872-8fef-5ad5bd37fe13",
+    "stage": "scheduled",
+    "at": 1789636854619,
+    "detail": "triggerAt=1789636920076;mode=alarmClock"
+  },
+  {
+    "token": "1375269217:d06909bc-4872-4872-8fef-5ad5bd37fe13",
+    "stage": "cancelled",
+    "at": 1789636855577,
+    "detail": "replaced by new schedule"
+  },
+  {
+    "token": "1375269217:9cfb9b43-65db-4897-b8f6-bf472cf9a44d",
+    "stage": "requested",
+    "at": 1789636855607,
+    "detail": "delayMs=64450"
+  },
+  {
+    "token": "1375269217:9cfb9b43-65db-4897-b8f6-bf472cf9a44d",
+    "stage": "item",
+    "at": 1789636855636,
+    "detail": "i_yb75vsphmu5bkqc3"
+  },
+  {
+    "token": "1375269217:9cfb9b43-65db-4897-b8f6-bf472cf9a44d",
+    "stage": "scheduled",
+    "at": 1789636855675,
+    "detail": "triggerAt=1789636920108;mode=alarmClock"
+  },
+  {
+    "token": "1375269217:9cfb9b43-65db-4897-b8f6-bf472cf9a44d",
+    "stage": "received",
+    "at": 1789636920209,
+    "detail": ""
+  },
+  {
+    "token": "1375269217:9cfb9b43-65db-4897-b8f6-bf472cf9a44d",
+    "stage": "environment",
+    "at": 1789636920294,
+    "detail": "screenOn=false;locked=false;inCall=false"
+  },
+  {
+    "token": "1375269217:9cfb9b43-65db-4897-b8f6-bf472cf9a44d",
+    "stage": "launchRequested",
+    "at": 1789636920374,
+    "detail": "not proof of visibility"
+  },
+  {
+    "token": "1375269217:9cfb9b43-65db-4897-b8f6-bf472cf9a44d",
+    "stage": "notifyReturned",
+    "at": 1789636920431,
+    "detail": "notify returned; not proof of display"
+  },
+  {
+    "token": "1375269217:9cfb9b43-65db-4897-b8f6-bf472cf9a44d",
+    "stage": "resumed",
+    "at": 1789636922067,
+    "detail": "Activity resumed"
+  },
+  {
+    "token": "1375269217:9cfb9b43-65db-4897-b8f6-bf472cf9a44d",
+    "stage": "resumed",
+    "at": 1789636922172,
+    "detail": "Activity resumed"
+  },
+  {
+    "token": "1375269217:9cfb9b43-65db-4897-b8f6-bf472cf9a44d",
+    "stage": "cancelled",
+    "at": 1789636922960,
+    "detail": "cancel API succeeded"
+  }
+]

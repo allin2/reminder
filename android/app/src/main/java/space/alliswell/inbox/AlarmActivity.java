@@ -54,6 +54,8 @@ public class AlarmActivity extends AppCompatActivity {
   private Vibrator vibrator;
   private final Handler handler = new Handler(Looper.getMainLooper());
   private Runnable clockTicker;
+  /** V1：本次投递是否已经判定为「显示出来了」，避免重复落盘与重复采样 */
+  private boolean visibilityMarked = false;
 
   /** 当前 Intent 绑定的数据（R2：随 onNewIntent 更新） */
   private String currentTitle = "";
@@ -65,6 +67,7 @@ public class AlarmActivity extends AppCompatActivity {
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    trace("created", "test=" + getIntent().getBooleanExtra(AlarmTrace.TEST, false));
     if (Build.VERSION.SDK_INT >= 27) {
       setShowWhenLocked(true);
       setTurnScreenOn(true);
@@ -111,21 +114,135 @@ public class AlarmActivity extends AppCompatActivity {
   @Override
   protected void onNewIntent(Intent intent) {
     super.onNewIntent(intent);
-    setIntent(intent);
+    String oldToken = getIntent().getStringExtra(AlarmTrace.EXTRA);
+    String newToken = intent.getStringExtra(AlarmTrace.EXTRA);
+    if (oldToken != null && oldToken.equals(newToken)) {
+      trace("duplicateIntent", "same delivery; keep sound playing");
+      return;
+    }
+    trace("replaced", "different delivery");
     stopAlarmEffects();
+    setIntent(intent);
     bindIntent();
     restartAlarmEffects();
+    // V1：换了一条投递，可见性判定要重新开始（新投递必须自己证明自己显示出来了）
+    visibilityMarked = false;
+    try {
+      getSharedPreferences(PREFS, MODE_PRIVATE).edit()
+        .putBoolean(AlarmTestReceiver.KEY_DELIVERY_VISIBLE, false)
+        .putLong(AlarmTestReceiver.KEY_DELIVERY_HIDDEN_AT, 0L)
+        .apply();
+    } catch (Exception ignored) {}
+    observeWindow();
+  }
+
+  @Override
+  protected void onResume() {
+    super.onResume();
+    trace("resumed", "lifecycle only");
+    observeWindow();
+  }
+
+  private void trace(String stage, String detail) {
+    AlarmTrace.record(this, getIntent() == null ? null : getIntent().getStringExtra(AlarmTrace.EXTRA), stage, detail);
+  }
+
+  /**
+   * V1：在 onResume 之后取三次窗口样本，自己证明「界面到底有没有送到用户眼前」。
+   *
+   * 此前只采一次（1.2 秒），且「可见」只认 onWindowFocusChanged(true)。真机实测：
+   * 后台被拉起时窗口可能**可见但拿不到焦点**，于是 deliveryShownAt 永远是 0，
+   * 被自检面板判成「用户没看到」—— 与事实不符。现在两条判据任一成立即算显示出来，
+   * 三次都没中才记一笔 deliveryHiddenAt：声音照旧响（它是用户唯一的线索），
+   * 但我们不再假装这次投递成功了。
+   */
+  private void observeWindow() {
+    final String token = getIntent().getStringExtra(AlarmTrace.EXTRA);
+    final int[] delays = { 300, 800, 1500 };
+    for (final int delay : delays) {
+      handler.postDelayed(() -> {
+        if (isFinishing() || isDestroyed() || token == null || !token.equals(getIntent().getStringExtra(AlarmTrace.EXTRA))) return;
+        android.view.View view = getWindow().getDecorView();
+        boolean playing = false;
+        try { playing = mediaPlayer != null && mediaPlayer.isPlaying(); } catch (Exception ignored) {}
+        AlarmTrace.record(this, token, "windowSample", "after=" + delay + "ms;focus=" + view.hasWindowFocus() +
+          ";shown=" + view.isShown() + ";visibility=" + view.getWindowVisibility() + ";playing=" + playing);
+        markVisible("sample@" + delay);
+        if (delay == delays[delays.length - 1] && !visibilityMarked) markHidden();
+      }, delay);
+    }
+  }
+
+  /**
+   * V1：把「界面真的显示出来了」落盘。判据二选一 —— 窗口可见（isShown 且 windowVisibility==0）
+   * 或获得窗口焦点。只看焦点会漏掉「可见但无焦点」的情形，只看可见性会漏掉被系统半透明覆盖的情形。
+   */
+  private void markVisible(String reason) {
+    if (visibilityMarked) return;
+    android.view.View view = getWindow() == null ? null : getWindow().getDecorView();
+    if (view == null) return;
+    boolean shown = view.isShown() && view.getWindowVisibility() == 0;
+    boolean focused = view.hasWindowFocus();
+    if (!shown && !focused) return;
+    visibilityMarked = true;
+    try {
+      getSharedPreferences(PREFS, MODE_PRIVATE).edit()
+        .putLong(AlarmTestReceiver.KEY_DELIVERY_SHOWN_AT, System.currentTimeMillis())
+        .putBoolean(AlarmTestReceiver.KEY_DELIVERY_VISIBLE, true)
+        .apply();
+    } catch (Exception ignored) {}
+    trace("windowVisible", "via=" + reason + ";focused=" + focused + ";shown=" + shown);
+  }
+
+  /** V1：1.5 秒后窗口仍不可见 ⇒ 如实记一笔「这次投递没送到用户眼前」 */
+  private void markHidden() {
+    try {
+      getSharedPreferences(PREFS, MODE_PRIVATE).edit()
+        .putLong(AlarmTestReceiver.KEY_DELIVERY_HIDDEN_AT, System.currentTimeMillis())
+        .putBoolean(AlarmTestReceiver.KEY_DELIVERY_VISIBLE, false)
+        .apply();
+    } catch (Exception ignored) {}
+    trace("windowHidden", "never visible within 1500ms");
+  }
+
+  @Override
+  public void onWindowFocusChanged(boolean focused) {
+    super.onWindowFocusChanged(focused);
+    trace("focus", String.valueOf(focused));
+    if (focused) markVisible("focus");
+  }
+
+  @Override
+  protected void onPause() {
+    trace("paused", "finishing=" + isFinishing());
+    super.onPause();
+  }
+
+  @Override
+  protected void onStop() {
+    trace("stopped", "finishing=" + isFinishing());
+    super.onStop();
   }
 
   private void bindIntent() {
     Intent intent = getIntent();
-    String title = intent != null ? intent.getStringExtra(EXTRA_TITLE) : null;
-    String body = intent != null ? intent.getStringExtra(EXTRA_BODY) : null;
-    String level = intent != null ? intent.getStringExtra(EXTRA_LEVEL) : null;
-    String itemId = intent != null ? intent.getStringExtra(EXTRA_ITEM_ID) : "";
+    if (intent != null && intent.getBooleanExtra(AlarmTrace.TEST, false)) {
+      final String token = intent.getStringExtra(AlarmTrace.EXTRA);
+      handler.postDelayed(() -> {
+        if (token != null && token.equals(getIntent().getStringExtra(AlarmTrace.EXTRA))) {
+          trace("autoClose", "diagnostic 5-second timeout");
+          stopAlarmEffects(); cancelPostedNotification(); finish();
+        }
+      }, 5000L);
+    }
+    // F1：两套键名都认 —— 闹钟时钟直接投递时带的是 Receiver 那套（见 AlarmScheduler.schedule）
+    String title = pick(EXTRA_TITLE, AlarmTestReceiver.EXTRA_TITLE);
+    String body = pick(EXTRA_BODY, AlarmTestReceiver.EXTRA_BODY);
+    String level = pick(EXTRA_LEVEL, AlarmTestReceiver.EXTRA_LEVEL);
+    String itemId = pick(EXTRA_ITEM_ID, AlarmTestReceiver.EXTRA_ITEM_ID);
     // V02：整条链路统一用 String 承载数据版本（Intent 的 typed getter 必须与实际类型匹配，
     // 用 getIntExtra 读一个 String extra 只会拿到默认值 0，导致旧版本校验把有效动作全部拒绝）
-    String itemRev = intent != null ? intent.getStringExtra(EXTRA_ITEM_REV) : null;
+    String itemRev = pick(EXTRA_ITEM_REV, AlarmTestReceiver.EXTRA_ITEM_REV);
     if (itemId == null) itemId = "";
     if (itemRev == null || itemRev.isEmpty()) itemRev = "0";
     if (title == null || title.isEmpty()) title = "安心收件箱";
@@ -134,7 +251,11 @@ public class AlarmActivity extends AppCompatActivity {
     currentBody = body;
     currentLevel = level == null ? "" : level;
     currentItemRev = itemRev == null ? "0" : itemRev;
-    currentAlarmId = intent != null ? intent.getIntExtra(EXTRA_ID, 90002) : 90002;
+    currentAlarmId = intent != null
+      ? (intent.hasExtra(EXTRA_ID)
+          ? intent.getIntExtra(EXTRA_ID, 90002)
+          : intent.getIntExtra(AlarmTestReceiver.EXTRA_ID, 90002))
+      : 90002;
 
     TextView titleView = findViewById(R.id.alarmTitle);
     TextView bodyView = findViewById(R.id.alarmBody);
@@ -161,11 +282,40 @@ public class AlarmActivity extends AppCompatActivity {
   }
 
   private void restartAlarmEffects() {
-    startAlarmSound();
+    if (!notificationOwnsSound()) startAlarmSound();
     startVibration();
   }
 
+  /**
+   * F2：铃声通常由**通知**承担 —— 渠道音 + `Notification.FLAG_INSISTENT`，由系统
+   * （NotificationManagerService 的 IRingtonePlayer）循环播放，界面被系统收掉也照样响。
+   *
+   * 这也解释了为什么不再让界面无条件自己播：真机实测界面可能只活 367 毫秒
+   * （created → resumed → 33ms → paused(finishing=true)），声音随载体一起消失，
+   * 用户只听到半声。只有通知确实发不出去（用户关了通知权限）时才退回界面自播，
+   * 否则会出现两路铃声重叠。
+   */
+  private boolean notificationOwnsSound() {
+    try {
+      Object svc = getSystemService(Context.NOTIFICATION_SERVICE);
+      NotificationManager nm = svc instanceof NotificationManager ? (NotificationManager) svc : null;
+      return nm != null && nm.areNotificationsEnabled();
+    } catch (Exception ignored) {
+      return false;
+    }
+  }
+
+  /** F1：闹钟时钟直接拉起界面时，extras 用的是 Receiver 那套键名；两套都认，界面才能正确渲染 */
+  private String pick(String uiKey, String deliveryKey) {
+    Intent intent = getIntent();
+    if (intent == null) return null;
+    String value = intent.getStringExtra(uiKey);
+    if (value == null || value.isEmpty()) value = intent.getStringExtra(deliveryKey);
+    return value;
+  }
+
   private void finishWithAction(String action, boolean reschedule) {
+    trace("userAction", action);
     stopAlarmEffects();
     if (reschedule) {
       try {
@@ -198,8 +348,7 @@ public class AlarmActivity extends AppCompatActivity {
   }
 
   private String currentItemId() {
-    Intent intent = getIntent();
-    String itemId = intent != null ? intent.getStringExtra(EXTRA_ITEM_ID) : "";
+    String itemId = pick(EXTRA_ITEM_ID, AlarmTestReceiver.EXTRA_ITEM_ID);
     return itemId == null ? "" : itemId;
   }
 
@@ -225,25 +374,36 @@ public class AlarmActivity extends AppCompatActivity {
   }
 
   private void startAlarmSound() {
+    android.media.AudioManager audio = (android.media.AudioManager) getSystemService(Context.AUDIO_SERVICE);
+    if (audio != null) trace("audioState", "alarmVolume=" + audio.getStreamVolume(android.media.AudioManager.STREAM_ALARM)
+      + ";max=" + audio.getStreamMaxVolume(android.media.AudioManager.STREAM_ALARM) + ";mode=" + audio.getMode());
     try {
-      mediaPlayer = new MediaPlayer();
-      mediaPlayer.setAudioAttributes(new AudioAttributes.Builder()
-        .setUsage(AudioAttributes.USAGE_ALARM)
-        .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
-        .build());
-      mediaPlayer.setDataSource(this, alarmUri());
-      mediaPlayer.setLooping(true);
-      mediaPlayer.prepare();
-      mediaPlayer.start();
-    } catch (Exception e) {
-      try {
-        mediaPlayer = MediaPlayer.create(this, RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM));
-        if (mediaPlayer != null) {
-          mediaPlayer.setLooping(true);
-          mediaPlayer.start();
-        }
-      } catch (Exception ignored) {}
+      playAlarm(alarmUri());
+    } catch (Exception error) {
+      trace("audioFailed", "primary: " + error.toString());
+      releasePlayer();
+      try { playAlarm(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM)); }
+      catch (Exception fallback) { trace("audioFailed", "fallback: " + fallback.toString()); releasePlayer(); }
     }
+  }
+
+  private void playAlarm(Uri uri) throws Exception {
+    mediaPlayer = new MediaPlayer();
+    mediaPlayer.setAudioAttributes(new AudioAttributes.Builder()
+      .setUsage(AudioAttributes.USAGE_ALARM).setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION).build());
+    mediaPlayer.setOnErrorListener((player, what, extra) -> {
+      trace("audioFailed", "async what=" + what + ";extra=" + extra); return false;
+    });
+    mediaPlayer.setDataSource(this, uri);
+    mediaPlayer.setLooping(true);
+    mediaPlayer.prepare();
+    mediaPlayer.start();
+    trace("audioStarted", "isPlaying=" + mediaPlayer.isPlaying() + ";not acoustic proof");
+  }
+
+  private void releasePlayer() {
+    try { if (mediaPlayer != null) mediaPlayer.release(); } catch (Exception ignored) {}
+    mediaPlayer = null;
   }
 
   private void startVibration() {
@@ -267,6 +427,7 @@ public class AlarmActivity extends AppCompatActivity {
   }
 
   private void stopAlarmEffects() {
+    trace("effectsStopped", "");
     try {
       if (mediaPlayer != null) {
         if (mediaPlayer.isPlaying()) mediaPlayer.stop();
@@ -283,7 +444,11 @@ public class AlarmActivity extends AppCompatActivity {
 
   @Override
   protected void onDestroy() {
+    trace("destroyed", "finishing=" + isFinishing());
+    // V1：到销毁都没能判定为可见（例如被系统在几百毫秒内收掉）⇒ 这次投递没送到眼前，如实落盘
+    if (!visibilityMarked) markHidden();
     stopAlarmEffects();
+    handler.removeCallbacksAndMessages(null);
     super.onDestroy();
   }
 

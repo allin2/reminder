@@ -1,0 +1,31 @@
+--------- beginning of main
+09-17 22:59:07.541 I/HWUI    (10701): [trimMemory] TrimMemory will destroy render context, mode: 40.
+09-17 22:59:07.557 I/alliswell.inbox(10701): vart_dgc,  GetCoefficient 15
+09-17 22:59:07.654 I/alliswell.inbox(10701): CollectorTransition concurrent copying GC freed 6405KB AllocSpace bytes, 169(6148KB) LOS objects, 61% free, 3769KB(1672KB_84KB)/9913KB, 2Bd, itvl 27.184s, cpu 84.044ms, paused 120us,91us total 96.252ms
+09-17 22:59:11.027 E/cmd     ( 9184): BBinder_init Processname  cmd  
+09-17 22:59:11.028 E/cmd     ( 9184): BBinder_init hasGetProcessName  cmd
+--------- beginning of system
+09-17 22:59:11.067 W/BatteryStatsService( 1843): Unknown sensor handle 0 received in noteWakeupSensorEvent
+09-17 22:59:11.504 D/BatteryStatsService( 1843): noteVideoSurfaceChanged  noteWhich: 49,arg1: 1080, arg2: 2400, arg3: 3303, arg4: 72071780314906804, name: com.android.systemui
+09-17 22:59:11.505 D/BatteryStatsService( 1843): noteVideoSurfaceChanged  noteWhich: 49,arg1: 2400, arg2: 1080, arg3: 3303, arg4: 72071780314908379, name: com.vivo.systemuiplugin
+09-17 22:59:11.505 D/BatteryStatsService( 1843): noteVideoSurfaceChanged  noteWhich: 49,arg1: 2400, arg2: 1080, arg3: 3303, arg4: 72071780314907517, name: com.vivo.systemuiplugin
+09-17 22:59:14.135 E/dumpsys (10283): BBinder_init Processname  dumpsys  
+09-17 22:59:14.135 E/dumpsys (10283): BBinder_init hasGetProcessName  dumpsys
+09-17 22:59:14.135 W/dumpsys (10283): Thread Pool max thread count is 0. Cannot cache binder as linkToDeath cannot be implemented. serviceName: power
+09-17 22:59:14.319 E/dumpsys (10365): BBinder_init Processname  dumpsys  
+09-17 22:59:14.320 E/dumpsys (10365): BBinder_init hasGetProcessName  dumpsys
+09-17 22:59:14.320 W/dumpsys (10365): Thread Pool max thread count is 0. Cannot cache binder as linkToDeath cannot be implemented. serviceName: window
+09-17 22:59:21.094 W/BatteryStatsService( 1843): Unknown sensor handle 0 received in noteWakeupSensorEvent
+09-17 23:01:11.571 W/BatteryStatsService( 1843): Unknown sensor handle 0 received in noteWakeupSensorEvent
+09-17 23:01:16.423 E/dumpsys (24200): BBinder_init Processname  dumpsys  
+09-17 23:01:16.424 E/dumpsys (24200): BBinder_init hasGetProcessName  dumpsys
+09-17 23:01:16.424 W/dumpsys (24200): Thread Pool max thread count is 0. Cannot cache binder as linkToDeath cannot be implemented. serviceName: notification
+09-17 23:01:17.309 E/dumpsys (24496): BBinder_init Processname  dumpsys  
+09-17 23:01:17.310 E/dumpsys (24496): BBinder_init hasGetProcessName  dumpsys
+09-17 23:01:17.310 W/dumpsys (24496): Thread Pool max thread count is 0. Cannot cache binder as linkToDeath cannot be implemented. serviceName: power
+09-17 23:01:17.598 E/dumpsys (24585): BBinder_init Processname  dumpsys  
+09-17 23:01:17.598 E/dumpsys (24585): BBinder_init hasGetProcessName  dumpsys
+09-17 23:01:17.599 W/dumpsys (24585): Thread Pool max thread count is 0. Cannot cache binder as linkToDeath cannot be implemented. serviceName: alarm
+09-17 23:01:17.764 E/dumpsys (24653): BBinder_init Processname  dumpsys  
+09-17 23:01:17.765 E/dumpsys (24653): BBinder_init hasGetProcessName  dumpsys
+09-17 23:01:17.765 W/dumpsys (24653): Thread Pool max thread count is 0. Cannot cache binder as linkToDeath cannot be implemented. serviceName: alarm

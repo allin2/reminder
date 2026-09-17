@@ -1,0 +1,4 @@
+{
+  "status": "INVALID_ASSERTIONS",
+  "reason": "due is expected after delivery, not waiting; future reminders use LocalNotifications and were omitted from collector. r3 corrects both assertions. No product defect established."
+}

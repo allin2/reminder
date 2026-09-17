@@ -1,0 +1,42 @@
+{
+  "serial": "10ACBF2D3D000RS",
+  "targetAt": 1789664109678,
+  "afterSeconds": 8,
+  "captures": [
+    {
+      "file": "deadline-screen.png",
+      "startedAt": 1789664117684,
+      "returncode": 0,
+      "bytes": 121934,
+      "stderr": ""
+    },
+    {
+      "file": "deadline-window.txt",
+      "startedAt": 1789664118240,
+      "returncode": 0,
+      "bytes": 93960,
+      "stderr": ""
+    },
+    {
+      "file": "deadline-notification.txt",
+      "startedAt": 1789664118362,
+      "returncode": 0,
+      "bytes": 348855,
+      "stderr": ""
+    },
+    {
+      "file": "deadline-trace.xml",
+      "startedAt": 1789664118916,
+      "returncode": 0,
+      "bytes": 31630,
+      "stderr": ""
+    },
+    {
+      "file": "deadline-delivery.xml",
+      "startedAt": 1789664118994,
+      "returncode": 0,
+      "bytes": 753,
+      "stderr": ""
+    }
+  ]
+}

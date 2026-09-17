@@ -1,0 +1,304 @@
+{
+  "files": [
+    {
+      "path": "ack/activity-after.txt",
+      "bytes": 110113,
+      "sha256": "5d1d65d88c927e2654559ddf44237f304eccc45dc87119c919ceb436499621f3"
+    },
+    {
+      "path": "ack/after.png",
+      "bytes": 249025,
+      "sha256": "fdc94065228fd4eff55de4a775cee015cdbaf9ec3ec967d0c5e357cb61fc2662"
+    },
+    {
+      "path": "ack/before.png",
+      "bytes": 118118,
+      "sha256": "1e21d41977a6c93b51963fe90413929f4e392b3f8cc777f847b66ecb25e08579"
+    },
+    {
+      "path": "ack/item-before.json",
+      "bytes": 968,
+      "sha256": "438c9c6b709d766a89d748d297edb1d450bbf08283205161c9c1c75471d7977b"
+    },
+    {
+      "path": "ack/local-pending.json",
+      "bytes": 7159,
+      "sha256": "384885d78c7776b66a0d06be29896fda259ca21fed8eca653e9d22aa737c789d"
+    },
+    {
+      "path": "ack/notification-after.txt",
+      "bytes": 344364,
+      "sha256": "51c6ed33946d8dee747e6f329273841e59f22a096c19926b24004631594bbd3b"
+    },
+    {
+      "path": "ack/queue-after.xml",
+      "bytes": 753,
+      "sha256": "c804dfb895e0c1639927e76ccdca663ea1ae6ce243e68cc775634137def07f7b"
+    },
+    {
+      "path": "ack/result.json",
+      "bytes": 1524,
+      "sha256": "f3046e634e9fecdff2fa46ff2d2387f444d8936fcaedb3673e45415042290b31"
+    },
+    {
+      "path": "ack/schedules-after.xml",
+      "bytes": 964,
+      "sha256": "f63c479901f50ba49dcfeecbc1d986deee0d33c5ab6dcc4b98f67df6745db0ea"
+    },
+    {
+      "path": "ack/state-after-action.json",
+      "bytes": 16921,
+      "sha256": "3aaaf1a18395f796f02607995a152b1851959f65980e282b9ce6b9340ec89257"
+    },
+    {
+      "path": "ack/trace-after.xml",
+      "bytes": 31279,
+      "sha256": "afc5abd9d4c5422ee0fb8c3ae01a2a518623c4ff54c7396cbdc9f6e45f8d5d81"
+    },
+    {
+      "path": "ack/trace-before.xml",
+      "bytes": 31400,
+      "sha256": "6997e7c800268be319c5157f19e155f752467c4eb9bf59ce0dec7c76738c8365"
+    },
+    {
+      "path": "ack/ui-before.xml",
+      "bytes": 7762,
+      "sha256": "0cd57ac17c95471fbc329108f66b0ba0bfb8ca4339312cdb28a4fe43346644f4"
+    },
+    {
+      "path": "close/activity-after.txt",
+      "bytes": 110109,
+      "sha256": "72ef93ac677cf83ab0ebb9ad461a003925a506c682ee0180fde41ab4ff61c2a4"
+    },
+    {
+      "path": "close/after.png",
+      "bytes": 263405,
+      "sha256": "df78fa94c8e5fc4f32c653ad62f9bb8138be440454dc548ff356585520fb5f2d"
+    },
+    {
+      "path": "close/before.png",
+      "bytes": 120756,
+      "sha256": "6a57306161b01ac6084b5955f7cb6a2eadb256023d8620e9a360015b8dac38fe"
+    },
+    {
+      "path": "close/item-before.json",
+      "bytes": 972,
+      "sha256": "58691e1797ab58266a9b75ad6a60744a5c40e9893b63f8326658258d89012797"
+    },
+    {
+      "path": "close/local-pending.json",
+      "bytes": 8967,
+      "sha256": "33ea5edb5b63dc0687b230c06c07d626373840ff884a50ebfb0794771bdd68ea"
+    },
+    {
+      "path": "close/notification-after.txt",
+      "bytes": 345368,
+      "sha256": "b97552f58e4a48181ceccc0115418d07180fa2787d8ba34757d5ccdb4b9b96a8"
+    },
+    {
+      "path": "close/queue-after.xml",
+      "bytes": 753,
+      "sha256": "07e95ff7f31374553d56234261c8439126aafa12b64f8dd30441cea199949c4c"
+    },
+    {
+      "path": "close/result.json",
+      "bytes": 3357,
+      "sha256": "270a9d96415389828835f46071d232e7b0a3ff054c1ce58dcf384391a1cddf88"
+    },
+    {
+      "path": "close/schedules-after.xml",
+      "bytes": 964,
+      "sha256": "f0e06da6e33a61dbe3a111b216a33a7b5d33a742a056193fc9144f834b3c36ac"
+    },
+    {
+      "path": "close/state-after-action.json",
+      "bytes": 15695,
+      "sha256": "37463871ab6a0f02828821d92c691e8172dcc445ca51d77139cab1d85f3f13af"
+    },
+    {
+      "path": "close/trace-after.xml",
+      "bytes": 31348,
+      "sha256": "a10cbedea03c378beb4dff5f362212a2e08bf714e3a4765a6cf4df751135e69d"
+    },
+    {
+      "path": "close/trace-before.xml",
+      "bytes": 31396,
+      "sha256": "2c557133ee24d7ffc0925d43a3450bcc04785c67e16eb2dcab2c504041df5759"
+    },
+    {
+      "path": "close/ui-before.xml",
+      "bytes": 7764,
+      "sha256": "68d5d9514a3bfdcf903797426192d38831204f9fc5965695596476630d5846ad"
+    },
+    {
+      "path": "done/activity-after.txt",
+      "bytes": 110105,
+      "sha256": "5696c83b50c09c6cdb64f7db7d504977f9aa140b1cbe2c761cb1759bebf9f753"
+    },
+    {
+      "path": "done/after.png",
+      "bytes": 248144,
+      "sha256": "d7cd264ce863731b0cc50abc2a485e6fc648b63ad1d677d57cbb6f95b2c59d5a"
+    },
+    {
+      "path": "done/before.png",
+      "bytes": 119449,
+      "sha256": "f0d19c39c0dd776a7285b3342a8f5566fdaab262e1270ef4523efeed6cdb0028"
+    },
+    {
+      "path": "done/item-before.json",
+      "bytes": 970,
+      "sha256": "64e30e3e1b9251c4f9e4c2de9346f30b41cc0a907ef85f9a905e36f462be3165"
+    },
+    {
+      "path": "done/local-pending.json",
+      "bytes": 7159,
+      "sha256": "384885d78c7776b66a0d06be29896fda259ca21fed8eca653e9d22aa737c789d"
+    },
+    {
+      "path": "done/notification-after.txt",
+      "bytes": 344368,
+      "sha256": "3e33cb77c65b930df22da0cb296753ef95cad8a0163f35e7375327382626db7e"
+    },
+    {
+      "path": "done/queue-after.xml",
+      "bytes": 753,
+      "sha256": "8ed29552cb8e01b61a605c8e75d0bb56607b1d347afa95121c19067d9c110450"
+    },
+    {
+      "path": "done/result.json",
+      "bytes": 1513,
+      "sha256": "863dbf6bf2f55f3341ccaaee17b25c06bdfc24a434ff034d8714ae4be0a65ea1"
+    },
+    {
+      "path": "done/schedules-after.xml",
+      "bytes": 964,
+      "sha256": "9ef7142543b8aa93b0fd5a1e8f73805d970650919f8d071e7b4c608e6209584e"
+    },
+    {
+      "path": "done/state-after-action.json",
+      "bytes": 19324,
+      "sha256": "5af13cebe474894261144cfc6ebc199fa58af3a395ab69afa14797727dc26e63"
+    },
+    {
+      "path": "done/trace-after.xml",
+      "bytes": 31300,
+      "sha256": "1518b38b3a9b52c8a295a4d704d7ae5a498e286243ea36b4fcfe5419daeb6317"
+    },
+    {
+      "path": "done/trace-before.xml",
+      "bytes": 31515,
+      "sha256": "7dcb2d748bffb917d0b8e264939777aaca6d89bfd733e2173ec5bc301abccf8f"
+    },
+    {
+      "path": "done/ui-before.xml",
+      "bytes": 7763,
+      "sha256": "d9eb092c303d56953940693ba5d67615cd8afbcb7b6edb745c45ae58faf6b931"
+    },
+    {
+      "path": "executed-script.py",
+      "bytes": 6836,
+      "sha256": "e13ae2c291dc8ec6fedefd387bcc6a6b38c14de7ab88ca6adf1c2cfebf22be69"
+    },
+    {
+      "path": "metadata.json",
+      "bytes": 245,
+      "sha256": "531414655efbd32fdb9ccee1b7492d035e15b2db5ba0e4beabcedd401a615165"
+    },
+    {
+      "path": "persistence-review.json",
+      "bytes": 200,
+      "sha256": "df01d9279ff7ed755d6350060473a0c237332b64a504ae338147183a302379e2"
+    },
+    {
+      "path": "results.json",
+      "bytes": 10711,
+      "sha256": "ce2638e4aa8527779b32db51456c4b2abba5e45245720822d0d60bd4471093de"
+    },
+    {
+      "path": "schedules-final.xml",
+      "bytes": 964,
+      "sha256": "6d74a608373efe713a3625f47d362f195d28ab5e6f20227b7438c55d32493564"
+    },
+    {
+      "path": "snooze/activity-after.txt",
+      "bytes": 110108,
+      "sha256": "d63f90448e1454eaa75e1eeeaae140fde8f2264520426913991d9cc05e8209ec"
+    },
+    {
+      "path": "snooze/after.png",
+      "bytes": 248540,
+      "sha256": "d2bd53f74d08a622aee33cd9adde9de5a65a1768532545bd14a78546d6b6b633"
+    },
+    {
+      "path": "snooze/before.png",
+      "bytes": 122774,
+      "sha256": "75c1b57a58689574a3a2b3ff195e178a579918fed452fe935c416d68a5766b0a"
+    },
+    {
+      "path": "snooze/item-before.json",
+      "bytes": 974,
+      "sha256": "fff672485edde4e95b80738858bee6ad83164d4ef2b5def884b7088931c00967"
+    },
+    {
+      "path": "snooze/local-pending.json",
+      "bytes": 8976,
+      "sha256": "b270a86a77a6e20e202d35077d8c9d7b061fa84081a3c3b99ce0d9b5466dc7fa"
+    },
+    {
+      "path": "snooze/notification-after.txt",
+      "bytes": 344366,
+      "sha256": "15617523bdc1439a694aa1d7e0a9627be98d345126603c4c5b0d70e2cbc152ee"
+    },
+    {
+      "path": "snooze/queue-after.xml",
+      "bytes": 753,
+      "sha256": "be97986b35f734e4a50166ea54ad84f897fbfffe8bbe760a45dcb4c29ec5f5a3"
+    },
+    {
+      "path": "snooze/result.json",
+      "bytes": 3582,
+      "sha256": "dcb92394fd5c5c66eb16a4ab0c31daae45027c25d8277e20ad817e58b8705a4c"
+    },
+    {
+      "path": "snooze/schedules-after.xml",
+      "bytes": 1263,
+      "sha256": "a67de93ab34e9a0ddede082121366e03f91149f1af4d6dcb903bff205cbdabeb"
+    },
+    {
+      "path": "snooze/state-after-action.json",
+      "bytes": 18122,
+      "sha256": "f99c7a872ff563eee599b13583817f2683966d0fd9b1eac74bf80f7b86793c70"
+    },
+    {
+      "path": "snooze/trace-after.xml",
+      "bytes": 31287,
+      "sha256": "e89decf923bb146f0abc3fa8b46db3e502d8792f81328f9a9f2eec676c1da752"
+    },
+    {
+      "path": "snooze/trace-before.xml",
+      "bytes": 31524,
+      "sha256": "f9cbd8b9a994bc8e8cd1b0f4ca37ddebf3704f0e8112a49fda83351206dcc77a"
+    },
+    {
+      "path": "snooze/ui-before.xml",
+      "bytes": 7765,
+      "sha256": "6b492791fa2788cd6f67802038efc9dd15c4d1b7276f8e5ac09e10498ebad14c"
+    },
+    {
+      "path": "state-after-reload.json",
+      "bytes": 19324,
+      "sha256": "5af13cebe474894261144cfc6ebc199fa58af3a395ab69afa14797727dc26e63"
+    },
+    {
+      "path": "state-before.json",
+      "bytes": 14535,
+      "sha256": "150871c34420438e8617c5e40c6c7ce77dd2f7250b9a5733a37902e5ea673b9e"
+    },
+    {
+      "path": "state-final.json",
+      "bytes": 19324,
+      "sha256": "5af13cebe474894261144cfc6ebc199fa58af3a395ab69afa14797727dc26e63"
+    }
+  ]
+}

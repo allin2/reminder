@@ -1,0 +1,1773 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1" />
+  <meta name="theme-color" content="#1b6b4a" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="description" content="少记挂，不错过 —— 本地优先的注意力唤醒与未来事项托管" />
+  <link rel="manifest" href="manifest.json" />
+  <link rel="icon" href="icon.svg" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="icon-192.png" />
+  <title>安心收件箱</title>
+  <style>
+    :root {
+      --paper: #f3f4f1;
+      --paper-elev: #fafaf8;
+      --card: #ffffff;
+      --ink: #14181d;
+      --ink-2: #3a424c;
+      --muted: #6f7a86;
+      --line: #e2e7e3;
+      --line-strong: #c8d2cc;
+      --signal: #1b6b4a;
+      --signal-soft: #e4f0ea;
+      --signal-press: #15553b;
+      --attention: #9a6b12;
+      --attention-soft: #f5ecd6;
+      --critical: #8f3a3a;
+      --critical-soft: #f6e8e8;
+      --future: #3d5a80;
+      --future-soft: #e6edf5;
+      --shadow: 0 8px 28px rgba(20, 24, 29, 0.08);
+      --shadow-sm: 0 2px 8px rgba(20, 24, 29, 0.06);
+      --radius: 14px;
+      --radius-sm: 10px;
+      --nav-h: 64px;
+      --safe-b: env(safe-area-inset-bottom, 0px);
+      --safe-t: env(safe-area-inset-top, 0px);
+      --font: system-ui, -apple-system, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      --font-display: "Iowan Old Style", "Palatino Linotype", Georgia, "Songti SC", serif;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+    html, body { height: 100%; }
+    body {
+      font-family: var(--font);
+      font-size: 16px;
+      line-height: 1.5;
+      color: var(--ink);
+      background: var(--paper);
+      overflow: hidden;
+      -webkit-font-smoothing: antialiased;
+      user-select: none;
+    }
+    input, textarea, select { user-select: text; font: inherit; color: inherit; }
+    button { font: inherit; border: 0; background: none; cursor: pointer; color: inherit; }
+    a { color: var(--signal); }
+
+    #app {
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      max-width: 480px;
+      margin: 0 auto;
+      position: relative;
+      background: var(--paper);
+    }
+    .top {
+      padding: calc(12px + var(--safe-t)) 16px 8px;
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 12px;
+      flex-shrink: 0;
+    }
+    .top-title {
+      font-family: var(--font-display);
+      font-size: 1.65rem;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      line-height: 1.15;
+    }
+    .top-sub { font-size: 0.8rem; color: var(--muted); margin-top: 2px; }
+    .top-actions { display: flex; gap: 8px; align-items: center; }
+    .icon-btn {
+      width: 40px; height: 40px;
+      border-radius: 12px;
+      display: grid; place-items: center;
+      background: var(--paper-elev);
+      border: 1px solid var(--line);
+      color: var(--ink-2);
+    }
+    .icon-btn:active { background: var(--signal-soft); color: var(--signal); }
+    .icon-btn svg { width: 20px; height: 20px; }
+
+    .main {
+      flex: 1;
+      overflow-y: auto;
+      overflow-x: hidden;
+      padding: 4px 16px calc(var(--nav-h) + var(--safe-b) + 88px);
+      -webkit-overflow-scrolling: touch;
+    }
+    .sec { margin-bottom: 22px; }
+    .sec-head {
+      display: flex; align-items: baseline; justify-content: space-between;
+      margin: 10px 2px 10px;
+      gap: 8px;
+    }
+    .sec-title {
+      font-size: 0.78rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .sec-count {
+      font-size: 0.78rem;
+      color: var(--muted);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 14px 14px 12px;
+      box-shadow: var(--shadow-sm);
+      margin-bottom: 10px;
+      position: relative;
+      overflow: hidden;
+    }
+    .card.urgent { border-color: #e8cfcf; background: linear-gradient(180deg, #fffafa 0%, #fff 40%); }
+    .card.important { border-color: #ead9b4; }
+    .card.acked { opacity: 0.94; }
+    .card-title {
+      font-size: 1.02rem;
+      font-weight: 550;
+      line-height: 1.4;
+      margin-bottom: 6px;
+      word-break: break-word;
+    }
+    .card.done .card-title {
+      text-decoration: line-through;
+      color: var(--muted);
+      font-weight: 500;
+    }
+    .card-meta { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; }
+    .pill {
+      display: inline-flex; align-items: center; gap: 4px;
+      font-size: 0.72rem;
+      padding: 3px 8px;
+      border-radius: 999px;
+      background: var(--paper);
+      color: var(--ink-2);
+      border: 1px solid var(--line);
+    }
+    .pill.time { color: var(--signal); background: var(--signal-soft); border-color: transparent; }
+    .pill.warn { color: var(--attention); background: var(--attention-soft); border-color: transparent; }
+    .pill.crit { color: var(--critical); background: var(--critical-soft); border-color: transparent; }
+    .pill.future { color: var(--future); background: var(--future-soft); border-color: transparent; }
+    .pill.tag { color: var(--future); background: var(--future-soft); border-color: transparent; }
+    .pill.proj { border-color: transparent; }
+    .card-actions {
+      display: flex; gap: 8px;
+      border-top: 1px solid var(--line);
+      margin: 4px -14px -12px;
+      padding: 0;
+    }
+    .card-actions button {
+      flex: 1;
+      padding: 12px 8px;
+      font-size: 0.9rem;
+      font-weight: 550;
+      color: var(--ink-2);
+    }
+    .card-actions button:active { background: var(--paper); }
+    .card-actions button.primary { color: var(--signal); }
+    .card-actions button.ghost { color: var(--muted); }
+    .card-actions button + button { border-left: 1px solid var(--line); }
+
+    .soft-entry {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 14px 16px;
+      background: transparent;
+      border: 1px dashed var(--line-strong);
+      border-radius: var(--radius);
+      color: var(--muted);
+      font-size: 0.92rem;
+      margin-bottom: 10px;
+      width: 100%;
+      text-align: left;
+    }
+    .soft-entry:active { background: var(--paper-elev); border-color: var(--signal); color: var(--signal); }
+    .soft-entry strong { color: var(--ink-2); font-weight: 600; }
+
+    .empty {
+      text-align: center;
+      padding: 48px 20px 36px;
+      color: var(--muted);
+    }
+    .empty-mark {
+      width: 64px; height: 64px;
+      margin: 0 auto 16px;
+      border-radius: 20px;
+      background: var(--signal-soft);
+      color: var(--signal);
+      display: grid; place-items: center;
+      font-size: 1.6rem;
+    }
+    .empty h3 {
+      font-family: var(--font-display);
+      font-size: 1.25rem;
+      color: var(--ink);
+      margin-bottom: 6px;
+      font-weight: 600;
+    }
+    .empty p { font-size: 0.92rem; line-height: 1.6; max-width: 260px; margin: 0 auto; }
+
+    .nav {
+      position: absolute;
+      left: 0; right: 0; bottom: 0;
+      height: calc(var(--nav-h) + var(--safe-b));
+      padding: 6px 8px var(--safe-b);
+      background: color-mix(in srgb, var(--paper-elev) 92%, transparent);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-top: 1px solid var(--line);
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      z-index: 40;
+    }
+    .nav-item {
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      gap: 2px;
+      color: var(--muted);
+      font-size: 0.68rem;
+      border-radius: 12px;
+      min-height: 52px;
+      position: relative;
+    }
+    .nav-item svg { width: 22px; height: 22px; }
+    .nav-item.active { color: var(--signal); font-weight: 600; }
+    .nav-badge {
+      position: absolute;
+      top: 4px; right: calc(50% - 18px);
+      min-width: 16px; height: 16px;
+      padding: 0 4px;
+      border-radius: 999px;
+      background: var(--critical);
+      color: #fff;
+      font-size: 10px;
+      font-weight: 700;
+      display: grid; place-items: center;
+      line-height: 1;
+    }
+
+    .fab {
+      position: absolute;
+      right: 18px;
+      bottom: calc(var(--nav-h) + var(--safe-b) + 18px);
+      width: 56px; height: 56px;
+      border-radius: 18px;
+      background: var(--signal);
+      color: #fff;
+      display: grid; place-items: center;
+      box-shadow: 0 10px 28px rgba(27, 107, 74, 0.35);
+      z-index: 45;
+      transition: transform 0.12s ease;
+    }
+    .fab:active { transform: scale(0.94); background: var(--signal-press); }
+    .fab svg { width: 26px; height: 26px; }
+
+    .backdrop {
+      position: absolute; inset: 0;
+      background: rgba(20, 24, 29, 0.38);
+      z-index: 50;
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.2s ease;
+    }
+    .backdrop.show { opacity: 1; pointer-events: auto; }
+
+    .sheet {
+      position: absolute;
+      left: 0; right: 0; bottom: 0;
+      z-index: 60;
+      background: var(--paper-elev);
+      border-radius: 22px 22px 0 0;
+      box-shadow: var(--shadow);
+      transform: translateY(110%);
+      transition: transform 0.28s cubic-bezier(0.2, 0.9, 0.25, 1);
+      max-height: min(90vh, 760px);
+      display: flex; flex-direction: column;
+      padding-bottom: var(--safe-b);
+    }
+    .sheet.open { transform: translateY(0); }
+    .sheet-grip {
+      width: 36px; height: 4px;
+      background: var(--line-strong);
+      border-radius: 999px;
+      margin: 10px auto 4px;
+      flex-shrink: 0;
+    }
+    .sheet-head {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 8px 18px 10px;
+      flex-shrink: 0;
+    }
+    .sheet-head h2 {
+      font-family: var(--font-display);
+      font-size: 1.2rem;
+      font-weight: 600;
+    }
+    .sheet-body {
+      padding: 0 18px 18px;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+    .sheet-foot {
+      padding: 10px 18px 16px;
+      border-top: 1px solid var(--line);
+      display: flex; gap: 10px;
+      flex-shrink: 0;
+      background: var(--paper-elev);
+    }
+
+    .field { margin-bottom: 14px; }
+    .field label {
+      display: block;
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--muted);
+      margin-bottom: 6px;
+      letter-spacing: 0.04em;
+    }
+    .field input[type="text"],
+    .field input[type="url"],
+    .field input[type="datetime-local"],
+    .field input[type="date"],
+    .field input[type="time"],
+    .field input[type="number"],
+    .field input[type="password"],
+    .field input[type="search"],
+    .field textarea,
+    .field select {
+      width: 100%;
+      border: 1px solid var(--line);
+      background: var(--card);
+      border-radius: var(--radius-sm);
+      padding: 12px 14px;
+      outline: none;
+      appearance: none;
+    }
+    .field input:focus, .field textarea:focus, .field select:focus {
+      border-color: var(--signal);
+      box-shadow: 0 0 0 3px var(--signal-soft);
+    }
+    .field textarea { min-height: 88px; resize: vertical; }
+    .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+    .chip {
+      padding: 8px 12px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: var(--card);
+      font-size: 0.85rem;
+      color: var(--ink-2);
+    }
+    .chip.on {
+      background: var(--signal-soft);
+      border-color: transparent;
+      color: var(--signal);
+      font-weight: 600;
+    }
+    .chip.warn.on { background: var(--attention-soft); color: var(--attention); }
+    .chip.crit.on { background: var(--critical-soft); color: var(--critical); }
+
+    .btn {
+      flex: 1;
+      padding: 14px 16px;
+      border-radius: var(--radius-sm);
+      font-weight: 600;
+      font-size: 0.95rem;
+      text-align: center;
+    }
+    .btn.primary { background: var(--signal); color: #fff; }
+    .btn.primary:active { background: var(--signal-press); }
+    .btn.secondary {
+      background: var(--card);
+      border: 1px solid var(--line);
+      color: var(--ink-2);
+    }
+    .btn.danger { background: var(--critical-soft); color: var(--critical); }
+
+    .parse-hint {
+      font-size: 0.82rem;
+      color: var(--signal);
+      background: var(--signal-soft);
+      border-radius: var(--radius-sm);
+      padding: 10px 12px;
+      margin-top: 8px;
+      min-height: 1.2em;
+      line-height: 1.45;
+    }
+    .parse-hint.muted { color: var(--muted); background: var(--paper); }
+
+    .detail-title {
+      font-family: var(--font-display);
+      font-size: 1.35rem;
+      font-weight: 600;
+      line-height: 1.35;
+      margin-bottom: 12px;
+    }
+    .detail-rows { margin: 12px 0 16px; }
+    .detail-row {
+      display: flex; justify-content: space-between; gap: 12px;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--line);
+      font-size: 0.9rem;
+    }
+    .detail-row dt { color: var(--muted); flex-shrink: 0; }
+    .detail-row dd { text-align: right; color: var(--ink-2); word-break: break-all; }
+
+    .toast {
+      position: absolute;
+      left: 16px; right: 16px;
+      bottom: calc(var(--nav-h) + var(--safe-b) + 86px);
+      z-index: 70;
+      background: var(--ink);
+      color: #fff;
+      border-radius: var(--radius);
+      padding: 12px 14px;
+      font-size: 0.88rem;
+      box-shadow: var(--shadow);
+      display: flex; align-items: center; gap: 10px;
+      opacity: 0;
+      transform: translateY(12px);
+      pointer-events: none;
+      transition: opacity 0.2s ease, transform 0.2s ease;
+    }
+    .toast.show { opacity: 1; transform: translateY(0); pointer-events: auto; }
+    .toast-action {
+      margin-left: auto;
+      color: #8fd6b4;
+      font-weight: 700;
+      padding: 4px 6px;
+      flex-shrink: 0;
+    }
+
+    .search-bar { display: flex; gap: 8px; margin-bottom: 14px; }
+    .search-bar input {
+      flex: 1;
+      border: 1px solid var(--line);
+      background: var(--card);
+      border-radius: var(--radius-sm);
+      padding: 12px 14px;
+      outline: none;
+    }
+    .search-bar input:focus {
+      border-color: var(--signal);
+      box-shadow: 0 0 0 3px var(--signal-soft);
+    }
+
+    .note-card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 14px;
+      margin-bottom: 10px;
+      box-shadow: var(--shadow-sm);
+    }
+    .note-card h3 { font-size: 1rem; margin-bottom: 4px; }
+    .note-card p {
+      color: var(--muted);
+      font-size: 0.86rem;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      white-space: pre-wrap;
+    }
+    .note-card .note-date {
+      margin-top: 8px;
+      font-size: 0.72rem;
+      color: var(--muted);
+    }
+    .md-preview {
+      font-size: 0.95rem;
+      line-height: 1.65;
+      color: var(--ink-2);
+      white-space: normal;
+    }
+    .md-preview h1, .md-preview h2, .md-preview h3 {
+      font-family: var(--font-display);
+      color: var(--ink);
+      margin: 0.6em 0 0.35em;
+    }
+    .md-preview h1 { font-size: 1.25rem; }
+    .md-preview h2 { font-size: 1.1rem; }
+    .md-preview h3 { font-size: 1rem; }
+    .md-preview p { margin: 0.4em 0; }
+    .md-preview ul, .md-preview ol { margin: 0.4em 0 0.4em 1.2em; }
+    .md-preview code {
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 0.86em;
+      background: var(--paper);
+      padding: 1px 5px;
+      border-radius: 4px;
+    }
+    .md-preview pre {
+      background: #1e242b;
+      color: #e8eeef;
+      padding: 12px;
+      border-radius: 10px;
+      overflow-x: auto;
+      margin: 0.6em 0;
+    }
+    .md-preview pre code { background: none; color: inherit; padding: 0; }
+    .md-preview blockquote {
+      border-left: 3px solid var(--signal);
+      padding-left: 12px;
+      color: var(--muted);
+      margin: 0.6em 0;
+    }
+    .md-preview a { color: var(--future); }
+
+    .set-group {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      overflow: hidden;
+      margin-bottom: 16px;
+    }
+    .set-row {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--line);
+      font-size: 0.95rem;
+      gap: 12px;
+      width: 100%;
+      text-align: left;
+    }
+    .set-row:last-child { border-bottom: 0; }
+    .set-row .sub { font-size: 0.78rem; color: var(--muted); margin-top: 2px; }
+    .switch {
+      width: 46px; height: 28px;
+      border-radius: 999px;
+      background: var(--line-strong);
+      position: relative;
+      flex-shrink: 0;
+      transition: background 0.15s ease;
+    }
+    .switch.on { background: var(--signal); }
+    .switch::after {
+      content: "";
+      position: absolute;
+      top: 3px; left: 3px;
+      width: 22px; height: 22px;
+      border-radius: 50%;
+      background: #fff;
+      transition: transform 0.15s ease;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+    }
+    .switch.on::after { transform: translateX(18px); }
+
+    .brand-block {
+      text-align: center;
+      padding: 20px 12px 8px;
+      margin-bottom: 16px;
+    }
+    .brand-block .logo {
+      width: 56px; height: 56px;
+      margin: 0 auto 10px;
+      border-radius: 16px;
+      background: var(--signal);
+      color: #fff;
+      display: grid; place-items: center;
+      font-size: 1.4rem;
+      box-shadow: 0 8px 20px rgba(27,107,74,0.28);
+    }
+    .brand-block h2 {
+      font-family: var(--font-display);
+      font-size: 1.3rem;
+      margin-bottom: 4px;
+    }
+    .brand-block p { color: var(--muted); font-size: 0.88rem; }
+
+    .alert-banner {
+      position: absolute;
+      top: calc(10px + var(--safe-t));
+      left: 12px; right: 12px;
+      z-index: 80;
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      box-shadow: var(--shadow);
+      padding: 12px 14px;
+      transform: translateY(-120%);
+      transition: transform 0.3s cubic-bezier(0.2, 0.9, 0.25, 1);
+    }
+    .alert-banner.show { transform: translateY(0); }
+    .alert-banner.crit { border-color: #e8cfcf; background: #fffafa; }
+    .alert-head {
+      display: flex; align-items: flex-start; justify-content: space-between; gap: 8px;
+      margin-bottom: 2px;
+    }
+    .alert-title { font-weight: 650; font-size: 0.95rem; }
+    .alert-close {
+      width: 28px; height: 28px;
+      border-radius: 8px;
+      display: grid; place-items: center;
+      color: var(--muted);
+      flex-shrink: 0;
+      margin: -4px -4px 0 0;
+    }
+    .alert-close:active { background: var(--paper); color: var(--ink); }
+    .alert-close svg { width: 16px; height: 16px; }
+    .alert-body { font-size: 0.85rem; color: var(--ink-2); margin-bottom: 10px; }
+    .alert-actions { display: flex; gap: 8px; }
+    .alert-actions button {
+      flex: 1;
+      padding: 8px;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      background: var(--paper);
+      color: var(--ink-2);
+    }
+    .alert-actions button.primary { background: var(--signal); color: #fff; }
+
+    .view { display: none; }
+    .view.active { display: block; }
+
+    .filter-row {
+      display: flex; gap: 8px;
+      overflow-x: auto;
+      padding: 0 0 12px;
+      scrollbar-width: none;
+    }
+    .filter-row::-webkit-scrollbar { display: none; }
+
+    .seg {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4px;
+      padding: 4px;
+      background: #e8ebe7;
+      border-radius: 12px;
+      margin-bottom: 12px;
+    }
+    .seg-item {
+      padding: 9px 10px;
+      border-radius: 9px;
+      font-size: 0.9rem;
+      font-weight: 550;
+      color: var(--muted);
+    }
+    .seg-item.on {
+      background: var(--card);
+      color: var(--ink);
+      box-shadow: var(--shadow-sm);
+    }
+    .day-head {
+      font-size: 0.78rem;
+      font-weight: 650;
+      color: var(--muted);
+      letter-spacing: 0.04em;
+      margin: 14px 2px 8px;
+    }
+    .day-head:first-child { margin-top: 4px; }
+
+    .linkish {
+      color: var(--future);
+      font-size: 0.82rem;
+      word-break: break-all;
+      display: block;
+      margin-top: 4px;
+    }
+
+    .cal {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 12px;
+      margin-bottom: 14px;
+      box-shadow: var(--shadow-sm);
+    }
+    .cal-head {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 8px;
+    }
+    .cal-title { font-weight: 600; font-size: 0.95rem; }
+    .cal-nav { display: flex; gap: 4px; }
+    .cal-nav button {
+      width: 32px; height: 32px;
+      border-radius: 8px;
+      color: var(--muted);
+      display: grid; place-items: center;
+    }
+    .cal-nav button:active { background: var(--paper); color: var(--signal); }
+    .cal-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 2px;
+      text-align: center;
+    }
+    .cal-dow {
+      font-size: 0.68rem;
+      color: var(--muted);
+      padding: 4px 0;
+    }
+    .cal-day {
+      aspect-ratio: 1;
+      border-radius: 8px;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      font-size: 0.82rem;
+      color: var(--ink-2);
+      position: relative;
+    }
+    .cal-day.muted { color: #c0c7c2; }
+    .cal-day.today { background: var(--signal-soft); color: var(--signal); font-weight: 700; }
+    .cal-day.has::after {
+      content: "";
+      width: 4px; height: 4px;
+      border-radius: 50%;
+      background: var(--future);
+      margin-top: 1px;
+    }
+    .cal-day.due-dot::after { background: var(--critical); }
+    .cal-day.sel { outline: 2px solid var(--signal); outline-offset: -2px; }
+
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+    .stat {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-sm);
+      padding: 12px 10px;
+      text-align: center;
+    }
+    .stat b {
+      display: block;
+      font-size: 1.25rem;
+      font-family: var(--font-display);
+      color: var(--ink);
+      font-variant-numeric: tabular-nums;
+    }
+    .stat span { font-size: 0.72rem; color: var(--muted); }
+
+    .hint-bar {
+      background: var(--future-soft);
+      color: var(--future);
+      border-radius: var(--radius-sm);
+      padding: 10px 12px;
+      font-size: 0.82rem;
+      line-height: 1.5;
+      margin-bottom: 12px;
+    }
+
+    .upcoming-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 12px 12px;
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-sm);
+      margin-bottom: 8px;
+      box-shadow: var(--shadow-sm);
+      cursor: pointer;
+    }
+    .upcoming-item:active { background: var(--paper); }
+    .upcoming-when {
+      flex-shrink: 0;
+      min-width: 64px;
+      text-align: center;
+      background: var(--future-soft);
+      color: var(--future);
+      border-radius: 8px;
+      padding: 6px 4px;
+      font-size: 0.72rem;
+      line-height: 1.25;
+    }
+    .upcoming-when b {
+      display: block;
+      font-size: 0.95rem;
+      font-variant-numeric: tabular-nums;
+      color: var(--ink);
+    }
+    .upcoming-body { flex: 1; min-width: 0; }
+    .upcoming-title {
+      font-size: 0.95rem;
+      font-weight: 600;
+      margin-bottom: 4px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .upcoming-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      align-items: center;
+    }
+    .soft-entry {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-sm);
+      padding: 12px;
+      margin-bottom: 10px;
+      font-size: 0.9rem;
+      color: var(--ink-2);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .similar-box {
+      background: var(--attention-soft);
+      color: var(--attention);
+      border-radius: var(--radius-sm);
+      padding: 10px 12px;
+      font-size: 0.82rem;
+      line-height: 1.5;
+      margin-top: 8px;
+      margin-bottom: 8px;
+    }
+    .similar-box button {
+      display: block;
+      margin-top: 6px;
+      font-weight: 650;
+      color: inherit;
+      text-decoration: underline;
+      text-align: left;
+      width: 100%;
+    }
+
+    @media (min-width: 480px) {
+      #app {
+        box-shadow: 0 0 0 1px var(--line);
+        margin-top: 12px;
+        margin-bottom: 12px;
+        height: calc(100% - 24px);
+        border-radius: 20px;
+        overflow: hidden;
+      }
+      .nav, .fab, .sheet, .backdrop, .toast {
+        max-width: 480px;
+        left: 50%;
+        transform: translateX(-50%);
+      }
+      .sheet { transform: translate(-50%, 110%); }
+      .sheet.open { transform: translate(-50%, 0); }
+      .fab { right: calc(50% - 240px + 18px); transform: none; }
+      .fab:active { transform: scale(0.94); }
+      .toast { left: 50%; width: calc(100% - 32px); max-width: 448px; }
+      .backdrop { right: auto; width: 480px; }
+      .alert-banner {
+        left: 50%;
+        width: calc(100% - 24px);
+        max-width: 456px;
+        transform: translate(-50%, -120%);
+      }
+      .alert-banner.show { transform: translate(-50%, 0); }
+    }
+  </style>
+</head>
+<body>
+<div id="app">
+  <header class="top">
+    <div>
+      <div class="top-title" id="pageTitle">安心收件箱</div>
+      <div class="top-sub" id="pageSub">现在需要你注意的</div>
+    </div>
+    <div class="top-actions">
+      <button class="icon-btn" id="btnSearch" aria-label="搜索">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3-3"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <main class="main" id="main">
+    <section class="view active" id="view-home">
+      <div id="homeReview"></div>
+      <div id="homeDue"></div>
+      <div id="homeActive"></div>
+      <div id="homeUpcoming"></div>
+      <div id="homeEmpty"></div>
+    </section>
+
+    <section class="view" id="view-future">
+      <div class="seg" id="futureSeg" role="tablist">
+        <button class="seg-item on" data-seg="waiting" role="tab">托管中</button>
+        <button class="seg-item" data-seg="archive" role="tab">已归档</button>
+      </div>
+      <div id="futureFiltersWrap">
+        <div class="filter-row" id="futureFilters">
+          <button class="chip on" data-filter="all">全部</button>
+          <button class="chip" data-filter="important">重要</button>
+          <button class="chip" data-filter="deadline">有截止</button>
+          <button class="chip" data-filter="repeat">周期</button>
+          <button class="chip" data-filter="project">有项目</button>
+        </div>
+      </div>
+      <div id="calMount"></div>
+      <div id="futureList"></div>
+    </section>
+
+    <section class="view" id="view-notes">
+      <div class="filter-row" id="notesFilters">
+        <button class="chip on" data-nfilter="all">全部</button>
+        <button class="chip" data-nfilter="pinned">置顶</button>
+      </div>
+      <div id="notesList"></div>
+    </section>
+
+    <section class="view" id="view-me">
+      <div class="brand-block">
+        <div class="logo">✓</div>
+        <h2>安心收件箱</h2>
+        <p>少记挂，不错过</p>
+      </div>
+      <div class="stats-row" id="statsRow"></div>
+      <div class="set-group">
+        <div class="set-row">
+          <div>
+            <div>本地通知</div>
+            <div class="sub">到期时提醒你真正看到</div>
+          </div>
+          <button class="switch" id="swNotify" aria-label="本地通知"></button>
+        </div>
+        <div class="set-row" style="align-items:flex-start;flex-direction:column;gap:10px">
+          <div>
+            <div>默认提醒方式</div>
+            <div class="sub">只影响之后录入的事项；标记为「重要」或「关键」的始终使用闹钟提醒</div>
+          </div>
+          <div class="seg" id="deliveryModeSeg" style="width:100%">
+            <button class="seg-item on" data-mode="notification" role="tab">系统通知</button>
+            <button class="seg-item" data-mode="alarm" role="tab">闹钟提醒</button>
+          </div>
+        </div>
+        <button class="set-row" id="btnExactAlarm" hidden>
+          <div>
+            <div>精确闹钟权限</div>
+            <div class="sub" id="exactAlarmSub">检测中…</div>
+          </div>
+          <span class="pill" id="exactAlarmPill">…</span>
+        </button>
+        <button class="set-row" id="btnNotifySettings" hidden>
+          <div>
+            <div>系统通知设置</div>
+            <div class="sub">跳转系统设置，确保通知渠道已开启</div>
+          </div>
+          <span style="color:var(--muted)">›</span>
+        </button>
+        <button class="set-row" id="btnBatterySettings" hidden>
+          <div>
+            <div>后台保活</div>
+            <div class="sub">关闭电池优化，避免提醒被系统杀掉</div>
+          </div>
+          <span style="color:var(--muted)">›</span>
+        </button>
+        <button class="set-row" id="btnNotifyLab" hidden>
+          <div>
+            <div>提醒能力自检</div>
+            <div class="sub">权限诊断 · 立即通知 · 定时闹钟测试</div>
+          </div>
+          <span style="color:var(--muted)">›</span>
+        </button>
+        <button class="set-row" id="btnReviewSettings">
+          <div>
+            <div>待整理时间</div>
+            <div class="sub" id="reviewScheduleSub">每天 21:30 · 集中整理模糊记录</div>
+          </div>
+          <span style="color:var(--muted)">›</span>
+        </button>
+        <div class="set-row">
+          <div>
+            <div>睡眠勿扰</div>
+            <div class="sub" id="dndSub">23:00–07:30 普通事项延后</div>
+          </div>
+          <button class="switch on" id="swDnd" aria-label="睡眠勿扰"></button>
+        </div>
+        <div class="set-row">
+          <div>
+            <div>重要事项持续提醒</div>
+            <div class="sub">未确认时提高显著性</div>
+          </div>
+          <button class="switch on" id="swImp" aria-label="重要提醒"></button>
+        </div>
+        <div class="set-row">
+          <div>
+            <div>轻量当日摘要</div>
+            <div class="sub" id="summarySub">默认关闭 · 仅增强可信感</div>
+          </div>
+          <button class="switch" id="swSummary" aria-label="轻量摘要"></button>
+        </div>
+        <div class="set-row">
+          <div>
+            <div>锁屏隐私</div>
+            <div class="sub">系统通知不显示事项内容</div>
+          </div>
+          <button class="switch" id="swPrivacy" aria-label="锁屏隐私"></button>
+        </div>
+      </div>
+      <div class="set-group">
+        <button class="set-row" id="btnProjects">
+          <div>
+            <div>项目管理</div>
+            <div class="sub" id="projSub">0 个项目</div>
+          </div>
+          <span style="color:var(--muted)">›</span>
+        </button>
+        <button class="set-row" id="btnQuiet">
+          <div>
+            <div>勿扰时段</div>
+            <div class="sub" id="quietSub">23:00 – 07:30</div>
+          </div>
+          <span style="color:var(--muted)">›</span>
+        </button>
+        <button class="set-row" id="btnAi">
+          <div>
+            <div>AI 智能理解</div>
+            <div class="sub" id="aiSub">未开启 · 解析时间与提炼标题</div>
+          </div>
+          <span style="color:var(--muted)">›</span>
+        </button>
+        <button class="set-row" id="btnInstall" hidden>
+          <div>
+            <div>安装到主屏幕</div>
+            <div class="sub">像原生 App 一样使用</div>
+          </div>
+          <span style="color:var(--muted)">›</span>
+        </button>
+        <div class="set-row">
+          <div>
+            <div>离线与提醒状态</div>
+            <div class="sub" id="pwaSub">检测中…</div>
+          </div>
+          <span class="pill" id="pwaPill">…</span>
+        </div>
+      </div>
+      <div class="set-group">
+        <button class="set-row" id="btnExport">
+          <div>
+            <div>导出数据</div>
+            <div class="sub">JSON 备份到文件</div>
+          </div>
+          <span style="color:var(--muted)">›</span>
+        </button>
+        <button class="set-row" id="btnImport">
+          <div>
+            <div>导入数据</div>
+            <div class="sub">从 JSON 备份恢复</div>
+          </div>
+          <span style="color:var(--muted)">›</span>
+        </button>
+        <button class="set-row" id="btnSeed">
+          <div>
+            <div>载入示例数据</div>
+            <div class="sub">用演示事项重新填充</div>
+          </div>
+          <span style="color:var(--muted)">›</span>
+        </button>
+        <button class="set-row" id="btnClear">
+          <div>
+            <div>清空全部数据</div>
+            <div class="sub">仅影响本机存储</div>
+          </div>
+          <span style="color:var(--critical)">›</span>
+        </button>
+        <button class="set-row" id="btnPrd">
+          <div>
+            <div>查看产品需求文档</div>
+            <div class="sub">Attention Inbox PRD V0.1</div>
+          </div>
+          <span style="color:var(--muted)">›</span>
+        </button>
+      </div>
+      <p style="text-align:center;color:var(--muted);font-size:0.78rem;padding:8px 20px 20px;line-height:1.6">
+        Local-first · 数据仅保存在本机<br/>
+        Acknowledged ≠ Completed · Future 默认不打扰<br/>
+        <span id="buildTag" style="opacity:.7">build 2026-09-15.3</span>
+      </p>
+    </section>
+  </main>
+
+  <nav class="nav" id="nav">
+    <button class="nav-item active" data-tab="home">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 10.5 12 3l9 7.5V21a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1v-10.5z"/></svg>
+      首页
+      <span class="nav-badge" id="navBadge" hidden>0</span>
+    </button>
+    <button class="nav-item" data-tab="future">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+      未来
+    </button>
+    <button class="nav-item" data-tab="notes">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 4h9l3 3v13a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1z"/><path d="M8 10h8M8 14h6"/></svg>
+      笔记
+    </button>
+    <button class="nav-item" data-tab="me">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="3.5"/><path d="M5 19c1.5-3.5 4-5 7-5s5.5 1.5 7 5"/></svg>
+      我的
+    </button>
+  </nav>
+
+  <button class="fab" id="fab" aria-label="快速记录">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 5v14M5 12h14"/></svg>
+  </button>
+
+  <div class="backdrop" id="backdrop"></div>
+
+  <!-- Capture / Edit item -->
+  <div class="sheet" id="sheetItem">
+    <div class="sheet-grip"></div>
+    <div class="sheet-head">
+      <h2 id="sheetItemTitle">安心记下</h2>
+      <button class="icon-btn" data-close="sheetItem" aria-label="关闭">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"/></svg>
+      </button>
+    </div>
+    <div class="sheet-body">
+      <div class="field">
+        <label for="capText">一句话交给系统</label>
+        <input id="capText" type="text" placeholder="例如：周五提醒我再看看这个项目" autocomplete="off" />
+        <div class="parse-hint muted" id="capHint">输入内容后自动解析时间</div>
+        <div class="chips" style="margin-top:8px">
+          <button type="button" class="chip" id="btnAiParse">✦ AI 理解</button>
+          <button type="button" class="chip" id="btnAiPolish">✦ AI 润色</button>
+        </div>
+      </div>
+      <div class="field">
+        <label>重要程度</label>
+        <div class="chips" id="capPriority">
+          <button type="button" class="chip on" data-p="normal">普通</button>
+          <button type="button" class="chip warn" data-p="important">☆ 重要</button>
+          <button type="button" class="chip crit" data-p="critical">🚨 关键</button>
+        </div>
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label for="capTrigger">提醒时间</label>
+          <input id="capTrigger" type="datetime-local" />
+        </div>
+        <div class="field">
+          <label for="capDeadline">截止时间</label>
+          <input id="capDeadline" type="datetime-local" />
+        </div>
+      </div>
+      <div class="field">
+        <label for="capProject">项目</label>
+        <select id="capProject"><option value="">无项目</option></select>
+      </div>
+      <div class="field">
+        <label for="capRepeat">周期</label>
+        <select id="capRepeat">
+          <option value="">不重复</option>
+          <option value="day">每天</option>
+          <option value="week">每周</option>
+          <option value="biweek">每两周</option>
+          <option value="month">每月（按触发日）</option>
+          <option value="monthEnd">每月最后一天</option>
+          <option value="nthWeekday">每月第 N 个星期 X</option>
+        </select>
+      </div>
+      <div class="field-row" id="nthWeekdayRow" hidden>
+        <div class="field">
+          <label for="capNth">第几个</label>
+          <select id="capNth">
+            <option value="1">第 1 个</option>
+            <option value="2">第 2 个</option>
+            <option value="3">第 3 个</option>
+            <option value="4">第 4 个</option>
+            <option value="-1">最后一个</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="capWeekday">星期</label>
+          <select id="capWeekday">
+            <option value="1">星期一</option>
+            <option value="2">星期二</option>
+            <option value="3">星期三</option>
+            <option value="4">星期四</option>
+            <option value="5">星期五</option>
+            <option value="6">星期六</option>
+            <option value="0">星期日</option>
+          </select>
+        </div>
+      </div>
+      <div class="field">
+        <label for="capRepeatMode">周期计时方式</label>
+        <select id="capRepeatMode">
+          <option value="calendar">按日历</option>
+          <option value="ack">从「我知道了」重新计时</option>
+        </select>
+      </div>
+      <div id="repeatPreview" class="parse-hint muted" style="margin-top:-4px;margin-bottom:12px"></div>
+      <div id="similarHint" hidden></div>
+      <div class="field">
+        <label for="capNote">补充说明 / 上下文（可选）</label>
+        <textarea id="capNote" placeholder="为什么值得关注？唤醒时帮你恢复记忆"></textarea>
+      </div>
+      <div class="field">
+        <label for="capTags">标签（空格分隔，可选）</label>
+        <input id="capTags" type="text" placeholder="工作 阅读" autocomplete="off" />
+      </div>
+      <div class="field">
+        <label for="capUrl">来源链接（可选）</label>
+        <input id="capUrl" type="url" placeholder="https://..." autocomplete="off" />
+      </div>
+    </div>
+    <div class="sheet-foot">
+      <button class="btn secondary" data-close="sheetItem">取消</button>
+      <button class="btn primary" id="btnSaveItem">安心交给系统</button>
+    </div>
+  </div>
+
+  <!-- Detail -->
+  <div class="sheet" id="sheetDetail">
+    <div class="sheet-grip"></div>
+    <div class="sheet-head">
+      <h2>事项详情</h2>
+      <button class="icon-btn" data-close="sheetDetail" aria-label="关闭">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"/></svg>
+      </button>
+    </div>
+    <div class="sheet-body" id="detailBody"></div>
+    <div class="sheet-foot" id="detailFoot"></div>
+  </div>
+
+  <!-- Snooze -->
+  <div class="sheet" id="sheetSnooze">
+    <div class="sheet-grip"></div>
+    <div class="sheet-head">
+      <h2>稍后提醒</h2>
+      <button class="icon-btn" data-close="sheetSnooze" aria-label="关闭">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"/></svg>
+      </button>
+    </div>
+    <div class="sheet-body">
+      <p style="color:var(--muted);font-size:0.9rem;margin-bottom:14px">选择再次进入注意力的时间</p>
+      <div class="chips" id="snoozeChips" style="margin-bottom:8px">
+        <button type="button" class="chip" data-min="30">30 分钟后</button>
+        <button type="button" class="chip" data-min="120">2 小时后</button>
+        <button type="button" class="chip" data-preset="tonight">今晚 20:00</button>
+        <button type="button" class="chip" data-preset="tomorrow">明天 09:00</button>
+        <button type="button" class="chip" data-preset="weekend">本周末</button>
+      </div>
+      <div class="field" style="margin-top:8px">
+        <label for="snoozeCustom">自定义时间</label>
+        <input id="snoozeCustom" type="datetime-local" />
+      </div>
+    </div>
+    <div class="sheet-foot">
+      <button class="btn secondary" data-close="sheetSnooze">取消</button>
+      <button class="btn primary" id="btnApplySnooze">确认稍后</button>
+    </div>
+  </div>
+
+  <!-- Note editor -->
+  <div class="sheet" id="sheetNote">
+    <div class="sheet-grip"></div>
+    <div class="sheet-head">
+      <h2 id="sheetNoteTitle">笔记</h2>
+      <button class="icon-btn" data-close="sheetNote" aria-label="关闭">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"/></svg>
+      </button>
+    </div>
+    <div class="sheet-body">
+      <div class="field">
+        <label for="noteTitle">标题</label>
+        <input id="noteTitle" type="text" placeholder="笔记标题" />
+      </div>
+      <div class="field">
+        <label for="noteBody">内容（支持简单 Markdown）</label>
+        <textarea id="noteBody" placeholder="# 标题&#10;- 列表&#10;**加粗**、`代码`、> 引用" style="min-height:180px"></textarea>
+      </div>
+      <div class="field">
+        <label for="noteProject">关联项目</label>
+        <select id="noteProject"><option value="">无项目</option></select>
+      </div>
+      <div class="set-row" style="border:1px solid var(--line);border-radius:var(--radius-sm);background:var(--card)">
+        <div>
+          <div>置顶</div>
+          <div class="sub">优先展示在笔记列表</div>
+        </div>
+        <button type="button" class="switch" id="swNotePin" aria-label="置顶"></button>
+      </div>
+      <div id="notePreviewWrap" hidden style="margin-top:14px">
+        <label style="display:block;font-size:0.78rem;font-weight:600;color:var(--muted);margin-bottom:6px">预览</label>
+        <div class="card md-preview" id="notePreview"></div>
+      </div>
+    </div>
+    <div class="sheet-foot">
+      <button class="btn secondary" id="btnNotePreview">预览</button>
+      <button class="btn primary" id="btnSaveNote">保存笔记</button>
+    </div>
+  </div>
+
+  <!-- Search -->
+  <div class="sheet" id="sheetSearch">
+    <div class="sheet-grip"></div>
+    <div class="sheet-head">
+      <h2>搜索</h2>
+      <button class="icon-btn" data-close="sheetSearch" aria-label="关闭">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"/></svg>
+      </button>
+    </div>
+    <div class="sheet-body">
+      <div class="search-bar">
+        <input id="searchInput" type="search" placeholder="搜索事项、标签、项目、笔记" />
+      </div>
+      <div id="searchResults"></div>
+    </div>
+  </div>
+
+  <!-- Projects -->
+  <div class="sheet" id="sheetProjects">
+    <div class="sheet-grip"></div>
+    <div class="sheet-head">
+      <h2>项目</h2>
+      <button class="icon-btn" data-close="sheetProjects" aria-label="关闭">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"/></svg>
+      </button>
+    </div>
+    <div class="sheet-body">
+      <div id="projectsList"></div>
+      <div class="field" style="margin-top:12px">
+        <label for="projName">新建项目</label>
+        <input id="projName" type="text" placeholder="例如：工作 / 阅读 / 家庭" />
+      </div>
+      <div class="field">
+        <label>颜色</label>
+        <div class="chips" id="projColors"></div>
+      </div>
+    </div>
+    <div class="sheet-foot">
+      <button class="btn primary" id="btnAddProject">添加项目</button>
+    </div>
+  </div>
+
+  <!-- Quiet hours -->
+  <div class="sheet" id="sheetQuiet">
+    <div class="sheet-grip"></div>
+    <div class="sheet-head">
+      <h2>勿扰时段</h2>
+      <button class="icon-btn" data-close="sheetQuiet" aria-label="关闭">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"/></svg>
+      </button>
+    </div>
+    <div class="sheet-body">
+      <p style="color:var(--muted);font-size:0.88rem;margin-bottom:14px;line-height:1.5">
+        普通事项在勿扰时段内会自动延后；重要与关键事项不受影响。
+      </p>
+      <div class="field-row">
+        <div class="field">
+          <label for="quietStart">开始</label>
+          <input id="quietStart" type="time" />
+        </div>
+        <div class="field">
+          <label for="quietEnd">结束</label>
+          <input id="quietEnd" type="time" />
+        </div>
+      </div>
+    </div>
+    <div class="sheet-foot">
+      <button class="btn secondary" data-close="sheetQuiet">取消</button>
+      <button class="btn primary" id="btnSaveQuiet">保存</button>
+    </div>
+  </div>
+
+  <!-- AI settings -->
+  <div class="sheet" id="sheetAi">
+    <div class="sheet-grip"></div>
+    <div class="sheet-head">
+      <h2>AI 智能理解</h2>
+      <button class="icon-btn" data-close="sheetAi" aria-label="关闭">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"/></svg>
+      </button>
+    </div>
+    <div class="sheet-body">
+      <div class="hint-bar">
+        AI 只做隐形基础设施：自然语言时间提取、截止识别、标题提炼、上下文摘要。
+        不会替你判断优先级，也不会展开聊天。
+      </div>
+      <div class="set-row" style="border:1px solid var(--line);border-radius:var(--radius-sm);background:var(--card);margin-bottom:14px">
+        <div>
+          <div>启用 AI</div>
+          <div class="sub">关闭后仅用本地规则解析</div>
+        </div>
+        <button type="button" class="switch" id="swAi" aria-label="启用 AI"></button>
+      </div>
+      <div class="field">
+        <label for="aiBaseUrl">API Base URL（OpenAI 兼容）</label>
+        <input id="aiBaseUrl" type="url" placeholder="https://api.openai.com/v1" autocomplete="off" />
+      </div>
+      <div class="field">
+        <label for="aiApiKey">API Key</label>
+        <input id="aiApiKey" type="password" placeholder="sk-..." autocomplete="off" />
+      </div>
+      <div class="field">
+        <label for="aiModel">模型</label>
+        <input id="aiModel" type="text" placeholder="gpt-4o-mini / deepseek-chat / ..." autocomplete="off" />
+      </div>
+      <div class="field">
+        <label for="aiAuto">记录时自动增强</label>
+        <div class="chips" id="aiAutoChips">
+          <button type="button" class="chip on" data-auto="off">仅手动</button>
+          <button type="button" class="chip" data-auto="on">保存时自动</button>
+        </div>
+      </div>
+      <button type="button" class="btn secondary" id="btnAiTest" style="width:100%">测试连接</button>
+      <p style="margin-top:12px;font-size:0.78rem;color:var(--muted);line-height:1.5">
+        Key 仅保存在本机 localStorage，不会上传到本应用服务器。请使用你自己的 API。
+      </p>
+    </div>
+    <div class="sheet-foot">
+      <button class="btn secondary" data-close="sheetAi">取消</button>
+      <button class="btn primary" id="btnSaveAi">保存</button>
+    </div>
+  </div>
+
+  <!-- Low confidence time pick -->
+  <div class="sheet" id="sheetLowConf">
+    <div class="sheet-grip"></div>
+    <div class="sheet-head">
+      <h2>确认提醒时间</h2>
+      <button class="icon-btn" data-close="sheetLowConf" aria-label="关闭">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"/></svg>
+      </button>
+    </div>
+    <div class="sheet-body">
+      <p style="color:var(--muted);font-size:0.9rem;margin-bottom:14px;line-height:1.5">
+        没有听出精确时间。选一个，或保持默认。
+      </p>
+      <div class="chips" id="lowConfChips" style="margin-bottom:12px">
+        <button type="button" class="chip" data-days="7">一周后</button>
+        <button type="button" class="chip" data-days="30">一个月后</button>
+        <button type="button" class="chip" data-preset="weekend">本周末</button>
+      </div>
+      <div class="field">
+        <label for="lowConfCustom">自定义</label>
+        <input id="lowConfCustom" type="datetime-local" />
+      </div>
+      <div class="parse-hint" id="lowConfHint"></div>
+    </div>
+    <div class="sheet-foot">
+      <button class="btn secondary" data-close="sheetLowConf">返回修改</button>
+      <button class="btn primary" id="btnLowConfOk">就按这个时间</button>
+    </div>
+  </div>
+
+  <!-- Confirm dialog -->
+  <div class="sheet" id="sheetConfirm">
+    <div class="sheet-grip"></div>
+    <div class="sheet-head">
+      <h2 id="confirmTitle">确认</h2>
+      <button class="icon-btn" id="confirmClose" aria-label="关闭">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"/></svg>
+      </button>
+    </div>
+    <div class="sheet-body">
+      <p id="confirmBody" style="color:var(--ink-2);font-size:0.95rem;line-height:1.6"></p>
+    </div>
+    <div class="sheet-foot">
+      <button class="btn secondary" id="confirmCancel">取消</button>
+      <button class="btn primary" id="confirmOk">确定</button>
+    </div>
+  </div>
+
+  <div class="sheet" id="sheetReview">
+    <div class="sheet-grip"></div>
+    <div class="sheet-head">
+      <h2>待整理</h2>
+      <div id="reviewProgress" style="font-size:0.85rem;color:var(--muted)">0 / 0</div>
+      <button class="icon-btn" data-close="sheetReview" aria-label="关闭">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"/></svg>
+      </button>
+    </div>
+    <div class="sheet-body" id="reviewBody"></div>
+    <div class="sheet-foot" id="reviewFoot" style="flex-wrap:wrap;gap:8px">
+      <button class="btn secondary" id="reviewSnooze">稍后</button>
+      <button class="btn secondary" id="reviewSkip">跳过本次</button>
+    </div>
+  </div>
+
+  <div class="sheet" id="sheetReviewSnooze">
+    <div class="sheet-grip"></div>
+    <div class="sheet-head">
+      <h2>稍后整理</h2>
+      <button class="icon-btn" data-close="sheetReviewSnooze" aria-label="关闭">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"/></svg>
+      </button>
+    </div>
+    <div class="sheet-body">
+      <p style="color:var(--muted);font-size:0.9rem;margin-bottom:12px">只推迟整理提醒，不会打乱已有事项提醒。</p>
+      <div class="chips">
+        <button type="button" class="chip" data-snooze-review="1800000">30 分钟后</button>
+        <button type="button" class="chip" data-snooze-review="7200000">2 小时后</button>
+        <button type="button" class="chip" data-snooze-review="tonight">今晚稍后</button>
+        <button type="button" class="chip" data-snooze-review="tomorrow">明天</button>
+        <button type="button" class="chip" data-snooze-review="next">下一个整理时间</button>
+      </div>
+    </div>
+    <div class="sheet-foot">
+      <button class="btn secondary" data-close="sheetReviewSnooze">取消</button>
+    </div>
+  </div>
+
+  <div class="sheet" id="sheetReviewSchedule">
+    <div class="sheet-grip"></div>
+    <div class="sheet-head">
+      <h2>待整理时间</h2>
+      <button class="icon-btn" data-close="sheetReviewSchedule" aria-label="关闭">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"/></svg>
+      </button>
+    </div>
+    <div class="sheet-body">
+      <div class="hint-bar">在固定时间集中整理模糊 Capture。整理不是任务管理，只为提高后续提醒质量。</div>
+      <div class="set-row" style="border:1px solid var(--line);border-radius:var(--radius-sm);background:var(--card);margin-bottom:14px">
+        <div>
+          <div>启用待整理提醒</div>
+          <div class="sub">有 NEEDS_REVIEW 时才通知</div>
+        </div>
+        <button type="button" class="switch" id="swReviewEnabled" aria-label="启用待整理"></button>
+      </div>
+      <div class="field" style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+        <div>
+          <label for="reviewStart">开始</label>
+          <input id="reviewStart" type="time" />
+        </div>
+        <div>
+          <label for="reviewEnd">窗口结束</label>
+          <input id="reviewEnd" type="time" />
+        </div>
+      </div>
+      <p style="margin-top:12px;font-size:0.78rem;color:var(--muted);line-height:1.5">
+        错过本次不会丢数据；未响应最多再提醒一次，然后进入下一个整理时间。
+      </p>
+    </div>
+    <div class="sheet-foot">
+      <button class="btn secondary" data-close="sheetReviewSchedule">取消</button>
+      <button class="btn primary" id="btnSaveReviewSchedule">保存</button>
+    </div>
+  </div>
+
+  <div class="sheet" id="sheetNotifyLab">
+    <div class="sheet-grip"></div>
+    <div class="sheet-head">
+      <h2>提醒能力自检</h2>
+      <button class="icon-btn" data-close="sheetNotifyLab" aria-label="关闭">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"/></svg>
+      </button>
+    </div>
+    <div class="sheet-body">
+      <div class="hint-bar" id="labIntro">
+        安心收件箱依赖系统通知与闹钟。首次使用请完成下面检查，并做一次真实测试。
+        若测试收不到，请打开系统设置授权后再试。
+      </div>
+      <!-- Q6：把「关掉 App 后到底会不会响」从推测变成结论。
+           此前该项只有「排了几条」的内部状态，界面上完全不可见 ——
+           一旦排程数为 0，用户只能看到「不响」，却看不到为什么。 -->
+      <div class="hint-bar" id="labVerdict" hidden></div>
+      <div class="set-group" style="margin-bottom:14px">
+        <div class="set-row">
+          <div>
+            <div>后台提醒</div>
+            <div class="sub" id="labBackground">检测中…</div>
+          </div>
+          <span class="pill" id="labBackgroundPill">…</span>
+        </div>
+        <div class="set-row">
+          <div>
+            <div>已排提醒</div>
+            <div class="sub" id="labScheduled">检测中…</div>
+          </div>
+          <span class="pill" id="labScheduledPill">…</span>
+        </div>
+        <div class="set-row">
+          <div>
+            <div>Capacitor 运行时</div>
+            <div class="sub" id="labBridge">检测中…</div>
+          </div>
+          <span class="pill" id="labBridgePill">…</span>
+        </div>
+        <div class="set-row">
+          <div>
+            <div>系统通知权限</div>
+            <div class="sub" id="labNotifyPerm">检测中…</div>
+          </div>
+          <span class="pill" id="labNotifyPill">…</span>
+        </div>
+        <div class="set-row">
+          <div>
+            <div>精确闹钟</div>
+            <div class="sub" id="labExact">检测中…</div>
+          </div>
+          <span class="pill" id="labExactPill">…</span>
+        </div>
+        <div class="set-row">
+          <div>
+            <div>电池优化白名单</div>
+            <div class="sub" id="labBattery">检测中…</div>
+          </div>
+          <span class="pill" id="labBatteryPill">…</span>
+        </div>
+        <div class="set-row">
+          <div>
+            <div>全屏闹钟</div>
+            <div class="sub" id="labFullScreen">检测中…</div>
+          </div>
+          <span class="pill" id="labFullScreenPill">…</span>
+        </div>
+      </div>
+
+      <div class="set-group" style="margin-bottom:14px">
+        <button class="set-row" id="labReqNotify">
+          <div>
+            <div>1. 申请通知权限</div>
+            <div class="sub">Android 13+ 必须显式授权</div>
+          </div>
+          <span style="color:var(--muted)">›</span>
+        </button>
+        <button class="set-row" id="labOpenNotify">
+          <div>
+            <div>2. 打开系统通知设置</div>
+            <div class="sub">确认应用与渠道开关为开</div>
+          </div>
+          <span style="color:var(--muted)">›</span>
+        </button>
+        <button class="set-row" id="labOpenExact">
+          <div>
+            <div>3. 允许精确闹钟</div>
+            <div class="sub">系统设置 → 闹钟和提醒</div>
+          </div>
+          <span style="color:var(--muted)">›</span>
+        </button>
+        <button class="set-row" id="labOpenBattery">
+          <div>
+            <div>4. 关闭电池优化</div>
+            <div class="sub">避免后台被杀导致漏提醒</div>
+          </div>
+          <span style="color:var(--muted)">›</span>
+        </button>
+        <button class="set-row" id="labOpenOverlay">
+          <div>
+            <div>5. 允许「显示在其他应用上层」</div>
+            <div class="sub">解锁亮屏时弹全屏的必要条件，否则只出通知横幅</div>
+          </div>
+          <span style="color:var(--muted)">›</span>
+        </button>
+        <button class="set-row" id="labOpenFsi">
+          <div>
+            <div>6. 允许「全屏通知」</div>
+            <div class="sub">Android 14+ 锁屏/息屏弹全屏的必要条件</div>
+          </div>
+          <span style="color:var(--muted)">›</span>
+        </button>
+        <button class="set-row" id="labOpenAutoStart">
+          <div>
+            <div>7. 自启动 / 后台弹出界面</div>
+            <div class="sub">国产系统专有开关，按厂商跳转</div>
+          </div>
+          <span style="color:var(--muted)">›</span>
+        </button>
+      </div>
+
+      <div class="set-group" style="margin-bottom:14px">
+        <button class="set-row" id="labResync">
+          <div>
+            <div>立即重排后台提醒</div>
+            <div class="sub">强制对账一次，并显示系统里实际挂着几条提醒</div>
+          </div>
+          <span class="pill time">重排</span>
+        </button>
+        <div class="set-row"><div style="min-width:0;width:100%">
+          <div>最近事项排程诊断</div>
+          <div class="sub">只读显示最近保存的 5 条事项；未记录不等于未投递。</div>
+          <pre id="labItemTrace" style="white-space:pre-wrap;overflow-wrap:anywhere;font:inherit;font-size:0.8rem;max-height:420px;overflow:auto">刷新诊断后显示</pre>
+        </div></div>
+        <button class="set-row" id="labTraceTest">
+          <div><div>一键后台诊断（10 / 60 / 120 秒）</div>
+          <div class="sub">点一次后返回桌面并锁屏，3 分钟后回来刷新。弹框 5 秒自动关闭。</div></div>
+        </button>
+        <div class="set-row"><div style="min-width:0;width:100%">
+          <div>逐次诊断记录</div>
+          <pre id="labTraceResults" style="white-space:pre-wrap;overflow-wrap:anywhere;font:inherit;font-size:0.8rem;max-height:340px;overflow:auto">刷新诊断后显示</pre>
+        </div></div>
+        <button class="set-row" id="labTestNow">
+          <div>
+            <div>立即测试系统通知</div>
+            <div class="sub">应在 1–2 秒内出现在通知栏</div>
+          </div>
+          <span class="pill time">发送</span>
+        </button>
+        <button class="set-row" id="labTest10s">
+          <div>
+            <div>10 秒后全屏闹钟</div>
+            <div class="sub">应亮屏弹出全屏界面并循环响铃；解锁亮屏时需「显示在其他应用上层」</div>
+          </div>
+          <span class="pill time">10s</span>
+        </button>
+        <button class="set-row" id="labTest60s">
+          <div>
+            <div>1 分钟后全屏闹钟</div>
+            <div class="sub">可先锁屏/熄屏，验证真正闹钟行为</div>
+          </div>
+          <span class="pill time">60s</span>
+        </button>
+        <button class="set-row" id="labCancelAlarm">
+          <div>
+            <div>取消未触发闹钟</div>
+            <div class="sub">取消 10s / 60s 测试闹钟</div>
+          </div>
+          <span style="color:var(--muted)">›</span>
+        </button>
+        <div class="set-row">
+          <div>
+            <div>上次闹钟投递结果</div>
+            <div class="sub" id="labDelivery">还没有投递记录</div>
+          </div>
+          <span class="pill" id="labDeliveryPill">—</span>
+        </div>
+      </div>
+
+      <p style="font-size:0.78rem;color:var(--muted);line-height:1.55" id="labLog">
+        尚未执行测试。
+      </p>
+    </div>
+    <div class="sheet-foot">
+      <button class="btn secondary" id="labRefresh">刷新诊断</button>
+      <button class="btn primary" data-close="sheetNotifyLab">完成</button>
+    </div>
+  </div>
+
+  <div class="toast" id="toast">
+    <span id="toastText"></span>
+    <button class="toast-action" id="toastAction" hidden>修改</button>
+  </div>
+
+  <div class="alert-banner" id="alertBanner">
+    <div class="alert-head">
+      <div class="alert-title" id="alertTitle"></div>
+      <button class="alert-close" id="alertClose" aria-label="关闭提醒">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"/></svg>
+      </button>
+    </div>
+    <div class="alert-body" id="alertBody"></div>
+    <div class="alert-actions">
+      <button id="alertSnooze">稍后</button>
+      <button class="primary" id="alertAck">我知道了</button>
+      <button id="alertDone">完成</button>
+    </div>
+  </div>
+
+  <input type="file" id="importFile" accept="application/json,.json" hidden />
+</div>
+
+<script src="lib/parse-cn.js"></script>
+<script src="lib/repeat.js"></script>
+<script src="lib/reminder.js"></script>
+<script src="lib/storage.js"></script>
+<script src="lib/native-reminders.js"></script>
+<script src="app-core.js"></script>
+</body>
+</html>

@@ -1,0 +1,126 @@
+{
+  "itemId": "f6c_20260917t165157z",
+  "token": "1281661782:9cc08e8f-e4f5-408b-b56e-b86b3f4ed5cb",
+  "targetAt": 1789664276535,
+  "receivedLagMs": 811,
+  "visibleLagMs": 2082,
+  "machineCriteria": {
+    "captureValid": true,
+    "receivedWithin10s": true,
+    "visibleWithin10s": true,
+    "notificationRecord": true,
+    "asleepBeforeAlarm": true,
+    "processDiedBeforeAlarm": true,
+    "systemStartedProcess": true
+  },
+  "machineCriteriaPass": true,
+  "screenshotReview": "PENDING",
+  "processStarts": [
+    "         1789664276.570  1843  2127 I am_proc_start: [0,25905,10190,space.alliswell.inbox,broadcast,{space.alliswell.inbox/space.alliswell.inbox.AlarmTestReceiver}, {action = space.alliswell.inbox.ACTION_TEST_ALARM}]"
+  ],
+  "freezes": [],
+  "events": [
+    {
+      "token": "1281661782:9cc08e8f-e4f5-408b-b56e-b86b3f4ed5cb",
+      "stage": "requested",
+      "at": 1789664202075,
+      "detail": "delayMs=74450"
+    },
+    {
+      "token": "1281661782:9cc08e8f-e4f5-408b-b56e-b86b3f4ed5cb",
+      "stage": "item",
+      "at": 1789664202082,
+      "detail": "f6c_20260917t165157z"
+    },
+    {
+      "token": "1281661782:9cc08e8f-e4f5-408b-b56e-b86b3f4ed5cb",
+      "stage": "unfreezerScheduled",
+      "at": 1789664202097,
+      "detail": "triggerAt=1789664276535;mode=alarmClock"
+    },
+    {
+      "token": "1281661782:9cc08e8f-e4f5-408b-b56e-b86b3f4ed5cb",
+      "stage": "scheduled",
+      "at": 1789664202104,
+      "detail": "triggerAt=1789664276535;mode=alarmClock"
+    },
+    {
+      "token": "1281661782:9cc08e8f-e4f5-408b-b56e-b86b3f4ed5cb",
+      "stage": "unfreezerStarted",
+      "at": 1789664277210,
+      "detail": "foreground service torn down the freezer"
+    },
+    {
+      "token": "1281661782:9cc08e8f-e4f5-408b-b56e-b86b3f4ed5cb",
+      "stage": "received",
+      "at": 1789664277346,
+      "detail": ""
+    },
+    {
+      "token": "1281661782:9cc08e8f-e4f5-408b-b56e-b86b3f4ed5cb",
+      "stage": "environment",
+      "at": 1789664277438,
+      "detail": "screenOn=false;locked=true;inCall=false;path=fsi+direct"
+    },
+    {
+      "token": "1281661782:9cc08e8f-e4f5-408b-b56e-b86b3f4ed5cb",
+      "stage": "launchRequested",
+      "at": 1789664277555,
+      "detail": "direct launch alongside full-screen intent"
+    },
+    {
+      "token": "1281661782:9cc08e8f-e4f5-408b-b56e-b86b3f4ed5cb",
+      "stage": "notifyReturned",
+      "at": 1789664277635,
+      "detail": "insistent; notify returned; not proof of display"
+    },
+    {
+      "token": "1281661782:9cc08e8f-e4f5-408b-b56e-b86b3f4ed5cb",
+      "stage": "created",
+      "at": 1789664278135,
+      "detail": "test=false"
+    },
+    {
+      "token": "1281661782:9cc08e8f-e4f5-408b-b56e-b86b3f4ed5cb",
+      "stage": "resumed",
+      "at": 1789664278316,
+      "detail": "lifecycle only"
+    },
+    {
+      "token": "1281661782:9cc08e8f-e4f5-408b-b56e-b86b3f4ed5cb",
+      "stage": "focus",
+      "at": 1789664278587,
+      "detail": "true"
+    },
+    {
+      "token": "1281661782:9cc08e8f-e4f5-408b-b56e-b86b3f4ed5cb",
+      "stage": "windowVisible",
+      "at": 1789664278617,
+      "detail": "via=focus;focused=true;shown=true"
+    },
+    {
+      "token": "1281661782:9cc08e8f-e4f5-408b-b56e-b86b3f4ed5cb",
+      "stage": "windowSample",
+      "at": 1789664278650,
+      "detail": "after=300ms;focus=true;shown=true;visibility=0;playing=false"
+    },
+    {
+      "token": "1281661782:9cc08e8f-e4f5-408b-b56e-b86b3f4ed5cb",
+      "stage": "windowSample",
+      "at": 1789664279142,
+      "detail": "after=800ms;focus=true;shown=true;visibility=0;playing=false"
+    },
+    {
+      "token": "1281661782:9cc08e8f-e4f5-408b-b56e-b86b3f4ed5cb",
+      "stage": "windowSample",
+      "at": 1789664279845,
+      "detail": "after=1500ms;focus=true;shown=true;visibility=0;playing=false"
+    },
+    {
+      "token": "1281661782:9cc08e8f-e4f5-408b-b56e-b86b3f4ed5cb",
+      "stage": "unfreezerStopped",
+      "at": 1789664285322,
+      "detail": "hold=8000ms"
+    }
+  ]
+}

@@ -1,251 +1,207 @@
-# 安心收件箱
+# 安心收件箱 (Attention Inbox)
 
-少记挂，不错过 —— 本地优先的注意力唤醒与未来事项托管（中文移动 Web App）。
+> **少记挂，不错过 —— 本地优先的注意力唤醒与未来事项托管**  
+> *Remember less. Miss nothing.*
 
-> Remember less. Miss nothing.
+[English](./README_EN.md) | 简体中文
 
-融合 [alliswell](https://github.com/allin2/alliswell) 的任务/提醒/笔记能力，以及 Attention Inbox 产品原则：  
-**Attention ≠ Task · Acknowledged ≠ Completed · Future 默认不可见 · 通知送达 ≠ 用户看到**。
+[![Tests](https://img.shields.io/badge/Tests-1040%20passed-1b6b4a.svg)](#验证与测试)
+[![Architecture](https://img.shields.io/badge/Architecture-Local--first%20%7C%20Zero--build-3d5a80.svg)](#技术架构与文件地图)
+[![Platform](https://img.shields.io/badge/Platform-Web%20PWA%20%7C%20Android-9a6b12.svg)](#android-客户端与打包)
+[![License](https://img.shields.io/badge/License-Noncommercial-muted.svg)](#许可与来源说明)
+
+---
+
+## 为什么需要「安心收件箱」？
+
+你是否也有过这样的经历：
+- 待办清单（Todoist、滴答清单）越积越长，每天打开 App 看到密密麻麻的列表，产生严重的囤积焦虑；
+- 为了不错过一件事，不得不强迫自己做分类、打标签、设优先级、四象限排程——**管理工具本身反而成了沉重的注意力负担**；
+- 手机弹出了提醒，你顺手划掉了通知，甚至打开看了一眼，回头却彻底遗忘；
+- 或者仅仅因为手头在忙，随手点了“已完成”，导致重要事项被提前归档而彻底漏掉。
+
+**安心收件箱不是又一个复杂的 Todo App，也不是项目协作看板。**  
+它的唯一职责是：**让你把未来需要关注的事项极低成本地交出去，然后彻底放心忘记；系统会在正确的时机以足够的强度重新唤醒你，并严谨确认你是否真的看到了。**
+
+---
+
+## 六大核心使用逻辑
+
+```text
+┌─────────────────────────────────────────────────────────────┐
+│                    Capture（极速随手记）                     │
+│               一句话自然语言 · 模糊录入也绝不阻断            │
+└──────────────┬──────────────────────────────┬───────────────┘
+               │ (时间明确)                   │ (时间模糊)
+               ▼                              ▼
+┌─────────────────────────────┐┌──────────────────────────────┐
+│       Future（未来）        ││     Needs Review（待整理）   │
+│   托管中，默认不占用首页    ││    弱化常驻，集中窗口提醒    │
+└──────────────┬──────────────┘└──────────────┬───────────────┘
+               │ (到期唤醒)                   │ (整理澄清)
+               ▼                              │
+┌─────────────────────────────────────────────▼───────────────┐
+│                 Now / Due（现在需要注意）                    │
+│        普通通知  /  阶梯重提醒  /  Android 全屏锁屏闹钟      │
+└──────────────┬──────────────────────────────┬───────────────┘
+               │                              │
+     ┌─────────┴─────────┐          ┌─────────┴─────────┐
+     ▼                   ▼          ▼                   ▼
+【我知道了】          【稍后 2 小时】    【关闭 / 止响】        【完成】
+ (确认看到，未完成)    (重新进入等待)     (仅止响，不记账)     (唯一归档出口)
+```
+
+### 1. 极速捕获，永不失败（Capture Never Fails）
+- 支持丰富的中文自然语言时间解析：“周五下班前买咖啡豆”、“每月第三个周四开例会”、“明早10点”、“本周末”。
+- **录入永不阻塞**：即便输入完全没有时间信息或语法杂乱，系统也绝不弹窗报错拒绝，而是妥善存入「待整理」，绝不打断记录灵感的心流。
+
+### 2. 未来默认不可见（Future Hidden by Default）
+- **核心原则：未到时间的事项，绝不提前消耗当前的认知带宽。**
+- 首页只展示“此刻应进入注意力”的事项，不出现令人焦虑的“即将到来”长列表。
+- 未来托管中的事项安静地存放在「未来」月历中，只有在你主动查看时才可见。
+
+### 3. 「我知道了」≠「已完成」（Acknowledged ≠ Completed）
+- 传统清单的最大缺陷：划掉通知或标记查看，往往等同于归档完成。
+- 在安心收件箱中：
+  - 点击 **「我知道了」**：向系统确认“我已经注意到这件事了”，停止连环催促，但事项依然保持活跃（收纳在弱化的「已看到未完成」栏中）；
+  - 只有主动点击 **「完成」**：才是事项进入历史归档的唯一正常出口。
+
+### 4. 真正叫得醒你的三级递进唤醒
+系统不假设“通知发出了你就一定能看到”，按事项重要程度提供多级唤醒：
+- **普通事项**：常规单次通知。
+- **重要事项（☆）**：首次通知 + 约每 30 分钟阶梯式重复提醒（最多 4 次），防止划掉后遗忘。
+- **关键事项（🚨）**：Android **独立全屏锁屏闹钟**（`setAlarmClock` + 亮屏 + 循环响铃 + 波形震动 + 锁屏直达）。提供「我知道了 / 稍后 2 小时 / 完成 / 仅关闭止响」四个出口。vivo 等厂商系统需要同时允许后台耗电、锁屏显示和自启动，才能覆盖息屏与进程退出后的冷启动场景。
+
+### 5. 双阶段死线独立保护（Deadline Protection）
+- 即使一个事项你已经点击过「我知道了」，只要它还未最终完成，并且包含硬性截止时间（Deadline）：
+- 系统会在 **截止前 24 小时（p24）** 与 **截止前 2 小时（p2）** 两个独立保护点再次拉响警报，阻止死线翻车。
+
+### 6. 100% 本地优先与数据主权（Local-First）
+- 数据完全保存在本机的 `IndexedDB` 中（自动配备 `localStorage` 镜像容灾）。
+- **无需注册、无需登录、无需连接任何后端服务器**，纯离线全功能可用，隐私零泄露。
+
+---
+
+## 典型使用场景
+
+| 场景 | 你的操作 | 安心收件箱的行为 |
+|---|---|---|
+| **走路/开会时灵光一闪** | 点右下角 `+`，输入 `下周二下午提醒我找老张确认合同` | 5 秒完成录入并自动解析时间，事项进入未来托管，首页保持空灵无负担。 |
+| **突发琐事时间不确定** | 输入 `抽空给车做个保养` | 无法提取精确时间，自动收归「待整理」，并在下一个设定好的整理窗口（Review Window）轻量提醒你补全。 |
+| **手头正在忙时闹钟响起** | 锁屏全屏闹钟响起，点击 **「稍后」** | 闹钟立刻静音，自动改期为 2 小时后重新强力唤醒你。 |
+| **看到了但稍后才能做** | 弹条提醒时点击 **「我知道了」** | 停止周期性重弹，事项折叠进「已看到未完成」数字徽标中，安心忙手头的事，不用担心误当成完成。 |
+| **临近关键交付前夕** | 某项目设了明天 18:00 截止，今早已点了我知道了 | 今天 18:00（倒计时 24 小时）和明天 16:00（倒计时 2 小时），系统自动发起两轮死线二次强唤醒。 |
 
 ---
 
 ## 快速开始
 
-无需构建、无需后端。
+本项目为**零构建（Zero-Build）纯静态架构**，无需 `npm run build`，无需配置复杂环境。
 
-1. 用浏览器打开项目根目录下的 `index.html`  
-   （手机宽度约 390px 体验最佳；也可「添加到主屏幕」作 PWA）
-2. 若首页为空：进入 **我的 → 载入示例数据**
-3. 点右下角 **+**，输入例如：`周五提醒我再看看这个项目`
+### 方式 A：Web / PWA 模式（跨平台开箱即用）
+1. 使用任意现代浏览器（Chrome / Safari / Edge）直接打开项目根目录下的 `index.html`（手机或浏览器模拟 390px 宽度体验最佳）。
+2. **载入示例数据**：初次打开若列表为空，进入底部导航 **我的 → 载入示例数据**，即可秒级体验完整的状态流转。
+3. **PWA 安装**：在手机浏览器中点击「分享 → 添加到主屏幕」，即可享受接近原生体验的离线 Web App。
 
-数据优先保存在本机 `IndexedDB`，不可用时回退到 `localStorage`，离线可用。
-
----
-
-## 核心交互
-
-| 操作 | 说明 |
-|------|------|
-| 快速录入 | 一句话自然语言；自动解析时间；**捕获永不失败**，解析不出来也照样收下 |
-| 现在需要注意 | 首页只展示当前应进入注意力的事项；**不出现「即将到来」**（D5） |
-| 我知道了 | 确认「已看到」，**不会**变成完成 |
-| 稍后 | 应用内给完整六档；通知栏/全屏闹钟快捷动作固定 **2 小时**（D11） |
-| 完成 | 唯一正常归档出口 |
-| 待整理 | 模糊记录先收下；入口**常驻弱形态**，整理窗口∪宽限期内变显著（D6）；兜底=下一个 Review Window，不占首页（D17） |
-| 弹条 | **只有点 × 才关闭**；挂 10 分钟自动收起且不记账（D13/D14） |
-| 未来 | 托管中的事项 + 月历；默认不占首页 |
-| 已归档 | 按日回看，可恢复；**重开不自动提醒**，可选设时间（D23） |
-| 默认提醒方式 | 未标记事项按全局默认（录入时快照）；**有标记（重要/关键）一律闹钟**（D25 / A-01） |
-| 笔记 | 轻量 Markdown，可置顶、关联项目 |
-| 搜索 | 事项、标签、项目、笔记；也是找回待整理记录的入口 |
-| AI（可选） | 我的 → AI 智能理解，BYOK；失败自动回退本地解析 |
+### 方式 B：Android 原生 App（享受全屏闹钟强力唤醒）
+- 仓库内已预置自签名测试包：[`releases/安心收件箱-debug.apk`](file:///Users/qlyf/Developer/reminder/releases/%E5%AE%89%E5%BF%83%E6%94%B6%E4%BB%B6%E7%AE%B1-debug.apk)；
+- 支持 Android 12+ 精确闹钟权限与 Android 13+ 通知权限，实现锁屏全屏直接拉起、关屏响铃与开机自动恢复排程。
 
 ---
 
-## 文件地图
+## 核心交互速查表
 
-| 文件 | 职责 |
-|------|------|
-| `index.html` | App 界面与样式 |
-| `app-core.js` | 核心编排（UI、状态、生命周期） |
-| `lib/parse-cn.js` | 中文自然语言时间解析 |
-| `lib/repeat.js` | 周期规则（含月底、第 N 个星期 X） |
-| `lib/reminder.js` | 勿扰、柔性窗口、有限重提醒策略 |
-| `lib/native-reminders.js` | Capacitor Android 原生通知、权限与排程对账适配层 |
-| `lib/storage.js` | IndexedDB 存储 + localStorage 回退/迁移 |
-| `sw.js` | Service Worker（离线壳层、通知） |
-| `manifest.json` | PWA 清单（安装、分享入口、快捷方式） |
-| `icon.svg` / `icon-192.png` / `icon-512.png` | 应用图标 |
-| `docs/baseline/` | **唯一业务基线**（V0.2 冻结版）与对齐分析 |
-| `prd.html` | 产品需求文档 **V0.1（历史详述）**，依赖同目录 `styles.css`、`app.js` |
-| `test-smoke.js` | Node 集成冒烟（生命周期主路径） |
-| `test-regressions.js` | Node 定向回归（提交边界 / 隔离草稿 / 稳定派生身份 / 撤销≠送达 / 停止重复 / 权威持久化 / 表驱动交错 / 重启一致性） |
-| `test-unit.js` | Node 单元测试（解析/周期/提醒/存储） |
-| `test-native-reminders.js` | Android 原生提醒投影与权限 mock 测试 |
-| `docs/compose/spec/` | Compose 特性规格 |
+| 操作 / 元素 | 交互与业务语义 |
+|---|---|
+| **快速录入 (+)** | 一句话自然语言捕获；**捕获永不失败**，解析不出的归入待整理。 |
+| **现在需要注意** | 首页只呈现当前应进入注意力的事项；**不出现「即将到来」列表**。 |
+| **我知道了 (ACK)** | 确认已看到，停止追问；**绝不变成完成**，保留在未完成池中。 |
+| **稍后 (Snooze)** | 应用内提供 6 档推迟；锁屏全屏闹钟与通知栏快捷动作固定推迟 **2 小时**。 |
+| **完成 (Done)** | 明确点击完成，归档移出活跃空间（唯一正常归档出口）。 |
+| **待整理 (Review)** | 模糊记录聚集地；平时入口弱化，到了 Review 集中窗口期显著提醒。 |
+| **未来 (Future)** | 托管中的所有未来事项与月历视图；默认不占首页。 |
+| **已归档 (Archive)** | 按日回溯已完成历史，可一键恢复；恢复后不自动设置提醒。 |
+| **全屏闹钟** | 针对重要/关键事项的首次提醒，穿透锁屏全屏亮屏弹出，4 出口明确表态。 |
+| **离线笔记** | 内置轻量 Markdown 笔记，可置顶、关联项目。 |
+| **AI 智能理解 (可选)** | 设置中可自备 OpenAI 兼容 Key（BYOK），失败自动平滑降级为本地纯正则解析。 |
 
 ---
 
-## 验证
+## 硬核工程与可靠性保障
 
-在项目根目录执行：
+安心收件箱表面极其轻量简洁，底层却历经了 11 轮严格的并发冲突与一致性加固：
+
+- **D41 统一事务模型**：
+  - 彻底杜绝在异步存储提交期间丢失用户点击。采用**不可见草稿隔离（Draft Isolation）**，原生锁屏动作先在独立内存草稿中变更，待 IndexedDB 提交确认后再安全发布至 UI。
+  - 提交窗口期内同一事项的新命令明确拒绝并提示重试，无关事项的并发命令则通过稳定 ID 有序重放到草稿中，杜绝界面脏读与竞态覆盖。
+- **权威持久化与重启一致性**：
+  - 以 IndexedDB 为绝对权威后端，localStorage 为尽力同步镜像；每次提交生成深拷贝独立快照，保证断电与重载后的真实状态与视觉完全一致。
+- **Android 真机运行验证（2026-09-18）**：
+  - vivo V2238A / Android 16 上，当前 F6c 候选已通过 **75 秒息屏闹钟**与**应用进程退出后的 75 秒冷启动闹钟**；系统到点投递、窗口可见和通知均有本次 token 绑定证据。
+  - 原生全屏闹钟的「关闭 / 我知道了 / 稍后 2 小时 / 完成」四个真实按钮均通过真机验证，并复核持久化结果与剩余排程。
+  - 厂商后台策略是可靠性前置条件：本机需开启 **允许后台耗电 + 锁屏显示 + 自启动**。30 分钟长待机、系统强行停止、设备重启、省电模式和多机型仍为 `NOT_PERFORMED`，不外推为已通过。
+  - 详细交接见 [`docs/handoff/2026-09-18-android-alarm-freezer.md`](docs/handoff/2026-09-18-android-alarm-freezer.md)，当前候选验证见 [`docs/reviews/android-vivo-f6c-functional-20260918.md`](docs/reviews/android-vivo-f6c-functional-20260918.md)。
+
+---
+
+## 验证与测试
+
+项目拥有严密的自动化测试套件（含模拟磁盘重启与 36 组合并发矩阵），在根目录下执行：
 
 ```bash
 npm test
 ```
 
-预期：
-- `test-unit.js`：**29 项全部通过**
-- `test-native-reminders.js`：**105 项全部通过**（含 D9/D25 首次全屏路由、P0-2 闹钟撤销、P0-1 待整理排程，
-  以及 L01/R5 待整理抑制、R4 窗口槽位、L07 勿扰、V03 截止阶段预排与送达消费、R7 台账失败保留、V08 失败可见）
-- `test-smoke.js`：**161 项全部通过**（含 D5/D6/D7/D8 首页架构、D12/D13/D14 弹条与全屏语义、
-  D15/D17/D22/D23/D25 落地断言、P0-3 整理会话出口回归、3h 段 L01–L08 / D23 及 V04/V05/V06 业务逻辑回归）
-- `test-regressions.js`：**559 项全部通过**（复核修复的定向回归：并发提交边界、隔离草稿、撤销≠送达、
-  停止重复保留历史、初始化就绪契约，**持久化权威后端**、**提交期间不丢用户操作**、
-  **提交隔离边界**（后到的动作不得污染先到的保存、先到的保存也不得把后到的动作提前提交），
-  以及**隔离发布语义**：原生动作先在不可见草稿执行，IndexedDB 成功后才发布；提交期间接受的命令
-  按稳定 id 与 `repeatParentId` 重放到草稿，不靠字段相等、随机 id 或数组位置猜归属；
-  用同一块「设备磁盘」再启一个实例来模拟重启，直接断言「重启后与用户看到的一致」。
-  T1、表驱动命令/故障序列，以及原生 3 动作 × UI 6 命令 × 提交成功/失败的 36 组合矩阵，
-  同时检查操作接受或拒绝、反馈、内存、权威快照、重载、事件台账与周期唯一性。
-  合计 `29+105+161+559 = **854**`）
-
-`test-smoke.js` / `test-regressions.js` 都**先 `await app.ready()`** 再准备状态 ——
-`init()` 的 `loadAsync → applyParsedState` 会整体替换 `state.items`，
-不等就绪就改 `app.state` 会让断言落在已被丢弃的对象上。
-`save()` / `load()` 是**异步契约**，要断言「落库之后」的状态请 `await app.saveAsync()`。
-提交过一个 **FIFO 闸门**（快照在轮到自己时才生成），原生动作的**校验 + 草稿变更 + 派生 + 台账 + 权威提交 + 发布**
-整体都在闸门内完成：提交成功前不改变可见 state；回归 harness 用 `boot()` 排空启动期提交，
-用 `releaseCommits(n, mode)` 按创建顺序**逐笔放行并逐笔指定成败**。
-窗口期命令在最后确认状态上执行并记账；动作成功后才重放到已提交草稿，失败则根本无需回滚可见状态。
-断言必须落在**磁盘快照**与**重启读回**上，而不是只看内存。
-
-本轮审查修复（2026-09-16）的两条规则裁决记录在
-`docs/decisions/review-fixes-2026-09-16.md`（D26 Review 补提醒与勿扰、D27 恢复归档与截止保护）；
-第三轮复核修复（2026-09-17）在 `docs/decisions/review-round3-fixes-2026-09-17.md`（D30 停止重复语义、D31 截止保护三态）；
-第四轮复核修复（2026-09-17）在 `docs/decisions/review-round4-fixes-2026-09-17.md`（D32 持久化权威后端、D33 提交期间不丢用户操作）；
-第五轮复核修复（2026-09-17）在 `docs/decisions/review-round5-fixes-2026-09-17.md`（D34 提交隔离边界）；
-第六轮复核修复（2026-09-17）在 `docs/decisions/review-round6-fixes-2026-09-17.md`（D35 隔离边界覆盖业务变更与提交）；
-第七轮复核修复（2026-09-17）在 `docs/decisions/review-round7-fixes-2026-09-17.md`（D36 回滚逐字段撤销 + 重放被破坏的业务意图）；
-第八轮复核修复（2026-09-17）在 `docs/decisions/review-round8-fixes-2026-09-17.md`（D37 回滚整体还原 + 重放用户操作，废除逐字段比值）；
-第九轮复核修复（2026-09-17）在 `docs/decisions/review-round9-fixes-2026-09-17.md`（D38 撤销范围=整个窗口期，重放复用派生实例 id）；
-第十轮复核修复（2026-09-17）在 `docs/decisions/review-round10-fixes-2026-09-17.md`（D39 撤销范围按归属界定 + 日志参数按 id 寻址 + 新建入口入账）；
-第十一轮复核修复（2026-09-17）在 `docs/decisions/review-round11-fixes-2026-09-17.md`（D40 已删的基线事项按基线恢复，删除由重放按序执行）。
-统一事务修复在 `docs/decisions/unified-transaction-model-2026-09-17.md`（D41 隔离草稿、提交后发布、稳定派生身份）。
-
-UI 手测建议顺序：示例载入 → 导航 → 录入 → 到期弹条 → 我知道了 → 完成 → 归档。
+**测试结果（2026-09-18 当前工作区复跑，1040 项断言全部通过）：**
+- `test-unit.js`：**105 项通过**（中文自然语言解析、相对时间、日历/ACK 周期递推、存储基础单测）
+- `test-native-reminders.js`：**193 项通过**（Android 原生通知投影、全屏闹钟路由、厂商后台设置引导、投递台账、勿扰规避、截止保护预排）
+- `test-smoke.js`：**175 项通过**（端到端生命周期、首页架构、弹条与全屏语义、整理会话出口）
+- `test-regressions.js`：**567 项通过**（D41 统一事务、并发提交隔离、命令重放、模拟断电重启一致性、3 原生动作 × 6 UI 命令 × 成功/失败 36 组合矩阵）
 
 ---
 
-## 数据与提醒（加固说明）
+## 技术架构与文件地图
 
-- **存储**：优先 IndexedDB（`attention-inbox`），不可用时自动退回 `localStorage`；首次打开会把旧 `localStorage` 数据迁入 IDB（旧键保留作备份）。
-- **重提醒**：普通事项不自动重弹；重要约每 30 分钟、最多 4 次；关键约每 15 分钟、最多 8 次；用户关闭弹条后 30 分钟内不再打扰；ACK/完成后停止。
-- **首次投递**：有标记（重要/关键）或 `delivery_mode=alarm` 的事项，**首次**走全屏闹钟，后续仍走通知（D9/D25）。
-- **周末窗口**：解析出 `window` 的事项，倾向在窗口日 10:00 进入注意力。
-
----
-
-## 已知限制（Web 边界）
-
-以下能力需原生壳（如 Capacitor）才能完整提供，当前 Web 版不承诺：
-
-- 静音模式穿透闹钟、开机后精确闹钟恢复
-- 系统分享面板（仅支持 URL 参数 / PWA share_target）
-- Android 桌面角标（仅在支持 Badge API 时尽力）
-- SQLite（当前为 IndexedDB，必要时回退 localStorage）
-- 真机自动化可靠性测试套件
-
----
-
-## 产品原则（摘要）
-
-原则分两级，**红线不可让渡**，**默认值允许有意识的例外但必须显式论证**：
-
-**红线**
-
-1. 系统管理的是「何时重新进入注意力」，不是完整任务管理（Attention ≠ Task）
-2. 只有用户主动「完成」才归档；「我知道了」永不等同于完成（Acknowledged ≠ Completed）
-3. 只有显式「我知道了」才算真正注意到；送达、显示、解锁、点击通知、打开 App 都不算（送达 ≠ 看到）
-
-**默认值**
-
-4. 未来事项默认不占据首页（Future 默认不可见）
-5. 管理注意力的工具本身不能成为新的注意力负担（低交互优先）
-
-> **例外的唯一论证标准**：它会让「用户主动查看 Future 的频率」上升还是下降？
-> 该指标在 PRD 里被定义为**不信任信号**，理想方向是下降。
-
-**需求基线**：[`docs/baseline/Attention_Inbox_V0.2_产品需求与业务规格基线.md`](./docs/baseline/Attention_Inbox_V0.2_产品需求与业务规格基线.md)
-（V0.2 冻结基线，**唯一业务基线**）。`prd.html` 是 V0.1，已降级为历史详述，冲突时以 V0.2 为准。
-
-> **生效基线 = V0.2 原文（冻结，不编辑）+ 已批准的条款级修订**
-> （[`docs/baseline/V0.2-amendments.md`](./docs/baseline/V0.2-amendments.md)，当前 1 项：A-01 默认提醒方式）。
-> 新需求按 §24 先记为[变更提案](./docs/baseline/change-proposals.md)。
-
-逐条对齐、7 项冲突的裁决与全新需求清单见
-[`docs/baseline/v0.2-alignment.md`](./docs/baseline/v0.2-alignment.md)。
-
-交互逻辑的裁决记录见
-[`docs/decisions/interaction-logic-2026-09-16.md`](./docs/decisions/interaction-logic-2026-09-16.md)。
+```text
+├── index.html                  # App 单页结构、布局与样式
+├── app-core.js                 # 核心控制器（状态机、UI渲染、FIFO提交闸门、事务重放）
+├── styles.css                  # 样式定义
+├── sw.js / manifest.json       # PWA 离线 Service Worker 与清单
+├── lib/
+│   ├── parse-cn.js             # 中文自然语言时间解析（独立纯模块）
+│   ├── repeat.js               # 周期计算规则（日历锚点 vs ACK 锚点）
+│   ├── reminder.js             # 免打扰(DND)、阶梯重提醒策略、双阶段死线保护
+│   ├── storage.js              # IndexedDB 权威存储适配器
+│   └── native-reminders.js     # Capacitor 原生通知排程与状态对账层
+├── android/                    # Capacitor 6 Android 原生平台工程
+│   └── app/src/main/java/space/alliswell/inbox/
+│       ├── AlarmActivity.java          # 锁屏全屏闹钟 Activity（4 出口表态）
+│       ├── SystemBridgePlugin.java     # 精确闹钟与通知渠道桥接插件
+│       └── BootRestoreReceiver.java    # 开机自愈重排广播接收器
+├── test-unit.js                # 基础单元测试
+├── test-smoke.js               # 主路径端到端冒烟测试
+├── test-native-reminders.js    # 原生映射与权限对账测试
+└── test-regressions.js         # 事务并发与重启一致性定向回归测试
+```
 
 ---
 
-## Android 打包（Capacitor）
+## Android 客户端与打包
 
-本仓库已接入 Capacitor Android 工程与官方本地通知插件，可在 **Android Studio** 中打开并生成 APK。
-
-### 环境要求
-- Node.js ≥ 18
-- JDK 17（Android Studio 自带亦可）
-- Android Studio + Android SDK（本机编译 APK 时需要）
-
-### 常用命令
+如需自行修改原生代码或打出签名包：
 
 ```bash
 npm ci
-npm run sync:www      # 把 Web 资源同步到 www/
-npm run cap:sync      # sync:www + 同步到 android 工程
-npm run cap:open      # 用 Android Studio 打开 android/
+npm run sync:www      # 将 Web 静态资源同步至 www/
+npm run cap:sync      # 同步至 android/ 工程
+npm run cap:open      # 在 Android Studio 中打开工程进行编译构建
 ```
 
-### 步骤
-1. `npm ci`
-2. `npm run cap:sync`
-3. `npm run cap:open`（或在 Android Studio 打开 `android/` 目录）
-4. 选择模拟器/真机 → Run；或 Build → Generate Signed Bundle/APK
-
-### 工程说明
-| 路径 | 说明 |
-|------|------|
-| `capacitor.config.json` | appId `space.alliswell.inbox`，应用名「安心收件箱」 |
-| `www/` | 打包用 Web 资源（由 `sync:www` 生成，不入库） |
-| `android/` | Capacitor 生成的 Android 平台工程 |
-| `scripts/sync-www.js` | 资源同步脚本 |
-
-### 原生提醒与权限
-
-- Android 使用 `@capacitor/local-notifications@6.1.3`，底层由 `AlarmManager` 排程；应用进程被普通回收或设备休眠时不依赖常驻前台服务。
-- 普通、重要、关键三个通知渠道分别排 1、4、8 次；重要每 30 分钟、关键每 15 分钟补充提醒。渠道启用提示音和震动，不申请勿扰策略访问，也**不使用全屏 Intent**。
-- **全屏闹钟是独立通道，不再只给「关键」档**（D25 / A-01）：**有标记**（☆重要 · 🚨关键）事项的**首次**提醒一律走 `SystemBridge` 的 `setAlarmClock` + 全屏 `AlarmActivity`（亮屏、循环响铃、波形震动、锁屏直达）；**未标记**事项按「我的 → 默认提醒方式」的录入时快照决定。后续补充提醒（重要 3 次 / 关键 7 次）仍走通知渠道。全屏界面提供「我知道了 / 稍后 2 小时 / 完成」，以及一个只止响、不表态的「关闭」。
-- **闹钟台账与撤销**：每次对账都会撤销不再需要的全屏闹钟（删除、改期、ACK、完成、关闭「本地通知」都会触发），并持久化已排 id，避免幽灵提醒。
-- **待整理不使用全屏闹钟**，只用普通通知（`attention-normal-v2`）：在下一个整理窗口起点预排首次 + 60 分钟 × 2 次补充；其提醒受「本地通知」总开关控制，并按普通事项参与勿扰。
-- Android 13+ 由用户在“我的”页面主动授予通知权限；未授权时只保留应用内提醒，不循环弹窗。
-- Android 12+ 可主动进入系统“闹钟和提醒”设置授予精确闹钟权限；未授权时仍使用原生非精确 `AlarmManager`，界面会标明时间可能延迟。
-- 官方插件接收 `BOOT_COMPLETED` / `LOCKED_BOOT_COMPLETED` 并恢复**它自己**的持久化排程；`SystemBridge` 排下的**全屏闹钟另由 `BootRestoreReceiver` 恢复**（读 `attention_alarm_schedules`，只补未过期项）。应用更新后也恢复排程，应用启动和恢复前台时会重新对账。
-- 用户在系统设置中主动“强制停止”应用后，Android 会阻止闹钟和广播，必须由用户再次打开应用；这是平台边界。
-
-数据仍以 IndexedDB 中的事项为真源，原生 pending 通知只是可删除、可重建的投影。完整契约与验证等级见
-[`docs/compose/spec/android-native-reminders.md`](./docs/compose/spec/android-native-reminders.md) 与
-[`docs/compose/spec/android-fullscreen-alarm.md`](./docs/compose/spec/android-fullscreen-alarm.md)。
-
-### 当前验证边界
-
-- 已完成 Node mock（含 SystemBridge 通道）、Web 冒烟、Capacitor 资源同步与 Manifest/插件注册静态核对。
-- 仓库内的 `releases/安心收件箱-debug.apk` 是**自签名 debug 包**，只能用于侧载验证，不可发布。
-- 本机未安装 JDK 17、Android SDK 或模拟器，因此 Gradle 编译、APK 生成/安装、系统杀进程、Doze、重启和真机通知动作均为 `NOT_PERFORMED`，不能据此宣称 Android 真机 PASS。
-- 2026-09-16 晚修复轮新增/修改的 Java（`BootRestoreReceiver`、`SystemBridgePlugin` 的闹钟落盘与撤销、`AlarmActivity` 的重排入账）**只做到 `javac` 语法级通过**，未编译、未装机。
-- 全屏闹钟、`USE_EXACT_ALARM` / `USE_FULL_SCREEN_INTENT` 等受限权限的**商店审核影响尚未评估**；PRD §33 也未把上架纳入 MVP。
-
-### 已知未落地
-
-- `schema 5` 迁移（`docs/compose/spec/delivery-mode.md` T9），需与 G01 正交状态建模合并。
-- 四维正交状态 / `time_source`（验收 H1–H3）、Onboarding（I1–I3）、Deadline 分层保护（E3–E7）。
-- `completed` 幽灵状态、`sessionStatus` / `notifyPrompted` 只写字段、旧通知渠道 `-v1` 的处置。
-- 最近一次对齐审查：[`docs/reviews/code-vs-plan-2026-09-16.md`](./docs/reviews/code-vs-plan-2026-09-16.md)。
-
----
-
-## 开发说明
-
-- 纯静态，无 npm 构建；改完刷新即可  
-- 改动 `app-core.js` 后请跑 `node test-smoke.js` 与 `node test-regressions.js`
-- Service Worker 为网络优先，避免旧脚本缓存；调试时可强制刷新  
-- 控制台兜底：`seedAttentionInbox()` 可强制载入示例数据  
+- **环境要求**：Node.js ≥ 18，JDK 17，Android Studio + Android SDK (API 34)。
 
 ---
 
 ## 许可与来源说明
 
-本仓库为结合 alliswell 产品思路与 Attention Inbox PRD 的中文轻量实现 Demo/应用，用于学习与个人使用验证。  
-alliswell 原项目许可请以其仓库为准（PolyForm Noncommercial 等）。
+本项目理念与部分能力融合自 [alliswell](https://github.com/allin2/alliswell) 任务/提醒/笔记体系，并严格遵循 Attention Inbox V0.2 业务规格基线。  
+版权与许可协议以各原始代码仓库声明为准。

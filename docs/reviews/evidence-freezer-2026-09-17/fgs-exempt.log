@@ -1,0 +1,47 @@
+[23:20:48] === 前台服务免冻实验 ===
+[23:21:02] 应用 PID=31887
+[23:21:03] --- 起前台服务（run-as 以应用身份启动自己的非导出服务）---
+    Starting service: Intent { cmp=space.alliswell.inbox/.AlarmRingService }
+    
+    Exception occurred while executing 'start-foreground-service':
+    java.lang.SecurityException: Permission Denial: service from com.android.shell asks to run as user -2 but is calling from uid u0a190; this requires android.permission.INTERACT_ACROSS_USERS_FULL or android.permission.INTERACT_ACROSS_USERS
+    	at com.android.server.am.UserController.handleIncomingUser(UserController.java:3271)
+    	at com.android.server.am.ActiveServices.retrieveServiceLocked(ActiveServices.java:5052)
+    	at com.android.server.am.ActiveServices.retrieveServiceLocked(ActiveServices.java:5022)
+    	at com.android.server.am.ActiveServices.startServiceLocked(ActiveServices.java:1053)
+    	at com.android.server.am.ActiveServices.startServiceLocked(ActiveServices.java:1004)
+    	at com.android.server.am.ActivityManagerService.startService(ActivityManagerService.java:15699)
+    	at com.android.server.am.ActivityManagerService.startService(ActivityManagerService.java:15620)
+    	at com.android.server.am.ActivityManagerShellCommand.runStartService(ActivityManagerShellCommand.java:1043)
+    	at com.android.server.am.ActivityManagerShellCommand.onCommand(ActivityManagerShellCommand.java:292)
+    	at com.android.modules.utils.BasicShellCommandHandler.exec(BasicShellCommandHandler.java:97)
+    	at android.os.ShellCommand.exec(ShellCommand.java:38)
+    	at com.android.server.am.ActivityManagerService.onShellCommand(ActivityManagerService.java:12066)
+    	at android.os.Binder.shellCommand(Binder.java:1166)
+    	at android.os.Binder.onTransact(Binder.java:968)
+    	at android.app.IActivityManager$Stub.onTransact(IActivityManager.java:6502)
+    	at com.android.server.am.ActivityManagerService.onTransact(ActivityManagerService.java:3304)
+    	at android.os.Binder.execTransactInternal(Binder.java:1441)
+    	at android.os.Binder.execTransact(Binder.java:1380)
+[23:21:05] 服务状态:   * ServiceRecord{faed796 u0 space.alliswell.inbox/.AlarmRingService c:space.alliswell.inbox} |   * ServiceRecord{b2ced67 u0 space.alliswell.inbox/org.chromium.content.app.SandboxedProcessService0:0 c:space.alliswell.inbox} | 
+[23:21:05] --- 退到后台，观察 7 秒 ---
+[23:21:14] 进程仍在: [31887]
+[23:21:14] 服务仍在: 2 条
+
+[23:21:14] --- events（只看本应用）---
+             1789658462.932 31887 31887 I auditd  : type=1400 audit(0.0:374208): avc:  denied  { ioctl } for  comm="binder:31887_6" path="/proc/fas/render" dev="proc" ino=4026532234 ioctlcmd=0x6609 scontext=u:r:untrusted_app:s0:c190,c256,c512,c768 tcontext=u:object_r:proc_fas:s0 tclass=file permissive=0 app=space.alliswell.inbox
+             1789658463.928 31887 31887 I auditd  : type=1400 audit(0.0:374209): avc:  denied  { ioctl } for  comm="binder:31887_6" path="/proc/fas/render" dev="proc" ino=4026532234 ioctlcmd=0x6609 scontext=u:r:untrusted_app:s0:c190,c256,c512,c768 tcontext=u:object_r:proc_fas:s0 tclass=file permissive=0 app=space.alliswell.inbox
+             1789658464.948 31887 31887 I auditd  : type=1400 audit(0.0:374211): avc:  denied  { ioctl } for  comm="binder:31887_6" path="/proc/fas/render" dev="proc" ino=4026532234 ioctlcmd=0x6609 scontext=u:r:untrusted_app:s0:c190,c256,c512,c768 tcontext=u:object_r:proc_fas:s0 tclass=file permissive=0 app=space.alliswell.inbox
+             1789658465.940 31887 31887 I auditd  : type=1400 audit(0.0:374212): avc:  denied  { ioctl } for  comm="binder:31887_6" path="/proc/fas/render" dev="proc" ino=4026532234 ioctlcmd=0x6609 scontext=u:r:untrusted_app:s0:c190,c256,c512,c768 tcontext=u:object_r:proc_fas:s0 tclass=file permissive=0 app=space.alliswell.inbox
+             1789658466.371  1843  2057 I wm_pause_activity: [0,139699747,space.alliswell.inbox/.AlarmActivity,userLeaving=true,pauseBackTasks]
+             1789658466.373  1843  2057 I wm_add_to_stopping: [0,139699747,space.alliswell.inbox/.AlarmActivity,makeInvisible]
+             1789658466.385 31887 31887 I wm_on_top_resumed_lost_called: [139699747,space.alliswell.inbox.AlarmActivity,topStateChangedWhenResumed]
+             1789658466.395 31887 31887 I wm_on_paused_called: [139699747,space.alliswell.inbox.AlarmActivity,performPause,6]
+             1789658466.442  1843  2416 I input_focus: [Focus leaving Window:ea2d4b7 type=1 space.alliswell.inbox/space.alliswell.inbox.AlarmActivity,reason=Waiting for window because NO_WINDOW]
+             1789658467.460  1843  3752 I wm_add_to_stopping: [0,139699747,space.alliswell.inbox/.AlarmActivity,makeInvisible]
+             1789658467.471  1843  2060 I wm_stop_activity: [0,139699747,space.alliswell.inbox/.AlarmActivity]
+             1789658467.551 31887 31887 I wm_on_stop_called: [139699747,space.alliswell.inbox.AlarmActivity,STOP_ACTIVITY_ITEM,29]
+             1789658473.010  1843  2149 I am_app_frozen: [0,10190,space.alliswell.inbox,from fast_freezer]
+
+[23:21:15] 判读：出现 am_app_frozen → 前台服务**不足以**免冻；只有 am_app_unfrozen → 前台服务有效
+[23:21:15] === 结束 ===

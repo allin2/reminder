@@ -1,0 +1,5 @@
+{
+  "status": "NOT_PERFORMED",
+  "reason": "User prioritized function verification before long standby",
+  "runnerInterruptedAfter": "cold/cleanup.json"
+}
