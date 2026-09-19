@@ -1,3 +1,7 @@
+> **2026-09-18 OPPO 最新暂停点**：本轮已修复隐藏震动的停止入口，用户要求完成当前实验后暂停验收。先读 [OPPO 修复与验收状态](../reviews/android-oppo-hidden-alarm-20260918.md)。当前候选 SHA256 `b4eb10c410e3537a88cf0f4821d714a9d97dd1c22dfa73b5b5cf983eb7c7acfc`；75 秒息屏/其他 App 前台通过，SIGKILL 后冷启动失败，不能沿用下方 vivo 的 PASS。OPPO 已改“完全允许后台行为”，自启动设置尚未核对。源码未提交，新 Release 未发布。
+>
+> **2026-09-18 vivo 最新候选复验续跑点**：当前仅连接 vivo `10ACBF2D3D000RS`。目标 APK 仍为上述 `b4eb10c4…7acfc`，但机上实际安装的仍是 F6c `7813017e5d7f9454bdafb5ead8ccfc5417f44c1242f096647eb16cf7032fa1c9`。本轮重新执行保留数据升级安装时，vivo 返回 `INSTALL_FAILED_ABORTED: User rejected permissions`；随后取证确认设备处于锁屏，最新候选没有落地。因此 **尚未开始把 off / other / cold 三组结果绑定到最新候选**。安装前快照在 `docs/reviews/verification-runs/20260918-vivo-latest-candidate/before-install/`，安装等待/拒绝现场在同目录的 `installer-wait/` 与 `install-rejected/`。下一步必须先解锁手机，再由用户在 vivo「安全守护」页手动勾选风险确认并点“继续安装”；不得绕过该系统确认。安装完成后先核对机上 SHA-256 为 `b4eb10c4…7acfc` 与升级前数据未丢，再依次运行最新候选的 75 秒 `off / other / cold`，脚本入口为 `scripts/verification/alarm-device-matrix.py`。
+
 # Android 闹钟交接 · vivo freezer / R-1 · 2026-09-18
 
 接手 Agent 先读这一份即可开始工作；下方报告与原始证据供核验，不需要回溯对话。

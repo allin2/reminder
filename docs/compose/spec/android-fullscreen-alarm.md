@@ -1,10 +1,10 @@
 ---
 feature: android-fullscreen-alarm
 status: decided
-updated: 2026-09-16
+updated: 2026-09-19
 branch: main
-relates: android-native-reminders.md
-decisions: D9 D10 D11 D12
+relates: android-native-reminders.md, android-alarm-carrier.md
+decisions: D9 D10 D11 D12 D25 D58 D59 D60 D61
 ---
 
 # 关键档全屏闹钟
@@ -35,17 +35,28 @@ decisions: D9 D10 D11 D12
 
 ## [S2] Design
 
-### [S2.1] 适用范围（唯一性）
+### [S2.1] 适用范围
 
-全屏闹钟**仅归「关键」档所有，且仅用于首次提醒**。
+> ⚠️ **本节已于 2026-09-19 更正。** 原文写「全屏闹钟**仅归「关键」档所有**」，
+> 并称「普通档、**重要档**一律不得使用全屏闹钟」。该表述**已被 D25 / A-01 取代** ——
+> A-01 把重要档从「更高显著性通知」**升为闹钟级**。
+> 佐证：`acceptance-cases.md` C2「☆重要事项首次提醒 → **全屏闹钟**」、
+> `scenarios-v2.html:928`「A-01 把重要档从「更高显著性通知」升为闹钟级」、
+> `product-logic.md:234`「**不再是「关键档专属」**」。
+> 代码 `native-reminders.js:279-283` 的 `shouldFirstAlarm()` 亦按此执行。
+> **原文是过期文档，不是代码缺陷。**
+
+全屏闹钟归**已标记档（重要 / 关键）**所有，且**仅用于首次提醒**；
+未标记事项由全局默认投递方式（`defaultDeliveryMode`）决定。
 
 | 档位 | 首次提醒 | 补充提醒 |
 |---|---|---|
-| 普通 | 通知（`attention-normal-v2`） | 无 |
-| 重要 | 通知（`attention-important-v2`） | 通知，30 分钟 × 3 |
+| 普通（未标记） | 按全局默认：通知 或 闹钟 | 无 |
+| 重要 | **全屏闹钟** | 通知（`attention-important-v2`），30 分钟 × 3 |
 | **关键** | **全屏闹钟** | 通知（`attention-critical-v2`），15 分钟 × 7 |
 
-**待整理、普通档、重要档一律不得使用全屏闹钟。** 这条是硬约束。
+**待整理（含「提醒能力自检」面板）一律不得使用全屏闹钟。** 这条硬约束不变
+（已落地，见 `product-logic.md:234`）；其余路由以 D25 / A-01 为准。
 
 ### [S2.2] 「显式开启」的判定
 
@@ -79,16 +90,17 @@ PRD 原则四（送达 ≠ 看到）。
 
 **`onBackPressed()` 必须恢复为「等同关闭」**，不得置空。
 
-### [S2.5] 权限与降级
+### [S2.5] 权限与降级 → **已移交**
 
-| 情况 | 行为 |
-|---|---|
-| 无 `POST_NOTIFICATIONS` | 退回应用内提醒，不弹全屏 |
-| 无精确闹钟权限（Android 12+） | 使用非精确 `AlarmManager`，界面标明可能延迟 |
-| `setAlarmClock` 抛异常 | 逐级降级：`setExactAndAllowWhileIdle` → `setAndAllowWhileIdle`（现有链路已具备） |
-| 全屏 Intent 被系统拒绝 | 仍投递高优先级通知作为兜底（现有 `AlarmTestReceiver` 已同时投递通知） |
+原表首行「无 `POST_NOTIFICATIONS` → **退回应用内提醒，不弹全屏**」**已于 2026-09-19 被 D61 否决**：
+它读起来像是允许静默降级，而真机上这一格的实际后果是**完全不响**（不响铃 / 不振动 / 不亮屏），
+与「退回应用内提醒」的语义相差很远。
 
-**任何降级都不得阻塞事项本身**——闹钟是增强，不是依赖。
+降级矩阵现由 [`android-alarm-carrier.md`](./android-alarm-carrier.md) [S2.3] **唯一**定义，
+其硬约束是「**任何降级都不得阻塞铃声与振动**」。本节不再重复维护，以免两处规则漂移。
+
+（原有两条仍然有效，并已并入新规格：`setAlarmClock` 抛异常时逐级降级；
+全屏 Intent 被拒时仍投递高优先级通知作兜底。）
 
 ### [S2.6] 投影与对账
 

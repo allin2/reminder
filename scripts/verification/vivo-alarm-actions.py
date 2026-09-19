@@ -3,7 +3,7 @@
 import argparse,json,subprocess,time,re,hashlib
 from pathlib import Path
 import xml.etree.ElementTree as ET
-p=argparse.ArgumentParser();p.add_argument('evidence',type=Path);p.add_argument('--serial',required=True);p.add_argument('--sha256',required=True);a=p.parse_args()
+p=argparse.ArgumentParser();p.add_argument('evidence',type=Path);p.add_argument('--serial',required=True);p.add_argument('--sha256',required=True);p.add_argument('--screen',choices=['off','foreground'],default='off');p.add_argument('--actions',nargs='+',choices=['close','ack','snooze','done'],default=['close','ack','snooze','done']);a=p.parse_args()
 root=Path(__file__).resolve().parents[2];run=a.evidence.resolve();run.mkdir(exist_ok=False)
 adb=[str(Path.home()/'Library/Android/sdk/platform-tools/adb'),'-s',a.serial];pkg='space.alliswell.inbox'
 def cmd(*args):return subprocess.check_output(adb+list(args),timeout=40)
@@ -16,19 +16,26 @@ def state():return cdp('(async()=>{const A=window.__ATTENTION_INBOX__;await A.re
 def prefs(name):return cmd('shell','run-as',pkg,'cat','shared_prefs/'+name+'.xml')
 def values(xml,key):return json.loads(ET.fromstring(xml).find("string[@name='"+key+"']").text or '[]')
 apk=cmd('shell','pm','path',pkg).decode().strip().removeprefix('package:');assert cmd('shell','sha256sum',apk).decode().split()[0]==a.sha256
-save(run/'metadata.json',{'serial':a.serial,'candidateSha256':a.sha256,'startedAt':int(time.time()*1000),'sourceScriptSha256':hashlib.sha256(Path(__file__).read_bytes()).hexdigest()})
+save(run/'metadata.json',{'serial':a.serial,'candidateSha256':a.sha256,'screen':a.screen,'startedAt':int(time.time()*1000),'sourceScriptSha256':hashlib.sha256(Path(__file__).read_bytes()).hexdigest()})
 cmd('shell','input','keyevent','KEYCODE_WAKEUP');cmd('shell','wm','dismiss-keyguard');cmd('shell','am','start','-W','-n',pkg+'/.MainActivity');time.sleep(2)
 before=state();save(run/'state-before.json',before);results=[]
 for action,button in [('close','btnDismiss'),('ack','btnAck'),('snooze','btnSnooze'),('done','btnDone')]:
+ if action not in a.actions:continue
  folder=run/action;folder.mkdir();iid='f6c_action_'+action+'_'+str(int(time.time()));title='F6c 按钮测试 '+action
  js='''(async()=>{const A=window.__ATTENTION_INBOX__;await A.ready();const it=A.makeItem({id:ID,title:TITLE,note:'功能验收专用',priority:'important',status:'waiting',triggerAt:Date.now()+30000,isFallbackTrigger:false,repeat:null});A.state.items.push(it);await A.saveAsync();await new Promise(r=>setTimeout(r,5000));return JSON.stringify(it)})()'''.replace('ID',json.dumps(iid)).replace('TITLE',json.dumps(title))
- item=cdp(js);save(folder/'item-before.json',item);cmd('shell','input','keyevent','KEYCODE_HOME');cmd('shell','input','keyevent','KEYCODE_SLEEP');print('WAIT',action,flush=True)
- time.sleep(max(0,item['triggerAt']/1000+4-time.time()))
+ item=cdp(js);save(folder/'item-before.json',item)
+ if a.screen=='off':
+  cmd('shell','input','keyevent','KEYCODE_HOME');cmd('shell','input','keyevent','KEYCODE_SLEEP')
+ print('WAIT',action,a.screen,flush=True)
+ until=item['triggerAt']/1000+4
+ while time.time()<until:
+  if a.screen=='foreground':cmd('shell','input','keyevent','KEYCODE_WAKEUP')
+  time.sleep(min(5,max(0,until-time.time())))
  (folder/'before.png').write_bytes(cmd('exec-out','screencap','-p'));xml=prefs('alarm_trace');(folder/'trace-before.xml').write_bytes(xml)
  events=values(xml,'events');token=[e['token'] for e in events if e['stage']=='item' and e['detail']==iid][-1];alarmid=token.split(':')[0]
  cmd('shell','uiautomator','dump','/sdcard/f6c-actions.xml');ui=cmd('exec-out','cat','/sdcard/f6c-actions.xml');(folder/'ui-before.xml').write_bytes(ui);tree=ET.fromstring(ui)
  assert any(n.get('text')==title for n in tree.iter('node')),'wrong alarm title'
- node=next(n for n in tree.iter('node') if n.get('resource-id')==pkg+':id/'+button);x1,y1,x2,y2=map(int,re.findall(r'\d+',node.get('bounds')));clicked=int(time.time()*1000)
+ node=next(n for n in tree.iter('node') if n.get('resource-id')==pkg+':id/'+button);x1,y1,x2,y2=map(int,re.findall(r'\d+',node.get('bounds')));clicked=int(cmd('shell','date','+%s%3N').decode().strip())
  cmd('shell','input','tap',str((x1+x2)//2),str((y1+y2)//2));time.sleep(5)
  # Read current WebView without launching MainActivity: a launch would hide action-routing faults.
  after=state();save(folder/'state-after-action.json',after);it=next(x for x in after['items'] if x['id']==iid)

@@ -193,6 +193,10 @@
     }
     .soft-entry:active { background: var(--paper-elev); border-color: var(--signal); color: var(--signal); }
     .soft-entry strong { color: var(--ink-2); font-weight: 600; }
+    /* A-2 / D68：首页告知条 —— 复用 soft-entry 的安静形态（无数字、无徽标），
+       只把虚线换成实线、标题用「注意」色，避免与「现在需要注意」争夺注意力。 */
+    .notice-entry { border-style: solid; border-color: color-mix(in srgb, var(--attention) 30%, var(--line)); }
+    .notice-entry .notice-title { color: var(--attention); font-weight: 600; }
 
     .empty {
       text-align: center;
@@ -887,7 +891,10 @@
   </header>
 
   <main class="main" id="main">
+    <section id="activeAlarmPanel" hidden aria-label="正在提醒的闹钟" aria-live="polite"></section>
     <section class="view active" id="view-home">
+      <!-- A-2：后台提醒链路断掉时的首页告知条（基线 §473 / AC-14）。默认空，由 renderHomeNotice 填充 -->
+      <div id="homeNotice"></div>
       <div id="homeReview"></div>
       <div id="homeDue"></div>
       <div id="homeActive"></div>
@@ -1681,7 +1688,7 @@
         <button class="set-row" id="labOpenFsi">
           <div>
             <div>6. 允许「全屏通知」</div>
-            <div class="sub">Android 14+ 锁屏/息屏弹全屏的必要条件</div>
+            <div class="sub">让到点的提醒在锁屏/息屏时直接亮屏弹到最前，而不是只留一条通知横幅。Android 14+ 需手动允许。</div>
           </div>
           <span style="color:var(--muted)">›</span>
         </button>

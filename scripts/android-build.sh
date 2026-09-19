@@ -71,7 +71,15 @@ build_one() {
   local variant="$1" task="assembleDebug" name="debug"
   if [ "$variant" = "release" ]; then task="assembleRelease"; name="release"; fi
   echo "==> ./gradlew $task"
-  ./gradlew "${GRADLE_ARGS[@]}" "$task"
+  # bash 3.2（macOS 自带 /bin/bash）在 `set -u` 下不允许展开**空**数组：
+  # `"${GRADLE_ARGS[@]}"` 会直接报 `GRADLE_ARGS[@]: unbound variable` 并终止。
+  # 没设 HTTPS_PROXY 时 GRADLE_ARGS 就是空的 —— 于是「本地无代理」这一最常见情况下构建必然失败。
+  # 这里显式分支，不依赖 bash 版本，也不给 gradlew 传空参数。
+  if [ ${#GRADLE_ARGS[@]} -gt 0 ]; then
+    ./gradlew "${GRADLE_ARGS[@]}" "$task"
+  else
+    ./gradlew "$task"
+  fi
 }
 
 mkdir -p "$REPO/releases"

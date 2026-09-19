@@ -28,7 +28,7 @@ function section(name) {
 function createEnvironment(options) {
   options = options || {};
   const calls = { schedule: [], cancel: [], deliveredRemoved: [], channels: [], actionTypes: [] };
-  const alarmCalls = { scheduleAlarm: [], scheduleAt: [], cancelAlarm: [] };
+  const alarmCalls = { scheduleAlarm: [], scheduleAt: [], cancelAlarm: [], cancelNotification: [] };
   let pending = (options.pending || []).slice();
   let actionCallback = null;
   let resumeCallback = null;
@@ -96,6 +96,7 @@ function createEnvironment(options) {
       };
     },
     async cancelAlarm(value) { alarmCalls.cancelAlarm.push(value); return { ok: true }; },
+    async cancelNotification(value) { alarmCalls.cancelNotification.push(value); return { ok: true }; },
     async diagnose() {
       return {
         notificationsEnabled: display !== "denied",
@@ -411,8 +412,8 @@ async function run() {
       /AlarmTestReceiver\.KEY_DELIVERY_SHOWN_AT/.test(activity) &&
       /AlarmTestReceiver\.KEY_DELIVERY_SHOWN_AT/.test(plugin));
     ok("receiver 先落「尝试」台账再起全屏（顺序反了会覆盖 shownAt）",
-      receiver.indexOf("recordAttempt(context, title") > -1 &&
-      receiver.indexOf("recordAttempt(context, title") < receiver.indexOf("context.startActivity(activity)"));
+      receiver.indexOf("recordAttempt(context, trace, title") > -1 &&
+      receiver.indexOf("recordAttempt(context, trace, title") < receiver.indexOf("context.startActivity(activity)"));
     ok("activity 启动时记录「全屏真的起来了」",
       /KEY_DELIVERY_SHOWN_AT, System\.currentTimeMillis\(\)/.test(activity));
     ok("plugin 能回读投递结局 + 两项全屏权限",
@@ -525,46 +526,109 @@ async function run() {
       /AlarmScheduler\.scheduleUnfreezer\(getContext\(\), am, id, trace, intent, triggerAt, flags, clockInfo\)/.test(plugin) &&
       /PendingIntent\.getForegroundService\(context, id, service, flags\)/.test(scheduler) &&
       /am\.setAlarmClock\(info, unfreezePi\)/.test(scheduler));
-    ok("F3b 拿不到闹钟时钟位时退回 allow-while-idle 并如实记 mode，不假装两条一样",
-      /scheduleUnfreezer\(context, am, id, trace, delivery, triggerAt, flags, null\)/.test(scheduler) &&
+    // D64（2026-09-19）改写并**加强**。
+    //
+    // 原断言是「拿不到闹钟时钟位时退回 allow-while-idle 并如实记 mode」—— 意图正确，
+    // 但当时那条兜底路径有个漏洞：没有精确闹钟权限时 `setExactAndAllowWhileIdle` 会抛
+    // SecurityException，而 `scheduleUnfreezer` 写在**同一个 try 内**，于是降级后
+    // **连解冻器都没排**（F3 的解冻整条失效），并且整条路径**一条台账都不写** ——
+    // 与「安静地不响」是同一类失效形态。
+    //
+    // 移除 `USE_EXACT_ALARM`（D64：本应用非闹钟/日历核心功能，不满足 Play 资格）之后，
+    // 这条路会成为 Android 14+ 的默认路径，所以断言也随之加强为三条独立契约。
+    ok("D64 精确闹钟权限先查再排（不再只靠 try/catch 兜）",
+      /boolean exactPerm = canScheduleExactAlarms\(context\)/.test(scheduler) &&
+      /static boolean canScheduleExactAlarms\(Context context\)/.test(scheduler));
+    ok("D64 解冻器无条件排在精确排程判定之外（精确排程失败也必须把进程拉起来）",
+      /scheduleUnfreezer\(context, am, id, trace, delivery, triggerAt, flags, info\)/.test(scheduler) &&
+      // 解冻器调用必须晚于「三种形态判定」的最后一次赋值：用它自己在源码里的位置证明
+      scheduler.indexOf("scheduleUnfreezer(context, am, id, trace, delivery, triggerAt, flags, info)") >
+        scheduler.indexOf('mode = "inexactNoPermission"'));
+    ok("D64 解冻器三种形态各自如实记 mode，不假装等价",
+      /mode = "alarmClock"/.test(scheduler) &&
       /mode = "allowWhileIdle"/.test(scheduler) &&
+      /mode = "inexactIdle"/.test(scheduler) &&
       /";mode=" \+ mode/.test(scheduler));
+    ok("D64 无精确闹钟权限时降级到非精确且落台账（消除静默降级）",
+      /exactAlarmPermissionMissing/.test(scheduler) &&
+      /mode = "inexactNoPermission"/.test(scheduler) &&
+      /am\.set\(AlarmManager\.RTC_WAKEUP, triggerAt, pi\)/.test(scheduler));
+    ok("D64 闹钟时钟位排程失败要留痕，不再 catch (Exception ignored) 吞掉",
+      /alarmClockFailed/.test(scheduler) &&
+      !/am\.setAlarmClock\(info, pi\);\s*\n\s*AlarmTrace\.record\(context, trace, "scheduled"/.test(scheduler));
     ok("F3b 两处注释都保留 Reason=frozen 的取证（别再退回 allow-while-idle）",
       /Reason=frozen/.test(scheduler) && /Reason=frozen/.test(ringService));
-    ok("F3 解冻器自己不投递任何东西（投递逻辑只有 Receiver 一条实现）",
+    ok("F3 解冻器自己不投递闹钟通知（投递逻辑只有 Receiver 一条实现）",
       /class AlarmRingService extends Service/.test(ringService) &&
-      /unfreezerStarted/.test(ringService) &&
+      !/ActiveAlarmStore\.postIfActive/.test(ringService) &&
       !/nm\.notify\(/.test(ringService));
-    ok("F3 解冻器必须尽快 startForeground 并短暂留住进程",
-      /startForeground\(FOREGROUND_ID, guardNotification\(\)\)/.test(ringService) &&
-      /HOLD_MS/.test(ringService) &&
+    ok("D59 服务启动即拿前台身份，并在响铃上限处自停（铃声不再靠「通知被撤」而停）",
+      /startForeground\(FOREGROUND_ID, ringNotification\(title\)\)/.test(ringService) &&
+      /ActiveAlarmStore\.MAX_AGE_MS/.test(ringService) &&
       /stopSelf\(\)/.test(ringService));
-    ok("F3b 前台身份保留时长可由测试钩子指定（免冻验证需要长于 8 秒的窗口）",
-      /static final String EXTRA_HOLD_MS/.test(ringService) &&
-      /intent\.getLongExtra\(EXTRA_HOLD_MS, HOLD_MS\)/.test(ringService) &&
-      /holdMs < 1000/.test(ringService));
-    ok("F3 Manifest 声明 shortService 与配套权限（API 34 类型不匹配会抛异常）",
+    ok("D59 响铃上限可由测试钩子指定（生产值 6 小时，真机上等不到）",
+      /static final String EXTRA_MAX_RING_MS/.test(ringService) &&
+      /intent\.getLongExtra\(EXTRA_MAX_RING_MS, ActiveAlarmStore\.MAX_AGE_MS\)/.test(ringService) &&
+      /maxRingMs < 1000L/.test(ringService));
+    ok("D59 Manifest 声明 mediaPlayback 与配套权限（API 34 类型不匹配会抛异常）",
       /android:name="\.AlarmRingService"/.test(manifest) &&
-      /android:foregroundServiceType="shortService"/.test(manifest) &&
-      /FOREGROUND_SERVICE_SHORT_SERVICE/.test(manifest));
+      /android:foregroundServiceType="mediaPlayback"/.test(manifest) &&
+      /FOREGROUND_SERVICE_MEDIA_PLAYBACK/.test(manifest) &&
+      // shortService 有硬性时长上限，而闹钟要响到用户处理或撞上 MAX_AGE —— 不能再用它
+      !/foregroundServiceType="shortService"/.test(manifest));
     ok("F3 取消时三种 PendingIntent 都撤（广播/前台服务/历史 Activity 直投）",
       /PendingIntent\.getBroadcast\(context, id, intent, flags\)/.test(scheduler) &&
       /PendingIntent\.getForegroundService\(context, id, service, flags\)/.test(scheduler) &&
       /PendingIntent\.getActivity\(context, id, ui, flags\)/.test(scheduler) &&
       /AlarmScheduler\.cancel\(getContext\(\), id\)/.test(plugin));
 
-    // F2：声音的所有权交给系统 —— 界面被系统收掉时铃声必须还在。
-    // 真机实测界面可能只活 367ms（created → resumed → 33ms → paused(finishing=true)），
-    // 声音随 MediaPlayer 一起消失（audioStarted 后 186ms 就 effectsStopped），用户只听到半声。
-    ok("F2 闹钟通知带 FLAG_INSISTENT（由系统循环播放，不随界面生死）",
-      /notification\.flags \|= Notification\.FLAG_INSISTENT/.test(receiver) &&
+    // D59（2026-09-19，**推翻 F2**）：声音与振动的所有权从通知收回应用。
+    //
+    // F2 当年把声音交给系统（通知的 IRingtonePlayer 播，不受本进程生死影响），
+    // 收益是「界面被系统收掉，声音还在」。代价在 H-08 上显形：无 POST_NOTIFICATIONS 时
+    // `notify()` 是**静默空操作**，声音与振动随屏幕一起归零 —— 真机实测
+    // 「无通知权限 + 息屏」7 轮受控投递 0/4 成功：不响铃、不振动、不亮屏。
+    //
+    // 下面几条是**反向断言**（证明旧路径已经消失）。反向断言有个专门陷阱：
+    // 「找不到某字符串」在文件读错、内容为空时**也会通过**，看起来一样绿。
+    // 所以每条都先剥注释 —— 新代码的注释里正解释着这些旧标识符，不剥就会自我命中 ——
+    // 并配一个长度哨兵证明「文件确实读到了内容」。
+    const strip = s => s.replace(/\/\*[\s\S]*?\*\//g, " ").replace(/^[ \t]*\/\/[^\n]*$/gm, " ");
+    const receiverCode = strip(receiver);
+    const activityCode = strip(activity);
+    ok("D59 闹钟通知不再带 FLAG_INSISTENT（声音不再由通知承载）",
+      receiverCode.length > 1000 &&
+      !/FLAG_INSISTENT/.test(receiverCode) &&
       /import android\.app\.Notification;/.test(receiver));
-    ok("F2 通知能发时界面不再自己播铃声（否则两路铃声重叠）",
-      /private boolean notificationOwnsSound\(\)/.test(activity) &&
-      /if \(!notificationOwnsSound\(\)\) startAlarmSound\(\)/.test(activity) &&
-      /areNotificationsEnabled\(\)/.test(activity));
-    ok("F2 INSISTENT 循环的就是渠道音（渠道没声音则 INSISTENT 无效）",
-      /channel\.setSound\(alarmSound\(context\)/.test(receiver));
+    ok("D59 闹钟通知不再 setDefaults(DEFAULT_ALL)（振动不再由通知承载）",
+      !/DEFAULT_ALL/.test(receiverCode));
+    ok("D59 渠道无声音无振动，且旧渠道被显式退役（渠道属性创建后不可改）",
+      /channel\.setSound\(null, null\)/.test(receiverCode) &&
+      /channel\.enableVibration\(false\)/.test(receiverCode) &&
+      /nm\.deleteNotificationChannel\(LEGACY_CHANNEL_ID\)/.test(receiverCode) &&
+      /CHANNEL_ID = "attention-alarm-v4"/.test(receiverCode) &&
+      /LEGACY_CHANNEL_ID = "attention-alarm-v3"/.test(receiverCode));
+    ok("D59 界面不再自己判断「通知是否持有声音」（所有权已不在通知）",
+      activityCode.length > 1000 &&
+      !/notificationOwnsSound/.test(activityCode) &&
+      /AlarmRingService\.isRinging\(\)/.test(activityCode));
+    ok("D59 投递侧先起响铃服务再拉界面（响不该被「亮」的失败连带）",
+      receiverCode.indexOf("startRingService(context, intent, trace)") > 0 &&
+      receiverCode.indexOf("startRingService(context, intent, trace)") <
+        receiverCode.indexOf("context.startActivity(activity)"));
+
+    // T4：界面亮屏能力。这段实现在 D59 之前就存在（D45-a 那轮写的），但**从未被断言过** ——
+    // 而 D59 之后它的地位上升了：屏幕成了通知权限唯一起作用的那一格，
+    // 「界面能不能在锁屏下显示」直接决定这一格是成功还是失败。所以补上守护。
+    ok("T4 界面亮屏齐备（API 27+ setter + 全版本 flag 回退 + manifest 三处）",
+      activityCode.length > 1000 &&
+      /setShowWhenLocked\(true\)/.test(activityCode) &&
+      /setTurnScreenOn\(true\)/.test(activityCode) &&
+      /FLAG_KEEP_SCREEN_ON/.test(activityCode) &&
+      /FLAG_TURN_SCREEN_ON/.test(activityCode) &&
+      /FLAG_SHOW_WHEN_LOCKED/.test(activityCode) &&
+      /android:showWhenLocked="true"/.test(manifest) &&
+      /android:turnScreenOn="true"/.test(manifest));
 
     // R-1：以下是放行前的历史失败；2026-09-18 已验证三个独立设置后恢复。
     //   ① 进程活着 → 被 fast_freezer 冻进 cgroup，冻结态下广播/前台服务/Activity 全进不来；
@@ -635,6 +699,76 @@ async function run() {
   // Q6：原生链路「静默失败」的可观测性。
   // 这一节全是源码级断言 —— 因为这类缺陷的共同点是**运行期完全看不见**：
   // 不抛错、不崩溃、界面照常可点，只在「关掉 App 后到底响不响」上体现出来。
+  section("N-02 / N-03 生命周期与冷启动基线（2026-09-18 修复守护）");
+  {
+    const fs = require("fs");
+    const readSrc = rel => fs.readFileSync(path.join(__dirname, rel), "utf8");
+    const activity = readSrc("android/app/src/main/java/space/alliswell/inbox/AlarmActivity.java");
+    const appCoreSrc = readSrc("app-core.js");
+    const codeOnly = appCoreSrc
+      .replace(/\/\*[\s\S]*?\*\//g, " ")
+      .replace(/^[ \t]*\/\/[^\n]*$/gm, " ");
+
+    // N-02-a：onStop 无条件停声振，但此前**没有对应的恢复** —— 在通知权限被禁
+    // （声音只能靠界面自播）的机器上，按 Home 再切回来闹钟就永久哑了。
+    const resumeAt = activity.indexOf("protected void onResume()");
+    const resumeBody = resumeAt < 0 ? "" : activity.slice(resumeAt, resumeAt + 900);
+    ok("N-02 onResume 恢复声振（与 onStop 的静音决策配成一对）",
+      /restartAlarmEffects\(\)/.test(resumeBody));
+
+    // N-02-b：startAlarmSound 必须幂等 —— playAlarm 无条件 new MediaPlayer 并直接覆盖字段，
+    // 旧 player 仍在 looping 却已失去引用（停不掉也释放不掉），重复起响会叠加成两路铃声。
+    const soundAt = activity.indexOf("private void startAlarmSound()");
+    const soundBody = soundAt < 0 ? "" : activity.slice(soundAt, soundAt + 520);
+    ok("N-02 startAlarmSound 幂等（已在播则复用，不叠加第二路铃声）",
+      /mediaPlayer\.isPlaying\(\)\)\s*return;/.test(soundBody));
+
+    // N-03-a：面板轮询句柄必须留痕，重复初始化不得静默堆定时器
+    ok("N-03 面板轮询保存句柄并在重绑时清理",
+      /let activeAlarmPollTimer = null;/.test(codeOnly) &&
+      /clearInterval\(activeAlarmPollTimer\)/.test(codeOnly));
+
+    // N-03-b：冷启动基线 —— committedAlarmItems 此前只在 writeSnapshot 里赋值，
+    // 「刚启动、还没提交过事务」时恒为 []，旧投递永远等不到自动忽略。
+    const applyAt = codeOnly.indexOf("function applyParsedState(parsed)");
+    const applyEnd = codeOnly.indexOf("function loadAsync()");
+    const applyBody = (applyAt < 0 || applyEnd <= applyAt) ? "" : codeOnly.slice(applyAt, applyEnd);
+    ok("N-03 加载状态时重建 committedAlarmItems 基线（否则旧投递永不被自动忽略）",
+      /committedAlarmItems = JSON\.parse\(JSON\.stringify\(state\.items\)\)/.test(applyBody));
+
+    // D45-a（2026-09-18 反向选择）：onStop **不再**停止声振。
+    // 必须剥注释后再匹配 —— 本轮 onStop 的注释里正解释着 "onDestroy 仍调
+    // stopAlarmEffects()"，不剥注释会把这段说明误判成「onStop 停了声」。
+    const javaCode = s => s
+      .replace(/\/\*[\s\S]*?\*\//g, " ")
+      .replace(/^[ \t]*\/\/[^\n]*$/gm, " ");
+    const activityCode = javaCode(activity);
+
+    // 用「方法区间」而不是固定偏移取 body —— 注释会随解释增删而变长。
+    const methodBody = (code, from, to) => {
+      const a = code.indexOf(from);
+      const b = a < 0 ? -1 : code.indexOf(to, a);
+      return (a < 0 || b <= a) ? "" : code.slice(a, b);
+    };
+
+    const stopBody = methodBody(activityCode, "protected void onStop()", "private void bindIntent()");
+    ok("D45-a onStop 不再停止声振（遮挡期间继续响）",
+      stopBody.length > 0 &&
+      !/stopLocalFallback\(\)/.test(stopBody) &&
+      !/stopAllEffects\(\)/.test(stopBody) &&
+      /super\.onStop\(\)/.test(stopBody));
+
+    // D59 改写了这条边界的**理由**（结论仍是「响铃不越过界面销毁」，但只管回落路径）：
+    // 铃声的主载体已经是前台服务，界面死掉不该把它一起带走 —— 那正是本次修复的目的。
+    // 所以 onDestroy 只停回落，**不能**出现 requestStop 或 stopAllEffects。
+    const destroyBody = methodBody(activityCode, "protected void onDestroy()", "public void onBackPressed()");
+    ok("D59 onDestroy 只停回落路径，不停服务（铃声不随界面销毁而中断）",
+      destroyBody.length > 0 &&
+      /stopLocalFallback\(\)/.test(destroyBody) &&
+      !/stopAllEffects\(\)/.test(destroyBody) &&
+      !/AlarmRingService\.requestStop/.test(destroyBody));
+  }
+
   section("Q6 原生链路静默失败与可观测性");
   {
     const fs = require("fs");
@@ -880,6 +1014,27 @@ async function run() {
     ok("D23 暂停截止保护后不排任何截止提醒",
       !native.buildDesired([pausedItem], { notify: true }, now).some(n => n.extra.event === "deadline"));
 
+    // N-08：截止不足 2 小时时 p24 与 p2 **同时**过期，补投只应产生**一条**提醒。
+    // 修复前两者各自补投 `now + 2000` → 同一事项在同一毫秒弹出两条通知（重复打扰）。
+    const overdueItem = item("od", "normal", now + 30 * 86400000, { deadlineAt: now + 3600000 });
+    const overdueDeadlines = native.buildDesired([overdueItem], { notify: true }, now)
+      .filter(n => n.extra.event === "deadline");
+    ok("N-08 多个保护点同时过期只补投一条截止提醒",
+      overdueDeadlines.length === 1,
+      overdueDeadlines.map(n => n.extra.stageKey + "@" + n.schedule.at.getTime()).join(" | "));
+    ok("N-08 补投保留最接近截止的阶段（p2）",
+      overdueDeadlines.length === 1 && overdueDeadlines[0].extra.stageKey === "p2@" + overdueItem.deadlineAt,
+      overdueDeadlines.map(n => n.extra.stageKey).join("|"));
+    // 对照：截止还有 12 小时 → 只有 p24 过期，p2 仍在未来，应为「1 条补投 + 1 条预排」
+    const leadOnlyItem = item("lo", "normal", now + 30 * 86400000, { deadlineAt: now + 12 * 3600000 });
+    const leadOnlyDeadlines = native.buildDesired([leadOnlyItem], { notify: true }, now)
+      .filter(n => n.extra.event === "deadline");
+    ok("N-08 对照：仅 p24 过期时补投 p24、并保留未来的 p2",
+      leadOnlyDeadlines.length === 2 &&
+      leadOnlyDeadlines.filter(n => n.schedule.at.getTime() <= now + 5000)
+        .every(n => n.extra.stageKey === "p24@" + leadOnlyItem.deadlineAt),
+      leadOnlyDeadlines.map(n => n.extra.stageKey + "@" + n.schedule.at.getTime()).join(" | "));
+
     // V06：整理确认后（REVIEWED）但兜底标记仍在的记录，原生不得排出正式提醒
     const confirmedFallback = item("cf", "normal", now + 3600000, {
       review_status: "REVIEWED", isFallbackTrigger: true
@@ -921,6 +1076,8 @@ async function run() {
     ok("R7 状态带出失败原因", (failed.errors || []).some(e => /^cancel:/.test(e)), JSON.stringify(failed.errors));
     bridgeMock.cancelAlarm = realCancel;
     const retried = await native.reconcile([], { notify: true, scheduledAlarmIds: failed.scheduledAlarmIds }, now, null);
+    ok("隐藏闹钟：排程对账不能移除正在提醒的停止入口",
+      env.alarms.cancelNotification.length > 0 && env.alarms.cancelNotification.every(x => x.preserveActive === true));
     ok("R7 重试成功后才移除台账",
       retried.alarmCancelled === 1 && retried.scheduledAlarmIds.length === 0,
       JSON.stringify(retried.scheduledAlarmIds));
@@ -962,6 +1119,296 @@ async function run() {
       cancelFailDisabledStatus.reliability + " " + JSON.stringify(cancelFailDisabledStatus.errors));
     bridgeMock2.cancelAlarm = origCancel;
     void env;
+  }
+
+  section("D43 单次提醒补投台账（2026-09-18 修复守护）");
+  {
+    // 背景：投影只排**严格未来**的触发点（`at <= now` 直接跳过），于是「触发点已过、
+    // 事项仍活跃」的提醒永远拿不到原生通知 —— 用户**少一条提醒**。
+    // 补投必须能回答「这个触发点是否已经消费过」，否则每轮对账都会再补一次。
+    // 台账结构、三态语义、身份取法全部与 deadlineEvents 对齐。
+    const past = now - 5 * 60 * 1000;
+    const missed = item("miss", "normal", past);
+    const caught = native.buildDesired([missed], { notify: true }, now);
+    ok("D43-a 触发点已过且无记录 → 补一条提醒（此前直接丢弃）",
+      caught.length === 1 && caught[0].extra.catchUp === true,
+      JSON.stringify(caught.map(n => n.extra.event)));
+    ok("D43-a 补投落在 now+2s，身份仍是**原定触发点**（不是补投时刻）",
+      caught.length === 1 &&
+      caught[0].schedule.at.getTime() === now + 2000 &&
+      caught[0].extra.reminderKey === "0@" + past,
+      caught.length ? caught[0].extra.reminderKey : "none");
+
+    const withState = state => Object.assign({}, missed, {
+      reminderEvents: { ["0@" + past]: { at: now + 2000, state } }
+    });
+    ok("D43-b 台账 scheduled → 既不重排也不补发（无法判定是否送达）",
+      native.buildDesired([withState("scheduled")], { notify: true }, now).length === 0);
+    ok("D43-c 台账 delivered → 终态，永不再打扰",
+      native.buildDesired([withState("delivered")], { notify: true }, now).length === 0);
+    ok("D43-d 台账 cancelled → 视同「从未排过」，允许补一次",
+      native.buildDesired([withState("cancelled")], { notify: true }, now).length === 1);
+
+    const ancient = item("ancient", "normal", now - 25 * 3600000);
+    ok("D43-e 超出补投窗口（>24h）不补 —— 事项本身已在首页「待确认」，半夜补通知是净打扰",
+      native.buildDesired([ancient], { notify: true }, now).length === 0);
+    const borderline = item("borderline", "normal", now - 23 * 3600000);
+    ok("D43-e 窗口内（<24h）仍补一条",
+      native.buildDesired([borderline], { notify: true }, now).length === 1);
+
+    const firstBuild = native.buildDesired([missed], { notify: true }, now)[0];
+    const secondBuild = native.buildDesired([missed], { notify: true }, now)[0];
+    ok("D43-f 补投身份稳定（同 now 反复对账得同一 id，不产生撤销/重排循环）",
+      !!firstBuild && !!secondBuild && firstBuild.id === secondBuild.id);
+
+    const overdueCritical = item("critical-miss", "critical", now - 2 * 3600000);
+    const criticalCaught = native.buildDesired([overdueCritical], { notify: true }, now);
+    const lastAttempt = 7; // critical: total = 8
+    ok("D43-g 多个尝试全过期只补一条，且保留**最后一次**尝试（与 D44-b 同一取舍）",
+      criticalCaught.length === 1 &&
+      criticalCaught[0].extra.attempt === lastAttempt &&
+      criticalCaught[0].extra.reminderKey ===
+        lastAttempt + "@" + (overdueCritical.triggerAt + lastAttempt * 15 * 60 * 1000),
+      JSON.stringify(criticalCaught.map(n => [n.extra.attempt, n.extra.reminderKey])));
+    ok("D43-h 补投**不**走全屏闹钟（错过的提醒不该抢屏）",
+      criticalCaught.length === 1 && !criticalCaught[0].extra.useAlarm);
+
+    const dismissed = Object.assign({}, missed, { dismissedUntil: now + 3600000 });
+    ok("D43-i dismissedUntil 在未来 → 不补投（不打断用户「别打扰」的承诺）",
+      native.buildDesired([dismissed], { notify: true }, now).length === 0);
+
+    const futureDesired = native.buildDesired([item("future", "normal", now + 3600000)],
+      { notify: true }, now);
+    ok("D43-j 未过期路径完全不受影响（无 catchUp 标记、身份照旧）",
+      futureDesired.length === 1 &&
+      futureDesired[0].extra.catchUp === undefined &&
+      futureDesired[0].extra.reminderKey === "0@" + (now + 3600000));
+
+    // 回传 → 落账 → 下一轮为 0：没有这条链路，补投会每轮对账重来一次
+    await native._resetForTests();
+    createEnvironment();
+    const recStatus = await native.reconcile([missed], { notify: true }, now, null);
+    ok("D43-k 对账回传 reminderEvents（本地通道）",
+      (recStatus.reminderEvents || []).length === 1 &&
+      recStatus.reminderEvents[0].itemId === "miss" &&
+      recStatus.reminderEvents[0].key === "0@" + past &&
+      recStatus.reminderEvents[0].at === now + 2000,
+      JSON.stringify(recStatus.reminderEvents));
+    const recorded = Object.assign({}, missed, {
+      reminderEvents: {
+        [recStatus.reminderEvents[0].key]: { at: recStatus.reminderEvents[0].at, state: "scheduled" }
+      }
+    });
+    ok("D43-l 把回传落账后下一轮不再补投（端到端幂等）",
+      native.buildDesired([recorded], { notify: true }, now).length === 0);
+
+    await native._resetForTests();
+    createEnvironment();
+    const alarmFuture = item("alarm-future", "critical", now + 3600000);
+    const alarmStatus = await native.reconcile([alarmFuture], { notify: true }, now, null);
+    ok("D43-m 闹钟通道（关键档首次）也要记入台账 —— 否则到点后重复补投",
+      (alarmStatus.reminderEvents || []).some(
+        e => e.itemId === "alarm-future" && e.key === "0@" + alarmFuture.triggerAt),
+      JSON.stringify(alarmStatus.reminderEvents));
+
+    await native._resetForTests();
+    createEnvironment();
+    await native.reconcile([item("revoke", "normal", now + 3600000)], { notify: true }, now, null);
+    const revoked = await native.reconcile([], { notify: true }, now + 1000, null);
+    ok("D43-n 本轮真的被撤销的提醒排程要回传（撤销 ≠ 送达，允许日后补一次）",
+      (revoked.cancelledReminderEvents || []).length === 1 &&
+      revoked.cancelledReminderEvents[0].itemId === "revoke" &&
+      revoked.cancelledReminderEvents[0].key === "0@" + (now + 3600000),
+      JSON.stringify(revoked.cancelledReminderEvents));
+  }
+
+  section("H-08 投递台账：无通知权限必须能被归因（2026-09-18 修复守护）");
+  {
+    // 背景：`setFullScreenIntent` 是 **Notification 的属性**，通知发不出去就没有载体，
+    // 系统也不会替我们全屏，并失去 NOTIFICATION_SERVICE 的 BAL 豁免 → 直起同样被静默拦。
+    // 2026-09-18 vivo 真机：无通知权限 + 息屏 0/4，有权限 2/2，断点每次都在 created 之前。
+    // 本轮只落「可观测性」（台账 + 自检归因），不改投递机制。
+    const fs = require("fs");
+    const readSrc = rel => fs.readFileSync(path.join(__dirname, rel), "utf8");
+    const receiver = readSrc("android/app/src/main/java/space/alliswell/inbox/AlarmTestReceiver.java");
+    const bridgeSrc = readSrc("android/app/src/main/java/space/alliswell/inbox/SystemBridgePlugin.java");
+    const appCore = readSrc("app-core.js");
+    const jCode = s => s
+      .replace(/\/\*[\s\S]*?\*\//g, " ")
+      .replace(/^[ \t]*\/\/[^\n]*$/gm, " ");
+
+    ok("H-08 投递台账新增「当时通知是否可用」字段",
+      /KEY_DELIVERY_NOTIFY_ON = "deliveryNotifyEnabled"/.test(receiver));
+    ok("H-08 投递时把通知可用性写进台账（事后改权限不能篡改当时的结论）",
+      /putBoolean\(KEY_DELIVERY_NOTIFY_ON, notificationsUsable\(context\)\)/.test(receiver));
+    // minSdk 22：`NotificationManager.areNotificationsEnabled()` 是 API 24+，直接调用会
+    // 抛 NoSuchMethodError 且 catch(Exception) 兜不住（H-04 已修过同一坑，这里是投递侧）。
+    ok("H-08 判权限用 NotificationManagerCompat（API 22 不会 NoSuchMethodError）",
+      /NotificationManagerCompat\.from\(context\)\.areNotificationsEnabled\(\)/.test(receiver));
+    // D59 改的是**字段与措辞两者**，不只是措辞。
+    //
+    // 旧文案 "system notifications disabled; full-screen intent has no carrier" 读起来像
+    // 「整个闹钟都哑了」；而 D59 之后它只对**屏幕**成立 —— 声音与振动已改由
+    // AlarmRingService 自播，根本不经过通知。诊断反着报比不报更危险：
+    // 2026-09-18 那轮就是靠这种反着的结论把排查引向了「加悬浮窗权限」。
+    ok("D59 只记「屏幕没有载体」，不再暗示整个闹钟静默",
+      /AlarmTrace\.record\(context, trace, "screenCarrierMissing"/.test(receiver) &&
+      !/"fullScreenCarrierMissing"/.test(jCode(receiver)) &&
+      /sound\+vibration unaffected/.test(receiver));
+    ok("H-08 lastAlarmDelivery 回传该字段，且默认 true（老记录不误报无权限）",
+      /r\.put\("notifyEnabledAtDelivery",\s*sp\.getBoolean\(AlarmTestReceiver\.KEY_DELIVERY_NOTIFY_ON, true\)\)/.test(bridgeSrc));
+
+    // JS 侧的归因是**行为**，不在这里做源码级匹配（源码级匹配无法反向验证）：
+    // 断言在 test-smoke.js「11. H-08 投递归因」一节，逐条覆盖「无权限 / 同时命中 /
+    // 老记录 / 权限齐备 / 界面已显示」五种形态。
+    const coreCodeH8 = jCode(appCore);
+    ok("H-08 归因读取投递台账字段（键名与原生写入一致）",
+      /d\.notifyEnabledAtDelivery === false/.test(coreCodeH8) &&
+      /notifyEnabledAtDelivery/.test(bridgeSrc));
+
+    // ── D64 两条上架门禁（2026-09-19）─────────────────────────────────────────
+    //
+    // ① `USE_EXACT_ALARM` 资格：Google Play 政策限定该受限权限只给「闹钟/计时器」类
+    //    或「显示活动通知的日历」类应用，并明写不符合资格者禁止发布
+    //    （support.google.com/googleplay/android-developer/answer/16558241）。
+    //    本应用核心功能是提醒/待办 → 改走官方给的替换路径：
+    //    「继续声明 SCHEDULE_EXACT_ALARM，并做好使用者拒绝的备案」。
+    // ② A14+ `USE_FULL_SCREEN_INTENT`：检测与引导**此前已实现**（Q3-a/Q3-b），
+    //    真正缺的是「投递时快照」—— 归因原先读的是**活值**。
+    const d64Manifest = readSrc("android/app/src/main/AndroidManifest.xml");
+    ok("D64 清单只声明 SCHEDULE_EXACT_ALARM，不再声明受限的 USE_EXACT_ALARM",
+      /android\.permission\.SCHEDULE_EXACT_ALARM/.test(d64Manifest) &&
+      !/<uses-permission android:name="android\.permission\.USE_EXACT_ALARM"/.test(d64Manifest));
+    ok("D64 注册精确闹钟权限变更接收器（官方迁移清单第 4 步：授权后重排）",
+      /\.ExactAlarmPermissionReceiver/.test(d64Manifest) &&
+      /android\.app\.action\.SCHEDULE_EXACT_ALARM_PERMISSION_STATE_CHANGED/.test(d64Manifest));
+    const exactReceiverSrc = readSrc(
+      "android/app/src/main/java/space/alliswell/inbox/ExactAlarmPermissionReceiver.java");
+    ok("D64 接收器以实测值为准再重排（不把「收到广播」当成「已授权」）",
+      /AlarmScheduler\.canScheduleExactAlarms\(appContext\)/.test(exactReceiverSrc) &&
+      /if \(granted\)/.test(exactReceiverSrc) &&
+      /SystemBridgePlugin\.restorePersistedAlarms\(appContext\)/.test(exactReceiverSrc));
+    ok("D64 投递时快照精确闹钟与全屏意图两项权限（同 H-08：不能用「现在」解释「当时」）",
+      /KEY_DELIVERY_EXACT_ON = "deliveryExactEnabled"/.test(receiver) &&
+      /KEY_DELIVERY_FSI_ON = "deliveryFullScreenIntentEnabled"/.test(receiver) &&
+      /\.putBoolean\(KEY_DELIVERY_EXACT_ON, canScheduleExactAlarmsNow\(context\)\)/.test(receiver) &&
+      /\.putBoolean\(KEY_DELIVERY_FSI_ON, canUseFullScreenIntentNow\(context\)\)/.test(receiver));
+    ok("D64 两个快照默认 true（老 APK 记录缺键，不得凭空变成「没权限」）",
+      /r\.put\("exactAtDelivery",\s*sp\.getBoolean\(AlarmTestReceiver\.KEY_DELIVERY_EXACT_ON, true\)\)/.test(bridgeSrc) &&
+      /r\.put\("fsiAtDelivery",\s*sp\.getBoolean\(AlarmTestReceiver\.KEY_DELIVERY_FSI_ON, true\)\)/.test(bridgeSrc));
+    ok("D64 归因优先用投递时快照，活值只作老记录回退",
+      /d\.fsiAtDelivery !== undefined/.test(coreCodeH8) &&
+      /d\.canUseFullScreenIntent !== false/.test(coreCodeH8) &&
+      /d\.exactAtDelivery === false/.test(coreCodeH8));
+    ok("D64 全屏意图判定前置版本闸门（API 34+ 方法在 minSdk 22 上抛 NoSuchMethodError，catch(Exception) 兜不住）",
+      /if \(Build\.VERSION\.SDK_INT < 34\) return true;/.test(receiver) &&
+      /catch \(Exception \| Error ignored\)/.test(receiver));
+
+    // ── D59 载体归因（S2.5）────────────────────────────────────────────────
+    //
+    // 「响了」与「亮了」是两件独立的事，台账必须能分开回答。缺这组字段时，
+    // `notifyEnabledAtDelivery=false` 会被读成「完全静默」—— 而在 D59 之后
+    // 那只是「屏幕没有载体」，声音照常在响。
+    const ringServiceSrc = readSrc("android/app/src/main/java/space/alliswell/inbox/AlarmRingService.java");
+    ok("D59 台账新增载体归因字段（声音/振动/前台服务分别归因）",
+      /KEY_CARRIER_SOUND = "carrierSound"/.test(receiver) &&
+      /KEY_CARRIER_VIBRATE = "carrierVibrate"/.test(receiver) &&
+      /KEY_CARRIER_FGS = "carrierForegroundService"/.test(receiver));
+    // 归属必须认「哪一次投递」。时间戳在这里是错的判据 ——
+    // 广播投递与响铃服务是两条**同刻**的闹钟时钟，谁先派发不确定，
+    // 用「谁更新」判断会在「服务先跑」时把本次结果误判成上一次的陈旧值。
+    ok("D59 载体归属用 trace 而不是时间戳（两条同刻排程谁先跑不确定）",
+      /KEY_CARRIER_TRACE = "carrierTrace"/.test(receiver) &&
+      /KEY_DELIVERY_TRACE = "deliveryTrace"/.test(receiver) &&
+      /putString\(KEY_DELIVERY_TRACE, trace/.test(receiver) &&
+      /putString\(AlarmTestReceiver\.KEY_CARRIER_TRACE/.test(ringServiceSrc));
+    ok("D59 载体陈旧时回 unknown，不沿用上一次投递的旧值",
+      /carrierFresh/.test(bridgeSrc) &&
+      /deliveryTrace\.equals\(carrierTrace\)/.test(bridgeSrc) &&
+      /"unknown"/.test(bridgeSrc));
+    ok("D59 服务把「铃声/振动/前台身份」各自的成功与否都上报",
+      /putString\(AlarmTestReceiver\.KEY_CARRIER_SOUND, sound \? "native" : "none"\)/.test(ringServiceSrc) &&
+      /putString\(AlarmTestReceiver\.KEY_CARRIER_VIBRATE, vibrate \? "native" : "none"\)/.test(ringServiceSrc) &&
+      /putBoolean\(AlarmTestReceiver\.KEY_CARRIER_FGS, foreground\)/.test(ringServiceSrc));
+    // 界面回落也必须上报载体，否则「服务没起来、界面代它响了」这件事在面板上反而看不见
+    ok("D59 界面回落自播时也上报载体（否则降级路径在面板上不可见）",
+      /recordFallbackCarrier/.test(jCode(readSrc("android/app/src/main/java/space/alliswell/inbox/AlarmActivity.java"))));
+
+    // 停铃链路必须闭环：撤通知**不会**让服务持有的铃声停（D59 之前它靠 FLAG_INSISTENT
+    // 挂在通知上，撤通知即停；现在不是了）。漏掉这一环的表现是
+    // 「点了停止声振，通知没了，铃声还在响」，而唯一兜底是 6 小时后的 MAX_AGE。
+    ok("D59 停铃收口：撤通知的同时显式停服务（否则铃声关不掉）",
+      /AlarmRingService\.requestStop\(context\)/.test(readSrc("android/app/src/main/java/space/alliswell/inbox/ActiveAlarmStore.java")));
+  }
+
+  section("D68 自动静音上限 / 首页硬告知 / 全屏意图用途说明（2026-09-19 修复守护）");
+  {
+    const fs2 = require("fs");
+    const readSrc2 = rel => fs2.readFileSync(path.join(__dirname, rel), "utf8");
+    const ringSrc = readSrc2("android/app/src/main/java/space/alliswell/inbox/AlarmRingService.java");
+    const actSrc = readSrc2("android/app/src/main/java/space/alliswell/inbox/AlarmActivity.java");
+    const pluginSrc = readSrc2("android/app/src/main/java/space/alliswell/inbox/SystemBridgePlugin.java");
+    const manifestSrc = readSrc2("android/app/src/main/AndroidManifest.xml");
+    const htmlSrc = readSrc2("index.html");
+    const coreSrc = readSrc2("app-core.js");
+
+    // ── A-1：闹钟档「响到确认为止」必须有可见的时限 ────────────────────────────
+    //
+    // 基线依据 §8：「普通 | 到点主动提醒；未 ACK 时有限补提醒；**达到上限后进入未确认区，
+    // 不无限追击**」；§8.1：「系统**不得**根据解锁、进入 App、通知消失等行为推测 ACK」。
+    // 现场依据（D63）：最坏形态是「无通知权限 + 息屏 = 界面起不来、通知栏没有，
+    // 只剩铃声响到 6h 的 MAX_AGE，且只有打开 App 才能停」。
+    ok("D68/A-1 自动静音上限存在，且远小于 6h 的 MAX_AGE 兜底",
+      /AUTO_SILENCE_MS = 5L \* 60L \* 1000L/.test(ringSrc) &&
+      /AUTO_SILENCE_MS/.test(ringSrc));
+    const silenceBody = ringSrc.slice(ringSrc.indexOf("private void scheduleAutoSilence"),
+      ringSrc.indexOf("private void scheduleAutoSilence") + 900);
+    ok("D68/A-1 静音到点先落盘「已静音」再停声（顺序反了会被界面回落自播重新播起来）",
+      silenceBody.indexOf("markAutoSilenced(trace)") > -1 &&
+      silenceBody.indexOf("markAutoSilenced(trace)") < silenceBody.indexOf("stopSelf()"));
+    ok("D68/A-1 自动静音只停声振、保留投递记录、不产生 ACK",
+      /ringAutoSilenced/.test(silenceBody) && /unacknowledged, no ACK/.test(silenceBody));
+    ok("D68/A-1 静音与 MAX_AGE 是两个并列上限（不许互相覆盖）",
+      /scheduleMaxAge\(trace, limit\)/.test(ringSrc) &&
+      /scheduleAutoSilence\(trace, intent\.getLongExtra/.test(ringSrc));
+    const dupBranch = ringSrc.slice(ringSrc.indexOf("ringDuplicateStart"),
+      ringSrc.indexOf("ringDuplicateStart") + 400);
+    ok("D68/A-1 「同一次投递重复启动」分支不重新 arm 静音计时（否则静音窗口被往后推）",
+      /scheduleMaxAge/.test(dupBranch) && !/scheduleAutoSilence/.test(dupBranch));
+    ok("D68/A-1 界面回落自播前先查「本次投递是否已自动静音」",
+      /wasAutoSilenced\(this, token\)/.test(actSrc) &&
+      actSrc.indexOf("wasAutoSilenced(this, token)") <
+        actSrc.indexOf("startLocalFallback()", actSrc.indexOf("private void restartAlarmEffects")));
+    ok("D68/A-1 lastAlarmDelivery 回传 autoSilenced / autoSilencedAt（否则面板看不出静音生效）",
+      /r\.put\("autoSilenced"/.test(pluginSrc) && /KEY_AUTO_SILENCED_AT/.test(pluginSrc));
+
+    // ── A-2：链路断了必须**在首页**直说 ────────────────────────────────────────
+    //
+    // 基线 §473「通知权限关闭 → 首页明确告知『无法保证提醒』；恢复权限后自动 Reconcile」
+    // + AC-14「不得继续伪装正常」+ §305「关键能力不得偷偷降级而不告知」。
+    // 这里只断言「宿主存在 + 真的被渲染 + 状态漏斗接上」三件事 ——
+    // 判定与 DOM 行为由 test-smoke 第 11b 节做**行为级**断言（D48 教训：源码正则挡不住语义回退）。
+    ok("D68/A-2 首页有告知条宿主节点", /id="homeNotice"/.test(htmlSrc));
+    ok("D68/A-2 renderHome 真的会渲染它（宿主存在但没人填 = 死节点）",
+      /function renderHome\(\)[\s\S]{0,400}?renderHomeNotice\(\)/.test(coreSrc));
+    ok("D68/A-2 原生状态漏斗会刷新它（权限恢复后自动消失，无需另建通路）",
+      /function setNativeReminderStatus\(status\)[\s\S]{0,700}?renderHomeNotice\(\)/.test(coreSrc));
+    ok("D68/A-2 判定与渲染都进了测试钩子（否则只能退回源码级断言）",
+      /homeNoticeVerdict,/.test(coreSrc) && /renderHomeNotice,/.test(coreSrc));
+
+    // ── Q6：USE_FULL_SCREEN_INTENT 的「清楚说明需求」（Google Play 政策要求）────
+    //
+    // 非闹钟/通话类应用声明该权限时必须**明确说明**用途；此前的文案只讲机制
+    // （「Android 14+ 的必要条件」），没讲「为什么需要」，等于说明缺失。
+    ok("D68/Q6 清单里写明该权限的用途与不用途（政策要的「明确说明需求」）",
+      /USE_FULL_SCREEN_INTENT/.test(manifestSrc) &&
+      /【为什么需要】/.test(manifestSrc) && /【不用于什么】/.test(manifestSrc));
+    ok("D68/Q6 自检面板第 6 项讲「为什么需要」，且入口两侧都在",
+      /id="labOpenFsi"/.test(htmlSrc) &&
+      /让到点的提醒在锁屏\/息屏时直接亮屏弹到最前/.test(htmlSrc) &&
+      /"#labOpenFsi"/.test(coreSrc));
+    ok("D68/Q6 旧文案已撤（只讲机制、不讲需求）",
+      !/Android 14\+ 锁屏\/息屏弹全屏的必要条件/.test(htmlSrc));
   }
 
   section("actions and resume");

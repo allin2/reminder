@@ -52,6 +52,18 @@ public class AlarmActivity extends AppCompatActivity {
 
   private MediaPlayer mediaPlayer;
   private Vibrator vibrator;
+  private static java.lang.ref.WeakReference<AlarmActivity> current = new java.lang.ref.WeakReference<>(null);
+
+  static void stopDelivery(int id, String token) {
+    AlarmActivity activity = current.get();
+    if (activity == null) return;
+    activity.runOnUiThread(() -> {
+      String activeToken = activity.getIntent().getStringExtra(AlarmTrace.EXTRA);
+      if (activity.currentAlarmId != id || (token != null && !token.equals(activeToken))) return;
+      activity.stopAllEffects();
+      activity.finish();
+    });
+  }
   private final Handler handler = new Handler(Looper.getMainLooper());
   private Runnable clockTicker;
   /** V1：本次投递是否已经判定为「显示出来了」，避免重复落盘与重复采样 */
@@ -86,6 +98,7 @@ public class AlarmActivity extends AppCompatActivity {
         | WindowManager.LayoutParams.FLAG_ALLOW_LOCK_WHILE_SCREEN_ON
     );
 
+    current = new java.lang.ref.WeakReference<>(this);
     setContentView(R.layout.activity_alarm);
 
     Button ack = findViewById(R.id.btnAck);
@@ -121,7 +134,18 @@ public class AlarmActivity extends AppCompatActivity {
       return;
     }
     trace("replaced", "different delivery");
-    stopAlarmEffects();
+    // 上一条的通知必须一并撤掉：D59 之后它不再承载声音（声音在服务里），
+    // 但残留的通知仍带着全屏意图与停止按钮，留着会让用户点到已经过期的入口。
+    if (currentAlarmId != intent.getIntExtra(EXTRA_ID, currentAlarmId)) {
+      ActiveAlarmStore.drop(this, currentAlarmId);
+    }
+    // **只停界面这一路**，绝不停服务。
+    //
+    // 新投递的服务在 `AlarmTestReceiver.onReceive` 里就已经启动了，而它的 trace 与当前
+    // 界面手里的旧 trace 不同 —— 此刻调 `stopAllEffects()` 会把**刚为新投递起的那条铃声**
+    // 一起杀掉，用户听到的是「B 响了一声就没了」。而服务自己认 trace：
+    // 它的 `onStartCommand` 收到新 trace 时会自行把铃声从 A 换到 B。
+    stopLocalFallback();
     setIntent(intent);
     bindIntent();
     restartAlarmEffects();
@@ -140,6 +164,15 @@ public class AlarmActivity extends AppCompatActivity {
   protected void onResume() {
     super.onResume();
     trace("resumed", "lifecycle only");
+    if (clockTicker != null) {
+      handler.removeCallbacks(clockTicker);
+      handler.post(clockTicker);
+    }
+    // N-02：`onStop` 无条件停掉声振（隐藏的界面不该自己独立重复振动 / 循环响铃），
+    // 但此前**没有对应的恢复** —— 用户按 Home 再切回来，在通知权限被禁（声音只能靠界面自播）
+    // 的机器上，闹钟就永久哑了。可见即恢复，与 onStop 的决策配成一对。
+    // 幂等性由 startAlarmSound 保证；token 已失效（被停止 / 被替换）时它自己 finish。
+    restartAlarmEffects();
     observeWindow();
   }
 
@@ -221,6 +254,27 @@ public class AlarmActivity extends AppCompatActivity {
   @Override
   protected void onStop() {
     trace("stopped", "finishing=" + isFinishing());
+    // D45-a 反向选择（2026-09-18）：界面被遮挡时**不再停止声振**。
+    // 原先的决策是 "A hidden Activity must never hold an independent repeating
+    // vibration"；但它只在一种情况下成为问题，即声音另有载体（通知）时。
+    // 而走到这里由界面发声，前提恰恰是 notificationOwnsSound() 为 false ——
+    // 用户关掉了通知权限，通知栏里根本没有那条带停止按钮的常驻通知，
+    // 界面因此是**唯一**的声源与唯一的静音入口；此时停声 = 整个闹钟消失。
+    //
+    // D59 补注（2026-09-19）：这条裁决的**前提已经被改掉一半** —— 声音与振动的主载体
+    // 不再是通知，而是 `AlarmRingService`。所以「遮挡期继续响」现在是**服务**的性质，
+    // 与界面死活无关；本方法连 `stopLocalFallback()` 都不必调，因为服务那边的铃声
+    // 不会因为界面的 onStop 而中断。D45-a 的结论不变（要响），但原因换了：
+    // 从前是「界面停了就没人响了」，现在是「界面本来就管不着铃声」。
+    // 覆盖该决策所接受的两项代价与两道边界：
+    //   · 代价：用户必须回到界面、或点通知按钮才能静音（通知按钮在无权限时不存在，
+    //     此时界面按钮是唯一入口 —— 见 D63 已显式接受该风险）
+    //   · 代价：遮挡期间振动也继续（USAGE_ALARM + repeat=0，本就该如此）
+    //   · 边界一：onDestroy 仍调 stopLocalFallback()，**回落路径**的响铃不越过界面自身的销毁
+    //     （服务路径不受此限，它有自己的 MAX_AGE 上限）
+    //   · 边界二：ActiveAlarmStore.MAX_AGE_MS 给台账与响铃设同一条上限
+    // 时钟刷新仍然停：它只服务于可见界面，onResume 会重新 post。
+    if (clockTicker != null) handler.removeCallbacks(clockTicker);
     super.onStop();
   }
 
@@ -231,7 +285,7 @@ public class AlarmActivity extends AppCompatActivity {
       handler.postDelayed(() -> {
         if (token != null && token.equals(getIntent().getStringExtra(AlarmTrace.EXTRA))) {
           trace("autoClose", "diagnostic 5-second timeout");
-          stopAlarmEffects(); cancelPostedNotification(); finish();
+          stopAllEffects(); cancelPostedNotification(); finish();
         }
       }, 5000L);
     }
@@ -281,28 +335,70 @@ public class AlarmActivity extends AppCompatActivity {
     }
   }
 
+  /**
+   * D59：界面不再持有铃声与振动的主载体 —— 那是 `AlarmRingService` 的职责。
+   *
+   * 这里只做两件事：确认这次投递仍然有效（否则自关），以及**在服务缺席时回落自播**
+   * （S2.3 降级矩阵最后一行：前台服务起不来时，进程内自播是最后一道防线）。
+   *
+   * 互斥是硬要求：服务在响时界面绝不自己播。V3 记的就是两路同时持有声音的现场 ——
+   * `replaced different delivery → effectsStopped → audioStarted → duplicateIntent`，
+   * 用户听到的是响铃被打断后从头重播。
+   */
   private void restartAlarmEffects() {
-    if (!notificationOwnsSound()) startAlarmSound();
-    startVibration();
+    String token = getIntent().getStringExtra(AlarmTrace.EXTRA);
+    if (!ActiveAlarmStore.contains(this, currentAlarmId, token)) {
+      finish();
+      return;
+    }
+    // D68：这次投递已经自动静音过 —— 不再回落自播。
+    //
+    // 回落自播的条件正是「服务不响」，而自动静音之后服务**恰好不响**。
+    // 不加这道闸，用户重新看到界面（或界面 resume）时铃声会被界面自己播起来，
+    // 5 分钟的静音上限就等于没生效 —— 那正是 D68 要消灭的失效形态。
+    if (AlarmRingService.wasAutoSilenced(this, token)) {
+      stopLocalFallback();
+      recordFallbackCarrier("none");
+      return;
+    }
+    if (AlarmRingService.isRinging()) {
+      stopLocalFallback();
+      recordFallbackCarrier("none");
+      return;
+    }
+    startLocalFallback();
   }
 
   /**
-   * F2：铃声通常由**通知**承担 —— 渠道音 + `Notification.FLAG_INSISTENT`，由系统
-   * （NotificationManagerService 的 IRingtonePlayer）循环播放，界面被系统收掉也照样响。
+   * 回落自播：只有服务确实没起来时才走这里。
    *
-   * 这也解释了为什么不再让界面无条件自己播：真机实测界面可能只活 367 毫秒
-   * （created → resumed → 33ms → paused(finishing=true)），声音随载体一起消失，
-   * 用户只听到半声。只有通知确实发不出去（用户关了通知权限）时才退回界面自播，
-   * 否则会出现两路铃声重叠。
+   * 与旧实现的区别在**触发条件**：旧的是「通知权限缺失就自播」（`notificationOwnsSound()` 取反），
+   * 现在声音已经不归通知管，那个条件失去意义；新的条件是「服务有没有把载体拿走」。
    */
-  private boolean notificationOwnsSound() {
+  private void startLocalFallback() {
+    startAlarmSound();
+    startVibration();
+    recordFallbackCarrier(mediaPlayer != null ? "activity" : "none");
+  }
+
+  /**
+   * 把「这次是界面在响」记进载体台账。
+   *
+   * 必须带上本次投递的 trace —— 读取方（`SystemBridgePlugin.lastAlarmDelivery`）靠它
+   * 判断这份载体记录属于哪一次投递；不写就会被判成陈旧值而返回 "unknown"，
+   * 于是「界面回落确实响了」这件事在面板上反而看不见。
+   */
+  private void recordFallbackCarrier(String sound) {
     try {
-      Object svc = getSystemService(Context.NOTIFICATION_SERVICE);
-      NotificationManager nm = svc instanceof NotificationManager ? (NotificationManager) svc : null;
-      return nm != null && nm.areNotificationsEnabled();
-    } catch (Exception ignored) {
-      return false;
-    }
+      getSharedPreferences(PREFS, MODE_PRIVATE).edit()
+        .putString(AlarmTestReceiver.KEY_CARRIER_SOUND, sound)
+        .putString(AlarmTestReceiver.KEY_CARRIER_VIBRATE, sound.equals("none") ? "none" : "activity")
+        .putBoolean(AlarmTestReceiver.KEY_CARRIER_FGS, false)
+        .putLong(AlarmTestReceiver.KEY_CARRIER_AT, System.currentTimeMillis())
+        .putString(AlarmTestReceiver.KEY_CARRIER_TRACE,
+          getIntent() == null ? "" : String.valueOf(getIntent().getStringExtra(AlarmTrace.EXTRA)))
+        .apply();
+    } catch (Exception ignored) {}
   }
 
   /** F1：闹钟时钟直接拉起界面时，extras 用的是 Receiver 那套键名；两套都认，界面才能正确渲染 */
@@ -316,7 +412,8 @@ public class AlarmActivity extends AppCompatActivity {
 
   private void finishWithAction(String action, boolean reschedule) {
     trace("userAction", action);
-    stopAlarmEffects();
+    // 用户明确要求停止 —— 这是**唯一**该停服务的出口类型（服务 + 界面回落一起停）
+    stopAllEffects();
     if (reschedule) {
       try {
         long delay = 2 * 60 * 60 * 1000L; // D11：快捷稍后固定 2 小时
@@ -353,12 +450,7 @@ public class AlarmActivity extends AppCompatActivity {
   }
 
   private void cancelPostedNotification() {
-    try {
-      Object svc = getSystemService(Context.NOTIFICATION_SERVICE);
-      if (svc instanceof NotificationManager) {
-        ((NotificationManager) svc).cancel(currentAlarmId);
-      }
-    } catch (Exception ignored) {}
+    ActiveAlarmStore.stop(this, currentAlarmId, getIntent().getStringExtra(AlarmTrace.EXTRA));
   }
 
   private Uri alarmUri() {
@@ -374,6 +466,14 @@ public class AlarmActivity extends AppCompatActivity {
   }
 
   private void startAlarmSound() {
+    // N-02：`onResume` 会在「从后台切回来」时重新起响，所以这里必须**幂等**。
+    // `playAlarm` 无条件 `new MediaPlayer()` 并直接覆盖字段 —— 旧 player 仍在 looping
+    // 但已失去引用，既停不掉也释放不掉，结果是两路铃声叠加。
+    // 已在播就直接复用；存在但已停（异常残留）才重建。
+    if (mediaPlayer != null) {
+      try { if (mediaPlayer.isPlaying()) return; } catch (Exception ignored) {}
+      releasePlayer();
+    }
     android.media.AudioManager audio = (android.media.AudioManager) getSystemService(Context.AUDIO_SERVICE);
     if (audio != null) trace("audioState", "alarmVolume=" + audio.getStreamVolume(android.media.AudioManager.STREAM_ALARM)
       + ";max=" + audio.getStreamMaxVolume(android.media.AudioManager.STREAM_ALARM) + ";mode=" + audio.getMode());
@@ -426,8 +526,16 @@ public class AlarmActivity extends AppCompatActivity {
     } catch (Exception ignored) {}
   }
 
-  private void stopAlarmEffects() {
-    trace("effectsStopped", "");
+  /**
+   * 停掉**界面这一路**的回落自播。
+   *
+   * D59 之前它叫 `stopAlarmEffects()` —— 那时界面确实是声音的所有者，名字是准的。
+   * 现在主载体在服务里，界面这条路只剩「服务没起来」时的回落，名字必须跟着改，
+   * 否则下一个读代码的人会以为调用它就是「静音了整个闹钟」，而在服务持有铃声时
+   * 它其实**什么也没停**。
+   */
+  private void stopLocalFallback() {
+    trace("localFallbackStopped", "service-owned sound is stopped separately");
     try {
       if (mediaPlayer != null) {
         if (mediaPlayer.isPlaying()) mediaPlayer.stop();
@@ -442,12 +550,27 @@ public class AlarmActivity extends AppCompatActivity {
     if (clockTicker != null) handler.removeCallbacks(clockTicker);
   }
 
+  /**
+   * 停掉**全部**声振：服务那一路 + 界面回落这一路。
+   *
+   * 只给「用户明确要求停止」的出口用（四个出口 / 诊断自动关闭）——
+   * 绝不能用在对账或换投递的路径上：换投递时服务正在为新投递响，
+   * 停掉它等于把刚起的那条铃声也一起杀了（见 `onNewIntent` 的注释）。
+   */
+  private void stopAllEffects() {
+    AlarmRingService.requestStop(this);
+    stopLocalFallback();
+  }
+
   @Override
   protected void onDestroy() {
     trace("destroyed", "finishing=" + isFinishing());
     // V1：到销毁都没能判定为可见（例如被系统在几百毫秒内收掉）⇒ 这次投递没送到眼前，如实落盘
     if (!visibilityMarked) markHidden();
-    stopAlarmEffects();
+    // D59：**只停回落路径**。服务持有的铃声不随界面销毁而中断 ——
+    // 这正是本次修复的目的：界面起不来（vivo 上常态）时闹钟照样响。
+    // 服务的生命周期由它自己管（显式停止 / MAX_AGE 上限），不由界面的生死决定。
+    stopLocalFallback();
     handler.removeCallbacksAndMessages(null);
     super.onDestroy();
   }

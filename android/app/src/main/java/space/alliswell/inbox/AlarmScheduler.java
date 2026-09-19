@@ -52,30 +52,86 @@ public final class AlarmScheduler {
     if (level != null) delivery.putExtra(AlarmTestReceiver.EXTRA_LEVEL, level);
     PendingIntent pi = PendingIntent.getBroadcast(context, id, delivery, flags);
 
+    // D64（2026-09-19）：精确闹钟权限必须**先查再排**，不能只靠 try/catch 兜。
+    //
+    // 官方迁移步骤第一条就是「At a minimum, apps must check to see if they have the
+    // permission before scheduling exact alarms」（Android 14 行为变更 / schedule-exact-alarms）。
+    // 此前的写法只靠异常兜底，于是形成一条**静默降级**路径：
+    //   ① `setExactAndAllowWhileIdle` 抛 SecurityException → 落到 `am.set()`（非精确）；
+    //   ② 而 `scheduleUnfreezer` 写在同一 try 内 → **连解冻器都没排**；
+    //   ③ 整条路径**一条台账都不写** → 与「安静地不响」同类的失效形态。
+    // 这条路径在本次移除 `USE_EXACT_ALARM`（D64：本应用非闹钟/日历核心功能）后，会成为
+    // Android 14+ 的**默认**路径，所以必须在它变成默认之前修好。
+    boolean exactPerm = canScheduleExactAlarms(context);
+
     AlarmManager.AlarmClockInfo info = null;
-    try {
-      if (Build.VERSION.SDK_INT >= 21) {
+    if (exactPerm && Build.VERSION.SDK_INT >= 21) {
+      try {
         Intent showIntent = new Intent(context, MainActivity.class);
         showIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
         PendingIntent showPi = PendingIntent.getActivity(context, id + 100000, showIntent, flags);
         info = new AlarmManager.AlarmClockInfo(triggerAt, showPi);
         am.setAlarmClock(info, pi);
-        AlarmTrace.record(context, trace, "scheduled", "triggerAt=" + triggerAt + ";mode=alarmClock");
-        scheduleUnfreezer(context, am, id, trace, delivery, triggerAt, flags, info);
-        return;
+      } catch (Exception error) {
+        // 不再 `catch (Exception ignored)`：闹钟时钟位是冻结态下唯一会被准点派发的形态
+        // （见下方 scheduleUnfreezer 的取证），拿不到就必须留痕，否则事后只能靠猜。
+        AlarmTrace.record(context, trace, "alarmClockFailed", error.toString());
+        info = null;
       }
-    } catch (Exception ignored) {}
+    } else if (!exactPerm) {
+      AlarmTrace.record(context, trace, "exactAlarmPermissionMissing",
+        "canScheduleExactAlarms=false; degrades to inexact");
+    }
 
-    // 兜底排程（无需精确闹钟权限时）
-    try {
-      if (Build.VERSION.SDK_INT >= 23) {
-        am.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, triggerAt, pi);
-      } else {
-        am.setExact(AlarmManager.RTC_WAKEUP, triggerAt, pi);
+    String mode;
+    if (info != null) {
+      mode = "alarmClock";
+    } else if (exactPerm) {
+      try {
+        if (Build.VERSION.SDK_INT >= 23) {
+          am.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, triggerAt, pi);
+          mode = "exactIdle";
+        } else {
+          am.setExact(AlarmManager.RTC_WAKEUP, triggerAt, pi);
+          mode = "exact";
+        }
+      } catch (Exception error) {
+        AlarmTrace.record(context, trace, "exactScheduleFailed", error.toString());
+        am.set(AlarmManager.RTC_WAKEUP, triggerAt, pi);
+        mode = "inexactFallback";
       }
-      scheduleUnfreezer(context, am, id, trace, delivery, triggerAt, flags, null);
-    } catch (SecurityException se) {
+    } else {
+      // 无精确闹钟权限：官方认可的降级形态。`set()` 由系统批量对齐，**不保证准点**
+      // （官方对「用户指定时间之后发生的动作」正是推荐 `set()`）。如实记 mode。
       am.set(AlarmManager.RTC_WAKEUP, triggerAt, pi);
+      mode = "inexactNoPermission";
+    }
+
+    AlarmTrace.record(context, trace, "scheduled",
+      "triggerAt=" + triggerAt + ";mode=" + mode);
+
+    // 解冻器**必须**留在这次判定之外：即使精确排程拿不到，进程仍然需要被拉起来。
+    // 否则 F3 的解冻（「只有打开 App 才响」的那个修复）在权限缺失时整条失效。
+    scheduleUnfreezer(context, am, id, trace, delivery, triggerAt, flags, info);
+  }
+
+  /**
+   * D64：精确闹钟权限的**单一判据**。
+   *
+   * Android 14 起 `SCHEDULE_EXACT_ALARM` 对 targetSdk ≥ 33 的新装应用**默认拒绝**
+   * （官方：「no longer being pre-granted to most newly installed apps targeting Android 13
+   * and higher」），而 `setExact()` / `setExactAndAllowWhileIdle()` / `setAlarmClock()`
+   * 缺权限会抛 `SecurityException`。API 31 以下没有这个权限概念，恒为可用。
+   */
+  static boolean canScheduleExactAlarms(Context context) {
+    if (Build.VERSION.SDK_INT < 31) return true;
+    Object svc = context.getSystemService(Context.ALARM_SERVICE);
+    AlarmManager am = svc instanceof AlarmManager ? (AlarmManager) svc : null;
+    if (am == null) return false;
+    try {
+      return am.canScheduleExactAlarms();
+    } catch (Exception ignored) {
+      return false;
     }
   }
 
@@ -117,9 +173,14 @@ public final class AlarmScheduler {
       if (info != null) {
         am.setAlarmClock(info, unfreezePi);
         mode = "alarmClock";
-      } else {
+      } else if (canScheduleExactAlarms(context)) {
         am.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, triggerAt, unfreezePi);
         mode = "allowWhileIdle";
+      } else {
+        // D64：无精确闹钟权限时只能退回非精确 —— 冻结态下它会被挂起（`Reason=frozen`），
+        // 也就是说解冻本身在此时**是失效的**。如实记 mode，不假装它与闹钟时钟位等价。
+        am.setAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, triggerAt, unfreezePi);
+        mode = "inexactIdle";
       }
       AlarmTrace.record(context, trace, "unfreezerScheduled",
         "triggerAt=" + triggerAt + ";mode=" + mode);

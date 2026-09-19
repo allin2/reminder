@@ -1943,6 +1943,41 @@ async function run() {
       JSON.stringify(reloaded.app.state.items.map(x => [x.id === aId ? "A" : "N", x.status])));
   }
 
+  section("隐藏闹钟：完成必须提交成功，旧提醒与截止保护不能误处理");
+  {
+    const h = createApp(); const app = await h.boot();
+    const it = app.makeItem({ title: "隐藏闹钟完成", status: "due", triggerAt: Date.now()-1000, rev: 1 });
+    app.state.items = [it]; await app.saveAsync();
+    const env = installCapacitor(); const stopped = [];
+    global.Capacitor.Plugins.SystemBridge.stopAlarmDelivery = async x => { stopped.push(x); return { stopped: true }; };
+    const alarm = { id: 8123, token: "8123:save-test", itemId: it.id, itemRev: 1 };
+    h.holdCommits(true);
+    let failure = null;
+    const action = app.completeActiveAlarm(alarm).catch(e => { failure = e; });
+    await flush(3);
+    ok("完成提交前仍保留原状态与停止入口", it.status === "due" && stopped.length === 0);
+    h.releaseCommits(1, "fail"); await action; h.holdCommits(false);
+    ok("完成落库失败不得止响或假归档", !!failure && stopped.length === 0 && it.status === "due");
+    h.releaseCommits(0, "ok");
+    await app.completeActiveAlarm(alarm);
+    ok("重试提交成功后才停止对应投递", h.persistedStatusOf(it.id) === "archived" && stopped.length === 1 && stopped[0].token === alarm.token);
+    env.cleanup();
+  }
+  {
+    const h = createApp(); const app = await h.boot();
+    const it = app.makeItem({ title: "已改期事项", status: "waiting", triggerAt: Date.now()+60000, rev: 2 });
+    app.state.items = [it]; await app.saveAsync();
+    const env = installCapacitor(); let stops = 0;
+    global.Capacitor.Plugins.SystemBridge.stopAlarmDelivery = async () => { stops++; };
+    let failure = null;
+    await app.completeActiveAlarm({ id: 8124, token: "8124:stale", itemId: it.id, itemRev: 1 }).catch(e => { failure = e; });
+    ok("旧投递不能完成新版事项", !!failure && it.status === "waiting" && stops === 0 && h.persistedStatusOf(it.id) === "waiting");
+    ok("已确认事项的同版本截止保护保持可处理", !app.deliveryHandledByCommittedItem({ itemRev: 2 }, { status: "acknowledged", rev: 2 }));
+    ok("稍后事项的同版本截止保护保持可处理", !app.deliveryHandledByCommittedItem({ itemRev: 2 }, { status: "snoozed", rev: 2 }));
+    ok("已提交的新确认只清理旧版本投递", app.deliveryHandledByCommittedItem({ itemRev: 1 }, { status: "acknowledged", rev: 2 }));
+    env.cleanup();
+  }
+
   /* ---------- T1：隔离草稿与稳定依赖身份 ---------- */
   section("T1 原生 ACK 派生实例在创建提交确认前不可见、确认后可安全修改");
   {

@@ -173,10 +173,24 @@ sdkVersion:'22'  targetSdkVersion:'34'
 application-label:'安心收件箱'
 ```
 
-权限（两版一致，共 **11** 条）：
-`INTERNET`、`POST_NOTIFICATIONS`、`SCHEDULE_EXACT_ALARM`、`USE_EXACT_ALARM`、
-`RECEIVE_BOOT_COMPLETED`、`WAKE_LOCK`、`VIBRATE`、`FOREGROUND_SERVICE`、
-`USE_FULL_SCREEN_INTENT`、`DISABLE_KEYGUARD`、`space.alliswell.inbox.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION`。
+权限（**12** 条 = 本应用声明 11 条 + Capacitor 注入的 `DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION`）：
+
+`INTERNET`、`POST_NOTIFICATIONS`、`SCHEDULE_EXACT_ALARM`、`RECEIVE_BOOT_COMPLETED`、`WAKE_LOCK`、
+`VIBRATE`、`FOREGROUND_SERVICE`、`FOREGROUND_SERVICE_MEDIA_PLAYBACK`、`USE_FULL_SCREEN_INTENT`、
+`DISABLE_KEYGUARD`、`SYSTEM_ALERT_WINDOW`、`space.alliswell.inbox.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION`。
+
+> ⚠️ **D64（2026-09-19）起 `USE_EXACT_ALARM` 不再声明**（Play 受限权限，本应用不满足资格）。
+> 上面这份清单是**从成品 APK 的二进制清单实测**得到的，不是从源码文本抄的 —— 见下条。
+
+**核权限必须读 APK，不能读源码或合并清单的文本。** 合并后的 `AndroidManifest.xml`（文本）会
+**原样保留主清单里的注释块**，所以「D64：不再声明 `USE_EXACT_ALARM`」这句注释本身会让
+`grep USE_EXACT_ALARM` 命中（实测命中 3 次，全是注释，没有一条是 `uses-permission`）。
+正确做法是读**编译后的二进制清单**（注释被 AXML 编译器丢弃）：
+
+```bash
+~/Library/Android/sdk/build-tools/34.0.0/aapt2 dump xmltree \
+  --file AndroidManifest.xml "releases/安心收件箱-debug.apk" | grep -A1 uses-permission
+```
 
 ### 3.3 打包内容校验：产物不陈旧
 

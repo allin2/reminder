@@ -5,7 +5,9 @@
   "use strict";
 
   const KEY = "attention-inbox-v2";
-  const SCHEMA = 4;
+  // D43：schema 5 = 事项新增 `reminderEvents`（单次提醒台账，与 deadlineEvents 同构）。
+  // 旧记录缺这个字段时由 normalizeItem 补 `{}`；`schemaMigrationNeeded` 触发一次重写落库。
+  const SCHEMA = 5;
   const $ = (s, r) => (r || document).querySelector(s);
   const $$ = (s, r) => Array.from((r || document).querySelectorAll(s));
   const Lib = (typeof AttentionLib !== "undefined" && AttentionLib) || {};
@@ -155,6 +157,34 @@
     return d.getTime();
   }
 
+  /**
+   * 与 lib/parse-cn.js 同名函数保持一致（H-01）。
+   *
+   * 本文件自带一份解析器副本，只在 lib/*.js 未加载时兜底；`Lib.parseChineseTime`
+   * 一旦可用就会覆盖本副本（见文件末尾的覆盖块）。两副本必须同步，否则线上跑的是
+   * lib、兜底跑的是另一套规则。M-10 记录了「整份重复已分叉」这件事。
+   */
+  function weekdayOfNextWeek(from, weekOffset, target) {
+    const d = startOfDay(from);
+    const day = d.getDay();
+    const toMonday = ((8 - day) % 7) || 7;
+    const monday = addDays(d, toMonday + (weekOffset - 1) * 7);
+    return addDays(monday, (target + 6) % 7);
+  }
+
+  function dayOfMonthIn(year, month, day) {
+    const last = new Date(year, month + 1, 0).getDate();
+    return new Date(year, month, Math.min(day, last), 10, 0, 0, 0);
+  }
+
+  function nextDayOfMonth(from, day) {
+    const base = startOfDay(from);
+    const today = dayOfMonthIn(base.getFullYear(), base.getMonth(), day);
+    if (today.getTime() > new Date(from).getTime()) return today.getTime();
+    const y = base.getMonth() === 11 ? base.getFullYear() + 1 : base.getFullYear();
+    return dayOfMonthIn(y, (base.getMonth() + 1) % 12, day).getTime();
+  }
+
   function repeatLabel(rep) {
     if (!rep || !rep.every) return "";
     const map = {
@@ -251,6 +281,8 @@
     let deadline = null;
     let win = null;
     let repeat = null;
+    /** H-02：「每月 N 号」里的 N；为 null 表示只说「每月」没说号数 */
+    let monthDay = null;
     let cleaned = text;
     const base = startOfDay(now);
 
@@ -270,16 +302,31 @@
       cleaned = cleaned.replace(m[0], "");
     } else if (/每周|每星期/.test(text)) {
       repeat = { mode: "calendar", every: "week" };
-      cleaned = cleaned.replace(/每周|每星期/g, "");
+      // N-04：星期几必须跟着「每周」一起剥掉，否则标题会留下孤立的「一」（「一站会」）。
+      const wm = text.match(/每(?:周|星期)\s*[一二三四五六日天]?/);
+      cleaned = cleaned.replace(wm ? wm[0] : /每周|每星期/g, "");
     } else if (/每天|每日/.test(text)) {
       repeat = { mode: "calendar", every: "day" };
       cleaned = cleaned.replace(/每天|每日/g, "");
     } else if (/每月|每个月/.test(text)) {
       repeat = { mode: "calendar", every: "month" };
-      cleaned = cleaned.replace(/每月|每个月/g, "");
+      // H-02：「每月15号」必须留下 15，否则落「+30 天」兜底并永久漂移到 18 号。
+      const md = text.match(/每(?:个)?月\s*(\d{1,2}|[一二三四五六七八九十]+)\s*[日号]/);
+      if (md) monthDay = cnInt(md[1]);
+      cleaned = cleaned.replace(md ? md[0] : /每月|每个月/g, "");
     }
 
-    const hasDeadlineKw = /截止|最后一天|到期|报名结束|提交截止|deadline/i.test(text);
+    /**
+     * N-04 / M-03：截止语义不能只认「截止/到期」等硬词，否则「9点前」「之前」既丢截止又污染标题。
+     * 刻意不用 lookbehind —— 老 Android WebView 会直接抛语法错误，让整个文件加载失败。
+     */
+    const beforeAlt = text.match(/之前|以前/);
+    let beforeToken = null;
+    if (beforeAlt) beforeToken = beforeAlt[0];
+    else if (/[点時时]\s*\d*\s*分?\s*前|半\s*前|[:：]\s*\d{2}\s*前|\d{1,2}\s*[日号]\s*前|(?:周|星期)[一二三四五六日天末]\s*前|(?:今天|明天|后天|大后天|今晚|今早|月底|月末|下个月|下月)\s*前/.test(text)) beforeToken = "前";
+
+    const hasDeadlineKw = /截止|最后一天|到期|报名结束|提交截止|deadline/i.test(text) || beforeToken != null;
+    if (beforeToken) cleaned = cleaned.replace(beforeToken, "");
     let advanceDays = null;
     const adv = text.match(/提前\s*([0-9一二两三四五六七八九十]+)\s*天/);
     if (adv) {
@@ -312,10 +359,10 @@
       if (mer === "中午") hour = 12;
       cleaned = cleaned.replace(clock[0], "");
     } else {
-      const clock2 = text.match(/(上午|中午|下午|晚上|早上)?\s*([0-9一二两三四五六七八九十]+)\s*[点時时](\s*([0-9一二三四五六七八九十]+)\s*分?)?/);
+      const clock2 = text.match(/(上午|中午|下午|晚上|早上)?\s*([0-9一二两三四五六七八九十]+)\s*[点時时](\s*(半|[0-9一二三四五六七八九十]+)\s*分?)?/);
       if (clock2) {
         hour = cnInt(clock2[2]);
-        minute = clock2[4] ? (cnInt(clock2[4]) || 0) : 0;
+        minute = clock2[4] === "半" ? 30 : (clock2[4] ? (cnInt(clock2[4]) || 0) : 0);
         const mer = clock2[1];
         if ((mer === "下午" || mer === "晚上") && hour != null && hour < 12) hour += 12;
         if (mer === "中午" && hour != null) hour = 12;
@@ -355,28 +402,20 @@
       win = { start: t, end: endOfDay(addDays(t, 1)).getTime() };
       confidence = "mid";
       cleaned = cleaned.replace(/周末/g, "");
-    } else if (/下周日|下星期日/.test(text)) {
-      const d = startOfDay(now);
-      const day = d.getDay();
-      const toNextSun = ((7 - day) % 7) + 7;
-      trigger = applyTime(addDays(d, toNextSun).getTime(), hour, minute);
-      confidence = "high";
-      cleaned = cleaned.replace(/下周日|下星期日/g, "");
-    } else if (/下周([一二三四五六日天])|下星期([一二三四五六日天])/.test(text)) {
-      const m = text.match(/下周([一二三四五六日天])|下星期([一二三四五六日天])/);
-      const ch = m[1] || m[2];
+    } else if (/(下+)周([一二三四五六日天])|(下+)星期([一二三四五六日天])/.test(text)) {
+      // H-01：合并原「下周日」「下周X」两分支（语义相同、实现不一致 → 「下周三」晚一周）。
+      // 「下+」同时覆盖「下下周X」，不再留下孤立的「下」（「下开会」）。
+      const m = text.match(/(下+)周([一二三四五六日天])|(下+)星期([一二三四五六日天])/);
+      const weekOffset = (m[1] || m[3] || "下").length;
+      const ch = m[2] || m[4];
       const map = { "一": 1, "二": 2, "三": 3, "四": 4, "五": 5, "六": 6, "日": 0, "天": 0 };
-      const target = map[ch];
-      const d = startOfDay(now);
-      const day = d.getDay();
-      let delta = ((target - day + 7) % 7) || 7;
-      delta += 7;
-      trigger = applyTime(addDays(d, delta).getTime(), hour, minute);
+      trigger = applyTime(weekdayOfNextWeek(now, weekOffset, map[ch]).getTime(), hour, minute);
       confidence = "high";
       cleaned = cleaned.replace(m[0], "");
-    } else if (/这?周([一二三四五六日天])|本?星期([一二三四五六日天])/.test(text)) {
-      const m = text.match(/这?周([一二三四五六日天])|本?星期([一二三四五六日天])/);
-      const ch = m[1] || m[2];
+    } else if (/(这|本)?周([一二三四五六日天])|(这|本)?星期([一二三四五六日天])/.test(text)) {
+      // N-04：「本周五」的「本」要一起剥掉，否则标题留下孤立的「本」
+      const m = text.match(/(这|本)?周([一二三四五六日天])|(这|本)?星期([一二三四五六日天])/);
+      const ch = m[2] || m[4];
       const map = { "一": 1, "二": 2, "三": 3, "四": 4, "五": 5, "六": 6, "日": 0, "天": 0 };
       const target = map[ch];
       const d = startOfDay(now);
@@ -388,15 +427,22 @@
       confidence = "high";
       cleaned = cleaned.replace(m[0], "");
     } else if (/月底|月末/.test(text)) {
-      const d = new Date(now.getFullYear(), now.getMonth() + 1, 0, 10, 0, 0, 0);
-      trigger = d.getTime();
+      // 「下个月底」此前落到「本月底」（先匹配到「月底」），日期整整早一个月
+      const nextMonth = /下个月|下月/.test(text);
+      const y = nextMonth && now.getMonth() === 11 ? now.getFullYear() + 1 : now.getFullYear();
+      const m2 = nextMonth ? (now.getMonth() + 1) % 12 : now.getMonth();
+      trigger = new Date(y, m2 + 1, 0, 10, 0, 0, 0).getTime();
       confidence = "mid";
-      cleaned = cleaned.replace(/月底|月末/g, "");
+      cleaned = cleaned.replace(nextMonth ? /下个月底|下个月末|下月底|下月末/g : /月底|月末/g, "");
     } else if (/下个月|下月/.test(text)) {
-      const d = new Date(now.getFullYear(), now.getMonth() + 1, 1, 10, 0, 0, 0);
+      // H-03：号数此前被丢掉、硬编码成 1 号（「下个月5号」→ 10-01，应 10-05）
+      const nm = text.match(/(?:下个月|下月)\s*(\d{1,2}|[一二三四五六七八九十]+)\s*[日号]/);
+      const day = nm ? cnInt(nm[1]) : 1;
+      const y = now.getMonth() === 11 ? now.getFullYear() + 1 : now.getFullYear();
+      const d = dayOfMonthIn(y, (now.getMonth() + 1) % 12, day);
       trigger = hour != null ? applyTime(d.getTime(), hour, minute) : d.getTime();
       confidence = "mid";
-      cleaned = cleaned.replace(/下个月|下月/g, "");
+      cleaned = cleaned.replace(nm ? nm[0] : /下个月|下月/g, "");
     } else if (/过两天/.test(text)) {
       trigger = applyTime(addDays(base, 2).getTime(), hour, minute);
       confidence = "mid";
@@ -432,6 +478,8 @@
       else if (repeat.every === "biweek") trigger = applyTime(addDays(base, 14).getTime(), 10, 0);
       else if (repeat.every === "monthEnd") trigger = applyTime(new Date(now.getFullYear(), now.getMonth() + 1, 0, 10, 0, 0, 0).getTime(), 10, 0);
       else if (repeat.every === "nthWeekday") trigger = nthWeekdayOfNextMonth(now, repeat.nth || 1, repeat.dow != null ? repeat.dow : 1, hour, minute);
+      // H-02：「每月N号」锚到 N 号的下一次出现
+      else if (monthDay != null) trigger = applyTime(nextDayOfMonth(now, monthDay), hour, minute);
       else trigger = applyTime(addDays(base, 30).getTime(), 10, 0);
       confidence = "mid";
     }
@@ -439,6 +487,13 @@
     if (!trigger) {
       trigger = applyTime(addDays(base, 7).getTime(), 10, 0);
       confidence = "low";
+    }
+
+    // N-04 / M-03：带截止语义的表达，其时间点即截止（有明确时刻精确到那一刻，否则取当天末尾）。
+    // 只对「X 前 / 之前」生效 —— 按 hasDeadlineKw 放宽会把「每月最后一天交房租」这类
+    // **周期**表达也变成截止事项，每个周期多一轮截止提醒，净增打扰。
+    if (beforeToken != null && deadline == null && trigger != null) {
+      deadline = hour != null ? trigger : endOfDay(new Date(trigger)).getTime();
     }
 
     let title = cleaned
@@ -544,13 +599,77 @@
     const json = JSON.stringify(payload || currentPayload());
     if (storage && storageReady) {
       await storage.save(JSON.parse(json)); // 权威提交：失败即本次提交失败
+      // H-07：这次写入**没有落进权威后端** —— IDB 本来可用（hasIdb 为真），
+      // 但本次会话只降级落在 localStorage 镜像上。必须留待回放凭据，否则下次
+      // IDB 恢复正常时 loadAsync 会读到 IDB 里的旧值，这段改动静默消失。
+      //
+      // 只在「本该用 IDB 却只落了镜像」时留凭据：设备**根本没有** IndexedDB 时
+      // backend 恒为 local，IDB 不可能是权威，留凭据只会让每次启动都做一次无效重放。
+      if (authoritativeBackendMissing()) markPendingReplay(json);
+      committedAlarmItems = JSON.parse(json).items || [];
       if (!(options && options.deferNativeSync)) queueNativeReminderSync();
       return true;
     }
     // 没有可用存储后端：localStorage 就是权威
     localStorage.setItem(KEY, json);
+    // H-07：降级期的写入**必须留一份待回放凭据**。否则 IDB 一旦恢复，
+    // loadAsync 会从 IDB 的旧值加载，这期间用户改的东西静默消失。
+    markPendingReplay(json);
+    committedAlarmItems = JSON.parse(json).items || [];
     if (!(options && options.deferNativeSync)) queueNativeReminderSync();
     return true;
+  }
+
+  /**
+   * H-07：IndexedDB 可用、但**这一次没有用它**（本会话降级到了 localStorage 镜像）。
+   *
+   * `lib/storage.js` 的 `ensure()` 在 `openDb()` 失败时会整体切到 `backend = "local"`，
+   * 此后所有写入都只落镜像 —— `storageReady` 仍然是 true，这条路径**不会**走上面的
+   * 降级分支，所以必须单独识别，否则「IDB 打不开」这一最常见形态恰好漏掉。
+   */
+  function authoritativeBackendMissing() {
+    try {
+      return typeof Lib.hasIdb === "function" && Lib.hasIdb() && storage.backend !== "idb";
+    } catch (error) {
+      return false;
+    }
+  }
+
+  /**
+   * H-07 / D47：降级期写入的「待回放快照」。
+   *
+   * 降到 localStorage 之后**照旧立即落盘**（用户可见行为不变：写入仍然成功），
+   * 但同时把这一份完整状态留在独立键里 —— IDB 恢复时由 `replayPendingSnapshot`
+   * 写回权威后端，降级期间的改动不再丢失。
+   */
+  const PENDING_REPLAY_KEY = KEY + "-pending-replay";
+
+  function markPendingReplay(json) {
+    try {
+      localStorage.setItem(PENDING_REPLAY_KEY, JSON.stringify({ at: Date.now(), json: json }));
+    } catch (error) {
+      // 配额不足时**不能**影响主写入路径（localStorage 此刻就是权威，已经写成功了），
+      // 但必须留下可见痕迹：这一份改动将无法自动回放到 IDB。
+      console.error(
+        "pending replay snapshot failed (degraded write will not be replayed):",
+        error && error.message ? error.message : error
+      );
+    }
+  }
+
+  function readPendingReplay() {
+    try {
+      const raw = localStorage.getItem(PENDING_REPLAY_KEY);
+      if (!raw) return null;
+      const pending = JSON.parse(raw);
+      return pending && typeof pending.json === "string" ? pending : null;
+    } catch (error) {
+      return null;
+    }
+  }
+
+  function clearPendingReplay() {
+    try { localStorage.removeItem(PENDING_REPLAY_KEY); } catch (error) {}
   }
 
   /**
@@ -766,7 +885,7 @@
 
   function applyParsedState(parsed) {
     schemaMigrationNeeded = parsed.schema !== SCHEMA || (Array.isArray(parsed.items) && parsed.items.some(it =>
-      !it || !it.scheduleBasis || it.dismissedUntil === undefined
+      !it || !it.scheduleBasis || it.dismissedUntil === undefined || it.reminderEvents === undefined
     ));
     state.items = Array.isArray(parsed.items) ? parsed.items.map(normalizeItem) : [];
     state.notes = Array.isArray(parsed.notes) ? parsed.notes : [];
@@ -793,6 +912,50 @@
     state.items.forEach(it => {
       if (!it.review_status) it.review_status = "READY";
     });
+    // N-03：冷启动基线。`committedAlarmItems` 此前**只在 `writeSnapshot` 里赋值**，
+    // 于是「刚启动、还没提交过任何事务」时它恒为 `[]`；原生投递面板拿它当对照，
+    // 找不到任何项 → 本该被自动忽略的旧投递会一直挂在面板上等用户手动处理。
+    // 加载完成时，「最后一次已提交的快照」就等于刚读到的权威状态，这里补齐基线。
+    // 用深拷贝与 `writeSnapshot` 口径一致：快照必须是独立副本，不被后续内存改动污染。
+    committedAlarmItems = JSON.parse(JSON.stringify(state.items));
+  }
+
+  /**
+   * H-07 / D47：IDB 恢复后把降级期的改动**重放**回权威后端。
+   *
+   * 返回 true = 已用待回放快照作为权威状态（调用方不要再拿可能更旧的 IDB 值覆盖）。
+   *
+   * **为什么「重放最后一份」就等于「按序重放」**：整个状态是一份**完整快照**、
+   * 写入语义是 last-write-wins（既有契约），而降级期间本机唯一的写入方就是这条路径，
+   * 所以中间态没有任何独立价值 —— 保留全部中间快照只会先撞爆 localStorage 配额。
+   * 与 D39/D40 的「回滚 + 按序重放」不冲突：那里重放的是**用户命令**，这里重放的是**终态**。
+   */
+  async function replayPendingSnapshot() {
+    const pending = readPendingReplay();
+    if (!pending) return false;
+    let payload = null;
+    try {
+      payload = JSON.parse(pending.json);
+    } catch (error) {
+      clearPendingReplay();
+      return false;
+    }
+    if (!payload || typeof payload !== "object") {
+      clearPendingReplay();
+      return false;
+    }
+    applyParsedState(payload);
+    try {
+      await storage.save(payload);
+      clearPendingReplay();
+    } catch (error) {
+      // 写回失败：内存已经是较新的状态，**保留**待回放快照留给下次启动再试 —— 绝不丢。
+      console.error(
+        "pending replay writeback failed (kept for next launch):",
+        error && error.message ? error.message : error
+      );
+    }
+    return true;
   }
 
   async function loadAsync() {
@@ -800,6 +963,12 @@
       try {
         const parsed = await storage.load();
         storageReady = true;
+        // H-07：先把降级期攒下的改动重放回权威后端，并以它作为权威状态；
+        // 否则「降级期间改过的东西」会被这里读到的旧值静默覆盖。
+        //
+        // 只有**真的换回了 IDB** 才重放：仍跑在镜像上时重放会白白清掉凭据，
+        // 下一次 IDB 恢复就再也拿不回这段改动（这一条是本轮真机/探测器实测暴露的盲区）。
+        if (storage.backend === "idb" && await replayPendingSnapshot()) return true;
         if (!parsed) return false;
         applyParsedState(parsed);
         return true;
@@ -865,6 +1034,11 @@
       // state: "scheduled" 已排期 / "delivered" 已送达（不再重排）
       deadlineEvents: it.deadlineEvents && typeof it.deadlineEvents === "object"
         ? it.deadlineEvents : {},
+      // D43：按触发点记账的单次提醒台账 { "<attempt>@<原定触发点>": { at, state } }
+      // state: "scheduled" 已排期 / "delivered" 已送达 / "cancelled" 排程被撤销
+      // 与 deadlineEvents 同构；补投的准入全靠它，缺了就会每次对账重复补一条。
+      reminderEvents: it.reminderEvents && typeof it.reminderEvents === "object"
+        ? it.reminderEvents : {},
       // D23：归档重开暂停截止保护时置位，需用户显式恢复
       deadlinePaused: !!it.deadlinePaused,
       // L03：ACK 周期已推进过的标记，避免完成时再生成一条下期
@@ -1381,6 +1555,105 @@
     if (inReviewWindow(now)) return true;
     if (rs.snoozedUntil && now >= rs.snoozedUntil && now < rs.snoozedUntil + 3600000) return true;
     return false;
+  }
+
+  /**
+   * A-2 / D68（2026-09-19）：后台提醒链路断了，**首页**必须直说。
+   *
+   * 依据（基线既有条款，非新增需求）：
+   *   · §473「通知权限关闭 → 首页明确告知『无法保证提醒』；恢复权限后自动 Reconcile」
+   *   · AC-14「不得继续伪装正常」
+   *   · §305「关键能力不得偷偷降级而不告知」
+   *
+   * 此前这条只落在「我的」页（renderPwaStatus）与自检面板（renderBackgroundVerdict），
+   * 而用户天天看的是**首页** —— 于是「关掉 App 就不响」在首页一个字都看不出来，
+   * 界面照常平静。这正是 H-08 能长期存活的原因：缺陷是静默的，界面在撒谎。
+   *
+   * 纯函数：只吃 (status, settings, native)，输出 null 或一条文案，便于行为级断言。
+   *
+   * 红线：**只在能确证断链时出声**。`notifications === "unknown"` 是「还没问过」，
+   * 不是「没有」；冷启动时桥晚到几秒，此时弹警告就是拿新误报换旧误报。
+   * 故一切「未定」状态一律返回 null。
+   *
+   * 范围边界（刻意）：`exactAlarm === "denied"` 不进首页 —— 它只让**到达时刻**可能被推迟，
+   * 不产生「关掉 App 就没有提醒」这类硬断链，且已在「我的」页如实标注「时间可能延迟」。
+   * 首页只在「你会有提醒」这个承诺被打破时开口。
+   */
+  function homeNoticeVerdict(status, settings, native) {
+    if (!native) return null;
+    const s = status || {};
+    // ① 用户自己关了总开关 —— 与「系统权限没给」是两件事，必须分开说（Q6 既有结论）。
+    //    放最前：此时把他引去授权，他授完权仍然不响（开关还是关的），是反复授权却始终不响的老路。
+    if (!(settings && settings.notify)) {
+      return {
+        kind: "switch",
+        title: "后台提醒已关闭",
+        text: "关掉 App 后不会有任何提醒。到「我的 → 本地通知」把它打开。"
+      };
+    }
+    // ② 系统通知权限没给 —— H-08 的根因落点，也是唯一「用户能自己修好」的断链
+    //
+    // 文案纪律（D59 的直接教训）：**不得把「响了但没亮屏」反着报成「完全静默」**。
+    // D59 之后声音与振动归 AlarmRingService（mediaPlayback 前台服务，不需要通知权限），
+    // 所以「闹钟不响」是错的；真正丢的是**通知**与**屏幕**（setFullScreenIntent 是
+    // Notification 的属性，通知发不出去系统就不会替我们全屏）。
+    // 也刻意不说成「只剩铃声」——深冻结态的 ROM 连服务都起不来，那时什么都没有。
+    if (s.notifications === "denied") {
+      return {
+        kind: "permission",
+        title: "无法保证提醒",
+        text: "系统通知权限未授予：关掉 App 后不会有通知，屏幕也不会亮 —— 可能只剩铃声与振动。点这里去授权。"
+      };
+    }
+    // ③ 原生桥始终没就绪（等满 10s 仍不可用）—— 整条原生链路静默消失
+    if (s.notifications === "unavailable" || s.bridgeNotReady) {
+      return {
+        kind: "bridge",
+        title: "无法保证提醒",
+        text: "提醒能力未就绪：请完全退出后重开应用，再做一次提醒自检。"
+      };
+    }
+    // ④ 对账失败 —— 排程没落进系统
+    if (s.reliability === "error") {
+      return {
+        kind: "error",
+        title: "无法保证提醒",
+        text: "提醒同步失败，排程可能没落进系统。请打开提醒自检重新排程。"
+      };
+    }
+    return null;
+  }
+
+  /**
+   * A-2：把 verdict 渲染到首页顶部。断链消失时**主动清空** ——
+   * 否则权限恢复后这句警告会一直挂着，变成新的「界面在撒谎」。
+   */
+  function renderHomeNotice() {
+    const host = $("#homeNotice");
+    if (!host) return;
+    const v = homeNoticeVerdict(nativeReminderStatus, state.settings, isNativeAndroidRuntime());
+    if (!v) {
+      host.innerHTML = "";
+      return;
+    }
+    host.innerHTML =
+      '<button class="soft-entry notice-entry" id="homeNoticeBtn" data-notice-kind="' + v.kind + '">' +
+      '<span><span class="notice-title">' + escapeHtml(v.title) + "</span><br>" +
+      '<span style="font-size:0.78rem;color:var(--muted)">' + escapeHtml(v.text) + "</span></span>" +
+      '<span style="color:var(--muted)">›</span></button>';
+    const btn = $("#homeNoticeBtn");
+    if (btn) {
+      btn.addEventListener("click", () => {
+        // 总开关的修法在「我的」页；权限/桥/对账的修法在自检面板（那里有「1. 申请通知权限」）
+        if (v.kind === "switch") {
+          state.ui.tab = "me";
+          render();
+          return;
+        }
+        openSheet("sheetNotifyLab");
+        refreshNotifyLab();
+      });
+    }
   }
 
   function renderReviewEntry() {
@@ -1963,6 +2236,9 @@
 
   function renderHome() {
     promoteDue();
+    // A-2 / D68：先摆「后台到底会不会响」这句话 —— 它是对整页的限定，
+    // 必须排在「现在需要注意」之前，否则用户读到的是一件件的待办，读不到前提。
+    renderHomeNotice();
     const now = Date.now();
     const dueMap = new Map();
     state.items.forEach(it => {
@@ -3353,6 +3629,11 @@
   function setNativeReminderStatus(status) {
     nativeReminderStatus = Object.assign({}, nativeReminderStatus, status || {});
     if (state.ui.tab === "me") renderPwaStatus();
+    // A-2 / D68：首页告知条吃同一份状态，且**不看当前在哪个 tab** ——
+    // #homeNotice 始终在 DOM 里，提前写好比等用户切回首页时再算更稳。
+    // onResume（从系统设置切回）经 getPermissionState → 这里，
+    // 于是「恢复权限后警告自动消失 / 撤销后自动出现」都无需另建通路（基线 §473 后半句）。
+    renderHomeNotice();
   }
 
   function refreshNativeScheduleBasis() {
@@ -3459,6 +3740,95 @@
     return changed;
   }
 
+  /**
+   * D43：单次提醒台账 —— 与 `applyDeadlineEvents` **同构**，只是键从「阶段@截止时刻」
+   * 换成「尝试序号@原定触发点」。
+   *
+   * 为什么要这一层：投影只排**严格未来**的触发点，于是「触发点已过、事项仍活跃」的提醒
+   * 拿不到原生通知（用户少一条提醒）；而补投必须能回答「这个触发点是否已经消费过」，
+   * 否则每次对账都会再补一次。三态语义与截止台账逐字对齐（见 applyDeadlineEvents 注释）。
+   *
+   * 键里带的是**原定触发点**而不是补投时刻：身份必须跨对账稳定，否则每轮都换一个身份
+   * → 撤销/重排循环（这正是 R6 注释警告过的形态）。
+   */
+  function applyReminderEvents(events, now, cancelledEvents) {
+    const planned = new Map();
+    (events || []).forEach(ev => {
+      if (!ev || !ev.itemId || !ev.key) return;
+      if (!planned.has(ev.itemId)) planned.set(ev.itemId, new Map());
+      planned.get(ev.itemId).set(ev.key, Number(ev.at));
+    });
+    const cancelledKeys = new Map();
+    (cancelledEvents || []).forEach(ev => {
+      if (!ev || !ev.itemId || !ev.key) return;
+      if (!cancelledKeys.has(ev.itemId)) cancelledKeys.set(ev.itemId, new Set());
+      cancelledKeys.get(ev.itemId).add(ev.key);
+    });
+    let changed = false;
+    const targetItemIds = new Set(planned.keys());
+    cancelledKeys.forEach((_value, itemId) => targetItemIds.add(itemId));
+    state.items.forEach(it => {
+      if (it && it.reminderEvents && typeof it.reminderEvents === "object" &&
+        Object.keys(it.reminderEvents).length > 0) targetItemIds.add(it.id);
+    });
+    targetItemIds.forEach(itemId => {
+      const it = state.items.find(x => x.id === itemId);
+      if (!it) return;
+      const keys = planned.get(itemId) || new Map();
+      const cancelled = cancelledKeys.get(itemId) || null;
+      const base = Number(it.triggerAt) || 0;
+      const prev = it.reminderEvents && typeof it.reminderEvents === "object" ? it.reminderEvents : {};
+      const next = {};
+      const keep = (key, value) => { next[key] = value; };
+      // 1) 本轮计划中的触发点：以原生回传的**实际排程时刻**为准（补投时那是 now+2s）
+      keys.forEach((at, key) => {
+        if (!base || !reminderKeyInTriggerRange(key, base)) return;
+        const old = prev[key];
+        // 已送达是终态：真实送达证据不能被后续对账抹掉
+        if (old && typeof old === "object" && old.state === "delivered") { keep(key, old); return; }
+        keep(key, { at: at, state: "scheduled" });
+      });
+      // 2) 保留当前触发起点下的已有记录
+      Object.keys(prev).forEach(key => {
+        if (next[key]) return;
+        if (!base || !reminderKeyInTriggerRange(key, base)) return;
+        const old = prev[key];
+        if (!old || typeof old !== "object") return;
+        if (old.state === "delivered" || old.state === "cancelled") { keep(key, old); return; }
+        const at = Number(old.at) || 0;
+        // 只有「原生确认撤销」且撤销发生在**投递时刻之前**才算撤销：
+        // 越过投递时刻后无法判定是否已经送达，保持待定（不补发、也不谎报送达）
+        if (at > now && cancelled && cancelled.has(key)) {
+          keep(key, { at: at, state: "cancelled" });
+          return;
+        }
+        keep(key, old);
+      });
+      if (JSON.stringify(prev) !== JSON.stringify(next)) {
+        if (Object.keys(next).length > 0) {
+          it.reminderEvents = next;
+        } else {
+          delete it.reminderEvents;
+        }
+        changed = true;
+      }
+    });
+    if (changed) save();
+    return changed;
+  }
+
+  /**
+   * D43：只保留属于**当前触发起点**的记录（`>= triggerAt`）。
+   *
+   * 与截止台账按 `@<deadlineAt>` 过滤同一思路：用户把触发时间往后改了，旧承诺的消费记录
+   * 就该作废；保留它们只会让台账无限增长并让「已排期」永久钉住新触发点。
+   * 用 `>=` 而不是 `===`：勿扰顺延会让首期触发点晚于 `triggerAt`（见 effectiveTriggerAt）。
+   */
+  function reminderKeyInTriggerRange(key, triggerAt) {
+    const at = Number(String(key).split("@")[1]);
+    return Number.isFinite(at) && at >= triggerAt;
+  }
+
   /** F1：系统送达回调 —— 真实的送达证据，直接标记 delivered */
   function markDeadlineDelivered(event) {
     if (!event || !event.itemId || !event.stageKey) return false;
@@ -3489,6 +3859,10 @@
       // 同时把本轮**被撤销**的排程记成 cancelled（撤销 ≠ 送达）
       if (status && Array.isArray(status.deadlineEvents)) {
         applyDeadlineEvents(status.deadlineEvents, Date.now(), status.cancelledDeadlineEvents);
+      }
+      // D43：单次提醒台账（与截止台账同构）—— 没有它，触发点已过的事项每轮对账都会重复补投
+      if (status && Array.isArray(status.reminderEvents)) {
+        applyReminderEvents(status.reminderEvents, Date.now(), status.cancelledReminderEvents);
       }
       // P0-2：记住本轮排下的全屏闹钟 id，供下一轮撤销不再需要的闹钟。
       // 仅在集合真变化时 save()，否则 save → queue → reconcile 会自激成死循环。
@@ -3936,23 +4310,70 @@
       return { text: "还没有投递记录", label: "—", ok: false, warn: true };
     }
     const when = d.at ? fmtTime(d.at) : "—";
+    // D64：精确闹钟降级是**排程层**的事实，与「屏幕有没有载体」正交。
+    // 它会让「到达时刻」本身就不准，而用户很容易把这理解成界面/通知的问题，
+    // 于是去反复授权无关的权限 —— 所以只要这次投递不是精确排程，就在归因里说出来。
+    // 放在函数前部是因为「无通知权限」那条早返回分支同样需要它。
+    // 缺键（老 APK 记录）按「精确」处理，不凭空指控。
+    const exactNote = d.exactAtDelivery === false
+      ? " · 本次为「非精确」排程（缺「闹钟和提醒」权限），到达时刻可能被系统推迟"
+      : "";
     // V1：可见判据与原生一致 —— 窗口可见（visible）或获得焦点（shownAt ≥ 本次投递时刻）
     const visible = !!d.visible || (!!d.shownAt && d.shownAt >= d.at);
     if (visible) {
       return { text: "闹钟界面已经显示出来 · " + when, label: "已显示", ok: true, warn: false };
+    }
+    // D59（2026-09-19）：这一格解释的是「**屏幕**没有载体」，不再是「整个闹钟哑了」。
+    //
+    // `setFullScreenIntent` 是 Notification 的属性（AlarmTestReceiver），通知发不出去
+    // （Android 13+ 未授予 POST_NOTIFICATIONS 时 `notify()` 是静默空操作）系统就不会替我们
+    // 全屏，直起也常被 BAL 静默拦下。2026-09-18 vivo 真机：无权限 + 息屏 **0/4**，有权限 **2/2**。
+    //
+    // 但 D59 把声音与振动的所有权收回 AlarmRingService（前台服务自播）之后，
+    // **通知权限只影响屏幕这一格** —— 铃声与振动照常。旧文案没有这层限定，
+    // 读起来像「整个闹钟都哑了」，于是把「响了但没亮屏」反着报成「完全静默」，
+    // 而那恰恰就是本轮要修的那个误诊。所以文案必须跟着载体台账一起说。
+    //
+    // 严格的 `=== false`：老版本 APK 写下的记录没有这个键（读回默认 true），
+    // 不能让它在升级后凭空变成「无通知权限」。
+    if (d.notifyEnabledAtDelivery === false) {
+      // 载体台账（D59）：把「到底响没响」与「亮没亮」分开回答。
+      // 老 APK 的读回里没有这些键 → 一律按「未上报」处理，不编造结论。
+      const carrierKnown = d.carrierSound === "native" || d.carrierSound === "activity";
+      const carrierText =
+        d.carrierSound === "native" ? "铃声与振动已由前台服务接管"
+        : d.carrierSound === "activity" ? "铃声与振动由界面回落自播"
+        : d.carrierSound === "none" ? "本次没有任何载体在响（前台服务与界面都没起来）"
+        : "铃声与振动不依赖通知权限";
+      return {
+        text: "投递时系统通知是关闭的 · 全屏闹钟没有载体（系统不会展示界面）· "
+          + carrierText + exactNote + " · " + when,
+        label: carrierKnown ? "已响未亮" : "无通知权限",
+        ok: false,
+        warn: true
+      };
     }
     // Q5：解锁时正在通话/响铃 → 只响铃不抢屏，这是设计如此，不是故障
     if (d.inCall && !d.locked) {
       return { text: "通话中 · 只响铃不抢屏（按设计）· " + when, label: "通话中", ok: false, warn: true };
     }
     // 投递当时的现场值优先（now 的权限可能后来被改过，不能用来解释当时的结果）
+    //
+    // D64：这三项都必须优先用**投递当时**的快照。
+    //   · `overlayAtDelivery` / `fsiAtDelivery` 是原生在投递瞬间落盘的
+    //     （`AlarmTestReceiver.recordAttempt`），只有它具备解释力；
+    //   · 回退到 `d.canDrawOverlays` / `d.canUseFullScreenIntent` 仅为兼容老 APK 写下的记录 ——
+    //     那两个是**活值**，表达的是「现在」。用现在解释当时，会在用户事后改过权限时
+    //     把结论整个反转（H-08 就是被同类的「用现在解释当时」误诊过）。
     const overlayAt = d.overlayAtDelivery !== undefined ? !!d.overlayAtDelivery : !!d.canDrawOverlays;
-    const fsiOk = d.canUseFullScreenIntent !== false;
+    const fsiAt = d.fsiAtDelivery !== undefined
+      ? d.fsiAtDelivery !== false
+      : d.canUseFullScreenIntent !== false;
     // V3：锁屏/息屏走系统全屏意图（系统会真的全屏）；解锁亮屏只能直起界面（需 BAL 豁免）
     const background = !!d.locked || d.screenOn === false;
     let reason;
     if (background) {
-      reason = fsiOk
+      reason = fsiAt
         ? "权限齐备，但系统没有展示这次全屏 · 请检查「后台与锁屏设置」中的锁屏显示"
         : "缺「全屏通知」权限 · 锁屏/息屏只能出横幅";
     } else if (!overlayAt) {
@@ -3960,7 +4381,10 @@
     } else {
       reason = "权限齐备，但界面没有被系统展示 · 请检查后台运行及界面显示限制";
     }
-    return { text: "未确认显示全屏 · " + when + " · " + reason, label: "仅通知", ok: false, warn: false };
+    return {
+      text: "未确认显示全屏 · " + when + " · " + reason + exactNote,
+      label: "仅通知", ok: false, warn: false
+    };
   }
 
   /**
@@ -4610,12 +5034,14 @@
             }
           } catch (error) {}
           refreshNativeScheduleBasis();
+          await refreshActiveAlarmPanel(true);
           promoteDue();
           queueNativeReminderSync();
         }
       });
       nativeReady = true;
       setNativeReminderStatus(status);
+      await refreshActiveAlarmPanel(true);
       refreshNativeScheduleBasis();
       await syncNativeRemindersNow();
     } catch (error) {
@@ -5562,7 +5988,94 @@
     }
   }
 
+  // Native deliveries can outlive their window, or have no item (diagnostic/removed item).
+  let committedAlarmItems = [];
+  function deliveryHandledByCommittedItem(alarm, item) {
+    if (!item) return false;
+    if (isTerminal(item)) return true;
+    // ACK/snooze only ends an older delivery; a new deadline alert with the current
+    // revision is independent and must remain actionable.
+    return (item.status === "acknowledged" || item.status === "snoozed") &&
+      hasKnownRev(alarm.itemRev) && Number(item.rev) > Number(alarm.itemRev);
+  }
+  async function completeActiveAlarm(alarm) {
+    const bridge = systemBridge();
+    const eventId = "active:" + alarm.token + ":done";
+    const completed = await handleAlarmAction({ action: "done", itemId: alarm.itemId,
+      itemRev: alarm.itemRev, alarmEventId: eventId });
+    if (!completed && !alarmEventSeen(eventId)) throw new Error("提醒已变更，请在事项详情中确认；仍可停止声振");
+    await bridge.stopAlarmDelivery({ id: alarm.id, token: alarm.token });
+    return true;
+  }
+  let activeAlarmRefreshBusy = false;
+  let activeAlarmPanelSignature = "";
+  async function refreshActiveAlarmPanel(reveal) {
+    const host = $("#activeAlarmPanel");
+    const bridge = systemBridge();
+    if (!host || !bridge || !bridge.activeAlarmDeliveries || activeAlarmRefreshBusy) return;
+    activeAlarmRefreshBusy = true;
+    try {
+      const result = await bridge.activeAlarmDeliveries();
+      const rows = [];
+      for (const alarm of result.alarms || []) {
+        const item = state.items.find(it => it.id === alarm.itemId);
+        // Current committed item state wins over an old delivery; never change it from a stale alarm.
+        const committedItem = committedAlarmItems.find(it => it.id === alarm.itemId);
+        if (deliveryHandledByCommittedItem(alarm, committedItem)) {
+          await bridge.stopAlarmDelivery({ id: alarm.id, token: alarm.token });
+          continue;
+        }
+        const canComplete = item && hasKnownRev(alarm.itemRev) && Number(item.rev) === Number(alarm.itemRev);
+        rows.push({ alarm, item, canComplete });
+      }
+      const signature = JSON.stringify(rows.map(({alarm,item}) => [alarm, item && item.title, item && item.rev]));
+      if (signature === activeAlarmPanelSignature) {
+        if (reveal && rows.length) host.scrollIntoView({ block: "start" });
+        return;
+      }
+      activeAlarmPanelSignature = signature;
+      host.hidden = rows.length === 0;
+      host.innerHTML = rows.map(({alarm,item,canComplete}, index) =>
+        '<div class="card" style="margin-bottom:12px;padding:16px;border:2px solid var(--accent)">' +
+        '<strong>闹钟待处理</strong><p>' + escapeHtml(item ? item.title : alarm.title || "闹钟提醒") + '</p>' +
+        '<p style="color:var(--muted)">' + escapeHtml(item ? "全屏未显示时，也可以在这里处理。" :
+          "测试提醒或原事项已不存在，仍可停止声振。") + '</p>' +
+        '<button class="btn" data-alarm-stop="' + index + '">停止声振</button> ' +
+        (canComplete ? '<button class="btn" data-alarm-done="' + index + '">完成事项</button>' : '') + '</div>'
+      ).join("");
+      if (reveal && rows.length) host.scrollIntoView({ block: "start" });
+      host.querySelectorAll("[data-alarm-stop], [data-alarm-done]").forEach(button => {
+        button.addEventListener("click", async () => {
+          button.disabled = true;
+          const done = button.hasAttribute("data-alarm-done");
+          const row = rows[Number(button.getAttribute(done ? "data-alarm-done" : "data-alarm-stop"))];
+          try {
+            if (done) {
+              // Persist completion first; a failed save must remain visible and retryable.
+              await completeActiveAlarm(row.alarm);
+            } else {
+              await bridge.stopAlarmDelivery({ id: row.alarm.id, token: row.alarm.token });
+            }
+            activeAlarmPanelSignature = "";
+            toast(done ? "已完成并停止声振" : "已停止本次声振，事项状态未改变");
+            await refreshActiveAlarmPanel();
+          } catch (error) { toast(error.message || "操作失败，请重试"); }
+          finally { button.disabled = false; }
+        });
+      });
+    } catch (error) {
+      // Keep existing stop controls on a transient bridge failure.
+    } finally { activeAlarmRefreshBusy = false; }
+  }
+
+  // N-03：轮询句柄必须留痕。`bindNetwork` 目前只在 `init()` 里调一次，
+  // 但重复初始化（热重载、将来多实例挂载）会静默堆出多个 2 秒定时器且无人能清 —— 先清后建。
+  let activeAlarmPollTimer = null;
   function bindNetwork() {
+    if (activeAlarmPollTimer != null) clearInterval(activeAlarmPollTimer);
+    activeAlarmPollTimer = setInterval(() => {
+      if (document.visibilityState === "visible") refreshActiveAlarmPanel();
+    }, 2000);
     window.addEventListener("online", renderPwaStatus);
     window.addEventListener("offline", renderPwaStatus);
     document.addEventListener("visibilitychange", () => {
@@ -5571,6 +6084,7 @@
         // 冷启动时若桥还没注入（存在稳定时间差），这里的 ensure 会再试一遍并把排程补上。
         if (!nativeReady) queueNativeReminderSync();
         promoteDue();
+        refreshActiveAlarmPanel(true);
         tick();
       }
     });
@@ -5777,10 +6291,24 @@
       // F1：截止事件按阶段记账
       applyDeadlineEvents,
       markDeadlineDelivered,
+      // D43：单次提醒台账（与截止台账同构）
+      applyReminderEvents,
+      // H-07：IDB 恢复后重放降级期的改动
+      replayPendingSnapshot,
       showAlert,
       hideAlert,
       dismissAlert,
+      // H-08：投递归因（自检面板的结论由它产生，必须能被行为级断言）
+      describeAlarmDelivery,
+      // A-2 / D68：首页告知条的判定与渲染（纯逻辑 + DOM，都要能被行为级断言）
+      homeNoticeVerdict,
+      renderHomeNotice,
+      // A-2：原生状态的唯一漏斗 —— 「权限恢复后警告自动消失」这句话就是经它成立的，
+      // 所以断言必须穿过它，而不是绕过它去直接摆状态
+      setNativeReminderStatus,
       handleAlarmAction,
+      completeActiveAlarm,
+      deliveryHandledByCommittedItem,
       alarmEventSeen,
       // G5：初始化完成信号（loadAsync/applyParsedState 已不再改动 state）
       ready: () => readyPromise || Promise.resolve(true),
@@ -5793,6 +6321,8 @@
       // 真实的持久化 Promise：测试要断言「落库之后」的状态就必须等它
       saveAsync,
       load,
+      // H-07：降级恢复的取证入口（探测器需要在不重启页面的情况下重放一次）
+      loadAsync,
       normalizeAiResult,
       extractJson,
       renderMarkdown,

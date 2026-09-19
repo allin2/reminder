@@ -1101,8 +1101,265 @@ section("9. 首页分桶规则");
   ok("due 计入首页", due.length === 1);
 }
 
-/* ---------- 10. PRD acceptance path ---------- */
-section("10. PRD 验收主路径");
+/* ---------- 10. D43 提醒台账（落库侧） + H-07 降级恢复 ---------- */
+section("10. D43 提醒台账与 H-07 降级恢复");
+{
+  // D43：投影把「已排的提醒」回传后由这一层落库。三态语义必须与 deadlineEvents 一致。
+  const past = Date.now() - 60000;
+  const ledger = app.makeItem({ title: "台账", status: "waiting", triggerAt: past });
+  app.state.items = [ledger];
+  ok("D43 落库：已排的触发点记为 scheduled",
+    app.applyReminderEvents([{ itemId: ledger.id, key: "0@" + past, at: past + 2000 }], Date.now(), []) === true &&
+    ledger.reminderEvents["0@" + past].state === "scheduled");
+  ok("D43 无变化不写库（否则 save→对账 会自激）",
+    app.applyReminderEvents([{ itemId: ledger.id, key: "0@" + past, at: past + 2000 }], Date.now(), []) === false);
+  ledger.reminderEvents["0@" + past].state = "delivered";
+  app.applyReminderEvents([{ itemId: ledger.id, key: "0@" + past, at: past + 2000 }], Date.now(), []);
+  ok("D43 已送达是终态，不被后续对账抹掉",
+    ledger.reminderEvents["0@" + past].state === "delivered");
+
+  const futureAt = Date.now() + 3600000;
+  const revocable = app.makeItem({ title: "撤销", status: "waiting", triggerAt: futureAt });
+  app.state.items = [revocable];
+  app.applyReminderEvents([{ itemId: revocable.id, key: "0@" + futureAt, at: futureAt }], Date.now(), []);
+  app.applyReminderEvents([], Date.now(), [{ itemId: revocable.id, key: "0@" + futureAt }]);
+  ok("D43 撤销且投递时刻未到 → cancelled（撤销 ≠ 送达）",
+    revocable.reminderEvents["0@" + futureAt].state === "cancelled");
+
+  revocable.triggerAt = futureAt + 86400000;
+  app.applyReminderEvents([], Date.now(), []);
+  ok("D43 触发点改到更晚 → 旧触发点的记录作废（台账不无限增长）",
+    !revocable.reminderEvents || !revocable.reminderEvents["0@" + futureAt]);
+
+  // H-07：降级期写入的待回放快照必须在 IDB 恢复后被采用
+  ok("H-07 没有待回放凭据时不误判", (await app.replayPendingSnapshot()) === false);
+  const pendingPayload = {
+    schema: 5,
+    items: [app.makeItem({ title: "降级期新增", status: "waiting", triggerAt: Date.now() + 60000 })],
+    notes: [],
+    projects: [],
+    settings: {}
+  };
+  localStorage.setItem("attention-inbox-v2-pending-replay",
+    JSON.stringify({ at: Date.now(), json: JSON.stringify(pendingPayload) }));
+  ok("H-07 有待回放快照时采用它作为权威状态（降级期改动不再静默丢失）",
+    (await app.replayPendingSnapshot()) === true &&
+    app.state.items.some(i => i.title === "降级期新增"));
+  ok("H-07 重放成功后清除凭据（不重复重放）",
+    localStorage.getItem("attention-inbox-v2-pending-replay") === null);
+
+  // 源码级守护：降级分支必须留凭据，加载分支必须先重放再回落到 IDB 值
+  const coreCode = src
+    .replace(/\/\*[\s\S]*?\*\//g, " ")
+    .replace(/^[ \t]*\/\/[^\n]*$/gm, " ");
+  ok("H-07 降级写入留待回放凭据的接线在位", /markPendingReplay\(json\)/.test(coreCode));
+  ok("H-07 加载时先重放再回落到 IDB 旧值",
+    /if \(storage\.backend === "idb" && await replayPendingSnapshot\(\)\) return true;/.test(coreCode));
+  ok("H-07 覆盖「IDB 打不开 → 后端整体降级为 local」这条路径（storageReady 仍为 true）",
+    /authoritativeBackendMissing\(\)\) markPendingReplay\(json\)/.test(coreCode) &&
+    /Lib\.hasIdb\(\) && storage\.backend !== "idb"/.test(coreCode));
+  ok("H-07 仍在镜像上跑时不得重放（否则凭据被提前清掉，IDB 恢复后拿不回来）",
+    /storage\.backend === "idb" && await replayPendingSnapshot\(\)/.test(coreCode));
+  ok("H-07 待回放键与权威键分离（不会污染镜像）",
+    /PENDING_REPLAY_KEY = KEY \+ \"-pending-replay\"/.test(coreCode));
+}
+
+/* ---------- 11. H-08 投递归因（行为级） ---------- */
+section("11. H-08 投递归因：无通知权限必须被直说");
+{
+  // 真机取证：`setFullScreenIntent` 是 **Notification 的属性**。通知发不出去 → 全屏意图没有
+  // 载体、系统不会展示，并失去 NOTIFICATION_SERVICE 的 BAL 豁免 → 直起同样被静默拦。
+  // 2026-09-18 vivo：无通知权限 + 息屏 0/4，有权限 2/2，断点每次都在 created 之前。
+  const base = { attempted: true, at: Date.now(), screenOn: false, locked: true, title: "演示" };
+  const noNotify = app.describeAlarmDelivery(Object.assign({}, base, { notifyEnabledAtDelivery: false }));
+  ok("H-08 投递时无通知权限 → 归因指向「全屏没有载体」",
+    noNotify.label === "无通知权限" && /没有载体/.test(noNotify.text), noNotify.text);
+  // 顺序：这一条必须压过「缺全屏通知权限」这类通用归因，否则真机最真实的断点会被盖掉
+  const both = app.describeAlarmDelivery(Object.assign({}, base,
+    { notifyEnabledAtDelivery: false, canUseFullScreenIntent: false }));
+  ok("H-08 与「缺全屏通知权限」同时命中时，先说根因（通知没有载体）",
+    both.label === "无通知权限", both.text);
+  // 老版本 APK 写下的记录没有这个键 —— 升级后不能凭空变成「无通知权限」
+  const legacy = app.describeAlarmDelivery(Object.assign({}, base, { canUseFullScreenIntent: false }));
+  ok("H-08 老记录（无该键）不被误判成无通知权限",
+    legacy.label !== "无通知权限" && /缺「全屏通知」权限/.test(legacy.text), legacy.text);
+  const healthy = app.describeAlarmDelivery(Object.assign({}, base,
+    { notifyEnabledAtDelivery: true, canUseFullScreenIntent: true }));
+  ok("H-08 权限齐备时保持原有归因（不改变既有结论）",
+    healthy.label === "仅通知" && /权限齐备，但系统没有展示这次全屏/.test(healthy.text), healthy.text);
+  const shown = app.describeAlarmDelivery(Object.assign({}, base,
+    { notifyEnabledAtDelivery: false, visible: true }));
+  ok("H-08 界面确实显示出来时仍以「已显示」为准（不误报）",
+    shown.label === "已显示", shown.text);
+
+  // ── D59：载体台账把「响没响」与「亮没亮」分开 ──────────────────────────────
+  //
+  // 这是本轮修复在**诊断侧**的落点。没有它，「无通知权限」这一格会把
+  // 「响了但没亮屏」反着报成「完全静默」—— 而那个误诊正是把上一轮排查
+  // 引向「加悬浮窗权限」这条错路的原因。测试用**行为级**断言（真调函数看返回），
+  // 不是源码级正则：后者在 H-08 阶段已被证明「回退即绿」，挡不住语义回退。
+  const carrierNative = app.describeAlarmDelivery(Object.assign({}, base,
+    { notifyEnabledAtDelivery: false, carrierSound: "native" }));
+  ok("D59 载体为前台服务时 label 改为「已响未亮」，不再说整个闹钟没响",
+    carrierNative.label === "已响未亮" && /前台服务接管/.test(carrierNative.text), carrierNative.text);
+  const carrierActivity = app.describeAlarmDelivery(Object.assign({}, base,
+    { notifyEnabledAtDelivery: false, carrierSound: "activity" }));
+  ok("D59 界面回落自播也算「已响」（降级路径必须在面板上可见）",
+    carrierActivity.label === "已响未亮" && /界面回落自播/.test(carrierActivity.text), carrierActivity.text);
+  const carrierNone = app.describeAlarmDelivery(Object.assign({}, base,
+    { notifyEnabledAtDelivery: false, carrierSound: "none" }));
+  ok("D59 载体确实为空时才保持「无通知权限」，且如实说没有任何载体在响",
+    carrierNone.label === "无通知权限" && /没有任何载体在响/.test(carrierNone.text), carrierNone.text);
+  const carrierUnknown = app.describeAlarmDelivery(Object.assign({}, base,
+    { notifyEnabledAtDelivery: false, carrierSound: "unknown" }));
+  ok("D59 载体归属不明时不冒充结论（老 APK 读不到该键）",
+    carrierUnknown.label === "无通知权限" && /不依赖通知权限/.test(carrierUnknown.text), carrierUnknown.text);
+}
+
+/* ---------- 11b. D64 门禁：投递时快照 + 非精确排程必须说出来 ---------- */
+section("11b. D64 门禁：归因用「投递当时」的权限，且非精确排程必须说出来");
+{
+  const base = { attempted: true, at: Date.now(), screenOn: false, locked: true, title: "演示" };
+
+  // D64①：全屏意图必须优先用**投递时快照**（fsiAtDelivery）。
+  //
+  // 活值 `canUseFullScreenIntent` 表达的是「现在」。用它解释一次历史投递，
+  // 会在用户事后改过权限时把结论整个反转 —— 这正是 H-08 被误诊的同一类错误。
+  // 行为级验证：**只改快照就让结论跟着变**，且在两个方向上各验一次
+  //（否则只改一个方向的话，「永远返回缺权限」这种退化实现也能蒙混过关）。
+  const fsiSnapshotDenied = app.describeAlarmDelivery(Object.assign({}, base,
+    { notifyEnabledAtDelivery: true, fsiAtDelivery: false, canUseFullScreenIntent: true }));
+  ok("D64 快照说「缺全屏通知权限」时，活值说「有」也不得盖过它",
+    /缺「全屏通知」权限/.test(fsiSnapshotDenied.text), fsiSnapshotDenied.text);
+
+  const fsiSnapshotGranted = app.describeAlarmDelivery(Object.assign({}, base,
+    { notifyEnabledAtDelivery: true, fsiAtDelivery: true, canUseFullScreenIntent: false }));
+  ok("D64 反向：快照说「有权限」时不得被活值拉回「缺权限」",
+    /权限齐备，但系统没有展示这次全屏/.test(fsiSnapshotGranted.text), fsiSnapshotGranted.text);
+
+  const legacyNoSnapshot = app.describeAlarmDelivery(Object.assign({}, base,
+    { notifyEnabledAtDelivery: true, canUseFullScreenIntent: false }));
+  ok("D64 老记录（无快照键）回退读活值，既有结论不变",
+    /缺「全屏通知」权限/.test(legacyNoSnapshot.text), legacyNoSnapshot.text);
+
+  // D64②：非精确排程是**排程层**的事实，与「屏幕有没有载体」正交。
+  // 不说出来，用户会把「到点晚了十分钟」理解成界面问题，去反复授权无关的权限。
+  const inexact = app.describeAlarmDelivery(Object.assign({}, base,
+    { notifyEnabledAtDelivery: true, exactAtDelivery: false }));
+  ok("D64 投递时无精确闹钟权限 → 归因里明说是「非精确」排程",
+    /「非精确」排程/.test(inexact.text), inexact.text);
+
+  const inexactWithNotifyOff = app.describeAlarmDelivery(Object.assign({}, base,
+    { notifyEnabledAtDelivery: false, carrierSound: "native", exactAtDelivery: false }));
+  ok("D64 无通知权限那条分支同样带上非精确提示（不能只在一个分支说）",
+    /「非精确」排程/.test(inexactWithNotifyOff.text), inexactWithNotifyOff.text);
+
+  const exactOk = app.describeAlarmDelivery(Object.assign({}, base,
+    { notifyEnabledAtDelivery: true, exactAtDelivery: true }));
+  ok("D64 负向对照：精确排程时不得凭空出现非精确提示",
+    !/非精确/.test(exactOk.text), exactOk.text);
+
+  const legacyExact = app.describeAlarmDelivery(Object.assign({}, base,
+    { notifyEnabledAtDelivery: true }));
+  ok("D64 老记录缺 exactAtDelivery 键时按「精确」处理，不凭空指控",
+    !/非精确/.test(legacyExact.text), legacyExact.text);
+}
+
+/* ---------- 11b. A-2 / D68 首页硬告知（行为级） ---------- */
+section("11b. A-2 后台链路断了，首页必须直说（基线 §473 / AC-14）");
+{
+  // 基线 §473：「通知权限关闭 → 首页明确告知『无法保证提醒』；恢复权限后自动 Reconcile」。
+  // AC-14：「不得继续伪装正常」。此前这句话只落在「我的」页与自检面板，
+  // 而用户天天看的是首页 —— 于是「关掉 App 就不响」在首页一个字都看不出来。
+  //
+  // 全部断言都**真调函数看返回/看 DOM**，不用源码正则：
+  // D48 已实测过 `if (x===false)` 改成 `if (false && x===false)` 仍然命中正则。
+  const V = app.homeNoticeVerdict;
+  const verdictOf = (status, notifyOn, native) =>
+    V(status, { notify: notifyOn }, native);
+
+  ok("A-2 无通知权限 → 告知条出现，且必须写「无法保证提醒」",
+    (() => {
+      const v = verdictOf({ notifications: "denied" }, true, true);
+      return v && v.kind === "permission" && /无法保证提醒/.test(v.title + v.text);
+    })());
+  // ── 文案纪律（D59 的直接教训）──────────────────────────────────────────────
+  // 「响了但没亮屏」不得被反着报成「完全静默」。D59 之后声音与振动归 AlarmRingService
+  // （mediaPlayback 前台服务，不需要通知权限），所以「闹钟不响」是错的；
+  // 真正丢的是**通知**与**屏幕**。这两条锁住措辞，防止后来者顺手「说得更严重些」。
+  const permVerdict = verdictOf({ notifications: "denied" }, true, true);
+  ok("A-2 权限文案不得说成「闹钟不响 / 没有任何提醒」（D59：声音不依赖通知权限）",
+    !/不响|不会响|没有任何提醒/.test(permVerdict.text), permVerdict.text);
+  ok("A-2 权限文案必须点出真正丢失的两项能力：没有通知 + 屏幕不会亮",
+    /不会有通知/.test(permVerdict.text) && /屏幕也不会亮/.test(permVerdict.text),
+    permVerdict.text);
+
+  ok("A-2 总开关未开 → 与「权限没给」分开说，并指向「我的」而不是系统授权",
+    (() => {
+      const v = verdictOf({ notifications: "denied" }, false, true);
+      return v && v.kind === "switch" && /我的/.test(v.text);
+    })());
+  ok("A-2 原生桥始终不就绪 → 告知条说是「提醒能力未就绪」",
+    (() => {
+      const v = verdictOf({ notifications: "unavailable", bridgeNotReady: true }, true, true);
+      return v && v.kind === "bridge" && /无法保证提醒/.test(v.title);
+    })());
+  ok("A-2 对账失败 → 告知条说是「同步失败、排程可能没落地」",
+    (() => {
+      const v = verdictOf({ notifications: "granted", reliability: "error" }, true, true);
+      return v && v.kind === "error" && /无法保证提醒/.test(v.title);
+    })());
+
+  // 红线：冷启动那几秒 `notifications` 是 "unknown"（**还没问过**，不是「没有」）。
+  // 此刻弹警告就是拿新误报换旧误报 —— 与被修的那个缺陷同类。
+  ok("A-2 状态未定（unknown）不得出声",
+    verdictOf({ notifications: "unknown", reliability: "web" }, true, true) === null);
+  ok("A-2 权限齐备且对账正常时首页保持安静（不新增常驻噪音）",
+    verdictOf({ notifications: "granted", exactAlarm: "granted", reliability: "exact" }, true, true) === null);
+  // 范围边界（刻意）：精确闹钟降级只让**到达时刻**可能被推迟，不产生「关掉 App 就没有提醒」
+  // 这类硬断链，且已在「我的」页如实标注「时间可能延迟」—— 不进首页。
+  ok("A-2 仅「精确闹钟未授权」不进首页",
+    verdictOf({ notifications: "granted", exactAlarm: "denied", reliability: "inexact" }, true, true) === null);
+  ok("A-2 非原生环境（PWA / 浏览器）不得出现告知条",
+    verdictOf({ notifications: "denied" }, true, false) === null);
+
+  // ── DOM 级：经 setNativeReminderStatus 驱动 ────────────────────────────────
+  // 这一段证明的是「自动出现 / 自动消失」真的接上了，而不是只写了一个判定函数。
+  // 沙箱里没有原生容器（isNativeAndroidRuntime 恒 false），故临时把 Capacitor 摆上，
+  // 用完立刻撤掉 —— 否则后续用例会以为自己在安卓容器里跑。
+  const noticeNode = getNode("#homeNotice");
+  const savedCapacitor = sandbox.window.Capacitor;
+  sandbox.window.Capacitor = { getPlatform: () => "android" };
+  const drive = (status, notifyOn) => {
+    app.state.settings.notify = notifyOn;
+    app.setNativeReminderStatus(status);
+    return noticeNode.innerHTML;
+  };
+  const broken = drive({ native: true, notifications: "denied", reliability: "in-app" }, true);
+  ok("A-2 权限被撤销后：首页 DOM 里真的出现告知条（带 data-notice-kind）",
+    /data-notice-kind="permission"/.test(broken) && /无法保证提醒/.test(broken),
+    broken.slice(0, 90));
+  const restored = drive({ notifications: "granted", reliability: "exact" }, true);
+  ok("A-2 权限恢复后：同一条通路把告知条自动清掉（基线 §473 后半句）",
+    restored === "", restored.slice(0, 90));
+  const switchOff = drive({ notifications: "granted", reliability: "exact" }, false);
+  ok("A-2 用户自己关掉总开关也出声，且指向「我的」",
+    /data-notice-kind="switch"/.test(switchOff) && /我的/.test(switchOff), switchOff.slice(0, 90));
+  // 收尾：撤掉临时 Capacitor 并复位状态，避免污染后面的用例
+  if (savedCapacitor === undefined) delete sandbox.window.Capacitor;
+  else sandbox.window.Capacitor = savedCapacitor;
+  app.state.settings.notify = true;
+  app.setNativeReminderStatus({ native: false, notifications: "web", reliability: "web" });
+  ok("A-2 复位后首页回到安静态（非原生不得留残余告知条）",
+    getNode("#homeNotice").innerHTML === "", getNode("#homeNotice").innerHTML.slice(0, 90));
+  // 负向对照：真正的入口 renderHome() 在 Web 下同样不得产出告知条
+  app.renderHome();
+  ok("A-2 负向对照：Web 下走完整 renderHome() 也不得出告知条",
+    getNode("#homeNotice").innerHTML === "", getNode("#homeNotice").innerHTML.slice(0, 90));
+}
+
+/* ---------- 12. PRD acceptance path ---------- */
+section("12. PRD 验收主路径");
 {
   app.state.settings.dnd = false;
   app.state.items = [];

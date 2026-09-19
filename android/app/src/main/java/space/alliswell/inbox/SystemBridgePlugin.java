@@ -532,15 +532,33 @@ public class SystemBridgePlugin extends Plugin {
     }
   }
 
+  @PluginMethod
+  public void activeAlarmDeliveries(PluginCall call) {
+    JSObject result = new JSObject();
+    result.put("alarms", ActiveAlarmStore.list(getContext()));
+    call.resolve(result);
+  }
+
+  @PluginMethod
+  public void stopAlarmDelivery(PluginCall call) {
+    String token = call.getString("token");
+    if (token == null || call.getInt("id") == null) { call.reject("缺少闹钟标识"); return; }
+    JSObject result = new JSObject();
+    result.put("stopped", ActiveAlarmStore.stop(getContext(), call.getInt("id"), token));
+    call.resolve(result);
+  }
+
   /** R8 / R7：撤销闹钟时同步清掉可能已投递的通知 */
   @PluginMethod
   public void cancelNotification(PluginCall call) {
     try {
       int id = intArg(call, "id", 90002);
-      NotificationManager nm = notificationManager();
-      if (nm != null) nm.cancel(id);
+      // Reconciliation removes future schedules, not a currently ringing delivery.
+      boolean preserve = Boolean.TRUE.equals(call.getBoolean("preserveActive", false));
+      boolean active = ActiveAlarmStore.cancelNotification(getContext(), id, preserve);
       JSObject r = new JSObject();
       r.put("ok", true);
+      r.put("active", active);
       call.resolve(r);
     } catch (Exception e) {
       call.reject("取消通知失败: " + e.getMessage(), e);
@@ -932,6 +950,43 @@ public class SystemBridgePlugin extends Plugin {
       r.put("locked", sp.getBoolean(AlarmTestReceiver.KEY_DELIVERY_LOCKED, false));
       r.put("overlayAtDelivery", sp.getBoolean(AlarmTestReceiver.KEY_DELIVERY_OVERLAY, false));
       r.put("inCall", sp.getBoolean(AlarmTestReceiver.KEY_DELIVERY_IN_CALL, false));
+      // H-08：投递当时的系统通知可用性 —— 缺了它，界面只能给出「权限齐备但系统没展示」
+      // 这种误导性的结论（真机上真实的断点其实是「通知权限没开 → 全屏意图无载体」）。
+      r.put("notifyEnabledAtDelivery",
+        sp.getBoolean(AlarmTestReceiver.KEY_DELIVERY_NOTIFY_ON, true));
+      // D59：载体归因。声音与振动不再挂在通知上，所以 `notifyEnabledAtDelivery=false`
+      // 只意味着「**屏幕**没有载体」，不等于「完全静默」—— 面板必须能看到声音落在哪里，
+      // 否则会把「响了但没亮屏」反着读成「什么都没发生」。
+      //
+      // 归属用 trace 判定，不用时间戳：广播投递与响铃服务是两条**同刻**的闹钟时钟
+      // （见 AlarmScheduler.scheduleUnfreezer），谁先派发不确定。用「谁更新」判断，
+      // 会在「服务先跑」时把本次结果误判成上一次的陈旧值。trace 相同才算本次上报。
+      String deliveryTrace = sp.getString(AlarmTestReceiver.KEY_DELIVERY_TRACE, "");
+      String carrierTrace = sp.getString(AlarmTestReceiver.KEY_CARRIER_TRACE, "");
+      boolean carrierFresh = !deliveryTrace.isEmpty() && deliveryTrace.equals(carrierTrace);
+      r.put("carrierSound", carrierFresh
+        ? sp.getString(AlarmTestReceiver.KEY_CARRIER_SOUND, "none") : "unknown");
+      r.put("carrierVibrate", carrierFresh
+        ? sp.getString(AlarmTestReceiver.KEY_CARRIER_VIBRATE, "none") : "unknown");
+      r.put("carrierForegroundService",
+        carrierFresh && sp.getBoolean(AlarmTestReceiver.KEY_CARRIER_FGS, false));
+      // D68：这次投递是否已被**自动静音** —— 响满上限后自己停的声振，
+      // **不是**用户确认。面板与归因必须把两者分开：混在一起，
+      // 「响过但没人管」这件事就会在界面上消失（而它正是最该被看见的那一类）。
+      boolean autoSilenced = AlarmRingService.wasAutoSilenced(getContext(), deliveryTrace);
+      r.put("autoSilenced", autoSilenced);
+      r.put("autoSilencedAt", autoSilenced
+        ? sp.getLong(AlarmRingService.KEY_AUTO_SILENCED_AT, 0L) : 0L);
+      // D64：投递**当时**的两项权限快照。命名上刻意与下面的活值分开 ——
+      // 拿「现在的权限」去解释一次**历史**投递的失败原因，会在用户事后改过权限时
+      // 给出反向结论（H-08 就是被同类的「用现在解释当时」误诊过）。
+      //
+      // 缺键时读回 true：老版本 APK 写的记录里没有这两个字段，
+      // 不能让它们在升级后凭空变成「没有权限」。
+      r.put("exactAtDelivery", sp.getBoolean(AlarmTestReceiver.KEY_DELIVERY_EXACT_ON, true));
+      r.put("fsiAtDelivery", sp.getBoolean(AlarmTestReceiver.KEY_DELIVERY_FSI_ON, true));
+      // 活值：描述**当前**能力状态，供设置页 / 自检面板显示。
+      // **不要用它解释历史投递** —— 解释历史请用上面的 *AtDelivery 快照。
       r.put("canDrawOverlays", canDrawOverlays());
       r.put("canUseFullScreenIntent", canUseFullScreenIntent());
       call.resolve(r);
