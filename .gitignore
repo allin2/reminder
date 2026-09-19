@@ -13,3 +13,13 @@ android/capacitor-cordova-android-plugins/build/
 *.aab
 !releases/*.apk
 .capacitor/
+
+# apksigner 的签名副产物与手工保留的过期包 —— 是本地构建残留，不是交付物
+*.idsig
+releases/*.stale-*
+
+# 工作区记忆（~/.workbuddy 的项目侧数据）：属于工具的工作状态，不入库
+.workbuddy/
+
+# 证据脱敏规则（含待脱敏的原文）—— 故意只留本地；仓库只保留脚本与哈希清单
+scripts/verification/.redaction-rules.json

@@ -1,0 +1,418 @@
+{
+  "rulesVersion": "2026-09-19.1",
+  "rules": [
+    {
+      "literalSha256_16": "bb7874e4da9f7dd4",
+      "placeholder": "<mail-account-a>"
+    },
+    {
+      "literalSha256_16": "febfb9555713a0e5",
+      "placeholder": "<mail-account-b>"
+    }
+  ],
+  "files": [
+    {
+      "file": "docs/reviews/verification-runs/20260918-oppo-close-rearm/baseline/notification.txt",
+      "replaced": {
+        "<mail-account-a>": 4,
+        "<mail-account-b>": 4
+      },
+      "originalSha256": "30a1561fce1b5b1f8645bd0432781271d878b6c1939ddec566db4e18f9cd03eb",
+      "redactedSha256": "7ab4f44f4c8c418365c3e7e15acaa320b72235a8ff367371b9ad12c43c54f953",
+      "originalBytes": 1673786,
+      "redactedBytes": 1673730
+    },
+    {
+      "file": "docs/reviews/verification-runs/20260918-oppo-close-rearm/done/done/notification-after.txt",
+      "replaced": {
+        "<mail-account-a>": 4,
+        "<mail-account-b>": 4
+      },
+      "originalSha256": "eafabe2bd3a86a8bc817ecdc1f915483687dd4b03e8d9b0c0a3d71c7ad9f2991",
+      "redactedSha256": "25692b3057c12932e24483c7a23da65abf838c1fdaaef8f99f43009c7ea84c83",
+      "originalBytes": 1680524,
+      "redactedBytes": 1680468
+    },
+    {
+      "file": "docs/reviews/verification-runs/20260918-oppo-close-rearm/foreground/close/notification-after.txt",
+      "replaced": {
+        "<mail-account-a>": 4,
+        "<mail-account-b>": 4
+      },
+      "originalSha256": "8c18334b6df99310dae4232bc3ec3a1ab4163e6a4a319a29133f3182be0da1fd",
+      "redactedSha256": "63630039fa2d4cd5b7fcaaa4e407de1cc22e63d1e555b9019b8d079a9a6a1884",
+      "originalBytes": 1680651,
+      "redactedBytes": 1680595
+    },
+    {
+      "file": "docs/reviews/verification-runs/20260918-oppo-close-rearm/foreground-r2/ack/notification-after.txt",
+      "replaced": {
+        "<mail-account-a>": 4,
+        "<mail-account-b>": 4
+      },
+      "originalSha256": "a9a4c92175e1e5e05362810e8d8097a83482889852e436c2d21886079e397e72",
+      "redactedSha256": "759a3d30ef72cf9611168ee543aa5c8c65ddc2892a794bc53337363ec522929d",
+      "originalBytes": 1680655,
+      "redactedBytes": 1680599
+    },
+    {
+      "file": "docs/reviews/verification-runs/20260918-oppo-close-rearm/foreground-r2/close/notification-after.txt",
+      "replaced": {
+        "<mail-account-a>": 4,
+        "<mail-account-b>": 4
+      },
+      "originalSha256": "6a3e34d9a4a703313c7ad2aaf32aab1979ca2642f77addc8318730aeae9d228e",
+      "redactedSha256": "76b3935e4ba7804cef1e7bb090063051ac9920191076bdf32a815dbee1ca707a",
+      "originalBytes": 1680651,
+      "redactedBytes": 1680595
+    },
+    {
+      "file": "docs/reviews/verification-runs/20260918-oppo-close-rearm/snooze/snooze/notification-after.txt",
+      "replaced": {
+        "<mail-account-a>": 4,
+        "<mail-account-b>": 4
+      },
+      "originalSha256": "41a51db1783342b85db5412e86d011165a8558319bcec6917d5c96120c743d0b",
+      "redactedSha256": "be3a39a60c74bc4e4d3501c2302f3d8bbf4b30f64a40ef2e11c7cb3f9cc3107f",
+      "originalBytes": 1680526,
+      "redactedBytes": 1680470
+    },
+    {
+      "file": "docs/reviews/verification-runs/20260918-oppo-hidden-alarm/baseline-notification.txt",
+      "replaced": {
+        "<mail-account-a>": 4,
+        "<mail-account-b>": 4
+      },
+      "originalSha256": "6226b7ecfe7aa1d11efcfe1a2532f95649199609730298f63297461c082d61f6",
+      "redactedSha256": "eeb4e31127521c4a25126666c06d3b6bc24a45e93658cb43e4af9766e8c9e8cd",
+      "originalBytes": 1673667,
+      "redactedBytes": 1673611
+    },
+    {
+      "file": "docs/reviews/verification-runs/20260918-oppo-hidden-alarm/current-buttons/ack/notification-after.txt",
+      "replaced": {
+        "<mail-account-a>": 4,
+        "<mail-account-b>": 4
+      },
+      "originalSha256": "11547d12033dbfd58f0f98b4e0ca5f058b9322ac90564aa3a3deed8047a864b5",
+      "redactedSha256": "414964f3356bf0f7668f4c25ff688b42bf21ce7e147a3fff77403914db42458f",
+      "originalBytes": 1701259,
+      "redactedBytes": 1701203
+    },
+    {
+      "file": "docs/reviews/verification-runs/20260918-oppo-hidden-alarm/current-buttons/close/notification-after.txt",
+      "replaced": {
+        "<mail-account-a>": 4,
+        "<mail-account-b>": 4
+      },
+      "originalSha256": "e26a9f84ad18c1294cb0baf45750d9628bb623ff991d59ca206ca36a8fd4e637",
+      "redactedSha256": "e1a5e316506ac16c0e2bfa4457325ca5c31361dd44d8e2b96eebf34d9adbaab7",
+      "originalBytes": 1701262,
+      "redactedBytes": 1701206
+    },
+    {
+      "file": "docs/reviews/verification-runs/20260918-oppo-hidden-alarm/current-buttons/done/notification-after.txt",
+      "replaced": {
+        "<mail-account-a>": 4,
+        "<mail-account-b>": 4
+      },
+      "originalSha256": "0f794fab90cdb23f017f360f52b20dfc132996a96f94e0fedba4e1603813e758",
+      "redactedSha256": "c275845701b3b7604f3e560b1888a0022a1f3da9d9d84d173c06f865e15ed975",
+      "originalBytes": 1701263,
+      "redactedBytes": 1701207
+    },
+    {
+      "file": "docs/reviews/verification-runs/20260918-oppo-hidden-alarm/current-buttons/snooze/notification-after.txt",
+      "replaced": {
+        "<mail-account-a>": 4,
+        "<mail-account-b>": 4
+      },
+      "originalSha256": "a45704360aa9405b2953be5d36e52c4cc04ccd0a49b83c5bb5a4b7ee7e6f52d7",
+      "redactedSha256": "9cea181d59f82e97c9419e018646557e473153ec513847be957af24f099ef57f",
+      "originalBytes": 1701260,
+      "redactedBytes": 1701204
+    },
+    {
+      "file": "docs/reviews/verification-runs/20260918-oppo-hidden-alarm/current-cold/cleaned-notifications.txt",
+      "replaced": {
+        "<mail-account-a>": 4,
+        "<mail-account-b>": 4
+      },
+      "originalSha256": "2d0cc2b8bba31f7249c7f2c0d7339cbf4ef1ed4325f25e8665b025f97bca0ca1",
+      "redactedSha256": "36c997b94571841a9efa3a982c3c70ca1758c16df727a956eb75141de8aafa68",
+      "originalBytes": 1694008,
+      "redactedBytes": 1693952
+    },
+    {
+      "file": "docs/reviews/verification-runs/20260918-oppo-hidden-alarm/current-cold/due-notifications.txt",
+      "replaced": {
+        "<mail-account-a>": 4,
+        "<mail-account-b>": 4
+      },
+      "originalSha256": "c6f4e5981eb3f6d47c03c5fd5681e94114326840cfc847b722597e15abed0c4c",
+      "redactedSha256": "de0964438a94f7c18ed5885946d265140b763b9649f29c42402e6d31bd1d8245",
+      "originalBytes": 1694005,
+      "redactedBytes": 1693949
+    },
+    {
+      "file": "docs/reviews/verification-runs/20260918-oppo-hidden-alarm/current-cold/scheduled-notifications.txt",
+      "replaced": {
+        "<mail-account-a>": 4,
+        "<mail-account-b>": 4
+      },
+      "originalSha256": "67226af17381bd5f9268ebb5ed89cb34ecff867e9661f75f9dd98a6861a7d329",
+      "redactedSha256": "1f1ce3cc2ba238fe8aede9b041f9bcd3bbbbae525c924d07d63a6903319b7b88",
+      "originalBytes": 1683767,
+      "redactedBytes": 1683711
+    },
+    {
+      "file": "docs/reviews/verification-runs/20260918-oppo-hidden-alarm/current-off/cleaned-notifications.txt",
+      "replaced": {
+        "<mail-account-a>": 4,
+        "<mail-account-b>": 4
+      },
+      "originalSha256": "ef319de3e67bbc66ff3477788d4c286cfed4b0e2dbeee5859743189dd874bfb1",
+      "redactedSha256": "0ce25bf624ff5483bc3252cc71573e7eb0c1266080f800a7509bb2340c9e885f",
+      "originalBytes": 1683768,
+      "redactedBytes": 1683712
+    },
+    {
+      "file": "docs/reviews/verification-runs/20260918-oppo-hidden-alarm/current-off/due-notifications.txt",
+      "replaced": {
+        "<mail-account-a>": 4,
+        "<mail-account-b>": 4
+      },
+      "originalSha256": "0b0d75753f6ffe600a87689b9acd3a2721d74f8db5e39503e5e9d6c515b2990c",
+      "redactedSha256": "287941ff3c341c6ba0f630d1a16cc51e82132d620a55fe9f5c7936d335cfadce",
+      "originalBytes": 1689847,
+      "redactedBytes": 1689791
+    },
+    {
+      "file": "docs/reviews/verification-runs/20260918-oppo-hidden-alarm/current-off/scheduled-notifications.txt",
+      "replaced": {
+        "<mail-account-a>": 4,
+        "<mail-account-b>": 4
+      },
+      "originalSha256": "86a6ab08509d89b182075736db6ada46acf33321b4d37a82c7250342ead85922",
+      "redactedSha256": "baa1e8c952f00b29c0f42ee09405965220444bf0667d7c7dcf9738a1bda79817",
+      "originalBytes": 1683768,
+      "redactedBytes": 1683712
+    },
+    {
+      "file": "docs/reviews/verification-runs/20260918-oppo-hidden-alarm/current-other/due-notifications.txt",
+      "replaced": {
+        "<mail-account-a>": 4,
+        "<mail-account-b>": 4
+      },
+      "originalSha256": "7559350abbd187efcd65414dde8523d8bb9ab5e2ab86470f44d6a856c8fa95b3",
+      "redactedSha256": "39b0d1b0f61d7ccabbcb0afbb35deb73712e1ec3f2f9e2d027d261eeea7e8fd9",
+      "originalBytes": 1699160,
+      "redactedBytes": 1699104
+    },
+    {
+      "file": "docs/reviews/verification-runs/20260918-oppo-hidden-alarm/current-other/panel-notifications.txt",
+      "replaced": {
+        "<mail-account-a>": 4,
+        "<mail-account-b>": 4
+      },
+      "originalSha256": "a3fc9ae588036c05b68f658c70af0eadcfb216a80a66795cb18080a4ed7b7070",
+      "redactedSha256": "716034062b086cd264d7c83e7fa18cdeb68211568697f511343df5ebaeb6e8ff",
+      "originalBytes": 1694496,
+      "redactedBytes": 1694440
+    },
+    {
+      "file": "docs/reviews/verification-runs/20260918-oppo-hidden-alarm/current-other/scheduled-notifications.txt",
+      "replaced": {
+        "<mail-account-a>": 4,
+        "<mail-account-b>": 4
+      },
+      "originalSha256": "e0345eaac9010ba0c0450f20fd89cc6e16da4d48acac6aa38672621e2b36c5b6",
+      "redactedSha256": "a3197074f099a043823d7eee5d29d229449d1d93bf490daeacf5b7a4d78facc1",
+      "originalBytes": 1683768,
+      "redactedBytes": 1683712
+    },
+    {
+      "file": "docs/reviews/verification-runs/20260918-oppo-hidden-alarm/final-other/cleaned-notifications.txt",
+      "replaced": {
+        "<mail-account-a>": 4,
+        "<mail-account-b>": 4
+      },
+      "originalSha256": "e8aad588d2fb396c7d31c34c0e15a3e61e3471fbe16add4bfd1184c90c2a88a6",
+      "redactedSha256": "30cc61c42cc163330bd42f65990ebd5c634355cb885563bf426b7c969a83bc91",
+      "originalBytes": 1678066,
+      "redactedBytes": 1678010
+    },
+    {
+      "file": "docs/reviews/verification-runs/20260918-oppo-hidden-alarm/final-other/due-notifications.txt",
+      "replaced": {
+        "<mail-account-a>": 4,
+        "<mail-account-b>": 4
+      },
+      "originalSha256": "ec7a84bb002f792512ce589e239489930e416fd94ed7890cd52dc032f512246a",
+      "redactedSha256": "24a48acc667275da0ce19e2187eab7022c3f1d62938353cd3abb2f72510ad258",
+      "originalBytes": 1683989,
+      "redactedBytes": 1683933
+    },
+    {
+      "file": "docs/reviews/verification-runs/20260918-oppo-hidden-alarm/final-other/scheduled-notifications.txt",
+      "replaced": {
+        "<mail-account-a>": 4,
+        "<mail-account-b>": 4
+      },
+      "originalSha256": "b6880621967603690607e189274b0d24253367b250b34af34598a624e289f595",
+      "redactedSha256": "ad40b6c5df07314c0a2961c0884f32b4e48b18539ac54e11864b54e706c60a85",
+      "originalBytes": 1678068,
+      "redactedBytes": 1678012
+    },
+    {
+      "file": "docs/reviews/verification-runs/20260918-oppo-hidden-alarm/final-screenoff/cleaned-notifications.txt",
+      "replaced": {
+        "<mail-account-a>": 4,
+        "<mail-account-b>": 4
+      },
+      "originalSha256": "9b58d0efa926491f74f8a47d6a721fb0a5f76ce615dda0488228f205c9db67b1",
+      "redactedSha256": "7e25d1dbf939debcaed76db518bdd44d15c0aa5668fc34d3e2d34453fe522e2d",
+      "originalBytes": 1678068,
+      "redactedBytes": 1678012
+    },
+    {
+      "file": "docs/reviews/verification-runs/20260918-oppo-hidden-alarm/final-screenoff/due-notifications.txt",
+      "replaced": {
+        "<mail-account-a>": 4,
+        "<mail-account-b>": 4
+      },
+      "originalSha256": "cef60153bf243bf3465e3288ea9fa07b5cfa94b672a179a77fffa453750604ab",
+      "redactedSha256": "01c29b67731a3d63a0e4b1d20b056273a2547b644c1b91e20c42865d23ad15ac",
+      "originalBytes": 1693708,
+      "redactedBytes": 1693652
+    },
+    {
+      "file": "docs/reviews/verification-runs/20260918-oppo-hidden-alarm/final-screenoff/scheduled-notifications.txt",
+      "replaced": {
+        "<mail-account-a>": 4,
+        "<mail-account-b>": 4
+      },
+      "originalSha256": "3758f5cb0ae7350f2c198f02e5ec44d17978678b9b6a1b304ac00da1971522b5",
+      "redactedSha256": "341ed4ff0c8e936c672df673350c475b5fb510d71688026f3fae95f16331cb61",
+      "originalBytes": 1678067,
+      "redactedBytes": 1678011
+    },
+    {
+      "file": "docs/reviews/verification-runs/20260918-oppo-hidden-alarm/fixed/app-notifications.txt",
+      "replaced": {
+        "<mail-account-a>": 4,
+        "<mail-account-b>": 4
+      },
+      "originalSha256": "71f0e3d69fa9262c3932fd5ff049d728e0446a91f94b3226bc067e51d896d9f0",
+      "redactedSha256": "f145f80fae76cab2304bb9c6425e99bbd1cb6a777f7e52134604490030fa7277",
+      "originalBytes": 1683956,
+      "redactedBytes": 1683900
+    },
+    {
+      "file": "docs/reviews/verification-runs/20260918-oppo-hidden-alarm/fixed/home-notifications.txt",
+      "replaced": {
+        "<mail-account-a>": 4,
+        "<mail-account-b>": 4
+      },
+      "originalSha256": "14f1cc7a236c5a8d5981208ecdb0c65bb69afb37da3cf1365e6569df55f48af7",
+      "redactedSha256": "3b85032bc613f1ad9078ab17f7195a16193fa3cb1aae96837b8140bb72a55a11",
+      "originalBytes": 1683959,
+      "redactedBytes": 1683903
+    },
+    {
+      "file": "docs/reviews/verification-runs/20260918-oppo-hidden-alarm/fixed/ringing-notifications.txt",
+      "replaced": {
+        "<mail-account-a>": 4,
+        "<mail-account-b>": 4
+      },
+      "originalSha256": "dcff53599569df776bddab25167a238f7918eff9a7beb275fb4fe9456abac8cf",
+      "redactedSha256": "5318739cc89559ff6c109838cd8d7f39fc23109e07b5cd701fe546e971bf0c5e",
+      "originalBytes": 1683958,
+      "redactedBytes": 1683902
+    },
+    {
+      "file": "docs/reviews/verification-runs/20260918-oppo-hidden-alarm/fixed/stopped-notifications.txt",
+      "replaced": {
+        "<mail-account-a>": 4,
+        "<mail-account-b>": 4
+      },
+      "originalSha256": "6244f02a6ee721740de8e84e7ff2ebef5feaf3231988dd55321dd04179405e8c",
+      "redactedSha256": "78ed697f1f8a8f83d429197d96f156d5cf3f5c4a396cbdf59f954e43e755d25c",
+      "originalBytes": 1678066,
+      "redactedBytes": 1678010
+    },
+    {
+      "file": "docs/reviews/verification-runs/20260918-oppo-hidden-alarm/repro/app-notifications.txt",
+      "replaced": {
+        "<mail-account-a>": 4,
+        "<mail-account-b>": 4
+      },
+      "originalSha256": "8bd6d6248c78256d10e7814213a174ed22517576ce8d51bf9c9216000f242c8b",
+      "redactedSha256": "5818278f8948ec6af217d6d3ff975dfc7ea3a00b77863989be7ee38c9c515183",
+      "originalBytes": 1683482,
+      "redactedBytes": 1683426
+    },
+    {
+      "file": "docs/reviews/verification-runs/20260918-oppo-hidden-alarm/repro/home-notifications.txt",
+      "replaced": {
+        "<mail-account-a>": 4,
+        "<mail-account-b>": 4
+      },
+      "originalSha256": "2a793c9429cab68fbd766ddf9f0275e80b4c5b6890f1c126de91225290a56c2d",
+      "redactedSha256": "7848d7a4141102c05dc0461037c5f37261cae892a494a37e6ab0e34ee49e2f7b",
+      "originalBytes": 1683481,
+      "redactedBytes": 1683425
+    },
+    {
+      "file": "docs/reviews/verification-runs/20260918-oppo-hidden-alarm/repro/ringing-notifications.txt",
+      "replaced": {
+        "<mail-account-a>": 4,
+        "<mail-account-b>": 4
+      },
+      "originalSha256": "7ed9ce06e82efd2222dc73730e93b3bd6d30e4122ec5dbdaab786fafb759f4fa",
+      "redactedSha256": "d4a80e903373184822f26d5471f23802ce7241ab55d96e1fcf9f3b216b8a6d6c",
+      "originalBytes": 1683481,
+      "redactedBytes": 1683425
+    },
+    {
+      "file": "docs/reviews/verification-runs/20260918-oppo-hidden-alarm/screenoff/cleaned-notifications.txt",
+      "replaced": {
+        "<mail-account-a>": 4,
+        "<mail-account-b>": 4
+      },
+      "originalSha256": "28beba17a8520c199f7d781e996b7fe896eea3d25be5078cc3c2eeac8bd4841a",
+      "redactedSha256": "8e95e3a472b8f533b53169ed92c36138253cec6db3c8bcb197aaa6a8c8b2a4af",
+      "originalBytes": 1678068,
+      "redactedBytes": 1678012
+    },
+    {
+      "file": "docs/reviews/verification-runs/20260918-oppo-hidden-alarm/screenoff/due-notifications.txt",
+      "replaced": {
+        "<mail-account-a>": 4,
+        "<mail-account-b>": 4
+      },
+      "originalSha256": "f39c791b76b8784618435d79be689c1281c38b92624b992cb5d3af40a07e30e8",
+      "redactedSha256": "285ab76580f4d6feaaf31d65839fb4a9f8af1c59db1e9e4038b2c82799ec4ab1",
+      "originalBytes": 1684194,
+      "redactedBytes": 1684138
+    },
+    {
+      "file": "docs/reviews/verification-runs/20260918-oppo-hidden-alarm/screenoff/scheduled-notifications.txt",
+      "replaced": {
+        "<mail-account-a>": 4,
+        "<mail-account-b>": 4
+      },
+      "originalSha256": "c0e7e6fc219767d6ff35246f124b59dbb7a9d477181c456a94c84641af4e6e46",
+      "redactedSha256": "fa41aef67e976adbaffb97490d90e897bef82190594180833912668e94cf4859",
+      "originalBytes": 1678066,
+      "redactedBytes": 1678010
+    }
+  ],
+  "otherAccountLikeTokens": [
+    "android.media.AudioManager@a29b684com.vivo.ai.copilot.base.voice.tts.logic",
+    "com.coloros.common.utils.j@ce6cd9b.isCurr",
+    "s-@8.Sr",
+    "system_server_anr@1788233906320.txt.gz"
+  ],
+  "note": "只替换 RULES 中的字面量，不改变任何其他字节；清单里给出每个文件的原始/脱敏后 sha256 以供复核。字面量以 sha256 前缀记录（不落原文），校验方式是：sha256(待核字符串)[:16] 是否等于清单中的 literalSha256_16。"
+}

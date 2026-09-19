@@ -1,0 +1,4 @@
+  CurrentVibration:
+    null
+  
+  NextVibration:

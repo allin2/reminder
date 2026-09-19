@@ -1,0 +1,4 @@
+{
+  "attempted": false,
+  "error": "am start 被拒：Command '['/Users/qlyf/Library/Android/sdk/platform-tools/adb', '-s', '10ACBF2D3D000RS', 'shell', 'run-as', 'space.alliswell.inbox', 'am', 'start', '--user', '0', '-n', 'space.alliswell.inbox/.AlarmActivity', '-e', 'alarmTraceToken', '1119990567:f4b86a46-ea40-47a1-bcad-7ff3e8985b10', '-e', 'alarmTitle', 'D68 自动静音验证', '-e', 'alarmItemId', 'd68_autosilence_1789784575', '--ei', 'alarmId', '1119990567']' returned non-zero exit status 255."
+}

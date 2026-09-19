@@ -1,0 +1,62 @@
+{
+  "itemId": "matrix_cold_1789671056",
+  "received": false,
+  "visible": false,
+  "lagMs": null,
+  "rows": [
+    {
+      "token": "669396625:bc9e2dbe-2359-492c-956f-77df425261c6",
+      "stage": "requested",
+      "at": 1789671056929,
+      "detail": "delayMs=74078"
+    },
+    {
+      "token": "669396625:bc9e2dbe-2359-492c-956f-77df425261c6",
+      "stage": "item",
+      "at": 1789671056937,
+      "detail": "matrix_cold_1789671056"
+    },
+    {
+      "token": "669396625:bc9e2dbe-2359-492c-956f-77df425261c6",
+      "stage": "unfreezerScheduled",
+      "at": 1789671056960,
+      "detail": "triggerAt=1789671131019;mode=alarmClock"
+    },
+    {
+      "token": "669396625:bc9e2dbe-2359-492c-956f-77df425261c6",
+      "stage": "scheduled",
+      "at": 1789671056968,
+      "detail": "triggerAt=1789671131019;mode=alarmClock"
+    },
+    {
+      "token": "669396625:bc9e2dbe-2359-492c-956f-77df425261c6",
+      "stage": "cancelled",
+      "at": 1789671057201,
+      "detail": "replaced by new schedule"
+    },
+    {
+      "token": "669396625:758762a3-f717-4e23-a437-d67a1fc2bcf9",
+      "stage": "requested",
+      "at": 1789671057208,
+      "detail": "delayMs=73808"
+    },
+    {
+      "token": "669396625:758762a3-f717-4e23-a437-d67a1fc2bcf9",
+      "stage": "item",
+      "at": 1789671057213,
+      "detail": "matrix_cold_1789671056"
+    },
+    {
+      "token": "669396625:758762a3-f717-4e23-a437-d67a1fc2bcf9",
+      "stage": "unfreezerScheduled",
+      "at": 1789671057225,
+      "detail": "triggerAt=1789671131025;mode=alarmClock"
+    },
+    {
+      "token": "669396625:758762a3-f717-4e23-a437-d67a1fc2bcf9",
+      "stage": "scheduled",
+      "at": 1789671057230,
+      "detail": "triggerAt=1789671131025;mode=alarmClock"
+    }
+  ]
+}

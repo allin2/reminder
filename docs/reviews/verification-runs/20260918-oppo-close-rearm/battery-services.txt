@@ -1,0 +1,146 @@
+---- TIME 2026/9/18 02:19:09 ----
+ACTIVITY MANAGER SERVICES (dumpsys activity services)
+  User 0 active services:
+  * ServiceRecord{6011167 u0 com.oplus.battery/.OplusBatteryService c:com.oplus.battery}
+    intent={cmp=com.oplus.battery/.OplusBatteryService mCallingUid=1000}
+    packageName=com.oplus.battery
+    processName=com.oplus.battery
+    targetSdkVersion=36
+    permission=com.oplus.permission.safe.READ_COMMON
+    baseDir=/system_ext/app/Battery/Battery.apk
+    dataDir=/data/user_de/0/com.oplus.battery
+    app=ProcessRecord{519495d 10666:com.oplus.battery/1000}
+    useNewWiuLogic_forCapabilities()=true
+    useNewWiuLogic_forStart()=true
+    useNewBfslLogic()=true
+    mAllowWiu_noBinding=PROC_STATE_PERSISTENT
+    mAllowWiu_inBindService=PROC_STATE_PERSISTENT
+    mAllowWiu_byBindings=DENIED
+    getFgsAllowWiu_legacy=PROC_STATE_PERSISTENT
+    getFgsAllowWiu_new=PROC_STATE_PERSISTENT
+    getFgsAllowWiu_forStart=PROC_STATE_PERSISTENT
+    getFgsAllowWiu_forCapabilities=PROC_STATE_PERSISTENT
+    allowUiJobScheduling=false
+    recentCallingPackage=com.oplus.athena
+    recentCallingUid=1000
+    mAllowStart_noBinding=PROC_STATE_PERSISTENT
+    mAllowStart_inBindService=PROC_STATE_PERSISTENT
+    mAllowStart_byBindings=DENIED
+    getFgsAllowStart_legacy=PROC_STATE_PERSISTENT
+    getFgsAllowStart_new=PROC_STATE_PERSISTENT
+    getFgsAllowStart=PROC_STATE_PERSISTENT
+    startForegroundCount=0
+    infoAllowStartForeground=[callingPackage: com.oplus.athena; callingUid: 1000; uidState: PER ; uidBFSL: [BFSL]; intent: Intent { act=com.oplus.battery.OplusBatteryService xflg=0x4 pkg=com.oplus.battery mCallingUid=1000 }; code:PROC_STATE_PERSISTENT; tempAllowListReason:<,reasonCode:SYSTEM_ALLOW_LISTED,duration:9223372036854775807,callingUid:-1>; allowWiu:10; targetSdkVersion:36; callerTargetSdkVersion:36; startForegroundCount:0; bindFromPackage:null: isBindService:true]
+    createTime=-18h12m56s547ms startingBgTimeout=--
+    lastActivity=-16h17m0s462ms restartTime=-16h17m59s932ms createdFromFg=true
+    startRequested=true delayedStop=false stopIfKilled=false callStart=true lastStartId=1
+ startCommandResult=1
+    Bindings:
+    * IntentBindRecord{851d4c CREATE}:
+      intent={act=com.oplus.battery.OplusBatteryService xflg=0x4 pkg=com.oplus.battery mCallingUid=1000}
+      binder=android.os.BinderProxy@c62d195
+      requested=true received=true hasBound=true doRebind=false
+      * Client AppBindRecord{2cd2aa ProcessRecord{7a7dbb4 8947:com.oplus.athena/1000}}
+        Per-process Connections:
+          ConnectionRecord{18348ad u0 CR com.oplus.battery/.OplusBatteryService:@3ff21c4 flags=0x1}
+    All Connections:
+      ConnectionRecord{18348ad u0 CR com.oplus.battery/.OplusBatteryService:@3ff21c4 flags=0x1}
+    restartReschedulingCount=0, RestartSceneMask=0, Flag = 0x0
+
+  * ServiceRecord{c58446e u0 com.oplus.battery/androidx.room.MultiInstanceInvalidationService c:com.oplus.battery}
+    intent={cmp=com.oplus.battery/androidx.room.MultiInstanceInvalidationService mCallingUid=1000}
+    packageName=com.oplus.battery
+    processName=com.oplus.battery
+    targetSdkVersion=36
+    baseDir=/system_ext/app/Battery/Battery.apk
+    dataDir=/data/user_de/0/com.oplus.battery
+    app=ProcessRecord{519495d 10666:com.oplus.battery/1000}
+    useNewWiuLogic_forCapabilities()=true
+    useNewWiuLogic_forStart()=true
+    useNewBfslLogic()=true
+    mAllowWiu_noBinding=DENIED
+    mAllowWiu_inBindService=PROC_STATE_PERSISTENT
+    mAllowWiu_byBindings=DENIED
+    getFgsAllowWiu_legacy=PROC_STATE_PERSISTENT
+    getFgsAllowWiu_new=DENIED
+    getFgsAllowWiu_forStart=DENIED
+    getFgsAllowWiu_forCapabilities=DENIED
+    allowUiJobScheduling=false
+    recentCallingPackage=com.oplus.battery
+    recentCallingUid=1000
+    mAllowStart_noBinding=DENIED
+    mAllowStart_inBindService=PROC_STATE_PERSISTENT
+    mAllowStart_byBindings=DENIED
+    getFgsAllowStart_legacy=PROC_STATE_PERSISTENT
+    getFgsAllowStart_new=DENIED
+    getFgsAllowStart=DENIED
+    startForegroundCount=0
+    infoAllowStartForeground=[callingPackage: com.oplus.battery; callingUid: 1000; uidState: PER ; uidBFSL: [BFSL]; intent: Intent { xflg=0x4 cmp=com.oplus.battery/androidx.room.MultiInstanceInvalidationService mCallingUid=1000 }; code:PROC_STATE_PERSISTENT; tempAllowListReason:<,reasonCode:SYSTEM_ALLOW_LISTED,duration:9223372036854775807,callingUid:-1>; allowWiu:10; targetSdkVersion:36; callerTargetSdkVersion:36; startForegroundCount:0; bindFromPackage:null: isBindService:true]
+    createTime=-18h12m58s368ms startingBgTimeout=--
+    lastActivity=-16h18m1s754ms restartTime=-16h18m1s754ms createdFromFg=true
+    Bindings:
+    * IntentBindRecord{4c1ae9b CREATE}:
+      intent={xflg=0x4 cmp=com.oplus.battery/androidx.room.MultiInstanceInvalidationService mCallingUid=1000}
+      binder=android.os.BinderProxy@8cc238
+      requested=true received=true hasBound=true doRebind=false
+      * Client AppBindRecord{e6bf211 ProcessRecord{519495d 10666:com.oplus.battery/1000}}
+        Per-process Connections:
+          ConnectionRecord{bc8c2b3 u0 CR com.oplus.battery/androidx.room.MultiInstanceInvalidationService:@ac1c822 flags=0x1}
+    All Connections:
+      ConnectionRecord{bc8c2b3 u0 CR com.oplus.battery/androidx.room.MultiInstanceInvalidationService:@ac1c822 flags=0x1}
+    restartReschedulingCount=0, RestartSceneMask=0, Flag = 0x0
+
+  * ServiceRecord{f32f64d u0 com.oplus.battery/com.oplus.thermalcontrol.trace.ThermalTraceService c:com.oplus.onetrace}
+    intent={act=com.oplus.battery.ThermalTraceService pkg=com.oplus.battery mCallingUid=1000}
+    packageName=com.oplus.battery
+    processName=com.oplus.battery
+    targetSdkVersion=36
+    permission=com.oplus.permission.safe.LOG
+    baseDir=/system_ext/app/Battery/Battery.apk
+    dataDir=/data/user_de/0/com.oplus.battery
+    app=ProcessRecord{519495d 10666:com.oplus.battery/1000}
+    useNewWiuLogic_forCapabilities()=true
+    useNewWiuLogic_forStart()=true
+    useNewBfslLogic()=true
+    mAllowWiu_noBinding=DENIED
+    mAllowWiu_inBindService=PROC_STATE_PERSISTENT
+    mAllowWiu_byBindings=DENIED
+    getFgsAllowWiu_legacy=PROC_STATE_PERSISTENT
+    getFgsAllowWiu_new=DENIED
+    getFgsAllowWiu_forStart=DENIED
+    getFgsAllowWiu_forCapabilities=DENIED
+    allowUiJobScheduling=false
+    recentCallingPackage=com.oplus.onetrace
+    recentCallingUid=1000
+    mAllowStart_noBinding=DENIED
+    mAllowStart_inBindService=PROC_STATE_PERSISTENT
+    mAllowStart_byBindings=DENIED
+    getFgsAllowStart_legacy=PROC_STATE_PERSISTENT
+    getFgsAllowStart_new=DENIED
+    getFgsAllowStart=DENIED
+    startForegroundCount=0
+    infoAllowStartForeground=[callingPackage: com.oplus.onetrace; callingUid: 1000; uidState: PER ; uidBFSL: [BFSL]; intent: Intent { act=com.oplus.battery.ThermalTraceService xflg=0x4 pkg=com.oplus.battery mCallingUid=1000 }; code:PROC_STATE_PERSISTENT; tempAllowListReason:<,reasonCode:SYSTEM_ALLOW_LISTED,duration:9223372036854775807,callingUid:-1>; allowWiu:10; targetSdkVersion:36; callerTargetSdkVersion:37; startForegroundCount:0; bindFromPackage:null: isBindService:true]
+    createTime=-32m43s911ms startingBgTimeout=--
+    lastActivity=-31m57s336ms restartTime=-31m57s336ms createdFromFg=true
+    Bindings:
+    * IntentBindRecord{1dd6f76 CREATE}:
+      intent={act=com.oplus.battery.ThermalTraceService xflg=0x4 pkg=com.oplus.battery mCallingUid=1000}
+      binder=android.os.BinderProxy@e829977
+      requested=true received=true hasBound=true doRebind=false
+      * Client AppBindRecord{167c9e4 ProcessRecord{11eeddd 31016:com.oplus.onetrace/1000}}
+        Per-process Connections:
+          ConnectionRecord{75081e4 u0 CR WPRI com.oplus.battery/com.oplus.thermalcontrol.trace.ThermalTraceService:@c3b3177 flags=0x21}
+    All Connections:
+      ConnectionRecord{75081e4 u0 CR WPRI com.oplus.battery/com.oplus.thermalcontrol.trace.ThermalTraceService:@c3b3177 flags=0x21}
+    restartReschedulingCount=0, RestartSceneMask=0, Flag = 0x0
+
+  Connection bindings to services:
+  * ConnectionRecord{18348ad u0 CR com.oplus.battery/.OplusBatteryService:@3ff21c4 flags=0x1}
+    binding=AppBindRecord{2cd2aa com.oplus.battery/.OplusBatteryService:com.oplus.athena}
+    conn=android.os.BinderProxy@3ff21c4 flags=0x1
+  * ConnectionRecord{bc8c2b3 u0 CR com.oplus.battery/androidx.room.MultiInstanceInvalidationService:@ac1c822 flags=0x1}
+    binding=AppBindRecord{e6bf211 com.oplus.battery/androidx.room.MultiInstanceInvalidationService:com.oplus.battery}
+    conn=android.os.BinderProxy@ac1c822 flags=0x1
+  * ConnectionRecord{75081e4 u0 CR WPRI com.oplus.battery/com.oplus.thermalcontrol.trace.ThermalTraceService:@c3b3177 flags=0x21}
+    binding=AppBindRecord{167c9e4 com.oplus.battery/com.oplus.thermalcontrol.trace.ThermalTraceService:com.oplus.onetrace}
+    conn=android.os.BinderProxy@c3b3177 flags=0x21

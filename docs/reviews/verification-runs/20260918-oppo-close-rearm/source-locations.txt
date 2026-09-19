@@ -1,0 +1,18 @@
+android/app/src/main/java/space/alliswell/inbox/AlarmTestReceiver.java:125:      //    重复拉起是安全的：两条路径携带**同一个 token**，AlarmActivity.onNewIntent
+android/app/src/main/java/space/alliswell/inbox/AlarmTestReceiver.java:213:        // 加上 FLAG_INSISTENT 后它会一直循环，直到通知被撤掉。
+android/app/src/main/java/space/alliswell/inbox/AlarmTestReceiver.java:216:        notification.flags |= Notification.FLAG_INSISTENT;
+android/app/src/main/java/space/alliswell/inbox/AlarmTestReceiver.java:217:        nm.notify(id, notification);
+android/app/src/main/java/space/alliswell/inbox/AlarmActivity.java:32: * R2：launchMode=singleInstance 时，第二条闹钟会通过 onNewIntent 送达。
+android/app/src/main/java/space/alliswell/inbox/AlarmActivity.java:35: * 并在 onNewIntent 里重新绑定 + 重新起响。
+android/app/src/main/java/space/alliswell/inbox/AlarmActivity.java:60:  /** 当前 Intent 绑定的数据（R2：随 onNewIntent 更新） */
+android/app/src/main/java/space/alliswell/inbox/AlarmActivity.java:103:    // V01：首次创建同样必须起响（此前只有 onNewIntent 会启动效果）
+android/app/src/main/java/space/alliswell/inbox/AlarmActivity.java:115:  protected void onNewIntent(Intent intent) {
+android/app/src/main/java/space/alliswell/inbox/AlarmActivity.java:116:    super.onNewIntent(intent);
+android/app/src/main/java/space/alliswell/inbox/AlarmActivity.java:124:    stopAlarmEffects();
+android/app/src/main/java/space/alliswell/inbox/AlarmActivity.java:234:          stopAlarmEffects(); cancelPostedNotification(); finish();
+android/app/src/main/java/space/alliswell/inbox/AlarmActivity.java:290:   * F2：铃声通常由**通知**承担 —— 渠道音 + `Notification.FLAG_INSISTENT`，由系统
+android/app/src/main/java/space/alliswell/inbox/AlarmActivity.java:319:    stopAlarmEffects();
+android/app/src/main/java/space/alliswell/inbox/AlarmActivity.java:334:    cancelPostedNotification();
+android/app/src/main/java/space/alliswell/inbox/AlarmActivity.java:355:  private void cancelPostedNotification() {
+android/app/src/main/java/space/alliswell/inbox/AlarmActivity.java:429:  private void stopAlarmEffects() {
+android/app/src/main/java/space/alliswell/inbox/AlarmActivity.java:450:    stopAlarmEffects();

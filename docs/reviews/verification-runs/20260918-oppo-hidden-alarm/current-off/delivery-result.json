@@ -1,0 +1,164 @@
+{
+  "itemId": "matrix_off_1789670824",
+  "received": true,
+  "visible": true,
+  "lagMs": 79,
+  "rows": [
+    {
+      "token": "231576371:e59c9792-5720-454b-9531-36c52a6d2ca6",
+      "stage": "requested",
+      "at": 1789670824425,
+      "detail": "delayMs=74581"
+    },
+    {
+      "token": "231576371:e59c9792-5720-454b-9531-36c52a6d2ca6",
+      "stage": "item",
+      "at": 1789670824430,
+      "detail": "matrix_off_1789670824"
+    },
+    {
+      "token": "231576371:e59c9792-5720-454b-9531-36c52a6d2ca6",
+      "stage": "unfreezerScheduled",
+      "at": 1789670824448,
+      "detail": "triggerAt=1789670899015;mode=alarmClock"
+    },
+    {
+      "token": "231576371:e59c9792-5720-454b-9531-36c52a6d2ca6",
+      "stage": "scheduled",
+      "at": 1789670824454,
+      "detail": "triggerAt=1789670899015;mode=alarmClock"
+    },
+    {
+      "token": "231576371:e59c9792-5720-454b-9531-36c52a6d2ca6",
+      "stage": "cancelled",
+      "at": 1789670824700,
+      "detail": "replaced by new schedule"
+    },
+    {
+      "token": "231576371:73901f0a-b91c-4e2d-9368-0091c961c17d",
+      "stage": "requested",
+      "at": 1789670824705,
+      "detail": "delayMs=74308"
+    },
+    {
+      "token": "231576371:73901f0a-b91c-4e2d-9368-0091c961c17d",
+      "stage": "item",
+      "at": 1789670824710,
+      "detail": "matrix_off_1789670824"
+    },
+    {
+      "token": "231576371:73901f0a-b91c-4e2d-9368-0091c961c17d",
+      "stage": "unfreezerScheduled",
+      "at": 1789670824721,
+      "detail": "triggerAt=1789670899021;mode=alarmClock"
+    },
+    {
+      "token": "231576371:73901f0a-b91c-4e2d-9368-0091c961c17d",
+      "stage": "scheduled",
+      "at": 1789670824725,
+      "detail": "triggerAt=1789670899021;mode=alarmClock"
+    },
+    {
+      "token": "231576371:73901f0a-b91c-4e2d-9368-0091c961c17d",
+      "stage": "unfreezerStarted",
+      "at": 1789670899063,
+      "detail": "foreground service torn down the freezer"
+    },
+    {
+      "token": "231576371:73901f0a-b91c-4e2d-9368-0091c961c17d",
+      "stage": "received",
+      "at": 1789670899079,
+      "detail": ""
+    },
+    {
+      "token": "231576371:73901f0a-b91c-4e2d-9368-0091c961c17d",
+      "stage": "environment",
+      "at": 1789670899093,
+      "detail": "screenOn=false;locked=true;inCall=false;path=fsi+direct"
+    },
+    {
+      "token": "231576371:73901f0a-b91c-4e2d-9368-0091c961c17d",
+      "stage": "launchRequested",
+      "at": 1789670899140,
+      "detail": "direct launch alongside full-screen intent"
+    },
+    {
+      "token": "231576371:73901f0a-b91c-4e2d-9368-0091c961c17d",
+      "stage": "notifyReturned",
+      "at": 1789670899148,
+      "detail": "insistent; notify returned; not proof of display"
+    },
+    {
+      "token": "231576371:73901f0a-b91c-4e2d-9368-0091c961c17d",
+      "stage": "created",
+      "at": 1789670899159,
+      "detail": "test=false"
+    },
+    {
+      "token": "231576371:73901f0a-b91c-4e2d-9368-0091c961c17d",
+      "stage": "resumed",
+      "at": 1789670899201,
+      "detail": "lifecycle only"
+    },
+    {
+      "token": "231576371:73901f0a-b91c-4e2d-9368-0091c961c17d",
+      "stage": "paused",
+      "at": 1789670899214,
+      "detail": "finishing=false"
+    },
+    {
+      "token": "231576371:73901f0a-b91c-4e2d-9368-0091c961c17d",
+      "stage": "resumed",
+      "at": 1789670899218,
+      "detail": "lifecycle only"
+    },
+    {
+      "token": "231576371:73901f0a-b91c-4e2d-9368-0091c961c17d",
+      "stage": "windowSample",
+      "at": 1789670899507,
+      "detail": "after=300ms;focus=false;shown=true;visibility=0;playing=false"
+    },
+    {
+      "token": "231576371:73901f0a-b91c-4e2d-9368-0091c961c17d",
+      "stage": "windowVisible",
+      "at": 1789670899533,
+      "detail": "via=sample@300;focused=false;shown=true"
+    },
+    {
+      "token": "231576371:73901f0a-b91c-4e2d-9368-0091c961c17d",
+      "stage": "windowSample",
+      "at": 1789670899535,
+      "detail": "after=300ms;focus=false;shown=true;visibility=0;playing=false"
+    },
+    {
+      "token": "231576371:73901f0a-b91c-4e2d-9368-0091c961c17d",
+      "stage": "focus",
+      "at": 1789670899538,
+      "detail": "true"
+    },
+    {
+      "token": "231576371:73901f0a-b91c-4e2d-9368-0091c961c17d",
+      "stage": "windowSample",
+      "at": 1789670900009,
+      "detail": "after=800ms;focus=true;shown=true;visibility=0;playing=false"
+    },
+    {
+      "token": "231576371:73901f0a-b91c-4e2d-9368-0091c961c17d",
+      "stage": "windowSample",
+      "at": 1789670900021,
+      "detail": "after=800ms;focus=true;shown=true;visibility=0;playing=false"
+    },
+    {
+      "token": "231576371:73901f0a-b91c-4e2d-9368-0091c961c17d",
+      "stage": "windowSample",
+      "at": 1789670900711,
+      "detail": "after=1500ms;focus=true;shown=true;visibility=0;playing=false"
+    },
+    {
+      "token": "231576371:73901f0a-b91c-4e2d-9368-0091c961c17d",
+      "stage": "windowSample",
+      "at": 1789670900722,
+      "detail": "after=1500ms;focus=true;shown=true;visibility=0;playing=false"
+    }
+  ]
+}

@@ -1,0 +1,179 @@
+[
+  {
+    "action": "close",
+    "itemId": "f6c_action_close_1789669146",
+    "clickedAt": 1789669185476,
+    "token": "763793489:c84175ea-0cca-41cb-a25d-172c83a0d065",
+    "checks": {
+      "nativeAction": true,
+      "effectsStopped": true,
+      "notificationRemoved": true,
+      "originalItemsUnchanged": true,
+      "statusDue": true,
+      "notAcknowledged": true,
+      "triggerUnchanged": true,
+      "futureSchedule": true
+    },
+    "pass": true,
+    "item": {
+      "id": "f6c_action_close_1789669146",
+      "title": "F6c 按钮测试 close",
+      "note": "功能验收专用",
+      "tags": [],
+      "url": "",
+      "projectId": "",
+      "priority": "important",
+      "status": "due",
+      "triggerAt": 1789669176000,
+      "windowStart": null,
+      "windowEnd": null,
+      "deadlineAt": null,
+      "repeat": null,
+      "createdAt": 1789669146093,
+      "acknowledgedAt": null,
+      "completedAt": null,
+      "snoozeCount": 0,
+      "deliveredAt": 1789669183031,
+      "remindCount": 1,
+      "lastRemindAt": 1789669183031,
+      "lastAlertShownAt": null,
+      "scheduleBasis": "wall-clock",
+      "localTrigger": "2026-09-18T02:19:36",
+      "snoozedAt": null,
+      "snoozeDelayMs": null,
+      "dismissedUntil": null,
+      "review_status": "READY",
+      "reviewed_at": null,
+      "sourceTitle": "",
+      "sourceApp": "",
+      "delivery_mode": "alarm",
+      "isFallbackTrigger": false,
+      "deadlineStageKey": null,
+      "deadlineEvents": {},
+      "deadlinePaused": false,
+      "ackAdvancedAt": null,
+      "rev": 1,
+      "seriesId": null,
+      "repeatParentId": null
+    },
+    "plans": [],
+    "localPlans": [
+      {
+        "id": 1639200313,
+        "title": "☆ 重要事项",
+        "body": "F6c 按钮测试 close",
+        "schedule": {
+          "at": "Fri Sep 18 03:49:36 GMT+08:00 2026",
+          "count": 1,
+          "repeats": false
+        },
+        "extra": {
+          "managedKind": "attention-reminder",
+          "scheduleVersion": 2,
+          "itemId": "f6c_action_close_1789669146",
+          "itemRev": 1,
+          "event": "realert",
+          "attempt": 3,
+          "scheduleKey": "2|f6c_action_close_1789669146|1|realert|3|1789674576000|☆ 重要事项|F6c 按钮测试 close|attention-important-v2"
+        }
+      },
+      {
+        "id": 1328479284,
+        "title": "☆ 重要事项",
+        "body": "F6c 按钮测试 close",
+        "schedule": {
+          "at": "Fri Sep 18 03:19:36 GMT+08:00 2026",
+          "count": 1,
+          "repeats": false
+        },
+        "extra": {
+          "managedKind": "attention-reminder",
+          "scheduleVersion": 2,
+          "itemId": "f6c_action_close_1789669146",
+          "itemRev": 1,
+          "event": "realert",
+          "attempt": 2,
+          "scheduleKey": "2|f6c_action_close_1789669146|1|realert|2|1789672776000|☆ 重要事项|F6c 按钮测试 close|attention-important-v2"
+        }
+      },
+      {
+        "id": 1561530211,
+        "title": "☆ 重要事项",
+        "body": "F6c 按钮测试 close",
+        "schedule": {
+          "at": "Fri Sep 18 02:49:36 GMT+08:00 2026",
+          "count": 1,
+          "repeats": false
+        },
+        "extra": {
+          "managedKind": "attention-reminder",
+          "scheduleVersion": 2,
+          "itemId": "f6c_action_close_1789669146",
+          "itemRev": 1,
+          "event": "realert",
+          "attempt": 1,
+          "scheduleKey": "2|f6c_action_close_1789669146|1|realert|1|1789670976000|☆ 重要事项|F6c 按钮测试 close|attention-important-v2"
+        }
+      }
+    ]
+  },
+  {
+    "action": "ack",
+    "itemId": "f6c_action_ack_1789669194",
+    "clickedAt": 1789669230603,
+    "token": "1896776120:769b9971-c525-4a9a-a7c6-9369b9b1ce9e",
+    "checks": {
+      "nativeAction": true,
+      "effectsStopped": true,
+      "notificationRemoved": true,
+      "originalItemsUnchanged": false,
+      "statusAcknowledged": true,
+      "acknowledgedAt": true,
+      "notCompleted": true
+    },
+    "pass": false,
+    "item": {
+      "id": "f6c_action_ack_1789669194",
+      "title": "F6c 按钮测试 ack",
+      "note": "功能验收专用",
+      "tags": [],
+      "url": "",
+      "projectId": "",
+      "priority": "important",
+      "status": "acknowledged",
+      "triggerAt": 1789669224000,
+      "windowStart": null,
+      "windowEnd": null,
+      "deadlineAt": null,
+      "repeat": null,
+      "createdAt": 1789669194580,
+      "acknowledgedAt": 1789669230752,
+      "completedAt": null,
+      "snoozeCount": 0,
+      "deliveredAt": 1789669226295,
+      "remindCount": 1,
+      "lastRemindAt": null,
+      "lastAlertShownAt": null,
+      "scheduleBasis": "wall-clock",
+      "localTrigger": "2026-09-18T02:20:24",
+      "snoozedAt": null,
+      "snoozeDelayMs": null,
+      "dismissedUntil": null,
+      "review_status": "READY",
+      "reviewed_at": null,
+      "sourceTitle": "",
+      "sourceApp": "",
+      "delivery_mode": "alarm",
+      "isFallbackTrigger": false,
+      "deadlineStageKey": null,
+      "deadlineEvents": {},
+      "deadlinePaused": false,
+      "ackAdvancedAt": null,
+      "rev": 2,
+      "seriesId": null,
+      "repeatParentId": null
+    },
+    "plans": [],
+    "localPlans": []
+  }
+]

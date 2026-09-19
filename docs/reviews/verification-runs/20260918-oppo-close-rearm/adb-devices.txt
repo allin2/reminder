@@ -1,0 +1,3 @@
+List of devices attached
+QSKFAE95CQEUJZ8L       unauthorized usb:1048576X transport_id:20
+

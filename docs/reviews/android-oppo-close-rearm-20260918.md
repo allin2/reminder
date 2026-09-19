@@ -66,3 +66,18 @@ runtime-logcat.txt 的 1789668982.815–.819：
 - 所有本轮创建的测试事项均通过应用 completeItem 归档，保留条目；清理范围来自本轮 item-before.json 中的精确 ID。结果见 final-state.json，最终系统排程与 trace 已保存。
 - 脚本 Python AST 语法检查、git diff --check 通过。没有改动 APK 或应用源码，没有提交/推送。本次是诊断完成，后台失效仍未修复；下一步需对 ColorOS 的可见后台/电池设置做单变量对照，确认哪项能解除 OFreezer 闹钟代理。
 - 原始证据目录的 sha256-manifest.json 绑定文件哈希。设备原始日志可能含私人事项信息，当前只保存本地，没有发布。
+
+## 证据脱敏说明（2026-09-19 入库前）
+
+上一轮记录里「只保存本地，没有发布」的状态**已改变**：这批证据随本仓一起入库。
+入库前对通知转储做了**字面量替换** —— `dumpsys notification` 会带出邮件应用的通知通道名，
+而该通道名里嵌着账号地址（`NotificationChannel{mId='^nc_1_mail_<账号>', mName=邮件}`），
+与本文结论无关却会让个人账号永久进入 git 历史。
+
+- 规则与替换计数：[`verification-runs/REDACTION-MANIFEST.json`](verification-runs/REDACTION-MANIFEST.json)
+  —— 含每个文件的**原始 sha256 / 脱敏后 sha256**；字面量只以 sha256 前缀记录，不落原文。
+- 可复跑脚本：[`../../scripts/verification/redact-evidence.py`](../../scripts/verification/redact-evidence.py)
+  （默认干跑，`--apply` 才写盘，`--audit` 复查残留）。
+- 影响范围：本轮的 6 个 `notification*.txt`，每个文件各 4 处；除此之外未改动任何字节。
+
+因此这些文件**不是逐字节的原始转储**，引用哈希请以清单中的 `redactedSha256` 为准。

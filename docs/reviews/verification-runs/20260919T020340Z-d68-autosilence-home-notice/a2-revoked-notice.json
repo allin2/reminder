@@ -1,0 +1,6 @@
+{
+  "html": "<button class=\"soft-entry notice-entry\" id=\"homeNoticeBtn\" data-notice-kind=\"permission\"><span><span class=\"notice-title\">无法保证提醒</span><br><span style=\"font-size:0.78rem;color:var(--muted)\">系统通知权限未授予：关掉 App 后闹钟可能不响。点这里去授权。</span></span><span style=\"color:var(--muted)\">›</span></button>",
+  "kind": "permission",
+  "renderedHeight": 91,
+  "screenNotify": true
+}

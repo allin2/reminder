@@ -1,0 +1,1541 @@
+POWER MANAGER (dumpsys power)
+
+Power Manager State:
+  Settings power_manager_constants:
+    no_cached_wake_locks=true
+  mDirty=0x0
+  mWakefulness=Asleep
+  mWakefulnessChanging=false
+  mIsPowered=true
+  mPlugType=2
+  mBatteryLevel=95
+  mDreamsBatteryLevelDrain=0
+  mDockState=0
+  mStayOn=false
+  mProximityPositive=false
+  mBootCompleted=true
+  mSystemReady=true
+  mEnhancedDischargeTimeElapsed=0
+  mLastEnhancedDischargeTimeUpdatedElapsed=0
+  mEnhancedDischargePredictionIsPersonalized=false
+  mUseAutoSuspend=true
+  mHalAutoSuspendModeEnabled=true
+  mHalInteractiveModeEnabled=false
+  mWakeLockSummary=0x0
+  mNotifyLongScheduled=+36s913ms
+  mNotifyLongDispatched=-23s596ms
+  mNotifyLongNextCheck=(none)
+  mRequestWaitForNegativeProximity=false
+  mInterceptedPowerKeyForProximity=false
+  mSandmanScheduled=false
+  mBatteryLevelLow=false
+  mLightDeviceIdleMode=false
+  mDeviceIdleMode=false
+  mDeviceIdleWhitelist=[1000, 1001, 2000, 10033, 10036, 10037, 10046, 10047, 10055, 10061, 10076, 10080, 10081, 10082, 10091, 10104, 10116, 10120, 10147, 10157, 10167, 10183, 10190, 10192, 10206, 10209, 10274, 10278]
+  mDeviceIdleTempWhitelist=[10190]
+  mLowPowerStandbyActive=false
+  mLastWakeTime=199205415 (129269 ms ago)
+  mLastSleepTime=199317768 (16916 ms ago)
+  mLastSleepReason=sleep_button
+  mLastGlobalWakeTimeRealtime=282935023 (in 83600339 ms)
+  mLastGlobalSleepTimeRealtime=283047375 (in 83712691 ms)
+  mLastInteractivePowerHintTime=199318232 (16452 ms ago)
+  mLastScreenBrightnessBoostTime=0 (199334684 ms ago)
+  mScreenBrightnessBoostInProgress=false
+  mHoldingWakeLockSuspendBlocker=false
+  mHoldingDisplaySuspendBlocker=false
+  mLastFlipTime=0
+  mIsFaceDown=false
+
+Settings and Configuration:
+  mDecoupleHalAutoSuspendModeFromDisplayConfig=true
+  mDecoupleHalInteractiveModeFromDisplayConfig=true
+  mWakeUpWhenPluggedOrUnpluggedConfig=true
+  mWakeUpWhenPluggedOrUnpluggedInTheaterModeConfig=false
+  mTheaterModeEnabled=false
+  mKeepDreamingWhenUnplugging=false
+  mSuspendWhenScreenOffDueToProximityConfig=true
+  mDreamsSupportedConfig=true
+  mDreamsEnabledByDefaultConfig=true
+  mDreamsActivatedOnSleepByDefaultConfig=false
+  mDreamsActivatedOnDockByDefaultConfig=true
+  mDreamsActivatedWhilePosturedByDefaultConfig=false
+  mDreamsEnabledOnBatteryConfig=false
+  mDreamsBatteryLevelMinimumWhenPoweredConfig=-1
+  mDreamsBatteryLevelMinimumWhenNotPoweredConfig=15
+  mDreamsBatteryLevelDrainCutoffConfig=5
+  mDreamsEnabledSetting=true
+  mDreamsActivateOnSleepSetting=false
+  mDreamsActivateOnDockSetting=true
+  mDreamsActivateWhilePosturedSetting=false
+  mDozeAfterScreenOff=true
+  mBrightWhenDozingConfig=false
+  mMinimumScreenOffTimeoutConfig=5000
+  mMaximumScreenDimDurationConfig=7000
+  mMaximumScreenDimRatioConfig=0.20000005
+  mAttentiveTimeoutConfig=-1
+  mAttentiveTimeoutSetting=-1
+  mAttentiveWarningDurationConfig=30000
+  mScreenOffTimeoutSetting=600000
+  mSleepTimeoutSetting=-1
+  mMaximumScreenOffTimeoutFromDeviceAdmin=9223372036854775807 (enforced=false)
+  mStayOnWhilePluggedInSetting=0
+  mUserActivityTimeoutOverrideFromWindowManager=7000
+  mUserInactiveOverrideFromWindowManager=false
+  mDozeScreenStateOverrideFromDreamManager=1
+  mDrawWakeLockOverrideFromSidekick=false
+  mDozeScreenBrightnessOverrideFromDreamManager=0
+  mUseNormalBrightnessForDoze=false
+  mScreenBrightnessMinimum=0.0
+  mScreenBrightnessMaximum=1.0
+  mScreenBrightnessDefault=0.4
+  mDoubleTapWakeEnabled=false
+  mButtonLightOn=true
+  mButtonLightAlwaysOn=false
+  mButtonLightSensorControl=false
+  buttonLightControlMode=0
+  isButtonLightSpecialScene=false
+  isButtonLightSpecialSceneException=false
+  isButtonNeedReflectGlobal=false
+  mForegroundProfile=0
+  mUserId=0
+
+Attentive timeout: -1 ms
+Sleep timeout: -1 ms
+Screen off timeout: 7000 ms
+Screen dim duration: 1400 ms
+
+UID states (changing=false changed=false):
+  UID 1000:   ACTIVE  count=0 state=0
+  UID 1001:   ACTIVE  count=0 state=0
+  UID 1027:   ACTIVE  count=0 state=0
+  UID 1068:   ACTIVE  count=0 state=0
+  UID 1073:   ACTIVE  count=0 state=0
+  UID u0a0:   ACTIVE  count=0 state=0
+  UID u0a31: INACTIVE  count=0 state=10
+  UID u0a33: INACTIVE  count=0 state=10
+  UID u0a37: INACTIVE  count=0 state=10
+  UID u0a39:   ACTIVE  count=0 state=7
+  UID u0a40:   ACTIVE  count=0 state=0
+  UID u0a43:   ACTIVE  count=0 state=5
+  UID u0a46:   ACTIVE  count=0 state=6
+  UID u0a47: INACTIVE  count=0 state=8
+  UID u0a48: INACTIVE  count=0 state=10
+  UID u0a55: INACTIVE  count=0 state=8
+  UID u0a56: INACTIVE  count=0 state=19
+  UID u0a57: INACTIVE  count=0 state=19
+  UID u0a61: INACTIVE  count=0 state=10
+  UID u0a66: INACTIVE  count=0 state=19
+  UID u0a67:   ACTIVE  count=0 state=5
+  UID u0a71: INACTIVE  count=0 state=19
+  UID u0a72: INACTIVE  count=0 state=19
+  UID u0a73: INACTIVE  count=0 state=17
+  UID u0a76:   ACTIVE  count=0 state=5
+  UID u0a80: INACTIVE  count=0 state=19
+  UID u0a82: INACTIVE  count=0 state=19
+  UID u0a84: INACTIVE  count=0 state=19
+  UID u0a85: INACTIVE  count=0 state=10
+  UID u0a86:   ACTIVE  count=0 state=5
+  UID u0a88: INACTIVE  count=0 state=10
+  UID u0a96: INACTIVE  count=0 state=19
+  UID u0a97: INACTIVE  count=0 state=10
+  UID u0a103: INACTIVE  count=0 state=19
+  UID u0a107: INACTIVE  count=0 state=19
+  UID u0a108:   ACTIVE  count=0 state=5
+  UID u0a112:   ACTIVE  count=0 state=5
+  UID u0a114:   ACTIVE  count=0 state=0
+  UID u0a116: INACTIVE  count=0 state=10
+  UID u0a118:   ACTIVE  count=0 state=5
+  UID u0a119: INACTIVE  count=0 state=19
+  UID u0a120: INACTIVE  count=0 state=10
+  UID u0a124: INACTIVE  count=0 state=19
+  UID u0a132: INACTIVE  count=0 state=10
+  UID u0a136: INACTIVE  count=0 state=10
+  UID u0a138:   ACTIVE  count=0 state=5
+  UID u0a141: INACTIVE  count=0 state=19
+  UID u0a147: INACTIVE  count=0 state=10
+  UID u0a149: INACTIVE  count=0 state=10
+  UID u0a154: INACTIVE  count=0 state=10
+  UID u0a156: INACTIVE  count=0 state=18
+  UID u0a163: INACTIVE  count=0 state=19
+  UID u0a164: INACTIVE  count=0 state=19
+  UID u0a166: INACTIVE  count=0 state=19
+  UID u0a167:   ACTIVE  count=0 state=0
+  UID u0a169: INACTIVE  count=0 state=19
+  UID u0a170: INACTIVE  count=0 state=19
+  UID u0a187: INACTIVE  count=0 state=19
+  UID u0a190:   ACTIVE  count=0 state=4
+  UID u0a210:   ACTIVE  count=0 state=5
+  UID u0a212: INACTIVE  count=0 state=19
+  UID u0a230: INACTIVE  count=0 state=19
+  UID u0a236: INACTIVE  count=0 state=19
+  UID u0a238: INACTIVE  count=0 state=10
+  UID u0a255: INACTIVE  count=0 state=19
+  UID u0a258: INACTIVE  count=0 state=19
+  UID u0a260: INACTIVE  count=0 state=19
+  UID u0a262: INACTIVE  count=0 state=19
+  UID u0a272: INACTIVE  count=0 state=18
+  UID u0a273: INACTIVE  count=0 state=19
+  UID u0a275: INACTIVE  count=0 state=19
+  UID u0a278: INACTIVE  count=0 state=16
+  UID u0a279: INACTIVE  count=0 state=19
+  UID u0a284: INACTIVE  count=0 state=19
+  UID u0a294: INACTIVE  count=0 state=19
+  UID u0a317: INACTIVE  count=0 state=19
+  UID u0a323:   ACTIVE  count=0 state=5
+  UID u0i1:   ACTIVE  count=0 state=5
+  UID u0i30:   ACTIVE  count=0 state=4
+  UID u666s1000: INACTIVE  count=0 state=10
+  UID u666a212: INACTIVE  count=0 state=19
+
+Looper state:
+  Looper (PowerManagerService, tid 88) {6486a62}
+    (MessageQueue is using Concurrent implementation)
+    State: android.os.MessageQueue$TimedParkStateNode@846caae
+    PriorityQueue Messages: 
+    AsyncPriorityQueue Messages: 
+    Message 1: { id=753162 when=+36s911ms what=4 target=android.os.Handler }
+    (Total messages: 2, polling=true, quitting=false)
+
+Wake Locks: size=0
+
+Frozen Wake Locks: size=0
+
+Suspend Blockers: size=5
+  PowerManagerService.Booting: ref count=0 []
+  PowerManagerService.WakeLocks: ref count=0 []
+  PowerManagerService.Display: ref count=0 []
+  PowerManagerService.Broadcasts: ref count=0 []
+  PowerManagerService.WirelessChargerDetector: ref count=0 []
+
+Display Power: com.android.server.power.PowerManagerService$1@4df3ce5
+
+Battery saving stats:
+  Battery Saver is currently: OFF
+    Times full enabled: 0
+    Times adaptive enabled: 0
+  
+  Drain stats:
+                     Battery saver OFF                          ON
+  NonDoze NonIntr:    107m    271mAh( 17%)    151.7mAh/h          0m      0mAh(  0%)      0.0mAh/h
+             Intr:     19m     56mAh(  5%)    175.5mAh/h          0m      0mAh(  0%)      0.0mAh/h
+  Deep    NonIntr:   2523m   3548mAh(203%)     84.4mAh/h          0m      0mAh(  0%)      0.0mAh/h
+             Intr:      1m      8mAh(  1%)    266.1mAh/h          0m      0mAh(  0%)      0.0mAh/h
+  Light   NonIntr:    115m    233mAh( 15%)    121.2mAh/h          0m      0mAh(  0%)      0.0mAh/h
+             Intr:      0m      5mAh(  0%)    401.5mAh/h          0m      0mAh(  0%)      0.0mAh/h
+
+Battery saver policy (*NOTE* they only apply when battery saver is ON):
+  Settings: battery_saver_constants
+    value: 
+  Settings: (overlay)
+    value: 
+  DeviceConfig: battery_saver
+    N/A
+  mAccessibilityEnabled=false
+  mAutomotiveProjectionActive=false
+  mPolicyLevel=0
+  
+  Policy 'default full'
+    advertise_is_enabled=true
+    disable_vibration=false
+    disable_animation=false
+    defer_full_backup=true
+    defer_keyvalue_backup=true
+    enable_firewall=true
+    enable_datasaver=false
+    disable_launch_boost=true
+    enable_brightness_adjustment=false
+    adjust_brightness_factor=0.5
+    location_mode=3
+    force_all_apps_standby=true
+    force_background_check=true
+    disable_optional_sensors=true
+    disable_aod=true
+    soundtrigger_mode=1
+    enable_quick_doze=true
+    enable_night_mode=false
+  
+  Policy 'current full'
+    advertise_is_enabled=true
+    disable_vibration=false
+    disable_animation=false
+    defer_full_backup=true
+    defer_keyvalue_backup=true
+    enable_firewall=true
+    enable_datasaver=false
+    disable_launch_boost=true
+    enable_brightness_adjustment=false
+    adjust_brightness_factor=0.5
+    location_mode=3
+    force_all_apps_standby=true
+    force_background_check=true
+    disable_optional_sensors=true
+    disable_aod=true
+    soundtrigger_mode=1
+    enable_quick_doze=true
+    enable_night_mode=false
+  
+  Policy 'default adaptive'
+    advertise_is_enabled=false
+    disable_vibration=false
+    disable_animation=false
+    defer_full_backup=false
+    defer_keyvalue_backup=false
+    enable_firewall=false
+    enable_datasaver=false
+    disable_launch_boost=false
+    enable_brightness_adjustment=false
+    adjust_brightness_factor=1.0
+    location_mode=0
+    force_all_apps_standby=false
+    force_background_check=false
+    disable_optional_sensors=false
+    disable_aod=false
+    soundtrigger_mode=0
+    enable_quick_doze=false
+    enable_night_mode=false
+  
+  Policy 'current adaptive'
+    advertise_is_enabled=false
+    disable_vibration=false
+    disable_animation=false
+    defer_full_backup=false
+    defer_keyvalue_backup=false
+    enable_firewall=false
+    enable_datasaver=false
+    disable_launch_boost=false
+    enable_brightness_adjustment=false
+    adjust_brightness_factor=1.0
+    location_mode=0
+    force_all_apps_standby=false
+    force_background_check=false
+    disable_optional_sensors=false
+    disable_aod=false
+    soundtrigger_mode=0
+    enable_quick_doze=false
+    enable_night_mode=false
+  
+  Policy 'effective'
+    advertise_is_enabled=false
+    disable_vibration=false
+    disable_animation=false
+    defer_full_backup=false
+    defer_keyvalue_backup=false
+    enable_firewall=false
+    enable_datasaver=false
+    disable_launch_boost=false
+    enable_brightness_adjustment=false
+    adjust_brightness_factor=1.0
+    location_mode=0
+    force_all_apps_standby=false
+    force_background_check=false
+    disable_optional_sensors=false
+    disable_aod=false
+    soundtrigger_mode=0
+    enable_quick_doze=false
+    enable_night_mode=false
+
+Battery saver state machine:
+  Enabled=false
+    full=false
+    adaptive=false
+  mState=1
+  mLastChangedIntReason=0
+  mLastChangedStrReason=null
+  mBootCompleted=true
+  mSettingsLoaded=true
+  mBatteryStatusSet=true
+  mIsPowered=true
+  mBatteryLevel=95
+  mIsBatteryLevelLow=false
+  mSettingAutomaticBatterySaver=0
+  mSettingBatterySaverEnabled=false
+  mSettingBatterySaverEnabledSticky=false
+  mSettingBatterySaverStickyAutoDisableEnabled=true
+  mSettingBatterySaverStickyAutoDisableThreshold=100
+  mSettingBatterySaverTriggerThreshold=0
+  mBatterySaverStickyBehaviourDisabled=false
+  mBatterySaverTurnedOffNotificationEnabled=true
+  mDynamicPowerSavingsDefaultDisableThreshold=80
+  mDynamicPowerSavingsDisableThreshold=80
+  mDynamicPowerSavingsEnableBatterySaver=false
+  mLastAdaptiveBatterySaverChangedExternallyElapsed=0
+AttentionDetector:
+ mIsSettingEnabled=false
+ mMaxExtensionMillis=900000
+ mPreDimCheckDurationMillis=2000
+ mEffectivePostDimTimeout=0
+ mLastUserActivityTime(excludingAttention)=199318232
+ mAttentionServiceSupported=false
+ mRequested=false
+
+Profile power states: size=0
+Display Group User Activity:
+  displayGroupId=0
+  userActivitySummary=0x0
+  lastUserActivityTime=199267591 (67097 ms ago)
+  lastUserActivityTimeNoChangeLights=199317702 (16986 ms ago)
+  mWakeLockSummary=0x0
+
+Wireless Charger Detector State:
+  mGravitySensor={Sensor name="gravity", vendor="mtk", version=1, type=9, maxRange=39.226803, resolution=0.0012, power=0.001, minDelay=10000}
+  mPoweredWirelessly=false
+  mAtRest=false
+  mRestX=0.0, mRestY=0.0, mRestZ=0.0
+  mDetectionInProgress=false
+  mDetectionStartTime=0 (never)
+  mMustUpdateRestPosition=false
+  mTotalSamples=0
+  mMovingSamples=0
+  mFirstSampleX=0.0, mFirstSampleY=0.0, mFirstSampleZ=0.0
+  mLastSampleX=0.0, mLastSampleY=0.0, mLastSampleZ=0.0
+
+DisplayPowerController size = 2
+DisplayPowerController 0 :
+  mPendingScreenOnUnblocker=null
+  mScreenBrightnessRampAnimator.isAnimating()=false
+  mColorFadeOnAnimator.isStarted()=false
+  mColorFadeOffAnimator.isStarted()=false
+WakelockController State:
+-------------------------
+  mDisplayId=0
+  mUnfinishedBusiness=false
+  mOnStateChangePending=false
+  mOnProximityPositiveMessages=false
+  mOnProximityNegativeMessages=false
+  mIsOverrideDozeScreenStateAcquired=false
+  mDisplayReadyLocked=true
+
+IsStatusOverride: false
+ThermalEventListeners:
+	callbacks: 5
+	killed: false
+	broadcasts count: -1
+ThermalStatusListeners:
+	callbacks: 6
+	killed: false
+	broadcasts count: -1
+Thermal Status: 1
+State changed time: 2026-09-18 14:54:30:883
+Cached temperatures:
+	Temperature{mValue=75.206, mType=0, mName=CPU, mStatus=0}
+	Temperature{mValue=75.206, mType=1, mName=GPU, mStatus=0}
+	Temperature{mValue=74.538, mType=9, mName=NPU, mStatus=0}
+	Temperature{mValue=44.246, mType=3, mName=SKIN, mStatus=1}
+	Temperature{mValue=30.6, mType=2, mName=BATTERY, mStatus=0}
+	Temperature{mValue=37.427, mType=5, mName=POWER_AMPLIFIER, mStatus=0}
+HAL Ready: true
+HAL connection:
+	ThermalHAL 2.0 connected: yes
+Current temperatures from HAL:
+	Temperature{mValue=44.724, mType=0, mName=CPU, mStatus=0}
+	Temperature{mValue=44.724, mType=1, mName=GPU, mStatus=0}
+	Temperature{mValue=37.6, mType=2, mName=BATTERY, mStatus=0}
+	Temperature{mValue=39.336, mType=3, mName=SKIN, mStatus=0}
+	Temperature{mValue=40.906, mType=5, mName=POWER_AMPLIFIER, mStatus=0}
+	Temperature{mValue=44.724, mType=9, mName=NPU, mStatus=0}
+Current cooling devices from HAL:
+	CoolingDevice{mValue=0, mType=2, mName=thermal-cpufreq-0}
+	CoolingDevice{mValue=0, mType=2, mName=thermal-cpufreq-1}
+	CoolingDevice{mValue=0, mType=4, mName=mutt-pa1}
+	CoolingDevice{mValue=0, mType=4, mName=mutt-pa2}
+	CoolingDevice{mValue=0, mType=4, mName=tx-pwr-pa1}
+	CoolingDevice{mValue=0, mType=4, mName=tx-pwr-pa2}
+	CoolingDevice{mValue=0, mType=4, mName=scg-off-pa2}
+	CoolingDevice{mValue=0, mType=2, mName=thermal-devfreq-0}
+Temperature static thresholds from HAL:
+	TemperatureThreshold{mType=0, mName=CPU, mHotThrottlingThresholds=[NaN, NaN, NaN, 95.0, 90.0, 100.0, 117.0], mColdThrottlingThresholds=[NaN, NaN, NaN, NaN, NaN, NaN, NaN]}
+	TemperatureThreshold{mType=1, mName=GPU, mHotThrottlingThresholds=[NaN, NaN, NaN, 95.0, 90.0, 100.0, 117.0], mColdThrottlingThresholds=[NaN, NaN, NaN, NaN, NaN, NaN, NaN]}
+	TemperatureThreshold{mType=2, mName=BATTERY, mHotThrottlingThresholds=[NaN, NaN, NaN, 50.0, 55.0, 59.0, 60.0], mColdThrottlingThresholds=[NaN, NaN, NaN, NaN, NaN, NaN, NaN]}
+	TemperatureThreshold{mType=3, mName=SKIN, mHotThrottlingThresholds=[NaN, 43.0, 45.0, 47.0, 56.0, 58.0, 80.0], mColdThrottlingThresholds=[NaN, NaN, NaN, NaN, NaN, NaN, NaN]}
+	TemperatureThreshold{mType=5, mName=POWER_AMPLIFIER, mHotThrottlingThresholds=[NaN, NaN, NaN, 68.0, 90.0, 100.0, 110.0], mColdThrottlingThresholds=[NaN, NaN, NaN, NaN, NaN, NaN, NaN]}
+	TemperatureThreshold{mType=9, mName=NPU, mHotThrottlingThresholds=[NaN, NaN, NaN, 95.0, 90.0, 100.0, 117.0], mColdThrottlingThresholds=[NaN, NaN, NaN, NaN, NaN, NaN, NaN]}
+Temperature headroom thresholds:
+[NaN, 0.76666665, 0.8333333, 1.0, 1.6666666, 2.0, 2.3333333]
+Notifier:
+Partial Wakelock Log:
+Wake Lock Log
+  09-15 08:37:15.101 - 10031 (com.android.providers.contacts,...) - ACQ *alarm* (partial)
+  09-17 18:01:04.904 - 10171 (com.vivo.space) - ACQ *launch* (partial)
+  09-17 20:49:36.997 - 10067 (com.vivo.systemuiplugin,...) - ACQ *launch* (partial)
+  09-17 20:49:38.773 - 10067 (com.vivo.systemuiplugin,...) - ACQ *launch* (partial)
+  09-17 20:52:27.637 - 10067 (com.vivo.systemuiplugin,...) - ACQ *launch* (partial)
+  09-17 20:52:30.841 - 10067 (com.vivo.systemuiplugin,...) - ACQ *launch* (partial)
+  09-17 20:52:41.723 - 10067 (com.vivo.systemuiplugin,...) - ACQ *launch* (partial)
+  09-17 20:52:49.169 - 10067 (com.vivo.systemuiplugin,...) - ACQ *launch* (partial)
+  09-17 20:52:52.559 - 10088 (com.bbk.theme) - ACQ *launch* (partial)
+  09-17 22:10:57.720 - 10073 (com.vivo.browser) - ACQ *launch* (partial)
+  09-17 23:56:37.753 - 10057 (com.android.packageinstaller) - ACQ *launch* (partial)
+  09-17 23:58:43.549 - 10057 (com.android.packageinstaller) - ACQ *launch* (partial)
+  09-18 00:00:52.740 - 10057 (com.android.packageinstaller) - ACQ *launch* (partial)
+  09-18 00:01:38.435 - 10057 (com.android.packageinstaller) - ACQ *launch* (partial)
+  09-18 00:45:26.770 - 10057 (com.android.packageinstaller) - ACQ *launch* (partial)
+  09-18 00:45:57.104 - 10057 (com.android.packageinstaller) - ACQ *launch* (partial)
+  09-18 00:46:51.106 - 10057 (com.android.packageinstaller) - ACQ *launch* (partial)
+  09-18 00:47:05.904 - 10086 (com.bbk.launcher2) - ACQ *alarm* (partial)
+  09-18 00:47:10.308 - 10057 (com.android.packageinstaller) - ACQ *launch* (partial)
+  09-18 00:48:12.863 - 1000 (System) - ACQ *launch* (partial)
+  09-18 00:48:58.632 - 10057 (com.android.packageinstaller) - ACQ *launch* (partial)
+  09-18 00:49:16.615 - 10057 (com.android.packageinstaller) - ACQ *launch* (partial)
+  09-18 01:11:01.458 - 10039 (com.baidu.input_vivo) - ACQ *launch* (partial)
+  09-18 01:11:04.376 - 10212 (com.android.permissioncontroller) - ACQ *launch* (partial)
+  09-18 01:44:56.393 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 01:45:00.005 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 01:46:00.012 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 01:47:00.006 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 01:47:45.024 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 01:48:00.007 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 01:49:00.012 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 01:50:00.003 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 01:50:16.650 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 01:51:00.008 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 01:51:26.884 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 01:52:00.005 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 01:52:36.104 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 01:53:00.003 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 01:53:46.359 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 01:54:00.006 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 01:54:52.633 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 01:55:00.005 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 01:55:57.858 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 01:56:00.007 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 01:57:00.008 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 01:58:00.010 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 01:58:45.033 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 01:59:00.008 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 01:59:50.002 - 10086 (com.bbk.launcher2) - ACQ *alarm* (partial)
+  09-18 02:00:00.005 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 02:01:09.191 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 02:01:28.303 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 02:01:33.664 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 02:01:40.920 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 02:01:57.203 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 02:01:57.372 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 02:02:00.002 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 02:02:29.959 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 02:03:15.297 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 02:04:28.299 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 02:04:30.615 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 02:05:12.314 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 02:05:36.673 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 02:06:00.003 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 02:06:14.120 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 02:06:31.532 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 02:06:58.403 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 02:07:00.006 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 02:08:00.004 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 02:09:00.010 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 02:09:45.013 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 02:09:57.022 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 02:10:00.008 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 02:11:00.008 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 02:11:01.240 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 02:12:00.007 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 02:12:11.511 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 02:13:00.008 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 02:13:34.650 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 02:14:00.008 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 02:15:00.005 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 02:15:04.600 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 02:16:00.017 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 02:16:45.012 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 02:17:00.005 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 02:18:29.296 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 02:19:30.298 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 02:19:45.294 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 02:22:02.296 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 02:25:40.297 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 02:30:41.304 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 02:35:40.299 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 02:37:08.299 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 02:38:00.394 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 02:39:40.296 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 02:40:40.305 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 02:40:59.076 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 02:41:00.001 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 02:41:11.294 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 02:42:10.391 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 02:43:25.123 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 02:44:01.144 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 02:44:41.021 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 02:46:06.155 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 02:46:15.194 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 02:47:06.236 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 02:49:05.479 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 02:50:01.206 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 02:51:34.031 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 02:52:15.558 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 02:55:25.635 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 02:56:01.266 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 02:56:13.022 - 10120 (com.iqoo.secure) - ACQ *alarm* (partial)
+  09-18 02:58:55.721 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 03:00:00.007 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 03:02:01.344 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 03:05:40.340 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 03:06:15.877 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 03:07:21.640 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 03:08:01.437 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 03:10:05.956 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 03:14:01.497 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 03:18:11.457 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 03:20:01.556 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 03:21:34.027 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 03:22:01.722 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 03:24:53.044 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 03:25:52.004 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 03:26:01.618 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 03:29:42.079 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 03:32:01.679 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 03:33:32.146 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 03:35:40.411 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 03:36:34.031 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 03:37:22.212 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 03:38:01.753 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 03:41:12.286 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 03:45:02.350 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 03:47:16.739 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 03:48:52.424 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 03:51:34.033 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 03:52:42.492 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 03:53:16.815 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 03:56:32.574 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 03:59:16.899 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 04:00:00.003 - 10086 (com.bbk.launcher2) - ACQ *alarm* (partial)
+  09-18 04:00:22.640 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 04:03:45.028 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 04:04:12.917 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 04:05:16.988 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 04:08:02.986 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 04:08:21.651 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 04:11:17.042 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 04:14:51.188 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 04:15:43.123 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 04:15:56.291 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 04:16:35.751 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 04:17:15.288 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 04:19:33.182 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 04:22:23.710 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 04:23:11.536 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 04:23:49.453 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 04:24:28.398 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 04:27:13.310 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 04:29:54.388 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 04:30:01.769 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 04:31:03.388 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 04:34:53.465 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 04:35:40.468 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 04:36:01.829 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 04:38:43.536 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 04:39:22.648 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 04:42:01.887 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 04:46:23.686 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 04:48:01.958 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 04:50:13.761 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 04:54:02.019 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 04:55:51.060 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 04:57:53.876 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 04:59:54.130 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 05:00:00.007 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 05:00:59.035 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 05:01:43.957 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 05:05:34.031 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 05:06:04.438 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 05:09:24.098 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 05:13:14.174 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 05:15:26.006 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 05:17:04.245 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 05:20:54.325 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 05:21:26.075 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 05:24:44.396 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 05:27:26.126 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 05:28:34.461 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 05:32:24.536 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 05:33:26.194 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 05:34:48.582 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 05:35:40.566 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 05:36:14.609 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 05:39:22.649 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 05:40:04.677 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 05:43:54.756 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 05:45:26.306 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 05:47:44.826 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 05:51:26.381 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 05:55:24.954 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 05:57:26.451 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 05:59:15.025 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 06:00:00.006 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 06:00:01.404 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 06:03:05.089 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 06:05:40.588 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 06:06:55.172 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 06:09:26.586 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 06:10:45.249 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 06:14:35.323 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 06:15:26.645 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 06:18:25.396 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 06:21:26.719 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 06:22:15.468 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 06:26:05.538 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 06:27:26.786 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 06:29:55.619 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 06:33:26.846 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 06:35:40.629 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 06:37:35.758 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 06:39:22.651 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 06:41:25.829 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 06:45:15.904 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 06:49:05.973 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 06:51:27.064 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 06:52:56.048 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 06:56:46.118 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 06:57:27.128 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 07:00:00.005 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 07:00:36.190 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 07:03:27.194 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 07:04:26.256 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 07:05:40.671 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 07:08:16.332 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 07:09:27.275 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 07:12:03.399 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 07:15:27.331 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 07:19:46.537 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 07:21:27.417 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 07:23:36.614 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 07:27:26.700 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 07:30:00.006 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 07:30:00.798 - 10039 (com.baidu.input_vivo) - ACQ *alarm* (partial)
+  09-18 07:30:02.778 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 07:31:00.003 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 07:31:16.763 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 07:31:45.361 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 07:32:00.002 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 07:32:38.167 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 07:33:00.003 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 07:34:00.002 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 07:35:00.004 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 07:35:06.825 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 07:35:31.264 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 07:35:40.670 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 07:36:00.003 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 07:36:51.827 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 07:37:00.003 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 07:37:06.511 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 07:37:44.364 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 07:38:00.002 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 07:39:00.004 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 07:39:45.000 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 07:40:00.002 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 07:41:00.002 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 07:42:00.008 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 07:42:03.105 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 07:43:00.003 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 07:43:48.111 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 07:44:00.003 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 07:45:00.002 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 07:46:00.006 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 07:46:37.002 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 07:47:00.003 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 07:48:00.004 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 07:48:55.944 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 07:49:00.004 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 07:49:45.006 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 07:50:00.002 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 07:51:00.005 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 07:52:00.006 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 07:52:15.130 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 07:53:00.004 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 07:53:49.795 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 07:53:55.952 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 07:54:00.002 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 07:55:00.003 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 07:56:00.003 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 07:56:03.640 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 07:57:00.007 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 07:57:26.727 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 07:58:00.003 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 07:58:45.001 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 07:59:00.003 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 07:59:10.160 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 07:59:50.002 - 10086 (com.bbk.launcher2) - ACQ *alarm* (partial)
+  09-18 08:00:00.002 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 08:00:24.919 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 08:01:00.003 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 08:01:45.253 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 08:02:00.004 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 08:02:45.004 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 08:02:52.914 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 08:03:00.003 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 08:04:00.004 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 08:04:07.197 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 08:05:00.003 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 08:05:04.873 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 08:06:00.004 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 08:06:49.875 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 08:07:00.003 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 08:08:00.006 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 08:09:00.006 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 08:09:37.347 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 08:10:00.006 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 08:11:00.002 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 08:11:12.630 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 08:12:00.005 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 08:12:45.006 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 08:13:00.002 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 08:14:00.007 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 08:15:00.005 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 08:15:07.025 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 08:16:00.005 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 08:16:52.030 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 08:17:00.003 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 08:17:54.542 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 08:18:00.003 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 08:19:00.004 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 08:20:00.005 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 08:20:45.017 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 08:21:00.002 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 08:22:00.006 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 08:22:55.280 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 08:23:00.001 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 08:23:45.014 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 08:24:00.003 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 08:24:57.589 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 08:25:00.002 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 08:26:00.004 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 08:27:00.007 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 08:27:45.022 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 08:28:00.002 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 08:28:47.655 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 08:29:00.004 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 08:29:54.749 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 08:30:00.008 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 08:31:00.002 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 08:32:00.005 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 08:32:37.711 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 08:33:00.006 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 08:33:20.520 - 10039 (com.baidu.input_vivo) - ACQ *alarm* (partial)
+  09-18 08:34:00.004 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 08:35:00.002 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 08:35:40.675 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 08:36:00.005 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 08:36:27.787 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 08:36:41.068 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 08:37:00.004 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 08:37:33.568 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 08:38:00.002 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 08:39:00.004 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 08:39:45.004 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 08:40:00.002 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 08:41:00.004 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 08:41:02.006 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 08:41:02.536 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 08:42:00.003 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 08:42:45.015 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 08:43:00.002 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 08:44:00.004 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 08:45:00.006 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 08:45:45.014 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 08:46:00.003 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 08:47:00.004 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 08:48:00.002 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 08:48:45.012 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 08:49:00.004 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 08:50:00.003 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 08:51:00.005 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 08:51:45.012 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 08:52:00.002 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 08:53:00.002 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 08:53:58.604 - 10076 (com.vivo.aiservice) - ACQ *alarm* (partial)
+  09-18 08:54:00.007 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 08:54:45.004 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 08:55:00.004 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 08:55:51.094 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 08:56:00.002 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 08:57:00.004 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 08:57:20.747 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 08:58:00.003 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 08:58:45.016 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 08:59:00.003 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 08:59:50.003 - 10086 (com.bbk.launcher2) - ACQ *alarm* (partial)
+  09-18 09:00:00.002 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 09:01:00.004 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 09:02:00.010 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 09:02:13.024 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 09:02:31.223 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 09:03:00.002 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 09:03:18.204 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 09:03:55.949 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 09:04:00.003 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 09:05:00.003 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 09:06:00.003 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 09:06:45.009 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 09:07:00.004 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 09:08:00.006 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 09:09:00.005 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 09:09:11.577 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 09:10:00.003 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 09:10:56.564 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 09:11:00.003 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 09:12:00.004 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 09:13:00.005 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 09:13:45.011 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 09:14:00.003 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 09:14:48.385 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 09:15:00.002 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 09:16:00.007 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 09:17:00.004 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 09:17:45.019 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 09:18:00.004 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 09:19:00.004 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 09:20:00.006 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 09:20:17.405 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 09:21:00.006 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 09:22:00.007 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 09:23:00.005 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 09:23:45.014 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 09:24:00.002 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 09:25:00.004 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 09:26:00.005 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 09:26:18.585 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 09:27:00.006 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 09:28:00.008 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 09:29:00.003 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 09:29:45.010 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 09:30:00.003 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 09:31:00.009 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 09:32:00.010 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 09:32:19.640 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 09:33:00.003 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 09:33:55.943 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 09:34:00.003 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 09:35:00.002 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 09:35:40.707 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 09:36:00.004 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 09:36:45.022 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 09:37:00.003 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 09:37:45.669 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 09:38:00.004 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 09:39:00.002 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 09:39:52.502 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 09:40:00.003 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 09:40:45.014 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 09:41:00.005 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 09:41:38.847 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 09:42:00.003 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 09:43:00.010 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 09:43:45.006 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 09:44:00.002 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 09:45:00.007 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 09:46:00.005 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 09:46:45.019 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 09:47:00.001 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 09:48:00.005 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 09:49:00.002 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 09:49:18.978 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 09:50:00.004 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 09:50:22.049 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 09:51:00.002 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 09:52:00.006 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 09:53:00.005 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 09:53:09.045 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 09:53:49.838 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 09:54:00.003 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 09:54:54.042 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 09:55:00.004 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 09:56:00.003 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 09:56:59.109 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 09:57:00.003 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 09:57:45.014 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 09:58:00.002 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 09:59:00.004 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 09:59:50.002 - 10086 (com.bbk.launcher2) - ACQ *alarm* (partial)
+  09-18 10:00:00.006 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 10:00:45.012 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 10:01:00.003 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 10:02:00.002 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 10:03:00.006 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 10:03:45.006 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 10:04:00.006 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 10:05:00.002 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 10:06:00.003 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 10:06:45.015 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 10:07:00.002 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 10:08:00.004 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 10:09:00.005 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 10:09:45.008 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 10:10:00.003 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 10:11:00.006 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 10:12:00.005 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 10:12:19.361 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 10:13:00.007 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 10:13:55.945 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 10:14:00.003 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 10:15:00.004 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 10:16:00.005 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 10:16:09.427 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 10:17:00.007 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 10:17:54.429 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 10:18:00.001 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 10:19:00.003 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 10:20:00.002 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 10:20:24.365 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 10:21:00.006 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 10:22:00.006 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 10:23:00.005 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 10:23:45.020 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 10:24:00.005 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 10:25:00.003 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 10:26:00.006 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 10:26:24.429 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 10:27:00.006 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 10:27:39.617 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 10:28:00.003 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 10:28:55.945 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 10:29:00.004 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 10:30:00.006 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 10:31:00.003 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 10:31:22.520 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 10:32:00.004 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 10:32:24.477 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 10:33:00.002 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 10:34:00.004 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 10:35:00.003 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 10:35:19.738 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 10:35:20.379 - 10260 (com.vivo.third.numbermark) - ACQ *alarm* (partial)
+  09-18 10:35:40.713 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 10:36:00.010 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 10:37:00.008 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 10:37:52.532 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 10:38:00.004 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 10:38:01.858 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 10:39:00.002 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 10:39:09.804 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 10:40:00.003 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 10:40:54.801 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 10:41:00.002 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 10:42:00.005 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 10:42:41.649 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 10:43:00.001 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 10:43:31.363 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 10:44:00.001 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 10:44:24.316 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 10:44:35.726 - 10170 (com.vivo.wallet) - ACQ *launch* (partial)
+  09-18 10:45:39.634 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 10:47:04.969 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 10:47:42.151 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 10:48:09.622 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 10:48:41.809 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 10:50:05.241 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 10:50:05.303 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 10:50:12.235 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 10:51:12.379 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 10:52:42.609 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 10:52:51.127 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 10:54:06.459 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 10:54:09.937 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 10:55:13.025 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 10:56:21.399 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 10:57:36.738 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 11:02:48.106 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 11:10:29.067 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 11:12:43.198 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 11:15:28.964 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 11:19:16.549 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 11:20:28.858 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 11:25:28.764 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 11:29:19.794 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 11:30:17.267 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 11:32:18.306 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 11:32:43.698 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 11:33:33.640 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 11:33:47.265 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 11:34:58.824 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 11:36:14.165 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 11:37:39.342 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 11:38:54.686 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 11:39:25.790 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 11:39:47.569 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 11:40:20.056 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 11:41:35.376 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 11:43:00.713 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 11:45:10.074 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 11:46:25.406 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 11:48:45.653 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 11:49:37.461 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 11:53:22.775 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 11:55:14.087 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 11:56:59.083 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 11:57:00.004 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 11:58:00.004 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 11:58:23.005 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 11:59:00.008 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 11:59:22.150 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 11:59:34.162 - 10086 (com.bbk.launcher2) - ACQ *alarm* (partial)
+  09-18 11:59:50.013 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 12:00:00.005 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 12:00:02.266 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 12:00:52.629 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 12:01:00.004 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 12:02:00.004 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 12:03:00.008 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 12:03:23.728 - 10057 (com.android.packageinstaller) - ACQ *launch* (partial)
+  09-18 12:03:24.216 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 12:04:00.003 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 12:04:55.327 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 12:05:00.002 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 12:06:00.007 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 12:07:00.011 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 12:07:14.294 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 12:08:00.009 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 12:08:59.306 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 12:09:00.006 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 12:10:00.007 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 12:10:52.648 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 12:11:00.003 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 12:11:00.808 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 12:11:08.798 - 10156 (com.vivo.gallery,...) - ACQ *alarm* (partial)
+  09-18 12:12:00.006 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 12:12:45.807 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 12:13:00.004 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 12:14:00.004 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 12:14:29.955 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 12:15:53.899 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 12:18:24.047 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 12:22:34.605 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 12:24:26.253 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 12:26:24.678 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 12:30:00.004 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 12:34:04.818 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 12:36:02.325 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 12:37:54.922 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 12:39:22.645 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 12:40:40.672 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 12:41:00.852 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 12:41:44.993 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 12:42:04.538 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 12:45:35.080 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 12:48:05.734 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 12:49:25.169 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 12:53:15.274 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 12:54:07.952 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 12:55:27.022 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 12:55:51.119 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 12:57:05.373 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 12:58:03.149 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 13:00:00.002 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 13:01:29.295 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 13:04:45.541 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 13:07:31.503 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 13:08:35.659 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 13:10:40.708 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 13:12:25.818 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 13:13:33.706 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 13:16:15.901 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 13:19:35.931 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 13:20:05.974 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 13:20:28.238 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 13:23:56.059 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 13:25:38.167 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 13:27:46.140 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 13:31:36.214 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 13:35:26.304 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 13:37:42.611 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 13:39:16.384 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 13:39:22.651 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 13:40:40.739 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 13:43:06.441 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 13:46:56.511 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 13:49:46.022 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 13:50:46.582 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 13:54:36.701 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 13:55:48.252 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 13:58:26.786 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 14:00:00.004 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 14:01:24.612 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 14:01:24.814 - 10039 (com.baidu.input_vivo) - ACQ *alarm* (partial)
+  09-18 14:02:00.001 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 14:02:50.998 - 10057 (com.android.packageinstaller) - ACQ *launch* (partial)
+  09-18 14:03:00.007 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 14:03:30.276 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 14:04:00.003 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 14:04:45.011 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 14:05:00.003 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 14:06:00.006 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 14:07:00.006 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 14:07:28.359 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 14:08:00.014 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 14:09:00.008 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 14:09:29.236 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 14:10:00.005 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 14:10:40.763 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 14:11:00.005 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 14:12:00.005 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 14:13:00.011 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 14:13:30.065 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 14:13:30.742 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 14:14:00.009 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 14:14:29.243 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 14:15:00.004 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 14:16:00.005 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 14:16:45.011 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 14:17:00.010 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 14:18:00.005 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 14:19:00.008 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 14:20:44.035 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 14:21:00.004 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 14:21:01.201 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 14:21:25.687 - 10272 (com.vivo.Tips) - ACQ *launch* (partial)
+  09-18 14:21:46.446 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 14:22:00.004 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 14:23:00.004 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 14:24:00.003 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 14:24:29.232 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 14:25:00.004 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 14:26:00.011 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 14:27:00.004 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 14:27:45.022 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 14:28:00.004 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 14:29:00.013 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 14:30:00.006 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 14:30:31.417 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 14:31:00.009 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 14:32:00.006 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 14:33:00.006 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 14:33:45.019 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 14:34:00.005 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 14:36:01.897 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 14:36:47.463 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 14:38:32.011 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 14:39:22.650 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 14:40:37.532 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 14:44:27.604 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 14:48:17.682 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 14:50:35.462 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 14:52:07.765 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 14:52:30.836 - 10055 (com.baidu.map.location) - ACQ *telephony-radio* (partial)
+  09-18 14:53:00.005 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 14:53:32.827 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 14:54:00.009 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 14:54:29.236 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 14:55:00.003 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 14:56:00.005 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 14:56:45.022 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 14:57:00.007 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 14:58:00.007 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 14:58:55.223 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 14:59:00.007 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 14:59:45.013 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 14:59:50.008 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 15:00:00.008 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 15:01:00.009 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 15:01:13.315 - 10156 (com.vivo.gallery,...) - ACQ *launch* (partial)
+  09-18 15:02:00.006 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 15:02:45.020 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 15:03:00.011 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 15:04:00.005 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 15:05:00.006 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 15:05:45.010 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 15:06:00.003 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 15:06:42.415 - 10057 (com.android.packageinstaller) - ACQ *launch* (partial)
+  09-18 15:07:00.008 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 15:07:27.669 - 10057 (com.android.packageinstaller) - ACQ *launch* (partial)
+  09-18 15:07:55.489 - 10047 (com.amap.android.location) - ACQ *telephony-radio* (partial)
+  09-18 15:08:00.007 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 15:08:00.530 - 10047 (com.amap.android.location) - ACQ *telephony-radio* (partial)
+  09-18 15:08:05.570 - 10047 (com.amap.android.location) - ACQ *telephony-radio* (partial)
+  09-18 15:08:10.614 - 10047 (com.amap.android.location) - ACQ *telephony-radio* (partial)
+  09-18 15:08:15.646 - 10047 (com.amap.android.location) - ACQ *telephony-radio* (partial)
+  09-18 15:08:45.022 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 15:09:00.007 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 15:10:40.652 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 15:11:03.757 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 15:12:00.008 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 15:13:00.001 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 15:13:17.367 - 10190 (space.alliswell.inbox) - ACQ AudioMix (partial)
+  09-18 15:13:17.867 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 15:13:19.447 - 10047 (com.amap.android.location) - ACQ *telephony-radio* (partial)
+  09-18 15:13:19.448 - 10047 (com.amap.android.location) - ACQ *telephony-radio* (partial)
+  09-18 15:13:24.488 - 10047 (com.amap.android.location) - ACQ *telephony-radio* (partial)
+  09-18 15:13:29.546 - 10047 (com.amap.android.location) - ACQ *telephony-radio* (partial)
+  09-18 15:13:30.503 - 1001 (com.vivo.vmdri,...) - ACQ *telephony-radio* (partial)
+  09-18 15:13:30.505 - 1001 (com.vivo.vmdri,...) - ACQ *telephony-radio* (partial)
+  09-18 15:13:30.516 - 1001 (com.vivo.vmdri,...) - ACQ *telephony-radio* (partial)
+  09-18 15:13:30.582 - 1001 (com.vivo.vmdri,...) - ACQ *telephony-radio* (partial)
+  09-18 15:13:30.582 - 1001 (com.vivo.vmdri,...) - ACQ *telephony-radio* (partial)
+  09-18 15:13:30.591 - 1001 (com.vivo.vmdri,...) - ACQ *telephony-radio* (partial)
+  09-18 15:13:30.927 - 1001 (com.vivo.vmdri,...) - ACQ *telephony-radio* (partial)
+  09-18 15:13:30.931 - 1001 (com.vivo.vmdri,...) - ACQ *telephony-radio* (partial)
+  09-18 15:13:30.938 - 1001 (com.vivo.vmdri,...) - ACQ *telephony-radio* (partial)
+  09-18 15:13:32.110 - 1001 (com.vivo.vmdri,...) - ACQ *telephony-radio* (partial)
+  09-18 15:13:32.111 - 1001 (com.vivo.vmdri,...) - ACQ *telephony-radio* (partial)
+  09-18 15:13:32.139 - 1001 (com.vivo.vmdri,...) - ACQ *telephony-radio* (partial)
+  09-18 15:13:33.450 - 1001 (com.vivo.vmdri,...) - ACQ *telephony-radio* (partial)
+  09-18 15:13:33.452 - 1001 (com.vivo.vmdri,...) - ACQ *telephony-radio* (partial)
+  09-18 15:13:33.462 - 1001 (com.vivo.vmdri,...) - ACQ *telephony-radio* (partial)
+  09-18 15:13:33.834 - 1000 (System) - ACQ *alarm* (partial)
+  09-18 15:13:33.964 - 1001 (com.vivo.vmdri,...) - ACQ *telephony-radio* (partial)
+  09-18 15:13:33.965 - 1001 (com.vivo.vmdri,...) - ACQ *telephony-radio* (partial)
+  09-18 15:13:33.974 - 1001 (com.vivo.vmdri,...) - ACQ *telephony-radio* (partial)
+  09-18 15:13:34.583 - 1001 (com.vivo.vmdri,...) - ACQ *telephony-radio* (partial)
+  09-18 15:13:34.586 - 10047 (com.amap.android.location) - ACQ *telephony-radio* (partial)
+  09-18 15:13:34.596 - 1001 (com.vivo.vmdri,...) - ACQ *telephony-radio* (partial)
+  09-18 15:13:36.458 - 1001 (com.vivo.vmdri,...) - ACQ *telephony-radio* (partial)
+  09-18 15:13:36.460 - 1001 (com.vivo.vmdri,...) - ACQ *telephony-radio* (partial)
+  09-18 15:13:36.469 - 1001 (com.vivo.vmdri,...) - ACQ *telephony-radio* (partial)
+  09-18 15:13:37.005 - 1001 (com.vivo.vmdri,...) - ACQ *telephony-radio* (partial)
+  09-18 15:13:37.007 - 1001 (com.vivo.vmdri,...) - ACQ *telephony-radio* (partial)
+  09-18 15:13:37.017 - 1001 (com.vivo.vmdri,...) - ACQ *telephony-radio* (partial)
+  09-18 15:13:37.167 - 1001 (com.vivo.vmdri,...) - ACQ *telephony-radio* (partial)
+  09-18 15:13:37.170 - 1001 (com.vivo.vmdri,...) - ACQ *telephony-radio* (partial)
+  09-18 15:13:37.199 - 1001 (com.vivo.vmdri,...) - ACQ *telephony-radio* (partial)
+  09-18 15:13:39.467 - 1001 (com.vivo.vmdri,...) - ACQ *telephony-radio* (partial)
+  09-18 15:13:39.469 - 1001 (com.vivo.vmdri,...) - ACQ *telephony-radio* (partial)
+  09-18 15:13:39.478 - 1001 (com.vivo.vmdri,...) - ACQ *telephony-radio* (partial)
+  09-18 15:13:39.627 - 1001 (com.vivo.vmdri,...) - ACQ *telephony-radio* (partial)
+  09-18 15:13:39.629 - 10047 (com.amap.android.location) - ACQ *telephony-radio* (partial)
+  09-18 15:13:39.642 - 10047 (com.amap.android.location) - REL *telephony-radio*
+  09-18 15:13:39.642 - 1001 (com.vivo.vmdri,...) - ACQ *telephony-radio* (partial)
+  09-18 15:13:39.643 - 1001 (com.vivo.vmdri,...) - REL *telephony-radio*
+  09-18 15:13:40.045 - 1001 (com.vivo.vmdri,...) - ACQ *telephony-radio* (partial)
+  09-18 15:13:40.049 - 1001 (com.vivo.vmdri,...) - REL *telephony-radio*
+  09-18 15:13:40.049 - 1001 (com.vivo.vmdri,...) - ACQ *telephony-radio* (partial)
+  09-18 15:13:40.062 - 1001 (com.vivo.vmdri,...) - REL *telephony-radio*
+  09-18 15:13:40.063 - 1001 (com.vivo.vmdri,...) - ACQ *telephony-radio* (partial)
+  09-18 15:13:40.066 - 1001 (com.vivo.vmdri,...) - REL *telephony-radio*
+  09-18 15:13:40.246 - 1000 (System) - ACQ NetworkStats (partial)
+  09-18 15:13:40.277 - 1000 (System) - REL NetworkStats
+  09-18 15:13:42.230 - 1001 (com.vivo.vmdri,...) - ACQ *telephony-radio* (partial)
+  09-18 15:13:42.232 - 1001 (com.vivo.vmdri,...) - REL *telephony-radio*
+  09-18 15:13:42.232 - 1001 (com.vivo.vmdri,...) - ACQ *telephony-radio* (partial)
+  09-18 15:13:42.259 - 1001 (com.vivo.vmdri,...) - REL *telephony-radio*
+  09-18 15:13:42.260 - 1001 (com.vivo.vmdri,...) - ACQ *telephony-radio* (partial)
+  09-18 15:13:42.262 - 1001 (com.vivo.vmdri,...) - REL *telephony-radio*
+  09-18 15:13:42.477 - 1001 (com.vivo.vmdri,...) - ACQ *telephony-radio* (partial)
+  09-18 15:13:42.478 - 1001 (com.vivo.vmdri,...) - REL *telephony-radio*
+  09-18 15:13:42.478 - 1001 (com.vivo.vmdri,...) - ACQ *telephony-radio* (partial)
+  09-18 15:13:42.485 - 1001 (com.vivo.vmdri,...) - REL *telephony-radio*
+  09-18 15:13:42.485 - 1001 (com.vivo.vmdri,...) - ACQ *telephony-radio* (partial)
+  09-18 15:13:42.487 - 1001 (com.vivo.vmdri,...) - REL *telephony-radio*
+  09-18 15:13:43.086 - 1001 (com.vivo.vmdri,...) - ACQ *telephony-radio* (partial)
+  09-18 15:13:43.087 - 1001 (com.vivo.vmdri,...) - REL *telephony-radio*
+  09-18 15:13:43.088 - 1001 (com.vivo.vmdri,...) - ACQ *telephony-radio* (partial)
+  09-18 15:13:43.098 - 1001 (com.vivo.vmdri,...) - REL *telephony-radio*
+  09-18 15:13:43.098 - 1001 (com.vivo.vmdri,...) - ACQ *telephony-radio* (partial)
+  09-18 15:13:43.100 - 1001 (com.vivo.vmdri,...) - REL *telephony-radio*
+  09-18 15:13:43.399 - 1000 (System) - ACQ NetworkStats (partial)
+  09-18 15:13:43.448 - 1000 (System) - REL NetworkStats
+  09-18 15:13:43.789 - 1000 (System) - ACQ NetworkStats (partial)
+  09-18 15:13:43.818 - 1000 (System) - REL NetworkStats
+  09-18 15:13:44.669 - 1001 (com.vivo.vmdri,...) - ACQ *telephony-radio* (partial)
+  09-18 15:13:44.671 - 1001 (com.vivo.vmdri,...) - REL *telephony-radio*
+  09-18 15:13:44.671 - 10047 (com.amap.android.location) - ACQ *telephony-radio* (partial)
+  09-18 15:13:44.681 - 10047 (com.amap.android.location) - REL *telephony-radio*
+  09-18 15:13:44.682 - 1001 (com.vivo.vmdri,...) - ACQ *telephony-radio* (partial)
+  09-18 15:13:44.685 - 1001 (com.vivo.vmdri,...) - REL *telephony-radio*
+  09-18 15:13:45.489 - 1001 (com.vivo.vmdri,...) - ACQ *telephony-radio* (partial)
+  09-18 15:13:45.494 - 1001 (com.vivo.vmdri,...) - REL *telephony-radio*
+  09-18 15:13:45.494 - 1001 (com.vivo.vmdri,...) - ACQ *telephony-radio* (partial)
+  09-18 15:13:45.513 - 1001 (com.vivo.vmdri,...) - REL *telephony-radio*
+  09-18 15:13:45.514 - 1001 (com.vivo.vmdri,...) - ACQ *telephony-radio* (partial)
+  09-18 15:13:45.516 - 1001 (com.vivo.vmdri,...) - REL *telephony-radio*
+  09-18 15:13:46.126 - 1001 (com.vivo.vmdri,...) - ACQ *telephony-radio* (partial)
+  09-18 15:13:46.128 - 1001 (com.vivo.vmdri,...) - REL *telephony-radio*
+  09-18 15:13:46.128 - 1001 (com.vivo.vmdri,...) - ACQ *telephony-radio* (partial)
+  09-18 15:13:46.138 - 1001 (com.vivo.vmdri,...) - REL *telephony-radio*
+  09-18 15:13:46.138 - 1001 (com.vivo.vmdri,...) - ACQ *telephony-radio* (partial)
+  09-18 15:13:46.141 - 1001 (com.vivo.vmdri,...) - REL *telephony-radio*
+  09-18 15:13:47.273 - 1001 (com.vivo.vmdri,...) - ACQ *telephony-radio* (partial)
+  09-18 15:13:47.274 - 1001 (com.vivo.vmdri,...) - REL *telephony-radio*
+  09-18 15:13:47.274 - 1001 (com.vivo.vmdri,...) - ACQ *telephony-radio* (partial)
+  09-18 15:13:47.297 - 1001 (com.vivo.vmdri,...) - REL *telephony-radio*
+  09-18 15:13:47.297 - 1001 (com.vivo.vmdri,...) - ACQ *telephony-radio* (partial)
+  09-18 15:13:47.297 - 1001 (com.vivo.vmdri,...) - REL *telephony-radio*
+  09-18 15:13:47.809 - 1000 (System) - ACQ NetworkStats (partial)
+  09-18 15:13:47.827 - 1000 (System) - REL NetworkStats
+  09-18 15:13:48.503 - 1001 (com.vivo.vmdri,...) - ACQ *telephony-radio* (partial)
+  09-18 15:13:48.504 - 1001 (com.vivo.vmdri,...) - REL *telephony-radio*
+  09-18 15:13:48.504 - 1001 (com.vivo.vmdri,...) - ACQ *telephony-radio* (partial)
+  09-18 15:13:48.513 - 1001 (com.vivo.vmdri,...) - REL *telephony-radio*
+  09-18 15:13:48.513 - 1001 (com.vivo.vmdri,...) - ACQ *telephony-radio* (partial)
+  09-18 15:13:48.514 - 1001 (com.vivo.vmdri,...) - REL *telephony-radio*
+  09-18 15:13:49.165 - 1001 (com.vivo.vmdri,...) - ACQ *telephony-radio* (partial)
+  09-18 15:13:49.166 - 1001 (com.vivo.vmdri,...) - REL *telephony-radio*
+  09-18 15:13:49.166 - 1001 (com.vivo.vmdri,...) - ACQ *telephony-radio* (partial)
+  09-18 15:13:49.175 - 1001 (com.vivo.vmdri,...) - REL *telephony-radio*
+  09-18 15:13:49.176 - 1001 (com.vivo.vmdri,...) - ACQ *telephony-radio* (partial)
+  09-18 15:13:49.176 - 1001 (com.vivo.vmdri,...) - REL *telephony-radio*
+  09-18 15:13:49.324 - 1000 (System) - ACQ ActivityManager-Sleep (partial)
+  09-18 15:13:49.371 - 1001 (com.vivo.vmdri,...) - ACQ MwiRIL (partial)
+  09-18 15:13:49.373 - 1001 (com.vivo.vmdri,...) - REL MwiRIL
+  09-18 15:13:49.390 - 1001 (com.vivo.vmdri,...) - ACQ *telephony-radio* (partial)
+  09-18 15:13:49.391 - 1001 (com.vivo.vmdri,...) - REL *telephony-radio*
+  09-18 15:13:49.391 - 1000 (System) - ACQ *telephony-radio* (partial)
+  09-18 15:13:49.393 - 1001 (com.vivo.vmdri,...) - ACQ *telephony-radio* (partial)
+  09-18 15:13:49.395 - 1001 (com.vivo.vmdri,...) - REL *telephony-radio*
+  09-18 15:13:49.396 - 1001 (com.vivo.vmdri,...) - ACQ *telephony-radio* (partial)
+  09-18 15:13:49.401 - 1001 (com.vivo.vmdri,...) - REL *telephony-radio*
+  09-18 15:13:49.401 - 1001 (com.vivo.vmdri,...) - ACQ *telephony-radio* (partial)
+  09-18 15:13:49.402 - 1001 (com.vivo.vmdri,...) - REL *telephony-radio*
+  09-18 15:13:49.407 - 1000 (System) - REL *telephony-radio*
+  09-18 15:13:49.407 - 1001 (com.vivo.vmdri,...) - ACQ *telephony-radio* (partial)
+  09-18 15:13:49.407 - 1001 (com.vivo.vmdri,...) - REL *telephony-radio*
+  09-18 15:13:49.453 - 1000 (System) - REL ActivityManager-Sleep
+  09-18 15:13:49.660 - 1000 (System) - ACQ com.vivo.fingerprintui:PowerUtils (partial)
+  09-18 15:13:49.661 - 10067 (com.vivo.systemuiplugin,...) - ACQ show keyguard (partial)
+  09-18 15:13:49.721 - 10067 (com.vivo.systemuiplugin,...) - REL show keyguard
+  09-18 15:13:50.203 - 1000 (System) - REL com.vivo.fingerprintui:PowerUtils
+  09-18 15:13:51.514 - 1001 (com.vivo.vmdri,...) - ACQ *telephony-radio* (partial)
+  09-18 15:13:51.518 - 1001 (com.vivo.vmdri,...) - REL *telephony-radio*
+  09-18 15:13:51.518 - 1001 (com.vivo.vmdri,...) - ACQ *telephony-radio* (partial)
+  09-18 15:13:51.524 - 1001 (com.vivo.vmdri,...) - REL *telephony-radio*
+  09-18 15:13:51.524 - 1001 (com.vivo.vmdri,...) - ACQ *telephony-radio* (partial)
+  09-18 15:13:51.539 - 1001 (com.vivo.vmdri,...) - REL *telephony-radio*
+  09-18 15:13:53.825 - 1000 (System) - ACQ NetworkStats (partial)
+  09-18 15:13:53.852 - 1000 (System) - REL NetworkStats
+  09-18 15:13:54.742 - 1001 (com.vivo.vmdri,...) - ACQ *telephony-radio* (partial)
+  09-18 15:13:54.743 - 1001 (com.vivo.vmdri,...) - REL *telephony-radio*
+  09-18 15:13:54.744 - 10047 (com.amap.android.location) - ACQ *telephony-radio* (partial)
+  09-18 15:13:54.762 - 10047 (com.amap.android.location) - REL *telephony-radio*
+  09-18 15:13:54.762 - 1001 (com.vivo.vmdri,...) - ACQ *telephony-radio* (partial)
+  09-18 15:13:54.764 - 1001 (com.vivo.vmdri,...) - REL *telephony-radio*
+  09-18 15:13:55.441 - 1000 (System) - ACQ QuickFrozen_SystemState (partial)
+  09-18 15:13:56.442 - 1000 (System) - REL QuickFrozen_SystemState
+  09-18 15:13:57.841 - 1000 (System) - ACQ NetworkStats (partial)
+  09-18 15:13:57.872 - 1000 (System) - REL NetworkStats
+  09-18 15:13:59.157 - 10190 (space.alliswell.inbox) - ACQ *alarm* (partial)
+  09-18 15:13:59.192 - 10190 (space.alliswell.inbox) - ACQ NotificationManagerService:post:space.alliswell.inbox (partial)
+  09-18 15:13:59.194 - 10190 (space.alliswell.inbox) - REL NotificationManagerService:post:space.alliswell.inbox
+  09-18 15:13:59.204 - 10190 (space.alliswell.inbox) - ACQ attention:alarm (partial)
+  09-18 15:13:59.239 - 10190 (space.alliswell.inbox) - ACQ NotificationManagerService:post:space.alliswell.inbox (partial)
+  09-18 15:13:59.247 - 10190 (space.alliswell.inbox) - REL NotificationManagerService:post:space.alliswell.inbox
+  09-18 15:13:59.258 - 10190 (space.alliswell.inbox) - REL attention:alarm
+  09-18 15:13:59.268 - 10190 (space.alliswell.inbox) - REL *alarm*
+  09-18 15:14:03.856 - 1000 (System) - ACQ NetworkStats (partial)
+  09-18 15:14:03.882 - 1000 (System) - REL NetworkStats
+  09-18 15:14:04.816 - 1001 (com.vivo.vmdri,...) - ACQ *telephony-radio* (partial)
+  09-18 15:14:04.817 - 1001 (com.vivo.vmdri,...) - REL *telephony-radio*
+  09-18 15:14:04.817 - 10047 (com.amap.android.location) - ACQ *telephony-radio* (partial)
+  09-18 15:14:04.839 - 10047 (com.amap.android.location) - REL *telephony-radio*
+  09-18 15:14:04.839 - 1001 (com.vivo.vmdri,...) - ACQ *telephony-radio* (partial)
+  09-18 15:14:04.841 - 1001 (com.vivo.vmdri,...) - REL *telephony-radio*
+  -
+  Events: 962, Time-Resets: 22
+  Buffer, Bytes used: 510
+  Tag Database: size(64), entries: 64, Bytes used: 5388
+
+Full Wakelock Log:
+Wake Lock Log
+  09-18 02:05:37.008 - 10190 (space.alliswell.inbox) - ACQ WindowManager/displayId:0 (screen-bright,on-after-release)
+  09-18 02:05:39.786 - 10190 (space.alliswell.inbox) - REL WindowManager/displayId:0
+  09-18 02:05:48.315 - 10039 (com.baidu.input_vivo) - ACQ WindowManager/displayId:0 (screen-bright,on-after-release)
+  09-18 02:05:50.053 - 10039 (com.baidu.input_vivo) - REL WindowManager/displayId:0
+  09-18 02:05:53.962 - 10039 (com.baidu.input_vivo) - ACQ WindowManager/displayId:0 (screen-bright,on-after-release)
+  09-18 02:05:55.348 - 10039 (com.baidu.input_vivo) - REL WindowManager/displayId:0
+  09-18 02:05:59.730 - 10039 (com.baidu.input_vivo) - ACQ WindowManager/displayId:0 (screen-bright,on-after-release)
+  09-18 02:06:01.722 - 10039 (com.baidu.input_vivo) - REL WindowManager/displayId:0
+  09-18 02:06:14.440 - 10190 (space.alliswell.inbox) - ACQ WindowManager/displayId:0 (screen-bright,on-after-release)
+  09-18 02:06:16.346 - 10190 (space.alliswell.inbox) - REL WindowManager/displayId:0
+  09-18 02:06:19.893 - 10039 (com.baidu.input_vivo) - ACQ WindowManager/displayId:0 (screen-bright,on-after-release)
+  09-18 02:06:21.544 - 10039 (com.baidu.input_vivo) - REL WindowManager/displayId:0
+  09-18 02:06:34.296 - 10190 (space.alliswell.inbox) - ACQ WindowManager/displayId:0 (screen-bright,on-after-release)
+  09-18 02:06:37.561 - 10190 (space.alliswell.inbox) - REL WindowManager/displayId:0
+  09-18 02:06:47.281 - 10039 (com.baidu.input_vivo) - ACQ WindowManager/displayId:0 (screen-bright,on-after-release)
+  09-18 02:06:49.159 - 10039 (com.baidu.input_vivo) - REL WindowManager/displayId:0
+  09-18 02:07:02.700 - 10190 (space.alliswell.inbox) - ACQ WindowManager/displayId:0 (screen-bright,on-after-release)
+  09-18 02:07:05.935 - 10190 (space.alliswell.inbox) - REL WindowManager/displayId:0
+  09-18 07:30:01.066 - 10190 (space.alliswell.inbox) - ACQ WindowManager/displayId:0 (screen-bright,on-after-release)
+  09-18 10:42:08.538 - 10190 (space.alliswell.inbox) - REL WindowManager/displayId:0
+  09-18 10:43:35.511 - 10116 (com.vivo.ai.copilot) - ACQ WindowManager/displayId:0 (screen-bright,on-after-release)
+  09-18 10:43:36.964 - 10116 (com.vivo.ai.copilot) - ACQ WakeLock (full)
+  09-18 10:43:41.749 - 10116 (com.vivo.ai.copilot) - REL WakeLock
+  09-18 10:44:36.095 - 10170 (com.vivo.wallet) - REL WindowManager/displayId:0
+  09-18 12:03:22.347 - 10190 (space.alliswell.inbox) - ACQ WindowManager/displayId:0 (screen-bright,on-after-release)
+  09-18 12:03:22.455 - 10190 (space.alliswell.inbox) - REL WindowManager/displayId:0
+  09-18 14:19:29.874 - 10190 (space.alliswell.inbox) - ACQ WindowManager/displayId:0 (screen-bright,on-after-release)
+  09-18 14:19:31.611 - 10190 (space.alliswell.inbox) - REL WindowManager/displayId:0
+  09-18 14:19:31.682 - 10190 (space.alliswell.inbox) - ACQ WindowManager/displayId:0 (screen-bright,on-after-release)
+  09-18 14:19:32.478 - 10190 (space.alliswell.inbox) - REL WindowManager/displayId:0
+  09-18 14:20:44.799 - 10190 (space.alliswell.inbox) - ACQ WindowManager/displayId:0 (screen-bright,on-after-release)
+  09-18 14:20:48.002 - 10190 (space.alliswell.inbox) - REL WindowManager/displayId:0
+  09-18 14:20:48.034 - 10190 (space.alliswell.inbox) - ACQ WindowManager/displayId:0 (screen-bright,on-after-release)
+  09-18 14:20:48.720 - 10190 (space.alliswell.inbox) - REL WindowManager/displayId:0
+  09-18 14:20:48.753 - 10190 (space.alliswell.inbox) - ACQ WindowManager/displayId:0 (screen-bright,on-after-release)
+  09-18 14:21:01.985 - 10190 (space.alliswell.inbox) - REL WindowManager/displayId:0
+  09-18 14:21:02.039 - 10190 (space.alliswell.inbox) - ACQ WindowManager/displayId:0 (screen-bright,on-after-release)
+  09-18 14:21:03.725 - 10190 (space.alliswell.inbox) - REL WindowManager/displayId:0
+  09-18 14:21:05.901 - 10190 (space.alliswell.inbox) - ACQ WindowManager/displayId:0 (screen-bright,on-after-release)
+  09-18 14:21:06.046 - 10190 (space.alliswell.inbox) - REL WindowManager/displayId:0
+  09-18 14:21:24.733 - 10067 (com.vivo.systemuiplugin,...) - ACQ WindowManager/displayId:0 (screen-bright,on-after-release)
+  09-18 14:21:26.413 - 10067 (com.vivo.systemuiplugin,...) - REL WindowManager/displayId:0
+  09-18 15:12:34.695 - 10190 (space.alliswell.inbox) - ACQ WindowManager/displayId:0 (screen-bright,on-after-release)
+  09-18 15:12:34.775 - 10190 (space.alliswell.inbox) - REL WindowManager/displayId:0
+  09-18 15:12:35.152 - 10190 (space.alliswell.inbox) - ACQ WindowManager/displayId:0 (screen-bright,on-after-release)
+  09-18 15:12:35.267 - 10190 (space.alliswell.inbox) - REL WindowManager/displayId:0
+  09-18 15:12:42.611 - 10190 (space.alliswell.inbox) - ACQ WindowManager/displayId:0 (screen-bright,on-after-release)
+  09-18 15:13:00.113 - 10190 (space.alliswell.inbox) - REL WindowManager/displayId:0
+  09-18 15:13:17.156 - 10190 (space.alliswell.inbox) - ACQ WindowManager/displayId:0 (screen-bright,on-after-release)
+  09-18 15:13:17.239 - 10190 (space.alliswell.inbox) - REL WindowManager/displayId:0
+  09-18 15:13:17.305 - 10190 (space.alliswell.inbox) - ACQ WindowManager/displayId:0 (screen-bright,on-after-release)
+  09-18 15:13:17.366 - 10190 (space.alliswell.inbox) - REL WindowManager/displayId:0
+  09-18 15:13:49.029 - 10190 (space.alliswell.inbox) - ACQ WindowManager/displayId:0 (screen-bright,on-after-release)
+  09-18 15:13:49.190 - 10190 (space.alliswell.inbox) - REL WindowManager/displayId:0
+  -
+  Events: 54, Time-Resets: 41
+  Buffer, Bytes used: 504
+  Tag Database: size(16), entries: 6, Bytes used: 538
+
+
+Wakefulness Session Observer:
+default timeout: 600000
+override timeout: -1
+  Wakefulness Session Power Group powerGroupId: 0
+    current wakefulness: 3
+    current user activity event: 0
+    current user activity duration: 67254
+    previous user activity event: 1
+    previous user activity duration: 67262
+    is in override timeout: false
+    mIsInteractive: false
+    current screen policy: 0
+    current screen policy duration: 17067
+    previous screen policy: 3
+    past screen policy duration: 112352
+
+FaceDownDetector:
+  mFaceDown=false
+  mActive=false
+  mLastFlipTime=0
+  mSensorMaxLatencyMicros=2000000
+  mUserInteractionBackoffMillis=60000
+  mPreviousResultTime=0
+  mPreviousResultType=1
+  mMillisSaved=0
+  mZAccelerationThreshold=-9.5
+  mAccelerationThreshold=0.2
+  mTimeThreshold=PT1S
+  mEnabledOverride=true
+AmbientDisplaySuppressionController:
+ ambientDisplaySuppressed=false
+ mSuppressionTokens={}
+
+Low Power Standby Controller:
+  mIsActive=false
+  mIsEnabled=false
+  mSupportedConfig=false
+  mEnabledByDefaultConfig=false
+  mStandbyTimeoutConfig=0
+  mEnableCustomPolicy=false
+  Allowed UIDs=[]
+  
+  UID allowed reasons:
+
+ScreenTimeoutOverridePolicy:
+  mScreenTimeoutOverrideConfig=-1
+  mLastAutoReleaseReason=-1
+PowerManagerFlags:
+ enable_early_screen_timeout_detector:                 true (def:true)
+ improve_wakelock_latency:                             true (def:true)
+ per_display_wake_by_touch:                            true (def:true)
+ framework_wakelock_info:                              false (def:false)
+ move_wsc_logging_to_notifier:                         true (def:true)
+ wakelock_attribution_via_workchain:                   true (def:true)
+ disable_frozen_process_wakelocks:                     false (def:false)

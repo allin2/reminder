@@ -1,0 +1,102 @@
+{
+  "serial": "10ACBF2D3D000RS",
+  "candidateSha256": "cb6a921717c2de35225e8ed47378079881ffb23b46de179557e67697cd76607f",
+  "deviceApkPath": "/data/app/~~C6C-nCw4xwEHZfarQtlIaQ==/space.alliswell.inbox-w9UiY64gRDIRHvDwKL8q7Q==/base.apk",
+  "uid": null,
+  "silenceMsProduction": 300000,
+  "toleranceMs": 30000,
+  "sourceScriptSha256": "b0e8d81e49c892bee5d20ad2685800e47741d22b011a9d9d2bce9a43e1b2824c",
+  "startedAt": 1789785181070,
+  "sourceArtifactConsistency": [
+    {
+      "file": "app-core.js",
+      "status": "MATCH",
+      "shippedSha256": "933b302262256945",
+      "workingTreeSha256": "933b302262256945"
+    },
+    {
+      "file": "icon-192.png",
+      "status": "MATCH",
+      "shippedSha256": "48e5078385c990aa",
+      "workingTreeSha256": "48e5078385c990aa"
+    },
+    {
+      "file": "icon-512.png",
+      "status": "MATCH",
+      "shippedSha256": "a558b0502031e078",
+      "workingTreeSha256": "a558b0502031e078"
+    },
+    {
+      "file": "icon.svg",
+      "status": "MATCH",
+      "shippedSha256": "fb09a46eae6dcd7c",
+      "workingTreeSha256": "fb09a46eae6dcd7c"
+    },
+    {
+      "file": "index.html",
+      "status": "MATCH",
+      "shippedSha256": "e52f49ef55e16130",
+      "workingTreeSha256": "e52f49ef55e16130"
+    },
+    {
+      "file": "lib/export-format.js",
+      "status": "MATCH",
+      "shippedSha256": "37e60a07624c2dda",
+      "workingTreeSha256": "37e60a07624c2dda"
+    },
+    {
+      "file": "lib/import-extract.js",
+      "status": "MATCH",
+      "shippedSha256": "edd959660e9fb952",
+      "workingTreeSha256": "edd959660e9fb952"
+    },
+    {
+      "file": "lib/import-map.js",
+      "status": "MATCH",
+      "shippedSha256": "51fe5528bb718940",
+      "workingTreeSha256": "51fe5528bb718940"
+    },
+    {
+      "file": "lib/native-reminders.js",
+      "status": "MATCH",
+      "shippedSha256": "97e5d356829119b5",
+      "workingTreeSha256": "97e5d356829119b5"
+    },
+    {
+      "file": "lib/parse-cn.js",
+      "status": "MATCH",
+      "shippedSha256": "79b12b5ba0621a11",
+      "workingTreeSha256": "79b12b5ba0621a11"
+    },
+    {
+      "file": "lib/reminder.js",
+      "status": "MATCH",
+      "shippedSha256": "886ab9eb1a438b34",
+      "workingTreeSha256": "886ab9eb1a438b34"
+    },
+    {
+      "file": "lib/repeat.js",
+      "status": "MATCH",
+      "shippedSha256": "8b01c7e3b1f926bc",
+      "workingTreeSha256": "8b01c7e3b1f926bc"
+    },
+    {
+      "file": "lib/storage.js",
+      "status": "MATCH",
+      "shippedSha256": "d7f5ca0d766f796c",
+      "workingTreeSha256": "d7f5ca0d766f796c"
+    },
+    {
+      "file": "manifest.json",
+      "status": "MATCH",
+      "shippedSha256": "660c2314cc921232",
+      "workingTreeSha256": "660c2314cc921232"
+    },
+    {
+      "file": "sw.js",
+      "status": "MATCH",
+      "shippedSha256": "7b002af05f658e13",
+      "workingTreeSha256": "7b002af05f658e13"
+    }
+  ]
+}

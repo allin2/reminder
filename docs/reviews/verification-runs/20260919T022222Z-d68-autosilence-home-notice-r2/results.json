@@ -1,0 +1,34 @@
+{
+  "a2RevokedShowsNotice": true,
+  "a2GrantedStaysSilent": true,
+  "a2SwitchOffDistinct": true,
+  "q6PurposeCopyPresent": true,
+  "q6OldMechanismCopyGone": true,
+  "a1ProductionSilenceMs": 300013,
+  "a1DeltaToleranceMs": 30000,
+  "a1SecondWitnessDeltaMs": 299964,
+  "a1Checks": {
+    "silenceWindowIsProductionValue": true,
+    "silencedAfterRecordedInDetail": true,
+    "statementSaysNoAck": true,
+    "noAckRecorded": false,
+    "deliveryRecordKept": true,
+    "serviceStoppedSoSoundStopped": true,
+    "ringHappenedBeforeSilence": true,
+    "secondWitnessMatchesToken": false,
+    "secondWitnessAgreesOnWindow": true
+  },
+  "a1AllChecksPass": false,
+  "a1AutoSilencedFlagOnDelivery": true,
+  "a1CarrierSoundObserved": "none",
+  "a1Ledger": {
+    "reads": 144,
+    "emptyReads": 0,
+    "accumulatedEvents": 183,
+    "scheduleRoundsObserved": 26,
+    "ledgerCapacity": 150,
+    "note": "台账保留最后 150 条；每次重排写 5 条 ⇒ 可用窗口 ≈ 30 轮"
+  },
+  "a1GuardTested": false,
+  "a1GuardHeldOnDevice": false
+}

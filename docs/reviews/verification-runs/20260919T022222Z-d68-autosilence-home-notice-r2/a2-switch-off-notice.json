@@ -1,0 +1,6 @@
+{
+  "html": "<button class=\"soft-entry notice-entry\" id=\"homeNoticeBtn\" data-notice-kind=\"switch\"><span><span class=\"notice-title\">后台提醒已关闭</span><br><span style=\"font-size:0.78rem;color:var(--muted)\">关掉 App 后不会有任何提醒。到「我的 → 本地通知」把它打开。</span></span><span style=\"color:var(--muted)\">›</span></button>",
+  "kind": "switch",
+  "renderedHeight": 91,
+  "screenNotify": false
+}

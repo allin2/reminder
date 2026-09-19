@@ -1,0 +1,4 @@
+<?xml version='1.0' encoding='utf-8' standalone='yes' ?>
+<map>
+    <string name="alarms">[{&quot;id&quot;:90002,&quot;triggerAt&quot;:1789667832473,&quot;title&quot;:&quot;安心收件箱闹钟测试&quot;,&quot;body&quot;:&quot;10 秒闹钟触发成功 · 可锁屏验证&quot;,&quot;itemId&quot;:&quot;&quot;,&quot;level&quot;:&quot;🚨 关键&quot;,&quot;itemRev&quot;:&quot;0&quot;},{&quot;id&quot;:1967773159,&quot;triggerAt&quot;:1789754040008,&quot;title&quot;:&quot;☆ 重要事项&quot;,&quot;body&quot;:&quot;报名截止，提前确认材料&quot;,&quot;itemId&quot;:&quot;i_l8ckastpmu5txuqy&quot;,&quot;level&quot;:&quot;☆ 重要&quot;,&quot;itemRev&quot;:&quot;1&quot;},{&quot;id&quot;:1269294629,&quot;triggerAt&quot;:1789783200009,&quot;title&quot;:&quot;☆ 重要事项&quot;,&quot;body&quot;:&quot;给爸妈打电话&quot;,&quot;itemId&quot;:&quot;i_wkquiksgmu5txuqy&quot;,&quot;level&quot;:&quot;☆ 重要&quot;,&quot;itemRev&quot;:&quot;1&quot;}]</string>
+</map>

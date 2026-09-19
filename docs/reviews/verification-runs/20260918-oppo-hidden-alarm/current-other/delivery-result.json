@@ -1,0 +1,134 @@
+{
+  "itemId": "matrix_other_1789670922",
+  "received": true,
+  "visible": true,
+  "lagMs": 59,
+  "rows": [
+    {
+      "token": "747473863:6ae89a60-4807-49df-ade7-367b88d0c5eb",
+      "stage": "requested",
+      "at": 1789670922485,
+      "detail": "delayMs=74528"
+    },
+    {
+      "token": "747473863:6ae89a60-4807-49df-ade7-367b88d0c5eb",
+      "stage": "item",
+      "at": 1789670922496,
+      "detail": "matrix_other_1789670922"
+    },
+    {
+      "token": "747473863:6ae89a60-4807-49df-ade7-367b88d0c5eb",
+      "stage": "unfreezerScheduled",
+      "at": 1789670922524,
+      "detail": "triggerAt=1789670997031;mode=alarmClock"
+    },
+    {
+      "token": "747473863:6ae89a60-4807-49df-ade7-367b88d0c5eb",
+      "stage": "scheduled",
+      "at": 1789670922533,
+      "detail": "triggerAt=1789670997031;mode=alarmClock"
+    },
+    {
+      "token": "747473863:6ae89a60-4807-49df-ade7-367b88d0c5eb",
+      "stage": "cancelled",
+      "at": 1789670922825,
+      "detail": "replaced by new schedule"
+    },
+    {
+      "token": "747473863:99d52a0c-5492-487e-818c-49482dc184a8",
+      "stage": "requested",
+      "at": 1789670922835,
+      "detail": "delayMs=74186"
+    },
+    {
+      "token": "747473863:99d52a0c-5492-487e-818c-49482dc184a8",
+      "stage": "item",
+      "at": 1789670922843,
+      "detail": "matrix_other_1789670922"
+    },
+    {
+      "token": "747473863:99d52a0c-5492-487e-818c-49482dc184a8",
+      "stage": "unfreezerScheduled",
+      "at": 1789670922863,
+      "detail": "triggerAt=1789670997035;mode=alarmClock"
+    },
+    {
+      "token": "747473863:99d52a0c-5492-487e-818c-49482dc184a8",
+      "stage": "scheduled",
+      "at": 1789670922870,
+      "detail": "triggerAt=1789670997035;mode=alarmClock"
+    },
+    {
+      "token": "747473863:99d52a0c-5492-487e-818c-49482dc184a8",
+      "stage": "unfreezerStarted",
+      "at": 1789670997049,
+      "detail": "foreground service torn down the freezer"
+    },
+    {
+      "token": "747473863:99d52a0c-5492-487e-818c-49482dc184a8",
+      "stage": "received",
+      "at": 1789670997059,
+      "detail": ""
+    },
+    {
+      "token": "747473863:99d52a0c-5492-487e-818c-49482dc184a8",
+      "stage": "environment",
+      "at": 1789670997067,
+      "detail": "screenOn=true;locked=false;inCall=false;path=direct"
+    },
+    {
+      "token": "747473863:99d52a0c-5492-487e-818c-49482dc184a8",
+      "stage": "launchRequested",
+      "at": 1789670997093,
+      "detail": "not proof of visibility"
+    },
+    {
+      "token": "747473863:99d52a0c-5492-487e-818c-49482dc184a8",
+      "stage": "notifyReturned",
+      "at": 1789670997099,
+      "detail": "insistent; notify returned; not proof of display"
+    },
+    {
+      "token": "747473863:99d52a0c-5492-487e-818c-49482dc184a8",
+      "stage": "created",
+      "at": 1789670997108,
+      "detail": "test=false"
+    },
+    {
+      "token": "747473863:99d52a0c-5492-487e-818c-49482dc184a8",
+      "stage": "resumed",
+      "at": 1789670997126,
+      "detail": "lifecycle only"
+    },
+    {
+      "token": "747473863:99d52a0c-5492-487e-818c-49482dc184a8",
+      "stage": "focus",
+      "at": 1789670997160,
+      "detail": "true"
+    },
+    {
+      "token": "747473863:99d52a0c-5492-487e-818c-49482dc184a8",
+      "stage": "windowVisible",
+      "at": 1789670997162,
+      "detail": "via=focus;focused=true;shown=true"
+    },
+    {
+      "token": "747473863:99d52a0c-5492-487e-818c-49482dc184a8",
+      "stage": "windowSample",
+      "at": 1789670997428,
+      "detail": "after=300ms;focus=true;shown=true;visibility=0;playing=false"
+    },
+    {
+      "token": "747473863:99d52a0c-5492-487e-818c-49482dc184a8",
+      "stage": "windowSample",
+      "at": 1789670997928,
+      "detail": "after=800ms;focus=true;shown=true;visibility=0;playing=false"
+    },
+    {
+      "token": "747473863:99d52a0c-5492-487e-818c-49482dc184a8",
+      "stage": "windowSample",
+      "at": 1789670998631,
+      "detail": "after=1500ms;focus=true;shown=true;visibility=0;playing=false"
+    }
+  ]
+}

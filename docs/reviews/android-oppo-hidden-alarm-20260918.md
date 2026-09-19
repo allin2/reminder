@@ -60,3 +60,17 @@ SIGKILL 冷进程、系统强制停止、重启是不同条件。短时息屏通
 5. 继续较长息屏（先 5 分钟、再 30 分钟/整夜），多提醒重叠、停止后再设、重启恢复及权限/省电降级。其余未执行项目均为 NOT_PERFORMED。不要把 USB 充电短测当自然 Doze 验收。
 
 脚本 `--panel-done` 遇 WebView 无辅助功能树时会中断；本轮手动按截图坐标完成了该项。续验时先修好采集回退，不要盲点固定坐标。测试留下的事项均为已归档的本轮测试记录，不删除用户事项或历史证据。
+
+## 证据脱敏说明（2026-09-19 入库前）
+
+本目录的通知转储来自 `dumpsys notification`，其中**邮件应用把账号地址嵌进了通知通道 id**
+（形态 `NotificationChannel{mId='^nc_1_mail_<账号>', mName=邮件}`）。该字符串与本文任何结论无关，
+但会让个人账号永久进入 git 历史，故入库前做了**字面量替换**：
+
+- 规则与替换计数：[`verification-runs/REDACTION-MANIFEST.json`](verification-runs/REDACTION-MANIFEST.json)
+  —— 含每个文件的**原始 sha256 / 脱敏后 sha256**；字面量本身只以 sha256 前缀记录，不落原文。
+- 可复跑脚本：[`../../scripts/verification/redact-evidence.py`](../../scripts/verification/redact-evidence.py)
+  （默认干跑，`--apply` 才写盘，`--audit` 复查残留）。
+- 影响范围：**36 个 `.txt`，每个文件各 4 处**；除这两处字面量外未改动任何字节。
+
+因此这些文件**不是逐字节的原始转储**。引用哈希时以清单中的 `redactedSha256` 为准。

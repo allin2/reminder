@@ -1,0 +1,164 @@
+{
+  "itemId": "matrix_off_1789670173",
+  "received": true,
+  "visible": true,
+  "lagMs": 61,
+  "rows": [
+    {
+      "token": "2132053826:e7705ce4-b0e5-4b14-9ecb-fe5fe1e2b9e8",
+      "stage": "requested",
+      "at": 1789670173610,
+      "detail": "delayMs=74397"
+    },
+    {
+      "token": "2132053826:e7705ce4-b0e5-4b14-9ecb-fe5fe1e2b9e8",
+      "stage": "item",
+      "at": 1789670173617,
+      "detail": "matrix_off_1789670173"
+    },
+    {
+      "token": "2132053826:e7705ce4-b0e5-4b14-9ecb-fe5fe1e2b9e8",
+      "stage": "unfreezerScheduled",
+      "at": 1789670173630,
+      "detail": "triggerAt=1789670248017;mode=alarmClock"
+    },
+    {
+      "token": "2132053826:e7705ce4-b0e5-4b14-9ecb-fe5fe1e2b9e8",
+      "stage": "scheduled",
+      "at": 1789670173635,
+      "detail": "triggerAt=1789670248017;mode=alarmClock"
+    },
+    {
+      "token": "2132053826:e7705ce4-b0e5-4b14-9ecb-fe5fe1e2b9e8",
+      "stage": "cancelled",
+      "at": 1789670173853,
+      "detail": "replaced by new schedule"
+    },
+    {
+      "token": "2132053826:0ba3b8a6-a3f5-4c3d-a5a7-27cb478bdc8d",
+      "stage": "requested",
+      "at": 1789670173857,
+      "detail": "delayMs=74152"
+    },
+    {
+      "token": "2132053826:0ba3b8a6-a3f5-4c3d-a5a7-27cb478bdc8d",
+      "stage": "item",
+      "at": 1789670173861,
+      "detail": "matrix_off_1789670173"
+    },
+    {
+      "token": "2132053826:0ba3b8a6-a3f5-4c3d-a5a7-27cb478bdc8d",
+      "stage": "unfreezerScheduled",
+      "at": 1789670173875,
+      "detail": "triggerAt=1789670248016;mode=alarmClock"
+    },
+    {
+      "token": "2132053826:0ba3b8a6-a3f5-4c3d-a5a7-27cb478bdc8d",
+      "stage": "scheduled",
+      "at": 1789670173881,
+      "detail": "triggerAt=1789670248016;mode=alarmClock"
+    },
+    {
+      "token": "2132053826:0ba3b8a6-a3f5-4c3d-a5a7-27cb478bdc8d",
+      "stage": "unfreezerStarted",
+      "at": 1789670248048,
+      "detail": "foreground service torn down the freezer"
+    },
+    {
+      "token": "2132053826:0ba3b8a6-a3f5-4c3d-a5a7-27cb478bdc8d",
+      "stage": "received",
+      "at": 1789670248061,
+      "detail": ""
+    },
+    {
+      "token": "2132053826:0ba3b8a6-a3f5-4c3d-a5a7-27cb478bdc8d",
+      "stage": "environment",
+      "at": 1789670248075,
+      "detail": "screenOn=false;locked=true;inCall=false;path=fsi+direct"
+    },
+    {
+      "token": "2132053826:0ba3b8a6-a3f5-4c3d-a5a7-27cb478bdc8d",
+      "stage": "launchRequested",
+      "at": 1789670248107,
+      "detail": "direct launch alongside full-screen intent"
+    },
+    {
+      "token": "2132053826:0ba3b8a6-a3f5-4c3d-a5a7-27cb478bdc8d",
+      "stage": "notifyReturned",
+      "at": 1789670248114,
+      "detail": "insistent; notify returned; not proof of display"
+    },
+    {
+      "token": "2132053826:0ba3b8a6-a3f5-4c3d-a5a7-27cb478bdc8d",
+      "stage": "created",
+      "at": 1789670248121,
+      "detail": "test=false"
+    },
+    {
+      "token": "2132053826:0ba3b8a6-a3f5-4c3d-a5a7-27cb478bdc8d",
+      "stage": "resumed",
+      "at": 1789670248156,
+      "detail": "lifecycle only"
+    },
+    {
+      "token": "2132053826:0ba3b8a6-a3f5-4c3d-a5a7-27cb478bdc8d",
+      "stage": "paused",
+      "at": 1789670248172,
+      "detail": "finishing=false"
+    },
+    {
+      "token": "2132053826:0ba3b8a6-a3f5-4c3d-a5a7-27cb478bdc8d",
+      "stage": "resumed",
+      "at": 1789670248175,
+      "detail": "lifecycle only"
+    },
+    {
+      "token": "2132053826:0ba3b8a6-a3f5-4c3d-a5a7-27cb478bdc8d",
+      "stage": "windowSample",
+      "at": 1789670248459,
+      "detail": "after=300ms;focus=false;shown=true;visibility=0;playing=false"
+    },
+    {
+      "token": "2132053826:0ba3b8a6-a3f5-4c3d-a5a7-27cb478bdc8d",
+      "stage": "windowVisible",
+      "at": 1789670248462,
+      "detail": "via=sample@300;focused=false;shown=true"
+    },
+    {
+      "token": "2132053826:0ba3b8a6-a3f5-4c3d-a5a7-27cb478bdc8d",
+      "stage": "windowSample",
+      "at": 1789670248476,
+      "detail": "after=300ms;focus=false;shown=true;visibility=0;playing=false"
+    },
+    {
+      "token": "2132053826:0ba3b8a6-a3f5-4c3d-a5a7-27cb478bdc8d",
+      "stage": "focus",
+      "at": 1789670248519,
+      "detail": "true"
+    },
+    {
+      "token": "2132053826:0ba3b8a6-a3f5-4c3d-a5a7-27cb478bdc8d",
+      "stage": "windowSample",
+      "at": 1789670248959,
+      "detail": "after=800ms;focus=true;shown=true;visibility=0;playing=false"
+    },
+    {
+      "token": "2132053826:0ba3b8a6-a3f5-4c3d-a5a7-27cb478bdc8d",
+      "stage": "windowSample",
+      "at": 1789670248976,
+      "detail": "after=800ms;focus=true;shown=true;visibility=0;playing=false"
+    },
+    {
+      "token": "2132053826:0ba3b8a6-a3f5-4c3d-a5a7-27cb478bdc8d",
+      "stage": "windowSample",
+      "at": 1789670249663,
+      "detail": "after=1500ms;focus=true;shown=true;visibility=0;playing=false"
+    },
+    {
+      "token": "2132053826:0ba3b8a6-a3f5-4c3d-a5a7-27cb478bdc8d",
+      "stage": "windowSample",
+      "at": 1789670249679,
+      "detail": "after=1500ms;focus=true;shown=true;visibility=0;playing=false"
+    }
+  ]
+}

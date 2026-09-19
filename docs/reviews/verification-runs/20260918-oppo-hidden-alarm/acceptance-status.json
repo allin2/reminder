@@ -1,0 +1,19 @@
+{
+  "status": "PAUSED_BY_USER",
+  "candidateSha256": "b4eb10c410e3537a88cf0f4821d714a9d97dd1c22dfa73b5b5cf983eb7c7acfc",
+  "installedSha256": "b4eb10c410e3537a88cf0f4821d714a9d97dd1c22dfa73b5b5cf983eb7c7acfc",
+  "sourceBase": "beeb9284a2e1f9a9ce394e4f2cbbf3d0608dc43d",
+  "sourceUncommitted": true,
+  "tests": 1048,
+  "screenOff75s": "PASS",
+  "otherApp75s": "PASS",
+  "appPanelComplete": "PASS_MANUAL_SCREEN_TAP",
+  "screenOffFourButtons": "PASS",
+  "coldProcess75s": "FAIL",
+  "longStandby": "NOT_PERFORMED",
+  "finalCandidateOrphanStop": "NOT_PERFORMED",
+  "finalCandidateNotificationStop": "NOT_PERFORMED",
+  "selfStartSetting": "NOT_INSPECTED",
+  "batterySetting": "完全允许后台行为",
+  "vibrationIdle": true
+}

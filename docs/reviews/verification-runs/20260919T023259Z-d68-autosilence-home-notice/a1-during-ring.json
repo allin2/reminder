@@ -1,0 +1,10 @@
+{
+  "serviceRunning": true,
+  "audio": {
+    "uid": null,
+    "matchedCount": 0,
+    "activeCount": 0,
+    "active": [],
+    "sample": []
+  }
+}

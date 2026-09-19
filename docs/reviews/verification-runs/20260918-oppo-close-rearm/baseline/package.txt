@@ -1,0 +1,391 @@
+Activity Resolver Table:
+  Non-Data Actions:
+      android.intent.action.MAIN:
+        961158f space.alliswell.inbox/.MainActivity filter e81f01c
+          Action: "android.intent.action.MAIN"
+          Category: "android.intent.category.LAUNCHER"
+
+Receiver Resolver Table:
+  Non-Data Actions:
+      android.intent.action.QUICKBOOT_POWERON:
+        623f425 space.alliswell.inbox/com.capacitorjs.plugins.localnotifications.LocalNotificationRestoreReceiver filter 2e37bab
+          Action: "android.intent.action.QUICKBOOT_POWERON"
+          Action: "android.intent.action.LOCKED_BOOT_COMPLETED"
+          Action: "android.intent.action.BOOT_COMPLETED"
+      space.alliswell.inbox.ACTION_TEST_ALARM:
+        bcbf208 space.alliswell.inbox/.AlarmTestReceiver filter 3c4ada1
+          Action: "space.alliswell.inbox.ACTION_TEST_ALARM"
+      androidx.profileinstaller.action.SAVE_PROFILE:
+        83226b4 space.alliswell.inbox/androidx.profileinstaller.ProfileInstallReceiver filter cc9b523
+          Action: "androidx.profileinstaller.action.SAVE_PROFILE"
+      android.intent.action.LOCKED_BOOT_COMPLETED:
+        623f425 space.alliswell.inbox/com.capacitorjs.plugins.localnotifications.LocalNotificationRestoreReceiver filter 2e37bab
+          Action: "android.intent.action.QUICKBOOT_POWERON"
+          Action: "android.intent.action.LOCKED_BOOT_COMPLETED"
+          Action: "android.intent.action.BOOT_COMPLETED"
+      androidx.profileinstaller.action.INSTALL_PROFILE:
+        83226b4 space.alliswell.inbox/androidx.profileinstaller.ProfileInstallReceiver filter 85d82dd
+          Action: "androidx.profileinstaller.action.INSTALL_PROFILE"
+      androidx.profileinstaller.action.SKIP_FILE:
+        83226b4 space.alliswell.inbox/androidx.profileinstaller.ProfileInstallReceiver filter 19e3e52
+          Action: "androidx.profileinstaller.action.SKIP_FILE"
+      androidx.profileinstaller.action.BENCHMARK_OPERATION:
+        83226b4 space.alliswell.inbox/androidx.profileinstaller.ProfileInstallReceiver filter 324fa20
+          Action: "androidx.profileinstaller.action.BENCHMARK_OPERATION"
+      android.intent.action.BOOT_COMPLETED:
+        623f425 space.alliswell.inbox/com.capacitorjs.plugins.localnotifications.LocalNotificationRestoreReceiver filter 2e37bab
+          Action: "android.intent.action.QUICKBOOT_POWERON"
+          Action: "android.intent.action.LOCKED_BOOT_COMPLETED"
+          Action: "android.intent.action.BOOT_COMPLETED"
+        32b2bc6 space.alliswell.inbox/.BootRestoreReceiver filter 1dc2787
+          Action: "android.intent.action.BOOT_COMPLETED"
+          Action: "android.intent.action.MY_PACKAGE_REPLACED"
+      android.intent.action.MY_PACKAGE_REPLACED:
+        623f425 space.alliswell.inbox/com.capacitorjs.plugins.localnotifications.LocalNotificationRestoreReceiver filter b5069fa
+          Action: "android.intent.action.MY_PACKAGE_REPLACED"
+        32b2bc6 space.alliswell.inbox/.BootRestoreReceiver filter 1dc2787
+          Action: "android.intent.action.BOOT_COMPLETED"
+          Action: "android.intent.action.MY_PACKAGE_REPLACED"
+
+Domain verification status:
+
+Permissions:
+  Permission [space.alliswell.inbox.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION] (155ac47):
+    sourcePackage=space.alliswell.inbox
+    uid=10556 gids=[] type=0 prot=signature
+    perm=PermissionInfo{c90759d space.alliswell.inbox.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION}
+    flags=0x0
+
+Registered ContentProviders:
+  space.alliswell.inbox/androidx.core.content.FileProvider:
+    Provider{aa39aa4 space.alliswell.inbox/androidx.core.content.FileProvider}
+  space.alliswell.inbox/androidx.startup.InitializationProvider:
+    Provider{ea81e28 space.alliswell.inbox/androidx.startup.InitializationProvider}
+
+ContentProvider Authorities:
+  [space.alliswell.inbox.fileprovider]:
+    Provider{aa39aa4 space.alliswell.inbox/androidx.core.content.FileProvider}
+      applicationInfo=ApplicationInfo{8454abe space.alliswell.inbox}
+  [space.alliswell.inbox.androidx-startup]:
+    Provider{ea81e28 space.alliswell.inbox/androidx.startup.InitializationProvider}
+      applicationInfo=ApplicationInfo{29972b1 space.alliswell.inbox}
+
+Key Set Manager:
+  [space.alliswell.inbox]
+      Signing KeySets: 332
+
+Packages:
+  Package [space.alliswell.inbox] (2925923):
+    appId=10556
+    pkg=Package{403875d space.alliswell.inbox}
+    codePath=/data/app/~~czqboD4FEKIq_O4u_ArLew==/space.alliswell.inbox-WEtJoYUzuoNOgyExgFvWbA==
+    resourcePath=/data/app/~~czqboD4FEKIq_O4u_ArLew==/space.alliswell.inbox-WEtJoYUzuoNOgyExgFvWbA==
+    legacyNativeLibraryDir=/data/app/~~czqboD4FEKIq_O4u_ArLew==/space.alliswell.inbox-WEtJoYUzuoNOgyExgFvWbA==/lib
+    extractNativeLibs=true
+    primaryCpuAbi=null
+    secondaryCpuAbi=null
+    cpuAbiOverride=null
+    versionCode=1 minSdk=22 targetSdk=34
+    minExtensionVersions=[]
+    versionName=1.0
+    hiddenApiEnforcementPolicy=2
+    usesNonSdkApi=false
+    splits=[base]
+    apkSigningVersion=2
+    flags=[ DEBUGGABLE HAS_CODE ALLOW_CLEAR_USER_DATA ALLOW_BACKUP ]
+    privateFlags=[ PRIVATE_FLAG_ACTIVITIES_RESIZE_MODE_RESIZEABLE_VIA_SDK_VERSION ALLOW_AUDIO_PLAYBACK_CAPTURE PARTIALLY_DIRECT_BOOT_AWARE PRIVATE_FLAG_ALLOW_NATIVE_HEAP_POINTER_TAGGING ]
+    forceQueryable=false
+    pageSizeCompat=0
+    scannedAsStoppedSystemApp=false
+    supportsScreens=[small, medium, large, xlarge, resizeable, anyDensity]
+    timeStamp=2026-09-18 01:54:41
+    lastUpdateTime=2026-09-18 01:54:51
+    installerPackageName=com.android.packageinstaller
+    installerPackageUid=10216
+    initiatingPackageName=com.android.packageinstaller
+    originatingPackageName=com.ss.android.lark
+    packageSource=3
+    appMetadataFilePath=null
+    appMetadataSource=0
+    signatures=PackageSignatures{c0bacce version:2, signatures:[d7697636], past signatures:[]}
+    installPermissionsFixed=false
+    pkgFlags=[ DEBUGGABLE HAS_CODE ALLOW_CLEAR_USER_DATA ALLOW_BACKUP ]
+    privatePkgFlags=[ PRIVATE_FLAG_ACTIVITIES_RESIZE_MODE_RESIZEABLE_VIA_SDK_VERSION ALLOW_AUDIO_PLAYBACK_CAPTURE PARTIALLY_DIRECT_BOOT_AWARE PRIVATE_FLAG_ALLOW_NATIVE_HEAP_POINTER_TAGGING ]
+    apexModuleName=null
+    declared permissions:
+      space.alliswell.inbox.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION: prot=signature
+    requested permissions:
+      android.permission.POST_NOTIFICATIONS
+      android.permission.FOREGROUND_SERVICE_SHORT_SERVICE
+      android.permission.SYSTEM_ALERT_WINDOW
+      android.permission.FOREGROUND_SERVICE
+      android.permission.RECEIVE_BOOT_COMPLETED
+      android.permission.INTERNET
+      android.permission.USE_EXACT_ALARM
+      android.permission.USE_FULL_SCREEN_INTENT
+      space.alliswell.inbox.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION
+      android.permission.DISABLE_KEYGUARD
+      android.permission.SCHEDULE_EXACT_ALARM
+      android.permission.VIBRATE
+      android.permission.WAKE_LOCK
+    install permissions:
+      android.permission.FOREGROUND_SERVICE: granted=true
+      android.permission.RECEIVE_BOOT_COMPLETED: granted=true
+      android.permission.INTERNET: granted=true
+      android.permission.USE_EXACT_ALARM: granted=true
+      android.permission.USE_FULL_SCREEN_INTENT: granted=true
+      space.alliswell.inbox.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION: granted=true
+      android.permission.DISABLE_KEYGUARD: granted=true
+      android.permission.VIBRATE: granted=true
+      android.permission.WAKE_LOCK: granted=true
+    User 0: ceDataInode=3581313 deDataInode=3581739 installed=true hidden=false suspended=false distractionFlags=0 stopped=false notLaunched=false enabled=0 ofs=0 pdm=false instant=false virtual=false quarantined=false
+      installReason=0
+      dataDir=/data/user/0/space.alliswell.inbox
+      firstInstallTime=2026-09-18 01:54:51
+      uninstallReason=0
+      overlay paths:
+        /product/overlay/NavigationBarModeGestural/NavigationBarModeGesturalOverlay.apk
+        /data/resource-cache/com.android.systemui-neutral-Jm3i.frro
+        /data/resource-cache/com.android.systemui-accent-a18B.frro
+        /data/resource-cache/com.android.systemui-dynamic-kcWh.frro
+      legacy overlay paths:
+        /product/overlay/NavigationBarModeGestural/NavigationBarModeGesturalOverlay.apk
+      lastDisabledCaller: com.android.packageinstaller
+      gids=[3003]
+      runtime permissions:
+        android.permission.POST_NOTIFICATIONS: granted=true, flags=[ USER_SET|USER_SENSITIVE_WHEN_GRANTED|USER_SENSITIVE_WHEN_DENIED]
+    User 999: ceDataInode=0 deDataInode=0 installed=false hidden=false suspended=false distractionFlags=0 stopped=true notLaunched=true enabled=0 ofs=0 pdm=false instant=false virtual=false quarantined=false
+      installReason=0
+      dataDir=null
+      firstInstallTime=1970-01-01 08:00:00
+      uninstallReason=0
+      gids=[3003]
+      runtime permissions:
+
+Queries:
+  system apps queryable: false
+  queries via forceQueryable:
+  queries via package name:
+  queries via component:
+    uni.app.UNIAD10B08:
+      space.alliswell.inbox
+    com.tmall.wireless:
+      space.alliswell.inbox
+    todolist.scheduleplanner.dailyplanner.todo.reminders:
+      space.alliswell.inbox
+    com.facebook.aura:
+      space.alliswell.inbox
+    com.jd.app.reader:
+      space.alliswell.inbox
+    com.ct.client:
+      space.alliswell.inbox
+    com.oplus.privacysandbox:
+      space.alliswell.inbox
+    com.heytap.market:
+      space.alliswell.inbox
+    com.heytap.speechassist:
+      space.alliswell.inbox
+    com.oplus.ocar:
+      space.alliswell.inbox
+    com.sohu.inputmethod.sogouoem:
+      space.alliswell.inbox
+    com.coloros.assistantscreen:
+      space.alliswell.inbox
+    com.heytap.browser:
+      space.alliswell.inbox
+    com.heytap.cloud:
+      space.alliswell.inbox
+    com.nearme.instant.platform:
+      space.alliswell.inbox
+    com.oplus.pay:
+      space.alliswell.inbox
+    com.heytap.htms:
+      space.alliswell.inbox
+    com.heytap.pictorial:
+      space.alliswell.inbox
+    com.taobao.trip:
+      space.alliswell.inbox
+    com.heytap.tas:
+      space.alliswell.inbox
+    com.Qunar:
+      space.alliswell.inbox
+    com.android.settings.intelligence:
+      space.alliswell.inbox
+    com.android.systemui:
+      space.alliswell.inbox
+    com.finshell.wallet:
+      space.alliswell.inbox
+    com.heytap.themestore:
+      space.alliswell.inbox
+    com.heytap.health:
+      space.alliswell.inbox
+    com.heytap.music:
+      space.alliswell.inbox
+    com.oppo.community:
+      space.alliswell.inbox
+    com.oppo.store:
+      space.alliswell.inbox
+    com.redteamobile.roaming:
+      space.alliswell.inbox
+    com.heytap.reader:
+      space.alliswell.inbox
+    com.baidu.input_oppo:
+      space.alliswell.inbox
+    com.qiyi.video:
+      space.alliswell.inbox
+    com.lietou.mishu:
+      space.alliswell.inbox
+    com.xunmeng.pinduoduo:
+      space.alliswell.inbox
+    com.UCMobile:
+      space.alliswell.inbox
+    com.taobao.taobao:
+      space.alliswell.inbox
+    com.xingin.xhs:
+      space.alliswell.inbox
+    ctrip.android.view:
+      space.alliswell.inbox
+    com.ximalaya.ting.android:
+      space.alliswell.inbox
+    com.sina.weibo:
+      space.alliswell.inbox
+    com.youku.phone:
+      space.alliswell.inbox
+    com.olimsoft.android.oplayer:
+      space.alliswell.inbox
+    com.sand.aircast:
+      space.alliswell.inbox
+    com.baidu.netdisk:
+      space.alliswell.inbox
+    net.csdn.csdnplus:
+      space.alliswell.inbox
+    pro.cubox.androidapp:
+      space.alliswell.inbox
+    ai.perplexity.app.android:
+      space.alliswell.inbox
+    com.didapinche.booking:
+      space.alliswell.inbox
+    cn.ticktick.task:
+      space.alliswell.inbox
+    com.douban.frodo:
+      space.alliswell.inbox
+    com.fenbi.android.servant:
+      space.alliswell.inbox
+    cc.forestapp:
+      space.alliswell.inbox
+    com.jd.jrapp:
+      space.alliswell.inbox
+    com.tipsoon.android:
+      space.alliswell.inbox
+    com.ll.enhance:
+      space.alliswell.inbox
+    com.coolapk.market:
+      space.alliswell.inbox
+    com.jingdong.app.mall:
+      space.alliswell.inbox
+    com.autonavi.minimap:
+      space.alliswell.inbox
+    com.sankuai.meituan:
+      space.alliswell.inbox
+    com.xstore.sevenfresh:
+      space.alliswell.inbox
+    com.xiaomi.smarthome:
+      space.alliswell.inbox
+    com.quark.browser:
+      space.alliswell.inbox
+    com.iyuba.ted:
+      space.alliswell.inbox
+    com.nowcoder.app.florida:
+      space.alliswell.inbox
+    com.smzdm.client.android:
+      space.alliswell.inbox
+    com.aliyun.tongyi:
+      space.alliswell.inbox
+    com.lianaibiji.dev:
+      space.alliswell.inbox
+    com.MobileTicket:
+      space.alliswell.inbox
+    com.tencent.mm:
+      space.alliswell.inbox
+    com.whatsapp:
+      space.alliswell.inbox
+    com.netease.cloudmusic:
+      space.alliswell.inbox
+    com.xunlei.downloadprovider:
+      space.alliswell.inbox
+    com.ctrip.b.welfare:
+      space.alliswell.inbox
+    com.xiachufang:
+      space.alliswell.inbox
+    com.taobao.idlefish:
+      space.alliswell.inbox
+    com.taobao.etao:
+      space.alliswell.inbox
+    com.wuba.zhuanzhuan:
+      space.alliswell.inbox
+    com.icbc:
+      space.alliswell.inbox
+    com.zhihu.android:
+      space.alliswell.inbox
+    com.dz.hmjc:
+      space.alliswell.inbox
+    com.android.skip:
+      space.alliswell.inbox
+    gov.pianzong.androidnga:
+      space.alliswell.inbox
+    com.mt.mtxx.mtxx:
+      space.alliswell.inbox
+    com.hupu.shihuo:
+      space.alliswell.inbox
+    com.shizhuang.duapp:
+      space.alliswell.inbox
+    com.instagram.android:
+      space.alliswell.inbox
+    com.bendibao:
+      space.alliswell.inbox
+    com.netease.uu:
+      space.alliswell.inbox
+    com.yaya.zone:
+      space.alliswell.inbox
+    com.hupu.games:
+      space.alliswell.inbox
+    com.oplus.logtrial:
+      space.alliswell.inbox
+    com.mi.health:
+      space.alliswell.inbox
+    com.facebook.katana:
+      space.alliswell.inbox
+    com.netease.uuremote:
+      space.alliswell.inbox
+  queryable via interaction:
+    User 0:
+      [com.oplus.lfeh,com.android.settings,com.android.providers.settings,com.oplus.appplatform,com.oplus.qualityprotect,com.oplus.exsystemservice,com.oplus.owkservice,com.oplus.healthservice,com.oplus.securitypermission,com.oplus.customize.coreapp,com.mediatek,android,com.oplus.nas,com.android.dynsystem,oplus,com.oplus.mediaturbo,com.wapi.wapicertmanager,com.mediatek.atci.service,com.oplus.postmanservice,com.oplus.battery,com.oplus.wirelesssettings,com.oplus.onetrace,com.oplus.powermonitor,com.oplus.sau,com.android.location.fused,com.oplus.engineernetwork,com.oplus.nearcomm,com.oplus.voice.crs,com.oplus.wifibackuprestore,com.oplus.engineermode,com.heytap.mcs,com.android.localtransport,com.oplus.obrain,com.oplus.atlas,com.android.inputdevices,com.oplus.sauhelper,com.oplus.olc,com.oplus.subsys,com.android.keychain,com.mediatek.location.lppe.main,com.oplus.trafficmonitor,com.android.DeviceAsWebcam,com.oplus.notificationmanager,com.android.server.telecom,com.oplus.athena,com.oplus.audio.effectcenter,com.oplus.safecenter]:
+        space.alliswell.inbox
+      [com.google.android.gsf,com.google.android.gms]:
+        space.alliswell.inbox
+      com.google.android.webview:
+        space.alliswell.inbox
+      com.android.launcher:
+        space.alliswell.inbox
+      com.android.systemui:
+        space.alliswell.inbox
+      com.android.permissioncontroller:
+        space.alliswell.inbox
+      com.bytedance.android.doubaoime:
+        space.alliswell.inbox
+      space.alliswell.inbox:
+        com.google.android.webview
+      [com.oplus.lfeh,com.android.settings,com.android.providers.settings,com.oplus.appplatform,com.oplus.qualityprotect,com.oplus.exsystemservice,com.oplus.owkservice,com.oplus.healthservice,com.oplus.securitypermission,com.oplus.customize.coreapp,com.mediatek,android,com.oplus.nas,com.android.dynsystem,oplus,com.oplus.mediaturbo,com.wapi.wapicertmanager,com.mediatek.atci.service,com.oplus.postmanservice,com.oplus.battery,com.oplus.wirelesssettings,com.oplus.onetrace,com.oplus.powermonitor,com.oplus.sau,com.android.location.fused,com.oplus.engineernetwork,com.oplus.nearcomm,com.oplus.voice.crs,com.oplus.wifibackuprestore,com.oplus.engineermode,com.heytap.mcs,com.android.localtransport,com.oplus.obrain,com.oplus.atlas,com.android.inputdevices,com.oplus.sauhelper,com.oplus.olc,com.oplus.subsys,com.android.keychain,com.mediatek.location.lppe.main,com.oplus.trafficmonitor,com.android.DeviceAsWebcam,com.oplus.notificationmanager,com.android.server.telecom,com.oplus.athena,com.oplus.audio.effectcenter,com.oplus.safecenter]:
+        space.alliswell.inbox
+    User 999:
+  queryable via uses-library:
+
+Dexopt state:
+  [space.alliswell.inbox]
+    path: /data/app/~~czqboD4FEKIq_O4u_ArLew==/space.alliswell.inbox-WEtJoYUzuoNOgyExgFvWbA==/base.apk
+      arm64: [status=run-from-apk] [reason=unknown] [primary-abi]
+        [location is error]
+
+Compiler stats:
+  [space.alliswell.inbox]
+     base.apk - 480

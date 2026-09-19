@@ -1,0 +1,16 @@
+{
+  "attempted": false,
+  "attempts": [
+    {
+      "via": "direct",
+      "ok": false,
+      "error": "ndroid.intent.action.MAIN cat=[android.intent.category.LAUNCHER] pkg=\\xe8\\x87\\xaa\\xe5\\x8a\\xa8\\xe9\\x9d\\x99\\xe9\\x9f\\xb3\\xe9\\xaa\\x8c\\xe8\\xaf\\x81 cmp=space.alliswell.inbox/.AlarmActivity (has extras) }\\n'"
+    },
+    {
+      "via": "run-as",
+      "ok": false,
+      "error": "ndroid.intent.action.MAIN cat=[android.intent.category.LAUNCHER] pkg=\\xe8\\x87\\xaa\\xe5\\x8a\\xa8\\xe9\\x9d\\x99\\xe9\\x9f\\xb3\\xe9\\xaa\\x8c\\xe8\\xaf\\x81 cmp=space.alliswell.inbox/.AlarmActivity (has extras) }\\n'"
+    }
+  ],
+  "reason": "AlarmActivity/AlarmTestReceiver 均 exported=false，adb 无法以同 token 驱动"
+}

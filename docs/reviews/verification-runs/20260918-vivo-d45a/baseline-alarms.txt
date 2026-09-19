@@ -1,0 +1,20 @@
+        space.alliswell.inbox
+    
+    Restricted packages:
+--
+    RTC_WAKEUP #66: Alarm{eb94bd9 type 0 origWhen 1789735860018 flags 3 windowLength 0 whenElapsed 303278130 maxWhenElapsed 303278130 repeatInterval 0 tag=*walarm*:space.alliswell.inbox/.AlarmActivity originWhenElapsed 303278130 originWindowLength 0 setAtTime=2026-09-17 14:48:14 policyWhenElapsed:[303278130, 272086897, 271178199, 0, 0] procName=space.alliswell.inbox space.alliswell.inbox}
+      tag=*walarm*:space.alliswell.inbox/.AlarmActivity
+      type=RTC_WAKEUP origWhen=2026-09-18 20:51:00.018 window=0 exactAllowReason=policy_permission repeatInterval=0 count=0 flags=0x3
+      policyWhenElapsed: requester=+5h41m7s584ms app_standby=-2h58m43s649ms device_idle=-3h13m52s347ms battery_saver=-- --unknown(4)--=--
+--
+        showIntent=PendingIntent{ae66d6e: PendingIntentRecord{125b6d9 space.alliswell.inbox startActivity}}
+      operation=PendingIntent{a884c0f: PendingIntentRecord{5cf249c space.alliswell.inbox startActivity}}
+      idle-options=Bundle[{android.pendingIntent.backgroundActivityAllowed=2, android:broadcast.temporaryAppAllowlistReasonCode=301, android:broadcast.temporaryAppAllowlistDuration=10000, android:broadcast.temporaryAppAllowlistReason=, android:broadcast.temporaryAppAllowlistType=0, android:broadcast.flags=8}]
+    RTC_WAKEUP #67: Alarm{27b38c3 type 0 origWhen 1789735860019 flags 3 windowLength 0 whenElapsed 303278131 maxWhenElapsed 303278131 repeatInterval 0 tag=*walarm*:space.alliswell.inbox.ACTION_TEST_ALARM originWhenElapsed 303278131 originWindowLength 0 setAtTime=2026-09-18 07:07:35 policyWhenElapsed:[303278131, 282673980, 0, 0, 0] procName=space.alliswell.inbox space.alliswell.inbox}
+      tag=*walarm*:space.alliswell.inbox.ACTION_TEST_ALARM
+      type=RTC_WAKEUP origWhen=2026-09-18 20:51:00.019 window=0 exactAllowReason=policy_permission repeatInterval=0 count=0 flags=0x3
+      policyWhenElapsed: requester=+5h41m7s585ms app_standby=-2m16s566ms device_idle=-- battery_saver=-- --unknown(4)--=--
+--
+        showIntent=PendingIntent{4678a97: PendingIntentRecord{125b6d9 space.alliswell.inbox startActivity}}
+      operation=PendingIntent{41a3484: PendingIntentRecord{3a49f7f space.alliswell.inbox broadcastIntent}}
+      idle-options=Bundle[{android.pendingIntent.backgroundActivityAllowed=2, android:broadcast.temporaryAppAllowlistReasonCode=301, android:broadcast.temporaryAppAllowlistDuration=10000, android:broadcast.temporaryAppAllowlistReason=, android:broadcast.temporaryAppAllowlistType=0, android:broadcast.flags=8}]

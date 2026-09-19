@@ -1,0 +1,194 @@
+{
+  "itemId": "matrix_off_1789670049",
+  "received": true,
+  "visible": true,
+  "lagMs": 80,
+  "rows": [
+    {
+      "token": "1472468571:44e87213-4ca6-4bfd-94c6-a0fc35fd0cf0",
+      "stage": "requested",
+      "at": 1789670049138,
+      "detail": "delayMs=74869"
+    },
+    {
+      "token": "1472468571:44e87213-4ca6-4bfd-94c6-a0fc35fd0cf0",
+      "stage": "item",
+      "at": 1789670049144,
+      "detail": "matrix_off_1789670049"
+    },
+    {
+      "token": "1472468571:44e87213-4ca6-4bfd-94c6-a0fc35fd0cf0",
+      "stage": "unfreezerScheduled",
+      "at": 1789670049155,
+      "detail": "triggerAt=1789670124015;mode=alarmClock"
+    },
+    {
+      "token": "1472468571:44e87213-4ca6-4bfd-94c6-a0fc35fd0cf0",
+      "stage": "scheduled",
+      "at": 1789670049159,
+      "detail": "triggerAt=1789670124015;mode=alarmClock"
+    },
+    {
+      "token": "1472468571:44e87213-4ca6-4bfd-94c6-a0fc35fd0cf0",
+      "stage": "cancelled",
+      "at": 1789670049366,
+      "detail": "replaced by new schedule"
+    },
+    {
+      "token": "1472468571:70b5b529-6ae0-4687-8f5b-f84875c4a867",
+      "stage": "requested",
+      "at": 1789670049372,
+      "detail": "delayMs=74641"
+    },
+    {
+      "token": "1472468571:70b5b529-6ae0-4687-8f5b-f84875c4a867",
+      "stage": "item",
+      "at": 1789670049377,
+      "detail": "matrix_off_1789670049"
+    },
+    {
+      "token": "1472468571:70b5b529-6ae0-4687-8f5b-f84875c4a867",
+      "stage": "unfreezerScheduled",
+      "at": 1789670049397,
+      "detail": "triggerAt=1789670124022;mode=alarmClock"
+    },
+    {
+      "token": "1472468571:70b5b529-6ae0-4687-8f5b-f84875c4a867",
+      "stage": "scheduled",
+      "at": 1789670049400,
+      "detail": "triggerAt=1789670124022;mode=alarmClock"
+    },
+    {
+      "token": "1472468571:70b5b529-6ae0-4687-8f5b-f84875c4a867",
+      "stage": "cancelled",
+      "at": 1789670102342,
+      "detail": "replaced by new schedule"
+    },
+    {
+      "token": "1472468571:a2a14823-7545-4092-851c-488a77672806",
+      "stage": "requested",
+      "at": 1789670102353,
+      "detail": "delayMs=21668"
+    },
+    {
+      "token": "1472468571:a2a14823-7545-4092-851c-488a77672806",
+      "stage": "item",
+      "at": 1789670102363,
+      "detail": "matrix_off_1789670049"
+    },
+    {
+      "token": "1472468571:a2a14823-7545-4092-851c-488a77672806",
+      "stage": "unfreezerScheduled",
+      "at": 1789670102383,
+      "detail": "triggerAt=1789670124037;mode=alarmClock"
+    },
+    {
+      "token": "1472468571:a2a14823-7545-4092-851c-488a77672806",
+      "stage": "scheduled",
+      "at": 1789670102393,
+      "detail": "triggerAt=1789670124037;mode=alarmClock"
+    },
+    {
+      "token": "1472468571:a2a14823-7545-4092-851c-488a77672806",
+      "stage": "unfreezerStarted",
+      "at": 1789670124066,
+      "detail": "foreground service torn down the freezer"
+    },
+    {
+      "token": "1472468571:a2a14823-7545-4092-851c-488a77672806",
+      "stage": "received",
+      "at": 1789670124080,
+      "detail": ""
+    },
+    {
+      "token": "1472468571:a2a14823-7545-4092-851c-488a77672806",
+      "stage": "environment",
+      "at": 1789670124092,
+      "detail": "screenOn=false;locked=true;inCall=false;path=fsi+direct"
+    },
+    {
+      "token": "1472468571:a2a14823-7545-4092-851c-488a77672806",
+      "stage": "launchRequested",
+      "at": 1789670124150,
+      "detail": "direct launch alongside full-screen intent"
+    },
+    {
+      "token": "1472468571:a2a14823-7545-4092-851c-488a77672806",
+      "stage": "notifyReturned",
+      "at": 1789670124157,
+      "detail": "insistent; notify returned; not proof of display"
+    },
+    {
+      "token": "1472468571:a2a14823-7545-4092-851c-488a77672806",
+      "stage": "created",
+      "at": 1789670124164,
+      "detail": "test=false"
+    },
+    {
+      "token": "1472468571:a2a14823-7545-4092-851c-488a77672806",
+      "stage": "resumed",
+      "at": 1789670124183,
+      "detail": "lifecycle only"
+    },
+    {
+      "token": "1472468571:a2a14823-7545-4092-851c-488a77672806",
+      "stage": "paused",
+      "at": 1789670124190,
+      "detail": "finishing=false"
+    },
+    {
+      "token": "1472468571:a2a14823-7545-4092-851c-488a77672806",
+      "stage": "resumed",
+      "at": 1789670124194,
+      "detail": "lifecycle only"
+    },
+    {
+      "token": "1472468571:a2a14823-7545-4092-851c-488a77672806",
+      "stage": "windowSample",
+      "at": 1789670124487,
+      "detail": "after=300ms;focus=false;shown=true;visibility=0;playing=false"
+    },
+    {
+      "token": "1472468571:a2a14823-7545-4092-851c-488a77672806",
+      "stage": "windowVisible",
+      "at": 1789670124586,
+      "detail": "via=sample@300;focused=false;shown=true"
+    },
+    {
+      "token": "1472468571:a2a14823-7545-4092-851c-488a77672806",
+      "stage": "windowSample",
+      "at": 1789670124588,
+      "detail": "after=300ms;focus=false;shown=true;visibility=0;playing=false"
+    },
+    {
+      "token": "1472468571:a2a14823-7545-4092-851c-488a77672806",
+      "stage": "focus",
+      "at": 1789670124590,
+      "detail": "true"
+    },
+    {
+      "token": "1472468571:a2a14823-7545-4092-851c-488a77672806",
+      "stage": "windowSample",
+      "at": 1789670124989,
+      "detail": "after=800ms;focus=true;shown=true;visibility=0;playing=false"
+    },
+    {
+      "token": "1472468571:a2a14823-7545-4092-851c-488a77672806",
+      "stage": "windowSample",
+      "at": 1789670124999,
+      "detail": "after=800ms;focus=true;shown=true;visibility=0;playing=false"
+    },
+    {
+      "token": "1472468571:a2a14823-7545-4092-851c-488a77672806",
+      "stage": "windowSample",
+      "at": 1789670125691,
+      "detail": "after=1500ms;focus=true;shown=true;visibility=0;playing=false"
+    },
+    {
+      "token": "1472468571:a2a14823-7545-4092-851c-488a77672806",
+      "stage": "windowSample",
+      "at": 1789670125702,
+      "detail": "after=1500ms;focus=true;shown=true;visibility=0;playing=false"
+    }
+  ]
+}

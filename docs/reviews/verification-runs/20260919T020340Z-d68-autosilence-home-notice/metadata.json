@@ -1,0 +1,10 @@
+{
+  "serial": "10ACBF2D3D000RS",
+  "candidateSha256": "1cdd76ac054e541e3f14a73fe860ea28776236c01ee642ce4dbe91cd3af3df66",
+  "deviceApkPath": "/data/app/~~8cFCTX3uA9ki6VN_yWyZBQ==/space.alliswell.inbox-tbIZMMHIyPRMybp7MogrwA==/base.apk",
+  "uid": null,
+  "silenceMsProduction": 300000,
+  "toleranceMs": 30000,
+  "sourceScriptSha256": "9b10a7efce47e5c771eb23b9090b4c1fec78e2b5a9dd2dae0ab8a79dbfa47a06",
+  "startedAt": 1789783424233
+}

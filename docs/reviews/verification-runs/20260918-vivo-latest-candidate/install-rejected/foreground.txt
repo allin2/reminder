@@ -1,0 +1,2 @@
+  mFocusedApp=ActivityRecord{103807770 u0 space.alliswell.inbox/.MainActivity t89 d0}
+  mFocusedApp=null

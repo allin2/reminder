@@ -1,0 +1,75 @@
+{
+  "id": "d68_autosilence_1789784575",
+  "title": "D68 自动静音验证",
+  "note": "D68 自动静音专用",
+  "tags": [],
+  "url": "",
+  "projectId": "",
+  "priority": "critical",
+  "status": "due",
+  "triggerAt": 1789784604000,
+  "windowStart": null,
+  "windowEnd": null,
+  "deadlineAt": null,
+  "repeat": null,
+  "createdAt": 1789784574318,
+  "acknowledgedAt": null,
+  "completedAt": null,
+  "snoozeCount": 0,
+  "deliveredAt": 1789784608834,
+  "remindCount": 1,
+  "lastRemindAt": 1789784608834,
+  "lastAlertShownAt": null,
+  "scheduleBasis": "wall-clock",
+  "localTrigger": "2026-09-19T10:23:24",
+  "snoozedAt": null,
+  "snoozeDelayMs": null,
+  "dismissedUntil": null,
+  "review_status": "READY",
+  "reviewed_at": null,
+  "sourceTitle": "",
+  "sourceApp": "",
+  "delivery_mode": "alarm",
+  "isFallbackTrigger": false,
+  "deadlineStageKey": null,
+  "deadlineEvents": {},
+  "reminderEvents": {
+    "1@1789785504000": {
+      "at": 1789785504000,
+      "state": "scheduled"
+    },
+    "2@1789786404000": {
+      "at": 1789786404000,
+      "state": "scheduled"
+    },
+    "3@1789787304000": {
+      "at": 1789787304000,
+      "state": "scheduled"
+    },
+    "4@1789788204000": {
+      "at": 1789788204000,
+      "state": "scheduled"
+    },
+    "5@1789789104000": {
+      "at": 1789789104000,
+      "state": "scheduled"
+    },
+    "6@1789790004000": {
+      "at": 1789790004000,
+      "state": "scheduled"
+    },
+    "7@1789790904000": {
+      "at": 1789790904000,
+      "state": "scheduled"
+    },
+    "0@1789784604000": {
+      "at": 1789784604000,
+      "state": "scheduled"
+    }
+  },
+  "deadlinePaused": false,
+  "ackAdvancedAt": null,
+  "rev": 1,
+  "seriesId": null,
+  "repeatParentId": null
+}

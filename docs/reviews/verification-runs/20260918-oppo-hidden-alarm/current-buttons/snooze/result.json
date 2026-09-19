@@ -1,0 +1,128 @@
+{
+  "action": "snooze",
+  "itemId": "f6c_action_snooze_1789671251",
+  "clickedAt": 1789671287280,
+  "token": "187166965:e313b5d7-0b1b-462c-b080-bb7332120b12",
+  "checks": {
+    "nativeAction": true,
+    "effectsStopped": true,
+    "notificationRemoved": true,
+    "originalItemsUnchanged": true,
+    "statusSnoozed": true,
+    "twoHourDelay": true,
+    "elapsedBasis": true,
+    "futureSchedule": true
+  },
+  "pass": true,
+  "item": {
+    "id": "f6c_action_snooze_1789671251",
+    "title": "F6c 按钮测试 snooze",
+    "note": "功能验收专用",
+    "tags": [],
+    "url": "",
+    "projectId": "",
+    "priority": "important",
+    "status": "snoozed",
+    "triggerAt": 1789678487484,
+    "windowStart": null,
+    "windowEnd": null,
+    "deadlineAt": null,
+    "repeat": null,
+    "createdAt": 1789671251165,
+    "acknowledgedAt": null,
+    "completedAt": null,
+    "snoozeCount": 1,
+    "deliveredAt": null,
+    "remindCount": 0,
+    "lastRemindAt": null,
+    "lastAlertShownAt": null,
+    "scheduleBasis": "elapsed",
+    "localTrigger": null,
+    "snoozedAt": 1789671287484,
+    "snoozeDelayMs": 7200000,
+    "dismissedUntil": null,
+    "review_status": "READY",
+    "reviewed_at": null,
+    "sourceTitle": "",
+    "sourceApp": "",
+    "delivery_mode": "alarm",
+    "isFallbackTrigger": false,
+    "deadlineStageKey": null,
+    "deadlineEvents": {},
+    "deadlinePaused": false,
+    "ackAdvancedAt": null,
+    "rev": 2,
+    "seriesId": null,
+    "repeatParentId": null
+  },
+  "plans": [
+    {
+      "id": 848555559,
+      "triggerAt": 1789678487498,
+      "title": "☆ 重要事项",
+      "body": "F6c 按钮测试 snooze",
+      "itemId": "f6c_action_snooze_1789671251",
+      "level": "☆ 重要",
+      "itemRev": "2"
+    }
+  ],
+  "localPlans": [
+    {
+      "id": 159475983,
+      "title": "☆ 重要事项",
+      "body": "F6c 按钮测试 snooze",
+      "schedule": {
+        "at": "Fri Sep 18 06:24:47 GMT+08:00 2026",
+        "count": 1,
+        "repeats": false
+      },
+      "extra": {
+        "managedKind": "attention-reminder",
+        "scheduleVersion": 2,
+        "itemId": "f6c_action_snooze_1789671251",
+        "itemRev": 2,
+        "event": "realert",
+        "attempt": 3,
+        "scheduleKey": "2|f6c_action_snooze_1789671251|2|realert|3|1789683887484|☆ 重要事项|F6c 按钮测试 snooze|attention-important-v2"
+      }
+    },
+    {
+      "id": 1135061554,
+      "title": "☆ 重要事项",
+      "body": "F6c 按钮测试 snooze",
+      "schedule": {
+        "at": "Fri Sep 18 05:24:47 GMT+08:00 2026",
+        "count": 1,
+        "repeats": false
+      },
+      "extra": {
+        "managedKind": "attention-reminder",
+        "scheduleVersion": 2,
+        "itemId": "f6c_action_snooze_1789671251",
+        "itemRev": 2,
+        "event": "realert",
+        "attempt": 1,
+        "scheduleKey": "2|f6c_action_snooze_1789671251|2|realert|1|1789680287484|☆ 重要事项|F6c 按钮测试 snooze|attention-important-v2"
+      }
+    },
+    {
+      "id": 1173273755,
+      "title": "☆ 重要事项",
+      "body": "F6c 按钮测试 snooze",
+      "schedule": {
+        "at": "Fri Sep 18 05:54:47 GMT+08:00 2026",
+        "count": 1,
+        "repeats": false
+      },
+      "extra": {
+        "managedKind": "attention-reminder",
+        "scheduleVersion": 2,
+        "itemId": "f6c_action_snooze_1789671251",
+        "itemRev": 2,
+        "event": "realert",
+        "attempt": 2,
+        "scheduleKey": "2|f6c_action_snooze_1789671251|2|realert|2|1789682087484|☆ 重要事项|F6c 按钮测试 snooze|attention-important-v2"
+      }
+    }
+  ]
+}

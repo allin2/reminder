@@ -1,0 +1,8 @@
+{
+  "reads": 143,
+  "emptyReads": 0,
+  "accumulatedEvents": 183,
+  "scheduleRoundsObserved": 24,
+  "ledgerCapacity": 150,
+  "note": "台账保留最后 150 条；每次重排写 5 条 ⇒ 可用窗口 ≈ 30 轮"
+}

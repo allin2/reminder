@@ -1,0 +1,23 @@
+USB:
+
+    USB 3.1 Bus:
+
+      Host Controller Driver: AppleT8132USBXHCI
+
+        PKC130:
+
+          Product ID: 0x2765
+          Vendor ID: 0x22d9
+          Version: 2.23
+          Serial Number: QSKFAE95CQEUJZ8L
+          Speed: Up to 480 Mb/s
+          Manufacturer: OPPO
+          Location ID: 0x00100000 / 1
+          Current Available (mA): 500
+          Current Required (mA): 0
+          Extra Operating Current (mA): 0
+
+    USB 3.1 Bus:
+
+      Host Controller Driver: AppleT8132USBXHCI
+

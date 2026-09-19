@@ -1,0 +1,140 @@
+{
+  "itemId": "matrix_off_1789712369",
+  "received": true,
+  "visible": true,
+  "lagMs": 86,
+  "rows": [
+    {
+      "token": "751756261:16eba2c0-7eef-45a3-ad71-f9ad70587713",
+      "stage": "requested",
+      "at": 1789712370079,
+      "detail": "delayMs=73928"
+    },
+    {
+      "token": "751756261:16eba2c0-7eef-45a3-ad71-f9ad70587713",
+      "stage": "item",
+      "at": 1789712370086,
+      "detail": "matrix_off_1789712369"
+    },
+    {
+      "token": "751756261:16eba2c0-7eef-45a3-ad71-f9ad70587713",
+      "stage": "unfreezerScheduled",
+      "at": 1789712370106,
+      "detail": "triggerAt=1789712444017;mode=alarmClock"
+    },
+    {
+      "token": "751756261:16eba2c0-7eef-45a3-ad71-f9ad70587713",
+      "stage": "scheduled",
+      "at": 1789712370116,
+      "detail": "triggerAt=1789712444017;mode=alarmClock"
+    },
+    {
+      "token": "751756261:16eba2c0-7eef-45a3-ad71-f9ad70587713",
+      "stage": "cancelled",
+      "at": 1789712370492,
+      "detail": "replaced by new schedule"
+    },
+    {
+      "token": "751756261:6a0dface-0ad2-43dc-8f63-b9561ad4a008",
+      "stage": "requested",
+      "at": 1789712370500,
+      "detail": "delayMs=73519"
+    },
+    {
+      "token": "751756261:6a0dface-0ad2-43dc-8f63-b9561ad4a008",
+      "stage": "item",
+      "at": 1789712370507,
+      "detail": "matrix_off_1789712369"
+    },
+    {
+      "token": "751756261:6a0dface-0ad2-43dc-8f63-b9561ad4a008",
+      "stage": "unfreezerScheduled",
+      "at": 1789712370516,
+      "detail": "triggerAt=1789712444029;mode=alarmClock"
+    },
+    {
+      "token": "751756261:6a0dface-0ad2-43dc-8f63-b9561ad4a008",
+      "stage": "scheduled",
+      "at": 1789712370522,
+      "detail": "triggerAt=1789712444029;mode=alarmClock"
+    },
+    {
+      "token": "751756261:6a0dface-0ad2-43dc-8f63-b9561ad4a008",
+      "stage": "received",
+      "at": 1789712444086,
+      "detail": ""
+    },
+    {
+      "token": "751756261:6a0dface-0ad2-43dc-8f63-b9561ad4a008",
+      "stage": "environment",
+      "at": 1789712444099,
+      "detail": "screenOn=false;locked=true;inCall=false;path=fsi+direct"
+    },
+    {
+      "token": "751756261:6a0dface-0ad2-43dc-8f63-b9561ad4a008",
+      "stage": "launchRequested",
+      "at": 1789712444120,
+      "detail": "direct launch alongside full-screen intent"
+    },
+    {
+      "token": "751756261:6a0dface-0ad2-43dc-8f63-b9561ad4a008",
+      "stage": "notifyReturned",
+      "at": 1789712444136,
+      "detail": "insistent; notify returned; not proof of display"
+    },
+    {
+      "token": "751756261:6a0dface-0ad2-43dc-8f63-b9561ad4a008",
+      "stage": "unfreezerStarted",
+      "at": 1789712444145,
+      "detail": "foreground service torn down the freezer"
+    },
+    {
+      "token": "751756261:6a0dface-0ad2-43dc-8f63-b9561ad4a008",
+      "stage": "created",
+      "at": 1789712444549,
+      "detail": "test=false"
+    },
+    {
+      "token": "751756261:6a0dface-0ad2-43dc-8f63-b9561ad4a008",
+      "stage": "resumed",
+      "at": 1789712444644,
+      "detail": "lifecycle only"
+    },
+    {
+      "token": "751756261:6a0dface-0ad2-43dc-8f63-b9561ad4a008",
+      "stage": "windowSample",
+      "at": 1789712444949,
+      "detail": "after=300ms;focus=false;shown=true;visibility=0;playing=false"
+    },
+    {
+      "token": "751756261:6a0dface-0ad2-43dc-8f63-b9561ad4a008",
+      "stage": "windowVisible",
+      "at": 1789712444954,
+      "detail": "via=sample@300;focused=false;shown=true"
+    },
+    {
+      "token": "751756261:6a0dface-0ad2-43dc-8f63-b9561ad4a008",
+      "stage": "focus",
+      "at": 1789712445031,
+      "detail": "true"
+    },
+    {
+      "token": "751756261:6a0dface-0ad2-43dc-8f63-b9561ad4a008",
+      "stage": "windowSample",
+      "at": 1789712445450,
+      "detail": "after=800ms;focus=true;shown=true;visibility=0;playing=false"
+    },
+    {
+      "token": "751756261:6a0dface-0ad2-43dc-8f63-b9561ad4a008",
+      "stage": "windowSample",
+      "at": 1789712446152,
+      "detail": "after=1500ms;focus=true;shown=true;visibility=0;playing=false"
+    },
+    {
+      "token": "751756261:6a0dface-0ad2-43dc-8f63-b9561ad4a008",
+      "stage": "focus",
+      "at": 1789712448026,
+      "detail": "false"
+    }
+  ]
+}
