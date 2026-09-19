@@ -12,6 +12,10 @@
   const $$ = (s, r) => Array.from((r || document).querySelectorAll(s));
   const Lib = (typeof AttentionLib !== "undefined" && AttentionLib) || {};
   const NativeReminders = (typeof AttentionNativeReminders !== "undefined" && AttentionNativeReminders) || {};
+  // UX-T01/T02/A01/A03：反馈与动作语义的纯逻辑层（判定全在 lib，编排只在这里）
+  const FeedbackLib = Lib.Feedback || null;
+  // UX-T03：原生送达证据的合并与事后核查判定
+  const EvidenceLib = Lib.DeliveryEvidence || null;
   const storage = Lib.createStorage
     ? Lib.createStorage({ lsKey: KEY })
     : null;
@@ -26,6 +30,14 @@
   // L01 / L05：时间来源必须可区分 —— 「用户手选」不能被解析器或系统兜底悄悄覆盖
   let triggerUserPicked = false;
   let reviewTriggerUserPicked = false;
+  /**
+   * 事项表单的**会话序号**（R-F03）。
+   *
+   * 每次 `resetItemSheet()`（新建 / 编辑 / 保存后复位）自增。异步回来的结果靠它回答
+   * 「现在这张表单还是不是当初提交的那一张」—— 只看内容签名不够：用户关掉重开后
+   * 可能又输入了一模一样的内容，那是**另一张**表单，旧结果无权回填或清空它。
+   */
+  let itemFormSession = 0;
   let nativeReminderStatus = {
     native: false,
     notifications: "unknown",
@@ -607,7 +619,10 @@
       // backend 恒为 local，IDB 不可能是权威，留凭据只会让每次启动都做一次无效重放。
       if (authoritativeBackendMissing()) markPendingReplay(json);
       committedAlarmItems = JSON.parse(json).items || [];
-      if (!(options && options.deferNativeSync)) queueNativeReminderSync();
+      if (!(options && options.deferNativeSync)) {
+        bumpNativeSyncVersion();
+        queueNativeReminderSync("save");
+      }
       return true;
     }
     // 没有可用存储后端：localStorage 就是权威
@@ -616,7 +631,10 @@
     // loadAsync 会从 IDB 的旧值加载，这期间用户改的东西静默消失。
     markPendingReplay(json);
     committedAlarmItems = JSON.parse(json).items || [];
-    if (!(options && options.deferNativeSync)) queueNativeReminderSync();
+    if (!(options && options.deferNativeSync)) {
+      bumpNativeSyncVersion();
+      queueNativeReminderSync("save");
+    }
     return true;
   }
 
@@ -755,9 +773,16 @@
   function commandConflicts(args, options) {
     if (!activeActionScope || !options || !options.userFacing) return false;
     if (options.globalConflict) return true;
-    const index = options.itemArg == null ? 0 : options.itemArg;
-    const arg = args[index];
-    const id = arg && typeof arg === "object" ? (arg.id || arg.__itemRef) : arg;
+    let id;
+    if (typeof options.scopeId === "function") {
+      // 命令的目标不是参数里的第一个对象（例如撤销：参数是一份「撤销记录」快照，
+      // 里面才有 itemId）。没有这条通路，撤销会**静默绕过**同域冲突检查。
+      try { id = options.scopeId.apply(null, args); } catch (error) { id = null; }
+    } else {
+      const index = options.itemArg == null ? 0 : options.itemArg;
+      const arg = args[index];
+      id = arg && typeof arg === "object" ? (arg.id || arg.__itemRef) : arg;
+    }
     const item = state.items.find(x => x.id === id);
     return itemConflictsWithActiveAction(item);
   }
@@ -1247,7 +1272,7 @@
     const rs = ensureReviewSettings();
     const base = from || new Date();
     const start = new Date(base);
-    start.setHours(rs.hour || 21, rs.minute || 30, 0, 0);
+    start.setHours(rs.hour != null ? rs.hour : 21, rs.minute != null ? rs.minute : 30, 0, 0);
     if (start.getTime() <= base.getTime()) start.setDate(start.getDate() + 1);
     return start.getTime();
   }
@@ -1257,10 +1282,10 @@
     if (!rs.enabled) return false;
     const d = new Date(now || Date.now());
     const cur = d.getHours() * 60 + d.getMinutes();
-    const start = (rs.hour || 21) * 60 + (rs.minute || 30);
+    const start = (rs.hour != null ? rs.hour : 21) * 60 + (rs.minute != null ? rs.minute : 30);
     const end = (rs.windowEndHour != null ? rs.windowEndHour : 23) * 60 +
       (rs.windowEndMinute != null ? rs.windowEndMinute : 0);
-    if (start === end) return cur === start;
+    if (start === end) return false;
     if (start < end) return cur >= start && cur < end;
     return cur >= start || cur < end;
   }
@@ -1299,11 +1324,14 @@
       rs.sessionStatus = "idle";
       return;
     }
-    if (rs.snoozedUntil && now < rs.snoozedUntil) return;
+    const snoozeAt = rs.snoozedUntil && inQuietHours(new Date(rs.snoozedUntil))
+      ? quietEnd(new Date(rs.snoozedUntil)) : Number(rs.snoozedUntil) || 0;
+    if (snoozeAt && now < snoozeAt) return;
     if (rs.skippedUntil && now < rs.skippedUntil) return;
     // D20：宽限期（snoozedUntil 后 1 小时）一过即失效。
     // 否则 snoozeDue 永远为真，会一直顶掉后续窗口的提醒额度。
-    if (rs.snoozedUntil && now >= rs.snoozedUntil + 3600000) rs.snoozedUntil = 0;
+    if (snoozeAt && now >= snoozeAt + 3600000) rs.snoozedUntil = 0;
+    if (inQuietHours(new Date(now))) return;
     if (!inReviewWindow(now) && !(rs.snoozedUntil && now >= rs.snoozedUntil)) {
       // allow snoozed follow-up outside window briefly handled above
       if (!rs.snoozedUntil) return;
@@ -1319,7 +1347,8 @@
     const key = snoozeDue ? "S:" + Number(rs.snoozedUntil) : reviewSessionKey(new Date(now), rs);
 
     const maxFollowups = rs.maxFollowups != null ? rs.maxFollowups : 2;
-    if (rs.lastSessionKey === key && rs.followupCount >= maxFollowups) {
+    const maxNotifications = snoozeDue ? 1 : 1 + maxFollowups;
+    if (rs.lastSessionKey === key && rs.followupCount >= maxNotifications) {
       // already fully notified for this window
       return;
     }
@@ -1330,7 +1359,7 @@
       rs.followupCount = 0;
       rs.sessionStatus = "due";
       shouldNotify = true;
-    } else if (rs.followupCount < maxFollowups &&
+    } else if (rs.followupCount < maxNotifications &&
       now - (rs.lastNotifiedAt || 0) >= (rs.followupMs || 60 * 60 * 1000)) {
       shouldNotify = true;
     }
@@ -1920,6 +1949,19 @@
    *      「下一期」混成同一条记录 —— 随后完成本次实例时，下一期会被一起归档（活跃实例归零）。
    * L04：终态保护 —— 已完成 / 已归档的事项不接受旧通知的 ACK。
    */
+  /** UX-A01：稍后面板的唯一入口 —— 卡片、详情、弹条、首次 ACK 的反馈都走这里。 */
+  function openSnoozeSheet(id) {
+    if (isItemActionPending(id)) { rejectPendingItemCommand(); return false; }
+    state.ui.snoozeId = id;
+    snoozePick = null;
+    snoozeBasis = "elapsed";
+    if ($("#snoozeCustom")) $("#snoozeCustom").value = "";
+    $$("#snoozeChips .chip").forEach(x => x.classList.remove("on"));
+    closeSheet("sheetDetail");
+    openSheet("sheetSnooze");
+    return true;
+  }
+
   function ackItem(id, silent) {
     const it = state.items.find(x => x.id === id);
     if (!it) return false;
@@ -1934,7 +1976,25 @@
     }
     bumpRev(it);
     save();
-    if (!silent) toast("已确认看到 · 仍保持未完成");
+    if (!silent) {
+      // UX-A01：第一次点「我知道了」时用**非阻塞**反馈说清后果，并就地给出「稍后提醒」入口。
+      // 文案纪律：不得承诺「以后不再提醒」—— 截止保护与 ACK 型周期都会再回来。
+      const first = !state.settings.ackExplained;
+      if (first) {
+        state.settings.ackExplained = true;
+        save();
+      }
+      const spec = FeedbackLib ? FeedbackLib.actionSpec("ack") : null;
+      if (first) {
+        toast(
+          (spec && spec.firstTimeText) || "已停止本轮催促，这件事仍未完成",
+          (spec && spec.firstTimeAction) || "稍后提醒",
+          () => openSnoozeSheet(id)
+        );
+      } else {
+        toast((spec && spec.sub) || "已停止本轮催促 · 仍未完成");
+      }
+    }
     render();
     return true;
   }
@@ -1969,17 +2029,216 @@
     return spawnNextInstance(it, ackBased ? (it.acknowledgedAt || Date.now()) : null);
   }
 
+  /**
+   * UX-A03：完成后的**有限撤销**。
+   *
+   * 与「归档恢复」是两件事，两者语义不同：
+   *  · 这里的撤销：短时（8 秒）、只覆盖**本次完成**、要成组还原周期派生；
+   *  · 归档恢复（`restoreItem`）：不清时间、不自动提醒、暂停截止保护。
+   * 把「恢复」冒充成「撤销」会静默改掉提醒与截止保护的语义，所以刻意分开。
+   */
+  let lastCompleteUndo = null;
+  const COMPLETE_UNDO_MS = (FeedbackLib && FeedbackLib.UNDO_WINDOW_MS) || 8000;
+  /**
+   * UX-A03：撤销之后必须确认「系统里的旧排程真的被撤掉了」。
+   *
+   * 「我点了撤销就没事了」是错的 —— 原生撤销失败时旧提醒仍在系统里，
+   * 到点照样会响。所以这里挂一个一次性检查：**不假装撤销干净**，
+   * 失败就提示旧提醒可能仍存在并给出重试入口。
+   */
+  let undoNativeCheckPending = false;
+
+  /**
+   * 撤销完成的**实际写入**——参数自足，因此可以进命令日志、被重放到随后发布的权威草稿。
+   *
+   * 只还原业务字段与本次完成派生的下一期；**不回放**已发生的铃声/通知/ACK/投递证据。
+   * R5：同时把「本次完成期间被取消、且已跨过原定时刻」的提醒键标成 suppressed，
+   * 否则对账会按「已被撤销 ⇒ 补一条」立刻补响用户刚刚取消掉的那一次。
+   */
+  function applyCompleteUndo(command) {
+    if (!command || !command.itemId) return false;
+    const it = state.items.find(x => x.id === command.itemId);
+    if (!it) return false;
+    Object.assign(it, command.prev);
+    if (command.reclaim && command.reclaim.length) {
+      const drop = new Set(command.reclaim);
+      state.items = state.items.filter(x => !drop.has(x.id));
+    }
+    if (NativeReminders.suppressPastReminderReplay) {
+      NativeReminders.suppressPastReminderReplay(it, Date.now());
+    }
+    bumpRev(it);
+    render();
+    return true;
+  }
+
+  /**
+   * 持久化失败时把**可见状态退回撤销之前**。
+   *
+   * 界面与磁盘必须说同一件事：留下一个「已撤销」的界面、而磁盘上仍是 archived，
+   * 就是这一轮被打回的形态（用户重启后又看到它回到已归档）。所以失败不是「算了」，
+   * 而是回滚 + 明确的重试入口。
+   */
+  function revertCompleteUndo(command) {
+    const snap = command && command.before;
+    if (!snap) return false;
+    const it = state.items.find(x => x.id === command.itemId);
+    if (it && snap.item) {
+      Object.keys(it).forEach(k => { if (!(k in snap.item)) delete it[k]; });
+      Object.keys(snap.item).forEach(k => { it[k] = snap.item[k]; });
+    }
+    (snap.removed || []).slice().sort((a, b) => a.index - b.index).forEach(entry => {
+      if (!entry || !entry.item) return;
+      if (state.items.some(x => x.id === entry.item.id)) return;
+      const at = Math.max(0, Math.min(entry.index, state.items.length));
+      state.items.splice(at, 0, entry.item);
+    });
+    render();
+    return true;
+  }
+
+  /**
+   * UX-A03 / 独立验收 F04：撤销「完成」是**统一事务里的一条受控命令**。
+   *
+   * 以前它直接改共享 state 再 `save()`，绕过统一命令日志，于是：
+   *  · 原生动作提交在途时撤销，会被随后发布的权威草稿整体覆盖 ——
+   *    界面说撤销成功，提交结束或重启后它又回到「已归档」（独立验收 R3）；
+   *  · 提示在**落库之前**就发出去了，写失败时用户已经被告知「已撤销完成」（R6）。
+   *
+   * 现在：
+   *  · 走 `runUserOp` —— 同域（同一条事项 / 同一周期）在途时明确拒绝，
+   *    无关事项则记进日志、在原生草稿发布之后按序重放；
+   *  · 成功反馈等**持久化确认**；失败则回滚可见状态并保留重试入口。
+   */
+  function undoLastComplete() {
+    const u = lastCompleteUndo;
+    if (!u) return false;
+    const it = state.items.find(x => x.id === u.itemId);
+    if (!it) { lastCompleteUndo = null; return false; }
+    // 过期：只失效撤销入口，不影响已经正常完成的这条
+    if (Date.now() - u.at > COMPLETE_UNDO_MS) {
+      lastCompleteUndo = null;
+      toast("撤销时间已过 · 可在「未来 → 已归档」里恢复");
+      return false;
+    }
+    // 本次完成之后又被改过 / 已经不是刚完成的状态 ⇒ 拒绝不安全撤销
+    if (Number(it.rev) !== Number(u.rev)) {
+      toast("这条之后又被改过 · 可在归档里恢复");
+      return false;
+    }
+    if (it.status !== "archived") {
+      toast("这条状态已经变了 · 可在归档里恢复");
+      return false;
+    }
+    // 完成之后到来的投递证据 ⇒ 说明已经进入投递，撤销会制造幽灵响铃
+    const events = it.reminderEvents && typeof it.reminderEvents === "object" ? it.reminderEvents : {};
+    const deliveredAfter = Object.keys(events).some(k => {
+      const ev = events[k];
+      return ev && ev.state === "delivered" && Number(ev.receivedAt || ev.at || 0) >= u.at;
+    });
+    if (deliveredAfter) {
+      toast("这条已经开始提醒 · 可在归档里恢复");
+      return false;
+    }
+    // 周期派生的下一期：只回收**本次完成生成的、且尚未被处理/投递**的
+    const reclaim = [];
+    for (const sp of u.spawned) {
+      const x = state.items.find(y => y.id === sp.id);
+      if (!x) continue;
+      if (x.repeatParentId !== it.id) continue; // 不是这条派生的，绝不删
+      const untouched = Number(x.rev) === Number(sp.rev) &&
+        x.status === "waiting" &&
+        !x.acknowledgedAt && !x.deliveredAt && !x.lastRemindAt && !x.remindCount &&
+        !x.ackAdvancedAt && !x.completedAt;
+      if (!untouched) {
+        toast("下一期已经开始处理 · 不能安全撤销，请到归档里逐条处理");
+        return false;
+      }
+      reclaim.push(x.id);
+    }
+    // 命令只携带**自足的值**：重放时按 itemId 在当时的草稿里重新解析，
+    // 不保留任何可能已被替换掉的旧对象引用。
+    const command = {
+      itemId: u.itemId,
+      rev: u.rev,
+      at: u.at,
+      prev: JSON.parse(JSON.stringify(u.prev)),
+      reclaim: reclaim.slice(),
+      // 仅用于「写失败回滚」，不参与重放（重放路径不会走到回滚）
+      before: {
+        item: JSON.parse(JSON.stringify(it)),
+        removed: reclaim.map(id => {
+          const index = state.items.findIndex(y => y.id === id);
+          return { index: index, item: index >= 0 ? JSON.parse(JSON.stringify(state.items[index])) : null };
+        })
+      }
+    };
+    const applied = runUserOp(applyCompleteUndo, [command], {
+      userFacing: true,
+      // 目标 id 藏在参数里（参数是一份撤销记录），必须显式告诉冲突检查
+      scopeId: (c) => c && c.itemId,
+      name: "undoComplete"
+    });
+    if (applied === false) return false;
+    lastCompleteUndo = null;
+    const pending = save();
+    pending.then(() => {
+      toast("已撤销完成 · 这条仍在「未完成」里");
+      // 只对未来仍有效的计划按现有规则对账；不因撤销立刻补响已经过去的那次
+      undoNativeCheckPending = true;
+      queueNativeReminderSync("undo-complete");
+    }).catch(() => {
+      // 没写进去就不算撤销过：退回原状 + 明确的重试入口
+      revertCompleteUndo(command);
+      lastCompleteUndo = u;
+      toast("撤销还没写进本机存储 · 请重试", "重试", () => undoLastComplete());
+    });
+    return true;
+  }
+
   function completeItem(id) {
     const it = state.items.find(x => x.id === id);
     if (!it) return false;
     if (isTerminal(it)) return false;
+    const prev = {
+      status: it.status,
+      completedAt: it.completedAt || null,
+      dismissedUntil: it.dismissedUntil == null ? null : it.dismissedUntil,
+      acknowledgedAt: it.acknowledgedAt == null ? null : it.acknowledgedAt,
+      ackAdvancedAt: it.ackAdvancedAt == null ? null : it.ackAdvancedAt,
+      lastRemindAt: it.lastRemindAt == null ? null : it.lastRemindAt
+    };
+    const beforeIds = new Set(state.items.map(x => x.id));
     it.status = "archived";
     it.completedAt = Date.now();
     it.dismissedUntil = null;
     advanceSeriesOnArchive(it);
     bumpRev(it);
+    // 只有**应用内**的完成才提供短时撤销。原生锁屏/通知里的完成不强行拉起主应用，
+    // 也不在次日重开时补发一个撤销窗口（UX-A03）。
+    if (!suppressUserFeedback) {
+      const spawned = state.items
+        .filter(x => !beforeIds.has(x.id))
+        .map(x => ({ id: x.id, rev: x.rev }));
+      lastCompleteUndo = {
+        itemId: it.id,
+        rev: it.rev,
+        at: Date.now(),
+        prev: prev,
+        spawned: spawned
+      };
+    }
     save();
-    toast(it.repeat ? "已完成 · 下一周期已生成" : "已完成并归档");
+    const spec = FeedbackLib ? FeedbackLib.actionSpec("done", { hasRepeat: !!(it.repeat && it.repeat.every) }) : null;
+    const msg = (spec && spec.undoText) || (it.repeat ? "已完成 · 下一周期已生成" : "已完成并归档");
+    if (suppressUserFeedback) {
+      // 原生路径：没有提示，也就不提供撤销入口
+    } else if (lastCompleteUndo) {
+      toast(msg, "前往归档", () => { state.ui.tab = "future"; state.ui.futureSeg = "archive"; render(); },
+        { label: "撤销", onClick: undoLastComplete }, { durationMs: COMPLETE_UNDO_MS });
+    } else {
+      toast(msg);
+    }
     render();
     return true;
   }
@@ -2148,6 +2407,19 @@
     return { critical: 0, important: 1, normal: 2 }[p] != null ? { critical: 0, important: 1, normal: 2 }[p] : 3;
   }
 
+  /**
+   * UX-A01：动作按钮 = 名称 + 短副说明。
+   *
+   * 四个动作在首页卡片、详情、弹条、Android 闹钟与通知快捷动作里含义必须一致；
+   * `data-act` 是行为契约，副说明只是给人看的，不参与任何判断。
+   */
+  function actionButton(act, id, cls, label, sub) {
+    return '<button class="' + cls + '" data-act="' + act + '" data-id="' + id + '">' +
+      '<span class="act-label">' + escapeHtml(label) + "</span>" +
+      (sub ? '<span class="act-sub">' + escapeHtml(sub) + "</span>" : "") +
+      "</button>";
+  }
+
   function renderItemCard(it, mode) {
     const pills = [];
     if (it.priority === "important") pills.push('<span class="pill warn">☆ 重要</span>');
@@ -2178,25 +2450,26 @@
     let actions = "";
     if (mode === "due") {
       actions = '<div class="card-actions">' +
-        '<button class="ghost" data-act="snooze" data-id="' + it.id + '">稍后</button>' +
-        '<button class="primary" data-act="ack" data-id="' + it.id + '">我知道了</button>' +
-        '<button class="ghost" data-act="done" data-id="' + it.id + '">完成</button>' +
+        actionButton("snooze", it.id, "ghost", "稍后提醒", "改到具体时间") +
+        actionButton("ack", it.id, "primary", "我知道了", "停止本轮 · 仍未完成") +
+        actionButton("done", it.id, "ghost", "完成", "结束并归档") +
         "</div>";
     } else if (mode === "active") {
       actions = '<div class="card-actions">' +
-        '<button class="ghost" data-act="reopen" data-id="' + it.id + '">再提醒</button>' +
-        '<button class="ghost" data-act="edit" data-id="' + it.id + '">编辑</button>' +
-        '<button class="primary" data-act="done" data-id="' + it.id + '">完成</button>' +
+        actionButton("reopen", it.id, "ghost", "稍后提醒", "2 小时后") +
+        actionButton("edit", it.id, "ghost", "修改", "改时间或内容") +
+        actionButton("done", it.id, "primary", "完成", "结束并归档") +
         "</div>";
     } else if (mode === "future") {
       actions = '<div class="card-actions">' +
-        '<button class="ghost" data-act="open" data-id="' + it.id + '">详情</button>' +
-        '<button class="primary" data-act="edit" data-id="' + it.id + '">编辑</button>' +
+        actionButton("open", it.id, "ghost", "详情", "") +
+        actionButton("edit", it.id, "primary", "修改", "") +
         "</div>";
     } else if (mode === "archived") {
       actions = '<div class="card-actions">' +
-        '<button class="ghost" data-act="open" data-id="' + it.id + '">详情</button>' +
-        '<button class="primary" data-act="restore" data-id="' + it.id + '">恢复</button>' +
+        actionButton("open", it.id, "ghost", "详情", "") +
+        // D23：归档恢复与「撤销完成」不是一回事 —— 恢复不会自动提醒，也不还原截止保护
+        actionButton("restore", it.id, "primary", "恢复到待办", "不会自动提醒") +
         "</div>";
     }
 
@@ -2238,6 +2511,7 @@
     promoteDue();
     // A-2 / D68：先摆「后台到底会不会响」这句话 —— 它是对整页的限定，
     // 必须排在「现在需要注意」之前，否则用户读到的是一件件的待办，读不到前提。
+    renderSetupEntry();
     renderHomeNotice();
     const now = Date.now();
     const dueMap = new Map();
@@ -2283,15 +2557,42 @@
 
     // D8：空态里一句纯文字完成数 —— 纯文字、不可点击、无徽标、无强调色、不新增区块
     // （当天完成明细走「未来 → 已归档」，不在首页开入口）
+    //
+    // UX-C01：空首页必须给出**一句用途说明 + 明显「记一件事」入口 + 输入示例**，
+    // 否则新用户的第一件事就是去读文档。
+    //
+    // 两件事**必须分容器**：D8 的纪律是「完成数不得变成伪待办入口」，它检查的是
+    // `#homeEmpty` 里没有 `<button>` / `data-act`。把新增入口塞进同一个容器，
+    // 那条纪律会当场失效 —— 于是说明留在 `#homeEmpty`，入口挂在兄弟节点 `#homeStart`。
     const quiet = !dueList.length && !active.length;
+    const reviewPending = needsReviewItems().length;
     $("#homeEmpty").innerHTML = quiet
-      ? '<div class="empty"><div class="empty-mark">✓</div><h3>此刻很安静</h3>' +
-        "<p>没有需要你注意的事项。已交给系统的未来，会自己在合适的时候回来。</p>" +
+      ? '<div class="empty"><div class="empty-mark">✓</div><h3>' +
+        (reviewPending ? "暂时没有到点的提醒" : "把要记的事丢进来") + "</h3>" +
+        "<p>" +
+        (reviewPending
+          ? "还有 " + reviewPending + " 条待整理，等你有空再补时间。"
+          : "写一句话就行，例如「明天下午3点提醒我取快递」。到点我会提醒你。") +
+        "</p>" +
         (doneToday.length
           ? '<p style="margin-top:12px;font-size:0.92rem;color:var(--ink-2)">今天已完成 ' + doneToday.length + " 件</p>"
           : "") +
         "</div>"
       : "";
+
+    const homeStart = $("#homeStart");
+    if (homeStart) {
+      homeStart.innerHTML = quiet
+        ? '<div class="empty-start">' +
+          '<button class="btn primary" id="emptyCapture">记一件事</button>' +
+          '<button class="soft-entry" id="emptyDemo"><span>看看演示（只读，不会写入数据）</span><span style="color:var(--muted)">›</span></button>' +
+          "</div>"
+        : "";
+      const emptyCapture = $("#emptyCapture");
+      if (emptyCapture) emptyCapture.addEventListener("click", () => openCapture());
+      const emptyDemo = $("#emptyDemo");
+      if (emptyDemo) emptyDemo.addEventListener("click", () => openDemoPreview());
+    }
 
     setBadge(dueList.length);
     // D6/D20：待整理入口 —— 显著时提到最前，弱形态时排在「需要注意」之后
@@ -2540,6 +2841,9 @@
     if (notifySettingsRow) notifySettingsRow.hidden = !native;
     if (batteryRow) batteryRow.hidden = !native;
     if (labRow) labRow.hidden = !native;
+    // UX-T02：首用设置入口与「高级诊断」都只在原生环境出现；诊断不再挡在首用路径上
+    const setupRow = $("#btnSetup");
+    if (setupRow) setupRow.hidden = !native;
     if (native) {
       const notificationGranted = nativeReminderStatus.notifications === "granted";
       const exactGranted = nativeReminderStatus.exactAlarm === "granted";
@@ -2547,6 +2851,7 @@
       const hasErrors = alarmErrors.length > 0 || nativeReminderStatus.reliability === "error";
       const reliability = hasErrors ? "error" : (state.settings.notify ? nativeReminderStatus.reliability : "in-app");
       if (exactRow) exactRow.disabled = !notificationGranted;
+      updateSetupEntry();
       if (exactSub) {
         exactSub.textContent = !notificationGranted ? "先开启通知权限" :
           exactGranted ? "已允许按设定时间精确提醒" : "未授权时仍提醒，但时间可能延迟";
@@ -2805,7 +3110,37 @@
     $("#capHint").classList.remove("muted");
   }
 
+  /**
+   * R-F03：把 AI 结果合并进**冻结草稿的副本**。
+   *
+   * 逐条对应 `applyAiToForm` 的字段语义（标题/时间/截止/空备注/标签并集/优先级/周期），
+   * 但作用在快照上而不是界面上 —— 于是「落库内容」与改前**完全一致**，
+   * 只是不再从「可能已经被用户改过的当前表单」里读。「迟到结果覆盖新草稿」正是那一步造成的。
+   */
+  function aiMergedDraft(base, r) {
+    const snap = Object.assign({}, base);
+    if (r.title) snap.text = r.title;
+    if (r.triggerAt) snap.trigger = toLocalInput(r.triggerAt);
+    if (r.deadlineAt) snap.deadline = toLocalInput(r.deadlineAt);
+    if (r.note && !String(snap.note == null ? "" : snap.note).trim()) snap.note = r.note;
+    if (r.tags && r.tags.length) {
+      const existing = String(snap.tags == null ? "" : snap.tags).trim().split(/\s+/).filter(Boolean);
+      snap.tags = Array.from(new Set(existing.concat(r.tags))).join(" ");
+    }
+    if (r.priority) snap.priority = r.priority;
+    if (r.repeat) {
+      snap.repeat = r.repeat.every;
+      snap.repeatMode = r.repeat.mode;
+      if (r.repeat.every === "nthWeekday") {
+        snap.nth = String(r.repeat.nth || 1);
+        snap.weekday = String(r.repeat.dow != null ? r.repeat.dow : 1);
+      }
+    }
+    return snap;
+  }
+
   let aiBusy = false;
+
   async function runAiOnCapture(mode) {
     if (aiBusy) return;
     if (!aiReady()) {
@@ -2923,10 +3258,17 @@
   }
 
   let toastTimer = null;
-  function toast(msg, actionLabel, onAction) {
+  /**
+   * 浮动提示。
+   *
+   * `second` 是 UX-C03/A03 需要的**第二个动作**（例如「查看」旁边的「撤销」）——
+   * 一个提示槽只有一个按钮时，「撤销」这种限时入口就没有位置，
+   * 会被迫缩成不可点的一句说明，等于没有恢复路径。
+   */
+  function toast(msg, actionLabel, onAction, second, opts) {
     // M1：重放用户操作时不重复弹提示 —— 那一次提示在用户操作时已经弹过了
     if (suppressUserFeedback) return;
-    const t = $("#toast"), a = $("#toastAction");
+    const t = $("#toast"), a = $("#toastAction"), b = $("#toastAction2");
     $("#toastText").textContent = msg;
     if (actionLabel) {
       a.hidden = false;
@@ -2936,16 +3278,426 @@
       a.hidden = true;
       a.onclick = null;
     }
+    if (b) {
+      if (second && second.label) {
+        b.hidden = false;
+        b.textContent = second.label;
+        b.onclick = () => { hideToast(); if (second.onClick) second.onClick(); };
+      } else {
+        b.hidden = true;
+        b.onclick = null;
+      }
+    }
     t.classList.add("show");
     clearTimeout(toastTimer);
-    toastTimer = setTimeout(hideToast, actionLabel ? 5000 : 2400);
+    const hasAction = !!(actionLabel || (second && second.label));
+    const duration = (opts && opts.durationMs) || (hasAction ? 5000 : 2400);
+    toastTimer = setTimeout(hideToast, duration);
   }
   function hideToast() { $("#toast").classList.remove("show"); }
+
+  /* ---------- UX-T01：保存结果与排程结果分开 ---------- */
+
+  /**
+   * 「保存中有反馈」与「避免重复提交」是同一件事的两面：
+   * 按钮一处既反馈去重。
+   *
+   * 刻意按**提交身份**（编辑哪条 + 内容 + 时间）去重，而不是一个全局布尔：
+   * 全局布尔会把「前一笔还没落盘时又记一件事」也一起拒掉 —— 而那恰恰是
+   * 用户最正常的连击（本仓的 P1-A2「连续新建两条都不得丢」就是这个场景）。
+   */
+  let saveSubmitsInFlight = new Set();
+
+  function beginSaveSubmit(token) {
+    saveSubmitsInFlight.add(token || "anonymous");
+    setSaveButtonRunning(true);
+  }
+
+  function endSaveSubmit(token) {
+    saveSubmitsInFlight.delete(token || "anonymous");
+    if (!saveSubmitsInFlight.size) setSaveButtonRunning(false);
+  }
+
+  function setSaveButtonRunning(running) {
+    const btn = $("#btnSaveItem");
+    if (!btn) return;
+    if (running) {
+      if (!btn.dataset.idleLabel) btn.dataset.idleLabel = btn.textContent || "保存";
+      btn.disabled = true;
+      btn.textContent = "保存中…";
+    } else {
+      btn.disabled = false;
+      if (btn.dataset.idleLabel) btn.textContent = btn.dataset.idleLabel;
+      btn.dataset.idleLabel = "";
+    }
+  }
+
+  /**
+   * 「失败保留草稿」—— 只在内存里留一份表单快照。
+   *
+   * 刻意不写进 localStorage/IDB：草稿是**本次会话的**恢复手段，
+   * 落库会与「权威快照」争抢同一个写入通道（H-07 的教训）。
+   */
+  function snapshotItemForm() {
+    const val = (sel) => ($(sel) ? $(sel).value : "");
+    const on = $$("#capPriority .chip.on")[0];
+    return {
+      text: val("#capText"),
+      note: val("#capNote"),
+      tags: val("#capTags"),
+      url: val("#capUrl"),
+      trigger: val("#capTrigger"),
+      deadline: val("#capDeadline"),
+      project: val("#capProject"),
+      repeat: val("#capRepeat"),
+      repeatMode: val("#capRepeatMode"),
+      nth: val("#capNth"),
+      weekday: val("#capWeekday"),
+      priority: on ? on.dataset.p : "normal",
+      advanced: $("#capAdvanced") ? !$("#capAdvanced").hidden : false,
+      editItemId: state.ui.editItemId,
+      triggerPicked: triggerUserPicked,
+      lowConfPicked: lowConfUserPicked
+    };
+  }
+
+  /**
+   * F03：一次提交属于**哪一份草稿**。
+   *
+   * 持久化回调必须能回答「现在表单里还是不是刚才提交的那一份」——
+   * 否则慢写入期间用户继续输入的内容会被旧请求的结果清掉（独立验收 R2）。
+   *
+   * 时间框只在**用户自己选过**时才算数：解析器与兜底会自己往它里面写值，
+   * 把它无条件算进来，会让「解析器刚补完时间」被误判成「用户改了草稿」，
+   * 于是面板不再关闭、草稿不再复位。
+   */
+  function formDraftSignature(snap) {
+    if (!snap) return "";
+    const picked = snap.triggerPicked || snap.lowConfPicked;
+    return [
+      snap.editItemId || "new",
+      snap.text, snap.note, snap.tags, snap.url, snap.deadline, snap.project,
+      snap.repeat, snap.repeatMode, snap.nth, snap.weekday, snap.priority,
+      picked ? snap.trigger : ""
+    ].join("\u0001");
+  }
+
+  function restoreItemForm(snap) {
+    if (!snap) return;
+    const set = (sel, v) => { if ($(sel)) $(sel).value = v == null ? "" : v; };
+    set("#capText", snap.text);
+    set("#capNote", snap.note);
+    set("#capTags", snap.tags);
+    set("#capUrl", snap.url);
+    set("#capTrigger", snap.trigger);
+    set("#capDeadline", snap.deadline);
+    set("#capProject", snap.project);
+    set("#capRepeat", snap.repeat);
+    set("#capRepeatMode", snap.repeatMode);
+    set("#capNth", snap.nth);
+    set("#capWeekday", snap.weekday);
+    $$("#capPriority .chip").forEach(c => c.classList.toggle("on", c.dataset.p === snap.priority));
+    state.ui.editItemId = snap.editItemId || null;
+    triggerUserPicked = !!snap.triggerPicked;
+    lowConfUserPicked = !!snap.lowConfPicked;
+    if (snap.editItemId) {
+      $("#sheetItemTitle").textContent = "编辑事项";
+      $("#btnSaveItem").textContent = "保存修改";
+    }
+    const adv = $("#capAdvanced");
+    if (adv) adv.hidden = !snap.advanced;
+  }
+
+  /** 按钮身份标签：编辑哪条 + 内容 + 时间。同一身份重入才算重复提交。 */
+  function saveSubmitToken(session, editItemId, text, triggerValue) {
+    // 同一会话内的双击/回车仍然去重；关闭后重新打开即使内容完全相同，也是一份
+    // 独立的用户意图，不能被上一会话的在途提交挡住（Y3）。
+    return String(session) + "|" + (editItemId || "new") + "|" + (text || "") + "|" + (triggerValue || "");
+  }
+
+  /**
+   * F03：保存失败时的收尾 —— **只在该收的时候**才把旧草稿放回表单。
+   *
+   * 独立验收 R2 的形态：写入还没落地时用户继续输入，失败回调把旧草稿恢复上去，
+   * 用户新写的内容就没了。所以先判断「表单里还是不是刚才提交的那一份」：
+   *  · 是 → 照旧恢复（等价于原行为，用户没在往下写）；
+   *  · 否 → 一个字符都不碰，改成给一个**显式**的找回入口。
+   */
+  function settleFailedDraft(draft, signature, session) {
+    if (itemFormSession === session && formDraftSignature(snapshotItemForm()) === signature) {
+      keepDraftForRetry(draft);
+      return;
+    }
+    toast("上一条没保存成功 · 你正在写的内容没被动过", "找回上一条", () => keepDraftForRetry(draft));
+  }
+
+  /**
+   * 「失败保留草稿和重试入口」—— 把输入原样放回表单并重开面板。
+   *
+   * 不复用任何成功文案：失败路径上说「已保存」会直接违反 UX-T01 的第一条。
+   */
+  function keepDraftForRetry(draft) {
+    restoreItemForm(draft);
+    openSheet("sheetItem");
+    const f = FeedbackLib
+      ? FeedbackLib.saveFeedback("failed")
+      : { text: "未能保存 · 内容还在，可重试", actionLabel: "重试" };
+    toast(f.text, f.actionLabel, () => {
+      restoreItemForm(draft);
+      saveItemFromForm();
+    });
+  }
+
+  /**
+   * 本条事项的**排程证据** —— 只吃这一条的证据，不看全局。
+   *
+   * D70 前置核验的教训：全局 `reliability: "exact"` 完全不能证明刚保存的这一条已排成功。
+   * 反过来也不许用「scheduled 且已过期」推断漏提醒 —— 本函数只回答
+   * 「有没有**本轮**的 scheduled/delivered 回执」，从不产出负面结论。
+   */
+  function itemScheduleEvidence(it) {
+    if (!it) return null;
+    const events = it.reminderEvents && typeof it.reminderEvents === "object" ? it.reminderEvents : null;
+    if (!events) return null;
+    const base = Number(it.triggerAt) || 0;
+    // R-F06：范围过滤之外还要核对**轮次身份** —— 旧轮遗留的键可能原定时刻晚于新起点，
+    // 只看范围会把它当成「本轮已排/已送达」，于是刚保存的新周期冒充「系统已接收」。
+    const keys = Object.keys(events).filter(k => {
+      const at = Number(String(k).split("@")[1]);
+      if (!Number.isFinite(at)) return false;
+      if (!base) return true;
+      if (at < base) return false;
+      const round = EvidenceLib && EvidenceLib.entryRoundBase
+        ? EvidenceLib.entryRoundBase(it, events[k], k) : base;
+      return Number(round) === base;
+    });
+    if (!keys.length) return null;
+    let scheduled = false;
+    let delivered = false;
+    keys.forEach(k => {
+      const s = events[k] && events[k].state;
+      if (s === "delivered") delivered = true;
+      else if (s === "scheduled") scheduled = true;
+    });
+    if (delivered) return "delivered";
+    if (scheduled) return "scheduled";
+    return null;
+  }
+
+  /** 喂给判定层的原生侧事实（只读，不改任何状态）。 */
+  function feedbackNativeSnapshot() {
+    const s = nativeReminderStatus || {};
+    return {
+      isNative: isNativeAndroidRuntime(),
+      bridgeReady: !!nativeReady,
+      notifySwitch: !!(state.settings && state.settings.notify),
+      notifications: s.notifications || "unknown",
+      exactAlarm: s.exactAlarm || "unknown",
+      reliability: s.reliability || "unknown",
+      capabilities: s.capabilities || null,
+      alarmCount: s.alarmCount || 0,
+      alarmScheduled: s.alarmScheduled || 0
+    };
+  }
+
+  function feedbackItemSnapshot(it) {
+    if (!it) return null;
+    return {
+      id: it.id,
+      hasTrigger: !!it.triggerAt,
+      isFallbackTrigger: !!it.isFallbackTrigger,
+      priority: it.priority,
+      deliveryMode: it.delivery_mode,
+      repeat: it.repeat || null,
+      deadlineAt: it.deadlineAt || null,
+      triggerAt: it.triggerAt || null
+    };
+  }
+
+  /**
+   * 保存/排程反馈的最终判定。
+   *
+   * 迟到响应不得覆盖新编辑的结果 —— 用**保存时刻的事项版本**做闸门：
+   * 版本已经变过，就说「这条之后又被改过，以最新设置为准」，不再替旧版本下结论。
+   */
+  function feedbackVerdictFor(it, waiter) {
+    const f = FeedbackLib;
+    if (waiter && waiter.rev != null && it && it.rev != null && it.rev !== waiter.rev) {
+      return {
+        kind: "superseded",
+        text: "已保存 · 这条之后又被改过，以最新设置为准",
+        actionLabel: "查看",
+        actionKind: "open-item",
+        tone: "info"
+      };
+    }
+    const evidence = itemScheduleEvidence(it);
+    const ctx = {
+      persistence: waiter && waiter.persistence ? waiter.persistence : "confirmed",
+      item: feedbackItemSnapshot(it),
+      native: feedbackNativeSnapshot(),
+      itemScheduled: evidence === "scheduled" || evidence === "delivered" ? true : null
+    };
+    if (!f) {
+      // lib 未加载时的兜底：宁可说「尚未确认」，也不冒充已安排
+      return { kind: "unknown", text: "已保存，提醒安排尚未确认", actionLabel: "查看状态", actionKind: "open-status", tone: "info" };
+    }
+    return f.reminderFeedback(ctx);
+  }
+
+  function runFeedbackAction(kind, it, waiter) {
+    if (kind === "retry-save") {
+      if (waiter && waiter.draft) {
+        restoreItemForm(waiter.draft);
+        openSheet("sheetItem");
+      }
+      return;
+    }
+    if (kind === "open-review") { openReviewSession(); return; }
+    if (kind === "open-settings") {
+      openSheet("sheetNotifyLab");
+      refreshNotifyLab();
+      return;
+    }
+    if (kind === "open-status") {
+      if (it) openDetail(it.id);
+      else { openSheet("sheetNotifyLab"); refreshNotifyLab(); }
+      return;
+    }
+    if (kind === "explain-web") {
+      if (it) openDetail(it.id);
+      return;
+    }
+    if (kind === "retry-schedule") { queueNativeReminderSync("save-feedback-retry"); return; }
+    if (kind === "open-item" && it) { openDetail(it.id); return; }
+    if (it) { openDetail(it.id); return; }
+  }
+
+  /**
+   * 保存结果与排程结果的**两段式**反馈。
+   *
+   * 第一段只说「保存成功了、提醒还在安排」；排程结论必须等本条目的真实回执
+   * （`scheduled` / `delivered`）到手才说 —— 持久化确认 ≠ 排程成功。
+   */
+  let feedbackWaiters = [];
+  const FEEDBACK_WAIT_MS = 30 * 1000;
+
+  /**
+   * UX-C03：新建成功后的**有限撤销**。
+   *
+   * 只针对本次创建、当前版本未被后续操作改变、且未开始投递的事项。
+   * 过期/已变化一律拒绝并引导去修改 —— 用整份旧快照覆盖当前数据会造成丢改动。
+   */
+  function undoNewItem(itemId, rev) {
+    const it = state.items.find(x => x.id === itemId);
+    if (!it) return false;
+    if (Number(it.rev) !== Number(rev)) {
+      toast("这条之后又被改过 · 请直接修改");
+      return false;
+    }
+    if (isTerminal(it) || it.acknowledgedAt) {
+      toast("这条已经开始处理 · 请直接修改");
+      return false;
+    }
+    const events = it.reminderEvents && typeof it.reminderEvents === "object" ? it.reminderEvents : {};
+    const delivered = Object.keys(events).some(k => events[k] && events[k].state === "delivered");
+    if (delivered || it.deliveredAt || it.lastRemindAt) {
+      toast("这条已经开始提醒 · 请直接修改");
+      return false;
+    }
+    // deleteItem 本身已由 wrapUserOp 包过：它已经负责「提交中拒绝」与命令日志，
+    // 这里再套一层 runUserOp 会把同一条命令记两次。
+    const applied = deleteItem(itemId);
+    if (applied === false) return false;
+    // 原生那边由接下来的对账撤销；失败会经 undoNativeCheckPending 如实说出来
+    undoNativeCheckPending = true;
+    queueNativeReminderSync("undo-new");
+    toast("已撤销这条记录");
+    return true;
+  }
+
+  /**
+   * 保存结果的**唯一**反馈出口（F08）。
+   *
+   * 纪律：一次保存只发一条带动作的提示。此前「没有明确时间」的记录会在这一条之后
+   * 又被 `toast("已收下 · 待整理", …)` 覆盖一次（那条不带撤销），用户看到的是
+   * 「待整理 / 去整理」，而**撤销入口刚生成就被顶掉**。
+   * 现在 `needs` 语义由本函数统一表达：文案与主动作说「待整理」，次动作仍是本次撤销。
+   */
+  function announceSaveOutcome(itemId, waiter) {
+    const it = state.items.find(x => x.id === itemId);
+    waiter = waiter || {};
+    waiter.itemId = itemId;
+    waiter.rev = it && it.rev != null ? it.rev : null;
+    waiter.at = Date.now();
+    waiter.draft = waiter.draft || null;
+    waiter.needs = !!waiter.needs;
+    feedbackWaiters = feedbackWaiters.filter(w => Date.now() - w.at < FEEDBACK_WAIT_MS);
+    feedbackWaiters.push(waiter);
+    // 排程结论未知时**不**借用全局状态：先把「已保存」这半句说实
+    const f = FeedbackLib;
+    const pending = f
+      ? f.reminderFeedback({ persistence: "confirmed", item: feedbackItemSnapshot(it), native: feedbackNativeSnapshot(), itemScheduled: null })
+      : { text: "已保存，提醒安排尚未确认" };
+    // UX-C03：新建与编辑都给「查看」定位入口；**只有新建**给 8 秒撤销
+    const undoSecond = (!waiter.editing && waiter.allowUndo !== false && it)
+      ? { label: "撤销", onClick: () => undoNewItem(itemId, waiter.rev) }
+      : null;
+    const undoCtx = undoSecond
+      ? { durationMs: (FeedbackLib && FeedbackLib.UNDO_WINDOW_MS) || 8000 }
+      : null;
+    // F08：待整理语义以**同一个出口**表达，不再另发一条把撤销顶掉
+    const decorate = (v) => {
+      if (!waiter.needs) return v;
+      const text = /待整理/.test(v.text) ? v.text : v.text + " · 待整理";
+      return Object.assign({}, v, { text: text, actionLabel: "去整理", actionKind: "open-review" });
+    };
+    const first = decorate({ text: "已保存 · 正在安排提醒", actionLabel: "查看", actionKind: "open-item" });
+    toast(first.text, first.actionLabel, () => { if (it) openDetail(itemId); }, undoSecond, undoCtx);
+    // 桥不可用时不会再有下一轮对账：立刻按当前事实给出可行动的结论
+    if (!nativeReady || !NativeReminders.reconcile) {
+      feedbackWaiters = feedbackWaiters.filter(w => w !== waiter);
+      const cur = state.items.find(x => x.id === itemId);
+      const v = decorate(feedbackVerdictFor(cur, waiter));
+      toast(v.text, v.actionLabel, () => runFeedbackAction(v.actionKind, cur, waiter), undoSecond, undoCtx);
+      return;
+    }
+    // 本条走的是「没有明确时间」这类不需要排程结论的分支时，直接给结论
+    if (pending.kind === "no-time" || pending.kind === "web" || pending.kind === "switch-off") {
+      feedbackWaiters = feedbackWaiters.filter(w => w !== waiter);
+      const cur = state.items.find(x => x.id === itemId);
+      const v = decorate(pending);
+      toast(v.text, v.actionLabel,
+        () => runFeedbackAction(v.actionKind, cur, waiter), undoSecond, undoCtx);
+    }
+  }
+
+  /** 一轮对账落定后，把等待中的保存反馈按**本条目的**结果更新。 */
+  function settleSaveFeedback() {
+    if (!feedbackWaiters.length) return;
+    const waiters = feedbackWaiters.splice(0, feedbackWaiters.length);
+    waiters.forEach(w => {
+      const it = state.items.find(x => x.id === w.itemId);
+      if (!it) return; // 事项已被删除/归档：不替它报结论
+      const v = feedbackVerdictFor(it, w);
+      // UX-C03：撤销窗口按**保存时刻**算，替换提示语不能顺手把它延长
+      const remaining = Math.max(0, ((FeedbackLib && FeedbackLib.UNDO_WINDOW_MS) || 8000) - (Date.now() - w.at));
+      const undoSecond = (!w.editing && w.allowUndo !== false && remaining > 0)
+        ? { label: "撤销", onClick: () => undoNewItem(it.id, w.rev) }
+        : null;
+      toast(v.text, v.actionLabel, () => runFeedbackAction(v.actionKind, it, w),
+        undoSecond, undoSecond ? { durationMs: remaining } : null);
+    });
+  }
+
+  /* ---------- UX-T01 结束 ---------- */
 
   /* ---------- item sheet (capture / edit) ---------- */
   function resetItemSheet() {
     state.ui.editItemId = null;
     state.ui.pendingLowConf = null;
+    // R-F03：换一张表单 = 换一个会话身份，之前提交的异步结果不再属于这张表单
+    itemFormSession++;
     // L01：换一张表单就是新的一次判断，不能继承上一条的手选状态
     triggerUserPicked = false;
     lowConfUserPicked = false;
@@ -2970,6 +3722,16 @@
     $("#capHint").textContent = "输入内容后自动解析时间";
     $("#capHint").classList.add("muted");
     $("#btnSaveItem").textContent = "安心交给系统";
+    // UX-T01：新一张表单没有在途提交，按钮标签退回默认（不继承上一条的「保存中…」）
+    $("#btnSaveItem").dataset.idleLabel = "";
+    $("#btnSaveItem").disabled = false;
+    // UX-C02：新建默认收起「更多选项」
+    if ($("#capAdvanced")) $("#capAdvanced").hidden = true;
+    if ($("#btnCapMore")) {
+      $("#btnCapMore").textContent = "更多选项";
+      $("#btnCapMore").setAttribute("aria-expanded", "false");
+    }
+    if ($("#capSummary")) $("#capSummary").innerHTML = "";
   }
 
   function openCapture(prefill) {
@@ -3010,21 +3772,37 @@
     }
     updateRepeatPreview();
     $$("#capPriority .chip").forEach(c => c.classList.toggle("on", c.dataset.p === it.priority));
+    // UX-C02：编辑已有复杂事项时展开「更多选项」，并显示已设置内容摘要；
+    // 未改动的字段完整保留（表单值已逐项填好，隐藏 ≠ 清空）。
+    const complex = !!(it.repeat && it.repeat.every) || !!it.deadlineAt ||
+      !!it.projectId || (it.priority && it.priority !== "normal") ||
+      !!it.note || !!it.url || !!(it.tags && it.tags.length);
+    if ($("#capAdvanced")) $("#capAdvanced").hidden = !complex;
+    if ($("#btnCapMore")) {
+      $("#btnCapMore").textContent = complex ? "收起更多选项" : "更多选项";
+      $("#btnCapMore").setAttribute("aria-expanded", complex ? "true" : "false");
+    }
+    renderCaptureSummary();
     $("#capHint").textContent = "可直接修改时间与字段，不必重新解析";
     $("#capHint").classList.remove("muted");
     openSheet("sheetItem");
   }
 
-  function formRepeat() {
-    const every = $("#capRepeat").value;
+  /**
+   * 周期设置。传 `src`（`snapshotItemForm()` 的冻结快照）时只读快照，
+   * 不读当前表单 —— R-F03 要求「落库内容只来自提交时冻结的那一份」。
+   */
+  function formRepeat(src) {
+    const read = (sel, key) => (src ? String(src[key] == null ? "" : src[key]) : $(sel).value);
+    const every = read("#capRepeat", "repeat");
     if (!every) return null;
-    const mode = $("#capRepeatMode").value || "calendar";
+    const mode = read("#capRepeatMode", "repeatMode") || "calendar";
     if (every === "nthWeekday") {
       return {
         every,
         mode,
-        nth: parseInt($("#capNth").value, 10) || 1,
-        dow: parseInt($("#capWeekday").value, 10)
+        nth: parseInt(read("#capNth", "nth"), 10) || 1,
+        dow: parseInt(read("#capWeekday", "weekday"), 10)
       };
     }
     return { every, mode };
@@ -3159,9 +3937,14 @@
       return;
     }
     const p = parseChineseTime(text);
+    // D17：低置信度是「没识别出精确时间」，不是「识别出一个约等于的时间」。
+    // 把解析器拍的 +7 天写回表单，会让同一屏出现两句互相打脸的话 ——
+    // 提示说「未识别精确时间」，摘要却说「提醒 9月26日 10:00」，时间框里也躺着一个具体日期。
+    // 保存路径早就按同一条理由拒收它了（见 finishSave 的 parsedLow），这里只是让表单跟上。
+    const lowConf = p.confidence === "low" || p.confidence === "none";
     // L01：用户手选的时间优先 —— 继续输入正文不得把它覆盖掉
     const picked = triggerUserPicked ? parseLocalInput($("#capTrigger").value) : null;
-    if (!picked) $("#capTrigger").value = toLocalInput(p.trigger);
+    if (!picked) $("#capTrigger").value = lowConf ? "" : toLocalInput(p.trigger);
     $("#capDeadline").value = toLocalInput(p.deadline);
     if (p.repeat) {
       $("#capRepeat").value = p.repeat.every;
@@ -3185,6 +3968,37 @@
     }
     $("#capHint").textContent = msg;
     $("#capHint").classList.remove("muted");
+    renderCaptureSummary();
+  }
+
+  /**
+   * UX-C02：识别摘要。
+   *
+   * 必须显示**有效提醒时间**，以及已识别的周期/截止这类会影响行为的信息 ——
+   * 把周期藏进「更多选项」会让用户以为建的是一次性记录，实际每两周回来一次。
+   * 摘要只读表单的**当前值**，所以「清除或手选时间后摘要同步更新」是天然成立的。
+   */
+  function renderCaptureSummary() {
+    const host = $("#capSummary");
+    if (!host) return;
+    const f = FeedbackLib;
+    if (!f) { host.textContent = ""; return; }
+    const hasContent = !!state.ui.editItemId ||
+      ($("#capText") && $("#capText").value.trim());
+    if (!hasContent) { host.textContent = ""; host.className = "cap-summary"; return; }
+    const rep = formRepeat();
+    const chip = $$("#capPriority .chip.on")[0];
+    const pv = chip ? chip.dataset.p : "normal";
+    const s = f.captureSummary({
+      triggerAt: parseLocalInput($("#capTrigger").value),
+      repeatText: rep
+        ? repeatLabel(rep) + (rep.mode === "ack" ? " · 从我点过「我知道了」重新计时" : "")
+        : "",
+      deadlineAt: parseLocalInput($("#capDeadline").value),
+      priorityLabel: pv === "critical" ? "关键（用闹钟提醒）" : pv === "important" ? "重要（用闹钟提醒）" : ""
+    });
+    host.className = "cap-summary" + (s.empty ? " is-empty" : "");
+    host.textContent = s.text;
   }
 
   /**
@@ -3245,7 +4059,19 @@
   }
 
   function saveItemFromForm() {
-    const raw = $("#capText").value.trim();
+    const rawPrefetch = $("#capText") ? $("#capText").value.trim() : "";
+    // UX-T01：**同一身份的**重复提交在这里被挡住（不去动事务与命令序列）
+    //
+    // F02：身份必须与下面**真正登记在途提交时用的那一个逐字相同**。此前这里算的是
+    // `new|<文本>|<时间>`，登记时却写 `new:<新ID>`（编辑 `edit:<ID>:<时间>`、
+    // AI `ai:<时间>`）—— 两边永远对不上，于是「连续回车 / 双击」会真的落两条一样的事项。
+    // 身份用**表单内容**而不是新生成的 id：id 每次都不同，也就永远去不了重。
+    const submitToken = saveSubmitToken(itemFormSession, state.ui.editItemId, rawPrefetch, $("#capTrigger") ? $("#capTrigger").value : "");
+    if (saveSubmitsInFlight.has(submitToken)) {
+      toast("正在保存 · 请稍候");
+      return false;
+    }
+    const raw = rawPrefetch;
     if (!raw && !state.ui.editItemId) {
       $("#capText").focus();
       toast("先写一句话吧");
@@ -3256,7 +4082,39 @@
       ? state.items.find(x => x.id === state.ui.editItemId)
       : null;
 
-    const finishSave = (parsed) => {
+    /**
+     * R-F03：**提交时冻结**这份草稿 + 它所属的表单会话。
+     *
+     * AI 是异步的，而人在 AI 窗口里会继续往下写。回来的结果只允许两种走向：
+     *   · 落库内容 —— 一律取自这份冻结快照（AI 结果只补它没给出的字段）；
+     *   · 回填/清空 UI —— 只有「还是同一张表单、且一个字都没改过」时才允许。
+     * 之前这里是先 `applyAiToForm`（无条件覆盖表单）再读**当前**表单去保存，
+     * 于是慢响应回来时：用户第二份草稿被清空，而且第一份的**备注**取到了第二份的值。
+     */
+    const frozenDraft = snapshotItemForm();
+    const frozenSig = formDraftSignature(frozenDraft);
+    const frozenSession = itemFormSession;
+    /** 表单是否还是当初提交的那一张、且内容未被改动 */
+    const formUntouched = () =>
+      itemFormSession === frozenSession && formDraftSignature(snapshotItemForm()) === frozenSig;
+
+    /**
+     * @param parsed 已解析结果（null = 走本地解析）
+     * @param opts.resuming 本次调用是**同一个在途提交的续跑**（AI 理解完之后接着提交）——
+     *        续跑不再重新登记身份，否则它会把自己挡在门外。
+     * @param opts.source 冻结草稿（R-F03）。给了就只读它，不读当前表单；
+     *        不给（低置信度面板续跑）才读当前表单 —— 那是同一次交互内的显式手选。
+     */
+    const finishSave = (parsed, opts) => {
+      const resuming = !!(opts && opts.resuming);
+      const src = (opts && opts.source) || snapshotItemForm();
+      // F02：按钮 disabled 挡不住输入框的 Enter 监听，真正的闸门只能在这里 ——
+      // 同一个身份第二次进来必须被拒，否则一次保存会落两条。
+      if (!resuming && saveSubmitsInFlight.has(submitToken)) {
+        toast("正在保存 · 请稍候");
+        return false;
+      }
+      if (!resuming) beginSaveSubmit(submitToken);
       let title = raw;
       if (parsed) {
         title = parsed.title || raw || (editing ? editing.title : "未命名事项");
@@ -3270,24 +4128,24 @@
         title = local.title || raw;
       }
 
-      const extraTags = $("#capTags").value.trim().split(/\s+/).filter(Boolean);
+      const extraTags = String(src.tags == null ? "" : src.tags).trim().split(/\s+/).filter(Boolean);
       const parsedTags = parsed ? (parsed.tags || []) : [];
       const tags = Array.from(new Set(parsedTags.concat(extraTags)));
-      const priority = ($$("#capPriority .chip.on")[0] || { dataset: { p: "normal" } }).dataset.p || "normal";
+      const priority = src.priority || "normal";
       // L01：时间来源优先级固定为「用户明确选择 > 有效解析 > 兜底」
       //  · explicitTime  = 用户手选（时间输入框 / 低置信度极简选择）
       //  · parsedTrigger = 解析器给出的真实时间（低置信度时不算「真实时间」）
       //  · formTrigger   = 表单当前值，可能是解析器写进去的，因此排在解析结果之后
-      const formTrigger = parseLocalInput($("#capTrigger").value);
+      const formTrigger = parseLocalInput(src.trigger);
       const parsedTrigger = parsed ? (parsed.trigger || parsed.triggerAt) : null;
-      const userPicked = triggerUserPicked || lowConfUserPicked;
+      const userPicked = !!(src.triggerPicked || src.lowConfPicked);
       const explicitTime = userPicked ? formTrigger : null;
       const parsedLow = !!(parsed && (parsed.confidence === "low" || parsed.confidence === "none"));
       const triggerAt = explicitTime || (parsedLow ? null : (parsedTrigger || formTrigger)) || null;
       const scheduleBasis = !userPicked && !parsedLow && parsed && parsed.scheduleBasis === "elapsed"
         ? "elapsed" : "wall-clock";
-      const deadlineAt = parseLocalInput($("#capDeadline").value) || (parsed ? parsed.deadline || parsed.deadlineAt : null);
-      const repeat = formRepeat() || (parsed && parsed.repeat
+      const deadlineAt = parseLocalInput(src.deadline) || (parsed ? parsed.deadline || parsed.deadlineAt : null);
+      const repeat = formRepeat(src) || (parsed && parsed.repeat
         ? (parsed.repeat.every === "nthWeekday"
             ? { every: "nthWeekday", mode: parsed.repeat.mode || "calendar", nth: parsed.repeat.nth || 1, dow: parsed.repeat.dow != null ? parsed.repeat.dow : 1 }
             : parsed.repeat)
@@ -3295,34 +4153,49 @@
 
       if (editing) {
         // 编辑保存记录在案：原生草稿提交成功后按原值重放。
+        // R-F03：draft 也用冻结快照 —— 它决定「表单能否关闭/复位」与失败重试恢复的内容。
+        const draft = src;
+        const draftSig = formDraftSignature(draft);
         const applied = runUserOp(applyItemEdit, [editing, {
           title: title,
-          note: $("#capNote").value.trim(),
+          note: String(src.note == null ? "" : src.note).trim(),
           tags: tags,
-          url: $("#capUrl").value.trim(),
-          projectId: $("#capProject").value || "",
+          url: String(src.url == null ? "" : src.url).trim(),
+          projectId: src.project || "",
           priority: priority,
           triggerAt: triggerAt,
           scheduleBasis: scheduleBasis,
           deadlineAt: deadlineAt,
           repeat: repeat
         }], { userFacing: true, itemArg: 0, name: "editItem" });
-        if (applied === false) return false;
-        save();
-        closeSheet("sheetItem");
-        closeSheet("sheetDetail");
-        render();
-        toast("已保存修改");
-        queueNativeReminderSync();
+        if (applied === false) { endSaveSubmit(submitToken); return false; }
+        const editId = editing.id;
+        const pendingEdit = save();
+        // UX-T01：权威持久化确认之前，不显示「已保存」，也不清掉输入
+        pendingEdit.then(() => {
+          endSaveSubmit(submitToken);
+          // F03：只有草稿还是刚才提交的那一份时才关闭并复位表单
+          if (itemFormSession === frozenSession && formDraftSignature(snapshotItemForm()) === draftSig) {
+            closeSheet("sheetItem");
+            closeSheet("sheetDetail");
+            resetItemSheet();
+          }
+          render();
+          announceSaveOutcome(editId, { editing: true, draft: draft, persistence: "confirmed" });
+          queueNativeReminderSync("save-edit");
+        }).catch(() => {
+          endSaveSubmit(submitToken);
+          settleFailedDraft(draft, draftSig, frozenSession);
+        });
         return true;
       }
 
       const item = makeItem({
         title,
-        note: $("#capNote").value.trim(),
+        note: String(src.note == null ? "" : src.note).trim(),
         tags,
-        url: $("#capUrl").value.trim(),
-        projectId: $("#capProject").value || "",
+        url: String(src.url == null ? "" : src.url).trim(),
+        projectId: src.project || "",
         priority,
         status: "waiting",
         triggerAt,
@@ -3354,22 +4227,34 @@
         }
       }
       // 新建也走命令日志（稳定 id + 已解析字段快照），草稿发布后沿用同一业务身份。
+      // R-F03：与编辑路径同理，draft 用冻结快照。
+      const draft = src;
+      const draftSig = formDraftSignature(draft);
       runUserOp(applyNewItem, [item.id, item]);
-      save();
-      closeSheet("sheetItem");
-      resetItemSheet();
-      state.ui.tab = "home";
-      render();
-      queueNativeReminderSync();
-      if (needs) {
-        toast("已收下 · 待整理", "去整理", () => openReviewSession());
-      } else {
-        toast("已交给系统 · " + fmtTime(item.triggerAt), "查看未来", () => {
-          state.ui.tab = "future";
-          state.ui.futureSeg = "waiting";
-          render();
-        });
-      }
+      const newId = item.id;
+      const pendingNew = save();
+      pendingNew.then(() => {
+        endSaveSubmit(submitToken);
+        if (itemFormSession === frozenSession && formDraftSignature(snapshotItemForm()) === draftSig) {
+          closeSheet("sheetItem");
+          resetItemSheet();
+          state.ui.tab = "home";
+        }
+        render();
+        // F08：**唯一的**反馈出口。「待整理」与「撤销」必须在同一条提示里 ——
+        // 以前这里随后又发一条不带撤销的 toast，把刚生成的撤销入口当场覆盖掉，
+        // 于是「无时间的记录」永远拿不到撤销（独立验收只对有明确时间的记录出现撤销）。
+        announceSaveOutcome(newId, { editing: false, draft: draft, persistence: "confirmed", needs: needs });
+        // UX-T02：第一次保存了「真有提醒时间」的事项之后，才给出可跳过的设置入口
+        noteFirstRemindSaved(item);
+        queueNativeReminderSync("save-new");
+        // UX-C03：新建成功后的定位入口在反馈里（「查看」直接打开这条详情）
+      }).catch(() => {
+        endSaveSubmit(submitToken);
+        // 未落库 ⇒ 不能留下一条「看起来已保存」的事项，也不能丢掉用户输入
+        state.items = state.items.filter(x => x.id !== newId);
+        settleFailedDraft(draft, draftSig, frozenSession);
+      });
       return true;
     };
 
@@ -3381,6 +4266,10 @@
       const low = localP.confidence === "low" || localP.confidence === "none";
       if (low && hasSpecificTimeWord(raw)) {
         pendingFinishSave = finishSave;
+        // F02：这一步只是「先问时间」，并不是在途提交 —— 必须把身份放开，
+        // 否则用户一旦取消这个面板，同一份内容就再也不能提交了。
+        // 确认（或改选）之后 finishSave 会重新登记同一身份并正常走完。
+        endSaveSubmit(submitToken);
         openLowConfSheet(fallbackTriggerAt(), raw);
         return;
       }
@@ -3391,29 +4280,37 @@
     }
 
     // AI auto-enhance on save (optional)
+    //
+    // UX-T01：AI 是**本地回退**而不是前提 —— 它失败时走的是 `finishSave(null)`（本地解析），
+    // 所以这一段只负责「保存中有反馈 + 不重复提交」，不再自己占着按钮状态不还。
     if (!editing && aiReady() && aiConfig().autoOnSave && raw) {
       const btn = $("#btnSaveItem");
-      const prevLabel = btn.textContent;
-      btn.disabled = true;
-      btn.textContent = "AI 理解中…";
+      // F02：AI 在途期间占用的必须是**同一个提交身份**（以前是 `ai:<时间戳>`，
+      // 于是「AI 还没回来又按一次回车」既不命中按钮闸门、也不命中待提交集合，
+      // 两次 AI 结果各自提交一份一模一样的事项）。
+      beginSaveSubmit(submitToken);
+      if (btn) btn.textContent = "AI 理解中…";
+      // R-F03：AI 结果**只**允许落进「还是当初那张表单」的界面；
+      // 落库内容一律来自提交时冻结的 `frozenDraft`（AI 结果合并在它的副本上）。
+      const frozenText = String(frozenDraft.text == null ? "" : frozenDraft.text).trim();
       aiParseCapture(raw)
         .then(r => {
-          applyAiToForm(r, "AI 理解");
+          const merged = aiMergedDraft(frozenDraft, r);
+          if (formUntouched()) applyAiToForm(r, "AI 理解");
           finishSave({
-            title: $("#capText").value.trim() || r.title,
-            trigger: parseLocalInput($("#capTrigger").value) || r.triggerAt,
-            deadline: parseLocalInput($("#capDeadline").value) || r.deadlineAt,
-            tags: ($("#capTags").value.trim().split(/\s+/).filter(Boolean)),
+            title: String(merged.text == null ? "" : merged.text).trim() || frozenText || r.title,
+            trigger: parseLocalInput(merged.trigger),
+            deadline: parseLocalInput(merged.deadline),
+            tags: String(merged.tags == null ? "" : merged.tags).trim().split(/\s+/).filter(Boolean),
             window: null,
-            repeat: formRepeat()
-          });
+            repeat: formRepeat(merged),
+            confidence: "high"
+          }, { resuming: true, source: merged });
         })
         .catch(() => {
-          finishSave(null);
-        })
-        .finally(() => {
-          btn.disabled = false;
-          btn.textContent = prevLabel;
+          // AI 失败回退本地解析：不吞掉用户输入，也不因此判保存失败。
+          // R-F03：同样走冻结快照，不许把 AI 窗口里新写的内容当成这次提交的内容。
+          finishSave(null, { resuming: true, source: frozenDraft });
         });
       return;
     }
@@ -3451,28 +4348,32 @@
       (it.repeat && it.repeat.every
         ? '<div class="detail-row"><dt>周期</dt><dd>' +
           escapeHtml(repeatLabel(it.repeat)) +
-          (it.repeat.mode === "ack" ? "（ACK 后计时）" : "") + "</dd></div>"
+          (it.repeat.mode === "ack" ? "（从我点过「我知道了」重新计时）" : "（按日历）") + "</dd></div>"
         : "") +
+      // UX-T03：事后核查。只有**有证据**时才说结论，缺证据一律「尚未确认」。
+      detailReminderStatusRow(it) +
       '<div class="detail-row"><dt>创建</dt><dd>' + fmtTime(it.createdAt) + "</dd></div>" +
       (it.acknowledgedAt ? '<div class="detail-row"><dt>确认看到</dt><dd>' + fmtTime(it.acknowledgedAt) + "</dd></div>" : "") +
       (it.completedAt ? '<div class="detail-row"><dt>完成</dt><dd>' + fmtTime(it.completedAt) + "</dd></div>" : "") +
       "</dl>" +
       (it.url ? '<a class="linkish" href="' + escapeHtml(it.url) + '" target="_blank" rel="noopener">' + escapeHtml(it.url) + "</a>" : "") +
-      '<p style="margin-top:16px;font-size:0.78rem;color:var(--muted);line-height:1.5">「我知道了」只表示你真正注意到了，不会自动变成「完成」。</p>';
+      '<p style="margin-top:16px;font-size:0.78rem;color:var(--muted);line-height:1.5">「我知道了」只表示你真正注意到了，不会自动变成「完成」。已经点过「我知道了」的事项会留在首页的「未完成」里，随时能找到。</p>';
 
+    const ab = actionButton;
     let foot = "";
     if (it.status === "due") {
-      foot = '<button class="btn secondary" data-act="snooze" data-id="' + it.id + '">稍后</button>' +
-        '<button class="btn primary" data-act="ack" data-id="' + it.id + '">我知道了</button>' +
+      foot = ab("snooze", it.id, "btn secondary", "稍后提醒", "改到具体时间") +
+        ab("ack", it.id, "btn primary", "我知道了", "停止本轮 · 仍未完成") +
         '<button class="btn secondary" data-act="done" data-id="' + it.id + '" style="flex:0 0 auto">完成</button>';
     } else if (it.status === "acknowledged") {
-      foot = '<button class="btn secondary" data-act="reopen" data-id="' + it.id + '">再提醒</button>' +
-        '<button class="btn primary" data-act="done" data-id="' + it.id + '">完成</button>';
+      foot = ab("reopen", it.id, "btn secondary", "稍后提醒", "2 小时后") +
+        ab("done", it.id, "btn primary", "完成", "结束并归档");
     } else if (it.status === "waiting" || it.status === "snoozed") {
       foot = '<button class="btn secondary" data-act="delete" data-id="' + it.id + '">删除</button>' +
-        '<button class="btn primary" data-act="edit" data-id="' + it.id + '">编辑</button>';
+        ab("edit", it.id, "btn primary", "修改", "");
     } else {
-      foot = '<button class="btn secondary" data-act="restore" data-id="' + it.id + '">恢复</button>' +
+      // D23：恢复 ≠ 撤销完成 —— 恢复不会自动提醒，也不还原截止保护
+      foot = ab("restore", it.id, "btn secondary", "恢复到待办", "不会自动提醒") +
         '<button class="btn danger" data-act="delete" data-id="' + it.id + '">删除</button>';
     }
     // L03 / D23：规则级的二级操作与「恢复截止保护」——
@@ -3626,7 +4527,15 @@
   let alertItem = null;
   const dismissedAlerts = Object.create(null);
 
-  function setNativeReminderStatus(status) {
+  /**
+   * 原生状态的**唯一漏斗**。
+   *
+   * `origin` 刻意是显式参数而不是「有没有某个字段」的推断：
+   * 只有**真正跑完一轮对账**（reconcile）才允许结清保存反馈 ——
+   * 权限刷新（onResume / 从系统设置切回）只是重读权限，它没有重排任何东西，
+   * 拿它当「排程结论已定」会让刚保存的事项被过早宣布为「尚未确认」。
+   */
+  function setNativeReminderStatus(status, origin) {
     nativeReminderStatus = Object.assign({}, nativeReminderStatus, status || {});
     if (state.ui.tab === "me") renderPwaStatus();
     // A-2 / D68：首页告知条吃同一份状态，且**不看当前在哪个 tab** ——
@@ -3634,6 +4543,22 @@
     // onResume（从系统设置切回）经 getPermissionState → 这里，
     // 于是「恢复权限后警告自动消失 / 撤销后自动出现」都无需另建通路（基线 §473 后半句）。
     renderHomeNotice();
+    if (origin === "reconcile") {
+      // UX-A03：撤销之后的这一轮对账若失败，必须说出来 —— 旧提醒可能还在系统里
+      if (undoNativeCheckPending) {
+        undoNativeCheckPending = false;
+        if (nativeReminderStatus.reliability === "error") {
+          toast("撤销已生效，但系统里的旧提醒可能还没取消 · 点这里重试", "重试",
+            () => { undoNativeCheckPending = true; queueNativeReminderSync("undo-retry"); });
+        }
+      }
+      // 微任务里结算：applyReminderEvents 与本函数在同一个同步块内，
+      // 提前结算会读到**上一轮**的事件台账（反馈就会晚一拍甚至报错）。
+      const pending = feedbackWaiters.slice();
+      if (pending.length) {
+        Promise.resolve().then(() => settleSaveFeedback());
+      }
+    }
   }
 
   function refreshNativeScheduleBasis() {
@@ -3750,6 +4675,12 @@
    *
    * 键里带的是**原定触发点**而不是补投时刻：身份必须跨对账稳定，否则每轮都换一个身份
    * → 撤销/重排循环（这正是 R6 注释警告过的形态）。
+   *
+   * 每个条目另带 **`roundBase`**（R-F06）：登记它时事项的触发起点，也就是「这属于哪一轮」。
+   * 键只能证明「我们承诺过这个时刻」，证明不了「它属于当前这一轮」——「稍后提醒」把时间
+   * 往后推之后，旧轮的追提醒键照样落在新轮的时间范围里，于是旧回执会把新轮抬成
+   * 「系统已接收」。有 `roundBase` 才分得开。旧条目没有这个字段时保持不可验证；
+   * 只有当前原生对账再次明确登记同一个键，才为它补上可证明的本轮身份。
    */
   function applyReminderEvents(events, now, cancelledEvents) {
     const planned = new Map();
@@ -3784,9 +4715,19 @@
       keys.forEach((at, key) => {
         if (!base || !reminderKeyInTriggerRange(key, base)) return;
         const old = prev[key];
-        // 已送达是终态：真实送达证据不能被后续对账抹掉
-        if (old && typeof old === "object" && old.state === "delivered") { keep(key, old); return; }
-        keep(key, { at: at, state: "scheduled" });
+        // 已送达是终态：真实送达证据不能被后续对账抹掉；
+        // suppressed 同样保留 —— 那是用户撤销「完成」时确认过不要这一次（R5）
+        if (old && typeof old === "object" &&
+          (old.state === "delivered" || old.state === "suppressed")) {
+          // 当前原生对账再次登记了同一个键，才足以把升级前缺身份的终态锚到本轮；
+          // 已有明确身份一律原样保留，不能把历史轮次改写成当前轮。
+          keep(key, old.roundBase == null
+            ? Object.assign({}, old, { roundBase: base })
+            : old);
+          return;
+        }
+        // 原生这一轮真的排了它 ⇒ 它就是当前轮的键，轮次身份跟着刷新
+        keep(key, { at: at, state: "scheduled", roundBase: base });
       });
       // 2) 保留当前触发起点下的已有记录
       Object.keys(prev).forEach(key => {
@@ -3794,12 +4735,17 @@
         if (!base || !reminderKeyInTriggerRange(key, base)) return;
         const old = prev[key];
         if (!old || typeof old !== "object") return;
-        if (old.state === "delivered" || old.state === "cancelled") { keep(key, old); return; }
+        // 保留历史条目时必须**连同它原来的轮次身份一起**保留：
+        // 丢掉 roundBase 会让旧轮的键看起来像当前轮（R-F06 就是这么漏过去的）
+        const roundField = (old.roundBase != null && Number.isFinite(Number(old.roundBase)))
+          ? { roundBase: Number(old.roundBase) } : {};
+        if (old.state === "delivered" || old.state === "cancelled" ||
+          old.state === "suppressed") { keep(key, old); return; }
         const at = Number(old.at) || 0;
         // 只有「原生确认撤销」且撤销发生在**投递时刻之前**才算撤销：
         // 越过投递时刻后无法判定是否已经送达，保持待定（不补发、也不谎报送达）
         if (at > now && cancelled && cancelled.has(key)) {
-          keep(key, { at: at, state: "cancelled" });
+          keep(key, Object.assign({ at: at, state: "cancelled" }, roundField));
           return;
         }
         keep(key, old);
@@ -3845,37 +4791,78 @@
     return true;
   }
 
+  let nativeSyncInFlight = false;
+  let nativeSyncPending = false;
+  let nativeSyncVersion = 0;
+  let nativeSyncMetrics = {
+    totalRequests: 0,
+    bySource: {},
+    runs: 0,
+    deduped: 0
+  };
+
+  function bumpNativeSyncVersion() {
+    nativeSyncVersion++;
+  }
+
   async function syncNativeRemindersNow() {
+    const options = arguments[0];
     if (!nativeReady || !NativeReminders.reconcile) return nativeReminderStatus;
+    if (nativeSyncInFlight) {
+      nativeSyncPending = true;
+      nativeSyncMetrics.deduped++;
+      return nativeReminderStatus;
+    }
+    nativeSyncInFlight = true;
     try {
-      // P0-1：把待整理队列并进同一次对账（原生侧据此预排 LocalNotifications）
-      const review = {
-        count: needsReviewItems().length,
-        settings: ensureReviewSettings()
-      };
-      const status = await NativeReminders.reconcile(state.items, state.settings, Date.now(), review);
-      setNativeReminderStatus(status);
-      // V03 / F1 / G3：把本轮已排的截止事件按阶段记账；
-      // 同时把本轮**被撤销**的排程记成 cancelled（撤销 ≠ 送达）
-      if (status && Array.isArray(status.deadlineEvents)) {
-        applyDeadlineEvents(status.deadlineEvents, Date.now(), status.cancelledDeadlineEvents);
+      while (true) {
+        nativeSyncPending = false;
+        const capturedVersion = nativeSyncVersion;
+        // 阶段 C：读取不可变的已提交快照
+        const snapshotItems = JSON.parse(JSON.stringify(state.items || []));
+        const snapshotSettings = JSON.parse(JSON.stringify(state.settings || {}));
+        const review = {
+          count: needsReviewItems().length,
+          settings: ensureReviewSettings()
+        };
+        nativeSyncMetrics.runs++;
+        const status = await NativeReminders.reconcile(snapshotItems, snapshotSettings, Date.now(), review, options);
+        setNativeReminderStatus(status, "reconcile");
+
+        // 阶段 C 返工（F2）：平台已成功执行的副作用必须独立跟踪并补偿。
+        // 无论对账期间业务版本是否漂移，底层真实排下的闹钟台账（scheduledAlarmIds / scheduledAlarmSignatures）
+        // 都必须同步到 state.settings 中，以便后续对账能够感知并撤销在途被删除或改期事项的旧排程，杜绝幽灵闹钟。
+        const idsChanged = status && Array.isArray(status.scheduledAlarmIds) &&
+          !sameIdSet(state.settings.scheduledAlarmIds, status.scheduledAlarmIds);
+        const sigsChanged = status && status.scheduledAlarmSignatures &&
+          JSON.stringify(state.settings.scheduledAlarmSignatures || {}) !== JSON.stringify(status.scheduledAlarmSignatures || {});
+        if (idsChanged) state.settings.scheduledAlarmIds = status.scheduledAlarmIds;
+        if (sigsChanged) state.settings.scheduledAlarmSignatures = status.scheduledAlarmSignatures;
+
+        // 业务消费记录仅在版本未漂移时才写回，旧轮结果绝不覆盖新业务状态
+        if (capturedVersion === nativeSyncVersion) {
+          if (status && Array.isArray(status.deadlineEvents)) {
+            applyDeadlineEvents(status.deadlineEvents, Date.now(), status.cancelledDeadlineEvents);
+          }
+          if (status && Array.isArray(status.reminderEvents)) {
+            applyReminderEvents(status.reminderEvents, Date.now(), status.cancelledReminderEvents);
+          }
+          if (idsChanged || sigsChanged) {
+            // 纯结果记账使用 deferNativeSync，避免 save → queue → reconcile 自激死循环
+            save({ deferNativeSync: true });
+          }
+          if (!nativeSyncPending) {
+            break;
+          }
+        }
       }
-      // D43：单次提醒台账（与截止台账同构）—— 没有它，触发点已过的事项每轮对账都会重复补投
-      if (status && Array.isArray(status.reminderEvents)) {
-        applyReminderEvents(status.reminderEvents, Date.now(), status.cancelledReminderEvents);
-      }
-      // P0-2：记住本轮排下的全屏闹钟 id，供下一轮撤销不再需要的闹钟。
-      // 仅在集合真变化时 save()，否则 save → queue → reconcile 会自激成死循环。
-      if (status && Array.isArray(status.scheduledAlarmIds) &&
-        !sameIdSet(state.settings.scheduledAlarmIds, status.scheduledAlarmIds)) {
-        state.settings.scheduledAlarmIds = status.scheduledAlarmIds;
-        save();
-      }
-      return status;
+      return nativeReminderStatus;
     } catch (error) {
       const status = { reliability: "error", error: error && error.message ? error.message : String(error) };
       setNativeReminderStatus(status);
       return status;
+    } finally {
+      nativeSyncInFlight = false;
     }
   }
 
@@ -3914,15 +4901,26 @@
     return nativeInitPromise;
   }
 
-  function queueNativeReminderSync() {
+  function queueNativeReminderSync(source) {
+    source = source || "default";
+    nativeSyncMetrics.totalRequests++;
+    nativeSyncMetrics.bySource[source] = (nativeSyncMetrics.bySource[source] || 0) + 1;
     if (!NativeReminders.reconcile) return;
     if (!nativeReady) {
       // Q6：桥可能只是晚到 —— 不要丢弃这次请求。
       // 补做初始化；成功后自己会再同步一次（下面的递归调用）。
-      ensureNativeReminders().then(ok => { if (ok) queueNativeReminderSync(); });
+      ensureNativeReminders().then(ok => { if (ok) queueNativeReminderSync(source); });
       return;
     }
-    if (nativeSyncTimer) clearTimeout(nativeSyncTimer);
+    if (nativeSyncInFlight) {
+      nativeSyncPending = true;
+      nativeSyncMetrics.deduped++;
+      return;
+    }
+    if (nativeSyncTimer) {
+      clearTimeout(nativeSyncTimer);
+      nativeSyncMetrics.deduped++;
+    }
     nativeSyncTimer = setTimeout(() => {
       nativeSyncTimer = null;
       syncNativeRemindersNow();
@@ -4355,7 +5353,7 @@
     }
     // Q5：解锁时正在通话/响铃 → 只响铃不抢屏，这是设计如此，不是故障
     if (d.inCall && !d.locked) {
-      return { text: "通话中 · 只响铃不抢屏（按设计）· " + when, label: "通话中", ok: false, warn: true };
+      return { text: "通话中 · 不抢全屏；已请求系统横幅并继续声振 · " + when, label: "通话中", ok: false, warn: true };
     }
     // 投递当时的现场值优先（now 的权限可能后来被改过，不能用来解释当时的结果）
     //
@@ -4369,7 +5367,7 @@
     const fsiAt = d.fsiAtDelivery !== undefined
       ? d.fsiAtDelivery !== false
       : d.canUseFullScreenIntent !== false;
-    // V3：锁屏/息屏走系统全屏意图（系统会真的全屏）；解锁亮屏只能直起界面（需 BAL 豁免）
+    // A-03：全屏 Intent 在锁屏用于全屏，在解锁亮屏用于系统 heads-up 横幅。
     const background = !!d.locked || d.screenOn === false;
     let reason;
     if (background) {
@@ -4381,9 +5379,12 @@
     } else {
       reason = "权限齐备，但界面没有被系统展示 · 请检查后台运行及界面显示限制";
     }
+    const notificationNote = d.notificationPosted
+      ? " · 系统通知已经投递；若未看到顶部横幅，请在系统通知设置开启「悬浮通知/横幅」"
+      : " · 未确认系统通知已经投递";
     return {
-      text: "未确认显示全屏 · " + when + " · " + reason + exactNote,
-      label: "仅通知", ok: false, warn: false
+      text: "未确认显示全屏 · " + when + " · " + reason + notificationNote + exactNote,
+      label: d.notificationPosted ? "系统通知已投递" : "仅通知", ok: false, warn: true
     };
   }
 
@@ -4712,20 +5713,33 @@
     }
   }
 
-  async function labCancelAlarms() {
+  /**
+   * 撤销未触发的测试排程。
+   *
+   * @param opts.quiet 不自己弹提示（调用方要把几件事合并成一条结论时用）
+   * @returns {{ok:boolean, error:string}} 取消失败必须能被调用方看见 ——
+   *          「没弹成功提示」不等于「取消掉了」（R-F07 的同一种错）。
+   */
+  async function labCancelAlarms(opts) {
+    // 这个函数同时挂在点击事件上，第一个参数可能是 Event —— 只认显式的 quiet:true
+    const quiet = !!(opts && opts.quiet === true);
     const bridge = systemBridge();
     if (!bridge || !bridge.cancelAlarm) {
-      toast("原生闹钟桥不可用");
-      return;
+      if (!quiet) toast("原生闹钟桥不可用");
+      return { ok: false, error: "原生闹钟桥不可用" };
     }
     try {
       await bridge.cancelAlarm({ id: 90002 });
       await bridge.cancelAlarm({ id: 90003 });
       for (const id of [-917010, -917060, -917120]) await bridge.cancelAlarm({ id });
       labLog("已取消未触发测试闹钟");
-      toast("已取消测试闹钟");
+      if (!quiet) toast("已取消测试闹钟");
+      return { ok: true, error: "" };
     } catch (error) {
-      toast("取消失败");
+      const msg = error && error.message ? error.message : String(error);
+      labLog("取消测试闹钟失败：" + msg);
+      if (!quiet) toast("取消失败");
+      return { ok: false, error: msg };
     }
   }
 
@@ -4791,6 +5805,17 @@
     }
   }
 
+  /**
+   * UX-T04：设置跳转**只承诺已验证的动作**。
+   *
+   * 「已跳转厂商自启动设置（app-details）」这种说法是错的：ColorOS 16 上实测落点
+   * 就是**应用详情页**（`{"ok":true,"component":"app-details"}`），而真正的自启动
+   * 列表（`com.oplus.battery/...StartupAppListActivity`）需要平台签名级权限，
+   * 第三方应用**不可能**打开。把兜底页说成自启动页，等于给用户虚假安全感。
+   *
+   * 所以这里只陈述「到了哪一页」，并要求开关由用户手动确认；
+   * 找不到可验证路径时明确说找不到，而不是把用户循环送回同一页。
+   */
   async function openSystemSetting(kind) {
     const bridge = systemBridge();
     const appSet = appSettingsPlugin();
@@ -4813,30 +5838,63 @@
         if (bridge && bridge.openFullScreenIntentSettings) await bridge.openFullScreenIntentSettings();
         else await openSystemSetting("autoStart");
       } else if (kind === "autoStart") {
-        // 国产 ROM 专有开关；原生按厂商组件逐个试，全失败退回应用详情
-        if (bridge && bridge.openAutoStartSettings) {
-          const r = await bridge.openAutoStartSettings();
-          if (r && r.component) labLog("已跳转厂商自启动设置（" + r.component + "）");
-        } else if (bridge && bridge.openAppDetailsSettings) {
-          await bridge.openAppDetailsSettings();
-        } else if (appSet && appSet.openAppDetailsSettings) {
-          await appSet.openAppDetailsSettings();
-        }
+        await openAutoStartHonest();
       }
-      labLog("已跳转系统设置（" + kind + "），返回后请点「刷新诊断」");
+      labLog("已请求系统设置（" + kind + "），返回后请点「刷新诊断」");
     } catch (error) {
       toast("无法打开系统设置");
     }
+  }
+
+  /** 最近一次「自启动/后台」跳转的**实际落点**（不推断、不美化）。 */
+  let autoStartLanding = null;
+
+  async function openAutoStartHonest() {
+    const bridge = systemBridge();
+    const appSet = appSettingsPlugin();
+    const report = text => {
+      const fb = $("#labSettingsFeedback");
+      if (fb) fb.textContent = text;
+      labLog(text);
+    };
+    if (!(bridge && bridge.openAutoStartSettings)) {
+      autoStartLanding = { landed: "unsupported", at: Date.now() };
+      if (bridge && bridge.openAppDetailsSettings) await bridge.openAppDetailsSettings();
+      else if (appSet && appSet.openAppDetailsSettings) await appSet.openAppDetailsSettings();
+      else {
+        report("此系统暂未找到可验证的设置路径。可以先做一次 60 秒测试确认实际效果，再决定要不要手动翻设置。");
+        return;
+      }
+      report("此系统没有可验证的自启动入口，已改为打开「应用详情」页。请在详情里手动查找「自启动 / 后台启动 / 耗电管理」。厂商开关读不到，勾没勾需要你自己确认。");
+      return;
+    }
+    const r = await bridge.openAutoStartSettings();
+    const landed = r && r.component ? String(r.component) : "";
+    autoStartLanding = { landed: landed || "unknown", ok: !!(r && r.ok !== false), at: Date.now() };
+    if (landed === "app-details") {
+      report("已打开「应用详情」页 —— 这**不是**自启动授权页。"
+        + "vivo/OPPO 在应用详情里找「自启动」或「耗电管理」；ColorOS 16 的自启动列表需要系统签名权限，第三方应用打不开。"
+        + "厂商开关读不到：勾没勾由你自己确认，返回这里也不会自动变绿。");
+      return;
+    }
+    if (landed) {
+      report("已请求打开厂商设置页（" + landed + "）。是否真到位、开关有没有打开，都需要你回来手动确认 —— 导航成功不等于授权成功。");
+      return;
+    }
+    report("没能确认跳到了哪一页。请手动在手机设置里查找「自启动 / 后台启动」。");
   }
 
   function bindNotifyLab() {
     const labBtn = $("#btnNotifyLab");
     if (labBtn) {
       labBtn.addEventListener("click", () => {
+        // UX-T02：这里是「高级诊断」—— 只有主动点开才进，不挡首用路径
         openSheet("sheetNotifyLab");
         refreshNotifyLab();
       });
     }
+    const setupBtn = $("#btnSetup");
+    if (setupBtn) setupBtn.addEventListener("click", () => openSetupSheet());
     const req = $("#labReqNotify");
     if (req) req.addEventListener("click", labRequestNotify);
     const openNotify = $("#labOpenNotify");
@@ -4872,7 +5930,7 @@
       resync.addEventListener("click", async () => {
         labLog("正在重新对账…");
         try {
-          const status = await syncNativeRemindersNow();
+          const status = await syncNativeRemindersNow({ forceRebuild: true });
           const diag = await refreshNotifyLab();
           const v = await renderBackgroundVerdict(diag);
           labLog("重排完成 · " + v.label + " · " + v.text +
@@ -4989,6 +6047,140 @@
 
   // D5：首页「即将到来」区块已删除（未来只在「未来」页查看）
 
+  /* ---------- UX-T03：原生送达证据的回读 ---------- */
+
+  /**
+   * 证据通道的可用性。
+   *
+   * 三态：`null` = 还不知道（还没读过 / 桥不支持）；`true` = 读成功；`false` = 读失败。
+   * 判定层必须把 null/false 都当成**读不到**，而不是「没有证据就是漏了」——
+   * 这正是 D70 前置核验里那条近 100% 误报的来源。
+   */
+  const deliveryEvidenceState = { readable: null, lastReadAt: 0, rows: 0, reason: "", retention: null };
+  let deliveryEvidenceInFlight = false;
+
+  function deliveryEvidenceReadable() {
+    return deliveryEvidenceState.readable;
+  }
+
+  /**
+   * 读一次原生**持久**证据并幂等合并。
+   *
+   * 为什么冷启动与回前台都要读：只挂 JS 运行期监听的话，
+   * 「关掉 App 期间响过的那一次」永远没有证据 —— 而它在原生侧其实是有记录的
+   * （`ActiveAlarmStore` 在真实送达时落盘）。诊断环形日志不能当证据源：它只有 150 条，
+   * 会被高频事件挤掉。
+   */
+  async function readDeliveryEvidence(source) {
+    if (deliveryEvidenceInFlight) return false;
+    if (!NativeReminders.getDeliveryEvidence) {
+      deliveryEvidenceState.readable = false;
+      deliveryEvidenceState.reason = "module-unsupported";
+      return false;
+    }
+    deliveryEvidenceInFlight = true;
+    try {
+      if (!nativeReady) {
+        const ok = await ensureNativeReminders();
+        if (!ok) {
+          deliveryEvidenceState.readable = false;
+          deliveryEvidenceState.reason = "bridge-not-ready";
+          return false;
+        }
+      }
+      const res = await NativeReminders.getDeliveryEvidence({ since: 0 });
+      deliveryEvidenceState.readable = !!(res && res.available);
+      deliveryEvidenceState.reason = (res && res.reason) || "";
+      deliveryEvidenceState.retention = (res && res.retention) || null;
+      deliveryEvidenceState.lastReadAt = Date.now();
+      if (!res || !res.available) return false;
+      deliveryEvidenceState.rows = Array.isArray(res.rows) ? res.rows.length : 0;
+      return applyNativeDeliveryEvidence(res.rows);
+    } catch (error) {
+      deliveryEvidenceState.readable = false;
+      deliveryEvidenceState.reason = error && error.message ? error.message : String(error);
+      return false;
+    } finally {
+      deliveryEvidenceInFlight = false;
+    }
+  }
+
+  /**
+   * 参数自足的合并写入：事项由参数给定（重放时按 id 重新解析），因此可以进命令日志。
+   * 不在这里 `save()` —— 出口统一提交一次。
+   */
+  function mergeEvidenceInto(it, evidences, at) {
+    if (!it || !EvidenceLib) return false;
+    const res = EvidenceLib.mergeEvidence([it], evidences, at);
+    return res.changed === true;
+  }
+
+  /**
+   * 把一批原生回执并进事项台账。
+   *
+   * 独立验收 F04：这里以前**直接写 `state.items`** —— 统一事务之外的第三个旁路。
+   * 原生动作提交在途时，合并结果会被随后发布的权威草稿覆盖（界面显示已接收，
+   * 提交结束后又变回 scheduled）。现在按事项逐条走 `runUserOp` 的命令日志，
+   * 于是它在窗口期内既不会丢，也不会覆盖别人。
+   */
+  function applyNativeDeliveryEvidence(rows) {
+    if (!EvidenceLib || !Array.isArray(rows) || !rows.length) return false;
+    const normalized = EvidenceLib.normalizeEvidence(rows, "native");
+    const byItem = new Map();
+    normalized.forEach(ev => {
+      if (!ev || ev.valid !== true || !ev.itemId) return;
+      if (!byItem.has(ev.itemId)) byItem.set(ev.itemId, []);
+      byItem.get(ev.itemId).push(ev);
+    });
+    if (!byItem.size) return false;
+    const at = Date.now();
+    let changed = false;
+    byItem.forEach((evidences, itemId) => {
+      const it = state.items.find(x => x.id === itemId);
+      if (!it) return;
+      if (runUserOp(mergeEvidenceInto, [it, evidences, at], {
+        userFacing: false,
+        itemArg: 0,
+        name: "mergeDeliveryEvidence"
+      }) === true) changed = true;
+    });
+    if (!changed) return false;
+    save();
+    return true;
+  }
+
+  /** UX-T03：通知通道的**实时**送达回调（进程活着时）；冷启动那批走 readDeliveryEvidence。 */
+  function applyReminderDelivered(ev) {
+    if (!ev) return false;
+    return applyNativeDeliveryEvidence([{
+      itemId: ev.itemId,
+      reminderKey: ev.reminderKey,
+      itemRev: ev.itemRev,
+      carrier: ev.carrier || "notification",
+      receivedAt: ev.receivedAt || Date.now()
+    }]);
+  }
+
+  /**
+   * UX-T03：详情页的「提醒结果」一行。
+   *
+   * 展示纪律：
+   *  · 只有**已到点且拿到证据**才说结论，且只说到「系统已接收」这一层；
+   *  · 缺证据一律「本次提醒结果尚未确认」，绝不说「确定漏提醒」；
+   *  · 本版本没登记过排程的（旧数据 / 未覆盖载体）直接说明无法核查。
+   */
+  function detailReminderStatusRow(it) {
+    if (!EvidenceLib) return "";
+    const st = EvidenceLib.evidenceStatusFor(it, {
+      now: Date.now(),
+      evidenceReadable: deliveryEvidenceReadable(),
+      observable: itemScheduleEvidence(it) !== null
+    });
+    const suffix = st.state === "delivered" ? "（只代表系统收到了这次提醒）" : "";
+    return '<div class="detail-row"><dt>提醒结果</dt><dd>' +
+      escapeHtml(st.text) + escapeHtml(suffix) + "</dd></div>";
+  }
+
   async function initializeNativeReminders() {
     // 非安卓容器（浏览器 / PWA）：原生能力本就不适用，直接返回。
     // 绝不能走下面的「桥未就绪」分支 —— 否则 Web 版会看到一句吓人的误报。
@@ -5015,6 +6207,9 @@
         onAction: handleNativeNotificationAction,
         // F1：系统确实送达时的回调，用于记录真实送达而不是靠时刻推断
         onDelivered: markDeadlineDelivered,
+        // UX-T03：**普通提醒**（primary / realert）的送达回调。此前只认截止事件，
+        // 于是「已响过的提醒也停在 scheduled」成了系统性事实。
+        onReminderDelivered: applyReminderDelivered,
         onStatusChange: setNativeReminderStatus,
         onResume: async () => {
           try {
@@ -5033,6 +6228,8 @@
               await NativeReminders.drainAlarmActions(handleAlarmAction);
             }
           } catch (error) {}
+          // UX-T03：回前台时补读一次原生持久证据（关掉 App 期间响过的那批只能这样拿到）
+          try { await readDeliveryEvidence("resume"); } catch (error) {}
           refreshNativeScheduleBasis();
           await refreshActiveAlarmPanel(true);
           promoteDue();
@@ -5043,7 +6240,9 @@
       setNativeReminderStatus(status);
       await refreshActiveAlarmPanel(true);
       refreshNativeScheduleBasis();
-      await syncNativeRemindersNow();
+      await syncNativeRemindersNow({ forceRebuild: true });
+      // UX-T03：冷启动也补读一次 —— 这是「次日重开仍能关联」的那条路
+      try { await readDeliveryEvidence("init"); } catch (error) {}
     } catch (error) {
       nativeReady = true;
       setNativeReminderStatus({
@@ -5054,17 +6253,380 @@
     }
   }
 
-  async function maybePromptAndroidNotify() {
+  /* ---------- UX-T02：首用设置走短路径 ---------- */
+
+  /**
+   * 旧行为是「首次启动 600ms 后无条件打开整张技术自检表」。
+   *
+   * 现在的分工：
+   *  · 启动时**什么都不弹**（空首页先允许录入）；
+   *  · 第一次真的保存了「需要提醒」的事项之后，首页出现一条**可跳过**的设置入口
+   *    （见 `renderSetupEntry`），设置里始终可从「我的 → 提醒设置」重新进入；
+   *  · 技术诊断、排程详情、环形日志移到「高级诊断」，不再挡在首用路径上。
+   *
+   * 升级兼容：不覆盖既有用户设置，也不重复强制引导。
+   * 旧字段 `onboardDone` 只是**读**，不再当「已通过测试」用（它从来不代表测试通过）。
+   */
+  function maybePromptAndroidNotify() {
     if (!(NativeReminders.isNativeAndroid && NativeReminders.isNativeAndroid())) return;
-    if (state.settings.onboardDone) return;
-    state.settings.onboardDone = true;
-    state.settings.notifyPrompted = true;
+    if (typeof state.settings.notifyPrompted !== "boolean") state.settings.notifyPrompted = false;
+    if (typeof state.settings.setupDismissed !== "boolean") state.settings.setupDismissed = false;
+    if (typeof state.settings.setupPromptStarted !== "boolean") state.settings.setupPromptStarted = false;
+    const row = $("#btnSetup");
+    if (row) row.hidden = false;
+    renderSetupEntry();
+  }
+
+  /** 首次保存了「有真实提醒时间」的事项 —— 这才是设置入口出现的时机。 */
+  function noteFirstRemindSaved(it) {
+    if (!(NativeReminders.isNativeAndroid && NativeReminders.isNativeAndroid())) return;
+    if (!it || !it.triggerAt || it.isFallbackTrigger) return;
+    if (state.settings.setupPromptStarted) return;
+    state.settings.setupPromptStarted = true;
     save();
-    setTimeout(() => {
-      openSheet("sheetNotifyLab");
-      refreshNotifyLab();
-      toast("请完成提醒能力自检，并做一次通知/闹钟测试");
-    }, 600);
+    renderSetupEntry();
+  }
+
+  function renderSetupEntry() {
+    const host = $("#homeSetup");
+    if (!host) return;
+    if (!isNativeAndroidRuntime()) { host.innerHTML = ""; return; }
+    if (state.settings.setupDone || state.settings.setupDismissed) { host.innerHTML = ""; return; }
+    if (!state.settings.setupPromptStarted) { host.innerHTML = ""; return; }
+    const f = FeedbackLib;
+    const st = f ? f.setupSteps(nativeReminderStatus, setupStepsContext()) : null;
+    if (!st || !st.next) { host.innerHTML = ""; return; }
+    const missing = st.steps.filter(s => !s.done);
+    host.innerHTML = '<button class="soft-entry" id="setupEntry" style="margin-bottom:10px">' +
+      "<span><strong>提醒还没准备好</strong><br>" +
+      '<span style="font-size:0.78rem;color:var(--muted)">还差 ' + missing.length + " 步：" +
+      escapeHtml(missing[0].title) + " · 可以跳过，跳过也能记录</span></span>" +
+      '<span style="color:var(--muted)">›</span></button>';
+    const btn = $("#setupEntry");
+    if (btn) btn.addEventListener("click", () => openSetupSheet());
+  }
+
+  function openSetupSheet() {
+    renderSetupSheetBody();
+    openSheet("sheetSetup");
+  }
+
+  const SETUP_TEST_ID = 90003;
+  /** 测试闹钟的标题。系统侧只回一条「最近一次投递」，靠它与运行时刻一起判定是否本次。 */
+  const SETUP_TEST_TITLE = "安心收件箱闹钟测试";
+
+  /** 本次运行记录（F07）：证据、用户反馈、停铃都以它为准，不再混用上一次的结果。 */
+  function currentTestRun() {
+    const run = state.settings.testRun;
+    return run && typeof run === "object" ? run : null;
+  }
+
+  /** `lastAlarmDelivery` 那条记录是不是**本次测试**产生的（不是上一条业务闹钟、也不是上次测试）。 */
+  function deliveryBelongsToRun(d, run) {
+    if (!d || !run) return false;
+    const at = Number(d.at || 0);
+    if (!(at > 0) || at < Number(run.startedAt || 0)) return false;
+    return String(d.title || "").indexOf("闹钟测试") >= 0;
+  }
+
+  /**
+   * F07 / UX-T02：开始一次 60 秒测试。
+   *
+   * 先落一条**本次运行**记录再排程（失败则不留记录）：后面的停铃、
+   * 「这次结果怎么样」的证据与反馈全靠它区分「本次」与「上一次」。
+   * 上一版这两处都是空的 —— 面板会把上一条业务闹钟的结果当成本次测试结果展示。
+   */
+  async function startSetupTestRun() {
+    const bridge = systemBridge();
+    if (!bridge || !bridge.scheduleAlarm) {
+      labLog("SystemBridge 不可用，无法设置闹钟");
+      toast("原生闹钟桥不可用");
+      return false;
+    }
+    const startedAt = Date.now();
+    try {
+      const r = await bridge.scheduleAlarm({
+        delayMs: 60000,
+        id: SETUP_TEST_ID,
+        title: SETUP_TEST_TITLE,
+        body: "60 秒闹钟触发成功 · 可锁屏验证"
+      });
+      state.settings.testRun = {
+        id: SETUP_TEST_ID,
+        startedAt: startedAt,
+        triggerAt: r && r.triggerAt ? Number(r.triggerAt) : startedAt + 60000,
+        stoppedAt: null,
+        seenAt: null,
+        feedbackAt: null
+      };
+      save();
+      labLog("已排 60 秒测试闹钟 · " + ((r && (r.mode || (r.exact ? "精确" : "非精确"))) || "已登记") +
+        " · 触发于 " + fmtTime(state.settings.testRun.triggerAt));
+      toast("已排 60 秒测试 · 可以锁屏了");
+      renderSetupSheetBody();
+      return true;
+    } catch (error) {
+      const msg = error && error.message ? error.message : String(error);
+      labLog("测试闹钟没排上：" + msg);
+      toast("测试闹钟没排上：" + msg);
+      renderSetupSheetBody();
+      return false;
+    }
+  }
+
+  /**
+   * F07：「停止铃声 / 取消未触发的测试」必须真的停住**本次测试**正在响的铃声。
+   *
+   * 之前这里只调 `labCancelAlarms()`（撤未来的 PendingIntent 与排程镜像），之后再条件调用
+   * `NativeReminders.stopAllAlarms` —— 而那个 API **在本模块里根本不存在**，分支永不执行。
+   * 于是「正在响的测试铃声」没有任何停止路径（源码级调用链确认，独立验收 F07）。
+   *
+   * 现在按**活跃投递台账**取本次测试那一条的 id + token，走已有的 token 限定停止链路
+   * （`stopAlarmDelivery`）：它只停指定 id 且 token 相符的那一条，
+   * 用户自己的闹钟（别的 id）一条都不会被误停。
+   *
+   * R-F07：三种结论必须分开 —— **真的停住了** / **确认没有活跃投递** / **读不到或停不住**。
+   * 之前读取抛错只写了一条日志，然后照样 `stoppedAt = now` 并提示「没有正在响的测试铃声」：
+   * 「读不到」被当成了「不存在」，而取消未来的 PendingIntent 根本证明不了正在响的铃声已停。
+   * 没确认就不能宣称已停，也不能把 `stoppedAt` 当成成功证据（面板会据此显示「你已手动停止」）。
+   */
+  async function stopSetupTestRun() {
+    const bridge = systemBridge();
+    const run = currentTestRun();
+    let stopped = 0;
+    let seen = 0;
+    let stopFailed = false;
+    let readOk = false;
+    let readError = "";
+    const canRead = !!(bridge && bridge.activeAlarmDeliveries && bridge.stopAlarmDelivery);
+    if (!canRead) {
+      readError = "原生桥不可用";
+    } else {
+      try {
+        const active = await bridge.activeAlarmDeliveries();
+        const rows = Array.isArray(active && active.alarms) ? active.alarms : [];
+        readOk = true;   // 读到「空的」与「读不到」是两件事：只有前者能说「没有在响」
+        for (const row of rows) {
+          if (!row || Number(row.id) !== SETUP_TEST_ID) continue;   // 只认本次测试的投递
+          if (run && Number(row.receivedAt || 0) < Number(run.startedAt || 0)) continue; // 上一次的残留
+          seen++;
+          if (!row.token) continue;
+          try {
+            const res = await bridge.stopAlarmDelivery({ id: SETUP_TEST_ID, token: String(row.token) });
+            if (res && res.stopped) stopped++;
+            else stopFailed = true;
+          } catch (error) {
+            stopFailed = true;
+            labLog("停止铃声失败：" + (error && error.message ? error.message : error));
+          }
+        }
+      } catch (error) {
+        readError = error && error.message ? error.message : String(error);
+        labLog("读取活跃投递失败：" + readError);
+      }
+    }
+    // 未来的测试排程一并撤掉（只撤测试用的那几个 id）；失败要能传上来
+    const cancel = await labCancelAlarms({ quiet: true });
+
+    // 只有**确认过**才落 stoppedAt：真的停住了，或读成功且确认没有活跃投递。
+    // 读取失败 / 停不住 / 取消失败都不算 —— 那时我们并不知道铃声还在不在响。
+    const confirmedGone = readOk && seen === 0;
+    const confirmed = stopped > 0 || confirmedGone;
+    if (run && confirmed) {
+      run.stoppedAt = Date.now();
+      save();
+    }
+    renderSetupSheetBody();
+    // 如实说明停到了什么 ——「没找到正在响的」不等于「停不掉」，也绝不等于「读不到」
+    const retry = () => { stopSetupTestRun(); };
+    if (stopped > 0) {
+      if (cancel.ok) toast("已停止本次测试的铃声");
+      else toast("已停止本次测试的铃声 · 但未触发的测试没取消掉", "重试", retry);
+    } else if (!readOk) {
+      toast("读不到铃声状态 · 无法确认是否已停" + (cancel.ok ? "" : "，且未触发的测试没取消掉"), "重试", retry);
+    } else if (seen === 0) {
+      if (cancel.ok) toast("没有正在响的测试铃声 · 已取消未触发的测试");
+      else toast("没有正在响的测试铃声 · 但未触发的测试没取消掉", "重试", retry);
+    } else {
+      // 台账里确实有本次测试的活跃投递，却一条都没停成功（stopFailed / 缺 token）：
+      // 不能宣称已停，也不谎称「没有在响」
+      toast("没能停住这次铃声 · 它可能还在响 · 请再试一次", "重试", retry);
+      labLog("停止铃声未确认：活跃 " + seen + " 条 · 停住 " + stopped + " 条" +
+        (stopFailed ? " · 有失败回执" : " · 有缺 token 的条目"));
+    }
+    return stopped;
+  }
+
+  function testFeedbackButtonsHtml() {
+    const cur = state.settings.testFeedback || null;
+    const run = currentTestRun();
+    // F07：上一次测试的答案不许再亮着 —— 只有**本次运行**之后的反馈才算数
+    const fresh = !!cur && (!run || Number(cur.at || 0) >= Number(run.startedAt || 0));
+    const f = FeedbackLib;
+    const list = f ? f.TEST_FEEDBACK : [
+      { value: "heard", label: "我听到了" }, { value: "seen", label: "我看到了" },
+      { value: "missed", label: "没收到" }, { value: "unsure", label: "不确定" }
+    ];
+    return '<div class="setup-test-actions" id="setupTestFeedback">' +
+      list.map(x => '<button type="button" class="chip' + (fresh && cur.value === x.value ? " on" : "") +
+        '" data-testfb="' + x.value + '">' + escapeHtml(x.label) + "</button>").join("") +
+      "</div>";
+  }
+
+  /**
+   * F07：系统侧证据 + 用户反馈，**都绑定本次运行**。
+   *
+   * 上一版把 `lastAlarmDelivery` 无条件当「最近一次投递」展示 —— 用户点开测试面板时
+   * 看到的可能是上一条业务闹钟、或上一次测试的结果，于是「这次到底行不行」永远答不出来。
+   */
+  async function setupEvidenceHtml() {
+    const s = nativeReminderStatus || {};
+    const run = currentTestRun();
+    const alarms = Array.isArray(s.scheduledAlarmIds) ? s.scheduledAlarmIds.length : 0;
+    const lines = [];
+    lines.push("系统侧：已排 " + alarms + " 条闹钟 · " +
+      (s.notificationsGranted ? "通知可用" : "通知未授权") +
+      (s.exactAlarm === "granted" ? " · 精确排程可用" : " · 非精确排程"));
+    if (!run) {
+      lines.push("本次测试：还没有开始过。点上面的按钮排一次，再锁屏等一分钟。");
+    } else {
+      lines.push("本次测试：" + fmtTime(run.startedAt) + " 开始 · 计划 " + fmtTime(run.triggerAt) +
+        (run.stoppedAt ? " · 你已手动停止" : ""));
+    }
+    const bridge = systemBridge();
+    if (bridge && bridge.lastAlarmDelivery) {
+      try {
+        const d = await bridge.lastAlarmDelivery();
+        if (deliveryBelongsToRun(d, run)) {
+          lines.push("本次测试投递：" + String(describeAlarmDelivery(d)).replace(/<[^>]+>/g, " "));
+          // 看到本次投递 ⇒ 本次测试有结果了（用于「测试完成 / 可重测」的判定）
+          if (run && !run.seenAt) {
+            run.seenAt = Date.now();
+            save();
+          }
+        } else if (run) {
+          lines.push("本次测试投递：还没有记录（没记录不等于没响；上一次的结果不计入本次）");
+        } else {
+          lines.push("最近一次投递：有历史记录，但它不属于任何一次测试（仅供参考）");
+        }
+      } catch (error) {
+        lines.push("本次测试投递：读不到（" + (error && error.message ? error.message : "未知") + "）");
+      }
+    } else {
+      lines.push("本次测试投递：当前环境读不到");
+    }
+    const fb = state.settings.testFeedback;
+    const fresh = !!fb && (!run || Number(fb.at || 0) >= Number(run.startedAt || 0));
+    const v = FeedbackLib ? FeedbackLib.testFeedbackVerdict(fresh ? fb.value : undefined) : null;
+    if (v) lines.push("你的反馈：" + v.text + (fresh ? "" : "（这是上一次的回答，本次还没有）"));
+    return '<p class="demo-note">' + lines.map(escapeHtml).join("<br>") + "</p>";
+  }
+
+  /** 传给 `FeedbackLib.setupSteps` 的上下文：测试步骤的完成/重测状态由本次运行决定。 */
+  function setupStepsContext() {
+    return { testRun: currentTestRun(), testFeedback: state.settings.testFeedback || null };
+  }
+
+  function renderSetupSheetBody() {
+    const body = $("#setupBody");
+    if (!body) return;
+    const f = FeedbackLib;
+    const st = f ? f.setupSteps(nativeReminderStatus, setupStepsContext()) : { steps: [], next: null };
+    const missing = st.steps.filter(s => !s.done);
+    const cur = missing[0] || null;
+    let html = "";
+    if (cur) {
+      html += '<div class="setup-step' + (cur.done ? " done" : "") + '"><h4>' + escapeHtml(cur.title) + "</h4>" +
+        "<p>" + escapeHtml(cur.why) + "</p>" +
+        '<p>拒绝之后会怎样：' + escapeHtml(cur.denyImpact) + "</p></div>" +
+        '<p class="demo-note">还剩 ' + missing.length + " 步，一屏一个。任何一步都可以拒绝或跳过，" +
+        "拒绝不影响记录功能，也不会再循环把你送回同一页。</p>";
+    } else {
+      html += '<div class="setup-step done"><h4>必要设置</h4><p>都已经就绪。</p></div>';
+    }
+    // 60 秒测试：由用户主动开始；证据与反馈分列
+    const testStep = st.steps.filter(s => s.id === "test")[0] || null;
+    const testDone = !!(testStep && testStep.done);
+    html += '<div class="setup-step' + (testDone ? " done" : "") + '"><h4>60 秒测试' +
+      (testDone ? " · 本次已出结果" : "") + "</h4>" +
+      "<p>点开始后锁屏等一分钟。测试用独立的测试闹钟，不建事项、不开周期、不进统计。</p>" +
+      '<div class="setup-test-actions">' +
+      '<button type="button" class="chip" id="setupTestStart">' +
+      (testDone ? "再测一次" : "开始 60 秒测试") + "</button>" +
+      '<button type="button" class="chip" id="setupTestStop">停止铃声 / 取消未触发的测试</button>' +
+      "</div></div>" +
+      '<div class="setup-step"><h4>这次结果怎么样？</h4>' +
+      "<p>你说了算 —— 系统事件证据和你的感受是两回事，未回答不代表失败或成功。</p>" +
+      testFeedbackButtonsHtml() + "</div>" +
+      '<div id="setupEvidence"></div>';
+    body.innerHTML = html;
+    const btn = $("#setupPrimary");
+    if (btn) {
+      btn.textContent = cur ? cur.action : "开始测试";
+      btn.onclick = () => runSetupStep(cur ? cur.id : "test");
+    }
+    // 用户反馈
+    $$("#setupTestFeedback .chip").forEach(ch => {
+      ch.addEventListener("click", () => {
+        const at = Date.now();
+        state.settings.testFeedback = { value: ch.dataset.testfb, at: at };
+        // F07：反馈挂在**本次运行**上，换一次测试就作废
+        const run = currentTestRun();
+        if (run) { run.feedbackAt = at; run.feedback = ch.dataset.testfb; }
+        save();
+        renderSetupSheetBody();
+        const v = FeedbackLib ? FeedbackLib.testFeedbackVerdict(ch.dataset.testfb) : null;
+        if (v) toast(v.text);
+      });
+    });
+    const start = $("#setupTestStart");
+    if (start) start.addEventListener("click", async () => { await startSetupTestRun(); });
+    const stop = $("#setupTestStop");
+    if (stop) stop.addEventListener("click", async () => { await stopSetupTestRun(); });
+    // 证据异步补进 DOM
+    const host = $("#setupEvidence");
+    if (host) {
+      setupEvidenceHtml().then(html2 => { if ($("#setupEvidence")) $("#setupEvidence").innerHTML = html2; })
+        .catch(() => {});
+    }
+    updateSetupEntry();
+  }
+
+  function updateSetupEntry() {
+    const row = $("#btnSetup");
+    if (!row) return;
+    const sub = $("#setupSub");
+    if (!sub) return;
+    const f = FeedbackLib;
+    const st = f ? f.setupSteps(nativeReminderStatus, setupStepsContext()) : { steps: [], next: null };
+    const missing = st.steps.filter(s => !s.done);
+    sub.textContent = missing.length
+      ? "还差 " + missing.length + " 步 · 检查必要设置 · 60 秒测试"
+      : "已就绪 · 可再做一次 60 秒测试";
+  }
+
+  async function runSetupStep(stepId) {
+    if (stepId === "notify") {
+      if (NativeReminders.requestNotificationPermission) {
+        try {
+          const st = await NativeReminders.requestNotificationPermission();
+          setNativeReminderStatus(st);
+        } catch (error) {}
+      }
+      const granted = nativeReminderStatus && nativeReminderStatus.notifications === "granted";
+      if (!granted) toast("没有授予也可以继续记录事项 · 只是关掉应用后看不到提醒");
+      renderSetupSheetBody();
+      return;
+    }
+    if (stepId === "exact") {
+      if (NativeReminders.openExactAlarmSettings) {
+        try { await NativeReminders.openExactAlarmSettings(); } catch (error) {}
+      }
+      toast("回到应用后这里会自动更新");
+      return;
+    }
+    // 默认：开始 60 秒测试（用户主动开始，不代跑）
+    await startSetupTestRun();
   }
 
   function shouldSkipAlert(it) {
@@ -5281,6 +6843,40 @@
   }
 
   /* ---------- seed ---------- */
+  /* ---------- UX-C01：演示是只读预览，不是「载入示例数据」 ---------- */
+
+  /**
+   * 演示内容（固定模板，与用户数据无关）。
+   *
+   * 刻意不叫「示例数据」：它不会进入 `state.items/notes/projects`，
+   * 不会被排程，也不会出现在统计里 —— 演示一旦能覆盖用户状态，
+   * 它就从「帮助理解」变成了「数据风险」。
+   */
+  function demoPreviewRows() {
+    return [
+      { title: "看看 Horolog 的调度设计", when: "本周六 10:00", tag: "普通 · 阅读", note: "写一句话就行，到点我会把这条推到你面前。" },
+      { title: "报名截止，提前确认材料", when: "明天 09:00 · 截止还有 5 天", tag: "重要 · 有截止", note: "标为「重要」或「关键」的事项用闹钟提醒：声音更大，锁屏时会亮屏。" },
+      { title: "交房租", when: "每月 1 日 09:00", tag: "每 1 个月 · 按日历", note: "周期事项点「完成」后会自动生成下一期。" },
+      { title: "给爸妈打电话", when: "下周六 10:00", tag: "每两周 · 从我点过「我知道了」重新计时", note: "周期有两种计时方式；选错会让你以为它忘了提醒。" },
+      { title: "有空看看这个项目", when: "还没定时间", tag: "会先收下 · 待整理", note: "没写时间的记录不会被拒绝，也不会冒充已经安排好了提醒。" }
+    ];
+  }
+
+  function openDemoPreview() {
+    const host = $("#demoBody");
+    if (host) {
+      host.innerHTML =
+        '<p class="demo-note">这是只读预览：不会写入你的数据，也不会安排任何提醒。</p>' +
+        demoPreviewRows().map(r =>
+          '<div class="demo-item">' +
+          '<div class="demo-title">' + escapeHtml(r.title) + "</div>" +
+          '<div class="demo-when">' + escapeHtml(r.when) + " · " + escapeHtml(r.tag) + "</div>" +
+          '<p style="font-size:0.82rem;color:var(--muted);margin-top:6px;line-height:1.5">' + escapeHtml(r.note) + "</p>" +
+          "</div>").join("");
+    }
+    openSheet("sheetDemo");
+  }
+
   function seed() {
     if (inflightActionDepth > 0) {
       toast("提醒操作正在保存 · 请稍后再载入示例数据");
@@ -5428,6 +7024,7 @@
       c.addEventListener("click", () => {
         $$("#capPriority .chip").forEach(x => x.classList.remove("on"));
         c.classList.add("on");
+        renderCaptureSummary();
       });
     });
     $("#btnSaveItem").addEventListener("click", saveItemFromForm);
@@ -5441,14 +7038,29 @@
       clearTimeout(similarTimer);
       similarTimer = setTimeout(() => renderSimilarHint($("#capText").value.trim()), 400);
     });
-    $("#capRepeat").addEventListener("change", updateRepeatPreview);
-    $("#capRepeatMode").addEventListener("change", updateRepeatPreview);
-    $("#capNth").addEventListener("change", updateRepeatPreview);
-    $("#capWeekday").addEventListener("change", updateRepeatPreview);
+    $("#capRepeat").addEventListener("change", () => { updateRepeatPreview(); renderCaptureSummary(); });
+    $("#capRepeatMode").addEventListener("change", () => { updateRepeatPreview(); renderCaptureSummary(); });
+    $("#capNth").addEventListener("change", () => { updateRepeatPreview(); renderCaptureSummary(); });
+    $("#capWeekday").addEventListener("change", () => { updateRepeatPreview(); renderCaptureSummary(); });
     $("#capTrigger").addEventListener("change", () => {
       // L01：只有用户真的动过这个字段，才算「明确选择的时间」
       triggerUserPicked = true;
       updateRepeatPreview();
+      renderCaptureSummary();
+    });
+    // UX-C02：清除手选时间后摘要必须同步更新（否则摘要会一直显示一个已经作废的时间）
+    $("#capTrigger").addEventListener("input", renderCaptureSummary);
+    $("#capDeadline").addEventListener("change", renderCaptureSummary);
+    $("#capDeadline").addEventListener("input", renderCaptureSummary);
+    // UX-C02：「更多选项」默认收起，编辑复杂事项时才自动展开
+    $("#btnCapMore").addEventListener("click", () => {
+      const adv = $("#capAdvanced");
+      const el = $("#btnCapMore");
+      if (!adv || !el) return;
+      const open = adv.hidden;
+      adv.hidden = !open;
+      el.textContent = open ? "收起更多选项" : "更多选项";
+      el.setAttribute("aria-expanded", open ? "true" : "false");
     });
 
     document.addEventListener("click", e => {
@@ -5493,14 +7105,7 @@
           if (completeItem(id) !== false) { closeSheet("sheetDetail"); hideAlert(); }
         }
         else if (act === "snooze") {
-          if (isItemActionPending(id)) { rejectPendingItemCommand(); return; }
-          state.ui.snoozeId = id;
-          snoozePick = null;
-          snoozeBasis = "elapsed";
-          $("#snoozeCustom").value = "";
-          $$("#snoozeChips .chip").forEach(x => x.classList.remove("on"));
-          closeSheet("sheetDetail");
-          openSheet("sheetSnooze");
+          openSnoozeSheet(id);
         }
         else if (act === "reopen") { if (reopenItem(id) !== false) closeSheet("sheetDetail"); }
         else if (act === "delete") {
@@ -5845,13 +7450,14 @@
       if (f) importDataFile(f);
       e.target.value = "";
     });
+    // UX-C01：「载入示例数据」这个会覆盖用户状态的入口已移除。
+    // 现在它只是**只读预览**：不写 state、不 save、不排任何原生或 Web 通知、不改统计。
     $("#btnSeed").addEventListener("click", () => {
       try {
-        seed();
-        toast("示例数据已载入");
+        openDemoPreview();
       } catch (e) {
         console.error(e);
-        toast("载入失败：" + (e && e.message ? e.message : "未知错误"));
+        toast("打开演示失败：" + (e && e.message ? e.message : "未知错误"));
       }
     });
     $("#btnClear").addEventListener("click", async () => {
@@ -6170,9 +7776,10 @@
     bindInstall();
     bindNetwork();
     if (!applyShareParams()) {
-      // 首次运行：没有任何已保存数据时才 seed（与后端无关）
-      if (!loaded && !state.items.length) seed();
-      else render();
+      // UX-C01：**干净首启** —— 没有任何已保存数据时也不再自动 seed、不弹演示提醒。
+      // 老数据照常加载（`loaded` 为真时走 else 分支的 render，什么都不改）；
+      // 从没见过的用户看到的是空首页 + 用途说明 + 「记一件事」入口（见 renderHome）。
+      render();
     } else {
       state.ui.tab = "home";
       render();
@@ -6314,7 +7921,36 @@
       ready: () => readyPromise || Promise.resolve(true),
       handleNativeNotificationAction,
       saveItemFromForm,
+      // UX-C01：演示必须是**只读预览**（老入口是「载入示例数据」，能覆盖用户状态）
+      openDemoPreview,
+      demoPreviewRows,
+      // UX-C03 / A03：有限撤销 —— 幽灵响铃的红线就压在这两个函数上，
+      // 所以必须能被行为级断言（否则只能退回源码字符串，D48 的教训）
+      undoNewItem,
+      undoLastComplete,
+      // UX-T02 / F07：60 秒测试的**本次运行**语义（停铃、证据绑定、完成与重测状态）
+      startSetupTestRun,
+      stopSetupTestRun,
+      setupEvidenceHtml,
+      setupStepsContext,
+      // UX-T03：原生送达证据的回流接线（幂等合并 + 详情页「提醒结果」结论）
+      readDeliveryEvidence,
+      applyNativeDeliveryEvidence,
+      applyReminderDelivered,
+      detailReminderStatusRow,
+      // R-F06：保存反馈用的「本条排程证据」也要能被行为级断言 ——
+      // 它同样只许认**当前轮**，否则旧轮的 delivered 会让刚排好的新周期冒充「已安排好」。
+      itemScheduleEvidence,
+      deliveryEvidenceReadable,
+      deliveryEvidenceState,
       markTriggerPicked: (v) => { triggerUserPicked = !!v; },
+      // R-F03：表单会话身份必须能被行为级断言 —— 「关掉重开」= 另一张表单，
+      // 内容碰巧一样也不行。所以要能从测试里真的开/关那张表单。
+      openCapture,
+      openEditItem,
+      resetItemSheet,
+      closeAllSheets,
+      get formSession() { return itemFormSession; },
       clearAlert: () => { alertItem = null; },
       get state() { return state; },
       save,

@@ -24,6 +24,28 @@ public final class AlarmScheduler {
    */
   public static void schedule(Context context, long triggerAt, String title, String body,
                               int id, String itemId, String level, String itemRev) {
+    schedule(context, triggerAt, title, body, id, itemId, level, itemRev, "wall-clock", 0L);
+  }
+
+  public static void schedule(Context context, long triggerAt, String title, String body,
+                              int id, String itemId, String level, String itemRev,
+                              String scheduleBasis, long elapsedTriggerAtMs) {
+    schedule(context, triggerAt, title, body, id, itemId, level, itemRev,
+      scheduleBasis, elapsedTriggerAtMs, null, triggerAt);
+  }
+
+  /**
+   * UX-T03：带**提醒身份**的排程。
+   *
+   * `reminderKey` 是 `<attempt>@<原定时刻>`，`plannedAt` 是这次提醒**原定的**时刻
+   * （不是 clamp 之后的）。两者都会被写进投递 Intent，由接收侧
+   * （`AlarmTestReceiver` / `AlarmRingService`）落进持久证据台账 ——
+   * 没有它们，接收侧就算知道自己响过，也说不清响的是哪一轮。
+   */
+  public static void schedule(Context context, long triggerAt, String title, String body,
+                              int id, String itemId, String level, String itemRev,
+                              String scheduleBasis, long elapsedTriggerAtMs,
+                              String reminderKey, long plannedAt) {
     // R3：minSdk 22 —— 不用 API 23+ 的 getSystemService(Class) 重载
     Object svc = context.getSystemService(Context.ALARM_SERVICE);
     AlarmManager am = svc instanceof AlarmManager ? (AlarmManager) svc : null;
@@ -32,8 +54,13 @@ public final class AlarmScheduler {
       triggerAt = System.currentTimeMillis() + 500;
     }
 
+    boolean isElapsed = "elapsed".equals(scheduleBasis);
+    if (isElapsed && elapsedTriggerAtMs <= 0) {
+      elapsedTriggerAtMs = android.os.SystemClock.elapsedRealtime() + Math.max(500, triggerAt - System.currentTimeMillis());
+    }
+
     String trace = id + ":" + java.util.UUID.randomUUID().toString();
-    AlarmTrace.record(context, trace, "requested", "restore/snooze triggerAt=" + triggerAt);
+    AlarmTrace.record(context, trace, "requested", "restore/snooze triggerAt=" + triggerAt + ";basis=" + scheduleBasis);
 
     int flags = PendingIntent.FLAG_UPDATE_CURRENT;
     if (Build.VERSION.SDK_INT >= 23) flags |= PendingIntent.FLAG_IMMUTABLE;
@@ -50,18 +77,14 @@ public final class AlarmScheduler {
     delivery.putExtra(AlarmTestReceiver.EXTRA_ITEM_REV,
       itemRev == null || itemRev.isEmpty() ? "0" : itemRev);
     if (level != null) delivery.putExtra(AlarmTestReceiver.EXTRA_LEVEL, level);
+    // UX-T03：提醒身份与计划时刻一起下发（见方法注释）
+    if (reminderKey != null && !reminderKey.isEmpty()) {
+      delivery.putExtra(AlarmTestReceiver.EXTRA_REMINDER_KEY, reminderKey);
+    }
+    delivery.putExtra(AlarmTestReceiver.EXTRA_PLANNED_AT, plannedAt > 0L ? plannedAt : triggerAt);
     PendingIntent pi = PendingIntent.getBroadcast(context, id, delivery, flags);
 
     // D64（2026-09-19）：精确闹钟权限必须**先查再排**，不能只靠 try/catch 兜。
-    //
-    // 官方迁移步骤第一条就是「At a minimum, apps must check to see if they have the
-    // permission before scheduling exact alarms」（Android 14 行为变更 / schedule-exact-alarms）。
-    // 此前的写法只靠异常兜底，于是形成一条**静默降级**路径：
-    //   ① `setExactAndAllowWhileIdle` 抛 SecurityException → 落到 `am.set()`（非精确）；
-    //   ② 而 `scheduleUnfreezer` 写在同一 try 内 → **连解冻器都没排**；
-    //   ③ 整条路径**一条台账都不写** → 与「安静地不响」同类的失效形态。
-    // 这条路径在本次移除 `USE_EXACT_ALARM`（D64：本应用非闹钟/日历核心功能）后，会成为
-    // Android 14+ 的**默认**路径，所以必须在它变成默认之前修好。
     boolean exactPerm = canScheduleExactAlarms(context);
 
     AlarmManager.AlarmClockInfo info = null;
@@ -73,8 +96,6 @@ public final class AlarmScheduler {
         info = new AlarmManager.AlarmClockInfo(triggerAt, showPi);
         am.setAlarmClock(info, pi);
       } catch (Exception error) {
-        // 不再 `catch (Exception ignored)`：闹钟时钟位是冻结态下唯一会被准点派发的形态
-        // （见下方 scheduleUnfreezer 的取证），拿不到就必须留痕，否则事后只能靠猜。
         AlarmTrace.record(context, trace, "alarmClockFailed", error.toString());
         info = null;
       }
@@ -85,33 +106,51 @@ public final class AlarmScheduler {
 
     String mode;
     if (info != null) {
-      mode = "alarmClock";
+      mode = isElapsed ? "alarmClockElapsed" : "alarmClock";
     } else if (exactPerm) {
       try {
         if (Build.VERSION.SDK_INT >= 23) {
-          am.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, triggerAt, pi);
-          mode = "exactIdle";
+          if (isElapsed && elapsedTriggerAtMs > 0) {
+            am.setExactAndAllowWhileIdle(AlarmManager.ELAPSED_REALTIME_WAKEUP, elapsedTriggerAtMs, pi);
+            mode = "exactElapsed";
+          } else {
+            am.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, triggerAt, pi);
+            mode = "exactIdle";
+          }
         } else {
-          am.setExact(AlarmManager.RTC_WAKEUP, triggerAt, pi);
-          mode = "exact";
+          if (isElapsed && elapsedTriggerAtMs > 0) {
+            am.setExact(AlarmManager.ELAPSED_REALTIME_WAKEUP, elapsedTriggerAtMs, pi);
+            mode = "exactElapsed";
+          } else {
+            am.setExact(AlarmManager.RTC_WAKEUP, triggerAt, pi);
+            mode = "exact";
+          }
         }
       } catch (Exception error) {
         AlarmTrace.record(context, trace, "exactScheduleFailed", error.toString());
-        am.set(AlarmManager.RTC_WAKEUP, triggerAt, pi);
-        mode = "inexactFallback";
+        if (isElapsed && elapsedTriggerAtMs > 0) {
+          am.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, elapsedTriggerAtMs, pi);
+          mode = "inexactElapsedFallback";
+        } else {
+          am.set(AlarmManager.RTC_WAKEUP, triggerAt, pi);
+          mode = "inexactFallback";
+        }
       }
     } else {
-      // 无精确闹钟权限：官方认可的降级形态。`set()` 由系统批量对齐，**不保证准点**
-      // （官方对「用户指定时间之后发生的动作」正是推荐 `set()`）。如实记 mode。
-      am.set(AlarmManager.RTC_WAKEUP, triggerAt, pi);
-      mode = "inexactNoPermission";
+      // 无精确闹钟权限：官方认可的降级形态。
+      if (isElapsed && elapsedTriggerAtMs > 0) {
+        am.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, elapsedTriggerAtMs, pi);
+        mode = "inexactNoPermissionElapsed";
+      } else {
+        am.set(AlarmManager.RTC_WAKEUP, triggerAt, pi);
+        mode = "inexactNoPermission";
+      }
     }
 
     AlarmTrace.record(context, trace, "scheduled",
       "triggerAt=" + triggerAt + ";mode=" + mode);
 
     // 解冻器**必须**留在这次判定之外：即使精确排程拿不到，进程仍然需要被拉起来。
-    // 否则 F3 的解冻（「只有打开 App 才响」的那个修复）在权限缺失时整条失效。
     scheduleUnfreezer(context, am, id, trace, delivery, triggerAt, flags, info);
   }
 

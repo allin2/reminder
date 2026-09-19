@@ -28,6 +28,15 @@ public class AlarmTestReceiver extends BroadcastReceiver {
   public static final String EXTRA_LEVEL = "level";
   /** L04：投递时的事项数据版本 */
   public static final String EXTRA_ITEM_REV = "itemRev";
+  /**
+   * UX-T03：提醒键 `<attempt>@<原定时刻>` 与计划时刻。
+   *
+   * 为什么要一路带到这里：送达证据的**最小身份**是「事项 + 逻辑轮次 + 计划时刻 + 载体」，
+   * 时间戳或标题单独都不能当身份。没有这两个 extra，接收侧就算知道自己响过，
+   * 也说不清「响的是哪一轮」—— 回写到三态台账时只能计成 unknown。
+   */
+  public static final String EXTRA_REMINDER_KEY = "reminderKey";
+  public static final String EXTRA_PLANNED_AT = "plannedAt";
   public static final String CHANNEL_ID = "attention-alarm-v4";
   public static final String CHANNEL_NAME = "提醒闹钟";
   /**
@@ -57,6 +66,8 @@ public class AlarmTestReceiver extends BroadcastReceiver {
   public static final String KEY_DELIVERY_PATH = "deliveryPath";
   /** V1：界面是否真的显示出来（窗口可见，或获得窗口焦点） */
   public static final String KEY_DELIVERY_VISIBLE = "deliveryVisible";
+  /** 系统通知已提交到 NotificationManager；不等同于横幅已被 OEM 展示。 */
+  public static final String KEY_DELIVERY_NOTIFICATION_POSTED = "deliveryNotificationPosted";
   /** V1：判定「界面没能显示出来」的时刻；0 = 没被判过 */
   public static final String KEY_DELIVERY_HIDDEN_AT = "deliveryHiddenAt";
   /**
@@ -133,6 +144,13 @@ public class AlarmTestReceiver extends BroadcastReceiver {
     String itemRev = intent.getStringExtra(EXTRA_ITEM_REV);
     if (itemId == null) itemId = "";
     if (itemRev == null || itemRev.isEmpty()) itemRev = "0";
+    // UX-T03：这一行就是「系统接收」的落点 —— 只有走到这里的投递才写证据。
+    // 之后的通知提交 / 声振请求 / 窗口可见都**不**在此处升级层级：
+    // 接收可确认时只写「系统已接收」，绝不写成用户看到或已读。
+    DeliveryEvidenceStore.record(context, itemId,
+      intent.getStringExtra(EXTRA_REMINDER_KEY),
+      intent.getLongExtra(EXTRA_PLANNED_AT, 0L),
+      "alarm", itemRev, trace);
     boolean fullScreen = intent.getBooleanExtra(EXTRA_FULL_SCREEN, true);
     if (title == null || title.isEmpty()) title = "安心收件箱";
     if (body == null || body.isEmpty()) body = "有一条事项需要你确认";
@@ -152,16 +170,16 @@ public class AlarmTestReceiver extends BroadcastReceiver {
     boolean locked = isKeyguardLocked(context);
     boolean inCall = isCallActive(context);
 
-    // V3：两条启动路径必须**按环境互斥**，绝不两路同时去拉同一个 AlarmActivity。
-    // 平台语义（AOSP 行为表，取证见 docs/reviews/vivo-device-test-2026-09-17.md §5.5）：
+    // A-03：界面直起与系统通知是两层兜底，共用同一个 token 保证重复 Intent 幂等。
+    // 平台语义：
     //   · 锁屏 / 息屏 / AOD：全屏意图由系统接管，系统此时会真的全屏；
     //   · 解锁亮屏：系统会把全屏意图**有意降级成横幅**，只能自己把界面拉起来（需 BAL 豁免）。
-    // 此前两路都开，锁屏时同一个 Activity 被拉起两次，现场实测产生
-    // replaced different delivery → effectsStopped → audioStarted → duplicateIntent：
-    // 响铃被打断后重启，窗口可见性一并受损。
+    // 系统通知必须在两格都存在；否则 directPath 被 OEM 拦截时只剩通知中心条目，没有横幅请求。
     boolean backgroundDelivery = locked || !screenOn;
-    /** 锁屏/息屏：系统全屏意图是**兜底**（真机上它并不总会拉起 Activity，见下方直起段） */
-    boolean fsiPath = fullScreen && backgroundDelivery;
+    /** 系统全屏 Intent：锁屏时尝试全屏，解锁时请求 heads-up 横幅。 */
+    // A-03：全屏 Intent 也是解锁亮屏时的系统横幅请求。Android 会在锁屏/息屏时全屏，
+    // 在解锁亮屏时降级为 heads-up。不能因为同时尝试 directPath 就把这个系统兜底摘掉。
+    boolean fsiPath = fullScreen;
     /**
      * Q5：解锁时不得打断通话；锁屏时不受此限（锁屏本就是闹钟优先的场景）。
      *
@@ -171,7 +189,7 @@ public class AlarmTestReceiver extends BroadcastReceiver {
      * 直起改为**与全屏意图并存**，仅「解锁 + 通话中」这一格让路。
      */
     boolean directPath = fullScreen && (!inCall || locked);
-    String path = !directPath ? "banner" : backgroundDelivery ? "fsi+direct" : "direct";
+    String path = !directPath ? "banner" : backgroundDelivery ? "fsi+direct" : "direct+banner";
 
     try {
       // Q3：先落「尝试投递」的台账（含投递当时的环境），再尝试起全屏。
@@ -295,14 +313,12 @@ public class AlarmTestReceiver extends BroadcastReceiver {
       PendingIntent stopPi = PendingIntent.getBroadcast(context, id, stop, flags);
       builder.addAction(android.R.drawable.ic_menu_close_clear_cancel, "停止声振", stopPi);
       builder.setDeleteIntent(stopPi);
-      // V3：只有「锁屏/息屏」这一格才挂全屏意图（系统会真的用它全屏）；
-      // 解锁亮屏时系统只会把它降级成横幅 —— 挂上去没有收益，反而会让这一次投递的
-      // 全屏意图与直起的界面争抢同一个 Activity。同时把同 id 的旧通知撤掉，
-      // 确保上一次投递残留的全屏意图不会继续留在系统里。
+      // A-03：所有 fullScreen 投递都挂同一 PendingIntent。
+      // · 锁屏/息屏：系统可使用它拉起全屏；
+      // · 解锁且其他应用在前台：平台按规则降级成 heads-up 横幅。
+      // directPath 仍并行尝试；同 token 的 onNewIntent 是幂等的，不会重启声振。
       if (fsiPath) {
         builder.setFullScreenIntent(contentPi, true);
-      } else {
-        try { nm.cancel(id); } catch (Exception ignored) {}
       }
 
       try {
@@ -315,8 +331,10 @@ public class AlarmTestReceiver extends BroadcastReceiver {
         // D59 相应地把所有权收回 AlarmRingService（前台服务自播），本行是那次裁决的落点。
         Notification notification = builder.build();
         if (!ActiveAlarmStore.postIfActive(context, id, trace, notification)) return;
+        recordNotificationPosted(context, trace);
         AlarmTrace.record(context, trace, "notifyReturned",
-          "silent; sound+vibration carried by AlarmRingService; returned; not proof of display");
+          "system notification posted; fullScreenIntent=" + fsiPath
+            + "; sound+vibration carried by AlarmRingService; banner visibility is OEM-controlled");
       } catch (Exception error) {
         AlarmTrace.record(context, trace, "notifyFailed", error.toString());
       }
@@ -342,12 +360,14 @@ public class AlarmTestReceiver extends BroadcastReceiver {
                                     boolean fullScreen, boolean screenOn, boolean locked,
                                     boolean inCall, String path) {
     try {
-      SharedPreferences sp = context.getSharedPreferences(AlarmActivity.PREFS, Context.MODE_PRIVATE);
+      SharedPreferences sp = DirectBootUtils.getSafeSharedPreferences(context, AlarmActivity.PREFS, Context.MODE_PRIVATE);
+      if (sp == null) return;
       sp.edit()
         .putLong(KEY_DELIVERY_AT, System.currentTimeMillis())
         .putBoolean(KEY_DELIVERY_ATTEMPTED, true)
         .putLong(KEY_DELIVERY_SHOWN_AT, 0L)
         .putBoolean(KEY_DELIVERY_VISIBLE, false)
+        .putBoolean(KEY_DELIVERY_NOTIFICATION_POSTED, false)
         .putLong(KEY_DELIVERY_HIDDEN_AT, 0L)
         .putString(KEY_DELIVERY_PATH, path == null ? "" : path)
         .putString(KEY_DELIVERY_TITLE, title == null ? "" : title)
@@ -372,6 +392,20 @@ public class AlarmTestReceiver extends BroadcastReceiver {
         + " screenOn=" + screenOn + " locked=" + locked + " inCall=" + inCall
         + " canDrawOverlays=" + canDrawOverlays(context));
     } catch (Exception ignored) {}
+  }
+
+  private static void recordNotificationPosted(Context context, String trace) {
+    try {
+      SharedPreferences sp = DirectBootUtils.getSafeSharedPreferences(
+        context, AlarmActivity.PREFS, Context.MODE_PRIVATE);
+      if (sp == null) return;
+      // 只允许本次投递写回，避免迟到旧通知覆盖新投递结局。
+      if (!String.valueOf(trace).equals(sp.getString(KEY_DELIVERY_TRACE, ""))) return;
+      sp.edit().putBoolean(KEY_DELIVERY_NOTIFICATION_POSTED, true).apply();
+      AlarmTrace.record(context, trace, "systemNotificationPosted", "NotificationManager accepted active delivery");
+    } catch (Exception error) {
+      AlarmTrace.record(context, trace, "systemNotificationRecordFailed", error.toString());
+    }
   }
 
   /**
@@ -409,13 +443,17 @@ public class AlarmTestReceiver extends BroadcastReceiver {
   static Intent fillDelivery(Intent out, Intent source) {
     if (out == null || source == null) return out;
     String[] stringKeys = {
-      EXTRA_TITLE, EXTRA_BODY, EXTRA_ITEM_ID, EXTRA_LEVEL, EXTRA_ITEM_REV, AlarmTrace.EXTRA
+      EXTRA_TITLE, EXTRA_BODY, EXTRA_ITEM_ID, EXTRA_LEVEL, EXTRA_ITEM_REV,
+      // UX-T03：两条路共用同一套 extras，提醒键与计划时刻也必须一起带过去，
+      // 否则「服务那一路解冻成功并真的响铃」这一次投递在证据台账里没有身份。
+      EXTRA_REMINDER_KEY, AlarmTrace.EXTRA
     };
     for (String key : stringKeys) {
       String value = source.getStringExtra(key);
       if (value != null) out.putExtra(key, value);
     }
     out.putExtra(EXTRA_ID, source.getIntExtra(EXTRA_ID, 90002));
+    out.putExtra(EXTRA_PLANNED_AT, source.getLongExtra(EXTRA_PLANNED_AT, 0L));
     out.putExtra(EXTRA_FULL_SCREEN, source.getBooleanExtra(EXTRA_FULL_SCREEN, true));
     out.putExtra(AlarmTrace.TEST, source.getBooleanExtra(AlarmTrace.TEST, false));
     return out;

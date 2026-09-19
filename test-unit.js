@@ -6,6 +6,8 @@ const parse = require(path.join(__dirname, "lib/parse-cn.js"));
 const repeat = require(path.join(__dirname, "lib/repeat.js"));
 const reminder = require(path.join(__dirname, "lib/reminder.js"));
 const storageMod = require(path.join(__dirname, "lib/storage.js"));
+const feedbackMod = require(path.join(__dirname, "lib/feedback.js"));
+const evidenceMod = require(path.join(__dirname, "lib/delivery-evidence.js"));
 
 let passed = 0, failed = 0;
 const failures = [];
@@ -563,6 +565,337 @@ section("storage");
     ok("storage async", false, e && e.message);
     finish();
   });
+}
+
+/* ---------- UX-T01 / T02 / A01：反馈与动作语义（lib/feedback.js） ---------- */
+section("feedback — 保存结果与排程结果分开");
+{
+  const fb = feedbackMod;
+
+  ok("保存中不得出现「已保存」", !/已保存/.test(fb.saveFeedback("saving").text));
+  const failedSave = fb.saveFeedback("failed");
+  ok("保存失败不伪装成功", !/已保存/.test(failedSave.text) && failedSave.actionKind === "retry-save");
+  const degraded = fb.saveFeedback("degraded");
+  ok("降级保存按实际保障程度提示", /受限/.test(degraded.text));
+
+  const nativeOK = {
+    isNative: true, bridgeReady: true, notifySwitch: true, notifications: "granted",
+    exactAlarm: "granted", reliability: "exact", alarmCount: 0, alarmScheduled: 0,
+    capabilities: { notifications: true, screen: true, exact: true }
+  };
+  const timed = { hasTrigger: true, isFallbackTrigger: false, triggerAt: Date.now() + 3600000 };
+
+  const vOK = fb.reminderFeedback({ persistence: "confirmed", item: timed, native: nativeOK, itemScheduled: true });
+  ok("本条已获真实确认 → scheduled", vOK.kind === fb.REMINDER_KINDS.SCHEDULED, vOK.kind);
+  ok("已确认的文案给出具体时间", /明天|今天|\d{1,2}月\d{1,2}日/.test(vOK.text), vOK.text);
+
+  // 关键反例：全局一切正常，但**本条**的排程结果未知 —— 不许冒充已安排
+  const vUnknown = fb.reminderFeedback({ persistence: "confirmed", item: timed, native: nativeOK, itemScheduled: null });
+  ok("全局正常不能证明刚保存的这一条已排成功", vUnknown.kind === fb.REMINDER_KINDS.UNKNOWN, vUnknown.kind);
+
+  const noTime = fb.reminderFeedback({
+    persistence: "confirmed",
+    item: { hasTrigger: false, isFallbackTrigger: false },
+    native: nativeOK, itemScheduled: null
+  });
+  ok("没有明确时间 → 待补提醒时间", noTime.kind === fb.REMINDER_KINDS.NO_TIME, noTime.kind);
+  ok("待整理文案不得暴露兜底时间为事项承诺", !/\d{1,2}:\d{2}/.test(noTime.text), noTime.text);
+
+  const fbItem = fb.reminderFeedback({
+    persistence: "confirmed",
+    item: { hasTrigger: true, isFallbackTrigger: true, triggerAt: Date.now() + 7200000 },
+    native: nativeOK, itemScheduled: true
+  });
+  ok("兜底时间不冒充已定的提醒时间", fbItem.kind === fb.REMINDER_KINDS.NO_TIME, fbItem.kind);
+
+  const vOff = fb.reminderFeedback({
+    persistence: "confirmed", item: timed, itemScheduled: null,
+    native: Object.assign({}, nativeOK, { notifySwitch: false })
+  });
+  ok("总开关关闭 → 提醒已关闭", vOff.kind === fb.REMINDER_KINDS.SWITCH_OFF, vOff.kind);
+  ok("不擅自替用户宣布已开启", !/已开启|已打开/.test(vOff.text), vOff.text);
+
+  const vDenied = fb.reminderFeedback({
+    persistence: "confirmed", item: timed, itemScheduled: null,
+    native: Object.assign({}, nativeOK, { notifications: "denied", reliability: "in-app" })
+  });
+  ok("通知权限被拒 → permission-denied", vDenied.kind === fb.REMINDER_KINDS.PERMISSION_DENIED, vDenied.kind);
+  ok("权限被拒文案不得说「完全不响」", !/完全|静默|不响/.test(vDenied.text), vDenied.text);
+
+  const vAlarmLimited = fb.reminderFeedback({
+    persistence: "confirmed", item: timed, itemScheduled: true,
+    native: Object.assign({}, nativeOK, {
+      notifications: "denied", reliability: "in-app", alarmCount: 1, alarmScheduled: 1,
+      capabilities: { notifications: false, screen: false, exact: true }
+    })
+  });
+  ok("闹钟可排但通知受限 → alarm-limited", vAlarmLimited.kind === fb.REMINDER_KINDS.ALARM_LIMITED, vAlarmLimited.kind);
+  ok("受限文案明确「已安排闹钟」而不是「没安排」", /已安排闹钟/.test(vAlarmLimited.text), vAlarmLimited.text);
+  ok("受限文案不误称完全不响", !/完全|静默/.test(vAlarmLimited.text), vAlarmLimited.text);
+
+  const vInexact = fb.reminderFeedback({
+    persistence: "confirmed", item: timed, itemScheduled: null,
+    native: Object.assign({}, nativeOK, { exactAlarm: "denied", reliability: "inexact" })
+  });
+  ok("只能非精确 → 提醒可能延迟", vInexact.kind === fb.REMINDER_KINDS.INEXACT, vInexact.kind);
+
+  const vErr = fb.reminderFeedback({
+    persistence: "confirmed", item: timed, itemScheduled: null,
+    native: Object.assign({}, nativeOK, { reliability: "error" })
+  });
+  ok("对账失败 → 排程失败 + 重试", vErr.kind === fb.REMINDER_KINDS.ERROR && vErr.actionKind === "retry-schedule");
+
+  const vWeb = fb.reminderFeedback({ persistence: "confirmed", item: timed, native: { isNative: false }, itemScheduled: null });
+  ok("Web/PWA 不显示 Android 就绪结论", vWeb.kind === fb.REMINDER_KINDS.WEB, vWeb.kind);
+
+  // 反例（有牙齿）：任何输入组合都不许产出「漏提醒」这一结论
+  const combos = [];
+  ["confirmed", "degraded", "failed"].forEach(p => {
+    [true, false].forEach(sc => {
+      [null, nativeOK,
+        Object.assign({}, nativeOK, { notifySwitch: false }),
+        Object.assign({}, nativeOK, { notifications: "denied" }),
+        Object.assign({}, nativeOK, { bridgeReady: false }),
+        Object.assign({}, nativeOK, { reliability: "error" }),
+        { isNative: false }].forEach(n => {
+        [timed, { hasTrigger: false }, { hasTrigger: true, isFallbackTrigger: true }].forEach(it => {
+          combos.push({ persistence: p, item: it, native: n, itemScheduled: sc });
+        });
+      });
+    });
+  });
+  const wrong = combos.map(c => fb.reminderFeedback(c))
+    .filter(v => /漏提醒|漏了提醒|确定漏/.test(v.text));
+  ok("穷举 " + combos.length + " 种组合：不产出「漏提醒」结论", wrong.length === 0,
+    wrong.length ? JSON.stringify(wrong[0]) : "");
+}
+
+section("feedback — 动作语义与术语");
+{
+  const fb = feedbackMod;
+  const ack = fb.actionSpec("ack");
+  ok("ACK 语义：停止本轮、仍未完成", /仍未完成/.test(ack.sub));
+  ok("ACK 文案不承诺「以后不再提醒」", !/不再提醒|不会再提醒/.test(ack.firstTimeText + ack.sub));
+  ok("ACK 首次反馈提供「稍后提醒」入口", ack.firstTimeAction === "稍后提醒");
+
+  const snooze = fb.actionSpec("snooze", { when: Date.now() + 7200000 });
+  ok("稍后提醒展示具体时间", /今天|明天|\d{1,2}月\d{1,2}日/.test(snooze.sub), snooze.sub);
+  ok("原生快捷稍后明确标注 2 小时", /2 小时/.test(snooze.nativeSub));
+
+  const done = fb.actionSpec("done", { hasRepeat: false });
+  ok("完成：结束当前实例并归档", /归档/.test(done.sub));
+  ok("完成后撤销窗口为 8 秒", done.undoWindowMs === 8000);
+  const doneRep = fb.actionSpec("done", { hasRepeat: true });
+  ok("周期完成的反馈说明是否存在下一周期", /下一周期/.test(doneRep.sub));
+
+  const stop = fb.actionSpec("stop");
+  ok("关闭声振不冒充 ACK/完成/稍后", stop.notAck === true && !/已确认|已完成|稍后/.test(stop.sub));
+
+  ok("术语替换 ACK", fb.humanize("点击 ACK 按钮") === "点击 我知道了 按钮", fb.humanize("点击 ACK 按钮"));
+  ok("术语替换 NEEDS_REVIEW", fb.humanize("NEEDS_REVIEW 记录") === "待整理 记录");
+  ok("术语替换 Capture", fb.humanize("Capture 一条") === "记下 一条");
+
+  const s1 = fb.captureSummary({});
+  ok("无时间摘要明确说明会被先记下", s1.empty === true && /待整理/.test(s1.text));
+  const s2 = fb.captureSummary({ triggerAt: Date.now() + 3600000, repeatText: "每两周", deadlineAt: Date.now() + 86400000 });
+  ok("摘要展示有效提醒时间", /提醒/.test(s2.text));
+  ok("摘要不隐藏已识别的周期", /每两周/.test(s2.text), s2.text);
+  ok("摘要展示截止", /截止/.test(s2.text));
+
+  const st = fb.setupSteps({ notifications: "granted", exactAlarm: "denied" });
+  ok("已满足的能力不重复申请", st.next && st.next.id === "exact", st.next && st.next.id);
+  ok("每个步骤都解释「为何需要」与「拒绝后的影响」",
+    st.steps.every(s => s.why && s.denyImpact));
+  const stAll = fb.setupSteps({ notifications: "granted", exactAlarm: "granted" });
+  ok("测试步骤仍可达（未测试前不算全通过）", !stAll.allDone || stAll.steps.some(s => s.id === "test"));
+  ok("未回答测试反馈不等于失败或成功", fb.testFeedbackVerdict(undefined).ok === null);
+  ok("不确定既不算失败也不算成功", fb.testFeedbackVerdict("unsure").ok === null);
+  ok("区分「没收到」与「不确定」", fb.testFeedbackVerdict("missed").ok === false);
+}
+
+/* ---------- UX-T03：原生送达证据（lib/delivery-evidence.js） ---------- */
+section("delivery-evidence — 证据合并与事后核查");
+{
+  const ev = evidenceMod;
+  ok("展示状态里没有 missed 这一档", !Object.prototype.hasOwnProperty.call(ev.STATUS, "MISSED"));
+  const allStates = Object.keys(ev.STATUS).map(k => ev.STATUS[k]);
+  ok("没有代表「漏提醒」的状态值", allStates.indexOf("missed") < 0 && allStates.indexOf("fail") < 0);
+
+  const now = 1789000000000;
+  // 独立验收 F06 / R4：回执必须锚到**我们登记过的那一轮**，所以事项先得有一份排程登记。
+  // 没有登记的轮次一律 unknown —— 宁可「尚未确认」，也不谎报「系统已接收」。
+  const scheduledAt = (at, roundBase) => ({ at: at, state: "scheduled", roundBase: roundBase });
+  const baseItem = () => ({
+    id: "i1", status: "waiting", triggerAt: now - 3600000, rev: 3,
+    reminderEvents: {
+      ["0@" + (now - 3600000)]: scheduledAt(now - 3600000, now - 3600000),
+      ["1@" + (now - 1800000)]: scheduledAt(now - 1800000, now - 3600000)
+    }
+  });
+
+  const rawGood = [{ id: 5, token: "t1", itemId: "i1", itemRev: "3", reminderKey: "0@" + (now - 3600000), receivedAt: now - 3599000, carrier: "alarm" }];
+  const norm = ev.normalizeEvidence(rawGood, "bridge");
+  ok("身份完整的事件被接受", norm.length === 1 && norm[0].valid === true);
+  ok("最小身份含事项 ID + 提醒键 + 计划时刻 + 载体", norm[0].itemId === "i1" && norm[0].key && norm[0].at && norm[0].carrier === "alarm");
+  ok("只声明「系统已接收」，不写成用户看到", norm[0].level === "received");
+
+  const items = [baseItem()];
+  const r1 = ev.mergeEvidence(items, norm, now);
+  ok("首次合并写入 delivered", r1.changed === true && r1.applied === 1);
+  ok("送达证据落在三态台账上", items[0].reminderEvents[norm[0].key].state === "delivered");
+
+  const r2 = ev.mergeEvidence(items, ev.normalizeEvidence(rawGood, "bridge"), now);
+  ok("重复回执幂等：第二次不产生变化", r2.changed === false && r2.applied === 0 && r2.deduped === 1);
+  // 差分对照：不同 key 的证据**确实**会改变 —— 证明上面的 false 不是因为函数恒空转
+  const r2b = ev.mergeEvidence(items, ev.normalizeEvidence(
+    [{ itemId: "i1", reminderKey: "1@" + (now - 1800000), receivedAt: now - 1799000, itemRev: "3", carrier: "alarm" }], "bridge"), now);
+  ok("对照组：换一个提醒键会正常写入（上面的幂等不是空转）", r2b.changed === true && r2b.applied === 1);
+
+  // 旧轮次守卫：键的原定时刻早于当前触发起点
+  const item2 = [{ id: "i2", status: "waiting", triggerAt: now, rev: 9 }];
+  const stale = ev.normalizeEvidence(
+    [{ itemId: "i2", reminderKey: "0@" + (now - 7200000), receivedAt: now - 7199000, itemRev: "9", carrier: "alarm" }], "bridge");
+  const rs = ev.mergeEvidence(item2, stale, now);
+  ok("旧轮次回执不写入（不污染新轮次）", rs.applied === 0 && item2[0].reminderEvents === undefined);
+  ok("旧轮次回执的判据是 stale-round，不是被身份检查顺带挡掉",
+    rs.reasons.indexOf("stale-round") >= 0, JSON.stringify(rs));
+  // 成对差分：两条事项只差「本轮有没有登记过这个键」
+  const freshKey = "0@" + (now + 60000);
+  const item2b = [{
+    id: "i2b", status: "waiting", triggerAt: now, rev: 9,
+    reminderEvents: { [freshKey]: scheduledAt(now + 60000, now) }
+  }];
+  const fresh = ev.normalizeEvidence(
+    [{ itemId: "i2b", reminderKey: freshKey, receivedAt: now + 61000, itemRev: "9", carrier: "alarm" }], "bridge");
+  const rf = ev.mergeEvidence(item2b, fresh, now);
+  ok("成对差分：仅把原定时刻挪进本轮就必须写入", rf.applied === 1, JSON.stringify(rf));
+
+  // R4 反例（独立验收报告 F06）：原定时刻**落在本轮内**，但这一轮我们从来没登记过。
+  // 旧实现只比 `ev.at >= item.triggerAt`，在这里会写出「系统已接收」—— 那是假的。
+  const item2c = [{ id: "i2c", status: "waiting", triggerAt: now, rev: 9, reminderEvents: {} }];
+  const unreg = ev.normalizeEvidence(
+    [{ itemId: "i2c", reminderKey: "0@" + (now + 90000), receivedAt: now + 91000, itemRev: "9", carrier: "alarm" }], "bridge");
+  const ru = ev.mergeEvidence(item2c, unreg, now);
+  ok("R4 未登记的轮次不写入（宁可尚未确认，不谎报已接收）",
+    ru.applied === 0 && ru.unknown === 1 && ru.reasons[0] === "unregistered-round" &&
+    Object.keys(item2c[0].reminderEvents).length === 0, JSON.stringify(ru));
+
+  // 独立复验 R-F06 / X1：键**登记过**、原定时刻也落在本轮范围内，但它属于**上一轮**。
+  // 「稍后提醒」把触发起点往后挪之后，旧轮的追提醒键照样落在新范围内 ——
+  // 只判「登记过」就会让旧回执把新轮抬成「系统已接收」。
+  const roundItem = (id) => ({
+    id: id, status: "waiting", triggerAt: now, rev: 9,
+    reminderEvents: {
+      // 当前轮：真的登记过，还没收到证据
+      ["0@" + (now + 60000)]: { at: now + 60000, state: "scheduled", roundBase: now },
+      // 上一轮留下的历史：原定时刻晚于当前起点，所以范围判据拦不住它
+      ["1@" + (now + 1800000)]: { at: now + 1800000, state: "cancelled", roundBase: now - 3600000 }
+    }
+  });
+  ok("R-F06 条目自带轮次身份时以它为准",
+    ev.entryRoundBase({ triggerAt: now }, { at: now + 1000, state: "delivered", roundBase: now - 5000 }) === now - 5000);
+  ok("Y2 旧版写入的条目没有轮次身份时保持不可验证（不冒充当前轮）",
+    ev.entryRoundBase({ triggerAt: now }, { at: now + 1000, state: "delivered" }) === null);
+  ok("Y2 对照：旧版 0@triggerAt 首期键可证明属于当前轮",
+    ev.entryRoundBase({ triggerAt: now }, { at: now, state: "delivered" }, "0@" + now) === now);
+  ok("Y2 旧版追提醒即使落在当前范围也不可从时刻猜成当前轮",
+    ev.entryRoundBase({ triggerAt: now }, { at: now + 1800000, state: "delivered" }, "1@" + (now + 1800000)) === null);
+
+  const item2d = [roundItem("i2d")];
+  const oldRoundEv = ev.normalizeEvidence(
+    [{ itemId: "i2d", reminderKey: "1@" + (now + 1800000), receivedAt: now + 1800000, itemRev: "8", carrier: "alarm" }], "bridge");
+  const rd = ev.mergeEvidence(item2d, oldRoundEv, now);
+  ok("R-F06 登记过但属于上一轮的键不写入（判据 superseded-round，不是被范围判据顺带挡掉）",
+    rd.applied === 0 && rd.unknown === 1 && rd.reasons[0] === "superseded-round", JSON.stringify(rd));
+  ok("R-F06 旧轮的键保留为历史（cancelled 不被改写成 delivered）",
+    item2d[0].reminderEvents["1@" + (now + 1800000)].state === "cancelled",
+    JSON.stringify(item2d[0].reminderEvents));
+
+  // 对照组：同一事项、同一批形状，只把回执换成**当前轮**登记的那条 ⇒ 必须写入
+  const item2e = [roundItem("i2e")];
+  const newRoundEv = ev.normalizeEvidence(
+    [{ itemId: "i2e", reminderKey: "0@" + (now + 60000), receivedAt: now + 61000, itemRev: "9", carrier: "alarm" }], "bridge");
+  const re = ev.mergeEvidence(item2e, newRoundEv, now);
+  ok("R-F06 对照组：属于当前轮的回执照常写入（上面的拒绝不是通路故障）",
+    re.applied === 1 && item2e[0].reminderEvents["0@" + (now + 60000)].state === "delivered", JSON.stringify(re));
+
+  // 展示面：旧轮的 delivered 不能让当前轮显示「系统已接收」
+  const statusFixture = (deliveredRound) => ({
+    id: "i2f", status: "waiting", triggerAt: now, rev: 9,
+    reminderEvents: {
+      ["0@" + (now + 60000)]: { at: now + 60000, state: "scheduled", roundBase: now },
+      ["1@" + (now + 1800000)]: { at: now + 1800000, state: "delivered", receivedAt: now + 1810000, roundBase: deliveredRound }
+    }
+  });
+  const oldDelivered = ev.evidenceStatusFor(statusFixture(now - 3600000),
+    { now: now + 1810000, evidenceReadable: true });
+  ok("R-F06 旧轮的 delivered 不抬高当前轮的状态（旧实现：直接显示「系统已接收」）",
+    oldDelivered.state !== ev.STATUS.DELIVERED && oldDelivered.text !== ev.STATUS_TEXT.delivered,
+    JSON.stringify(oldDelivered));
+  const curDelivered = ev.evidenceStatusFor(statusFixture(now),
+    { now: now + 1810000, evidenceReadable: true });
+  ok("R-F06 对照组：属于当前轮的 delivered 仍然算数",
+    curDelivered.state === ev.STATUS.DELIVERED, JSON.stringify(curDelivered));
+
+  // 完成事项不被复活
+  const item3 = [{
+    id: "i3", status: "archived", completedAt: now - 1000, triggerAt: now - 3600000, rev: 4,
+    reminderEvents: { ["0@" + (now - 3600000)]: scheduledAt(now - 3600000, now - 3600000) }
+  }];
+  ev.mergeEvidence(item3, ev.normalizeEvidence(
+    [{ itemId: "i3", reminderKey: "0@" + (now - 3600000), receivedAt: now - 3599000, itemRev: "4", carrier: "alarm" }], "bridge"), now);
+  ok("迟到回执不复活已完成事项", item3[0].status === "archived" && item3[0].completedAt === now - 1000);
+
+  // 身份缺失/事项不存在 → unknown，不反推失败
+  const bad = ev.normalizeEvidence([{ id: 7, itemId: "i1", receivedAt: now }, { title: "只有标题" }], "bridge");
+  const rr = ev.mergeEvidence([baseItem()], bad, now);
+  ok("缺身份的证据计入 unknown", rr.unknown === 2 && rr.applied === 0, JSON.stringify(rr));
+  ok("unknown 不等于失败（不产生任何失败标记）", rr.reasons.every(x => x === "missing-identity"));
+  const orphan = ev.mergeEvidence([baseItem()], ev.normalizeEvidence(
+    [{ itemId: "nope", reminderKey: "0@" + now, receivedAt: now, itemRev: "1", carrier: "alarm" }], "bridge"), now);
+  ok("事项已不存在 → unknown 而不是指控", orphan.unknown === 1 && orphan.reasons[0] === "item-missing");
+
+  // 展示判定
+  const noReg = ev.evidenceStatusFor({ id: "x", triggerAt: now }, { now: now });
+  ok("没有登记过排程 → 无法核查（不是漏）", noReg.state === ev.STATUS.UNVERIFIABLE, noReg.state);
+  ok("无法核查/未知的文案都不含「漏」", !/漏/.test(noReg.text), noReg.text);
+
+  const pendingItem = { id: "p", triggerAt: now + 600000, reminderEvents: { ["0@" + (now + 600000)]: { at: now + 600000, state: "scheduled", roundBase: now + 600000 } } };
+  ok("未到点 → pending", ev.evidenceStatusFor(pendingItem, { now: now }).state === ev.STATUS.PENDING);
+
+  const dueNoEvidence = { id: "d", triggerAt: now - 3600000, reminderEvents: { ["0@" + (now - 3600000)]: { at: now - 3600000, state: "scheduled", roundBase: now - 3600000 } } };
+  const st1 = ev.evidenceStatusFor(dueNoEvidence, { now: now });
+  ok("到点但缺证据 → unknown", st1.state === ev.STATUS.UNKNOWN, st1.state);
+  ok("缺证据的文案只说「尚未确认」", /尚未确认/.test(st1.text), st1.text);
+  ok("缺证据绝不判成失败", st1.isMissed === false && !/失败|漏/.test(st1.text));
+
+  const st2 = ev.evidenceStatusFor(dueNoEvidence, { now: now - 3600000 + 30000 });
+  ok("刚到点 → processing（不立刻断言结果）", st2.state === ev.STATUS.PROCESSING, st2.state);
+  const st3 = ev.evidenceStatusFor(dueNoEvidence, { now: now, evidenceReadable: false });
+  ok("证据通道读不到 → unknown（不指控）", st3.state === ev.STATUS.UNKNOWN);
+  const st4 = ev.evidenceStatusFor(dueNoEvidence, { now: now, readbackInFlight: true });
+  ok("回读进行中 → processing", st4.state === ev.STATUS.PROCESSING);
+
+  const delivered = { id: "z", triggerAt: now - 3600000, reminderEvents: { ["0@" + (now - 3600000)]: { at: now - 3600000, state: "delivered", level: "received", roundBase: now - 3600000 } } };
+  const st5 = ev.evidenceStatusFor(delivered, { now: now });
+  ok("有证据 → delivered", st5.state === ev.STATUS.DELIVERED);
+  ok("有证据也只说「系统已接收」", /系统已接收/.test(st5.text) && !/已读|用户看到/.test(st5.text), st5.text);
+
+  // 乱序：先收到晚轮次、再收到早轮次
+  const item4 = [{
+    id: "i4", status: "waiting", triggerAt: now - 7200000, rev: 1,
+    reminderEvents: {
+      ["0@" + (now - 7200000)]: scheduledAt(now - 7200000, now - 7200000),
+      ["3@" + (now - 1800000)]: scheduledAt(now - 1800000, now - 7200000)
+    }
+  }];
+  ev.mergeEvidence(item4, ev.normalizeEvidence(
+    [{ itemId: "i4", reminderKey: "3@" + (now - 1800000), receivedAt: now - 1799000, itemRev: "1", carrier: "alarm" }], "bridge"), now);
+  ev.mergeEvidence(item4, ev.normalizeEvidence(
+    [{ itemId: "i4", reminderKey: "0@" + (now - 7200000), receivedAt: now - 7199000, itemRev: "1", carrier: "alarm" }], "bridge"), now);
+  ok("乱序到达的两轮证据都能各自关联", Object.keys(item4[0].reminderEvents).length === 2);
+  ok("乱序下展示取最新已送达轮次",
+    ev.evidenceStatusFor(item4[0], { now: now }).at === now - 1800000);
 }
 
 function finish() {

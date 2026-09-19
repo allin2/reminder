@@ -1,0 +1,30 @@
+{
+  "head": "8d1c2617cff3aac5c4450a949c9044b79f63a673",
+  "productAndTestFiles": {
+    "app-core.js": "214aea29aacdb4d38c3d18efdb8ff6abe3dd881f385c569180eef572bc88ae95",
+    "lib/delivery-evidence.js": "7ee77186881d8462450c8fe8a550840647ec9d7626c259fb9e29768290062d03",
+    "test-unit.js": "e1ad9965185edd789cb2fe9ec3e2cdb2c24ce438723506be8f164cf70a0709dd",
+    "test-regressions.js": "6e95f327a70932a29d12111035c86d46aa90114c990151bee7487413fb6fb51b"
+  },
+  "acceptedCandidate": {
+    "directory": "releases/candidates/20260920T014002-ux-y123-fix",
+    "jdk": "Temurin 17.0.20.1",
+    "debug": {
+      "size": 4081606,
+      "sha256": "dbdd79732d0595df3e502c98cfbc66ebeb92651cb5464cbc0faf1953d1a158da"
+    },
+    "release": {
+      "size": 3251418,
+      "sha256": "2d5f5226635c6fc64a773062f312aaa3051929b58ab9166c28354d01bd1c62b9"
+    },
+    "releaseSignerCertificateSha256": "bbdaeece7fa34052a529e3fc3aaab2a4f6d688b7e60845750f10cd4e17469f0b"
+  },
+  "evidence": {
+    "task-delta.patch": "9440e5842b3f4cdd9d426255e05c6f59e26c61b91ae5b212c903d49a2b143bd1",
+    "npm-test.log": "cd2d396e4eb22c1cab64d1be50968d24570709001504c3b2c2c6240446121e0f",
+    "android-unit-jdk17.log": "ce6c30df69c9140135ae3d65d0202dd2ec965e793110edb86c0fecd043b6c9be",
+    "android-assemble-jdk17.log": "c795daa7d839109cbf3e6103fcf637f2ba7b49815bb67d101399e0ca3afc9128",
+    "candidate-entry-diff-jdk17.txt": "77d6b710d8a7666a99ab8728760dd1d9095fde24f40b8b9e0968dd517919f3cd",
+    "apk-web-assets.txt": "b45a85880d2dc1e2720f287fb0f73206c534162379643970a954b5cfbd8db8f3"
+  }
+}

@@ -1,0 +1,39 @@
+=== 候选与真机 APK 身份（2026-09-19 23:22-23:24 CST）===
+
+【设备】
+serial   : QSKFAE95CQEUJZ8L
+model    : PKC130 (OPPO)
+android  : 16 (API 36)
+build    : PKC130_16.0.10.500(CN01)
+locale   : zh-CN (24 小时制)
+
+【覆盖安装前，设备上已装的包】
+pm path        : /data/app/~~SLW24pNx83tiBRk7O3xIDA==/space.alliswell.inbox-nlV5r86MAcSMMrQOykUqiA==/base.apk
+sha256         : dd58144c53753d9a229eed84c0a58616842fda21cf09a94ddf7cae1816401a1f
+size           : 4061135 bytes
+签名证书 DN     : C=US, O=Android, CN=Android Debug
+证书 SHA-256    : 7ad67d49f059c504f43f6866e828b44ac4d03f8fcad8a216e2c689fb504dccc0a
+
+【本次候选（debug，安装用）】
+path           : releases/candidates/20260919-ux-three-priorities/attention-inbox-debug-ux-three-priorities.apk
+sha256         : 69c5761bc624a980937f62ffd93dedcf2f3dec0a9adea73b125013fa9eef6443
+签名证书 SHA-256: 7ad67d49f059c504f43f6866e828b44acd03f8fcad8a216e2c689fb504dccc0a   ← 与已装包同证书
+
+【本次候选（release，仅归档未安装）】
+path           : releases/candidates/20260919-ux-three-priorities/attention-inbox-release-ux-three-priorities.apk
+sha256         : 58925fa4002c9f4e0232d7431f0e22268fbd522eae9f1fbf89649bd4262d3b7c
+签名校验        : v1 / v2 / v3 均通过（apksigner verify -v）
+
+【安装】
+命令           : adb install -r <候选 debug apk>          （-r 保留数据，未卸载、未清数据）
+结果           : Performing Streamed Install / Success
+安装后 pm path : /data/app/~~SLW24pNx83tiBRk7O3xIDA==/space.alliswell.inbox-nlV5r86MAcSMMrQOykUqiA==/base.apk
+安装后 sha256  : 69c5761bc624a980937f62ffd93dedcf2f3dec0a9adea73b125013fa9eef6443   ← 与候选逐字节一致
+
+【安装后用户数据】
+items=36  notes=2  projects=3   schema=5   （探针实测；覆盖安装未清空、未丢失）
+
+【被保留未动的既有产物】
+releases/安心收件箱-debug.apk   sha256 186c28b912000d3e9c34137c75160b3c0ff2a5aba62bd4fed95eff2c1015a523
+  ← 构建脚本会覆盖它；本轮已先备份到 /tmp/ux3p-apk-backup/ 并在构建后按字节还原（见下）
+releases/安心收件箱-release.apk 本轮构建前不存在，构建后已删除，恢复原状

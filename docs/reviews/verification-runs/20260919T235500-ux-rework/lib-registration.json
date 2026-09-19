@@ -1,0 +1,126 @@
+{
+  "checkedAt": "2026-09-19T16:14:59.027Z",
+  "libCount": 10,
+  "wiredInBrowser": [
+    "delivery-evidence.js",
+    "feedback.js",
+    "native-reminders.js",
+    "parse-cn.js",
+    "reminder.js",
+    "repeat.js",
+    "storage.js"
+  ],
+  "unwiredModules": [
+    "lib/export-format.js",
+    "lib/import-extract.js",
+    "lib/import-map.js"
+  ],
+  "rows": [
+    {
+      "file": "lib/delivery-evidence.js",
+      "wiredInBrowser": true,
+      "indexHtml": true,
+      "swAssets": true,
+      "smoke": true,
+      "regressions": true,
+      "complete": true
+    },
+    {
+      "file": "lib/export-format.js",
+      "wiredInBrowser": false,
+      "indexHtml": false,
+      "swAssets": false,
+      "smoke": false,
+      "regressions": false,
+      "complete": false
+    },
+    {
+      "file": "lib/feedback.js",
+      "wiredInBrowser": true,
+      "indexHtml": true,
+      "swAssets": true,
+      "smoke": true,
+      "regressions": true,
+      "complete": true
+    },
+    {
+      "file": "lib/import-extract.js",
+      "wiredInBrowser": false,
+      "indexHtml": false,
+      "swAssets": false,
+      "smoke": false,
+      "regressions": false,
+      "complete": false
+    },
+    {
+      "file": "lib/import-map.js",
+      "wiredInBrowser": false,
+      "indexHtml": false,
+      "swAssets": false,
+      "smoke": false,
+      "regressions": false,
+      "complete": false
+    },
+    {
+      "file": "lib/native-reminders.js",
+      "wiredInBrowser": true,
+      "indexHtml": true,
+      "swAssets": false,
+      "smoke": true,
+      "regressions": true,
+      "complete": false
+    },
+    {
+      "file": "lib/parse-cn.js",
+      "wiredInBrowser": true,
+      "indexHtml": true,
+      "swAssets": true,
+      "smoke": true,
+      "regressions": true,
+      "complete": true
+    },
+    {
+      "file": "lib/reminder.js",
+      "wiredInBrowser": true,
+      "indexHtml": true,
+      "swAssets": true,
+      "smoke": true,
+      "regressions": true,
+      "complete": true
+    },
+    {
+      "file": "lib/repeat.js",
+      "wiredInBrowser": true,
+      "indexHtml": true,
+      "swAssets": true,
+      "smoke": true,
+      "regressions": true,
+      "complete": true
+    },
+    {
+      "file": "lib/storage.js",
+      "wiredInBrowser": true,
+      "indexHtml": true,
+      "swAssets": true,
+      "smoke": true,
+      "regressions": true,
+      "complete": true
+    }
+  ],
+  "wiredGaps": [
+    {
+      "file": "lib/native-reminders.js",
+      "wiredInBrowser": true,
+      "indexHtml": true,
+      "swAssets": false,
+      "smoke": true,
+      "regressions": true,
+      "complete": false
+    }
+  ],
+  "swAssetsMissing": [
+    "native-reminders.js"
+  ],
+  "swCacheId": "attention-inbox-v4",
+  "verdict": "WIRED_GAP SW_ASSETS_GAP"
+}

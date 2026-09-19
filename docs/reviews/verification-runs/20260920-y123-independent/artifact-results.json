@@ -1,0 +1,79 @@
+{
+  "worktree": "/Users/qlyf/.codex/worktrees/3547/reminder",
+  "files": {
+    "app-core.js": {
+      "source": "cf1fe51aef957b79ea38be84b9aa778b42982680e056f1f2578ce60576a82869",
+      "reviewed": "214aea29aacdb4d38c3d18efdb8ff6abe3dd881f385c569180eef572bc88ae95"
+    },
+    "lib/delivery-evidence.js": {
+      "source": "e4662193572e65fa23c8f85562ee64c5a88bb35168ae03cb912246db73849982",
+      "reviewed": "7ee77186881d8462450c8fe8a550840647ec9d7626c259fb9e29768290062d03"
+    },
+    "test-unit.js": {
+      "source": "491b97f151b3d63d01976ae815ad980a39e082520e6e67f2b3e260b5632c755e",
+      "reviewed": "e1ad9965185edd789cb2fe9ec3e2cdb2c24ce438723506be8f164cf70a0709dd"
+    },
+    "test-regressions.js": {
+      "source": "b79a589c5549c90a51fd5cde732d31626a25404b1440cb528449e86c6475d159",
+      "reviewed": "6e95f327a70932a29d12111035c86d46aa90114c990151bee7487413fb6fb51b"
+    }
+  },
+  "candidates": [
+    {
+      "kind": "debug",
+      "sha256": "dbdd79732d0595df3e502c98cfbc66ebeb92651cb5464cbc0faf1953d1a158da",
+      "entryCount": 508,
+      "added": [],
+      "removed": [],
+      "changed": [
+        "META-INF/CERT.RSA",
+        "META-INF/CERT.SF",
+        "META-INF/MANIFEST.MF",
+        "assets/public/app-core.js",
+        "assets/public/lib/delivery-evidence.js"
+      ],
+      "all13WebAssetsEqual": true,
+      "dexEqual": true
+    },
+    {
+      "kind": "release",
+      "sha256": "2d5f5226635c6fc64a773062f312aaa3051929b58ab9166c28354d01bd1c62b9",
+      "entryCount": 508,
+      "added": [],
+      "removed": [],
+      "changed": [
+        "META-INF/ATTENTIO.RSA",
+        "META-INF/ATTENTIO.SF",
+        "META-INF/MANIFEST.MF",
+        "assets/public/app-core.js",
+        "assets/public/lib/delivery-evidence.js"
+      ],
+      "all13WebAssetsEqual": true,
+      "dexEqual": true
+    }
+  ],
+  "matchesReportedFinal": true,
+  "androidSuites": [
+    {
+      "name": "com.getcapacitor.myapp.ExampleUnitTest",
+      "tests": "1",
+      "skipped": "0",
+      "failures": "0",
+      "errors": "0"
+    },
+    {
+      "name": "space.alliswell.inbox.ProductionJavaAlarmTest",
+      "tests": "8",
+      "skipped": "0",
+      "failures": "0",
+      "errors": "0"
+    },
+    {
+      "name": "space.alliswell.inbox.DeliveryEvidenceStoreTest",
+      "tests": "13",
+      "skipped": "0",
+      "failures": "0",
+      "errors": "0"
+    }
+  ]
+}

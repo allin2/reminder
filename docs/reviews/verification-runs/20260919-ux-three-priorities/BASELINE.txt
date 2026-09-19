@@ -1,0 +1,141 @@
+=== 2026-09-19T14:45:48Z baseline ===
+--- branch: main
+--- HEAD: 8d1c2617cff3aac5c4450a949c9044b79f63a673
+--- modified ---
+ M android/app/build.gradle
+ M android/app/src/main/AndroidManifest.xml
+ M android/app/src/main/java/space/alliswell/inbox/ActiveAlarmStore.java
+ M android/app/src/main/java/space/alliswell/inbox/AlarmActivity.java
+ M android/app/src/main/java/space/alliswell/inbox/AlarmRingService.java
+ M android/app/src/main/java/space/alliswell/inbox/AlarmScheduler.java
+ M android/app/src/main/java/space/alliswell/inbox/AlarmTestReceiver.java
+ M android/app/src/main/java/space/alliswell/inbox/AlarmTrace.java
+ M android/app/src/main/java/space/alliswell/inbox/BootRestoreReceiver.java
+ M android/app/src/main/java/space/alliswell/inbox/SystemBridgePlugin.java
+ M android/variables.gradle
+ M app-core.js
+ M docs/acceptance-cases.md
+ M docs/compose/spec/android-fullscreen-alarm.md
+ M docs/compose/spec/delivery-mode.md
+ M docs/decisions/interaction-logic-2026-09-16.md
+ M docs/decisions/request-d69-reconcile-churn-2026-09-19.md
+ M docs/product-logic.md
+ M index.html
+ M lib/native-reminders.js
+ M "releases/\345\256\211\345\277\203\346\224\266\344\273\266\347\256\261-debug.apk"
+ M test-native-reminders.js
+ M test-regressions.js
+ M test-smoke.js
+--- untracked ---
+?? android/app/src/main/java/space/alliswell/inbox/DirectBootUtils.java
+?? android/app/src/test/java/space/
+?? docs/decisions/d70-prerequisites-verification-2026-09-19.md
+?? docs/decisions/proposal-export-file-visibility-2026-09-19.md
+?? docs/decisions/proposal-rework-round4-verification-fixes-2026-09-19.md
+?? docs/decisions/reminder-window-grilling-2026-09-19.md
+?? docs/decisions/request-d70-cold-process-delivery-2026-09-19.md
+?? docs/handoff/2026-09-19-reminder-alarm-implementation.md
+?? docs/handoff/2026-09-19-user-experience-three-priorities.md
+?? docs/reviews/directboot-locked-route-and-control-closure-2026-09-19.md
+?? docs/reviews/foreground-system-banner-implementation-2026-09-19.md
+?? docs/reviews/oppo-current-build-live-verification-2026-09-19.md
+?? docs/reviews/reminder-alarm-audit-remediation-2026-09-19.md
+?? docs/reviews/reminder-alarm-implementation-2026-09-19.md
+?? docs/reviews/reminder-alarm-independent-acceptance-2026-09-19.md
+?? docs/reviews/reminder-alarm-independent-probes-2026-09-19.cjs
+?? docs/reviews/reminder-alarm-independent-recheck-2026-09-19.md
+?? docs/reviews/reminder-alarm-plan-vs-code-audit-2026-09-19.md
+?? docs/reviews/reminder-alarm-rework-fourth-round-independent-recheck-2026-09-19.md
+?? docs/reviews/reminder-alarm-rework-time-probe-2026-09-19.cjs
+?? docs/reviews/reminder-window-implementation-2026-09-19.md
+?? docs/reviews/verification-runs/20260919-foreground-banner-cold/
+?? docs/reviews/verification-runs/20260919-foreground-banner-off/
+?? docs/reviews/verification-runs/20260919-foreground-banner-other/
+?? docs/reviews/verification-runs/20260919-n4-device/
+?? docs/reviews/verification-runs/20260919-n4-window/
+?? docs/reviews/verification-runs/20260919-oppo-cold-diag/
+?? docs/reviews/verification-runs/20260919-oppo-connect-baseline/
+?? docs/reviews/verification-runs/20260919-oppo-current-build-full/
+?? docs/reviews/verification-runs/20260919-oppo-current-cold/
+?? docs/reviews/verification-runs/20260919-oppo-current-off/
+?? docs/reviews/verification-runs/20260919-oppo-current-other/
+?? docs/reviews/verification-runs/20260919-oppo-interaction/
+?? docs/reviews/verification-runs/20260919-oppo-warm-control/
+?? docs/reviews/verification-runs/20260919-oppo2-asleep/
+?? docs/reviews/verification-runs/20260919-oppo2-cold/
+?? docs/reviews/verification-runs/20260919-oppo3-asleep/
+?? docs/reviews/verification-runs/20260919-oppo3-bg/
+?? docs/reviews/verification-runs/20260919-oppo3-cold/
+?? docs/reviews/verification-runs/20260919-u2-delivered-writer/
+?? docs/reviews/verification-runs/20260919-u3-autostart-landing/
+?? docs/reviews/verification-runs/20260919-ux-three-priorities/
+?? docs/reviews/verification-runs/20260919-vivo-candidate/
+?? docs/reviews/verification-runs/20260919T043348Z-device-verify/
+?? docs/reviews/verification-runs/20260919T043405Z-device-verify/
+?? docs/reviews/verification-runs/20260919T051023Z-device-verify/
+?? docs/reviews/verification-runs/20260919T054627Z-device-verify/
+?? docs/reviews/verification-runs/20260919T071920Z-device-verify/
+?? docs/reviews/verification-runs/20260919T103321Z-audit-remediation/
+?? releases/candidates/
+?? scripts/verification/alarm-token-device.js
+?? scripts/verification/review-window-device.js
+--- sha256 of task-relevant files ---
+d2cee2dc562d1d1c40ff18b7bc0336c3927692996c233862ecf760f052b0de2b  app-core.js
+771f5582a1548def7bbbbfc00b5715dd6f0f4810812d341351df951d04871fcb  app.js
+231ce013c4747d15c2c7bab2c0665a831aeeba60e11fc5c6e0d89bd9d7198d77  index.html
+bfdd3c88f9d14d3a1e391dc2f5e290c8319708dc0f7036d6856dc0ac67f4b581  styles.css
+37e60a07624c2dda1f1afadec8c1b2d61fe5b4a5a34b4c9c82f2c10ed0270423  lib/export-format.js
+edd959660e9fb9525ba7c290cde3019a81d53f1873c0ce31af24da30e1714bfa  lib/import-extract.js
+51fe5528bb7189400946685ab0b9e9819f71eae8096166920deb048a4a0529d9  lib/import-map.js
+c02994747d467c45a7c52d65f906995d14b3d9482a454d70956b029bc3b4d93f  lib/native-reminders.js
+79b12b5ba0621a11a80ab53213d84e723bf428290d91940cdf0a6b12eb71faab  lib/parse-cn.js
+886ab9eb1a438b34122b71a461ed89a4a5b37fa85dedf8ee7afa558ee58f62fd  lib/reminder.js
+8b01c7e3b1f926bc53edff43808331839c01e2e3c540b898f1b24314467a4bde  lib/repeat.js
+d7f5ca0d766f796cdeea6f4ce0b73875dc5778ed4eefdb8c939cae6b5b27d2d1  lib/storage.js
+9bc6ca9599dd6563dafc145d74ee36bce38db8bb63a0cca17d293acacc1bb212  test-smoke.js
+924a7d25a4eaa7b03ad85d7d05d44df8a25d6410032db29ce2651551c5155f3a  test-regressions.js
+1670a19b07fb26ffa22765cc98c3aae9b43f6ba0c6f745d9f46eef022e8829cd  test-native-reminders.js
+e210c8bee4866adf23151fbf54072bbf6f545d185284093718a958bbcbba72d7  test-unit.js
+d423cbd42b94fcdf44b88eea0ce9c9cd2167459e67009579080d40faaa17e3a4  android/app/src/main/java/space/alliswell/inbox/ActiveAlarmStore.java
+1eb9b1c692d58bc69949e2666f02487d0f479fd29b48e52984bafee62dcd4d51  android/app/src/main/java/space/alliswell/inbox/AlarmActivity.java
+edc1346184fdbd95d258c26cfc6b2038eb61ab975ab0d433d67906c401ac21d5  android/app/src/main/java/space/alliswell/inbox/AlarmRingService.java
+c9901cdcda496eb99404555d0df064b8df2682d9d8d582a5d9635869a9549a70  android/app/src/main/java/space/alliswell/inbox/AlarmScheduler.java
+de5eaa31e0648e7a2286af45a995b98e6e1fb0c491589c3e22e8339d07a5c47e  android/app/src/main/java/space/alliswell/inbox/AlarmStopReceiver.java
+a681be7a239eb8a69fdd597932309b1b3a57a22585d8a37b433ac93747aa2b1e  android/app/src/main/java/space/alliswell/inbox/AlarmTestReceiver.java
+d8b02025e9ae2881ce7dace7942337cc826ee56d8496b7218d12a5a90924818f  android/app/src/main/java/space/alliswell/inbox/AlarmTrace.java
+f260a73a74c4d54d562e8a1b9fbb8ed7d347ff95d475aaee52b638ab23af82a7  android/app/src/main/java/space/alliswell/inbox/AppSettingsPlugin.java
+ce0aae8b2944fa800907db3e771851af6b8f82cba73c12fb001c579282c440ec  android/app/src/main/java/space/alliswell/inbox/BootRestoreReceiver.java
+30605472b7d1c0af43a738c4bf20175787018e91b8e2885c35de75bf81c0a29c  android/app/src/main/java/space/alliswell/inbox/DirectBootUtils.java
+cb2bc01389c20acdd21fed77790e503d4f0e5dfa975116abfd53923aaad94beb  android/app/src/main/java/space/alliswell/inbox/ExactAlarmPermissionReceiver.java
+6d593a3d696ea27b71fabebc098017743d8de2939755b3bd9a064c7008e6cbc5  android/app/src/main/java/space/alliswell/inbox/MainActivity.java
+a2fab2045bec6e41245b6044505706422747f33d21e478e811186aa40b2aa876  android/app/src/main/java/space/alliswell/inbox/SystemBridgePlugin.java
+
+=== 2026-09-19T15:30Z end state（实施+自测结束） ===
+--- branch: main
+--- HEAD: 8d1c2617cff3aac5c4450a949c9044b79f63a673
+--- 本轮实施新增/修改（相对上面 baseline） ---
+ M app-core.js            (UX-T01/C01/C02/C03/A03 + updateParseHint 低置信度不再预填兜底时间)
+ M index.html             (新增 #homeStart 容器 + 挂载 lib/feedback.js、lib/delivery-evidence.js)
+ M sw.js                  (缓存 v4 + 两个新模块进 ASSETS)
+ M test-native-reminders.js / test-regressions.js / test-smoke.js  (新增 UX 断言 + 加载新模块)
+ A android/.../DeliveryEvidenceStore.java  (UX-T03 原生持久证据台账)
+ A android/app/src/test/java/space/...     (DeliveryEvidenceStoreTest 10 例)
+ M android/.../AlarmTestReceiver.java / AlarmRingService.java / AlarmScheduler.java / SystemBridgePlugin.java / AlarmActivity.java  (UX-T03 证据写入 + reminderKey/plannedAt 传递 + deliveryEvidence 桥方法)
+--- 结束源码哈希（sha256） ---
+aff30d6f5c2bbababe2bace7b2e4255c613abf35fb27dd97a4182b8f299af5b7  app-core.js
+91063b8629c9cf67f29fa4970e070eb75e03f1bc19753a2743474d9216502ec2  index.html
+9acd48f429c95a38aa22f83a0c752ef456167674284d766f70a14dab99c609f7  sw.js
+f19a5a9adfb55234c83e604edf1ed48d35391d98a3d41ac1e5bfd7cfc6e4d602  lib/feedback.js
+01aa270f905eedb1044866a4b4d76292e097e6fc9b1d9b6f2bf1b38442c6b8e3  lib/delivery-evidence.js
+10ef85fe87cd35eb4e0019ac8c6a0bf0e5d8e053c630119defbd76678cc680b9  lib/native-reminders.js
+d7f5ca0d766f796cdeea6f4ce0b73875dc5778ed4eefdb8c939cae6b5b27d2d1  lib/storage.js
+d2da36b536731472f35e0fa7b3dd3d307ac3c084b7d5b1c29ff5cb540a5356f9  test-unit.js
+56a1abf236485ade382111f366030dfd2958c1659f46dad0cde19b512b674a98  test-native-reminders.js
+3636658b1700b770bed3fa4291024b6fd126281dc12836e6495cb06b51a8dfe8  test-smoke.js
+f29ccffdfe01f8e91e0e708ec7ed41e13907cb272f33df5769717a55df3a4757  test-regressions.js
+1467ead76148ed02d6b05dc2d7f51149f904bf551a52f1c590257f53d6e9e4e6  android/app/src/main/java/space/alliswell/inbox/DeliveryEvidenceStore.java
+c40f171e359efa2c9edbc750893085847c80b6237118aaebd7841e715a2dcff8  android/app/src/main/java/space/alliswell/inbox/AlarmTestReceiver.java
+b4acf5c0f18ba8bb0d51852978804d431fb2124e29e1b1c13e39f651df296d98  android/app/src/main/java/space/alliswell/inbox/AlarmRingService.java
+b7ebd9bfba93ce4a1c1c87784d9f14d822f1b21155be8501233b9e4dc4d0459d  android/app/src/main/java/space/alliswell/inbox/AlarmScheduler.java
+fc89cc4e2cff78d191554ff7d78f6409ac05922feea53f130b1ace8dad5b7c74  android/app/src/main/java/space/alliswell/inbox/SystemBridgePlugin.java
+34b02873e90b67172b1614a4e2008ded7bec438d858970c1d5965a7d6f420af6  android/app/src/main/java/space/alliswell/inbox/AlarmActivity.java

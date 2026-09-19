@@ -1,0 +1,190 @@
+{
+  "ranAt": "2026-09-19T15:23:53.239Z",
+  "cdpPort": 9223,
+  "webviewUrl": "https://localhost/",
+  "snapshot": {
+    "hook": true,
+    "userAgent": "Mozilla/5.0 (Linux; Android 16; PKC130 Build/BP2A.250605.015; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/151.0.7922.199 Mobile Safari/537.36",
+    "url": "https://localhost/",
+    "origin": "https://localhost",
+    "capacitorNative": true,
+    "pluginAvailable": true,
+    "libs": {
+      "feedback": true,
+      "evidence": true,
+      "storage": false,
+      "native": false
+    },
+    "counts": {
+      "items": 36,
+      "notes": 2,
+      "projects": 3
+    },
+    "titles": [
+      "看看 Horolog 的调度设计",
+      "报名截止，提前确认材料",
+      "交房租",
+      "给爸妈打电话",
+      "看看那篇注意力管理文章",
+      "续费域名",
+      "买猫粮",
+      "。",
+      "。",
+      "。",
+      "。",
+      "。",
+      "。",
+      "。",
+      "F6c 按钮测试 close",
+      "F6c 按钮测试 close",
+      "F6c 按钮测试 close",
+      "F6c 按钮测试 close",
+      "F6c 按钮测试 ack",
+      "F6c 按钮测试 snooze",
+      "F6c 按钮测试 done",
+      "F6c 按钮测试 close",
+      "F6c 按钮测试 ack",
+      "F6c 按钮测试 snooze",
+      "F6c 按钮测试 done",
+      "前 提交版本材料",
+      "提交版本材料",
+      "五分钟以后提醒我",
+      "给爸妈打电话",
+      "走查-ACK周期",
+      "。",
+      "。",
+      "。",
+      "。",
+      "。",
+      "U2对照-请勿处理"
+    ],
+    "statuses": [
+      "archived/READY",
+      "due/READY",
+      "waiting/READY",
+      "archived/READY",
+      "due/READY",
+      "archived/READY",
+      "archived/READY",
+      "archived/READY",
+      "archived/READY",
+      "archived/READY",
+      "archived/READY",
+      "archived/READY",
+      "archived/READY",
+      "acknowledged/READY",
+      "archived/READY",
+      "archived/READY",
+      "archived/READY",
+      "archived/READY",
+      "archived/READY",
+      "archived/READY",
+      "archived/READY",
+      "archived/READY",
+      "archived/READY",
+      "archived/READY",
+      "archived/READY",
+      "acknowledged/READY",
+      "archived/READY",
+      "archived/READY",
+      "waiting/READY",
+      "waiting/READY",
+      "acknowledged/READY",
+      "archived/READY",
+      "archived/READY",
+      "archived/READY",
+      "due/READY",
+      "archived/READY"
+    ],
+    "schema": 5,
+    "settingsKeys": [
+      "ai",
+      "alarmEventLog",
+      "dailySummary",
+      "defaultDeliveryMode",
+      "dnd",
+      "importantRepeat",
+      "lastSummaryAt",
+      "notify",
+      "notifyPrompted",
+      "onboardDone",
+      "privacyNotify",
+      "quietEnd",
+      "quietStart",
+      "review",
+      "scheduledAlarmIds",
+      "scheduledAlarmSignatures",
+      "setupDismissed",
+      "setupPromptStarted"
+    ],
+    "notify": true,
+    "homeNotice": null,
+    "homeNoticeText": "",
+    "evidenceReadableBefore": true
+  },
+  "deliveryEvidence": {
+    "merged": false,
+    "err": null,
+    "readable": true,
+    "state": {
+      "readable": true,
+      "lastReadAt": 1789831432307,
+      "rows": 0,
+      "reason": "",
+      "retention": {
+        "maxAgeMs": 604800000,
+        "capacity": 300
+      }
+    },
+    "evidenceItems": 12,
+    "sampleTitle": "报名截止，提前确认材料",
+    "row": "<div class=\"detail-row\"><dt>提醒结果</dt><dd>本次提醒结果尚未确认</dd></div>"
+  },
+  "checks": [
+    {
+      "name": "真机测试钩子存在且 ready 解析完成",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "运行在 Capacitor 原生容器内",
+      "pass": true,
+      "detail": "ua=Mozilla/5.0 (Linux; Android 16; PKC130 Build/BP2A.250605.015; wv) AppleWebKit/53"
+    },
+    {
+      "name": "SystemBridge 插件可解析",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "本次新增的两块纯逻辑模块在 WebView 内已加载",
+      "pass": true,
+      "detail": "{\"feedback\":true,\"evidence\":true,\"storage\":false,\"native\":false}"
+    },
+    {
+      "name": "用户既有数据仍在（覆盖安装未清空/未丢失）",
+      "pass": true,
+      "detail": "{\"items\":36,\"notes\":2,\"projects\":3}"
+    },
+    {
+      "name": "真机上读原生送达证据不抛异常",
+      "pass": true,
+      "detail": "ok"
+    },
+    {
+      "name": "真机上证据通道报告可用（原生持久台账存在）",
+      "pass": true,
+      "detail": "readable=true state={\"readable\":true,\"lastReadAt\":1789831432307,\"rows\":0,\"reason\":\"\",\"retention\":{\"maxAgeMs\":604800000,\"capacity\":300}}"
+    },
+    {
+      "name": "原生侧声明了保留策略（跨次日可关联的前提）",
+      "pass": true,
+      "detail": "{\"maxAgeMs\":604800000,\"capacity\":300}"
+    },
+    {
+      "name": "详情「提醒结果」不指控漏提醒（红线）",
+      "pass": true,
+      "detail": "提醒结果  本次提醒结果尚未确认"
+    }
+  ]
+}

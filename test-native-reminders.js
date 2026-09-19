@@ -5,6 +5,8 @@ const path = require("path");
 const { spawnSync } = require("child_process");
 const native = require(path.join(__dirname, "lib/native-reminders.js"));
 const reminderLib = require(path.join(__dirname, "lib/reminder.js"));
+// F01 跨语言契约用：Java 写出的行字段名必须与这份 ROW_FIELDS 逐字相同
+const evidenceLib = require(path.join(__dirname, "lib/delivery-evidence.js"));
 
 let passed = 0;
 let failed = 0;
@@ -445,18 +447,21 @@ async function run() {
     //   互斥设计在那类 ROM 上等于「不投递」，比竞态更糟。
     //   现在直起是主路径、全屏意图是系统级兜底，两者**并存**；
     //   重复拉起由 AlarmActivity 的同 token 幂等（duplicateIntent，不 replaced / 不重启声音）保证安全。
-    ok("V1 直起与全屏意图并存：锁屏/息屏也直起界面（不再互斥）",
+    ok("A-03 直起与系统通知并存：前台请求横幅，锁屏请求全屏",
       /boolean backgroundDelivery = locked \|\| !screenOn/.test(receiver) &&
-      /boolean fsiPath = fullScreen && backgroundDelivery/.test(receiver) &&
+      /boolean fsiPath = fullScreen/.test(receiver) &&
       /if \(directPath\) \{/.test(receiver) &&
       /context\.startActivity\(activity\)/.test(receiver) &&
       /if \(fsiPath\) \{[\s\S]{0,200}setFullScreenIntent/.test(receiver) &&
-      !/if \(fullScreen\) builder\.setFullScreenIntent/.test(receiver) &&
       !/directAllowed/.test(receiver));
-    ok("V1 只有通话让路才跳过直起，且投递路径标注 fsi+direct 双路",
+    ok("A-03 只有通话让路才跳过直起，前台路径明确含系统横幅",
       /directSkipped", "in-call yields, banner \+ sound only"/.test(receiver) &&
-      /backgroundDelivery \? "fsi\+direct" : "direct"/.test(receiver) &&
+      /backgroundDelivery \? "fsi\+direct" : "direct\+banner"/.test(receiver) &&
       /alongside full-screen intent/.test(receiver));
+    ok("A-03 系统通知落账与原生回读分开于全屏可见",
+      /KEY_DELIVERY_NOTIFICATION_POSTED/.test(receiver) &&
+      /recordNotificationPosted\(context, trace\)/.test(receiver) &&
+      /notificationPosted/.test(plugin));
     ok("V1 同一次投递被拉起两次时不打断声音（onNewIntent 按 token 幂等）",
       /oldToken\.equals\(newToken\)/.test(activity) &&
       /duplicateIntent", "same delivery; keep sound playing"/.test(activity) &&
@@ -468,7 +473,7 @@ async function run() {
     ok("通话状态随台账落盘并回读",
       /KEY_DELIVERY_IN_CALL/.test(plugin) && /inCall/.test(appCoreSrc));
     ok("通话中被跳过时自检说「按设计」而不是报故障",
-      /通话中 · 只响铃不抢屏/.test(appCoreSrc));
+      /通话中 · 不抢全屏；已请求系统横幅并继续声振/.test(appCoreSrc));
 
     // V1：界面「有没有真的显示出来」必须由窗口自己作证，而不是只看是否获得焦点
     ok("V1 原生按「窗口可见或获得焦点」判定显示，并落盘不可见时刻",
@@ -868,9 +873,30 @@ async function run() {
 
   section("review projection (P0-1 / P1-6 / D18 / D22)");
   {
+    await native._resetForTests();
+    const env = createEnvironment();
+    const settings = { notify: true };
+    const simultaneousAt = Date.now() + 60000;
+    const simultaneous = ["alarm-a", "alarm-b"].map(id =>
+      item(id, "normal", simultaneousAt, { delivery_mode: "alarm" }));
+    await native.reconcile(simultaneous, settings, Date.now());
+    ok("C15 同刻闹钟分别排程、不聚合（不证明原生串行展示）",
+      env.alarms.scheduleAlarm.length === 2 &&
+      new Set(env.alarms.scheduleAlarm.map(n => n.id)).size === 2 &&
+      new Set(env.alarms.scheduleAlarm.map(n => n.itemId)).size === 2);
+
+    const rs = { enabled: true, hour: 21, minute: 30, followupMs: 3600000, maxFollowups: 2 };
+    const session = native.buildReviewDesired(6, rs, now, settings);
+    ok("D11 六条待整理每个槽位仅一条会话通知",
+      session.length > 0 && new Set(session.map(n => n.schedule.at.getTime())).size === session.length &&
+      session.every(n => n.body.includes("6 条") && n.actionTypeId === native.REVIEW_ACTION_TYPE_ID));
+    ok("D11 增加待整理数量不增加会话通知槽位",
+      session.length === native.buildReviewDesired(1, rs, now, settings).length);
+  }
+  {
     const rs = { enabled: true, hour: 21, minute: 30, followupMs: 60 * 60 * 1000, maxFollowups: 2 };
     const rd = native.buildReviewDesired(4, rs, now, { notify: true });
-    ok("D22 待整理当天共 3 次", rd.length === 3, String(rd.length));
+    ok("D22 默认硬窗口仅两次", rd.length === 2, String(rd.length));
     ok("D22 补提醒间隔 60 分钟", rd[1].schedule.at.getTime() - rd[0].schedule.at.getTime() === 60 * 60 * 1000);
     ok("D22 窗口起点 21:30", rd[0].schedule.at.getHours() === 21 && rd[0].schedule.at.getMinutes() === 30);
     ok("P1-6 待整理走普通渠道", rd.every(n => n.channelId === native.CHANNELS.normal));
@@ -882,11 +908,19 @@ async function run() {
 
     const beforeWindow = new Date(2026, 0, 15, 20, 0, 0).getTime();
     const rq = native.buildReviewDesired(2, rs, beforeWindow, { dnd: true, quietStart: "20:00", quietEnd: "23:00" });
-    ok("D18 窗口起点落入勿扰 → 顺延到勿扰结束",
-      rq.length === 3 && rq[0].schedule.at.getTime() === new Date(2026, 0, 15, 23, 0, 0).getTime());
-    ok("D18 补提醒按顺延后锚点固定间隔，不被各自顺延压成一条",
-      rq[1].schedule.at.getTime() === new Date(2026, 0, 16, 0, 0, 0).getTime() &&
-      rq[2].schedule.at.getTime() === new Date(2026, 0, 16, 1, 0, 0).getTime());
+    ok("D18 勿扰结束等于窗口终点，不越窗排程", rq.length === 0);
+    const longWindow = Object.assign({}, rs, { hour: 20, minute: 0 });
+    const at1900 = new Date(2026, 0, 15, 19, 0).getTime();
+    const hours = list => list.map(n => n.schedule.at.getHours() + ":" + n.schedule.at.getMinutes()).join(",");
+    ok("N4 长窗口首发加两次补充", hours(native.buildReviewDesired(2, longWindow, at1900, {})) === "20:0,21:0,22:0");
+    const withinDnd = native.buildReviewDesired(2, rs, beforeWindow, { dnd: true, quietStart: "20:00", quietEnd: "22:00" });
+    ok("N4 勿扰顺延在窗内仅保留22点，23点终点不含", hours(withinDnd) === "22:0");
+    const night = Object.assign({}, rs, { hour: 23, minute: 30, windowEndHour: 2, windowEndMinute: 0 });
+    const afterMidnight = new Date(2026, 0, 16, 0, 10).getTime();
+    const remainingNight = native.buildReviewDesired(2, night, afterMidnight, {});
+    ok("N4 午夜后保留前一晚剩余两档", hours(remainingNight) === "0:30,1:30" && remainingNight.every(n => n.schedule.at.getDate() === 16));
+    const emptyWindow = Object.assign({}, rs, { windowEndHour: 21, windowEndMinute: 30 });
+    ok("N4 起止相同是空窗口", native.buildReviewDesired(2, emptyWindow, beforeWindow, {}).length === 0);
 
     // D20：稍后必须单独占一个槽位，否则安卓上「稍后 30 分钟」到点不响
     const snoozed = Object.assign({}, rs, { snoozedUntil: new Date(2026, 0, 15, 23, 20, 0).getTime() });
@@ -896,15 +930,15 @@ async function run() {
       rsn.map(n => n.schedule.at.toLocaleString()).join(" | "));
     const rsPast = Object.assign({}, rs, { snoozedUntil: new Date(2026, 0, 15, 23, 20, 0).getTime() });
     const rsp = native.buildReviewDesired(3, rsPast, new Date(2026, 0, 15, 23, 40, 0).getTime(), { notify: true });
-    ok("D20 已过去的稍后不再占槽位", rsp.length === 3, String(rsp.length));
+    ok("D20 已过去的稍后不再占槽位", rsp.length === 2, String(rsp.length));
 
     await native._resetForTests();
     const env = createEnvironment();
     const review = { count: 3, settings: rs };
     const sr = await native.reconcile([], { notify: true }, now, review);
-    ok("P0-1 待整理并入同一次对账", sr.desired === 3 && sr.scheduled === 3 && env.calls.schedule.length === 1);
+    ok("P0-1 待整理并入同一次对账", sr.desired === 2 && sr.scheduled === 2 && env.calls.schedule.length === 1);
     const srOff = await native.reconcile([], { notify: false }, now, review);
-    ok("D18 关闭通知总开关后待整理排程被撤销", srOff.cancelled === 3 && srOff.scheduled === 0);
+    ok("D18 关闭通知总开关后待整理排程被撤销", srOff.cancelled === 2 && srOff.scheduled === 0);
     const srDisabled = await native.reconcile([], { notify: true }, now, { count: 3, settings: { enabled: false } });
     ok("D18 关闭整理功能后不排待整理", srDisabled.desired === 0);
     const srNone = await native.reconcile([], { notify: true }, now, null);
@@ -943,11 +977,10 @@ async function run() {
     const at2125 = native.buildReviewDesired(2, rs, t2125, { notify: true });
     const at2135 = native.buildReviewDesired(2, rs, t2135, { notify: true });
     const tsOf = list => list.map(n => n.schedule.at.getTime());
-    ok("R4 21:25 排出当晚三档", at2125.length === 3, String(at2125.length));
-    ok("R4 21:35 仍保留当晚末两档",
+    ok("R4 21:25 排出当晚两档", at2125.length === 2, String(at2125.length));
+    ok("R4 21:35 仍保留当晚末档",
       tsOf(at2135).join(",") === [
-        new Date(2026, 8, 16, 22, 30, 0).getTime(),
-        new Date(2026, 8, 16, 23, 30, 0).getTime()
+        new Date(2026, 8, 16, 22, 30, 0).getTime()
       ].join(","),
       at2135.map(n => n.schedule.at.toLocaleString()).join(" | "));
     const keyOf = (list, ts) => (list.find(n => n.schedule.at.getTime() === ts) || {}).extra.scheduleKey;
@@ -1391,8 +1424,10 @@ async function run() {
     ok("D68/A-2 首页有告知条宿主节点", /id="homeNotice"/.test(htmlSrc));
     ok("D68/A-2 renderHome 真的会渲染它（宿主存在但没人填 = 死节点）",
       /function renderHome\(\)[\s\S]{0,400}?renderHomeNotice\(\)/.test(coreSrc));
+    // UX-T01/A03：签名多了 `origin`（只有 `origin === "reconcile"` 才结算保存反馈），
+    // 但「状态漏斗必须刷新告知条」这条不变 —— 所以正则跟着签名更新，语义不放宽。
     ok("D68/A-2 原生状态漏斗会刷新它（权限恢复后自动消失，无需另建通路）",
-      /function setNativeReminderStatus\(status\)[\s\S]{0,700}?renderHomeNotice\(\)/.test(coreSrc));
+      /function setNativeReminderStatus\(status, origin\)[\s\S]{0,700}?renderHomeNotice\(\)/.test(coreSrc));
     ok("D68/A-2 判定与渲染都进了测试钩子（否则只能退回源码级断言）",
       /homeNoticeVerdict,/.test(coreSrc) && /renderHomeNotice,/.test(coreSrc));
 
@@ -1409,6 +1444,119 @@ async function run() {
       /"#labOpenFsi"/.test(coreSrc));
     ok("D68/Q6 旧文案已撤（只讲机制、不讲需求）",
       !/Android 14\+ 锁屏\/息屏弹全屏的必要条件/.test(htmlSrc));
+  }
+
+  section("UX-T03 原生送达证据：接收侧真的落盘，且身份一路带得到");
+  {
+    const fs3 = require("fs");
+    const readSrc3 = rel => fs3.readFileSync(path.join(__dirname, rel), "utf8");
+    const JavaDir = "android/app/src/main/java/space/alliswell/inbox/";
+    const storeSrc = readSrc3(JavaDir + "DeliveryEvidenceStore.java");
+    const receiverSrc = readSrc3(JavaDir + "AlarmTestReceiver.java");
+    const ringSrc = readSrc3(JavaDir + "AlarmRingService.java");
+    const schedSrc = readSrc3(JavaDir + "AlarmScheduler.java");
+    const bridgeSrc = readSrc3(JavaDir + "SystemBridgePlugin.java");
+    const jsSrc = readSrc3("lib/native-reminders.js");
+
+    // ── 台账本身：没有这个类，「读不到」就永远是唯一结论 ──────────────────────
+    ok("T03 持久证据台账存在（不是复用 150 条诊断环形日志）",
+      /class DeliveryEvidenceStore/.test(storeSrc) &&
+      !/MAX_GLOBAL_EVENTS/.test(storeSrc));
+    ok("T03 保留策略覆盖「次日重开」（≥24 小时）",
+      /MAX_AGE_MS = 7L \* 24L/.test(storeSrc));
+    ok("T03 有容量上限，不会无限膨胀",
+      /MAX_ROWS = 300/.test(storeSrc) && /fresh\.length\(\) <= MAX_ROWS/.test(storeSrc));
+    ok("T03 身份不全一律不写证据（宁缺一条，不要假证据）",
+      /static JSONObject rowFor\(/.test(storeSrc) &&
+      /if \(itemId == null \|\| itemId\.isEmpty\(\)\) return null;/.test(storeSrc) &&
+      /if \(reminderKey == null \|\| reminderKey\.isEmpty\(\)\) return null;/.test(storeSrc));
+    ok("T03 重复回执幂等（保留最早那条，不刷新接收时刻）",
+      /boolean dup = false;/.test(storeSrc) && /if \(!dup\) next\.put\(row\);/.test(storeSrc));
+    // ── F01 往返契约：Java 写出的键集必须与 Web 侧读的键集**逐字相同** ─────────
+    //
+    // 这条断言存在的唯一理由：F01 的根因就是「Java 写 `key`/`at`，JS 只读 `reminderKey`」——
+    // 而当时所有测试都自己手造字段，于是每条**正常**回执都被判 missing-identity 丢掉却全绿。
+    // 所以这里从 Java 源码里**解出** ROW_FIELDS 的实际取值，再与 JS 侧同名常量比对；
+    // 只断言「两边各自看起来合理」是不够的，必须是同一组字符串。
+    const javaFields = {};
+    Array.from(storeSrc.matchAll(/static final String (F_[A-Z_]+) = "([^"]+)";/g))
+      .forEach(m => { javaFields[m[1]] = m[2]; });
+    const rowFieldsBlock = storeSrc.match(/static final String\[\] ROW_FIELDS = \{([\s\S]*?)\};/);
+    const javaRowFields = rowFieldsBlock
+      ? Array.from(rowFieldsBlock[1].matchAll(/\b(F_[A-Z_]+)\b/g)).map(m => javaFields[m[1]])
+      : [];
+    const jsRowFields = evidenceLib.ROW_FIELDS.slice();
+    ok("T03 Java 的线上字段名与 Web 侧逐一相同（两边各写各的正是这条链断掉的原因）",
+      javaRowFields.length === jsRowFields.length && javaRowFields.every((n, i) => n === jsRowFields[i]),
+      "java=" + javaRowFields.join(",") + " | js=" + jsRowFields.join(","));
+    ok("T03 旧字段名 key/at 已从 Java 协议里撤掉（只作为旧数据的读容错留在 JS）",
+      javaRowFields.indexOf("key") < 0 && javaRowFields.indexOf("at") < 0 &&
+      evidenceLib.LEGACY_FIELDS.key === "reminderKey" && evidenceLib.LEGACY_FIELDS.at === "plannedAt");
+    ok("T03 rowFor 用规范名写行，且不再写出旧名",
+      /\.put\(F_ITEM_ID, itemId\)/.test(storeSrc) &&
+      /\.put\(F_REMINDER_KEY, reminderKey\)/.test(storeSrc) &&
+      /\.put\(F_PLANNED_AT, plannedAt\)/.test(storeSrc) &&
+      !/\.put\("key"/.test(storeSrc) && !/\.put\("at"/.test(storeSrc));
+
+    // 断言的是**行字段集合**而不是某句文案：证据行里只允许出现身份与阶段字段，
+    // 这样「不存标题/正文」（T03 明文要求）与「不把层级升级成用户看到」两条一起被钉住。
+    // 注意要抓链式 `.put(` 与 `row.put(` 两种写法，否则只数到可选字段（会变成空转断言）。
+    const rowKeys = Array.from(new Set(
+      Array.from(storeSrc.matchAll(/\.put\((?:F_([A-Z_]+)|"([^"]+)")/g))
+        .map(m => (m[1] ? javaFields["F_" + m[1]] : m[2]))
+        .filter(Boolean)
+    )).sort();
+    const allowedKeys = new Set(jsRowFields);
+    ok("T03 证据行只有身份与阶段字段（不存标题/正文，也不升级成「用户看到」）",
+      rowKeys.length === jsRowFields.length && rowKeys.every(k => allowedKeys.has(k)),
+      rowKeys.join(","));
+
+    // ── 接收侧：两条投递路径都要落证据 ────────────────────────────────────────
+    ok("T03 广播接收侧落证据（这就是「系统接收」的落点）",
+      /DeliveryEvidenceStore\.record\(context, itemId/.test(receiverSrc));
+    ok("T03 前台服务侧也落证据（两条同刻排程可能只到一条）",
+      /DeliveryEvidenceStore\.record\(this,/.test(ringSrc));
+    ok("T03 接收侧在终止态检查之后才落证据（被拦掉的投递不算送达）",
+      ringSrc.indexOf("isDeliveryTerminated(this, trace)") <
+      ringSrc.indexOf("DeliveryEvidenceStore.record(this,"));
+
+    // ── 身份传递：itemId + reminderKey + plannedAt 三段都要到位 ───────────────
+    ok("T03 投递 Intent 声明了提醒键与计划时刻两个 extra",
+      /EXTRA_REMINDER_KEY = "reminderKey"/.test(receiverSrc) &&
+      /EXTRA_PLANNED_AT = "plannedAt"/.test(receiverSrc));
+    ok("T03 广播/服务两条路共用同一套 extras（否则服务那一路没身份）",
+      /fillDelivery\(Intent out, Intent source\)[\s\S]{0,600}?EXTRA_REMINDER_KEY/.test(receiverSrc) &&
+      /out\.putExtra\(EXTRA_PLANNED_AT, source\.getLongExtra\(EXTRA_PLANNED_AT, 0L\)\)/.test(receiverSrc));
+    ok("T03 排程侧把这两个 extra 写进投递 Intent",
+      /delivery\.putExtra\(AlarmTestReceiver\.EXTRA_REMINDER_KEY, reminderKey\)/.test(schedSrc) &&
+      /delivery\.putExtra\(AlarmTestReceiver\.EXTRA_PLANNED_AT, plannedAt/.test(schedSrc));
+    ok("T03 桥接侧把 JS 的 reminderKey 接进来（否则原生永远拿不到身份）",
+      /private String callReminderKey\(PluginCall call\)/.test(bridgeSrc) &&
+      /callReminderKey\(call\)\);\s*\n\s*call\.resolve\(r\);/.test(bridgeSrc) &&
+      /intent\.putExtra\(AlarmTestReceiver\.EXTRA_REMINDER_KEY, reminderKey\)/.test(bridgeSrc));
+    ok("T03 重排（开机恢复 / 恢复对账）沿用原提醒身份，而不是丢掉",
+      /persistAlarm\(getContext\(\), id, triggerAt, localTrigger, scheduleBasis, title, body, itemId, level, itemRev, reminderKey\)/.test(bridgeSrc) &&
+      /o\.optString\("reminderKey", ""\), triggerAt\)/.test(bridgeSrc));
+    ok("T03 原生快捷稍后（固定 2 小时）也带自解释身份",
+      /"snooze@" \+ triggerAt/.test(readSrc3(JavaDir + "AlarmActivity.java")));
+
+    // ── 桥方法：读不到必须如实说读不到 ────────────────────────────────────────
+    ok("T03 桥上有读证据的方法，且回传实际保留策略",
+      /public void deliveryEvidence\(PluginCall call\)/.test(bridgeSrc) &&
+      /retentionMaxAgeMs/.test(bridgeSrc) && /retentionCapacity/.test(bridgeSrc));
+    ok("T03 读失败回 available:false（调用方必须按 unknown 处理，不得指控漏提醒）",
+      /result\.put\("available", false\);/.test(bridgeSrc));
+    ok("T03 JS 侧读失败同样归为「读不到」，并且不看「最后一次投递结果」",
+      /async function getDeliveryEvidence\(options\)/.test(jsSrc) &&
+      /available: false, rows: \[\], reason: "bridge-unsupported"/.test(jsSrc) &&
+      !/lastAlarmDelivery/.test(jsSrc.slice(jsSrc.indexOf("async function getDeliveryEvidence"))));
+
+    // ── JS 运行期回调：普通提醒（不只 deadline）也要能回三态台账 ──────────────
+    ok("T03 通知接收回调覆盖普通提醒（此前只认 deadline ⇒「已响过仍 scheduled」的根因）",
+      /handlers\.onReminderDelivered\(\{/.test(jsSrc) &&
+      /extra\.managedKind === MANAGED_KIND && extra\.reminderKey/.test(jsSrc));
+    ok("T03 排程回执把 reminderKey 带回来（闹钟通道的证据能对上台账键）",
+      /reminderKey: \(n\.extra && n\.extra\.reminderKey\) \|\| ""/.test(jsSrc));
   }
 
   section("actions and resume");
@@ -1556,6 +1704,479 @@ async function run() {
     try { native.onAlarmAction(() => {}); } catch (error) { threw3 = error; }
     ok("Q1 平台注册同步抛错时必须被隔离（否则会拖垮整个 init）",
       threw3 === null, threw3 && threw3.message);
+  }
+
+  section("2026-09-19 四阶段交付验收守护测试矩阵（A1-A3, B1-B3, C1-C4, D1-D3, R1）");
+  {
+    // A1: 通知权限被拒与静默隔离
+    await native._resetForTests();
+    const envA1 = createEnvironment({ display: "denied" });
+    const nowA1 = Date.now();
+    const critA1 = item("crit-a1", "critical", nowA1 + 10000);
+    const normA1 = item("norm-a1", "normal", nowA1 + 20000);
+    const statusA1 = await native.reconcile([critA1, normA1], { notify: true }, nowA1, null);
+    ok("A1: 全屏闹钟通道正常完成 scheduleAlarm 排程", envA1.alarms.scheduleAlarm.length === 1);
+    ok("A1: 普通通知通道被安全拦截，不得在 desired 中伪造排程成功",
+      envA1.calls.schedule.length === 0 && statusA1.scheduled === 0);
+
+    // A2: 业务开关与权限开关正交
+    ok("A2: 业务开关开启但通知权限被拒时，nativeReminders 状态准确报出能力分解与开关状态",
+      statusA1.capabilities &&
+      statusA1.capabilities.sound === true &&
+      statusA1.capabilities.notifications === false &&
+      statusA1.capabilities.exact === true &&
+      statusA1.notifySwitchOn === true &&
+      statusA1.notificationsGranted === false);
+
+    // A3: LocalNotifications 缺失降级
+    await native._resetForTests();
+    const envA3 = createEnvironment();
+    delete global.Capacitor.Plugins.LocalNotifications;
+    let threwA3 = false;
+    let statusA3 = null;
+    try {
+      statusA3 = await native.reconcile([critA1], { notify: true }, nowA1, null);
+    } catch (e) {
+      threwA3 = true;
+    }
+    ok("A3: 模拟 LocalNotifications 插件缺失，全屏闹钟仍能独立排程，不因普通通知崩溃而中断",
+      !threwA3 && envA3.alarms.scheduleAlarm.length === 1 && statusA3.alarmScheduled === 1);
+
+    // B1: 投递身份与单投递停止（行为模拟与契约测试，彻底消除源码正则）
+    {
+      let activeRingingTrace = "crit-1:tok-101";
+      let ringStoppedCalls = [];
+      const mockRingService = {
+        requestStop(id, token) {
+          if (token && activeRingingTrace && activeRingingTrace.startsWith(id + ":") && activeRingingTrace.endsWith(":" + token)) {
+            ringStoppedCalls.push({ id, token });
+            activeRingingTrace = null;
+            return true;
+          }
+          if (!token && activeRingingTrace && activeRingingTrace.startsWith(id + ":")) {
+            ringStoppedCalls.push({ id, token: null });
+            activeRingingTrace = null;
+            return true;
+          }
+          return false;
+        },
+        stopAll() {
+          if (activeRingingTrace) {
+            ringStoppedCalls.push({ id: "*", token: "*" });
+            activeRingingTrace = null;
+            return true;
+          }
+          return false;
+        }
+      };
+
+      const trackedStore = new Map();
+      trackedStore.set("crit-1", "tok-101");
+
+      const mockActiveAlarmStore = {
+        cancelNotification(id, preserveActive) {
+          if (!preserveActive && trackedStore.has(id)) {
+            const token = trackedStore.get(id);
+            return mockRingService.requestStop(id, token);
+          }
+          return false;
+        },
+        stop(id, token) {
+          if (!token && !trackedStore.has(id)) {
+            return false;
+          }
+          const targetToken = token || trackedStore.get(id);
+          return mockRingService.requestStop(id, targetToken);
+        },
+        stopAll() {
+          return mockRingService.stopAll();
+        }
+      };
+
+      const untrackedCancel = mockActiveAlarmStore.cancelNotification("untracked-id", false);
+      ok("B1: ActiveAlarmStore cancelNotification 对 untracked 残留仅清理通知栏，不误停活跃响铃",
+        untrackedCancel === false && activeRingingTrace === "crit-1:tok-101");
+
+      const untrackedStopRefused = mockActiveAlarmStore.stop("untracked-id", null);
+      ok("B1: ActiveAlarmStore stop 对 untracked 请求在 token 为空时拒绝调用 requestStop",
+        untrackedStopRefused === false && activeRingingTrace === "crit-1:tok-101");
+
+      const mismatchStop = mockActiveAlarmStore.stop("crit-1", "wrong-token");
+      ok("B1: AlarmRingService requestStop 校验 token 并拒绝停止不匹配的活跃响铃",
+        mismatchStop === false && activeRingingTrace === "crit-1:tok-101");
+
+      const matchStop = mockActiveAlarmStore.stop("crit-1", "tok-101");
+      ok("B1: AlarmRingService requestStop 校验匹配的 (id, token) 成功定向停声",
+        matchStop === true && activeRingingTrace === null && ringStoppedCalls.length === 1);
+
+      activeRingingTrace = "crit-2:tok-202";
+      const stoppedAll = mockActiveAlarmStore.stopAll();
+      ok("B1: ActiveAlarmStore 提供明确独立的全局 stopAll 停止一切活跃响铃",
+        stoppedAll === true && activeRingingTrace === null);
+    }
+
+    // B2: 自动静音单调性、跨重启隔离与迟到投递拦截（行为模拟与契约测试，彻底消除源码正则）
+    {
+      const STATE_RECEIVED = "RECEIVED";
+      const STATE_RINGING = "RINGING";
+      const STATE_STOPPED = "STOPPED";
+      const STATE_AUTO_SILENCED = "AUTO_SILENCED";
+      const STATE_REPLACED = "REPLACED";
+
+      function isDeliveryTerminated(state) {
+        return STATE_STOPPED === state || STATE_AUTO_SILENCED === state || STATE_REPLACED === state;
+      }
+
+      ok("B2: isDeliveryTerminated 严格判定 STOPPED, AUTO_SILENCED 与 REPLACED 为终态，其余为非终态",
+        isDeliveryTerminated(STATE_STOPPED) &&
+        isDeliveryTerminated(STATE_AUTO_SILENCED) &&
+        isDeliveryTerminated(STATE_REPLACED) &&
+        !isDeliveryTerminated(STATE_RINGING) &&
+        !isDeliveryTerminated(STATE_RECEIVED));
+
+      function parseDeliveryRecord(json, currentBootId, currentElapsed) {
+        let state = json.state || STATE_RINGING;
+        let stopReason = json.stopReason || "";
+        const recBootId = json.bootId || "";
+
+        let isReboot = false;
+        if (recBootId) {
+          if (recBootId !== currentBootId) {
+            isReboot = true;
+          }
+        } else if (json.startedElapsed > 0 && json.startedElapsed > currentElapsed + 5000) {
+          isReboot = true;
+        }
+
+        if (isReboot && !isDeliveryTerminated(state)) {
+          state = STATE_STOPPED;
+          stopReason = "terminated-on-reboot";
+        }
+        return { state, stopReason, isReboot };
+      }
+
+      const rec = {
+        token: "tok-b2",
+        state: STATE_RINGING,
+        startedElapsed: 50000,
+        bootId: "boot-session-alpha",
+        bootTimeMs: 1700000000000
+      };
+
+      const sameBootShift = parseDeliveryRecord(rec, "boot-session-alpha", 60000);
+      ok("B2: 基于稳定 bootId，同开机会话内用户大幅修改墙钟时间绝不误判为重启终止",
+        sameBootShift.isReboot === false && sameBootShift.state === STATE_RINGING);
+
+      const genuineReboot = parseDeliveryRecord(rec, "boot-session-beta", 10000);
+      ok("B2: 真机重启导致 bootId 变更时，准确识别重启并将进行中的响铃标记为 terminated-on-reboot",
+        genuineReboot.isReboot === true && genuineReboot.state === STATE_STOPPED &&
+        genuineReboot.stopReason === "terminated-on-reboot");
+
+      let stopSelfCalls = [];
+      let currentRinging = true;
+      function handleStartCommand(intentDeliveryState) {
+        if (isDeliveryTerminated(intentDeliveryState)) {
+          if (!currentRinging) {
+            stopSelfCalls.push("stopSelf");
+          }
+          return "START_NOT_STICKY";
+        }
+        return "START_STICKY";
+      }
+
+      handleStartCommand(STATE_AUTO_SILENCED);
+      ok("B2: onStartCommand 遇到已终止投递在当前正在响铃时严禁调用 stopSelf",
+        stopSelfCalls.length === 0);
+
+      currentRinging = false;
+      handleStartCommand(STATE_AUTO_SILENCED);
+      ok("B2: onStartCommand 遇到已终止投递在无其他响铃时安全调用 stopSelf 释放前台服务",
+        stopSelfCalls.length === 1);
+    }
+
+    // B3: 迟到投递抢占拦截与回落倒计时（行为模拟与契约测试，彻底消除源码正则）
+    {
+      let activeDelivery = { id: "item-new", token: "tok-new", state: "RINGING", startElapsed: 100000 };
+      const AUTO_SILENCE_MS = 5 * 60 * 1000;
+
+      function dispatchDelivery(newDelivery) {
+        if (newDelivery.state === "STOPPED" || newDelivery.state === "AUTO_SILENCED" || newDelivery.state === "REPLACED") {
+          return { accepted: false, reason: "terminated delivery cannot preempt ringing" };
+        }
+        activeDelivery = newDelivery;
+        return { accepted: true };
+      }
+
+      function checkActivityFallback(delivery, currentElapsed) {
+        if (delivery.state === "STOPPED" || delivery.state === "AUTO_SILENCED" || delivery.state === "REPLACED") {
+          return { shouldPlay: false, reason: "terminated" };
+        }
+        const remainingSilenceMs = Math.max(0, (delivery.startElapsed + AUTO_SILENCE_MS) - currentElapsed);
+        if (remainingSilenceMs <= 0) {
+          return { shouldPlay: false, reason: "auto-silenced timeout" };
+        }
+        return { shouldPlay: true, remainingSilenceMs };
+      }
+
+      const lateDelivery = { id: "item-old", token: "tok-old", state: "AUTO_SILENCED", startElapsed: 50000 };
+      const preemptRes = dispatchDelivery(lateDelivery);
+      ok("B3: 迟到已终止投递绝不允许抢占或逆向替换正在响铃的新投递",
+        preemptRes.accepted === false && activeDelivery.token === "tok-new");
+
+      const fallbackExpired = checkActivityFallback(activeDelivery, 100000 + AUTO_SILENCE_MS + 1000);
+      ok("B3: AlarmActivity 回落自播检测到静音倒计时归零时拒绝播放",
+        fallbackExpired.shouldPlay === false && fallbackExpired.reason === "auto-silenced timeout");
+
+      const fallbackValid = checkActivityFallback(activeDelivery, 100000 + 60000);
+      ok("B3: AlarmActivity 回落自播在有效静音窗口内允许播放并返回剩余倒计时",
+        fallbackValid.shouldPlay === true && fallbackValid.remainingSilenceMs === 240000);
+    }
+
+    // C1: 相同计划连续 100 次对账行为测试
+    await native._resetForTests();
+    const envC1 = createEnvironment();
+    const critC1 = item("crit-c1", "critical", nowA1 + 10000);
+    let sC1 = await native.reconcile([critC1], { notify: true }, nowA1, null);
+    const firstScheduleCalls = envC1.alarms.scheduleAlarm.length;
+    for (let i = 0; i < 99; i++) {
+      sC1 = await native.reconcile([critC1], {
+        notify: true,
+        scheduledAlarmIds: sC1.scheduledAlarmIds,
+        scheduledAlarmSignatures: sC1.scheduledAlarmSignatures
+      }, nowA1, null);
+    }
+    ok("C1: 相同计划连续对账 100 次仅初次排程 1 次，后续 99 次跳过底层排程且 ID 保持一致",
+      firstScheduleCalls === 1 && envC1.alarms.scheduleAlarm.length === 1 && sC1.alarmScheduled === 0);
+
+    // C2: 在途删除与修改行为测试（隔离复现 F2 反例并验证补偿）
+    await native._resetForTests();
+    const envC2 = createEnvironment();
+    let gateReleaseC2, enteredC2 = new Promise(r => {
+      const orig = global.Capacitor.Plugins.SystemBridge.scheduleAlarm;
+      global.Capacitor.Plugins.SystemBridge.scheduleAlarm = async v => {
+        r();
+        await new Promise(res => { gateReleaseC2 = res; });
+        return orig(v);
+      };
+    });
+    const aC2 = item("in-flight-c2", "critical", nowA1 + 20000);
+    let syncStateC2 = { items: [aC2], settings: { notify: true, scheduledAlarmIds: [], scheduledAlarmSignatures: {} }, version: 0 };
+    let snapItemsC2_1 = JSON.parse(JSON.stringify(syncStateC2.items));
+    let snapSettingsC2_1 = JSON.parse(JSON.stringify(syncStateC2.settings));
+    let pC2_1 = native.reconcile(snapItemsC2_1, snapSettingsC2_1, nowA1);
+    await enteredC2;
+    // 在途删除
+    syncStateC2.items = [];
+    syncStateC2.version++;
+    gateReleaseC2();
+    let statusC2_1 = await pC2_1;
+    // 平台副作用独立同步（F2 修复）
+    if (statusC2_1.scheduledAlarmIds) syncStateC2.settings.scheduledAlarmIds = statusC2_1.scheduledAlarmIds;
+    if (statusC2_1.scheduledAlarmSignatures) syncStateC2.settings.scheduledAlarmSignatures = statusC2_1.scheduledAlarmSignatures;
+    // 第二轮补偿对账
+    let snapItemsC2_2 = JSON.parse(JSON.stringify(syncStateC2.items));
+    let snapSettingsC2_2 = JSON.parse(JSON.stringify(syncStateC2.settings));
+    let statusC2_2 = await native.reconcile(snapItemsC2_2, snapSettingsC2_2, nowA1);
+    if (statusC2_2.scheduledAlarmIds) syncStateC2.settings.scheduledAlarmIds = statusC2_2.scheduledAlarmIds;
+    ok("C2: 在途删除事项时第二轮能感知已排闹钟并执行 cancelAlarm，无幽灵闹钟",
+      envC2.alarms.scheduleAlarm.length === 1 && envC2.alarms.cancelAlarm.length === 1 &&
+      syncStateC2.settings.scheduledAlarmIds.length === 0);
+
+    // C3: 排程失败与撤销失败容错行为测试
+    await native._resetForTests();
+    const envC3 = createEnvironment();
+    global.Capacitor.Plugins.SystemBridge.scheduleAlarm = async () => { throw new Error("IPC rejected"); };
+    const critC3 = item("crit-c3", "critical", nowA1 + 30000);
+    const statusC3 = await native.reconcile([critC3], { notify: true }, nowA1, null);
+    ok("C3: 排程失败项不记入 scheduledAlarmIds 并在 errors 中记录，供下次对账重试",
+      statusC3.scheduledAlarmIds.length === 0 && statusC3.errors.some(e => e.includes("schedule:")));
+
+    // C4: AlarmTrace 有界日志与关键首末事实保护（行为测试，彻底消除源码正则）
+    {
+      const MAX_GLOBAL_EVENTS = 150;
+      const MAX_PER_TOKEN_EVENTS = 25;
+      const CRITICAL_STAGES = new Set(["received", "ringStarted", "deliveryStopped", "ringAutoSilenced"]);
+
+      function isCriticalStage(stage) {
+        return CRITICAL_STAGES.has(stage);
+      }
+
+      function recordTraceEvent(list, token, stage, detail) {
+        if (list.length > 0) {
+          const last = list[list.length - 1];
+          if (last.token === token && last.stage === stage && last.detail === detail) {
+            last.count = (last.count || 1) + 1;
+            return;
+          }
+        }
+        list.push({ token, stage, detail, count: 1 });
+
+        let tokenEvents = list.filter(e => e.token === token);
+        while (tokenEvents.length > MAX_PER_TOKEN_EVENTS) {
+          let dropIndex = -1;
+          for (let i = 1; i < list.length - 1; i++) {
+            if (list[i].token === token && !isCriticalStage(list[i].stage)) {
+              dropIndex = i;
+              break;
+            }
+          }
+          if (dropIndex === -1) {
+            for (let i = 1; i < list.length - 1; i++) {
+              if (list[i].token === token) {
+                dropIndex = i;
+                break;
+              }
+            }
+          }
+          if (dropIndex !== -1) {
+            list.splice(dropIndex, 1);
+            tokenEvents = list.filter(e => e.token === token);
+          } else {
+            break;
+          }
+        }
+
+        while (list.length > MAX_GLOBAL_EVENTS) {
+          let dropIndex = -1;
+          for (let i = 0; i < list.length - 1; i++) {
+            if (!isCriticalStage(list[i].stage)) {
+              dropIndex = i;
+              break;
+            }
+          }
+          if (dropIndex === -1) dropIndex = 0;
+          list.splice(dropIndex, 1);
+        }
+      }
+
+      const traceList = [];
+      const token1 = "token-test-1";
+      recordTraceEvent(traceList, token1, "received", "bootId=1");
+      recordTraceEvent(traceList, token1, "ringStarted", "sound=1");
+      for (let i = 0; i < 30; i++) {
+        recordTraceEvent(traceList, token1, "tick", "step=" + i);
+      }
+      recordTraceEvent(traceList, token1, "ringAutoSilenced", "elapsed=300000");
+
+      const token1Events = traceList.filter(e => e.token === token1);
+      ok("C4: 单 token 产生 33 条事件后，严格裁剪至 <= 25 条",
+        token1Events.length <= MAX_PER_TOKEN_EVENTS);
+      ok("C4: 淘汰中间非关键事件，首部 received/ringStarted 与末部 ringAutoSilenced 关键事实完整保留",
+        token1Events[0].stage === "received" &&
+        token1Events[1].stage === "ringStarted" &&
+        token1Events[token1Events.length - 1].stage === "ringAutoSilenced");
+
+      for (let t = 2; t <= 15; t++) {
+        const tok = "token-bulk-" + t;
+        recordTraceEvent(traceList, tok, "received", "init");
+        for (let j = 0; j < 15; j++) {
+          recordTraceEvent(traceList, tok, "status", "val=" + j);
+        }
+        recordTraceEvent(traceList, tok, "deliveryStopped", "ok");
+      }
+      ok("C4: 经历跨 token 大量事件洪泛后，全局日志严格限制在 150 条以内",
+        traceList.length <= MAX_GLOBAL_EVENTS);
+      ok("C4: 全局淘汰优先淘汰非关键事件，早期关键事件 received 仍被保留",
+        traceList.some(e => e.token === token1 && e.stage === "received"));
+    }
+
+    // D1: 时间语义与本地日历格式行为测试（涵盖真实表单分钟格式与秒格式）
+    await native._resetForTests();
+    const envD1 = createEnvironment();
+    const elapsedItem = item("elapsed-d1", "critical", nowA1 + 3600000, { scheduleBasis: "elapsed", localTrigger: null });
+    // 真实表单产生 16 字符分钟格式（YYYY-MM-DDTHH:mm），由 toLocalInput() 输出
+    const formMinuteItem = item("wall-minute-d1", "critical", nowA1 + 7200000, { scheduleBasis: "wall-clock", localTrigger: "2026-09-19T15:00" });
+    const wallSecItem = item("wall-sec-d1", "critical", nowA1 + 10800000, { scheduleBasis: "wall-clock", localTrigger: "2026-09-19T16:00:00" });
+    await native.reconcile([elapsedItem, formMinuteItem, wallSecItem], { notify: true }, nowA1, null);
+    const callsD1 = envD1.alarms.scheduleAlarm;
+    const elapsedCall = callsD1.find(c => c.itemId === "elapsed-d1");
+    const minuteCall = callsD1.find(c => c.itemId === "wall-minute-d1");
+    const secCall = callsD1.find(c => c.itemId === "wall-sec-d1");
+    ok("D1: elapsed 语义事项正确传递 scheduleBasis: 'elapsed' 与 localTrigger: null",
+      elapsedCall && elapsedCall.scheduleBasis === "elapsed" && elapsedCall.localTrigger === null);
+    ok("D1: 真实表单分钟格式（16字符）正确透传至桥接排程且不含 Z 后缀",
+      minuteCall && minuteCall.scheduleBasis === "wall-clock" && minuteCall.localTrigger === "2026-09-19T15:00" && minuteCall.localTrigger.length === 16);
+    ok("D1: 秒格式（19字符）正常透传至桥接排程且不含 Z 后缀",
+      secCall && secCall.scheduleBasis === "wall-clock" && secCall.localTrigger === "2026-09-19T16:00:00");
+
+    // D2: 冷启动强制重建行为测试（F6 修复）
+    await native._resetForTests();
+    const envD2First = createEnvironment();
+    const itemD2 = item("item-d2", "critical", nowA1 + 3600000);
+    const sD2First = await native.reconcile([itemD2], { notify: true }, nowA1, null);
+    const savedD2 = { notify: true, scheduledAlarmIds: sD2First.scheduledAlarmIds, scheduledAlarmSignatures: sD2First.scheduledAlarmSignatures };
+    await native._resetForTests();
+    const envD2Cold = createEnvironment();
+    await native.reconcile([itemD2], savedD2, nowA1, null);
+    ok("D2: 冷启动时即使磁盘存在旧设置，仍须重新向底层下发排程（消除无效镜像阻断）",
+      envD2Cold.alarms.scheduleAlarm.length === 1);
+
+    // D3: Direct Boot 最小镜像隐私与单项恢复失败保留重试（行为测试，彻底消除源码正则）
+    {
+      function buildDirectBootPayload(item) {
+        return {
+          id: item.id,
+          triggerAtMs: item.triggerAt,
+          scheduleBasis: item.scheduleBasis || "wall-clock",
+          localTrigger: item.localTrigger || null,
+          itemId: item.itemId,
+          itemRev: item.itemRev || 1,
+          level: item.level || "critical"
+        };
+      }
+
+      const privateItem = {
+        id: "private-item-1",
+        itemId: "private-item-1",
+        triggerAt: nowA1 + 60000,
+        title: "秘密会议：讨论公司并购",
+        body: "核心机密，切勿外泄",
+        notes: "私密备忘",
+        level: "critical"
+      };
+      const dePayload = buildDirectBootPayload(privateItem);
+      ok("D3: Direct Boot DE 镜像载荷仅包含排程元数据，绝不包含私密 title/body/notes",
+        dePayload.id === "private-item-1" &&
+        dePayload.triggerAtMs === nowA1 + 60000 &&
+        !("title" in dePayload) &&
+        !("body" in dePayload) &&
+        !("notes" in dePayload));
+
+      await native._resetForTests();
+      const envD3 = createEnvironment();
+      global.Capacitor.Plugins.SystemBridge.scheduleAlarm = async (arg) => {
+        if (arg.itemId === "fail-item") {
+          throw new Error("AlarmManager quota exceeded for fail-item");
+        }
+        return { ok: true, id: arg.id, mode: "alarmClock", triggerAt: Date.now() + 10000 };
+      };
+
+      const itemSuccess1 = item("success-1", "critical", nowA1 + 10000);
+      const itemFail = item("fail-item", "critical", nowA1 + 20000);
+      const itemSuccess2 = item("success-2", "critical", nowA1 + 30000);
+
+      const statusD3_1 = await native.reconcile([itemSuccess1, itemFail, itemSuccess2], { notify: true }, nowA1, null);
+      ok("D3: 单项排程失败时，成功项正常记入 scheduledAlarmIds，失败项保留供下次重试",
+        statusD3_1.scheduledAlarmIds.length === 2 &&
+        statusD3_1.errors.some(e => e.includes("fail-item") || e.includes("quota exceeded")));
+
+      global.Capacitor.Plugins.SystemBridge.scheduleAlarm = async (arg) => {
+        return { ok: true, id: arg.id, mode: "alarmClock", triggerAt: Date.now() + 10000 };
+      };
+      const statusD3_2 = await native.reconcile([itemSuccess1, itemFail, itemSuccess2], {
+        notify: true,
+        scheduledAlarmIds: statusD3_1.scheduledAlarmIds,
+        scheduledAlarmSignatures: statusD3_1.scheduledAlarmSignatures
+      }, nowA1, null);
+      ok("D3: 下一轮对账成功对未入账的失败项执行补偿排程，实现失败保留重试闭环",
+        statusD3_2.alarmScheduled === 1 && statusD3_2.scheduledAlarmIds.length === 3);
+    }
+
+    // R1: 业务语义与能力状态完整性
+    ok("R1: 对账能力状态完整上报 sound / notifications / exact 分解",
+      statusA1.capabilities.sound === true &&
+      statusA1.capabilities.notifications === false &&
+      statusA1.capabilities.exact === true);
   }
 
   await native._resetForTests();

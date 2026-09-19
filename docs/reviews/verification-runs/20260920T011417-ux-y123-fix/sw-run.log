@@ -1,0 +1,5 @@
+{
+  precacheHasNativeBridge: true,
+  offlineScriptResponseIsIndexHtml: false,
+  evidenceLevel: 'production SW handlers with cache/network mocks; not browser or Android execution'
+}

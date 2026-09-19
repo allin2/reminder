@@ -1,0 +1,60 @@
+[
+  {
+    "id": "F01-JS",
+    "status": "RED_AS_EXPECTED",
+    "exit": 1,
+    "expected": "T03 Java 的线上字段名与 Web 侧逐一相同"
+  },
+  {
+    "id": "F01-Java",
+    "status": "RED_AS_EXPECTED",
+    "exit": 1,
+    "expected": "rowFieldsAreTheWebProtocol"
+  },
+  {
+    "id": "F02",
+    "status": "RED_AS_EXPECTED",
+    "exit": 1,
+    "expected": "R1 第二次提交被同一份提交身份拒绝"
+  },
+  {
+    "id": "F03",
+    "status": "RED_AS_EXPECTED",
+    "exit": 1,
+    "expected": "R2 旧保存成功不清掉新输入"
+  },
+  {
+    "id": "F04-commit",
+    "status": "RED_AS_EXPECTED",
+    "exit": 1,
+    "expected": "R3 原生提交发布后仍未被覆盖"
+  },
+  {
+    "id": "F04-feedback",
+    "status": "RED_AS_EXPECTED",
+    "exit": 1,
+    "expected": "R6 落库之前绝不说「已撤销」"
+  },
+  {
+    "id": "F05",
+    "status": "RED_AS_EXPECTED",
+    "exit": 1,
+    "expected": "R5 不因撤销立刻补响已经过去的那一次"
+  },
+  {
+    "id": "F07",
+    "status": "RED_AS_EXPECTED",
+    "exit": 1,
+    "expected": "F07 停铃返回本次真正停掉的条数"
+  },
+  {
+    "id": "F08",
+    "status": "RED_AS_EXPECTED",
+    "exit": 1,
+    "expected": "F08 撤销入口没有被第二条提示顶掉"
+  },
+  {
+    "id": "RESTORE",
+    "status": "BYTE_IDENTICAL"
+  }
+]

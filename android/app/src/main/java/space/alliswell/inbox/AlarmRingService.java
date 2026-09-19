@@ -4,6 +4,7 @@ import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.Service;
+import androidx.core.app.NotificationCompat;
 import android.content.Context;
 import android.content.Intent;
 import android.media.AudioAttributes;
@@ -18,7 +19,9 @@ import android.os.VibrationEffect;
 import android.os.Vibrator;
 import android.os.VibratorManager;
 
-import androidx.core.app.NotificationCompat;
+import org.json.JSONArray;
+import org.json.JSONObject;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * 闹钟档的「两个身份」（D59）。
@@ -146,25 +149,305 @@ public class AlarmRingService extends Service {
   private static final Object AUTO_SILENCE_TOKEN = new Object();
 
   /**
-   * 「这一次投递已被自动静音」的落盘标记。
-   *
-   * 必须落盘、不能只用内存变量：`AlarmActivity.restartAlarmEffects()` 的**回落自播**条件是
-   * 「服务不响」，而自动静音之后服务**恰好不响** —— 不标记的话，用户重新看到界面时
-   * 铃声会被界面自己重新播起来，等于静音根本没发生（那正是 D68 要消灭的形态）。
+   * 「这一次投递已被自动静音」的落盘标记（单槽位兼容键）。
    */
   private static final String KEY_AUTO_SILENCED_TRACE = "autoSilencedTrace";
 
   /** 自动静音发生的时刻。面板用它说明「响了多久之后静的」，而不是让用户猜。 */
   static final String KEY_AUTO_SILENCED_AT = "autoSilencedAt";
 
+  // ── 单投递状态治理（Phase B）：消除单槽位覆盖问题 ─────────────────────────────
+  public static final String STATE_RINGING = "RINGING";
+  public static final String STATE_STOPPED = "STOPPED";
+  public static final String STATE_AUTO_SILENCED = "AUTO_SILENCED";
+  public static final String STATE_REPLACED = "REPLACED";
+
+  private static final String PREFS_DELIVERY_STATES = "alarm_delivery_states";
+  private static final String KEY_STATES_JSON = "states";
+  private static final int MAX_SAVED_STATES = 30;
+
+  public static String getBootId() {
+    return DirectBootUtils.getBootId();
+  }
+
+  static class DeliveryRecord {
+    final String token;
+    volatile String state;
+    final long startedElapsed;
+    final long silenceDeadlineElapsed;
+    final long maxAgeDeadlineElapsed;
+    final long startedAt;
+    volatile long stoppedAt;
+    volatile String stopReason;
+
+    final long bootTimeMs;
+    final String bootId;
+
+    DeliveryRecord(String token, String state, long startedElapsed, long silenceDeadlineElapsed,
+                   long maxAgeDeadlineElapsed, long startedAt, long stoppedAt, String stopReason) {
+      this(token, state, startedElapsed, silenceDeadlineElapsed, maxAgeDeadlineElapsed, startedAt, stoppedAt, stopReason,
+        System.currentTimeMillis() - android.os.SystemClock.elapsedRealtime());
+    }
+
+    DeliveryRecord(String token, String state, long startedElapsed, long silenceDeadlineElapsed,
+                   long maxAgeDeadlineElapsed, long startedAt, long stoppedAt, String stopReason, long bootTimeMs) {
+      this(token, state, startedElapsed, silenceDeadlineElapsed, maxAgeDeadlineElapsed,
+           startedAt, stoppedAt, stopReason, bootTimeMs, getBootId());
+    }
+
+    DeliveryRecord(String token, String state, long startedElapsed,
+                   long silenceDeadlineElapsed, long maxAgeDeadlineElapsed,
+                   long startedAt, long stoppedAt, String stopReason, long bootTimeMs, String bootId) {
+      this.token = token;
+      this.state = state;
+      this.startedElapsed = startedElapsed;
+      this.silenceDeadlineElapsed = silenceDeadlineElapsed;
+      this.maxAgeDeadlineElapsed = maxAgeDeadlineElapsed;
+      this.startedAt = startedAt;
+      this.stoppedAt = stoppedAt;
+      this.stopReason = stopReason == null ? "" : stopReason;
+      this.bootTimeMs = bootTimeMs;
+      this.bootId = bootId != null && !bootId.isEmpty() ? bootId : getBootId();
+    }
+
+    JSONObject toJson() {
+      try {
+        JSONObject obj = new JSONObject();
+        obj.put("token", token);
+        obj.put("state", state);
+        obj.put("startedElapsed", startedElapsed);
+        obj.put("silenceDeadlineElapsed", silenceDeadlineElapsed);
+        obj.put("maxAgeDeadlineElapsed", maxAgeDeadlineElapsed);
+        obj.put("startedAt", startedAt);
+        obj.put("stoppedAt", stoppedAt);
+        obj.put("stopReason", stopReason);
+        obj.put("bootTimeMs", bootTimeMs);
+        obj.put("bootId", bootId);
+        return obj;
+      } catch (Exception e) {
+        return new JSONObject();
+      }
+    }
+
+    static DeliveryRecord fromJson(JSONObject obj) {
+      if (obj == null) return null;
+      String token = obj.optString("token", "");
+      if (token.isEmpty()) return null;
+      String recBootId = obj.optString("bootId", "");
+      String currentBootId = getBootId();
+      long recBootTimeMs = obj.optLong("bootTimeMs", 0L);
+      long currentBootTimeMs = System.currentTimeMillis() - android.os.SystemClock.elapsedRealtime();
+      String st = obj.optString("state", STATE_RINGING);
+      long silenceDeadline = obj.optLong("silenceDeadlineElapsed", 0L);
+      String reason = obj.optString("stopReason", "");
+      long startedElapsed = obj.optLong("startedElapsed", 0L);
+      long currentElapsed = android.os.SystemClock.elapsedRealtime();
+
+      boolean isReboot = false;
+      if (!recBootId.isEmpty()) {
+        // R2-04：基于内核稳定的 boot_id 判定是否发生真机重启，不受用户调整系统时钟的影响
+        if (!recBootId.equals(currentBootId)) {
+          isReboot = true;
+        }
+      } else {
+        // 迁移旧记录：若单调记录时刻明显大于当前开机后的单调时长，证明是上一开机会话
+        if (startedElapsed > 0L && startedElapsed > currentElapsed + 5000L) {
+          isReboot = true;
+        } else if (recBootTimeMs > 0L && Math.abs(currentBootTimeMs - recBootTimeMs) > 86400000L) {
+          isReboot = true;
+        } else {
+          recBootId = currentBootId;
+        }
+      }
+
+      // 跨重启保护：若记录来自前次开机会话，任何进行中的响铃状态均判定为重启终止，绝不在新开机中复用旧单调时钟
+      if (isReboot) {
+        if (STATE_RINGING.equals(st)) {
+          st = STATE_STOPPED;
+          reason = "terminated-on-reboot";
+          silenceDeadline = 0L;
+        }
+      }
+
+      return new DeliveryRecord(
+        token,
+        st,
+        startedElapsed,
+        silenceDeadline,
+        obj.optLong("maxAgeDeadlineElapsed", 0L),
+        obj.optLong("startedAt", 0L),
+        obj.optLong("stoppedAt", 0L),
+        reason,
+        recBootTimeMs > 0L ? recBootTimeMs : currentBootTimeMs,
+        recBootId.isEmpty() ? currentBootId : recBootId
+      );
+    }
+  }
+
+  private static final ConcurrentHashMap<String, DeliveryRecord> deliveryStates =
+    new ConcurrentHashMap<>();
+
+  static DeliveryRecord getDeliveryRecord(Context context, String token) {
+    if (token == null || token.isEmpty()) return null;
+    DeliveryRecord mem = deliveryStates.get(token);
+    if (mem != null) return mem;
+    if (context == null) return null;
+    try {
+      android.content.SharedPreferences sp = DirectBootUtils.getSafeSharedPreferences(context, PREFS_DELIVERY_STATES, Context.MODE_PRIVATE);
+      if (sp == null) return null;
+      String json = sp.getString(KEY_STATES_JSON, "[]");
+      JSONArray arr = new JSONArray(json);
+      for (int i = arr.length() - 1; i >= 0; i--) {
+        JSONObject o = arr.optJSONObject(i);
+        if (o != null && token.equals(o.optString("token", ""))) {
+          DeliveryRecord rec = DeliveryRecord.fromJson(o);
+          if (rec != null) {
+            deliveryStates.put(token, rec);
+            return rec;
+          }
+        }
+      }
+    } catch (Exception ignored) {}
+    return null;
+  }
+
+  static synchronized void saveDeliveryRecord(Context context, DeliveryRecord record) {
+    if (record == null || record.token == null || record.token.isEmpty()) return;
+    deliveryStates.put(record.token, record);
+    if (context == null) return;
+    try {
+      android.content.SharedPreferences sp = DirectBootUtils.getSafeSharedPreferences(context, PREFS_DELIVERY_STATES, Context.MODE_PRIVATE);
+      if (sp == null) return;
+      JSONArray arr = new JSONArray(sp.getString(KEY_STATES_JSON, "[]"));
+      JSONArray out = new JSONArray();
+      for (int i = 0; i < arr.length(); i++) {
+        JSONObject o = arr.optJSONObject(i);
+        if (o != null && !record.token.equals(o.optString("token", ""))) {
+          out.put(o);
+        }
+      }
+      out.put(record.toJson());
+      while (out.length() > MAX_SAVED_STATES) {
+        out.remove(0);
+      }
+      boolean ok = sp.edit().putString(KEY_STATES_JSON, out.toString()).commit();
+      if (!ok) {
+        AlarmTrace.record(context, record.token, "deliverySaveFailed", "commit returned false");
+      }
+    } catch (Exception e) {
+      AlarmTrace.record(context, record.token, "deliverySaveFailed", e.toString());
+    }
+  }
+
+  static String getDeliveryState(Context context, String token) {
+    if (token == null || token.isEmpty()) return "";
+    DeliveryRecord rec = getDeliveryRecord(context, token);
+    return rec != null ? rec.state : "";
+  }
+
+  static boolean isDeliveryTerminatedState(String state) {
+    return STATE_STOPPED.equals(state) || STATE_AUTO_SILENCED.equals(state) || STATE_REPLACED.equals(state);
+  }
+
+  static boolean isDeliveryTerminated(Context context, String token) {
+    if (token == null || token.isEmpty()) return false;
+    DeliveryRecord rec = getDeliveryRecord(context, token);
+    if (rec != null) {
+      return isDeliveryTerminatedState(rec.state);
+    }
+    return false;
+  }
+
   /** 这次投递是否已经走到自动静音。供界面判定「不要回落自播」、供面板归因。 */
   static boolean wasAutoSilenced(Context context, String trace) {
     if (context == null || trace == null || trace.isEmpty()) return false;
+    DeliveryRecord rec = getDeliveryRecord(context, trace);
+    if (rec != null && STATE_AUTO_SILENCED.equals(rec.state)) return true;
     try {
-      return trace.equals(context.getSharedPreferences(AlarmActivity.PREFS, Context.MODE_PRIVATE)
-        .getString(KEY_AUTO_SILENCED_TRACE, ""));
+      android.content.SharedPreferences sp = DirectBootUtils.getSafeSharedPreferences(context, AlarmActivity.PREFS, Context.MODE_PRIVATE);
+      return sp != null && trace.equals(sp.getString(KEY_AUTO_SILENCED_TRACE, ""));
     } catch (Exception ignored) {
       return false;
+    }
+  }
+
+  /** 获取单调时钟计算的剩余静音时长（毫秒） */
+  static long getRemainingSilenceMs(Context context, String trace, long defaultLimitMs) {
+    if (trace == null || trace.isEmpty()) return defaultLimitMs;
+    DeliveryRecord rec = getDeliveryRecord(context, trace);
+    if (rec == null) return defaultLimitMs;
+    if (STATE_AUTO_SILENCED.equals(rec.state) || STATE_STOPPED.equals(rec.state)) return 0L;
+    long remaining = rec.silenceDeadlineElapsed - android.os.SystemClock.elapsedRealtime();
+    return remaining > 0 ? remaining : 0L;
+  }
+
+  /** 确保该 token 具备初始投递记录，建立单调截止时间基准 */
+  static DeliveryRecord ensureDeliveryRecord(Context context, String token, long autoSilenceMs) {
+    if (token == null || token.isEmpty()) return null;
+    DeliveryRecord rec = getDeliveryRecord(context, token);
+    if (rec != null) return rec;
+    long nowElapsed = android.os.SystemClock.elapsedRealtime();
+    long silenceLimit = autoSilenceMs > 0 ? autoSilenceMs : AUTO_SILENCE_MS;
+    rec = new DeliveryRecord(
+      token, STATE_RINGING, nowElapsed, nowElapsed + silenceLimit,
+      nowElapsed + ActiveAlarmStore.MAX_AGE_MS, System.currentTimeMillis(), 0L, ""
+    );
+    saveDeliveryRecord(context, rec);
+    return rec;
+  }
+
+  /** 标记投递已停止 */
+  static void markDeliveryStopped(Context context, String trace, String reason) {
+    if (trace == null || trace.isEmpty()) return;
+    DeliveryRecord rec = getDeliveryRecord(context, trace);
+    long nowElapsed = android.os.SystemClock.elapsedRealtime();
+    if (rec == null) {
+      rec = new DeliveryRecord(trace, STATE_STOPPED, nowElapsed, nowElapsed,
+        nowElapsed, System.currentTimeMillis(), System.currentTimeMillis(), reason);
+    } else {
+      rec.state = STATE_STOPPED;
+      rec.stoppedAt = System.currentTimeMillis();
+      rec.stopReason = reason;
+    }
+    saveDeliveryRecord(context, rec);
+  }
+
+  /** 标记投递已被替换 */
+  static void markDeliveryReplaced(Context context, String trace, String reason) {
+    if (trace == null || trace.isEmpty()) return;
+    DeliveryRecord rec = getDeliveryRecord(context, trace);
+    if (rec != null) {
+      rec.state = STATE_REPLACED;
+      rec.stoppedAt = System.currentTimeMillis();
+      rec.stopReason = reason;
+      saveDeliveryRecord(context, rec);
+    }
+  }
+
+  /** 标记投递已自动静音，兼顾单槽位回落 */
+  static void markAutoSilenced(Context context, String trace) {
+    if (trace == null || trace.isEmpty()) return;
+    DeliveryRecord rec = getDeliveryRecord(context, trace);
+    long nowElapsed = android.os.SystemClock.elapsedRealtime();
+    if (rec == null) {
+      rec = new DeliveryRecord(trace, STATE_AUTO_SILENCED, nowElapsed, nowElapsed,
+        nowElapsed, System.currentTimeMillis(), System.currentTimeMillis(), "autoSilence");
+    } else {
+      rec.state = STATE_AUTO_SILENCED;
+      rec.stoppedAt = System.currentTimeMillis();
+      rec.stopReason = "autoSilence";
+    }
+    saveDeliveryRecord(context, rec);
+    if (context != null) {
+      try {
+        android.content.SharedPreferences sp = DirectBootUtils.getSafeSharedPreferences(context, AlarmActivity.PREFS, Context.MODE_PRIVATE);
+        if (sp != null) {
+          sp.edit()
+            .putString(KEY_AUTO_SILENCED_TRACE, trace)
+            .putLong(KEY_AUTO_SILENCED_AT, System.currentTimeMillis())
+            .apply();
+        }
+      } catch (Exception ignored) {}
     }
   }
 
@@ -177,55 +460,119 @@ public class AlarmRingService extends Service {
   private boolean ringing = false;
   /**
    * 当前正在响的是**哪一次投递**。
-   *
-   * 「广播投递」与「响铃服务」本来就是两条同刻的闹钟时钟（`scheduleUnfreezer`），
-   * 它们都会走到这里。若不认身份就重起铃声，同一个闹钟会被打断后从头重播 ——
-   * 用户听到的是「响了两声、停一下、又从开头响」，这正是 V3 记下的那类现场
-   * （replaced different delivery → effectsStopped → audioStarted）。
    */
   private String ringingTrace;
 
   /**
+   * 获取当前正在响铃的 trace token
+   */
+  static String getRingingTrace() {
+    AlarmRingService service = instance;
+    return (service != null && service.ringing) ? service.ringingTrace : null;
+  }
+
+  /**
    * 现在是否由**本服务**持有铃声。
    *
-   * `AlarmActivity` 用它做互斥：服务在响时界面绝不自己播（否则就是 V3 那个
-   * 「两路同时拉、响铃被打断重启」的坑）；服务没起来时界面才回落自播。
+   * `AlarmActivity` 用它做互斥：服务在响时界面绝不自己播；服务没起来时界面才回落自播。
    */
   static boolean isRinging() {
     AlarmRingService service = instance;
     return service != null && service.ringing;
   }
 
-  /**
-   * 停铃收口 —— D59 之后**所有**停声路径都必须经过这里：
-   * 通知的「停止声振」按钮（`AlarmStopReceiver`）、界面出口（`AlarmActivity`）、
-   * 以及对账撤销（`ActiveAlarmStore`）。少一条就会表现为「关掉了界面，铃声还在响」。
-   *
-   * 用 `stopService()` 而不是 `startService(ACTION_STOP)`：服务没在跑时它是无害的 no-op，
-   * 而 `startService` 会把一个没在响的服务**拉起来**再停掉 —— 白起一次前台服务。
-   */
-  static void requestStop(Context context) {
-    if (context == null) return;
+  /** 显式全局停铃入口 */
+  static boolean requestStopAll(Context context) {
+    if (context == null) return false;
+    AlarmRingService service = instance;
+    String currentTrace = (service != null && service.ringing) ? service.ringingTrace : null;
+    if (currentTrace != null) {
+      markDeliveryStopped(context, currentTrace, "requestStopAll");
+    }
     try {
+      if (service != null) {
+        service.stopSelf();
+      }
       context.stopService(new Intent(context, AlarmRingService.class));
     } catch (Exception ignored) {}
+    return true;
+  }
+
+  /**
+   * 停铃收口 —— D59 之后所有停声路径都必须经过这里。
+   * 兼容保留无参版本（显式全局停铃）。
+   */
+  static boolean requestStop(Context context) {
+    return requestStopAll(context);
+  }
+
+  /**
+   * 携带 (id, token) 的明确停铃请求。
+   * 如果传入了 token 且当前正在响的不是该 token，拒绝停服并记录日志；
+   * 如果 token 为空但指定了非 0 的 id，检查当前正在响的 trace 是否属于该 id（以 id + ":" 起始），不匹配则拒绝停服。
+   * 返回 true 表示执行了停服或匹配停止，false 表示 token 不匹配被拒绝。
+   */
+  static boolean requestStop(Context context, int id, String token) {
+    if (context == null) return false;
+    AlarmRingService service = instance;
+    String currentTrace = (service != null && service.ringing) ? service.ringingTrace : null;
+
+    if (token != null && currentTrace != null && !token.equals(currentTrace)) {
+      AlarmTrace.record(context, token, "mismatch-rejected",
+        "active ringing trace is " + currentTrace + "; cannot stop using token=" + token);
+      markDeliveryStopped(context, token, "stopped-mismatch-delivery");
+      return false;
+    }
+
+    if (token == null && id != 0 && currentTrace != null && !currentTrace.startsWith(id + ":")) {
+      AlarmTrace.record(context, "id:" + id, "mismatch-rejected",
+        "active ringing trace is " + currentTrace + "; cannot stop mismatched id=" + id);
+      return false;
+    }
+
+    if (currentTrace != null) {
+      markDeliveryStopped(context, currentTrace, "requestStop");
+    }
+    if (token != null) {
+      markDeliveryStopped(context, token, "requestStop");
+    }
+
+    try {
+      if (service != null) {
+        service.stopSelf();
+      }
+      context.stopService(new Intent(context, AlarmRingService.class));
+    } catch (Exception ignored) {}
+    return true;
   }
 
   @Override
   public int onStartCommand(Intent intent, int flags, int startId) {
     if (intent != null && ACTION_STOP.equals(intent.getAction())) {
-      AlarmTrace.record(this, intent.getStringExtra(AlarmTrace.EXTRA), "ringStopRequested", "explicit stop action");
-      stopSelf();
+      String stopToken = intent.getStringExtra(AlarmTrace.EXTRA);
+      AlarmTrace.record(this, stopToken, "ringStopRequested", "explicit stop action");
+      requestStop(this, 0, stopToken);
       return START_NOT_STICKY;
     }
 
     String trace = intent == null ? null : intent.getStringExtra(AlarmTrace.EXTRA);
     String title = intent == null ? null : intent.getStringExtra(AlarmTestReceiver.EXTRA_TITLE);
-    // 没有投递数据的启动（系统重启服务、或外来 Intent）一律不响铃：
-    // 宁可不响，也不要响一条没有归属、不知道该由哪条事项负责的闹钟。
+    // 没有投递数据的启动（系统重启服务、或外来 Intent）一律不响铃
     if (title == null || title.isEmpty()) {
       AlarmTrace.record(this, trace, "ringSkippedNoPayload", "started without delivery extras");
-      stopSelf();
+      if (!ringing) {
+        stopSelf(startId);
+      }
+      return START_NOT_STICKY;
+    }
+
+    // 延迟 Intent 拦截：服务收到 onStartCommand 时，若 token 处于终态（STOPPED, AUTO_SILENCED, REPLACED），直接丢弃并不起响。
+    if (trace != null && isDeliveryTerminated(this, trace)) {
+      AlarmTrace.record(this, trace, "ringSkippedTerminated",
+        "delivery is already terminated: " + getDeliveryState(this, trace));
+      if (!ringing) {
+        stopSelf(startId);
+      }
       return START_NOT_STICKY;
     }
 
@@ -237,12 +584,51 @@ public class AlarmRingService extends Service {
       return START_NOT_STICKY;
     }
 
+    // 若新投递本身已处于终态，绝不允许复活并打断正在响铃的其他合法投递
+    if (trace != null && isDeliveryTerminated(this, trace)) {
+      AlarmTrace.record(this, trace, "ringSkippedTerminated",
+        "terminated delivery cannot preempt ringing: " + getDeliveryState(this, trace));
+      return START_NOT_STICKY;
+    }
+
+    // 若当前正在响其他投递，标记其被替换
+    if (ringing && ringingTrace != null && !ringingTrace.equals(trace)) {
+      markDeliveryReplaced(this, ringingTrace, "replaced by " + trace);
+      AlarmTrace.record(this, ringingTrace, "ringReplaced", "replaced by " + trace);
+    }
+
     instance = this;
+    // UX-T03：服务这条路**已经真的走到响铃**了 —— 这也是「系统接收」的实锤，
+    // 而它和广播投递是两条独立的排程（App 存活时两条都会到，冷进程时可能只到一条）。
+    // 台账按身份去重，两条都写不会变成两条证据；只写广播那一条会让
+    // 「服务先到 / 广播被拦」时凭空丢失证据。终止态已在上方拦掉，不写。
+    DeliveryEvidenceStore.record(this,
+      intent.getStringExtra(AlarmTestReceiver.EXTRA_ITEM_ID),
+      intent.getStringExtra(AlarmTestReceiver.EXTRA_REMINDER_KEY),
+      intent.getLongExtra(AlarmTestReceiver.EXTRA_PLANNED_AT, 0L),
+      "alarm",
+      intent.getStringExtra(AlarmTestReceiver.EXTRA_ITEM_REV),
+      trace);
     long maxRingMs = intent.getLongExtra(EXTRA_MAX_RING_MS, ActiveAlarmStore.MAX_AGE_MS);
     if (maxRingMs < 1000L) maxRingMs = 1000L;
+    long autoSilenceLimit = intent.getLongExtra(EXTRA_AUTO_SILENCE_MS, AUTO_SILENCE_MS);
+    if (autoSilenceLimit < 1000L) autoSilenceLimit = 1000L;
 
-    // 前台身份。**拿不到也要继续响** —— D59 之后铃声与振动不依赖通知，
-    // 前台身份只是「让系统不要轻易杀掉我们」，不是响铃的前提（S2.3 降级矩阵）。
+    long nowElapsed = android.os.SystemClock.elapsedRealtime();
+    DeliveryRecord existing = trace != null ? getDeliveryRecord(this, trace) : null;
+    DeliveryRecord record;
+    if (existing != null && existing.silenceDeadlineElapsed > 0L) {
+      record = existing;
+      record.state = STATE_RINGING;
+    } else {
+      record = new DeliveryRecord(
+        trace, STATE_RINGING, nowElapsed, nowElapsed + autoSilenceLimit,
+        nowElapsed + maxRingMs, System.currentTimeMillis(), 0L, ""
+      );
+      if (trace != null) saveDeliveryRecord(this, record);
+    }
+
+    // 前台身份
     boolean foreground = false;
     try {
       startForeground(FOREGROUND_ID, ringNotification(title));
@@ -253,12 +639,9 @@ public class AlarmRingService extends Service {
 
     boolean sound = startRingtone(trace);
     boolean vibrate = startVibration(trace);
-    // 「服务在响」= 至少一个载体到手。两者都失败才让界面回落自播，避免双声源。
     ringing = sound || vibrate;
     if (ringing) ringingTrace = trace;
 
-    // D59/S2.5：载体归因必须落盘并与「本次投递」绑定 —— 时间戳让 App 侧能区分
-    // 「服务真的报了到」与「服务没起来，读到的还是上一次投递的旧值」。
     recordCarrier(trace, sound, vibrate, foreground);
 
     AlarmTrace.record(this, trace, "ringStarted",
@@ -266,26 +649,19 @@ public class AlarmRingService extends Service {
 
     final long limit = maxRingMs;
     scheduleMaxAge(trace, limit);
-    // D68：自动静音。**只在首次启动时arm** —— 上面「同一次投递重复启动」的早返回分支
-    // 刻意不重新计时，否则两条同刻排程（投递 + 解冻器）会把静音窗口往后推。
     scheduleAutoSilence(trace, intent.getLongExtra(EXTRA_AUTO_SILENCE_MS, AUTO_SILENCE_MS));
     return START_NOT_STICKY;
   }
 
   /**
    * D68：到点自动静音 —— 停声振、留记录、**不产生 ACK**。
-   *
-   * 与 `scheduleMaxAge` 的分工：本方法管「响多久」（5 分钟，可感），
-   * `scheduleMaxAge` 管「记录存多久」（6h，兜底）。两个上限并存，互不覆盖。
    */
   private void scheduleAutoSilence(String trace, long limitMs) {
-    if (limitMs < 1000L) limitMs = 1000L;
+    long actualLimit = getRemainingSilenceMs(this, trace, limitMs);
+    if (actualLimit < 1000L) actualLimit = 1000L;
     handler.removeCallbacksAndMessages(AUTO_SILENCE_TOKEN);
-    final long limit = limitMs;
+    final long limit = actualLimit;
     handler.postAtTime(() -> {
-      // 顺序有意：**先把「已静音」落盘，再停声**。
-      // 界面（若可见）可能在服务停下的同一时刻 resume，那时它读到的必须已经是「已静音」，
-      // 否则回落自播会在静音之后把铃声重新播起来。
       markAutoSilenced(trace);
       AlarmTrace.record(this, trace, "ringAutoSilenced",
         "silencedAfter=" + limit + "ms; sound+vibration stopped; delivery record kept (unacknowledged, no ACK)");
@@ -293,25 +669,12 @@ public class AlarmRingService extends Service {
     }, AUTO_SILENCE_TOKEN, android.os.SystemClock.uptimeMillis() + limit);
   }
 
-  /** 落盘「本次投递已自动静音」。写失败不阻塞静音本身 —— 停下来比标记更重要。 */
   private void markAutoSilenced(String trace) {
-    try {
-      getSharedPreferences(AlarmActivity.PREFS, Context.MODE_PRIVATE).edit()
-        .putString(KEY_AUTO_SILENCED_TRACE, trace == null ? "" : trace)
-        .putLong(KEY_AUTO_SILENCED_AT, System.currentTimeMillis())
-        .apply();
-    } catch (Exception ignored) {}
+    markAutoSilenced(this, trace);
   }
 
   /**
    * D59：响铃上限兜底。
-   *
-   * 铃声不再交给通知（通知被撤掉就自动停），而是应用自己循环播 —— 因此必须有上限。
-   * 上限用的是 `ActiveAlarmStore.MAX_AGE_MS`(6h) 同一个常量：它本来就是「一条投递
-   * 多久之后不再算活跃」的既有裁决（D45），响铃与台账用同一条线，不会互相矛盾。
-   *
-   * 用 token 定位并先清旧回调：同一次投递可能被重复启动（两条同刻排程），
-   * 堆叠会让 trace 里出现多条 ringMaxAgeReached，「到底响了多久」就读不准了。
    */
   private void scheduleMaxAge(String trace, long limitMs) {
     if (limitMs < 1000L) limitMs = 1000L;
@@ -483,6 +846,23 @@ public class AlarmRingService extends Service {
       }
     } catch (Exception ignored) {}
     player = null;
+  }
+
+  @Override
+  public android.content.SharedPreferences getSharedPreferences(String name, int mode) {
+    if (android.os.Build.VERSION.SDK_INT >= 24) {
+      if (isDeviceProtectedStorage()) {
+        return super.getSharedPreferences(name, mode);
+      }
+      android.os.UserManager um = (android.os.UserManager) getSystemService(Context.USER_SERVICE);
+      if (um != null && !um.isUserUnlocked()) {
+        Context de = createDeviceProtectedStorageContext();
+        if (de != null) {
+          return de.getSharedPreferences(name, mode);
+        }
+      }
+    }
+    return super.getSharedPreferences(name, mode);
   }
 
   @Override

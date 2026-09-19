@@ -30,6 +30,13 @@ import com.getcapacitor.annotation.PermissionCallback;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
+import java.util.TimeZone;
+import android.util.Log;
+
 @CapacitorPlugin(
   name = "SystemBridge",
   permissions = {
@@ -40,15 +47,31 @@ import org.json.JSONObject;
   }
 )
 public class SystemBridgePlugin extends Plugin {
+  private static final String TAG = "SystemBridgePlugin";
 
   public static final String CHANNEL_ID = "attention-bridge-v2";
   public static final String CHANNEL_NAME = "提醒测试";
   public static final int REQ_NOTIFY = 21001;
   public static final int REQ_EXACT = 21002;
 
-  /** P1-4：已排全屏闹钟的持久化记录，供开机后恢复 */
+  /** P1-4 & Phase D：已排全屏闹钟的持久化记录架构（schemaVersion: 1） */
   public static final String PREFS_SCHEDULES = "attention_alarm_schedules";
   public static final String KEY_ALARMS = "alarms";
+  public static final String KEY_MISSED_ALARMS = "missed_alarms";
+  public static final String KEY_SCHEMA_VERSION = "schemaVersion";
+  public static final int CURRENT_SCHEMA_VERSION = 1;
+  public static final String BASIS_WALL_CLOCK = "wall-clock";
+  public static final String BASIS_ELAPSED = "elapsed";
+
+  public static final String PREFS_DIRECT_BOOT = "attention_direct_boot_schedules";
+
+  private static Context getDeviceProtectedContext(Context context) {
+    if (context == null) return null;
+    if (Build.VERSION.SDK_INT >= 24) {
+      return context.createDeviceProtectedStorageContext();
+    }
+    return context;
+  }
 
   /** P1-4：记录一条已排闹钟（同 id 覆盖）。V02：一并持久化数据版本 */
   static synchronized void persistAlarm(Context context, int id, long triggerAt,
@@ -58,6 +81,30 @@ public class SystemBridgePlugin extends Plugin {
 
   static synchronized void persistAlarm(Context context, int id, long triggerAt, String title,
                                         String body, String itemId, String level, String itemRev) {
+    persistAlarm(context, id, triggerAt, null, BASIS_WALL_CLOCK, title, body, itemId, level, itemRev);
+  }
+
+  /** Phase D & F5：完整元数据持久化，并同步维护 Direct Boot 最小不含隐私镜像 */
+  static synchronized void persistAlarm(Context context, int id, long triggerAtMs,
+                                        String localTrigger, String scheduleBasis,
+                                        String title, String body, String itemId,
+                                        String level, String itemRev) {
+    persistAlarm(context, id, triggerAtMs, localTrigger, scheduleBasis, title, body, itemId,
+      level, itemRev, "");
+  }
+
+  /**
+   * UX-T03：把提醒键一起落盘。
+   *
+   * 开机恢复 / 恢复对账都会**重排**闹钟（`kept` 那两条路径）。如果键只活在
+   * 首次排程的 Intent 里，重排之后这次投递在证据台账里就没有身份了 ——
+   * 表现是「重启后响过的那次提醒查不到结果」。
+   */
+  static synchronized void persistAlarm(Context context, int id, long triggerAtMs,
+                                        String localTrigger, String scheduleBasis,
+                                        String title, String body, String itemId,
+                                        String level, String itemRev, String reminderKey) {
+    if (context == null) return;
     try {
       SharedPreferences prefs = context.getSharedPreferences(PREFS_SCHEDULES, Context.MODE_PRIVATE);
       JSONArray arr = new JSONArray(prefs.getString(KEY_ALARMS, "[]"));
@@ -68,19 +115,82 @@ public class SystemBridgePlugin extends Plugin {
       }
       JSONObject entry = new JSONObject();
       entry.put("id", id);
-      entry.put("triggerAt", triggerAt);
+      entry.put("triggerAtMs", triggerAtMs);
+      entry.put("triggerAt", triggerAtMs); // backwards compatibility
+      String basis = (scheduleBasis == null || scheduleBasis.isEmpty()) ? BASIS_WALL_CLOCK : scheduleBasis;
+      entry.put("scheduleBasis", basis);
+
+      long delayMs = Math.max(0L, triggerAtMs - System.currentTimeMillis());
+      long elapsedTriggerAtMs = android.os.SystemClock.elapsedRealtime() + delayMs;
+      String bootId = AlarmRingService.getBootId();
+      entry.put("elapsedTriggerAtMs", elapsedTriggerAtMs);
+      entry.put("durationMs", delayMs);
+      entry.put("bootId", bootId);
+
+      String local = localTrigger;
+      if (local == null || local.isEmpty()) {
+        try {
+          SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault());
+          local = sdf.format(new Date(triggerAtMs));
+        } catch (Exception ignored) {
+          local = "";
+        }
+      }
+      entry.put("localTrigger", local);
       entry.put("title", title == null ? "" : title);
       entry.put("body", body == null ? "" : body);
       entry.put("itemId", itemId == null ? "" : itemId);
       entry.put("level", level == null ? "" : level);
       entry.put("itemRev", itemRev == null || itemRev.isEmpty() ? "0" : itemRev);
+      // UX-T03：提醒键不是隐私内容（只是 `<轮次>@<原定时刻>`），两条镜像都带上
+      entry.put("reminderKey", reminderKey == null ? "" : reminderKey);
       out.put(entry);
-      prefs.edit().putString(KEY_ALARMS, out.toString()).apply();
-    } catch (Exception ignored) {}
+      prefs.edit()
+        .putInt(KEY_SCHEMA_VERSION, CURRENT_SCHEMA_VERSION)
+        .putString(KEY_ALARMS, out.toString())
+        .apply();
+
+      // F5：同步维护 Device Protected Storage 最小镜像（无私密标题与正文）
+      try {
+        Context deCtx = getDeviceProtectedContext(context);
+        if (deCtx != null) {
+          SharedPreferences dePrefs = deCtx.getSharedPreferences(PREFS_DIRECT_BOOT, Context.MODE_PRIVATE);
+          JSONArray deArr = new JSONArray(dePrefs.getString(KEY_ALARMS, "[]"));
+          JSONArray deOut = new JSONArray();
+          for (int i = 0; i < deArr.length(); i++) {
+            JSONObject o = deArr.optJSONObject(i);
+            if (o != null && o.optInt("id", 0) != id) deOut.put(o);
+          }
+          JSONObject deEntry = new JSONObject();
+          deEntry.put("id", id);
+          deEntry.put("triggerAtMs", triggerAtMs);
+          deEntry.put("triggerAt", triggerAtMs);
+          deEntry.put("scheduleBasis", basis);
+          deEntry.put("elapsedTriggerAtMs", elapsedTriggerAtMs);
+          deEntry.put("durationMs", delayMs);
+          deEntry.put("bootId", bootId);
+          deEntry.put("localTrigger", local);
+          deEntry.put("itemId", itemId == null ? "" : itemId);
+          deEntry.put("level", level == null ? "" : level);
+          deEntry.put("itemRev", itemRev == null || itemRev.isEmpty() ? "0" : itemRev);
+          deEntry.put("reminderKey", reminderKey == null ? "" : reminderKey);
+          deOut.put(deEntry);
+          dePrefs.edit()
+            .putInt(KEY_SCHEMA_VERSION, CURRENT_SCHEMA_VERSION)
+            .putString(KEY_ALARMS, deOut.toString())
+            .apply();
+        }
+      } catch (Exception deError) {
+        Log.w(TAG, "persistAlarm to DE storage failed", deError);
+      }
+    } catch (Exception e) {
+      Log.e(TAG, "persistAlarm failed", e);
+    }
   }
 
-  /** P1-4：撤销记录 */
+  /** P1-4 & F5：撤销记录（同时清理 CE 与 DE 镜像） */
   static synchronized void forgetAlarm(Context context, int id) {
+    if (context == null) return;
     try {
       SharedPreferences prefs = context.getSharedPreferences(PREFS_SCHEDULES, Context.MODE_PRIVATE);
       JSONArray arr = new JSONArray(prefs.getString(KEY_ALARMS, "[]"));
@@ -90,29 +200,249 @@ public class SystemBridgePlugin extends Plugin {
         if (o != null && o.optInt("id", 0) != id) out.put(o);
       }
       prefs.edit().putString(KEY_ALARMS, out.toString()).apply();
+
+      try {
+        Context deCtx = getDeviceProtectedContext(context);
+        if (deCtx != null) {
+          SharedPreferences dePrefs = deCtx.getSharedPreferences(PREFS_DIRECT_BOOT, Context.MODE_PRIVATE);
+          JSONArray deArr = new JSONArray(dePrefs.getString(KEY_ALARMS, "[]"));
+          JSONArray deOut = new JSONArray();
+          for (int i = 0; i < deArr.length(); i++) {
+            JSONObject o = deArr.optJSONObject(i);
+            if (o != null && o.optInt("id", 0) != id) deOut.put(o);
+          }
+          dePrefs.edit().putString(KEY_ALARMS, deOut.toString()).apply();
+        }
+      } catch (Exception ignored) {}
     } catch (Exception ignored) {}
   }
 
   /** P1-4：开机 / 应用更新后重排仍未来的闹钟，丢弃已过期的 */
   static synchronized void restorePersistedAlarms(Context context) {
+    restorePersistedAlarms(context, "boot");
+  }
+
+  /** F5：Direct Boot 锁定开机状态下从 DE 最小镜像恢复排程（无私密标题与正文） */
+  static synchronized void restoreDirectBootAlarms(Context deContext, String reason) {
+    if (deContext == null) return;
+    try {
+      SharedPreferences dePrefs = deContext.getSharedPreferences(PREFS_DIRECT_BOOT, Context.MODE_PRIVATE);
+      JSONArray arr = new JSONArray(dePrefs.getString(KEY_ALARMS, "[]"));
+      JSONArray kept = new JSONArray();
+      long now = System.currentTimeMillis();
+      long currentElapsed = android.os.SystemClock.elapsedRealtime();
+      String currentBootId = AlarmRingService.getBootId();
+      boolean isTimezoneChange = Intent.ACTION_TIMEZONE_CHANGED.equals(reason);
+
+      for (int i = 0; i < arr.length(); i++) {
+        JSONObject o = arr.optJSONObject(i);
+        if (o == null) continue;
+        int id = o.optInt("id", 0);
+        if (id == 0) continue;
+
+        long triggerAt = o.optLong("triggerAtMs", o.optLong("triggerAt", 0L));
+        String basis = o.optString("scheduleBasis", BASIS_WALL_CLOCK);
+        String localTrigger = o.optString("localTrigger", "");
+        long elapsedTriggerAtMs = o.optLong("elapsedTriggerAtMs", 0L);
+        String itemBootId = o.optString("bootId", "");
+
+        boolean isElapsed = BASIS_ELAPSED.equals(basis);
+        boolean sameBoot = (!itemBootId.isEmpty() && itemBootId.equals(currentBootId))
+            || (elapsedTriggerAtMs > 0 && elapsedTriggerAtMs > currentElapsed);
+
+        if (isElapsed) {
+          if (sameBoot) {
+            long remainingMs = elapsedTriggerAtMs - currentElapsed;
+            if (remainingMs <= 0) {
+              continue;
+            }
+            triggerAt = now + remainingMs;
+            o.put("triggerAtMs", triggerAt);
+            o.put("triggerAt", triggerAt);
+            o.put("bootId", currentBootId);
+          } else {
+            if (triggerAt <= now) {
+              continue;
+            }
+            long remainingMs = triggerAt - now;
+            elapsedTriggerAtMs = currentElapsed + remainingMs;
+            o.put("elapsedTriggerAtMs", elapsedTriggerAtMs);
+            o.put("bootId", currentBootId);
+          }
+        } else {
+          if (isTimezoneChange && !localTrigger.isEmpty()) {
+            long recalculated = parseLocalTriggerInCurrentZone(localTrigger, triggerAt);
+            if (recalculated > 0L) {
+              triggerAt = recalculated;
+              o.put("triggerAtMs", triggerAt);
+              o.put("triggerAt", triggerAt);
+            }
+          }
+          if (triggerAt <= now) {
+            continue;
+          }
+        }
+
+        try {
+          String rev = o.optString("itemRev", "0");
+          // UX-T03：重排必须沿用**原来的提醒身份与计划时刻** —— 换一个身份
+          // 会让重启后真正响过的那次提醒查不到结果（证据落在没人问津的键上）。
+          AlarmScheduler.schedule(deContext, triggerAt, "提醒", "",
+            id, o.optString("itemId"), o.optString("level"),
+            rev == null || rev.isEmpty() ? "0" : rev, basis, elapsedTriggerAtMs,
+            o.optString("reminderKey", ""), triggerAt);
+          kept.put(o);
+        } catch (Exception itemError) {
+          kept.put(o);
+          Log.w(TAG, "DirectBoot restore failed for item " + id, itemError);
+        }
+      }
+      dePrefs.edit().putString(KEY_ALARMS, kept.toString()).apply();
+    } catch (Exception e) {
+      Log.e(TAG, "restoreDirectBootAlarms failed", e);
+    }
+  }
+
+  /** Phase D & D3：系统事件恢复（支持开机、更新、时区变更与时间调整，带单项异常隔离、防群响与失败保留重试） */
+  static synchronized void restorePersistedAlarms(Context context, String reason) {
+    if (context == null) return;
     try {
       SharedPreferences prefs = context.getSharedPreferences(PREFS_SCHEDULES, Context.MODE_PRIVATE);
       JSONArray arr = new JSONArray(prefs.getString(KEY_ALARMS, "[]"));
       JSONArray kept = new JSONArray();
       long now = System.currentTimeMillis();
+      long currentElapsed = android.os.SystemClock.elapsedRealtime();
+      String currentBootId = AlarmRingService.getBootId();
+      boolean isTimezoneChange = Intent.ACTION_TIMEZONE_CHANGED.equals(reason);
+
       for (int i = 0; i < arr.length(); i++) {
-        JSONObject o = arr.optJSONObject(i);
-        if (o == null) continue;
-        int id = o.optInt("id", 0);
-        long triggerAt = o.optLong("triggerAt", 0L);
-        if (id == 0 || triggerAt <= now) continue;
-        String rev = o.optString("itemRev", "0");
-        AlarmScheduler.schedule(context, triggerAt, o.optString("title"), o.optString("body"),
-          id, o.optString("itemId"), o.optString("level"),
-          rev == null || rev.isEmpty() ? "0" : rev);
-        kept.put(o);
+        try {
+          JSONObject o = arr.optJSONObject(i);
+          if (o == null) continue;
+          int id = o.optInt("id", 0);
+          if (id == 0) continue;
+
+          long triggerAt = o.optLong("triggerAtMs", o.optLong("triggerAt", 0L));
+          String basis = o.optString("scheduleBasis", BASIS_WALL_CLOCK);
+          String localTrigger = o.optString("localTrigger", "");
+          long elapsedTriggerAtMs = o.optLong("elapsedTriggerAtMs", 0L);
+          String itemBootId = o.optString("bootId", "");
+
+          boolean isElapsed = BASIS_ELAPSED.equals(basis);
+          boolean sameBoot = (!itemBootId.isEmpty() && itemBootId.equals(currentBootId))
+              || (elapsedTriggerAtMs > 0 && elapsedTriggerAtMs > currentElapsed);
+
+          if (isElapsed) {
+            // R2-02：elapsed 语义在同次开机内严格按单调时钟计算剩余时长；不受用户前拨、回拨系统时钟或修改时区的影响
+            if (sameBoot) {
+              long remainingMs = elapsedTriggerAtMs - currentElapsed;
+              if (remainingMs <= 0) {
+                // 已在当前开机周期内自然到期
+                recordMissedAlarm(context, o, reason, triggerAt, now);
+                AlarmTrace.record(context, id + ":missed", "alarmElapsedExpired",
+                  "reason=" + reason + ";elapsedTriggerAtMs=" + elapsedTriggerAtMs + ";now=" + now);
+                continue;
+              }
+              // 未到期：重新校准对应的绝对时刻（供 AlarmClock/通知展示），保持剩余时长绝对不变
+              triggerAt = now + remainingMs;
+              o.put("triggerAtMs", triggerAt);
+              o.put("triggerAt", triggerAt);
+              o.put("bootId", currentBootId);
+            } else {
+              // 跨真机重启恢复：利用关机前的绝对时刻判断关机期间是否已跨过目标时刻
+              if (triggerAt <= now) {
+                // 关机期间已过期：遵守防群响政策，绝不集中补响，记录 missed
+                recordMissedAlarm(context, o, "reboot_expired", triggerAt, now);
+                AlarmTrace.record(context, id + ":missed", "alarmRebootExpired",
+                  "reason=" + reason + ";triggerAt=" + triggerAt + ";now=" + now);
+                continue;
+              }
+              // 重启后仍在未来：按关机前约定的绝对时刻在新开机会话中重新锚定单调时钟
+              long remainingMs = triggerAt - now;
+              elapsedTriggerAtMs = currentElapsed + remainingMs;
+              o.put("elapsedTriggerAtMs", elapsedTriggerAtMs);
+              o.put("bootId", currentBootId);
+            }
+          } else {
+            // wall-clock 语义：时区变更时按本地日历格式重新换算绝对时间戳
+            if (isTimezoneChange && !localTrigger.isEmpty()) {
+              long recalculated = parseLocalTriggerInCurrentZone(localTrigger, triggerAt);
+              if (recalculated > 0L) {
+                triggerAt = recalculated;
+                o.put("triggerAtMs", triggerAt);
+                o.put("triggerAt", triggerAt);
+              }
+            }
+
+            // 防群响治理：已过期的闹钟绝不重排（AlarmManager 对过去时刻会集体立即起响）
+            if (triggerAt <= now) {
+              recordMissedAlarm(context, o, reason, triggerAt, now);
+              AlarmTrace.record(context, id + ":missed", "alarmExpiredMissed",
+                "reason=" + reason + ";triggerAt=" + triggerAt + ";now=" + now);
+              continue;
+            }
+          }
+
+          String rev = o.optString("itemRev", "0");
+          try {
+            // UX-T03：同 DirectBoot 恢复 —— 重排沿用原身份与计划时刻
+            AlarmScheduler.schedule(context, triggerAt, o.optString("title"), o.optString("body"),
+              id, o.optString("itemId"), o.optString("level"),
+              rev == null || rev.isEmpty() ? "0" : rev, basis, elapsedTriggerAtMs,
+              o.optString("reminderKey", ""), triggerAt);
+          } catch (Exception schedErr) {
+            // D3 失败重试：某条 schedule 抛错不代表数据损坏或应永久遗弃，保留在 kept 供后续恢复重试
+            AlarmTrace.record(context, "restore:item" + i, "restoreItemFailed", schedErr.toString());
+            Log.e(TAG, "Failed to schedule alarm item at index " + i, schedErr);
+          }
+          kept.put(o);
+        } catch (Exception itemError) {
+          // 单项异常隔离，确保坏数据不影响其他有效排程的恢复
+          AlarmTrace.record(context, "restore:item" + i, "restoreItemFailed", itemError.toString());
+          Log.e(TAG, "Failed to restore alarm item at index " + i, itemError);
+        }
       }
       prefs.edit().putString(KEY_ALARMS, kept.toString()).apply();
+    } catch (Exception e) {
+      Log.e(TAG, "restorePersistedAlarms failed", e);
+    }
+  }
+
+  static long parseLocalTriggerInCurrentZone(String localTrigger, long fallback) {
+    if (localTrigger == null || localTrigger.length() < 16) return fallback;
+    try {
+      int year = Integer.parseInt(localTrigger.substring(0, 4));
+      int month = Integer.parseInt(localTrigger.substring(5, 7)) - 1;
+      int day = Integer.parseInt(localTrigger.substring(8, 10));
+      int hour = Integer.parseInt(localTrigger.substring(11, 13));
+      int min = Integer.parseInt(localTrigger.substring(14, 16));
+      int sec = (localTrigger.length() >= 19) ? Integer.parseInt(localTrigger.substring(17, 19)) : 0;
+      Calendar cal = Calendar.getInstance(TimeZone.getDefault());
+      cal.set(year, month, day, hour, min, sec);
+      cal.set(Calendar.MILLISECOND, 0);
+      return cal.getTimeInMillis();
+    } catch (Exception ignored) {
+      return fallback;
+    }
+  }
+
+  static synchronized void recordMissedAlarm(Context context, JSONObject alarmObj, String reason, long triggerAt, long now) {
+    if (context == null || alarmObj == null) return;
+    try {
+      SharedPreferences prefs = context.getSharedPreferences(PREFS_SCHEDULES, Context.MODE_PRIVATE);
+      JSONArray missed = new JSONArray(prefs.getString(KEY_MISSED_ALARMS, "[]"));
+      JSONObject entry = new JSONObject();
+      entry.put("id", alarmObj.optInt("id"));
+      entry.put("itemId", alarmObj.optString("itemId"));
+      entry.put("title", alarmObj.optString("title"));
+      entry.put("triggerAt", triggerAt);
+      entry.put("missedAt", now);
+      entry.put("reason", reason);
+      missed.put(entry);
+      while (missed.length() > 50) {
+        missed.remove(0);
+      }
+      prefs.edit().putString(KEY_MISSED_ALARMS, missed.toString()).apply();
     } catch (Exception ignored) {}
   }
 
@@ -465,6 +795,18 @@ public class SystemBridgePlugin extends Plugin {
     return String.valueOf(intArg(call, "itemRev", 0));
   }
 
+  /**
+   * UX-T03：JS 侧生成的提醒键 `<attempt>@<原定时刻>`。
+   *
+   * 缺省为空串而不是 null —— 这条链路上「没有身份」和「身份为空」都必须走同一条
+   * 保守分支：接收侧不写证据（`DeliveryEvidenceStore.rowFor` 直接返回 null），
+   * 于是这类投递的核查结论停在 unknown，而不是被当成「送达」或「漏了」。
+   */
+  private String callReminderKey(PluginCall call) {
+    String key = call.getString("reminderKey", "");
+    return key == null ? "" : key;
+  }
+
   @PluginMethod
   public void scheduleAlarm(PluginCall call) {
     try {
@@ -472,7 +814,9 @@ public class SystemBridgePlugin extends Plugin {
       String title = call.getString("title", "安心收件箱闹钟测试");
       String body = call.getString("body", "这是定时闹钟提醒测试");
       int id = intArg(call, "id", 90002);
-      JSObject r = scheduleAlarmInternal(delayMs, title, body, id, callItemId(call), callLevel(call), callItemRev(call));
+      String localTrigger = call.getString("localTrigger", null);
+      String scheduleBasis = call.getString("scheduleBasis", BASIS_WALL_CLOCK);
+      JSObject r = scheduleAlarmInternal(delayMs, title, body, id, callItemId(call), callLevel(call), callItemRev(call), localTrigger, scheduleBasis, callReminderKey(call));
       call.resolve(r);
     } catch (Exception e) {
       call.reject("设置闹钟失败: " + e.getMessage(), e);
@@ -487,10 +831,26 @@ public class SystemBridgePlugin extends Plugin {
       String body = call.getString("body", "有一条事项需要你确认");
       int id = intArg(call, "id", 90100);
       long delayMs = Math.max(500L, at - System.currentTimeMillis());
-      JSObject r = scheduleAlarmInternal(delayMs, title, body, id, callItemId(call), callLevel(call), callItemRev(call));
+      String localTrigger = call.getString("localTrigger", null);
+      String scheduleBasis = call.getString("scheduleBasis", BASIS_WALL_CLOCK);
+      JSObject r = scheduleAlarmInternal(delayMs, title, body, id, callItemId(call), callLevel(call), callItemRev(call), localTrigger, scheduleBasis, callReminderKey(call));
       call.resolve(r);
     } catch (Exception e) {
       call.reject("设置定时失败: " + e.getMessage(), e);
+    }
+  }
+
+  /** Phase D：查询因过期/防群响拦截的漏响记录台账 */
+  @PluginMethod
+  public void getMissedAlarms(PluginCall call) {
+    try {
+      SharedPreferences prefs = getContext().getSharedPreferences(PREFS_SCHEDULES, Context.MODE_PRIVATE);
+      JSONArray missed = new JSONArray(prefs.getString(KEY_MISSED_ALARMS, "[]"));
+      JSObject r = new JSObject();
+      r.put("missed", missed);
+      call.resolve(r);
+    } catch (Exception e) {
+      call.reject("读取漏响记录失败: " + e.getMessage(), e);
     }
   }
 
@@ -539,6 +899,49 @@ public class SystemBridgePlugin extends Plugin {
     call.resolve(result);
   }
 
+  /**
+   * UX-T03：读原生**持久**送达证据。
+   *
+   * 与 `activeAlarmDeliveries` 的区别不是措辞：那一个回答「现在有没有一条正在响的投递」
+   * （有生命周期、会被 stop/drop 出账），这一个回答「这一次提醒，系统到底接收到了没有」
+   * （只增、按 7 天 / 300 条淘汰，与投递生命周期无关）。
+   *
+   * 返回值里的 `retentionMaxAgeMs` / `retentionCapacity` 是**实际选值**，
+   * 不是文档承诺 —— Web 侧要把它显示成「哪些结果无法核查」的依据。
+   *
+   * 失败一律 `available: false`：调用方必须按 unknown 处理，
+   * 绝不能把「这次读不到」写成「漏提醒」（D70 前置核验的近 100% 误报就是这么来的）。
+   */
+  @PluginMethod
+  public void deliveryEvidence(PluginCall call) {
+    try {
+      // 独立验收 F01：`list` 以前把「读失败」也返回成空数组，于是「读不到」与
+      // 「没有证据」在 JS 侧变成同一个结论 ⇒ 一旦读取出错，界面会照常显示
+      // 「本次提醒结果尚未确认」都做不到，反而可能被当成「确实没送达」。
+      // 现在两件事分开表达：读不到 = available:false。
+      JSONArray rows = DeliveryEvidenceStore.listOrNull(getContext(), System.currentTimeMillis());
+      JSObject result = new JSObject();
+      if (rows == null) {
+        result.put("available", false);
+        result.put("evidence", new JSONArray());
+        result.put("error", "evidence-store-unreadable");
+        call.resolve(result);
+        return;
+      }
+      result.put("available", true);
+      result.put("evidence", rows);
+      result.put("retentionMaxAgeMs", DeliveryEvidenceStore.MAX_AGE_MS);
+      result.put("retentionCapacity", DeliveryEvidenceStore.MAX_ROWS);
+      call.resolve(result);
+    } catch (Exception e) {
+      JSObject result = new JSObject();
+      result.put("available", false);
+      result.put("evidence", new JSONArray());
+      result.put("error", e.getMessage() == null ? "unavailable" : e.getMessage());
+      call.resolve(result);
+    }
+  }
+
   @PluginMethod
   public void stopAlarmDelivery(PluginCall call) {
     String token = call.getString("token");
@@ -566,6 +969,20 @@ public class SystemBridgePlugin extends Plugin {
   }
 
   private JSObject scheduleAlarmInternal(long delayMs, String title, String body, int id, String itemId, String level, String itemRev) throws Exception {
+    return scheduleAlarmInternal(delayMs, title, body, id, itemId, level, itemRev, null, BASIS_WALL_CLOCK);
+  }
+
+  private JSObject scheduleAlarmInternal(long delayMs, String title, String body, int id, String itemId, String level, String itemRev, String localTrigger, String scheduleBasis) throws Exception {
+    return scheduleAlarmInternal(delayMs, title, body, id, itemId, level, itemRev, localTrigger,
+      scheduleBasis, "");
+  }
+
+  /**
+   * UX-T03：`reminderKey` 是 JS 侧生成的 `<attempt>@<原定时刻>`。
+   * 它必须一路带到投递 Intent —— 接收侧要落「系统已接收」证据，而证据的最小身份
+   * 就是「事项 + 轮次 + 计划时刻 + 载体」；只带 itemId 说明不了响的是哪一轮。
+   */
+  private JSObject scheduleAlarmInternal(long delayMs, String title, String body, int id, String itemId, String level, String itemRev, String localTrigger, String scheduleBasis, String reminderKey) throws Exception {
     ensureChannel();
     AlarmTrace.cancel(getContext(), id, "replaced by new schedule");
     String trace = id + ":" + java.util.UUID.randomUUID().toString();
@@ -596,12 +1013,20 @@ public class SystemBridgePlugin extends Plugin {
     intent.putExtra(AlarmTestReceiver.EXTRA_ITEM_ID, itemId == null ? "" : itemId);
     if (level != null) intent.putExtra(AlarmTestReceiver.EXTRA_LEVEL, level);
     if (itemRev != null) intent.putExtra(AlarmTestReceiver.EXTRA_ITEM_REV, itemRev);
+    // UX-T03：提醒身份与计划时刻（计划时刻 = 请求落点，不是下面可能被夹紧的 triggerAt）
+    if (reminderKey != null && !reminderKey.isEmpty()) {
+      intent.putExtra(AlarmTestReceiver.EXTRA_REMINDER_KEY, reminderKey);
+    }
+    intent.putExtra(AlarmTestReceiver.EXTRA_PLANNED_AT, triggerAt);
     PendingIntent pi = PendingIntent.getBroadcast(getContext(), id, intent, flags);
 
     String mode = "inexact";
     boolean exact = false;
     boolean alarmClock = false;
     AlarmManager.AlarmClockInfo clockInfo = null;
+    boolean isElapsed = BASIS_ELAPSED.equals(scheduleBasis);
+    long nowElapsed = android.os.SystemClock.elapsedRealtime();
+    long elapsedTriggerAtMs = nowElapsed + delayMs;
 
     if (Build.VERSION.SDK_INT >= 21) {
       try {
@@ -614,7 +1039,7 @@ public class SystemBridgePlugin extends Plugin {
         am.setAlarmClock(clockInfo, pi);
         alarmClock = true;
         exact = true;
-        mode = "alarmClock";
+        mode = isElapsed ? "alarmClockElapsed" : "alarmClock";
       } catch (Exception ignored) {}
     }
 
@@ -623,23 +1048,48 @@ public class SystemBridgePlugin extends Plugin {
       try {
         if (Build.VERSION.SDK_INT >= 23) {
           if (exact) {
-            am.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, triggerAt, pi);
-            mode = "exactIdle";
+            if (isElapsed) {
+              am.setExactAndAllowWhileIdle(AlarmManager.ELAPSED_REALTIME_WAKEUP, elapsedTriggerAtMs, pi);
+              mode = "exactElapsed";
+            } else {
+              am.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, triggerAt, pi);
+              mode = "exactIdle";
+            }
           } else {
-            am.setAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, triggerAt, pi);
-            mode = "inexactIdle";
+            if (isElapsed) {
+              am.setAndAllowWhileIdle(AlarmManager.ELAPSED_REALTIME_WAKEUP, elapsedTriggerAtMs, pi);
+              mode = "inexactElapsedIdle";
+            } else {
+              am.setAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, triggerAt, pi);
+              mode = "inexactIdle";
+            }
           }
         } else if (exact) {
-          am.setExact(AlarmManager.RTC_WAKEUP, triggerAt, pi);
-          mode = "exact";
+          if (isElapsed) {
+            am.setExact(AlarmManager.ELAPSED_REALTIME_WAKEUP, elapsedTriggerAtMs, pi);
+            mode = "exactElapsed";
+          } else {
+            am.setExact(AlarmManager.RTC_WAKEUP, triggerAt, pi);
+            mode = "exact";
+          }
         } else {
-          am.set(AlarmManager.RTC_WAKEUP, triggerAt, pi);
-          mode = "inexact";
+          if (isElapsed) {
+            am.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, elapsedTriggerAtMs, pi);
+            mode = "inexactElapsed";
+          } else {
+            am.set(AlarmManager.RTC_WAKEUP, triggerAt, pi);
+            mode = "inexact";
+          }
         }
       } catch (SecurityException se) {
-        am.set(AlarmManager.RTC_WAKEUP, triggerAt, pi);
+        if (isElapsed) {
+          am.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, elapsedTriggerAtMs, pi);
+          mode = "fallbackElapsed";
+        } else {
+          am.set(AlarmManager.RTC_WAKEUP, triggerAt, pi);
+          mode = "fallback";
+        }
         exact = false;
-        mode = "fallback";
       }
     }
 
@@ -658,9 +1108,9 @@ public class SystemBridgePlugin extends Plugin {
     r.put("delayMs", delayMs);
     r.put("trace", trace);
     AlarmTrace.record(getContext(), trace, "scheduled", "triggerAt=" + triggerAt + ";mode=" + mode);
-    // P1-4：落盘，供开机恢复（V02：带上数据版本）
+    // P1-4 & Phase D：落盘，供开机恢复（带上数据版本、本地表达与基准）
     if (id != -917010 && id != -917060 && id != -917120)
-      persistAlarm(getContext(), id, triggerAt, title, body, itemId, level, itemRev);
+      persistAlarm(getContext(), id, triggerAt, localTrigger, scheduleBasis, title, body, itemId, level, itemRev, reminderKey);
     return r;
     } catch (Exception error) {
       AlarmTrace.record(getContext(), trace, "scheduleFailed", error.toString());
@@ -942,6 +1392,8 @@ public class SystemBridgePlugin extends Plugin {
       r.put("shownAt", sp.getLong(AlarmTestReceiver.KEY_DELIVERY_SHOWN_AT, 0L));
       // V1：界面是否真的显示出来（窗口可见或获得焦点），以及判定「没能显示」的时刻
       r.put("visible", sp.getBoolean(AlarmTestReceiver.KEY_DELIVERY_VISIBLE, false));
+      r.put("notificationPosted",
+        sp.getBoolean(AlarmTestReceiver.KEY_DELIVERY_NOTIFICATION_POSTED, false));
       r.put("hiddenAt", sp.getLong(AlarmTestReceiver.KEY_DELIVERY_HIDDEN_AT, 0L));
       // V3：这次投递走的路径 —— fsi（系统全屏意图）/ direct（直起界面）/ banner（只出横幅）
       r.put("path", sp.getString(AlarmTestReceiver.KEY_DELIVERY_PATH, ""));

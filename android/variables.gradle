@@ -10,6 +10,9 @@ ext {
     coreSplashScreenVersion = '1.0.1'
     androidxWebkitVersion = '1.9.0'
     junitVersion = '4.13.2'
+    // 仅供 JVM 单元测试：桩住 UserManager.isUserUnlocked()，以驱动 Direct Boot 锁定/已解锁两条路由。
+    // 5.2.0 已在本地 Gradle 缓存中，可离线解析。
+    mockitoVersion = '5.2.0'
     androidxJunitVersion = '1.1.5'
     androidxEspressoCoreVersion = '3.5.1'
     cordovaAndroidVersion = '10.1.1'

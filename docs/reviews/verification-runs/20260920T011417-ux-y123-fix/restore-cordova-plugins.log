@@ -1,0 +1,8 @@
+restored (write-only):
+  /Users/qlyf/.codex/worktrees/3547/reminder/android/capacitor-cordova-android-plugins/build.gradle  1661 bytes
+  /Users/qlyf/.codex/worktrees/3547/reminder/android/capacitor-cordova-android-plugins/cordova.variables.gradle  313 bytes
+  /Users/qlyf/.codex/worktrees/3547/reminder/android/capacitor-cordova-android-plugins/src/main/AndroidManifest.xml  120 bytes
+3925b0f0fcbd5860c7401770c7eda734eb041b745461e99fbbeefc98e3045194  android/app/src/main/assets/capacitor.config.json
+de43e041e227af24e1f0fe5a5ae43a931e09110dd7ddcaf328840f2b9c7b2fb3  android/app/src/main/assets/capacitor.plugins.json
+e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  android/app/src/main/assets/public/cordova.js
+e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  android/app/src/main/assets/public/cordova_plugins.js

@@ -1,0 +1,59 @@
+[
+  {
+    "id": "X1-retained-old-round",
+    "expected": "no old receipt applied; current remains unconfirmed",
+    "pass": false,
+    "oldRev": 1,
+    "currentRev": 2,
+    "before": {
+      "0@1789835561894": {
+        "at": 1789835561894,
+        "state": "scheduled"
+      },
+      "1@1789837001894": {
+        "at": 1789837001894,
+        "state": "cancelled"
+      }
+    },
+    "merged": {
+      "changed": true,
+      "applied": 1,
+      "deduped": 0,
+      "unknown": 0,
+      "reasons": []
+    },
+    "status": {
+      "state": "delivered",
+      "text": "系统已接收这次提醒",
+      "at": 1789837001894,
+      "isMissed": false
+    }
+  },
+  {
+    "id": "X2-ai-late-result",
+    "expected": "new draft preserved; first saved item must not contain second draft note",
+    "pass": false,
+    "input": "",
+    "items": [
+      {
+        "title": "取快递",
+        "note": "第二条的备注"
+      }
+    ]
+  },
+  {
+    "id": "X3-no-time-undo",
+    "pass": true,
+    "text": "已收下 · 待整理",
+    "action": "撤销",
+    "hidden": false
+  },
+  {
+    "id": "X4-stop-read-error",
+    "expected": "cannot confirm active ring state, show retry or unknown",
+    "pass": false,
+    "stopped": 0,
+    "text": "没有正在响的测试铃声 · 已取消未触发的测试",
+    "stoppedAt": 1789835261956
+  }
+]

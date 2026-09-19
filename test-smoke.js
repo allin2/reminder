@@ -10,6 +10,10 @@ const libParse = fs.readFileSync(path.join(ROOT, "lib/parse-cn.js"), "utf8");
 const libRepeat = fs.readFileSync(path.join(ROOT, "lib/repeat.js"), "utf8");
 const libReminder = fs.readFileSync(path.join(ROOT, "lib/reminder.js"), "utf8");
 const libStorage = fs.readFileSync(path.join(ROOT, "lib/storage.js"), "utf8");
+// UX-T01/T03：与 index.html 同序加载。少了这两支，app-core 里的 FeedbackLib /
+// EvidenceLib 会静默退化成兜底分支 —— 断言看似通过，实际测的是「没有实现」的那条路。
+const libFeedback = fs.readFileSync(path.join(ROOT, "lib/feedback.js"), "utf8");
+const libDeliveryEvidence = fs.readFileSync(path.join(ROOT, "lib/delivery-evidence.js"), "utf8");
 const src = fs.readFileSync(path.join(ROOT, "app-core.js"), "utf8");
 
 /* ---------- DOM / browser mocks ---------- */
@@ -130,6 +134,8 @@ vm.runInContext(libParse, sandbox, { filename: "lib/parse-cn.js" });
 vm.runInContext(libRepeat, sandbox, { filename: "lib/repeat.js" });
 vm.runInContext(libReminder, sandbox, { filename: "lib/reminder.js" });
 vm.runInContext(libStorage, sandbox, { filename: "lib/storage.js" });
+vm.runInContext(libFeedback, sandbox, { filename: "lib/feedback.js" });
+vm.runInContext(libDeliveryEvidence, sandbox, { filename: "lib/delivery-evidence.js" });
 vm.runInContext(src, sandbox, { filename: "app-core.js" });
 
 const app = sandbox.__ATTENTION_INBOX__;
@@ -451,6 +457,8 @@ section("3e. 弹条与全屏动作语义 D12/D13/D14");
 /* ---------- 3f. 整理会话提醒节奏（D20 / D22 回归） ---------- */
 section("3f. 整理会话提醒节奏 D20/D22");
 {
+  const previousDnd = app.state.settings.dnd;
+  app.state.settings.dnd = false;
   app.state.items = [
     app.makeItem({
       title: "待整理记录",
@@ -500,6 +508,33 @@ section("3f. 整理会话提醒节奏 D20/D22");
   // 场景 D：旧版按分钟编码的 lastSessionKey 会被迁移作废
   rs.lastSessionKey = "2026-9-16T22:50";
   ok("迁移 旧 lastSessionKey 被作废", app.ensureReviewSettings().lastSessionKey === "");
+  rs.snoozedUntil = 0; rs.lastSessionKey = ""; rs.followupCount = 0; rs.lastNotifiedAt = 0;
+  rs.hour = 20; rs.minute = 0;
+  ok("N4 长窗口首发加两次补充，23:00 不再发",
+    probe(rs, ["20:00", "21:00", "22:00", "22:59", "23:00"], 18) === 3);
+  rs.hour = 23; rs.minute = 30; rs.windowEndHour = 2;
+  rs.lastSessionKey = ""; rs.followupCount = 0; rs.lastNotifiedAt = 0;
+  const nightHits = probe(rs, ["23:30"], 18) + probe(rs, ["00:30", "01:30", "02:00"], 19);
+  ok("N4 跨午夜同一窗口只有三次", nightHits === 3);
+  rs.hour = 0; rs.minute = 0; rs.windowEndHour = 1;
+  rs.lastSessionKey = ""; rs.followupCount = 0; rs.lastNotifiedAt = 0;
+  ok("N4 零点窗口不被默认值覆盖", probe(rs, ["00:00", "00:30", "01:00"], 20) === 1);
+  rs.hour = 21; rs.minute = 30; rs.windowEndHour = 23;
+  const previousQuietStart = app.state.settings.quietStart;
+  const previousQuietEnd = app.state.settings.quietEnd;
+  app.state.settings.dnd = true;
+  app.state.settings.quietStart = "20:00"; app.state.settings.quietEnd = "22:00";
+  rs.lastSessionKey = ""; rs.followupCount = 0; rs.lastNotifiedAt = 0;
+  ok("N4 勿扰结束窗内只发一次，终点不含", probe(rs, ["21:30", "22:00", "23:00"], 21) === 1);
+  app.state.settings.quietStart = "23:00"; app.state.settings.quietEnd = "07:30";
+  rs.snoozedUntil = new Date(2026, 8, 21, 23, 20).getTime();
+  rs.lastSessionKey = ""; rs.followupCount = 0; rs.lastNotifiedAt = 0;
+  ok("N4 主动稍后仍遵守勿扰，顺延后跨窗仅一次",
+    probe(rs, ["23:20"], 21) + probe(rs, ["07:00", "07:30", "07:31", "08:30"], 22) === 1);
+  rs.snoozedUntil = 0;
+  app.state.settings.quietStart = previousQuietStart;
+  app.state.settings.quietEnd = previousQuietEnd;
+  app.state.settings.dnd = previousDnd;
 }
 
 /* ---------- 3g. 环境判断健壮性（N3 类回归） ---------- */
@@ -1187,6 +1222,31 @@ section("11. H-08 投递归因：无通知权限必须被直说");
     { notifyEnabledAtDelivery: true, canUseFullScreenIntent: true }));
   ok("H-08 权限齐备时保持原有归因（不改变既有结论）",
     healthy.label === "仅通知" && /权限齐备，但系统没有展示这次全屏/.test(healthy.text), healthy.text);
+  const foregroundBanner = app.describeAlarmDelivery({
+    attempted: true,
+    at: Date.now(),
+    screenOn: true,
+    locked: false,
+    overlayAtDelivery: false,
+    notifyEnabledAtDelivery: true,
+    notificationPosted: true
+  });
+  ok("A-03 其他应用前台时：通知已提交但全屏未显示，必须明确提示检查系统横幅开关",
+    foregroundBanner.label === "系统通知已投递" &&
+      /系统通知已经投递/.test(foregroundBanner.text) &&
+      /悬浮通知\/横幅/.test(foregroundBanner.text), foregroundBanner.text);
+  const foregroundUnconfirmed = app.describeAlarmDelivery({
+    attempted: true,
+    at: Date.now(),
+    screenOn: true,
+    locked: false,
+    overlayAtDelivery: false,
+    notifyEnabledAtDelivery: true,
+    notificationPosted: false
+  });
+  ok("A-03 其他应用前台时：原生未确认通知提交，不得冒充系统横幅已投递",
+    foregroundUnconfirmed.label === "仅通知" &&
+      /未确认系统通知已经投递/.test(foregroundUnconfirmed.text), foregroundUnconfirmed.text);
   const shown = app.describeAlarmDelivery(Object.assign({}, base,
     { notifyEnabledAtDelivery: false, visible: true }));
   ok("H-08 界面确实显示出来时仍以「已显示」为准（不误报）",

@@ -1,0 +1,35 @@
+
+> Configure project :app
+WARNING: Using flatDir should be avoided because it doesn't support any meta-data formats.
+
+> Configure project :capacitor-cordova-android-plugins
+WARNING: Using flatDir should be avoided because it doesn't support any meta-data formats.
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Could not determine the dependencies of task ':app:testDebugUnitTest'.
+> Could not resolve all task dependencies for configuration ':app:debugUnitTestRuntimeClasspath'.
+   > Could not resolve project :capacitor-android.
+     Required by:
+         project :app
+      > No matching configuration of project :capacitor-android was found. The consumer was configured to find a library for use during runtime, preferably optimized for Android, as well as attribute 'com.android.build.api.attributes.BuildTypeAttr' with value 'debug', attribute 'com.android.build.api.attributes.AgpVersionAttr' with value '8.2.1' but:
+          - None of the consumable configurations have attributes.
+   > Could not resolve project :capacitor-app.
+     Required by:
+         project :app
+      > No matching configuration of project :capacitor-app was found. The consumer was configured to find a library for use during runtime, preferably optimized for Android, as well as attribute 'com.android.build.api.attributes.BuildTypeAttr' with value 'debug', attribute 'com.android.build.api.attributes.AgpVersionAttr' with value '8.2.1' but:
+          - None of the consumable configurations have attributes.
+   > Could not resolve project :capacitor-local-notifications.
+     Required by:
+         project :app
+      > No matching configuration of project :capacitor-local-notifications was found. The consumer was configured to find a library for use during runtime, preferably optimized for Android, as well as attribute 'com.android.build.api.attributes.BuildTypeAttr' with value 'debug', attribute 'com.android.build.api.attributes.AgpVersionAttr' with value '8.2.1' but:
+          - None of the consumable configurations have attributes.
+
+* Try:
+> Run with --stacktrace option to get the stack trace.
+> Run with --info or --debug option to get more log output.
+> Run with --scan to get full insights.
+> Get more help at https://help.gradle.org.
+
+BUILD FAILED in 670ms

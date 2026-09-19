@@ -26,9 +26,15 @@ final class ActiveAlarmStore {
     return prune(context, readRaw(context));
   }
 
+  private static android.content.SharedPreferences prefs(Context context) {
+    return DirectBootUtils.getSafeSharedPreferences(context, PREFS, 0);
+  }
+
   private static JSONArray readRaw(Context context) {
-    try { return new JSONArray(context.getSharedPreferences(PREFS, 0).getString("alarms", "[]")); }
-    catch (Exception e) { return new JSONArray(); }
+    try {
+      android.content.SharedPreferences sp = prefs(context);
+      return sp != null ? new JSONArray(sp.getString("alarms", "[]")) : new JSONArray();
+    } catch (Exception e) { return new JSONArray(); }
   }
 
   /** 丢弃过期投递并写回，避免台账无限膨胀、也避免过期项继续钉住通知 */
@@ -45,8 +51,10 @@ final class ActiveAlarmStore {
       fresh.put(row);
     }
     if (dropped) {
-      try { context.getSharedPreferences(PREFS, 0).edit().putString("alarms", fresh.toString()).commit(); }
-      catch (Exception ignored) {}
+      try {
+        android.content.SharedPreferences sp = prefs(context);
+        if (sp != null) sp.edit().putString("alarms", fresh.toString()).commit();
+      } catch (Exception ignored) {}
     }
     return fresh;
   }
@@ -68,7 +76,8 @@ final class ActiveAlarmStore {
     try {
       next.put(new JSONObject().put("id", id).put("token", token).put("itemId", itemId)
         .put("itemRev", itemRev).put("title", title).put("body", body).put("receivedAt", System.currentTimeMillis()));
-      context.getSharedPreferences(PREFS, 0).edit().putString("alarms", next.toString()).commit();
+      android.content.SharedPreferences sp = prefs(context);
+      if (sp != null) sp.edit().putString("alarms", next.toString()).commit();
     } catch (Exception e) { AlarmTrace.record(context, token, "activeRecordFailed", e.toString()); }
   }
   static synchronized boolean postIfActive(Context context, int id, String token, Notification notification) {
@@ -80,7 +89,18 @@ final class ActiveAlarmStore {
   }
   static synchronized boolean cancelNotification(Context context, int id, boolean preserveActive) {
     if (preserveActive && contains(context, id, null)) return true;
-    if (!preserveActive) stop(context, id, null);
+    if (!preserveActive && contains(context, id, null)) {
+      String token = null;
+      JSONArray rows = list(context);
+      for (int i = 0; i < rows.length(); i++) {
+        JSONObject r = rows.optJSONObject(i);
+        if (r != null && r.optInt("id") == id) {
+          token = r.optString("token", null);
+          break;
+        }
+      }
+      stop(context, id, token);
+    }
     Object service = context.getSystemService(Context.NOTIFICATION_SERVICE);
     if (service instanceof NotificationManager) ((NotificationManager) service).cancel(id);
     return false;
@@ -97,37 +117,75 @@ final class ActiveAlarmStore {
       JSONObject row = rows.optJSONObject(i);
       if (row != null && row.optInt("id") != id) next.put(row);
     }
-    context.getSharedPreferences(PREFS, 0).edit().putString("alarms", next.toString()).commit();
+    android.content.SharedPreferences sp = prefs(context);
+    if (sp != null) sp.edit().putString("alarms", next.toString()).commit();
     Object service = context.getSystemService(Context.NOTIFICATION_SERVICE);
     if (service instanceof NotificationManager) ((NotificationManager) service).cancel(id);
   }
 
   static synchronized boolean stop(Context context, int id, String token) {
     boolean tracked = contains(context, id, null);
-    // A stale notification/button must not silence a newer delivery with the same ID.
-    if (tracked && !contains(context, id, token)) return false;
-    JSONArray rows = list(context), next = new JSONArray();
-    for (int i = 0; i < rows.length(); i++) {
-      JSONObject row = rows.optJSONObject(i);
-      if (row != null && row.optInt("id") != id) next.put(row);
+    String targetToken = token;
+
+    if (tracked) {
+      JSONArray rows = list(context), next = new JSONArray();
+      for (int i = 0; i < rows.length(); i++) {
+        JSONObject row = rows.optJSONObject(i);
+        if (row != null && row.optInt("id") == id) {
+          String rowToken = row.optString("token", null);
+          if (token != null && !token.equals(rowToken)) {
+            AlarmTrace.record(context, token, "mismatch-rejected", "id=" + id + " has newer delivery");
+            return false;
+          }
+          if (targetToken == null) targetToken = rowToken;
+        } else if (row != null) {
+          next.put(row);
+        }
+      }
+      android.content.SharedPreferences sp = prefs(context);
+      if (sp != null) sp.edit().putString("alarms", next.toString()).commit();
     }
-    context.getSharedPreferences(PREFS, 0).edit().putString("alarms", next.toString()).commit();
-    // 台账里查不到也必须撤通知：那是一条残留通知，恰恰是最需要被静音的。
-    // 此前这里在 !contains 时直接 return，用户点了「停止声振」/「关闭」而系统通知仍在响 —— 关不掉。
+
+    // 撤销该 id 的通知栏通知
     Object service = context.getSystemService(Context.NOTIFICATION_SERVICE);
     if (service instanceof NotificationManager) ((NotificationManager) service).cancel(id);
-    // D59：铃声与振动由前台服务持有，**撤通知并不会让它停** —— 必须显式停服务。
-    //
-    // 这一行是「关得掉」的关键：漏掉它，用户点「停止声振」后通知消失、铃声照旧，
-    // 而唯一的兜底是 6 小时后的 MAX_AGE —— 比修复前的体验更糟。
-    // 停服务会走它的 onDestroy，那里统一收口（MediaPlayer + Vibrator + 前台身份）。
-    AlarmRingService.requestStop(context);
+
+    // 停止响铃：
+    // 若处于 tracked 状态，使用确定的 targetToken 停止；
+    // 若为 untracked（普通残留通知清理），仅在 caller 显式传入有效 token 时按 token 停止；若 token 为空，绝不隐式停止服务！
+    boolean ringStopped = false;
     if (tracked) {
-      AlarmActivity.stopDelivery(id, token);
-      AlarmTrace.record(context, token, "deliveryStopped", "notification, ring service and fallback effects stopped");
+      ringStopped = AlarmRingService.requestStop(context, id, targetToken);
+      AlarmActivity.stopDelivery(id, targetToken);
+      AlarmTrace.record(context, targetToken, "deliveryStopped", "notification and ring service stopped (stopped=" + ringStopped + ")");
     } else {
-      AlarmTrace.record(context, token, "leftoverCancelled", "no active delivery row; notification and ring service stopped anyway");
+      if (token != null) {
+        ringStopped = AlarmRingService.requestStop(context, id, token);
+      }
+      AlarmTrace.record(context, token != null ? token : ("untracked:" + id),
+        "leftoverCancelled", "untracked notification cancelled; ringStopped=" + ringStopped);
     }
     return tracked;
+  }
+
+  /** 全局兜底停止：清空所有活跃投递台账并停止响铃服务与界面 */
+  static synchronized void stopAll(Context context) {
+    if (context == null) return;
+    try {
+      JSONArray rows = list(context);
+      Object service = context.getSystemService(Context.NOTIFICATION_SERVICE);
+      NotificationManager nm = (service instanceof NotificationManager) ? (NotificationManager) service : null;
+      for (int i = 0; i < rows.length(); i++) {
+        JSONObject row = rows.optJSONObject(i);
+        if (row != null && nm != null) {
+          nm.cancel(row.optInt("id"));
+        }
+      }
+      android.content.SharedPreferences sp = prefs(context);
+      if (sp != null) sp.edit().putString("alarms", "[]").commit();
+      AlarmRingService.requestStop(context);
+      AlarmActivity.stopDelivery(-1, null);
+      AlarmTrace.record(context, "global", "stopAll", "all deliveries cleared and ring stopped");
+    } catch (Exception ignored) {}
   }
 }

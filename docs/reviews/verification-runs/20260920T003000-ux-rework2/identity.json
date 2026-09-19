@@ -1,0 +1,112 @@
+{
+  "runId": "20260920T003000-ux-rework2",
+  "purpose": "二次返工：独立复验 R-F06 / R-F03 / R-F07 三个遗漏分支 + SW 缺口后的候选身份与源码身份",
+  "judgedFailedRound": "20260919T235500-ux-rework",
+  "HEAD": "8d1c2617cff3aac5c4450a949c9044b79f63a673",
+  "originMain": "8d1c2617cff3aac5c4450a949c9044b79f63a673",
+  "committed": true,
+  "committedMeaning": "HEAD == origin/main（即本地无待推送提交）；**不代表工作区干净**",
+  "workingTreeDirtyEntries": 90,
+  "sourceSha256": {
+    "app-core.js": "cf1fe51aef957b79ea38be84b9aa778b42982680e056f1f2578ce60576a82869",
+    "icon.svg": "fb09a46eae6dcd7c165811710d8fb91ae47f4273bb7228711076ea016ce8ddbb",
+    "index.html": "91063b8629c9cf67f29fa4970e070eb75e03f1bc19753a2743474d9216502ec2",
+    "lib/delivery-evidence.js": "e4662193572e65fa23c8f85562ee64c5a88bb35168ae03cb912246db73849982",
+    "lib/export-format.js": "37e60a07624c2dda1f1afadec8c1b2d61fe5b4a5a34b4c9c82f2c10ed0270423",
+    "lib/feedback.js": "7e9317d19cb930ee405cd6715ceaeda2fdbc6f26e8452bb699ffd9d09eafde9a",
+    "lib/import-extract.js": "edd959660e9fb9525ba7c290cde3019a81d53f1873c0ce31af24da30e1714bfa",
+    "lib/import-map.js": "51fe5528bb7189400946685ab0b9e9819f71eae8096166920deb048a4a0529d9",
+    "lib/native-reminders.js": "7c09fa1c53e21f5be997a59261ec8005f38a4f58c81fb8f068ee42022e5b06af",
+    "lib/parse-cn.js": "79b12b5ba0621a11a80ab53213d84e723bf428290d91940cdf0a6b12eb71faab",
+    "lib/reminder.js": "886ab9eb1a438b34122b71a461ed89a4a5b37fa85dedf8ee7afa558ee58f62fd",
+    "lib/repeat.js": "8b01c7e3b1f926bc53edff43808331839c01e2e3c540b898f1b24314467a4bde",
+    "lib/storage.js": "d7f5ca0d766f796cdeea6f4ce0b73875dc5778ed4eefdb8c939cae6b5b27d2d1",
+    "manifest.json": "660c2314cc921232ed9f9c3f7271839f57109e6640e1a9b0cf2a7259ca42e2f1",
+    "sw.js": "aa077b2eaad0f49aa4e8ea7e27eab39a101d1086e03dcaccdc7a083f4cb784a3"
+  },
+  "javaSha256": {
+    "android/app/src/main/java/space/alliswell/inbox/ActiveAlarmStore.java": "d423cbd42b94fcdf44b88eea0ce9c9cd2167459e67009579080d40faaa17e3a4",
+    "android/app/src/main/java/space/alliswell/inbox/AlarmActivity.java": "34b02873e90b67172b1614a4e2008ded7bec438d858970c1d5965a7d6f420af6",
+    "android/app/src/main/java/space/alliswell/inbox/AlarmRingService.java": "b4acf5c0f18ba8bb0d51852978804d431fb2124e29e1b1c13e39f651df296d98",
+    "android/app/src/main/java/space/alliswell/inbox/AlarmScheduler.java": "b7ebd9bfba93ce4a1c1c87784d9f14d822f1b21155be8501233b9e4dc4d0459d",
+    "android/app/src/main/java/space/alliswell/inbox/AlarmStopReceiver.java": "de5eaa31e0648e7a2286af45a995b98e6e1fb0c491589c3e22e8339d07a5c47e",
+    "android/app/src/main/java/space/alliswell/inbox/AlarmTestReceiver.java": "c40f171e359efa2c9edbc750893085847c80b6237118aaebd7841e715a2dcff8",
+    "android/app/src/main/java/space/alliswell/inbox/AlarmTrace.java": "d8b02025e9ae2881ce7dace7942337cc826ee56d8496b7218d12a5a90924818f",
+    "android/app/src/main/java/space/alliswell/inbox/AppSettingsPlugin.java": "f260a73a74c4d54d562e8a1b9fbb8ed7d347ff95d475aaee52b638ab23af82a7",
+    "android/app/src/main/java/space/alliswell/inbox/BootRestoreReceiver.java": "ce0aae8b2944fa800907db3e771851af6b8f82cba73c12fb001c579282c440ec",
+    "android/app/src/main/java/space/alliswell/inbox/DeliveryEvidenceStore.java": "e9dae6f7802819ad7bfe76e2c777f78ee08b8006b925da8c34ff7824c5668575",
+    "android/app/src/main/java/space/alliswell/inbox/DirectBootUtils.java": "30605472b7d1c0af43a738c4bf20175787018e91b8e2885c35de75bf81c0a29c",
+    "android/app/src/main/java/space/alliswell/inbox/ExactAlarmPermissionReceiver.java": "cb2bc01389c20acdd21fed77790e503d4f0e5dfa975116abfd53923aaad94beb",
+    "android/app/src/main/java/space/alliswell/inbox/MainActivity.java": "6d593a3d696ea27b71fabebc098017743d8de2939755b3bd9a064c7008e6cbc5",
+    "android/app/src/main/java/space/alliswell/inbox/SystemBridgePlugin.java": "c2b9109b08631db361f985b2b6c923e511acb3fe22ea2fab1842c15b2b59ca84"
+  },
+  "javaTestSha256": {
+    "android/app/src/test/java/space/alliswell/inbox/DeliveryEvidenceStoreTest.java": "02a4c5025b2491b61e227fb8f635343a86208fd3f06b49c11509828c9f7fa0ac",
+    "android/app/src/test/java/space/alliswell/inbox/ProductionJavaAlarmTest.java": "1f0addcbd4e4cd7ca761e95a9739053d506aa27b56e06b4b79363216669c1316"
+  },
+  "changedVsFailedRound": {
+    "app-core.js": {
+      "before": "e2fcad684508a450a6c3cf7839f2a17e727a6273460fca6312a591f3bc981913",
+      "after": "cf1fe51aef957b79ea38be84b9aa778b42982680e056f1f2578ce60576a82869"
+    },
+    "lib/delivery-evidence.js": {
+      "before": "33659312d6b96441e0c7c3e36526d83a88ce44dd1250a42999089d208f26c352",
+      "after": "e4662193572e65fa23c8f85562ee64c5a88bb35168ae03cb912246db73849982"
+    },
+    "sw.js": {
+      "before": "9acd48f429c95a38aa22f83a0c752ef456167674284d766f70a14dab99c609f7",
+      "after": "aa077b2eaad0f49aa4e8ea7e27eab39a101d1086e03dcaccdc7a083f4cb784a3"
+    }
+  },
+  "notInPreviousIdentity": {
+    "icon.svg": "fb09a46eae6dcd7c165811710d8fb91ae47f4273bb7228711076ea016ce8ddbb",
+    "manifest.json": "660c2314cc921232ed9f9c3f7271839f57109e6640e1a9b0cf2a7259ca42e2f1"
+  },
+  "notInPreviousIdentityNote": "上一轮 identity.json 未收录这些文件（它只收 index.html / app-core.js / sw.js / lib/*.js），因此「是否变化」无据；单独列出，不与 changedVsFailedRound 混在一起",
+  "changedJavaVsFailedRound": {},
+  "javaChangedCount": 0,
+  "apks": [
+    {
+      "name": "attention-inbox-debug-ux-rework2.apk",
+      "path": "/Users/qlyf/Developer/reminder/releases/candidates/20260920T003000-ux-rework2/attention-inbox-debug-ux-rework2.apk",
+      "sha256": "06a404499237ea7656c04c8856f5845f9ddbafc6307a96f5a0d0525a01848200",
+      "size": 4242746,
+      "webMatches": {
+        "index.html": true,
+        "app-core.js": true,
+        "sw.js": true,
+        "lib/delivery-evidence.js": true,
+        "lib/export-format.js": true,
+        "lib/feedback.js": true,
+        "lib/import-extract.js": true,
+        "lib/import-map.js": true,
+        "lib/native-reminders.js": true,
+        "lib/parse-cn.js": true,
+        "lib/reminder.js": true,
+        "lib/repeat.js": true,
+        "lib/storage.js": true
+      }
+    },
+    {
+      "name": "attention-inbox-release-ux-rework2.apk",
+      "path": "/Users/qlyf/Developer/reminder/releases/candidates/20260920T003000-ux-rework2/attention-inbox-release-ux-rework2.apk",
+      "sha256": "679768958743aba528f32d58d9dab4171f21023c0ec91c63b2e83003635b4658",
+      "size": 3251418,
+      "webMatches": {
+        "index.html": true,
+        "app-core.js": true,
+        "sw.js": true,
+        "lib/delivery-evidence.js": true,
+        "lib/export-format.js": true,
+        "lib/feedback.js": true,
+        "lib/import-extract.js": true,
+        "lib/import-map.js": true,
+        "lib/native-reminders.js": true,
+        "lib/parse-cn.js": true,
+        "lib/reminder.js": true,
+        "lib/repeat.js": true,
+        "lib/storage.js": true
+      }
+    }
+  ]
+}

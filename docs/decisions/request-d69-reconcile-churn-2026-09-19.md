@@ -2,12 +2,17 @@
 doc: decisions
 topic: 对账（reconcile）全量重排的开销与诊断台账窗口
 date: 2026-09-19
-status: ⏳ 待裁决（**未实现任何代码** —— 按 2026-09-18 流程约定，先裁决再动手）
+status: 部分实施（四阶段交接 C）；当前候选真机对账频率及长期台账可用性未复验
 relates: ../compose/spec/android-alarm-carrier.md（S2.7 / D68）· ./ui-reachability-d68-2026-09-19.md
 evidence: ../reviews/verification-runs/20260919T020340Z-d68-autosilence-home-notice/
 ---
 
 # 待裁决 · D69：对账每被触发一次就全量重写所有闹钟
+
+> **2026-09-19 状态更正**：下文保留发现时的历史诊断，不代表当前源码。
+> 四阶段交接 C 已落实 `nativeSyncInFlight/nativeSyncPending` 串行合并、
+> `deferNativeSync` 内部保存隔离、`alarmSignaturesCache` 差量排程与有界日志。
+> 因此“仍未实现、每轮全量重排”已过时；但原 1Hz 来源与最新候选实机长期效果未获完整证据，不能宣称 D69 全场景闭环。
 
 ## ⚠️ 编号说明
 

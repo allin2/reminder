@@ -178,6 +178,60 @@
     .card-actions button.primary { color: var(--signal); }
     .card-actions button.ghost { color: var(--muted); }
     .card-actions button + button { border-left: 1px solid var(--line); }
+    /* UX-A01：动作按钮的短副说明 —— 不要求用户记住缩写 */
+    .act-sub {
+      display: block;
+      font-size: 0.68rem;
+      font-weight: 400;
+      opacity: 0.72;
+      margin-top: 2px;
+      line-height: 1.2;
+    }
+    .card-actions button { padding: 9px 6px; }
+    /* UX-C02：识别摘要 —— 有效提醒时间与会影响行为的周期/截止都在这里 */
+    .cap-summary {
+      font-size: 0.86rem;
+      line-height: 1.5;
+      color: var(--ink-2);
+      background: var(--attention-bg);
+      border-radius: var(--radius);
+      padding: 10px 12px;
+      margin: -4px 0 12px;
+      min-height: 0;
+    }
+    .cap-summary:empty { display: none; }
+    .cap-summary.is-empty { background: var(--paper); color: var(--muted); }
+    .more-toggle {
+      width: 100%;
+      text-align: left;
+      padding: 10px 2px;
+      font-size: 0.86rem;
+      color: var(--signal);
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+    .more-toggle[aria-expanded="true"] { color: var(--muted); }
+    .alert-note {
+      font-size: 0.72rem;
+      color: var(--muted);
+      margin: 8px 2px 0;
+      line-height: 1.45;
+    }
+    .setup-step { padding: 14px 2px; border-bottom: 1px solid var(--line); }
+    .setup-step:last-child { border-bottom: none; }
+    .setup-step h4 { font-size: 0.96rem; margin-bottom: 4px; }
+    .setup-step p { font-size: 0.84rem; color: var(--muted); line-height: 1.5; margin-bottom: 6px; }
+    .setup-step.done h4::after { content: " · 已完成"; color: var(--signal); font-size: 0.8rem; }
+    .setup-test-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+    .setup-test-actions .chip { font-size: 0.82rem; }
+    .demo-item { padding: 12px 0; border-bottom: 1px dashed var(--line); }
+    .demo-item:last-child { border-bottom: none; }
+    .demo-item .demo-title { font-weight: 600; margin-bottom: 4px; }
+    .demo-item .demo-when { font-size: 0.82rem; color: var(--muted); }
+    .demo-note {
+      font-size: 0.82rem; line-height: 1.55; color: var(--ink-2);
+      background: var(--paper); border-radius: var(--radius); padding: 10px 12px; margin-bottom: 4px;
+    }
 
     .soft-entry {
       display: flex; align-items: center; justify-content: space-between;
@@ -220,6 +274,13 @@
       font-weight: 600;
     }
     .empty p { font-size: 0.92rem; line-height: 1.6; max-width: 260px; margin: 0 auto; }
+    /* UX-C01：空首页的两个主动入口。刻意挂在 #emptyStart 里、**不放进 .empty** ——
+       D8 要求空态那句完成数保持纯文字不可点击，同容器会连带把按钮算进去。 */
+    .empty-start {
+      display: flex; flex-direction: column; gap: 8px;
+      padding: 0 20px 30px;
+      margin-top: -24px;
+    }
 
     .nav {
       position: absolute;
@@ -893,6 +954,8 @@
   <main class="main" id="main">
     <section id="activeAlarmPanel" hidden aria-label="正在提醒的闹钟" aria-live="polite"></section>
     <section class="view active" id="view-home">
+      <!-- UX-T02：首用设置的**可跳过**入口。默认空，由 renderSetupEntry 按真实缺口填充 -->
+      <div id="homeSetup"></div>
       <!-- A-2：后台提醒链路断掉时的首页告知条（基线 §473 / AC-14）。默认空，由 renderHomeNotice 填充 -->
       <div id="homeNotice"></div>
       <div id="homeReview"></div>
@@ -900,6 +963,7 @@
       <div id="homeActive"></div>
       <div id="homeUpcoming"></div>
       <div id="homeEmpty"></div>
+      <div id="homeStart"></div>
     </section>
 
     <section class="view" id="view-future">
@@ -974,10 +1038,17 @@
           </div>
           <span style="color:var(--muted)">›</span>
         </button>
+        <button class="set-row" id="btnSetup" hidden>
+          <div>
+            <div>提醒设置</div>
+            <div class="sub" id="setupSub">检查必要设置 · 60 秒测试</div>
+          </div>
+          <span style="color:var(--muted)">›</span>
+        </button>
         <button class="set-row" id="btnNotifyLab" hidden>
           <div>
-            <div>提醒能力自检</div>
-            <div class="sub">权限诊断 · 立即通知 · 定时闹钟测试</div>
+            <div>高级诊断</div>
+            <div class="sub">排程详情 · 投递台账 · 权限诊断。平时不需要看</div>
           </div>
           <span style="color:var(--muted)">›</span>
         </button>
@@ -1071,8 +1142,8 @@
         </button>
         <button class="set-row" id="btnSeed">
           <div>
-            <div>载入示例数据</div>
-            <div class="sub">用演示事项重新填充</div>
+            <div>查看演示</div>
+            <div class="sub">只读预览示例事项 · 不会写入你的数据</div>
           </div>
           <span style="color:var(--muted)">›</span>
         </button>
@@ -1092,8 +1163,8 @@
         </button>
       </div>
       <p style="text-align:center;color:var(--muted);font-size:0.78rem;padding:8px 20px 20px;line-height:1.6">
-        Local-first · 数据仅保存在本机<br/>
-        Acknowledged ≠ Completed · Future 默认不打扰<br/>
+        本地优先 · 数据只保存在这台设备上<br/>
+        「我知道了」不等于「完成」 · 未来事项默认不打扰<br/>
         <span id="buildTag" style="opacity:.7">build 2026-09-15.3</span>
       </p>
     </section>
@@ -1137,91 +1208,96 @@
     <div class="sheet-body">
       <div class="field">
         <label for="capText">一句话交给系统</label>
-        <input id="capText" type="text" placeholder="例如：周五提醒我再看看这个项目" autocomplete="off" />
+        <input id="capText" type="text" placeholder="例如：明天下午3点提醒我取快递" autocomplete="off" />
         <div class="parse-hint muted" id="capHint">输入内容后自动解析时间</div>
-        <div class="chips" style="margin-top:8px">
+      </div>
+      <!-- UX-C02：识别摘要必须显示有效提醒时间与会影响行为的周期/截止 -->
+      <div id="capSummary" class="cap-summary" aria-live="polite"></div>
+      <div class="field">
+        <label for="capTrigger">提醒时间（可改）</label>
+        <input id="capTrigger" type="datetime-local" />
+      </div>
+      <button type="button" class="more-toggle" id="btnCapMore" aria-expanded="false" aria-controls="capAdvanced">更多选项</button>
+      <div id="capAdvanced" hidden>
+        <div class="field-row">
+          <div class="field">
+            <label for="capDeadline">截止时间</label>
+            <input id="capDeadline" type="datetime-local" />
+          </div>
+          <div class="field">
+            <label for="capProject">项目</label>
+            <select id="capProject"><option value="">无项目</option></select>
+          </div>
+        </div>
+        <div class="field">
+          <label>重要程度</label>
+          <div class="chips" id="capPriority">
+            <button type="button" class="chip on" data-p="normal">普通</button>
+            <button type="button" class="chip warn" data-p="important">☆ 重要</button>
+            <button type="button" class="chip crit" data-p="critical">🚨 关键</button>
+          </div>
+        </div>
+        <div class="field">
+          <label for="capRepeat">周期</label>
+          <select id="capRepeat">
+            <option value="">不重复</option>
+            <option value="day">每天</option>
+            <option value="week">每周</option>
+            <option value="biweek">每两周</option>
+            <option value="month">每月（按触发日）</option>
+            <option value="monthEnd">每月最后一天</option>
+            <option value="nthWeekday">每月第 N 个星期 X</option>
+          </select>
+        </div>
+        <div class="field-row" id="nthWeekdayRow" hidden>
+          <div class="field">
+            <label for="capNth">第几个</label>
+            <select id="capNth">
+              <option value="1">第 1 个</option>
+              <option value="2">第 2 个</option>
+              <option value="3">第 3 个</option>
+              <option value="4">第 4 个</option>
+              <option value="-1">最后一个</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="capWeekday">星期</label>
+            <select id="capWeekday">
+              <option value="1">星期一</option>
+              <option value="2">星期二</option>
+              <option value="3">星期三</option>
+              <option value="4">星期四</option>
+              <option value="5">星期五</option>
+              <option value="6">星期六</option>
+              <option value="0">星期日</option>
+            </select>
+          </div>
+        </div>
+        <div class="field">
+          <label for="capRepeatMode">周期计时方式</label>
+          <select id="capRepeatMode">
+            <option value="calendar">按日历</option>
+            <option value="ack">从「我知道了」重新计时</option>
+          </select>
+        </div>
+        <div id="repeatPreview" class="parse-hint muted" style="margin-top:-4px;margin-bottom:12px"></div>
+        <div id="similarHint" hidden></div>
+        <div class="field">
+          <label for="capNote">补充说明 / 上下文（可选）</label>
+          <textarea id="capNote" placeholder="为什么值得关注？唤醒时帮你恢复记忆"></textarea>
+        </div>
+        <div class="field">
+          <label for="capTags">标签（空格分隔，可选）</label>
+          <input id="capTags" type="text" placeholder="工作 阅读" autocomplete="off" />
+        </div>
+        <div class="field">
+          <label for="capUrl">来源链接（可选）</label>
+          <input id="capUrl" type="url" placeholder="https://..." autocomplete="off" />
+        </div>
+        <div class="chips" style="margin-top:4px">
           <button type="button" class="chip" id="btnAiParse">✦ AI 理解</button>
           <button type="button" class="chip" id="btnAiPolish">✦ AI 润色</button>
         </div>
-      </div>
-      <div class="field">
-        <label>重要程度</label>
-        <div class="chips" id="capPriority">
-          <button type="button" class="chip on" data-p="normal">普通</button>
-          <button type="button" class="chip warn" data-p="important">☆ 重要</button>
-          <button type="button" class="chip crit" data-p="critical">🚨 关键</button>
-        </div>
-      </div>
-      <div class="field-row">
-        <div class="field">
-          <label for="capTrigger">提醒时间</label>
-          <input id="capTrigger" type="datetime-local" />
-        </div>
-        <div class="field">
-          <label for="capDeadline">截止时间</label>
-          <input id="capDeadline" type="datetime-local" />
-        </div>
-      </div>
-      <div class="field">
-        <label for="capProject">项目</label>
-        <select id="capProject"><option value="">无项目</option></select>
-      </div>
-      <div class="field">
-        <label for="capRepeat">周期</label>
-        <select id="capRepeat">
-          <option value="">不重复</option>
-          <option value="day">每天</option>
-          <option value="week">每周</option>
-          <option value="biweek">每两周</option>
-          <option value="month">每月（按触发日）</option>
-          <option value="monthEnd">每月最后一天</option>
-          <option value="nthWeekday">每月第 N 个星期 X</option>
-        </select>
-      </div>
-      <div class="field-row" id="nthWeekdayRow" hidden>
-        <div class="field">
-          <label for="capNth">第几个</label>
-          <select id="capNth">
-            <option value="1">第 1 个</option>
-            <option value="2">第 2 个</option>
-            <option value="3">第 3 个</option>
-            <option value="4">第 4 个</option>
-            <option value="-1">最后一个</option>
-          </select>
-        </div>
-        <div class="field">
-          <label for="capWeekday">星期</label>
-          <select id="capWeekday">
-            <option value="1">星期一</option>
-            <option value="2">星期二</option>
-            <option value="3">星期三</option>
-            <option value="4">星期四</option>
-            <option value="5">星期五</option>
-            <option value="6">星期六</option>
-            <option value="0">星期日</option>
-          </select>
-        </div>
-      </div>
-      <div class="field">
-        <label for="capRepeatMode">周期计时方式</label>
-        <select id="capRepeatMode">
-          <option value="calendar">按日历</option>
-          <option value="ack">从「我知道了」重新计时</option>
-        </select>
-      </div>
-      <div id="repeatPreview" class="parse-hint muted" style="margin-top:-4px;margin-bottom:12px"></div>
-      <div id="similarHint" hidden></div>
-      <div class="field">
-        <label for="capNote">补充说明 / 上下文（可选）</label>
-        <textarea id="capNote" placeholder="为什么值得关注？唤醒时帮你恢复记忆"></textarea>
-      </div>
-      <div class="field">
-        <label for="capTags">标签（空格分隔，可选）</label>
-        <input id="capTags" type="text" placeholder="工作 阅读" autocomplete="off" />
-      </div>
-      <div class="field">
-        <label for="capUrl">来源链接（可选）</label>
-        <input id="capUrl" type="url" placeholder="https://..." autocomplete="off" />
       </div>
     </div>
     <div class="sheet-foot">
@@ -1660,7 +1736,7 @@
         <button class="set-row" id="labOpenNotify">
           <div>
             <div>2. 打开系统通知设置</div>
-            <div class="sub">确认应用与渠道开关为开</div>
+            <div class="sub">确认通知、悬浮通知/横幅、锁屏通知均开启</div>
           </div>
           <span style="color:var(--muted)">›</span>
         </button>
@@ -1762,24 +1838,57 @@
     </div>
   </div>
 
+  <!-- UX-T02：首用设置短路径 —— 一屏一个主要动作 -->
+  <div class="sheet" id="sheetSetup">
+    <div class="sheet-grip"></div>
+    <div class="sheet-head">
+      <h2>提醒设置</h2>
+      <button class="icon-btn" data-close="sheetSetup" aria-label="关闭">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"/></svg>
+      </button>
+    </div>
+    <div class="sheet-body" id="setupBody"></div>
+    <div class="sheet-foot">
+      <button class="btn secondary" data-close="sheetSetup">以后再说</button>
+      <button class="btn primary" id="setupPrimary">开始</button>
+    </div>
+  </div>
+
+  <!-- UX-C01：演示是主动入口、只读预览，不注册任何通知、不改统计 -->
+  <div class="sheet" id="sheetDemo">
+    <div class="sheet-grip"></div>
+    <div class="sheet-head">
+      <h2>演示（只读）</h2>
+      <button class="icon-btn" data-close="sheetDemo" aria-label="关闭">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"/></svg>
+      </button>
+    </div>
+    <div class="sheet-body" id="demoBody"></div>
+    <div class="sheet-foot">
+      <button class="btn primary" data-close="sheetDemo">知道了</button>
+    </div>
+  </div>
+
   <div class="toast" id="toast">
     <span id="toastText"></span>
     <button class="toast-action" id="toastAction" hidden>修改</button>
+    <button class="toast-action" id="toastAction2" hidden>撤销</button>
   </div>
 
   <div class="alert-banner" id="alertBanner">
     <div class="alert-head">
       <div class="alert-title" id="alertTitle"></div>
-      <button class="alert-close" id="alertClose" aria-label="关闭提醒">
+      <button class="alert-close" id="alertClose" aria-label="关闭这次铃声（不代表我知道了或完成）">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"/></svg>
       </button>
     </div>
     <div class="alert-body" id="alertBody"></div>
     <div class="alert-actions">
-      <button id="alertSnooze">稍后</button>
-      <button class="primary" id="alertAck">我知道了</button>
-      <button id="alertDone">完成</button>
+      <button id="alertSnooze">稍后提醒<span class="act-sub">重新安排</span></button>
+      <button class="primary" id="alertAck">我知道了<span class="act-sub">停止本轮 · 仍未完成</span></button>
+      <button id="alertDone">完成<span class="act-sub">结束并归档</span></button>
     </div>
+    <p class="alert-note">右上角 × 只关闭这次铃声，不算「我知道了」，也不算完成。</p>
   </div>
 
   <input type="file" id="importFile" accept="application/json,.json" hidden />
@@ -1789,6 +1898,10 @@
 <script src="lib/repeat.js"></script>
 <script src="lib/reminder.js"></script>
 <script src="lib/storage.js"></script>
+<!-- UX-T01/T02/A01/A03：反馈与动作语义的纯逻辑层（保存结果 ≠ 排程结果） -->
+<script src="lib/feedback.js"></script>
+<!-- UX-T03：原生送达证据的合并与事后核查判定（缺证据只能是 unknown） -->
+<script src="lib/delivery-evidence.js"></script>
 <script src="lib/native-reminders.js"></script>
 <script src="app-core.js"></script>
 </body>

@@ -1,0 +1,23 @@
+[
+  {
+    "name": "com.getcapacitor.myapp.ExampleUnitTest",
+    "tests": "1",
+    "failures": "0",
+    "errors": "0",
+    "timestamp": "2026-09-19T15:46:29"
+  },
+  {
+    "name": "space.alliswell.inbox.ProductionJavaAlarmTest",
+    "tests": "8",
+    "failures": "0",
+    "errors": "0",
+    "timestamp": "2026-09-19T15:46:29"
+  },
+  {
+    "name": "space.alliswell.inbox.DeliveryEvidenceStoreTest",
+    "tests": "10",
+    "failures": "0",
+    "errors": "0",
+    "timestamp": "2026-09-19T15:46:29"
+  }
+]

@@ -4,17 +4,19 @@ status: decided
 updated: 2026-09-19
 branch: main
 relates: android-native-reminders.md, android-alarm-carrier.md
-decisions: D9 D10 D11 D12 D25 D58 D59 D60 D61
+decisions: D9 D10 D11 D12 D25 D58 D59 D60 D61 A-03
 ---
 
 # 关键档全屏闹钟
 
 ## Report
 
-**交付状态** — **规格已定，代码接线未落地。** 本规格规定全屏闹钟的适用范围与动作集；
-按 [交互逻辑决策清单](../../decisions/interaction-logic-2026-09-16.md) 的 D4，代码改动单独一轮。
+**交付状态（2026-09-19 复核）** — **代码接线已落地，目标设备全场景验收未完成**。
+重要/关键首次及普通显式 alarm 已走原生闹钟；待整理走普通通知。四动作与返回关闭已实现。
+旧候选 `7bcb5663...` cold 场景有可见界面证据（INHERITED_EVIDENCE），不能推广为当前包锁屏/熄屏全场景 PASS。
+详见 [审查整改报告](../../reviews/reminder-alarm-audit-remediation-2026-09-19.md)。
 
-**现状** — 原生能力**已经存在**：`SystemBridgePlugin.scheduleAlarm/scheduleAt` 走
+**改造前问题背景（非当前状态）** — 原生能力**已经存在**：`SystemBridgePlugin.scheduleAlarm/scheduleAt` 走
 `AlarmManager.setAlarmClock`，`AlarmTestReceiver` 直接拉起 `AlarmActivity` 并同时投递带
 `setFullScreenIntent` 的通知，`AlarmActivity` 负责亮屏、循环响铃、波形震动与时钟走秒。
 但**接线是错的**：
@@ -66,11 +68,11 @@ PRD §13.3 要求关键模式「必须显式开启，不作为默认录入字段
 
 ### [S2.3] 触发链路
 
-关键档事项在 `promoteDue()` 中首次晋升为 `due` 时，除原有的通知排程外，额外排一次全屏闹钟：
+当前投影对账在到期前预排；不依赖 App 存活时的 `promoteDue()` 才开始排程：
 
 - 时刻 = `effectiveTriggerAt(item, settings)`，与通知渠道同一时刻；
-- 走 `SystemBridge.scheduleAlarm({ at, title, body, id })`；
-- 闹钟 id 使用独立号段，**不得与通知 id 混用**（通知 id 由 `scheduleKey` 哈希分配）；
+- 首次槽位按档位/投递方式分流，走 `SystemBridge.scheduleAlarm`（含 `delayMs` 与时间语义载荷），不同时重复投普通通知；
+- 使用稳定投递 ID 与各通道投影台账；具体接口以 `lib/native-reminders.js` 为准；
 - 排程后必须登记到投影状态，使 ACK / 完成 / 删除能取消它。
 
 ### [S2.4] 动作集
@@ -79,7 +81,7 @@ PRD §13.3 要求关键模式「必须显式开启，不作为默认录入字段
 
 | 动作 | 语义 | 副作用 |
 |---|---|---|
-| 我知道了 | Attention Delivery 完成 | 写 ACK；停掉后续 7 次补充提醒 |
+| 我知道了 | Attention Delivery 完成 | 写 ACK；停掉剩余补充提醒（重要最多 3 次、关键最多 7 次） |
 | 稍后 2 小时 | 现在不适合关注 | 按**相对时长**重排；重新计一轮预算 |
 | 完成 | 事项结束 | 归档；周期事项生成下一条 |
 | **关闭** | 止响，但**不表态** | **不写 ACK、不计入关闭抑制、后续补充提醒照常** |
@@ -112,20 +114,35 @@ ACK / 完成 / 删除 / Snooze 都必须取消已排的全屏闹钟。新增 id 
 
 关键档**不受勿扰影响**（与现状一致：只有 `normal` 参与勿扰）。
 
+### [S2.8] A-03 前台系统横幅兜底
+
+当本应用不在前台、设备处于解锁亮屏状态时，首次闹钟必须同时保留两条路径：
+
+1. 尝试直起 `AlarmActivity`；
+2. 始终为高优先级闹钟通知附加同 token 的 `fullScreenIntent`。
+
+Android 在锁屏/息屏时可把第 2 条展示为全屏界面，在用户正使用其他应用时应降级为
+heads-up（悬浮通知/横幅）。两路共用投递 token，重复 Intent 必须幂等，不得重启声振。
+
+`NotificationManager.notify()` 返回只证明通知已提交，**不证明 OEM 已把横幅显示到用户眼前**。
+如果系统通知、渠道通知或厂商「悬浮通知/横幅」开关被关闭，产品必须明确引导用户打开；
+不得把通知栏落账写成「用户已看到」。声振仍由 `AlarmRingService` 独立承担。
+
 ## [S3] Out of Scope
 
 - 待整理使用全屏闹钟（**明确禁止**）
-- 普通档、重要档使用全屏闹钟
+- 普通档默认 notification 时使用全屏闹钟（普通显式 alarm、重要首次均在范围内）
 - iOS 工程
 - Google Play 受限权限的合规方案本身（仅在 README 记录风险，不在本轮解决）
-- 真机验证（本机无 JDK 17 / Android SDK / 模拟器）
+- 整机重启首解锁前、调表/调时区等未执行场景不得由 JVM 测试替代
 
 ## Tasks
 
-- [ ] T1: 关键档首次提醒接入 `SystemBridge.scheduleAlarm` — acceptance: `critical` 首次走全屏，`normal`/`important` 不受影响 (covers: S2.1, S2.3)
-- [ ] T2: 全屏界面补齐四动作（我知道了 / 稍后 2 小时 / 完成 / 关闭），删除 10 分钟硬编码 — acceptance: 关闭止响但不写 ACK (covers: S2.4)
-- [ ] T3: 恢复 `onBackPressed()` 为等同关闭 — acceptance: 返回键可退出且不写 ACK (covers: S2.4)
-- [ ] T4: 全屏闹钟纳入投影对账，ACK/完成/删除/Snooze 均取消 — acceptance: 归档后无残留响铃 (covers: S2.6)
-- [ ] T5: 摘掉待整理与自检面板之外的全屏调用 — acceptance: 仅 `critical` 路径使用 `scheduleAlarm` (covers: S2.1)
-- [ ] T6: 补 `test-native-reminders.js` 用例 — acceptance: 覆盖档位路由与四动作映射 (covers: S2.2, S2.4)
-- [ ] T7: 真机验证 — acceptance: 锁屏/息屏下全屏弹出并循环响铃（**本机无法执行，标 `NOT_PERFORMED`**）(covers: S2.5)
+- [x] T1: 重要/关键首次、普通显式 alarm 接入原生排程；JS 路由测试通过 (covers: S2.1, S2.3)
+- [x] T2: 四动作及稍后 2 小时代码已实现；不代表四动作全套真机验收 (covers: S2.4)
+- [x] T3: 返回键等同关闭代码已实现 (covers: S2.4)
+- [~] T4: 取消对账已有 JS 覆盖；完整原生生命周期交叉场景未全验 (covers: S2.6)
+- [x] T5: 待整理走通知；保留能力自检与合法事项闹钟通道 (covers: S2.1)
+- [x] T6: JS 路由/动作映射已有用例；Java 静态检查不等于实机 (covers: S2.2, S2.4)
+- [~] T7: 旧候选 cold 可见界面继承证据；当前候选锁屏/熄屏全场景与首解锁前验收未完成 (covers: S2.5)
+- [x] T8: 解锁亮屏且其他应用在前台时，通知始终携带 fullScreenIntent 请求系统横幅；投递台账与全屏可见分开 (covers: S2.8)

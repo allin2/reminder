@@ -1,0 +1,58 @@
+{
+  "runId": "20260919T235500-ux-rework",
+  "command": "./gradlew :app:testDebugUnitTest --offline --rerun-tasks",
+  "javaHome": "temurin-17.jdk",
+  "suites": [
+    {
+      "class": "com.getcapacitor.myapp.ExampleUnitTest",
+      "tests": 1,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "cases": [
+        "com.getcapacitor.myapp.ExampleUnitTest"
+      ]
+    },
+    {
+      "class": "space.alliswell.inbox.DeliveryEvidenceStoreTest",
+      "tests": 13,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "cases": [
+        "space.alliswell.inbox.DeliveryEvidenceStoreTest",
+        "space.alliswell.inbox.DeliveryEvidenceStoreTest",
+        "space.alliswell.inbox.DeliveryEvidenceStoreTest",
+        "space.alliswell.inbox.DeliveryEvidenceStoreTest",
+        "space.alliswell.inbox.DeliveryEvidenceStoreTest",
+        "space.alliswell.inbox.DeliveryEvidenceStoreTest",
+        "space.alliswell.inbox.DeliveryEvidenceStoreTest",
+        "space.alliswell.inbox.DeliveryEvidenceStoreTest",
+        "space.alliswell.inbox.DeliveryEvidenceStoreTest",
+        "space.alliswell.inbox.DeliveryEvidenceStoreTest",
+        "space.alliswell.inbox.DeliveryEvidenceStoreTest",
+        "space.alliswell.inbox.DeliveryEvidenceStoreTest",
+        "space.alliswell.inbox.DeliveryEvidenceStoreTest"
+      ]
+    },
+    {
+      "class": "space.alliswell.inbox.ProductionJavaAlarmTest",
+      "tests": 8,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "cases": [
+        "space.alliswell.inbox.ProductionJavaAlarmTest",
+        "space.alliswell.inbox.ProductionJavaAlarmTest",
+        "space.alliswell.inbox.ProductionJavaAlarmTest",
+        "space.alliswell.inbox.ProductionJavaAlarmTest",
+        "space.alliswell.inbox.ProductionJavaAlarmTest",
+        "space.alliswell.inbox.ProductionJavaAlarmTest",
+        "space.alliswell.inbox.ProductionJavaAlarmTest",
+        "space.alliswell.inbox.ProductionJavaAlarmTest"
+      ]
+    }
+  ],
+  "total": 22,
+  "totalFailures": 0
+}

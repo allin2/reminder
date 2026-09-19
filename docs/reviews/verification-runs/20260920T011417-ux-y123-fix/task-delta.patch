@@ -1,0 +1,532 @@
+--- a/app-core.js
++++ b/app-core.js
+@@ -3409,8 +3409,10 @@
+   }
+ 
+   /** 按钮身份标签：编辑哪条 + 内容 + 时间。同一身份重入才算重复提交。 */
+-  function saveSubmitToken(editItemId, text, triggerValue) {
+-    return (editItemId || "new") + "|" + (text || "") + "|" + (triggerValue || "");
++  function saveSubmitToken(session, editItemId, text, triggerValue) {
++    // 同一会话内的双击/回车仍然去重；关闭后重新打开即使内容完全相同，也是一份
++    // 独立的用户意图，不能被上一会话的在途提交挡住（Y3）。
++    return String(session) + "|" + (editItemId || "new") + "|" + (text || "") + "|" + (triggerValue || "");
+   }
+ 
+   /**
+@@ -3421,8 +3423,8 @@
+    *  · 是 → 照旧恢复（等价于原行为，用户没在往下写）；
+    *  · 否 → 一个字符都不碰，改成给一个**显式**的找回入口。
+    */
+-  function settleFailedDraft(draft, signature) {
+-    if (formDraftSignature(snapshotItemForm()) === signature) {
++  function settleFailedDraft(draft, signature, session) {
++    if (itemFormSession === session && formDraftSignature(snapshotItemForm()) === signature) {
+       keepDraftForRetry(draft);
+       return;
+     }
+@@ -3466,7 +3468,7 @@
+       if (!base) return true;
+       if (at < base) return false;
+       const round = EvidenceLib && EvidenceLib.entryRoundBase
+-        ? EvidenceLib.entryRoundBase(it, events[k]) : base;
++        ? EvidenceLib.entryRoundBase(it, events[k], k) : base;
+       return Number(round) === base;
+     });
+     if (!keys.length) return null;
+@@ -4064,7 +4066,7 @@
+     // `new|<文本>|<时间>`，登记时却写 `new:<新ID>`（编辑 `edit:<ID>:<时间>`、
+     // AI `ai:<时间>`）—— 两边永远对不上，于是「连续回车 / 双击」会真的落两条一样的事项。
+     // 身份用**表单内容**而不是新生成的 id：id 每次都不同，也就永远去不了重。
+-    const submitToken = saveSubmitToken(state.ui.editItemId, rawPrefetch, $("#capTrigger") ? $("#capTrigger").value : "");
++    const submitToken = saveSubmitToken(itemFormSession, state.ui.editItemId, rawPrefetch, $("#capTrigger") ? $("#capTrigger").value : "");
+     if (saveSubmitsInFlight.has(submitToken)) {
+       toast("正在保存 · 请稍候");
+       return false;
+@@ -4173,7 +4175,7 @@
+         pendingEdit.then(() => {
+           endSaveSubmit(submitToken);
+           // F03：只有草稿还是刚才提交的那一份时才关闭并复位表单
+-          if (formDraftSignature(snapshotItemForm()) === draftSig) {
++          if (itemFormSession === frozenSession && formDraftSignature(snapshotItemForm()) === draftSig) {
+             closeSheet("sheetItem");
+             closeSheet("sheetDetail");
+             resetItemSheet();
+@@ -4183,7 +4185,7 @@
+           queueNativeReminderSync("save-edit");
+         }).catch(() => {
+           endSaveSubmit(submitToken);
+-          settleFailedDraft(draft, draftSig);
++          settleFailedDraft(draft, draftSig, frozenSession);
+         });
+         return true;
+       }
+@@ -4233,7 +4235,7 @@
+       const pendingNew = save();
+       pendingNew.then(() => {
+         endSaveSubmit(submitToken);
+-        if (formDraftSignature(snapshotItemForm()) === draftSig) {
++        if (itemFormSession === frozenSession && formDraftSignature(snapshotItemForm()) === draftSig) {
+           closeSheet("sheetItem");
+           resetItemSheet();
+           state.ui.tab = "home";
+@@ -4251,7 +4253,7 @@
+         endSaveSubmit(submitToken);
+         // 未落库 ⇒ 不能留下一条「看起来已保存」的事项，也不能丢掉用户输入
+         state.items = state.items.filter(x => x.id !== newId);
+-        settleFailedDraft(draft, draftSig);
++        settleFailedDraft(draft, draftSig, frozenSession);
+       });
+       return true;
+     };
+@@ -4677,8 +4679,8 @@
+    * 每个条目另带 **`roundBase`**（R-F06）：登记它时事项的触发起点，也就是「这属于哪一轮」。
+    * 键只能证明「我们承诺过这个时刻」，证明不了「它属于当前这一轮」——「稍后提醒」把时间
+    * 往后推之后，旧轮的追提醒键照样落在新轮的时间范围里，于是旧回执会把新轮抬成
+-   * 「系统已接收」。有 `roundBase` 才分得开。旧条目没有这个字段时由
+-   * `DeliveryEvidence.entryRoundBase` 按升级前规则保守推定。
++   * 「系统已接收」。有 `roundBase` 才分得开。旧条目没有这个字段时保持不可验证；
++   * 只有当前原生对账再次明确登记同一个键，才为它补上可证明的本轮身份。
+    */
+   function applyReminderEvents(events, now, cancelledEvents) {
+     const planned = new Map();
+@@ -4716,7 +4718,14 @@
+         // 已送达是终态：真实送达证据不能被后续对账抹掉；
+         // suppressed 同样保留 —— 那是用户撤销「完成」时确认过不要这一次（R5）
+         if (old && typeof old === "object" &&
+-          (old.state === "delivered" || old.state === "suppressed")) { keep(key, old); return; }
++          (old.state === "delivered" || old.state === "suppressed")) {
++          // 当前原生对账再次登记了同一个键，才足以把升级前缺身份的终态锚到本轮；
++          // 已有明确身份一律原样保留，不能把历史轮次改写成当前轮。
++          keep(key, old.roundBase == null
++            ? Object.assign({}, old, { roundBase: base })
++            : old);
++          return;
++        }
+         // 原生这一轮真的排了它 ⇒ 它就是当前轮的键，轮次身份跟着刷新
+         keep(key, { at: at, state: "scheduled", roundBase: base });
+       });
+@@ -7938,6 +7947,7 @@
+       // R-F03：表单会话身份必须能被行为级断言 —— 「关掉重开」= 另一张表单，
+       // 内容碰巧一样也不行。所以要能从测试里真的开/关那张表单。
+       openCapture,
++      openEditItem,
+       resetItemSheet,
+       closeAllSheets,
+       get formSession() { return itemFormSession; },
+--- a/lib/delivery-evidence.js
++++ b/lib/delivery-evidence.js
+@@ -75,16 +75,20 @@
+    *     回执依然合法。所以这里比的是「轮」而不是「版本号相等」：机械要求 rev 相同
+    *     会把合法证据误判成陈旧（rev 会因为改标题而推进）。
+    *
+-   * 旧版本写入的条目没有 `roundBase`：按升级前的规则（键在当前轮范围内即算本轮）
+-   * 保守推定 —— 升级本身不该把用户已经看到过的「系统已接收」翻成未知。
+-   * 新写入一律带 `roundBase`，所以这条推只影响升级前那一批行。
++   * 旧版本写入的条目没有 `roundBase`：身份默认**不可验证**，不能因为它碰巧落在
++   * 当前时间范围内，就把它提升成当前轮的肯定证据。只有两种可证明迁移：
++   *   · 旧键本身是 `0@triggerAt`（首期键精确锚定当前触发起点）；
++   *   · 后续原生对账再次明确登记同一个当前轮键（由 `applyReminderEvents` 补字段）。
++   * 其余升级前历史仍保留在台账里但不证明当前轮。未知不能冒充当前轮，正是 Y2 的边界。
+    */
+-  function entryRoundBase(item, entry) {
++  function entryRoundBase(item, entry, key) {
+     if (entry && typeof entry === "object" && entry.roundBase != null) {
+       const explicit = Number(entry.roundBase);
+       if (Number.isFinite(explicit)) return explicit;
+     }
+-    return Number(item && item.triggerAt) || 0;
++    const base = Number(item && item.triggerAt) || 0;
++    if (base && /^0@/.test(String(key || "")) && keyAt(key) === base) return base;
++    return null;
+   }
+ 
+   /** 把一行原生数据映射到规范字段名（不猜、不补默认值）。 */
+@@ -214,24 +218,28 @@
+       }
+       // 登记过还不够：这条键可能是**上一轮**留下的（原定时刻落在当前范围内，但轮次已经换过）
+       const roundBase = Number(it.triggerAt) || 0;
+-      if (roundBase && entryRoundBase(it, prev) !== roundBase) {
++      const registeredRound = entryRoundBase(it, prev, ev.key);
++      if (roundBase && registeredRound !== roundBase) {
+         result.unknown++;
+-        result.reasons.push("superseded-round");
++        result.reasons.push(registeredRound == null ? "unverifiable-round" : "superseded-round");
+         return;
+       }
+       if (prev && typeof prev === "object" && prev.state === "delivered") {
+         result.deduped++;
+         return;
+       }
+-      it.reminderEvents[ev.key] = {
++      it.reminderEvents[ev.key] = Object.assign({}, prev, {
+         at: prev && Number(prev.at) ? Number(prev.at) : ev.at,
+         state: "delivered",
+         receivedAt: ev.receivedAt || (now || Date.now()),
+         carrier: ev.carrier,
++        // scheduled → delivered 也必须保留轮次身份；否则一次正常回执就会把
++        // 可验证条目重新降级成「身份缺失」，并在下一轮错误继承当前 triggerAt（Y1）。
++        roundBase: registeredRound,
+         // 这里刻意用「系统已接收」而不是「用户看到」
+         level: "received",
+         source: ev.source
+-      };
++      });
+       result.applied++;
+       result.changed = true;
+     });
+@@ -264,7 +272,7 @@
+       key: k,
+       at: keyAt(k),
+       state: events[k] && events[k].state,
+-      roundBase: entryRoundBase(item, events[k])
++      roundBase: entryRoundBase(item, events[k], k)
+     }));
+     // **只认当前轮的证据**：`triggerAt` 之前的键属于被改掉时间的旧承诺；
+     // 而原定时刻仍然落在范围内、轮次却已经换过（稍后提醒后的旧追提醒）的那些键，
+@@ -273,6 +281,9 @@
+     const base = Number(item.triggerAt) || 0;
+     const inRound = planned.filter(p =>
+       !base || (p.at != null && p.at >= base && p.roundBase === base));
++    // 有历史，但没有一条能证明属于当前轮：保持「不可核查」。尤其不能把旧版
++    // scheduled/cancelled/delivered 因缺 roundBase 而解释成当前轮（Y2）。
++    if (base && !inRound.length) return result(STATUS.UNVERIFIABLE, null);
+     const delivered = inRound.filter(p => p.state === "delivered");
+     // 只认「已到点」的那些键 —— 未来的键当然没有证据
+     const duePassed = inRound.filter(p => p.at != null && p.at <= now);
+--- a/test-unit.js
++++ b/test-unit.js
+@@ -724,12 +724,12 @@
+   const now = 1789000000000;
+   // 独立验收 F06 / R4：回执必须锚到**我们登记过的那一轮**，所以事项先得有一份排程登记。
+   // 没有登记的轮次一律 unknown —— 宁可「尚未确认」，也不谎报「系统已接收」。
+-  const scheduledAt = (at) => ({ at: at, state: "scheduled" });
++  const scheduledAt = (at, roundBase) => ({ at: at, state: "scheduled", roundBase: roundBase });
+   const baseItem = () => ({
+     id: "i1", status: "waiting", triggerAt: now - 3600000, rev: 3,
+     reminderEvents: {
+-      ["0@" + (now - 3600000)]: scheduledAt(now - 3600000),
+-      ["1@" + (now - 1800000)]: scheduledAt(now - 1800000)
++      ["0@" + (now - 3600000)]: scheduledAt(now - 3600000, now - 3600000),
++      ["1@" + (now - 1800000)]: scheduledAt(now - 1800000, now - 3600000)
+     }
+   });
+ 
+@@ -763,7 +763,7 @@
+   const freshKey = "0@" + (now + 60000);
+   const item2b = [{
+     id: "i2b", status: "waiting", triggerAt: now, rev: 9,
+-    reminderEvents: { [freshKey]: scheduledAt(now + 60000) }
++    reminderEvents: { [freshKey]: scheduledAt(now + 60000, now) }
+   }];
+   const fresh = ev.normalizeEvidence(
+     [{ itemId: "i2b", reminderKey: freshKey, receivedAt: now + 61000, itemRev: "9", carrier: "alarm" }], "bridge");
+@@ -794,8 +794,12 @@
+   });
+   ok("R-F06 条目自带轮次身份时以它为准",
+     ev.entryRoundBase({ triggerAt: now }, { at: now + 1000, state: "delivered", roundBase: now - 5000 }) === now - 5000);
+-  ok("R-F06 旧版写入的条目没有轮次身份时按升级前规则推定（不把升级变成降级）",
+-    ev.entryRoundBase({ triggerAt: now }, { at: now + 1000, state: "delivered" }) === now);
++  ok("Y2 旧版写入的条目没有轮次身份时保持不可验证（不冒充当前轮）",
++    ev.entryRoundBase({ triggerAt: now }, { at: now + 1000, state: "delivered" }) === null);
++  ok("Y2 对照：旧版 0@triggerAt 首期键可证明属于当前轮",
++    ev.entryRoundBase({ triggerAt: now }, { at: now, state: "delivered" }, "0@" + now) === now);
++  ok("Y2 旧版追提醒即使落在当前范围也不可从时刻猜成当前轮",
++    ev.entryRoundBase({ triggerAt: now }, { at: now + 1800000, state: "delivered" }, "1@" + (now + 1800000)) === null);
+ 
+   const item2d = [roundItem("i2d")];
+   const oldRoundEv = ev.normalizeEvidence(
+@@ -836,7 +840,7 @@
+   // 完成事项不被复活
+   const item3 = [{
+     id: "i3", status: "archived", completedAt: now - 1000, triggerAt: now - 3600000, rev: 4,
+-    reminderEvents: { ["0@" + (now - 3600000)]: scheduledAt(now - 3600000) }
++    reminderEvents: { ["0@" + (now - 3600000)]: scheduledAt(now - 3600000, now - 3600000) }
+   }];
+   ev.mergeEvidence(item3, ev.normalizeEvidence(
+     [{ itemId: "i3", reminderKey: "0@" + (now - 3600000), receivedAt: now - 3599000, itemRev: "4", carrier: "alarm" }], "bridge"), now);
+@@ -856,10 +860,10 @@
+   ok("没有登记过排程 → 无法核查（不是漏）", noReg.state === ev.STATUS.UNVERIFIABLE, noReg.state);
+   ok("无法核查/未知的文案都不含「漏」", !/漏/.test(noReg.text), noReg.text);
+ 
+-  const pendingItem = { id: "p", triggerAt: now + 600000, reminderEvents: { ["0@" + (now + 600000)]: { at: now + 600000, state: "scheduled" } } };
++  const pendingItem = { id: "p", triggerAt: now + 600000, reminderEvents: { ["0@" + (now + 600000)]: { at: now + 600000, state: "scheduled", roundBase: now + 600000 } } };
+   ok("未到点 → pending", ev.evidenceStatusFor(pendingItem, { now: now }).state === ev.STATUS.PENDING);
+ 
+-  const dueNoEvidence = { id: "d", triggerAt: now - 3600000, reminderEvents: { ["0@" + (now - 3600000)]: { at: now - 3600000, state: "scheduled" } } };
++  const dueNoEvidence = { id: "d", triggerAt: now - 3600000, reminderEvents: { ["0@" + (now - 3600000)]: { at: now - 3600000, state: "scheduled", roundBase: now - 3600000 } } };
+   const st1 = ev.evidenceStatusFor(dueNoEvidence, { now: now });
+   ok("到点但缺证据 → unknown", st1.state === ev.STATUS.UNKNOWN, st1.state);
+   ok("缺证据的文案只说「尚未确认」", /尚未确认/.test(st1.text), st1.text);
+@@ -872,7 +876,7 @@
+   const st4 = ev.evidenceStatusFor(dueNoEvidence, { now: now, readbackInFlight: true });
+   ok("回读进行中 → processing", st4.state === ev.STATUS.PROCESSING);
+ 
+-  const delivered = { id: "z", triggerAt: now - 3600000, reminderEvents: { ["0@" + (now - 3600000)]: { at: now - 3600000, state: "delivered", level: "received" } } };
++  const delivered = { id: "z", triggerAt: now - 3600000, reminderEvents: { ["0@" + (now - 3600000)]: { at: now - 3600000, state: "delivered", level: "received", roundBase: now - 3600000 } } };
+   const st5 = ev.evidenceStatusFor(delivered, { now: now });
+   ok("有证据 → delivered", st5.state === ev.STATUS.DELIVERED);
+   ok("有证据也只说「系统已接收」", /系统已接收/.test(st5.text) && !/已读|用户看到/.test(st5.text), st5.text);
+@@ -881,8 +885,8 @@
+   const item4 = [{
+     id: "i4", status: "waiting", triggerAt: now - 7200000, rev: 1,
+     reminderEvents: {
+-      ["0@" + (now - 7200000)]: scheduledAt(now - 7200000),
+-      ["3@" + (now - 1800000)]: scheduledAt(now - 1800000)
++      ["0@" + (now - 7200000)]: scheduledAt(now - 7200000, now - 7200000),
++      ["3@" + (now - 1800000)]: scheduledAt(now - 1800000, now - 7200000)
+     }
+   }];
+   ev.mergeEvidence(item4, ev.normalizeEvidence(
+--- a/test-regressions.js
++++ b/test-regressions.js
+@@ -2512,7 +2512,7 @@
+   const key = "1@" + at;
+   const it = app.makeItem({ title: "提醒过的事", status: "waiting", triggerAt: at });
+   it.reminderEvents = {};
+-  it.reminderEvents[key] = { at: at, state: "scheduled" };
++  it.reminderEvents[key] = { at: at, state: "scheduled", roundBase: it.triggerAt };
+   app.state.items = [it];
+ 
+   // ① 证据通道读不到 → 只能说「尚未确认」，一个字都不许出现「漏」
+@@ -2569,7 +2569,7 @@
+   // ⑦ 独立验收 F01：缺规范字段（旧名 key/at 之外的半套写法）→ 不计入、也不许补默认值
+   const it4 = app.makeItem({ title: "半套字段", status: "waiting", triggerAt: now - 600000 });
+   const unwrittenKey = "0@" + (now - 600000);
+-  it4.reminderEvents = { [unwrittenKey]: { at: now - 600000, state: "scheduled" } };
++  it4.reminderEvents = { [unwrittenKey]: { at: now - 600000, state: "scheduled", roundBase: it4.triggerAt } };
+   app.state.items = [it4];
+   ok("T03 缺 receivedAt/carrier/itemRev 的回执不作数（不接受「用当前时间补上」）",
+     app.applyNativeDeliveryEvidence([{ itemId: it4.id, reminderKey: unwrittenKey }]) === false &&
+@@ -2779,7 +2779,7 @@
+     JSON.stringify({ available: got.available, norm: norm }));
+   const item = {
+     id: "java-row", rev: 2, triggerAt: now - 1000,
+-    reminderEvents: { [key]: { at: now - 1000, state: "scheduled" } }
++    reminderEvents: { [key]: { at: now - 1000, state: "scheduled", roundBase: now - 1000 } }
+   };
+   ok("R7 并进事项台账后写成 delivered（证据回流真的通了）",
+     evidenceLib2.mergeEvidence([item], norm, now).applied === 1);
+@@ -3018,7 +3018,133 @@
+     ]) === true && c.reminderEvents["0@" + t2].state === "delivered",
+     JSON.stringify(c.reminderEvents));
+ }
++
++section("返工3 Y1：正常接收保留轮次身份，编辑换轮与重启后旧历史不证明新轮");
++{
++  const evidence = require(path.join(ROOT, "lib/delivery-evidence.js"));
++  const h = createApp();
++  const app = await h.boot();
++  app.state.settings.dnd = false;
++  const now = Date.now();
++  const oldBase = now - 31 * 60000;
++  const oldAt = now - 60000;
++  const newBase = Math.floor((now - 2 * 60000) / 60000) * 60000;
++  const x = app.makeItem({ title: "接收后再改期", status: "due", triggerAt: oldBase });
++  x.triggerAt = oldBase;
++  app.state.items = [x];
+ 
++  // 必须从真实排程登记与真实接收入口构造，不手造 delivered fixture。
++  app.applyReminderEvents([{ itemId: x.id, key: "1@" + oldAt, at: oldAt }], oldBase, []);
++  const received = app.applyNativeDeliveryEvidence([{
++    itemId: x.id, reminderKey: "1@" + oldAt, itemRev: String(x.rev),
++    token: "y1-received", carrier: "alarm", receivedAt: oldAt
++  }]);
++  ok("Y1 正常 scheduled → delivered 入口保留 roundBase",
++    received === true && x.reminderEvents["1@" + oldAt].state === "delivered" &&
++    x.reminderEvents["1@" + oldAt].roundBase === oldBase,
++    JSON.stringify(x.reminderEvents));
++
++  // 通过生产编辑保存入口换到另一轮，再由生产对账登记新轮。
++  app.openEditItem(x.id);
++  h.setField("#capTrigger", localInputOf(newBase));
++  app.markTriggerPicked(true);
++  app.saveItemFromForm();
++  await flush(10);
++  await app.saveAsync();
++  const edited = app.state.items.find(it => it.id === x.id);
++  app.applyReminderEvents([{ itemId: edited.id, key: "0@" + edited.triggerAt, at: edited.triggerAt }], now, []);
++  await app.saveAsync();
++  ok("Y1 编辑换轮后旧 delivered 保留为历史但不冒充当前轮",
++    edited.reminderEvents["1@" + oldAt].roundBase === oldBase &&
++    evidence.evidenceStatusFor(edited, { now, evidenceReadable: true, observable: true }).state !== evidence.STATUS.DELIVERED,
++    JSON.stringify(edited.reminderEvents));
++
++  const restarted = await restartApp(h.disk);
++  const restored = restarted.app.state.items.find(it => it.id === x.id);
++  ok("Y1 重启回读后轮次身份仍在，旧历史仍不能证明新轮已接收",
++    restored.reminderEvents["1@" + oldAt].roundBase === oldBase &&
++    evidence.evidenceStatusFor(restored, { now, evidenceReadable: true, observable: true }).state !== evidence.STATUS.DELIVERED,
++    JSON.stringify(restored.reminderEvents));
++}
++
++section("返工3 Y2：升级前缺身份的三态保持不可验证；可证明的当前对账才补身份");
++{
++  const evidence = require(path.join(ROOT, "lib/delivery-evidence.js"));
++  const now = Date.now();
++  const oldBase = now - 60000;
++  const oldAt = now + 29 * 60000;
++  const newBase = now + 5 * 60000;
++  const legacyStates = ["scheduled", "cancelled", "delivered"];
++  const legacyItems = legacyStates.map((state, index) => ({
++    id: "legacy-round-" + state,
++    title: "旧台账 " + state,
++    status: "due",
++    triggerAt: oldBase,
++    rev: index + 1,
++    reminderEvents: {
++      ["1@" + oldAt]: { at: oldAt, state: state, receivedAt: state === "delivered" ? oldAt : undefined }
++    }
++  }));
++  const seed = {
++    schema: 5,
++    items: legacyItems,
++    notes: [], projects: [],
++    settings: { dnd: false, notifyEnabled: true }
++  };
++  const h = createApp({ seedState: seed });
++  const app = await h.boot();
++
++  app.state.items.forEach(it => {
++    app.snoozeItem(it.id, newBase, "elapsed");
++    app.applyReminderEvents([{ itemId: it.id, key: "0@" + newBase, at: newBase }], now,
++      [{ itemId: it.id, key: "1@" + oldAt, at: oldAt }]);
++  });
++  await flush(8);
++
++  app.state.items.forEach(it => {
++    const first = app.applyNativeDeliveryEvidence([{
++      itemId: it.id, reminderKey: "1@" + oldAt, itemRev: String(it.rev),
++      token: "legacy-first", carrier: "alarm", receivedAt: oldAt
++    }]);
++    const duplicate = app.applyNativeDeliveryEvidence([{
++      itemId: it.id, reminderKey: "1@" + oldAt, itemRev: String(it.rev),
++      token: "legacy-duplicate", carrier: "alarm", receivedAt: oldAt + 1
++    }]);
++    ok("Y2 旧 " + it.title.split(" ")[1] + " 缺 roundBase 的乱序/重复回执均不提升当前轮",
++      first === false && duplicate === false &&
++      evidence.entryRoundBase(it, it.reminderEvents["1@" + oldAt]) === null &&
++      evidence.evidenceStatusFor(it, { now: oldAt + 1000, evidenceReadable: true, observable: true }).state !== evidence.STATUS.DELIVERED,
++      JSON.stringify(it.reminderEvents));
++  });
++
++  // 对照：旧终态缺身份，但当前原生对账明确再次登记了**同一个当前轮键**，归属可证明。
++  const provenBase = now + 60 * 60000;
++  const proven = app.makeItem({ title: "可证明迁移", status: "waiting", triggerAt: provenBase });
++  proven.triggerAt = provenBase;
++  proven.reminderEvents = {
++    ["0@" + provenBase]: { at: provenBase, state: "delivered", receivedAt: provenBase }
++  };
++  app.state.items.push(proven);
++  app.applyReminderEvents([{ itemId: proven.id, key: "0@" + provenBase, at: provenBase }], now, []);
++  ok("Y2 可证明的当前轮对账补齐身份，同时保留 delivered 历史",
++    proven.reminderEvents["0@" + provenBase].roundBase === provenBase &&
++    proven.reminderEvents["0@" + provenBase].state === "delivered",
++    JSON.stringify(proven.reminderEvents));
++
++  await app.saveAsync();
++  const restarted = await restartApp(h.disk);
++  legacyStates.forEach(state => {
++    const restored = restarted.app.state.items.find(it => it.id === "legacy-round-" + state);
++    ok("Y2 重启后旧 " + state + " 仍是历史且身份未知",
++      !!restored && evidence.entryRoundBase(restored, restored.reminderEvents["1@" + oldAt]) === null &&
++      evidence.evidenceStatusFor(restored, { now: oldAt + 1000, evidenceReadable: true, observable: true }).state !== evidence.STATUS.DELIVERED,
++      restored && JSON.stringify(restored.reminderEvents));
++  });
++  const restoredProven = restarted.app.state.items.find(it => it.id === proven.id);
++  ok("Y2 可证明迁移的 roundBase 也能跨重启保留",
++    restoredProven.reminderEvents["0@" + provenBase].roundBase === provenBase);
++}
++
+ section("返工2 R-F03：AI 迟到结果不得覆盖新草稿（复验 X2）");
+ {
+   const aiReply = (title, iso) => ({
+@@ -3140,6 +3266,89 @@
+     JSON.stringify(titles5));
+ }
+ 
++section("返工3 Y3：新建/编辑的持久化收尾必须绑定表单会话");
++{
++  const text = "明天下午3点提醒我取快递";
++
++  // ① 新建成功：旧会话完成时，新会话即使内容相同也不能被清空；且新会话仍可正常再提交。
++  const h1 = createApp();
++  const app1 = await h1.boot();
++  app1.openCapture();
++  h1.holdCommits(true);
++  h1.setField("#capText", text);
++  const firstSession = app1.formSession;
++  app1.saveItemFromForm();
++  await flush(2);
++  app1.openCapture();
++  h1.setField("#capText", text);
++  const secondSession = app1.formSession;
++  h1.holdCommits(false);
++  h1.releaseCommits();
++  await flush(10);
++  ok("Y3 新建成功回调不清空另一会话的同内容表单",
++    secondSession !== firstSession && h1.fieldOf("#capText") === text && h1.hasClassOf("#sheetItem", "open"),
++    JSON.stringify({ firstSession, secondSession, text: h1.fieldOf("#capText") }));
++  ok("Y3 新会话同内容不是重复点击，仍可独立提交",
++    app1.saveItemFromForm() !== false);
++  await flush(10);
++  await app1.saveAsync();
++  ok("Y3 两个独立会话各自落库一次",
++    app1.state.items.filter(it => /取快递/.test(it.title)).length === 2,
++    JSON.stringify(app1.state.items.map(it => it.title)));
++
++  // ② 新建失败：旧会话失败恢复不能覆盖另一会话；同会话失败仍保留正常恢复。
++  const h2 = createApp();
++  const app2 = await h2.boot();
++  app2.openCapture();
++  h2.holdCommits(true);
++  h2.setField("#capText", text);
++  app2.saveItemFromForm();
++  await flush(2);
++  app2.openCapture();
++  h2.setField("#capText", text);
++  h2.setCommitFailure(true);
++  h2.holdCommits(false);
++  h2.releaseCommits();
++  await flush(10);
++  ok("Y3 新建失败回调不把旧草稿恢复到另一会话",
++    h2.fieldOf("#capText") === text && h2.hasClassOf("#sheetItem", "open"));
++
++  const h3 = createApp();
++  const app3 = await h3.boot();
++  app3.openCapture();
++  h3.holdCommits(true);
++  h3.setField("#capText", "同会话失败要保留");
++  app3.saveItemFromForm();
++  await flush(2);
++  h3.setCommitFailure(true);
++  h3.holdCommits(false);
++  h3.releaseCommits();
++  await flush(10);
++  ok("Y3 对照组：同会话保存失败仍保留草稿并打开表单",
++    h3.fieldOf("#capText") === "同会话失败要保留" && h3.hasClassOf("#sheetItem", "open"));
++
++  // ③ 编辑成功/失败同样受会话约束，不能只修新建路径。
++  for (const shouldFail of [false, true]) {
++    const h = createApp();
++    const app = await h.boot();
++    const item = app.makeItem({ title: "编辑前", status: "waiting", triggerAt: Date.now() + 3600000 });
++    app.state.items = [item];
++    app.openEditItem(item.id);
++    h.holdCommits(true);
++    h.setField("#capText", "编辑后");
++    app.saveItemFromForm();
++    await flush(2);
++    app.openCapture();
++    h.setField("#capText", "编辑后");
++    if (shouldFail) h.setCommitFailure(true);
++    h.holdCommits(false);
++    h.releaseCommits();
++    await flush(10);
++    ok("Y3 编辑" + (shouldFail ? "失败" : "成功") + "回调不碰另一会话的同内容表单",
++      h.fieldOf("#capText") === "编辑后" && h.hasClassOf("#sheetItem", "open"));
++  }
++}
++
+ section("返工2 R-F07：停铃读取失败不冒充「没有正在响」（复验 X4）");
+ {
+   const runAt = Date.now() - 1000;

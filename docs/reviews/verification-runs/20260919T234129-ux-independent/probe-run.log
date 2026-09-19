@@ -1,0 +1,188 @@
+State save failed: commit failed
+[
+  {
+    "id": "R1-repeat-submit",
+    "expected": "one item; second submit rejected",
+    "actual": {
+      "first": true,
+      "second": true,
+      "count": 2,
+      "durableCount": 2
+    }
+  },
+  {
+    "id": "R2-late-save-clears-input",
+    "expected": "new input preserved",
+    "actual": {
+      "input": ""
+    }
+  },
+  {
+    "id": "R3-undo-during-native-commit",
+    "expected": "accepted undo stays undone after native commit and restart",
+    "actual": {
+      "accepted": true,
+      "immediate": "due",
+      "after": "archived",
+      "restarted": "archived"
+    }
+  },
+  {
+    "id": "R4-stale-receipt",
+    "expected": "old revision rejected, current reminder stays pending",
+    "actual": {
+      "merged": {
+        "changed": true,
+        "applied": 1,
+        "deduped": 0,
+        "unknown": 0,
+        "reasons": []
+      },
+      "status": {
+        "state": "delivered",
+        "text": "系统已接收这次提醒",
+        "at": 1789832726128,
+        "isMissed": false
+      },
+      "events": {
+        "0@1789832666128": {
+          "state": "scheduled",
+          "at": 1789832666128
+        },
+        "1@1789832726128": {
+          "at": 1789832726128,
+          "state": "delivered",
+          "receivedAt": 1789832786128,
+          "carrier": "alarm",
+          "level": "received",
+          "source": "native"
+        }
+      }
+    }
+  },
+  {
+    "id": "R4b-incomplete-identity",
+    "expected": "missing receipt time/carrier/version/token is invalid",
+    "actual": [
+      {
+        "valid": true,
+        "itemId": "missing",
+        "key": "0@123",
+        "at": 123,
+        "carrier": "notification",
+        "receivedAt": null,
+        "itemRev": null,
+        "token": null,
+        "source": "native",
+        "level": "received"
+      }
+    ]
+  },
+  {
+    "id": "R5-undo-replays-past-event",
+    "expected": "no immediate replay of a past event",
+    "actual": {
+      "accepted": true,
+      "desired": [
+        {
+          "title": "安心收件箱提醒",
+          "body": "undo replay",
+          "id": 535403631,
+          "channelId": "attention-normal-v2",
+          "actionTypeId": "attention-actions",
+          "autoCancel": true,
+          "sound": "attention_reminder",
+          "schedule": {
+            "at": "2026-09-19T15:46:29.722Z",
+            "allowWhileIdle": true
+          },
+          "extra": {
+            "managedKind": "attention-reminder",
+            "scheduleVersion": 2,
+            "itemId": "i_coi35fipmu8k88gq",
+            "itemRev": 3,
+            "event": "primary",
+            "attempt": 0,
+            "scheduleKey": "2|i_coi35fipmu8k88gq|3|primary|0|1789832787638|安心收件箱提醒|undo replay|attention-normal-v2",
+            "reminderKey": "0@1789832787638",
+            "catchUp": true
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "R6-undo-save-failure",
+    "expected": "no success before durable undo; retry remains available",
+    "actual": {
+      "accepted": true,
+      "immediateToast": "已撤销完成 · 这条仍在「未完成」里",
+      "durable": "archived",
+      "restarted": "archived"
+    }
+  },
+  {
+    "id": "R7-real-java-row-contract",
+    "expected": "Java row survives bridge and is merged",
+    "actual": {
+      "bridgeResult": {
+        "available": true,
+        "rows": [
+          {
+            "itemId": "java-row",
+            "key": "0@1789832786755",
+            "at": 1789832786755,
+            "carrier": "alarm",
+            "receivedAt": 1789832787755,
+            "itemRev": "2",
+            "token": "token-2"
+          }
+        ],
+        "retention": {
+          "maxAgeMs": 604800000,
+          "capacity": 300
+        },
+        "reason": ""
+      },
+      "normalized": [
+        {
+          "valid": false,
+          "reason": "missing-identity",
+          "itemId": "java-row",
+          "key": "",
+          "raw": {
+            "itemId": "java-row",
+            "key": "0@1789832786755",
+            "at": 1789832786755,
+            "carrier": "alarm",
+            "receivedAt": 1789832787755,
+            "itemRev": "2",
+            "token": "token-2"
+          }
+        }
+      ],
+      "merged": {
+        "changed": false,
+        "applied": 0,
+        "deduped": 0,
+        "unknown": 1,
+        "reasons": [
+          "missing-identity"
+        ]
+      }
+    }
+  },
+  {
+    "id": "R7b-bridge-unavailable",
+    "expected": "bridge failure remains unavailable",
+    "actual": {
+      "available": true,
+      "rows": [],
+      "retention": {
+        "maxAgeMs": null,
+        "capacity": null
+      },
+      "reason": ""
+    }
+  }
+]

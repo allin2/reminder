@@ -26,6 +26,7 @@
 
         <activity
             android:name=".AlarmActivity"
+            android:directBootAware="true"
             android:excludeFromRecents="true"
             android:exported="false"
             android:launchMode="singleInstance"
@@ -56,13 +57,17 @@
 
         <receiver
             android:name=".AlarmTestReceiver"
+            android:directBootAware="true"
             android:exported="false">
             <intent-filter>
                 <action android:name="space.alliswell.inbox.ACTION_TEST_ALARM" />
             </intent-filter>
         </receiver>
 
-        <receiver android:name=".AlarmStopReceiver" android:exported="false" />
+        <receiver
+            android:name=".AlarmStopReceiver"
+            android:directBootAware="true"
+            android:exported="false" />
 
         <!--
           F3 + D59：闹钟档的「解冻投递器」兼「铃声与振动的唯一持有者」。
@@ -79,17 +84,23 @@
         -->
         <service
             android:name=".AlarmRingService"
+            android:directBootAware="true"
             android:exported="false"
             android:foregroundServiceType="mediaPlayback" />
 
-        <!-- P1-4：恢复 SystemBridge 排下的全屏闹钟（插件只恢复它自己的通知排程） -->
+        <!-- P1-4 & Phase D：恢复 SystemBridge 排下的全屏闹钟（开机、更新、时区变更与时间调整） -->
         <receiver
             android:name=".BootRestoreReceiver"
             android:enabled="true"
-            android:exported="true">
+            android:exported="true"
+            android:directBootAware="true">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.LOCKED_BOOT_COMPLETED" />
+                <action android:name="android.intent.action.USER_UNLOCKED" />
                 <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
+                <action android:name="android.intent.action.TIME_SET" />
+                <action android:name="android.intent.action.TIMEZONE_CHANGED" />
             </intent-filter>
         </receiver>
 
@@ -103,6 +114,7 @@
         -->
         <receiver
             android:name=".ExactAlarmPermissionReceiver"
+            android:directBootAware="true"
             android:exported="false">
             <intent-filter>
                 <action android:name="android.app.action.SCHEDULE_EXACT_ALARM_PERMISSION_STATE_CHANGED" />

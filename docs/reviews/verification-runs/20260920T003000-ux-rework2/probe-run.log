@@ -1,0 +1,147 @@
+State save failed: commit failed
+[
+  {
+    "id": "R1-repeat-submit",
+    "expected": "one item; second submit rejected",
+    "actual": {
+      "first": true,
+      "second": false,
+      "count": 1,
+      "durableCount": 1
+    }
+  },
+  {
+    "id": "R2-late-save-clears-input",
+    "expected": "new input preserved",
+    "actual": {
+      "input": "第二条尚未保存的输入"
+    }
+  },
+  {
+    "id": "R3-undo-during-native-commit",
+    "expected": "accepted undo stays undone after native commit and restart",
+    "actual": {
+      "accepted": true,
+      "immediate": "due",
+      "after": "due",
+      "restarted": "due"
+    }
+  },
+  {
+    "id": "R4-stale-receipt",
+    "expected": "old revision rejected, current reminder stays pending",
+    "actual": {
+      "merged": {
+        "changed": false,
+        "applied": 0,
+        "deduped": 0,
+        "unknown": 1,
+        "reasons": [
+          "unregistered-round"
+        ]
+      },
+      "status": {
+        "state": "unknown",
+        "text": "本次提醒结果尚未确认",
+        "at": 1789835611088,
+        "isMissed": false
+      },
+      "events": {
+        "0@1789835611088": {
+          "state": "scheduled",
+          "at": 1789835611088
+        }
+      }
+    }
+  },
+  {
+    "id": "R4b-incomplete-identity",
+    "expected": "missing receipt time/carrier/version/token is invalid",
+    "actual": [
+      {
+        "valid": false,
+        "reason": "missing-identity",
+        "itemId": "missing",
+        "key": "0@123",
+        "raw": {
+          "itemId": "missing",
+          "reminderKey": "0@123"
+        }
+      }
+    ]
+  },
+  {
+    "id": "R5-undo-replays-past-event",
+    "expected": "no immediate replay of a past event",
+    "actual": {
+      "accepted": true,
+      "desired": []
+    }
+  },
+  {
+    "id": "R6-undo-save-failure",
+    "expected": "no success before durable undo; retry remains available",
+    "actual": {
+      "accepted": true,
+      "immediateToast": "已完成并归档",
+      "durable": "archived",
+      "restarted": "archived"
+    }
+  },
+  {
+    "id": "R7-real-java-row-contract",
+    "expected": "Java row survives bridge and is merged",
+    "actual": {
+      "bridgeResult": {
+        "available": true,
+        "rows": [
+          {
+            "itemId": "java-row",
+            "key": "0@1789835731715",
+            "at": 1789835731715,
+            "carrier": "alarm",
+            "receivedAt": 1789835732715,
+            "itemRev": "2",
+            "token": "token-2"
+          }
+        ],
+        "retention": {
+          "maxAgeMs": 604800000,
+          "capacity": 300
+        },
+        "reason": ""
+      },
+      "normalized": [
+        {
+          "valid": true,
+          "itemId": "java-row",
+          "key": "0@1789835731715",
+          "at": 1789835731715,
+          "carrier": "alarm",
+          "receivedAt": 1789835732715,
+          "itemRev": "2",
+          "token": "token-2",
+          "source": "native",
+          "level": "received"
+        }
+      ],
+      "merged": {
+        "changed": true,
+        "applied": 1,
+        "deduped": 0,
+        "unknown": 0,
+        "reasons": []
+      }
+    }
+  },
+  {
+    "id": "R7b-bridge-unavailable",
+    "expected": "bridge failure remains unavailable",
+    "actual": {
+      "available": false,
+      "rows": [],
+      "reason": "storage-unavailable",
+      "retention": null
+    }
+  }
+]

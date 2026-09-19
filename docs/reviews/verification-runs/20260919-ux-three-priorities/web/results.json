@@ -1,0 +1,304 @@
+{
+  "ranAt": "2026-09-19T15:20:44.433Z",
+  "repo": "/Users/qlyf/Developer/reminder",
+  "consoleErrors": [],
+  "passed": 59,
+  "failed": 0,
+  "results": [
+    {
+      "name": "V00 测试钩子与新增纯逻辑模块已加载",
+      "pass": true,
+      "detail": "{\"hook\":true,\"libs\":{\"feedback\":true,\"evidence\":true},\"native\":false}"
+    },
+    {
+      "name": "V00 运行环境是 Web（非原生）",
+      "pass": true,
+      "detail": "native=false"
+    },
+    {
+      "name": "V01 干净首启不写入任何事项",
+      "pass": true,
+      "detail": "items=0 notes=0"
+    },
+    {
+      "name": "V01 首启不自动弹演示（sheetDemo 未打开）",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "V01 首启不自动弹录入面板",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "V01 首启不弹遮罩",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "V01 空首页有用途说明 + 输入示例",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "V01 空态容器里没有按钮（D8：完成数是纯文字）",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "V01 空首页有「记一件事」主动入口",
+      "pass": true,
+      "detail": "记一件事看看演示（只读，不会写入数据）›"
+    },
+    {
+      "name": "V01b 演示是主动入口且打开面板",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "V01b 演示有内容",
+      "pass": true,
+      "detail": "rows=5"
+    },
+    {
+      "name": "V01b 演示零写入（items 仍为 0）",
+      "pass": true,
+      "detail": "items=0"
+    },
+    {
+      "name": "V01b 演示明确写出「只读预览」",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "V01b 演示文本只渲染在面板里，没进用户数据",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "V01b 演示面板可正常关闭",
+      "pass": true,
+      "detail": "{\"demoOpen\":false,\"backdropShown\":false}"
+    },
+    {
+      "name": "V02 空首页「记一件事」打开录入面板（UX-C01/T02 短路径）",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "V02 默认表单简洁（更多选项收起）",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "V02 解析摘要给出具体提醒时间",
+      "pass": true,
+      "detail": "提醒 明天 15:00"
+    },
+    {
+      "name": "V02 摘要显示的是有效提醒时间（与提示一致）",
+      "pass": true,
+      "detail": "已设置：明天 15:00 · 可修改"
+    },
+    {
+      "name": "V02 保存后确实落了一条",
+      "pass": true,
+      "detail": "count=1"
+    },
+    {
+      "name": "V02 标题只留内容主体「取快递」（时间词移进结构化字段，不是丢掉）",
+      "pass": true,
+      "detail": "取快递 / triggerAt=1789887600000"
+    },
+    {
+      "name": "V02 解析出明确提醒时间",
+      "pass": true,
+      "detail": "triggerAt=1789887600000"
+    },
+    {
+      "name": "V02 保存后给出反馈",
+      "pass": true,
+      "detail": "已保存，本页关闭后不会有提醒"
+    },
+    {
+      "name": "V02 Web 上按 Web 结论反馈（不冒充 Android 就绪）",
+      "pass": true,
+      "detail": "已保存，本页关闭后不会有提醒 / 了解"
+    },
+    {
+      "name": "V02 Web 结论带可理解的入口（了解），不给 Android 才有的「查看状态」",
+      "pass": true,
+      "detail": "了解"
+    },
+    {
+      "name": "V02 新建给出有限撤销入口",
+      "pass": true,
+      "detail": "撤销"
+    },
+    {
+      "name": "V02 保存后录入面板关闭且草稿清空",
+      "pass": true,
+      "detail": "{\"open\":false,\"v\":\"\"}"
+    },
+    {
+      "name": "V02 重开后数据仍在（真落库，不是只改了内存）",
+      "pass": true,
+      "detail": "count=1"
+    },
+    {
+      "name": "V03 常驻入口 #fab 可打开录入面板",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "V03 无时间场景默认表单同样简洁",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "V03 低置信度提示如实说「未识别精确时间」",
+      "pass": true,
+      "detail": "未识别精确时间 · 先收下，稍后整理时再确认"
+    },
+    {
+      "name": "V03 摘要不与提示自相矛盾（提示未识别时摘要不显示提醒时间）",
+      "pass": true,
+      "detail": "{\"summary\":\"还没有时间 · 会先记下，之后请你在待整理里补上\",\"hint\":\"未识别精确时间 · 先收下，稍后整理时再确认\",\"triggerField\":\"\"}"
+    },
+    {
+      "name": "V03 低置信度不把兜底时间预填进时间框",
+      "pass": true,
+      "detail": "triggerField=\"\""
+    },
+    {
+      "name": "V03 摘要如实说明「还没有时间 · 先记下」",
+      "pass": true,
+      "detail": "还没有时间 · 会先记下，之后请你在待整理里补上"
+    },
+    {
+      "name": "V03 无时间记录被收下（不被拒绝）",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "V03 无时间记录进待整理",
+      "pass": true,
+      "detail": "NEEDS_REVIEW"
+    },
+    {
+      "name": "V03 兜底时间被标记为兜底（不当成事项承诺）",
+      "pass": true,
+      "detail": "isFallback=true"
+    },
+    {
+      "name": "V03 保存反馈不承诺已安排提醒",
+      "pass": true,
+      "detail": "已收下 · 待整理 / 去整理"
+    },
+    {
+      "name": "V03 有待整理时不误说「把要记的事丢进来」",
+      "pass": true,
+      "detail": "✓暂时没有到点的提醒还有 1 条待整理，等你有空再补时间。"
+    },
+    {
+      "name": "V04 elapsed 记录被收下",
+      "pass": true,
+      "detail": "triggerAt=1789831413407"
+    },
+    {
+      "name": "V04 elapsed 落在 3 分钟附近（不漂移）",
+      "pass": true,
+      "detail": "delta=180000 ms"
+    },
+    {
+      "name": "V04 未来页能列出待办事项",
+      "pass": true,
+      "detail": "rows=3"
+    },
+    {
+      "name": "V04 卡片「修改」打开编辑面板",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "V04 简单事项编辑时高级字段默认收起",
+      "pass": true,
+      "detail": "text=三分钟以后提醒我"
+    },
+    {
+      "name": "V04 「更多选项」可展开高级字段",
+      "pass": true,
+      "detail": "moreLabel=收起更多选项"
+    },
+    {
+      "name": "V04 展开更多选项不影响已填内容（标题与时间都还在）",
+      "pass": true,
+      "detail": "三分钟以后提醒我 / 2026-09-19T23:23"
+    },
+    {
+      "name": "V16 360px 无横向溢出",
+      "pass": true,
+      "detail": "scrollW=360 innerW=360"
+    },
+    {
+      "name": "V16 360px 保存/更多选项可达",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "V16 390px 无横向溢出",
+      "pass": true,
+      "detail": "scrollW=390 innerW=390"
+    },
+    {
+      "name": "V16 390px 保存/更多选项可达",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "V16 430px 无横向溢出",
+      "pass": true,
+      "detail": "scrollW=430 innerW=430"
+    },
+    {
+      "name": "V16 430px 保存/更多选项可达",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "V17 到期浮层确实出现（15 s 心跳内）",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "V17 到期浮层不丢录入内容",
+      "pass": true,
+      "detail": "before=还没保存的草稿内容 after=还没保存的草稿内容"
+    },
+    {
+      "name": "V17 到期不隐式 ACK（未被标记已确认）",
+      "pass": true,
+      "detail": "status=due"
+    },
+    {
+      "name": "V13 Web 上读送达证据不抛异常",
+      "pass": true,
+      "detail": "ok"
+    },
+    {
+      "name": "V13 Web 上如实报告「无原生证据」而不是编造已送达",
+      "pass": true,
+      "detail": "false readableFlag=false"
+    },
+    {
+      "name": "V13 详情「提醒结果」不指控漏提醒（红线：缺证据只能是未确认）",
+      "pass": true,
+      "detail": "提醒结果  这条记录的提醒无法核查"
+    },
+    {
+      "name": "全程浏览器控制台无异常",
+      "pass": true,
+      "detail": ""
+    }
+  ]
+}

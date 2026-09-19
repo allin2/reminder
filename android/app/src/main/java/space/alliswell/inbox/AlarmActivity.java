@@ -59,7 +59,7 @@ public class AlarmActivity extends AppCompatActivity {
     if (activity == null) return;
     activity.runOnUiThread(() -> {
       String activeToken = activity.getIntent().getStringExtra(AlarmTrace.EXTRA);
-      if (activity.currentAlarmId != id || (token != null && !token.equals(activeToken))) return;
+      if ((id != -1 && activity.currentAlarmId != id) || (token != null && !token.equals(activeToken))) return;
       activity.stopAllEffects();
       activity.finish();
     });
@@ -335,6 +335,8 @@ public class AlarmActivity extends AppCompatActivity {
     }
   }
 
+  private static final Object FALLBACK_SILENCE_TOKEN = new Object();
+
   /**
    * D59：界面不再持有铃声与振动的主载体 —— 那是 `AlarmRingService` 的职责。
    *
@@ -351,12 +353,8 @@ public class AlarmActivity extends AppCompatActivity {
       finish();
       return;
     }
-    // D68：这次投递已经自动静音过 —— 不再回落自播。
-    //
-    // 回落自播的条件正是「服务不响」，而自动静音之后服务**恰好不响**。
-    // 不加这道闸，用户重新看到界面（或界面 resume）时铃声会被界面自己播起来，
-    // 5 分钟的静音上限就等于没生效 —— 那正是 D68 要消灭的失效形态。
-    if (AlarmRingService.wasAutoSilenced(this, token)) {
+    // D68 / Phase B：检查该投递是否已自动静音或已终止
+    if (AlarmRingService.wasAutoSilenced(this, token) || AlarmRingService.isDeliveryTerminated(this, token)) {
       stopLocalFallback();
       recordFallbackCarrier("none");
       return;
@@ -371,14 +369,33 @@ public class AlarmActivity extends AppCompatActivity {
 
   /**
    * 回落自播：只有服务确实没起来时才走这里。
-   *
-   * 与旧实现的区别在**触发条件**：旧的是「通知权限缺失就自播」（`notificationOwnsSound()` 取反），
-   * 现在声音已经不归通知管，那个条件失去意义；新的条件是「服务有没有把载体拿走」。
+   * 继承并遵守剩余静音倒计时（单调递减）。
    */
   private void startLocalFallback() {
+    String token = getIntent() == null ? null : getIntent().getStringExtra(AlarmTrace.EXTRA);
+    long remainingMs = AlarmRingService.getRemainingSilenceMs(this, token, AlarmRingService.AUTO_SILENCE_MS);
+    if (remainingMs <= 0L) {
+      AlarmRingService.markAutoSilenced(this, token);
+      stopLocalFallback();
+      recordFallbackCarrier("none");
+      return;
+    }
+    AlarmRingService.ensureDeliveryRecord(this, token, remainingMs);
     startAlarmSound();
     startVibration();
     recordFallbackCarrier(mediaPlayer != null ? "activity" : "none");
+    scheduleFallbackAutoSilence(token, remainingMs);
+  }
+
+  private void scheduleFallbackAutoSilence(String token, long remainingMs) {
+    handler.removeCallbacksAndMessages(FALLBACK_SILENCE_TOKEN);
+    handler.postAtTime(() -> {
+      AlarmRingService.markAutoSilenced(this, token);
+      stopLocalFallback();
+      recordFallbackCarrier("none");
+      AlarmTrace.record(this, token, "fallbackAutoSilenced",
+        "silenced by fallback deadline; sound+vibration stopped; no ACK");
+    }, FALLBACK_SILENCE_TOKEN, android.os.SystemClock.uptimeMillis() + remainingMs);
   }
 
   /**
@@ -421,7 +438,12 @@ public class AlarmActivity extends AppCompatActivity {
         String itemIdForReschedule = currentItemId();
         String itemRevForReschedule = currentItemRev == null ? "0" : currentItemRev;
         AlarmScheduler.schedule(this, triggerAt, currentTitle, currentBody,
-          currentAlarmId, itemIdForReschedule, currentLevel, itemRevForReschedule);
+          currentAlarmId, itemIdForReschedule, currentLevel, itemRevForReschedule,
+          "wall-clock", 0L,
+          // UX-T03：原生快捷稍后是**固定的 2 小时**（D11），JS 调度器并不知道这一轮，
+          // 所以给它一个自解释的身份前缀。没有它，2 小时后真响的那次在证据台账里
+          // 没有身份，用户回来查只能看到「尚未确认」。
+          "snooze@" + triggerAt, triggerAt);
         // P0-2：自行重排的闹钟也要入账，否则下一轮对账撤不掉它（会变成幽灵闹钟 / 重复响）
         SystemBridgePlugin.persistAlarm(this, currentAlarmId, triggerAt, currentTitle, currentBody,
           itemIdForReschedule, currentLevel, itemRevForReschedule);
@@ -536,6 +558,7 @@ public class AlarmActivity extends AppCompatActivity {
    */
   private void stopLocalFallback() {
     trace("localFallbackStopped", "service-owned sound is stopped separately");
+    handler.removeCallbacksAndMessages(FALLBACK_SILENCE_TOKEN);
     try {
       if (mediaPlayer != null) {
         if (mediaPlayer.isPlaying()) mediaPlayer.stop();
@@ -558,7 +581,8 @@ public class AlarmActivity extends AppCompatActivity {
    * 停掉它等于把刚起的那条铃声也一起杀了（见 `onNewIntent` 的注释）。
    */
   private void stopAllEffects() {
-    AlarmRingService.requestStop(this);
+    String token = getIntent() == null ? null : getIntent().getStringExtra(AlarmTrace.EXTRA);
+    AlarmRingService.requestStop(this, currentAlarmId, token);
     stopLocalFallback();
   }
 
@@ -579,5 +603,22 @@ public class AlarmActivity extends AppCompatActivity {
   public void onBackPressed() {
     // D12：返回 = 「关闭」（只止响，不写 ACK）
     finishWithAction("close", false);
+  }
+
+  @Override
+  public android.content.SharedPreferences getSharedPreferences(String name, int mode) {
+    if (android.os.Build.VERSION.SDK_INT >= 24) {
+      if (isDeviceProtectedStorage()) {
+        return super.getSharedPreferences(name, mode);
+      }
+      android.os.UserManager um = (android.os.UserManager) getSystemService(Context.USER_SERVICE);
+      if (um != null && !um.isUserUnlocked()) {
+        Context de = createDeviceProtectedStorageContext();
+        if (de != null) {
+          return de.getSharedPreferences(name, mode);
+        }
+      }
+    }
+    return super.getSharedPreferences(name, mode);
   }
 }

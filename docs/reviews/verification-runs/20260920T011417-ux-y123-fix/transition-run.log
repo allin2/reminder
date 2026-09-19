@@ -1,0 +1,58 @@
+[
+  {
+    "id": "Y1-receipt-drops-round",
+    "pass": true,
+    "before": {
+      "1@1789838638565": {
+        "at": 1789838638565,
+        "state": "scheduled",
+        "roundBase": 1789836838565
+      }
+    },
+    "afterReceive": {
+      "1@1789838638565": {
+        "at": 1789838638565,
+        "state": "delivered",
+        "roundBase": 1789836838565,
+        "receivedAt": 1789838638565,
+        "carrier": "alarm",
+        "level": "received",
+        "source": "native"
+      }
+    },
+    "newTrigger": 1789838520000,
+    "status": {
+      "state": "unknown",
+      "text": "本次提醒结果尚未确认",
+      "at": 1789838520000,
+      "isMissed": false
+    }
+  },
+  {
+    "id": "Y2-upgrade-unknown-round",
+    "pass": true,
+    "merged": {
+      "changed": false,
+      "applied": 0,
+      "deduped": 0,
+      "unknown": 1,
+      "reasons": [
+        "unverifiable-round"
+      ]
+    },
+    "status": {
+      "state": "unknown",
+      "text": "本次提醒结果尚未确认",
+      "at": 1789838998590,
+      "isMissed": false
+    }
+  },
+  {
+    "id": "Y3-new-session-same-text",
+    "pass": true,
+    "initialSession": 1,
+    "newSession": 2,
+    "input": "明天下午3点提醒我取快递",
+    "persistedCount": 1
+  }
+]

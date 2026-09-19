@@ -1,0 +1,77 @@
+== debug ==
+ENTRY_SET_MISMATCH
+--- docs/reviews/verification-runs/20260920T011417-ux-y123-fix/debug-prev-entries.txt	2026-09-20 01:30:23
++++ docs/reviews/verification-runs/20260920T011417-ux-y123-fix/debug-this-entries.txt	2026-09-20 01:30:23
+@@ -40,12 +40,8 @@
+ META-INF/kotlinx_coroutines_core.version
+ META-INF/services/kotlinx.coroutines.CoroutineExceptionHandler
+ META-INF/services/kotlinx.coroutines.internal.MainDispatcherFactory
+-assets/capacitor.config.json
+-assets/capacitor.plugins.json
+ assets/native-bridge.js
+ assets/public/app-core.js
+-assets/public/cordova.js
+-assets/public/cordova_plugins.js
+ assets/public/icon-192.png
+ assets/public/icon-512.png
+ assets/public/icon.svg
+@@ -503,6 +499,5 @@
+ res/mipmap-xxxhdpi-v4/ic_launcher_foreground.png
+ res/mipmap-xxxhdpi-v4/ic_launcher_round.png
+ res/raw/attention_reminder.wav
+-res/xml/config.xml
+ res/xml/file_paths.xml
+ resources.arsc
+UNEXPECTED  AndroidManifest.xml  prev=b44531c6cb9807073876e811a92dbc63f8119e0dc3f6383c775c8b740c7636a5 this=54bf9b456b30d77e14a4a7942c0c69c428029f98f010fc7721956e9815b7ff5a
+SIGNATURE_METADATA  META-INF/CERT.RSA  prev=600d62670c185df84fb4f753d1dbddd13b4913dc8484da7f6a2e7764b0d1fb4c this=269cad6d6747aeed3dcaaa8bab5ac7ce41f436059d2360f9dd6de11c0b744841
+SIGNATURE_METADATA  META-INF/CERT.SF  prev=b8c85457e8ee7b29d090bf2e058436fd4eee0ddfa40f21463fcfd61c26c76038 this=35343bf57f85004170e574de17c7fd25701c812ef8607afd0bd3a03b85cb2df0
+SIGNATURE_METADATA  META-INF/MANIFEST.MF  prev=ff29917fafa1801de6d54ad8a1b0fb7e7a7ebed47b3db9843f0f887d3915ed58 this=fce06b8253c29ecd07c3603b4e0f6c9968851be9cc570e81b1d6491ca66c29c3
+EXPECTED_WEB  assets/public/app-core.js  prev=cf1fe51aef957b79ea38be84b9aa778b42982680e056f1f2578ce60576a82869 this=214aea29aacdb4d38c3d18efdb8ff6abe3dd881f385c569180eef572bc88ae95
+EXPECTED_WEB  assets/public/lib/delivery-evidence.js  prev=e4662193572e65fa23c8f85562ee64c5a88bb35168ae03cb912246db73849982 this=7ee77186881d8462450c8fe8a550840647ec9d7626c259fb9e29768290062d03
+UNEXPECTED  classes3.dex  prev=75044f0f21a12a20f2cfad3eb96eeec0692ec10bdbd1351b525eadb4e70c1cf8 this=c2f7cad0c31fbd17c1c32324a5af91c8faa3a82fc0308f3e101ae39eb65177e7
+UNEXPECTED  resources.arsc  prev=40741ec9dd4ffcbd7c614ce8ca66a10a17836412a97f2326235712eb000f1de2 this=5bf91c40e6f034ba365a61db55d723f03d5cb2f63011b459f82fb4927962354b
+DIFF_COUNT=8
+== release ==
+ENTRY_SET_MISMATCH
+--- docs/reviews/verification-runs/20260920T011417-ux-y123-fix/release-prev-entries.txt	2026-09-20 01:30:34
++++ docs/reviews/verification-runs/20260920T011417-ux-y123-fix/release-this-entries.txt	2026-09-20 01:30:34
+@@ -1,8 +1,5 @@
+ AndroidManifest.xml
+ DebugProbesKt.bin
+-META-INF/ATTENTIO.RSA
+-META-INF/ATTENTIO.SF
+-META-INF/MANIFEST.MF
+ META-INF/androidx.activity_activity.version
+ META-INF/androidx.annotation_annotation-experimental.version
+ META-INF/androidx.appcompat_appcompat-resources.version
+@@ -40,14 +37,10 @@
+ META-INF/kotlinx_coroutines_core.version
+ META-INF/services/kotlinx.coroutines.CoroutineExceptionHandler
+ META-INF/services/kotlinx.coroutines.internal.MainDispatcherFactory
+-assets/capacitor.config.json
+-assets/capacitor.plugins.json
+ assets/dexopt/baseline.prof
+ assets/dexopt/baseline.profm
+ assets/native-bridge.js
+ assets/public/app-core.js
+-assets/public/cordova.js
+-assets/public/cordova_plugins.js
+ assets/public/icon-192.png
+ assets/public/icon-512.png
+ assets/public/icon.svg
+@@ -302,7 +295,6 @@
+ res/ZL.xml
+ res/ZN.9.png
+ res/ZN.xml
+-res/ZW.xml
+ res/Zd.png
+ res/Zg.xml
+ res/Zp.png
+UNEXPECTED  AndroidManifest.xml  prev=2a81676a4b69be9cccea280a0f8cf9308c12edaaaed93fb0473d13a87d64f9d7 this=aada44fe12851ee04283762c04756794c25289cdc4eeae7ba05ad8713633bc36
+UNEXPECTED  assets/dexopt/baseline.prof  prev=dd86acb37e2faf7b330203542e28254e78759e8b356ced1c433707e76b8cabbc this=399dc33ff25fcbefe30322a3e055f8e7d3607d37f5555d8b4ec16170374ea133
+EXPECTED_WEB  assets/public/app-core.js  prev=cf1fe51aef957b79ea38be84b9aa778b42982680e056f1f2578ce60576a82869 this=214aea29aacdb4d38c3d18efdb8ff6abe3dd881f385c569180eef572bc88ae95
+EXPECTED_WEB  assets/public/lib/delivery-evidence.js  prev=e4662193572e65fa23c8f85562ee64c5a88bb35168ae03cb912246db73849982 this=7ee77186881d8462450c8fe8a550840647ec9d7626c259fb9e29768290062d03
+UNEXPECTED  classes.dex  prev=1bfdd7dd9119002a07fdeca2fabc4f15fdfff89a33eb78d9dc4e54162f89267d this=fd70007a9d65ebbb5829336239c481379b23bcdb7af7cbe426b510933e2a1834
+UNEXPECTED  resources.arsc  prev=441c353695ba82180614491199780e1860348edec6f3e1a28d8203adf7c69275 this=1f16bb5e6f843ce3e238ed71bbbde7a44faa61e94a260d683341f260493e99cb
+DIFF_COUNT=6
+RESULT: UNEXPECTED_DIFFS

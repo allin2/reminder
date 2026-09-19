@@ -1,0 +1,55 @@
+[
+  {
+    "id": "Y1-receipt-drops-round",
+    "pass": false,
+    "before": {
+      "1@1789837533616": {
+        "at": 1789837533616,
+        "state": "scheduled",
+        "roundBase": 1789835733616
+      }
+    },
+    "afterReceive": {
+      "1@1789837533616": {
+        "at": 1789837533616,
+        "state": "delivered",
+        "receivedAt": 1789837533616,
+        "carrier": "alarm",
+        "level": "received",
+        "source": "native"
+      }
+    },
+    "newTrigger": 1789837440000,
+    "status": {
+      "state": "delivered",
+      "text": "系统已接收这次提醒",
+      "at": 1789837533616,
+      "isMissed": false
+    }
+  },
+  {
+    "id": "Y2-upgrade-unknown-round",
+    "pass": false,
+    "merged": {
+      "changed": true,
+      "applied": 1,
+      "deduped": 0,
+      "unknown": 0,
+      "reasons": []
+    },
+    "status": {
+      "state": "delivered",
+      "text": "系统已接收这次提醒",
+      "at": 1789839333642,
+      "isMissed": false
+    }
+  },
+  {
+    "id": "Y3-new-session-same-text",
+    "pass": false,
+    "initialSession": 1,
+    "newSession": 2,
+    "input": "",
+    "persistedCount": 1
+  }
+]

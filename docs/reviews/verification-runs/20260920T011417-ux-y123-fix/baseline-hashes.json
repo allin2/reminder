@@ -1,0 +1,17 @@
+{
+  "sourceWorkspace": "/Users/qlyf/Developer/reminder",
+  "implementationWorktree": "/Users/qlyf/.codex/worktrees/3547/reminder",
+  "head": "8d1c2617cff3aac5c4450a949c9044b79f63a673",
+  "originMain": "8d1c2617cff3aac5c4450a949c9044b79f63a673",
+  "baselineFiles": {
+    "app-core.js": "cf1fe51aef957b79ea38be84b9aa778b42982680e056f1f2578ce60576a82869",
+    "lib/delivery-evidence.js": "e4662193572e65fa23c8f85562ee64c5a88bb35168ae03cb912246db73849982",
+    "test-unit.js": "491b97f151b3d63d01976ae815ad980a39e082520e6e67f2b3e260b5632c755e",
+    "test-regressions.js": "b79a589c5549c90a51fd5cde732d31626a25404b1440cb528449e86c6475d159"
+  },
+  "previousAcceptedCandidate": {
+    "debug": "06a404499237ea7656c04c8856f5845f9ddbafc6307a96f5a0d0525a01848200",
+    "release": "679768958743aba528f32d58d9dab4171f21023c0ec91c63b2e83003635b4658"
+  },
+  "sourceRootDebugApkAtFinalRecheck": "186c28b912000d3e9c34137c75160b3c0ff2a5aba62bd4fed95eff2c1015a523"
+}

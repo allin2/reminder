@@ -1,0 +1,15 @@
+{
+  "how": "cd android && JAVA_HOME=~/Library/Java/JavaVirtualMachines/temurin-17.jdk/Contents/Home ./gradlew :app:testDebugUnitTest --offline --rerun-tasks",
+  "exit": 0,
+  "tasksExecuted": 66,
+  "tasksUpToDate": 0,
+  "note": "--rerun-tasks 是刻意的：不加它 Gradle 可能直接 UP-TO-DATE，拿到的是缓存而不是本次结果。",
+  "classes": [
+    { "name": "com.getcapacitor.myapp.ExampleUnitTest", "tests": 1, "failures": 0, "errors": 0, "skipped": 0 },
+    { "name": "space.alliswell.inbox.DeliveryEvidenceStoreTest", "tests": 13, "failures": 0, "errors": 0, "skipped": 0 },
+    { "name": "space.alliswell.inbox.ProductionJavaAlarmTest", "tests": 8, "failures": 0, "errors": 0, "skipped": 0 }
+  ],
+  "total": { "tests": 22, "failures": 0, "errors": 0, "skipped": 0 },
+  "javaChangedThisRound": false,
+  "javaChangedEvidence": "identity.json.changedJavaVsFailedRound 与 javaChangedCount；另见 compare-candidate-entries.py —— 两个候选的 DEX 条目完全一致"
+}

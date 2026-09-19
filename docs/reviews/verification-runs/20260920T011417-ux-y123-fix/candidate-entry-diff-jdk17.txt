@@ -1,0 +1,23 @@
+== debug ==
+entries: previous=508 current=508
+only_previous: []
+only_current: []
+changed [SIGNATURE]: META-INF/CERT.RSA
+changed [SIGNATURE]: META-INF/CERT.SF
+changed [SIGNATURE]: META-INF/MANIFEST.MF
+changed [PRODUCT]: assets/public/app-core.js
+changed [PRODUCT]: assets/public/lib/delivery-evidence.js
+unexpected: []
+sha256(current): dbdd79732d0595df3e502c98cfbc66ebeb92651cb5464cbc0faf1953d1a158da
+== release ==
+entries: previous=508 current=508
+only_previous: []
+only_current: []
+changed [SIGNATURE]: META-INF/ATTENTIO.RSA
+changed [SIGNATURE]: META-INF/ATTENTIO.SF
+changed [SIGNATURE]: META-INF/MANIFEST.MF
+changed [PRODUCT]: assets/public/app-core.js
+changed [PRODUCT]: assets/public/lib/delivery-evidence.js
+unexpected: []
+sha256(current): 2d5f5226635c6fc64a773062f312aaa3051929b58ab9166c28354d01bd1c62b9
+RESULT: EXPECTED_PRODUCT_AND_SIGNATURE_DIFFS_ONLY

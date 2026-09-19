@@ -1,0 +1,38 @@
+{
+  "HEAD": "8d1c2617cff3aac5c4450a949c9044b79f63a673",
+  "sourceSha256": {
+    "app-core.js": "aff30d6f5c2bbababe2bace7b2e4255c613abf35fb27dd97a4182b8f299af5b7",
+    "index.html": "91063b8629c9cf67f29fa4970e070eb75e03f1bc19753a2743474d9216502ec2",
+    "lib/native-reminders.js": "10ef85fe87cd35eb4e0019ac8c6a0bf0e5d8e053c630119defbd76678cc680b9",
+    "lib/feedback.js": "f19a5a9adfb55234c83e604edf1ed48d35391d98a3d41ac1e5bfd7cfc6e4d602",
+    "lib/delivery-evidence.js": "01aa270f905eedb1044866a4b4d76292e097e6fc9b1d9b6f2bf1b38442c6b8e3",
+    "sw.js": "9acd48f429c95a38aa22f83a0c752ef456167674284d766f70a14dab99c609f7",
+    "android/app/src/main/java/space/alliswell/inbox/DeliveryEvidenceStore.java": "1467ead76148ed02d6b05dc2d7f51149f904bf551a52f1c590257f53d6e9e4e6"
+  },
+  "apks": [
+    {
+      "path": "/Users/qlyf/Developer/reminder/releases/candidates/20260919-ux-three-priorities/attention-inbox-debug-ux-three-priorities.apk",
+      "sha256": "69c5761bc624a980937f62ffd93dedcf2f3dec0a9adea73b125013fa9eef6443",
+      "webMatches": {
+        "app-core.js": true,
+        "index.html": true,
+        "lib/native-reminders.js": true,
+        "lib/feedback.js": true,
+        "lib/delivery-evidence.js": true,
+        "sw.js": true
+      }
+    },
+    {
+      "path": "/Users/qlyf/Developer/reminder/releases/candidates/20260919-ux-three-priorities/attention-inbox-release-ux-three-priorities.apk",
+      "sha256": "58925fa4002c9f4e0232d7431f0e22268fbd522eae9f1fbf89649bd4262d3b7c",
+      "webMatches": {
+        "app-core.js": true,
+        "index.html": true,
+        "lib/native-reminders.js": true,
+        "lib/feedback.js": true,
+        "lib/delivery-evidence.js": true,
+        "sw.js": true
+      }
+    }
+  ]
+}

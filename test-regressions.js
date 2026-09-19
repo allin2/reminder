@@ -19,8 +19,17 @@ const vm = require("vm");
 const ROOT = __dirname;
 const native = require(path.join(ROOT, "lib/native-reminders.js"));
 
-const LIB_SOURCES = ["lib/parse-cn.js", "lib/repeat.js", "lib/reminder.js", "lib/storage.js"]
-  .map(f => ({ name: f, code: fs.readFileSync(path.join(ROOT, f), "utf8") }));
+const LIB_SOURCES = [
+  "lib/parse-cn.js",
+  "lib/repeat.js",
+  "lib/reminder.js",
+  "lib/storage.js",
+  // UX-T01/T03：这两支必须和 index.html 同序加载 —— 少了它们，
+  // app-core 里的 FeedbackLib / EvidenceLib 会静默退化成兜底分支，
+  // 于是「反馈与证据」的全部断言都测在了没有实现的那条路上。
+  "lib/feedback.js",
+  "lib/delivery-evidence.js"
+].map(f => ({ name: f, code: fs.readFileSync(path.join(ROOT, f), "utf8") }));
 const APP_SOURCE = { name: "app-core.js", code: fs.readFileSync(path.join(ROOT, "app-core.js"), "utf8") };
 
 let passed = 0;
@@ -281,12 +290,42 @@ function createApp(options) {
     setField(selector, value) {
       document.querySelector(selector).value = value;
     },
+    /**
+     * 替换沙箱里的 `fetch`（默认实现是「测试里没有网络」）。
+     *
+     * AI 路径必须能在**不发真实请求**的前提下被驱动：只有把 Promise 捏在手里，
+     * 才能复现「响应迟到、期间用户继续输入」这类时序反例（R-F03）。
+     */
+    setFetch(fn) {
+      sandbox.fetch = fn;
+    },
     /** 读回表单元素（断言表单被写入的值） */
     fieldOf(selector) {
       return document.querySelector(selector).value;
     },
     textOf(selector) {
       return document.querySelector(selector).textContent;
+    },
+    /**
+     * 元素当前是不是**隐藏**的。
+     *
+     * F08 的「上一条 toast 把撤销入口顶掉」在只读 textContent 时是看不见的：`toast()` 在
+     * 无第二动作时只把 `#toastAction2` 置为 hidden，**不清空**它的文字。于是「按钮还在、
+     * 只是不可见」这种状态必须用可见性来断言，否则断言会一直是绿的（反向自检实测）。
+     */
+    hiddenOf(selector) {
+      const node = document.querySelector(selector);
+      return !!(node && node.hidden);
+    },
+    /**
+     * 元素是否带某个 class。
+     *
+     * 面板开关用的是**类**（`open` 在 `.sheet` 上、`show` 在 `#backdrop` 上），
+     * 不是 `hidden` —— 所以「面板关掉了没有」只能靠类断言，用 `hiddenOf` 会永远是绿。
+     */
+    hasClassOf(selector, cls) {
+      const node = document.querySelector(selector);
+      return !!(node && node.classList && node.classList.contains(cls));
     },
     /** 磁盘上某项的状态（权威后端） */
     persistedStatusOf(itemId) {
@@ -395,6 +434,33 @@ function installCapacitor(options) {
 /* ================================================================= */
 
 async function run() {
+  section("N5 / D13 整理四条即时落盘，重启仅继续剩余六条");
+  {
+    const h = createApp();
+    const app = await h.boot();
+    app.state.items = Array.from({ length: 10 }, (_, i) => app.makeItem({
+      id: "audit-review-" + i, title: "验收整理 " + i,
+      status: "waiting", review_status: "NEEDS_REVIEW",
+      triggerAt: Date.now() + 86400000, isFallbackTrigger: false,
+      createdAt: Date.now() + i
+    }));
+    await app.saveAsync();
+    app.openReviewSession();
+    for (let i = 0; i < 4; i++) {
+      app.reviewConfirm();
+      // 不补调 saveAsync：必须证明 reviewConfirm 自己发起的保存已提交。
+      await flush(6);
+      ok("D13 第 " + (i + 1) + " 条确认后立即持久化",
+        h.persisted().items.filter(it => it.review_status === "REVIEWED").length === i + 1);
+    }
+    const resumed = await restartApp(h.disk);
+    resumed.app.openReviewSession();
+    ok("D13 重启只剩六条待整理", resumed.app.needsReviewItems().length === 6);
+    ok("D13 重启会话不包含已经确认的四条",
+      resumed.app.state.ui.reviewQueue.join(",") ===
+      Array.from({ length: 6 }, (_, i) => "audit-review-" + (i + 4)).join(","));
+  }
+
   /* ---------- G1：并发消费 / 提交边界 ---------- */
   section("G1 同一事件的并发消费必须落到同一次提交上");
   {
@@ -2277,31 +2343,1179 @@ section("Q1. 启动链完整性 / addListener 返回契约");
       calls.appListener === 1 && calls.bridgeListener === 1,
       "app=" + calls.appListener + " bridge=" + calls.bridgeListener);
     ok("Q1 真机契约（同步句柄）：ready() === true，init 未被中断", ready === true);
-    ok("Q1 真机契约：seed 生效 —— 证明 init 第 5129 行之后的代码真的跑了",
-      app.state.items.length > 0, "items=" + app.state.items.length);
+    // UX-C01 之后首启**不再自动 seed**，所以旧的 `items.length > 0` 代理失效了。
+    // 换成两条更强的断言：① 干净首启真的什么都不写入（旧代理的反面）；
+    // ② 启动链末端那枚 15 秒心跳装上 —— 它才是「init 跑到底」的活证据。
+    ok("Q1 真机契约：干净首启不自动写入演示数据（UX-C01）",
+      app.state.items.length === 0, "items=" + app.state.items.length);
     ok("Q1 真机契约：15 秒心跳已装上（启动链跑到底的标志）",
       h.intervals.some(x => x.ms === 15000), JSON.stringify(h.intervals.map(x => x.ms)));
   }
 
   // ② 官方 capacitor.js 契约：返回 Promise（并把 .remove 挂在上面）—— 归一化后同样必须可用
   {
-    const { app, calls, ready } = await withPlatform(() => {
+    const { h, app, calls, ready } = await withPlatform(() => {
       const p = Promise.resolve({ remove: async () => {} });
       p.remove = async () => {};
       return p;
     });
     ok("Q1 Promise 契约：同样能注册且不中断启动",
       calls.appListener === 1 && ready === true);
-    ok("Q1 Promise 契约：seed 与心跳照常", app.state.items.length > 0);
+    ok("Q1 Promise 契约：启动链照常跑到底（首启无演示数据 + 15 秒心跳装上）",
+      app.state.items.length === 0 && h.intervals.some(x => x.ms === 15000),
+      "items=" + app.state.items.length + " intervals=" + JSON.stringify(h.intervals.map(x => x.ms)));
   }
 
   // ③ 平台同步抛错：注册失败必须被隔离，不能拖垮整条启动链
   {
-    const { app, ready } = await withPlatform(() => { throw new Error("plugin not registered"); });
+    const { h, app, ready } = await withPlatform(() => { throw new Error("plugin not registered"); });
     ok("Q1 注册同步抛错：错误被隔离，ready() 仍为 true", ready === true);
-    ok("Q1 注册同步抛错：其余启动动作照常完成（seed 生效）",
-      app.state.items.length > 0, "items=" + app.state.items.length);
+    ok("Q1 注册同步抛错：其余启动动作照常完成（15 秒心跳装上）",
+      h.intervals.some(x => x.ms === 15000),
+      "intervals=" + JSON.stringify(h.intervals.map(x => x.ms)));
   }
+}
+
+/* -----------------------------------------------------------------
+ * UX 三项优先项：新增事务 / 证据逻辑的行为级检查
+ *
+ * §9.1 写的是「新增事务/证据逻辑须有故障和重启测试」—— 不是「搜到某段源码」。
+ * 这里挑的是三处**错了就会造成用户可见损害**的地方：
+ *   · C01：演示预览若写入 state ⇒ 老缺陷「载入示例数据覆盖用户数据」换个名字回来；
+ *   · C03/A03：撤销若不看版本 / 已处理 / 已投递 ⇒ 误删事项，或撤销后旧提醒照响（幽灵响铃）；
+ *   · T03：证据回流若把「读不到」当成「没送达」⇒ D70 前置核验里那条近 100% 误报。
+ * ----------------------------------------------------------------- */
+
+section("UX-C01 演示是只读预览，不是「载入示例数据」");
+{
+  const h = createApp();
+  const app = await h.boot();
+  const real = app.makeItem({ title: "用户自己记的事", status: "waiting", triggerAt: Date.now() + 3600000 });
+  app.state.items = [real];
+  app.state.notes = [{ id: "n1", text: "用户自己的便签" }];
+  const itemsBefore = JSON.stringify(app.state.items);
+  const notesBefore = JSON.stringify(app.state.notes);
+  const projectsBefore = JSON.stringify(app.state.projects);
+
+  const rows = app.demoPreviewRows();
+  ok("C01 演示有实际内容（空壳预览等于没做）",
+    Array.isArray(rows) && rows.length >= 3, "rows=" + (rows && rows.length));
+  app.openDemoPreview();
+  await flush(2);
+
+  ok("C01 打开演示不写事项", JSON.stringify(app.state.items) === itemsBefore);
+  ok("C01 打开演示不写便签 / 项目（老入口正是从这两处覆盖用户状态）",
+    JSON.stringify(app.state.notes) === notesBefore &&
+    JSON.stringify(app.state.projects) === projectsBefore);
+  ok("C01 用户那条还在原位（数量与 id 都没动）",
+    app.state.items.length === 1 && app.state.items[0].id === real.id);
+
+  // 反向对照：演示条目一条都不许出现在用户数据里 ——
+  // 否则「只读预览」这句话就是假的，只是没覆盖到这条断言而已。
+  const realTitles = new Set(app.state.items.map(x => x.title));
+  ok("C01 演示条目一条都没进用户数据",
+    rows.every(r => !realTitles.has(r.title)));
+}
+
+section("UX-C03 新建的有限撤销（幽灵排程 / 误删的红线）");
+{
+  const h = createApp();
+  const app = await h.boot();
+
+  // ① 版本未变 → 允许撤销，且真的删掉
+  const a = app.makeItem({ title: "刚记下的事", status: "waiting", triggerAt: Date.now() + 3600000 });
+  app.state.items = [a];
+  ok("C03 新建后版本未变可撤销", app.undoNewItem(a.id, a.rev) === true);
+  ok("C03 撤销真的撤掉了这条", !app.state.items.some(x => x.id === a.id));
+
+  // ② 版本已变（之后又被改过）→ 拒绝，且不得误删
+  const b = app.makeItem({ title: "后来又被改过的事", status: "waiting", triggerAt: Date.now() + 3600000 });
+  app.state.items = [b];
+  const staleRev = b.rev;
+  b.rev = Number(b.rev) + 1;
+  ok("C03 版本已变 → 拒绝撤销", app.undoNewItem(b.id, staleRev) === false);
+  ok("C03 拒绝后事项仍在（没有误删）", app.state.items.some(x => x.id === b.id));
+
+  // ③ 已经 ACK 过 → 属于「已开始处理」
+  const c = app.makeItem({ title: "已经看过的事", status: "acknowledged", triggerAt: Date.now() - 1000 });
+  c.acknowledgedAt = Date.now();
+  app.state.items = [c];
+  ok("C03 已开始处理（ACK）→ 拒绝撤销", app.undoNewItem(c.id, c.rev) === false);
+  ok("C03 拒绝后这条仍在", app.state.items.some(x => x.id === c.id));
+
+  // ④ 已经拿到送达证据 → 撤销会留下「幽灵响铃」，必须拒绝
+  const d = app.makeItem({ title: "已经响过的事", status: "waiting", triggerAt: Date.now() - 60000 });
+  d.reminderEvents = {};
+  d.reminderEvents["1@" + d.triggerAt] = { at: d.triggerAt, state: "delivered", receivedAt: Date.now() };
+  app.state.items = [d];
+  ok("C03 已开始投递 → 拒绝撤销（否则旧提醒照响）", app.undoNewItem(d.id, d.rev) === false);
+  ok("C03 被拒的这条没被删", app.state.items.some(x => x.id === d.id));
+}
+
+section("UX-A03 完成的有限撤销（周期成组还原 / 不误删下一期）");
+{
+  const h = createApp();
+  const app = await h.boot();
+
+  // ① 普通事项：完成 → 有撤销入口 → 8 秒内可还原
+  const it = app.makeItem({ title: "普通完成", status: "due", triggerAt: Date.now() - 1000 });
+  app.state.items = [it];
+  app.completeItem(it.id);
+  ok("A03 完成后提供撤销入口", h.textOf("#toastAction2") === "撤销", h.textOf("#toastAction2"));
+  ok("A03 完成即归档（主动作不因撤销倒计时延迟）", it.status === "archived" && !!it.completedAt);
+  ok("A03 撤销后回到未完成",
+    app.undoLastComplete() === true && it.status !== "archived" && !it.completedAt);
+
+  // ② 周期事项：完成派生的下一期必须被成组回收
+  const r = app.makeItem({
+    title: "每月交房租", status: "due", triggerAt: Date.now() - 1000,
+    repeat: { mode: "calendar", every: "month" }
+  });
+  app.state.items = [r];
+  app.completeItem(r.id);
+  const spawned = app.state.items.filter(x => x.repeatParentId === r.id);
+  ok("A03 周期完成确实派生了下一期（否则下面两条在空转）",
+    spawned.length === 1, "spawned=" + spawned.length);
+  ok("A03 撤销成组还原并回收未被处理的下一期",
+    app.undoLastComplete() === true &&
+    !app.state.items.some(x => x.repeatParentId === r.id));
+
+  // ③ 下一期已经被处理过 → 拒绝不安全撤销，且绝不误删
+  const r2 = app.makeItem({
+    title: "每周复盘", status: "due", triggerAt: Date.now() - 1000,
+    repeat: { mode: "calendar", every: "week" }
+  });
+  app.state.items = [r2];
+  app.completeItem(r2.id);
+  const next = app.state.items.find(x => x.repeatParentId === r2.id);
+  ok("A03 周期完成派生了下一期（③ 的前置）", !!next);
+  next.acknowledgedAt = Date.now();
+  ok("A03 下一期已处理 → 拒绝撤销", app.undoLastComplete() === false);
+  ok("A03 拒绝后下一期不被误删", app.state.items.some(x => x.repeatParentId === r2.id));
+
+  // ④ 完成后到来的投递证据 → 撤销会制造幽灵响铃
+  const it4 = app.makeItem({ title: "完成后才收到回执", status: "due", triggerAt: Date.now() - 1000 });
+  app.state.items = [it4];
+  app.completeItem(it4.id);
+  it4.reminderEvents = it4.reminderEvents || {};
+  it4.reminderEvents["1@" + it4.triggerAt] = { at: it4.triggerAt, state: "delivered", receivedAt: Date.now() };
+  ok("A03 已进入投递 → 拒绝撤销（不回放旧铃）", app.undoLastComplete() === false);
+  ok("A03 被拒后仍保持完成状态", it4.status === "archived");
+}
+
+section("UX-T03 送达证据回流：只有拿到证据才下结论，缺证据绝不指控");
+{
+  const h = createApp();
+  const app = await h.boot();
+  const now = Date.now();
+  const at = now - 5 * 60000; // 已过点，按旧逻辑正是「看起来漏了」的形态
+  const key = "1@" + at;
+  const it = app.makeItem({ title: "提醒过的事", status: "waiting", triggerAt: at });
+  it.reminderEvents = {};
+  it.reminderEvents[key] = { at: at, state: "scheduled", roundBase: it.triggerAt };
+  app.state.items = [it];
+
+  // ① 证据通道读不到 → 只能说「尚未确认」，一个字都不许出现「漏」
+  app.deliveryEvidenceState.readable = false;
+  let row = app.detailReminderStatusRow(it);
+  ok("T03 读不到证据时不指控漏提醒", /尚未确认/.test(row) && !/漏/.test(row), row);
+
+  // ② 真实回执到达 → 只说到「系统已接收」这一层
+  // 独立验收 F01：回执必须带齐**规范字段名**（itemId/reminderKey/carrier/receivedAt/itemRev），
+  // 这正是原生 `DeliveryEvidenceStore.rowFor` 写出来的那一组；旧名 key/at 不再被写出。
+  const changed = app.applyNativeDeliveryEvidence([
+    { itemId: it.id, reminderKey: key, carrier: "alarm", itemRev: String(it.rev), receivedAt: now }
+  ]);
+  ok("T03 新回执确实写进台账（对照不是空转）",
+    changed === true && it.reminderEvents[key].state === "delivered");
+  ok("T03 层级只声明「系统已接收」，不写用户看到", it.reminderEvents[key].level === "received");
+  ok("T03 证据回流绝不改 status（完成事项不能被回执复活）", it.status === "waiting");
+  row = app.detailReminderStatusRow(it);
+  ok("T03 有证据时说「系统已接收」，不说已看到/已读",
+    /系统已接收/.test(row) && !/看到|已读/.test(row), row);
+
+  // ③ 重复回执 → 幂等，不产生第二次变化
+  ok("T03 重复回执是幂等的",
+    app.applyNativeDeliveryEvidence([
+      { itemId: it.id, reminderKey: key, carrier: "alarm", itemRev: String(it.rev), receivedAt: now }
+    ]) === false);
+
+  // ④ 身份缺失的回执 → 计 unknown，不反推失败
+  ok("T03 缺身份（无提醒键）的回执不动任何事项",
+    app.applyNativeDeliveryEvidence([{ itemId: it.id, receivedAt: now }]) === false);
+  ok("T03 缺身份后状态仍是 delivered（没有把它降级成失败）",
+    it.reminderEvents[key].state === "delivered");
+
+  // ⑤ 旧轮次回执：这条事项的当前触发起点已经换过，旧键不再作数
+  const it2 = app.makeItem({ title: "换过时间的事", status: "waiting", triggerAt: now + 3600000 });
+  it2.reminderEvents = {};
+  app.state.items = [it2];
+  ok("T03 旧轮次回执不写入（新轮次不被污染）",
+    app.applyNativeDeliveryEvidence([
+      { itemId: it2.id, reminderKey: key, carrier: "alarm", itemRev: String(it2.rev), receivedAt: now }
+    ]) === false &&
+    Object.keys(it2.reminderEvents).length === 0);
+
+  // ⑥ 独立验收 F06 / 反例 R4：原定时刻**落在本轮内**，但这一轮我们从没登记过排程。
+  // 旧实现只比 `ev.at >= item.triggerAt`，会在这种回执上写出一条**假的**「系统已接收」。
+  const it3 = app.makeItem({ title: "本轮之外的轮次", status: "waiting", triggerAt: now - 600000 });
+  it3.reminderEvents = {};
+  app.state.items = [it3];
+  ok("T03 本轮内但未登记的轮次不写入（宁可尚未确认，不谎报已接收）",
+    app.applyNativeDeliveryEvidence([
+      { itemId: it3.id, reminderKey: "7@" + (now - 300000), carrier: "alarm", itemRev: String(it3.rev), receivedAt: now }
+    ]) === false && Object.keys(it3.reminderEvents).length === 0);
+
+  // ⑦ 独立验收 F01：缺规范字段（旧名 key/at 之外的半套写法）→ 不计入、也不许补默认值
+  const it4 = app.makeItem({ title: "半套字段", status: "waiting", triggerAt: now - 600000 });
+  const unwrittenKey = "0@" + (now - 600000);
+  it4.reminderEvents = { [unwrittenKey]: { at: now - 600000, state: "scheduled", roundBase: it4.triggerAt } };
+  app.state.items = [it4];
+  ok("T03 缺 receivedAt/carrier/itemRev 的回执不作数（不接受「用当前时间补上」）",
+    app.applyNativeDeliveryEvidence([{ itemId: it4.id, reminderKey: unwrittenKey }]) === false &&
+    it4.reminderEvents[unwrittenKey].state === "scheduled");
+  // 同一事项补全字段后必须能写入 —— 证明上面的 false 不是通路坏掉
+  ok("T03 同一条补全规范字段后即可写入（上面的拒绝不是通路故障）",
+    app.applyNativeDeliveryEvidence([
+      { itemId: it4.id, reminderKey: unwrittenKey, carrier: "notification", itemRev: String(it4.rev), receivedAt: now }
+    ]) === true && it4.reminderEvents[unwrittenKey].state === "delivered");
+}
+
+/* =================================================================
+ * 独立验收返工：R1–R7b 反例 → 有断言的回归
+ *
+ * 来源：`docs/reviews/user-experience-three-priorities-independent-acceptance-20260919.md`
+ * 与它的可复现脚本 `docs/reviews/verification-runs/20260919T234129-ux-independent/probes.cjs`。
+ * 那批反例当时全部被判「不符合要求」；本节把它们逐条变成**会变红的断言**。
+ * 纪律：每条断言都要能在**拔掉对应修复**时变红（成对差分／对照组写在断言旁边）。
+ * ================================================================= */
+
+section("返工 R1（F02）：同一份表单连续提交只落一条");
+{
+  const h = createApp();
+  const app = await h.boot();
+  h.holdCommits(true);
+  h.setField("#capText", "明天下午3点提醒我取快递");
+  // 输入框的 Enter 监听会再次调用保存 —— 按钮 disabled 拦不住它
+  const first = app.saveItemFromForm();
+  const second = app.saveItemFromForm();
+  h.holdCommits(false);
+  h.releaseCommits();
+  await flush(8);
+  await app.saveAsync();
+  ok("R1 第一次提交被接受", first === true, String(first));
+  ok("R1 第二次提交被同一份提交身份拒绝（旧实现：两次都返回 true）", second === false, String(second));
+  ok("R1 内存里只有一条", app.state.items.length === 1, app.state.items.length);
+  ok("R1 权威存储里也只有一条", ((h.persisted() || {}).items || []).length === 1,
+    JSON.stringify(((h.persisted() || {}).items || []).map(x => x.title)));
+
+  // 对照组：提交真正结束之后，**合法的下一条**仍必须能保存
+  // （否则「去重」会退化成「这个入口从此废掉」）
+  h.setField("#capText", "第二条完全不同的记录");
+  const third = app.saveItemFromForm();
+  await flush(8);
+  await app.saveAsync();
+  ok("R1 对照组：提交结束后新的一条照常保存", third === true && app.state.items.length === 2,
+    JSON.stringify({ third, count: app.state.items.length }));
+}
+
+section("返工 R2（F03）：上一笔保存的结果不碰用户新写的草稿");
+{
+  const h = createApp();
+  const app = await h.boot();
+  h.holdCommits(true);
+  h.setField("#capText", "明天下午3点提醒我取快递");
+  app.saveItemFromForm();
+  await flush(2);
+  h.setField("#capText", "第二条尚未保存的输入");
+  h.holdCommits(false);
+  h.releaseCommits();
+  await flush(8);
+  await app.saveAsync();
+  ok("R2 旧保存成功不清掉新输入（旧实现：输入被清成空字符串）",
+    h.fieldOf("#capText") === "第二条尚未保存的输入", JSON.stringify(h.fieldOf("#capText")));
+
+  // 失败路径同样：不许把旧草稿恢复上来盖掉正在写的内容
+  const h2 = createApp();
+  const app2 = await h2.boot();
+  h2.holdCommits(true);            // 先扣住写事务，才有「失败回调晚于用户继续输入」的窗口
+  h2.setCommitFailure(true);
+  h2.setField("#capText", "这一笔会写失败");
+  app2.saveItemFromForm();
+  await flush(2);
+  h2.setField("#capText", "失败期间写下的新内容");
+  h2.holdCommits(false);
+  h2.releaseCommits();
+  await flush(8);
+  ok("R2 旧保存失败不覆盖新输入（改成给一个显式的找回入口）",
+    h2.fieldOf("#capText") === "失败期间写下的新内容", JSON.stringify(h2.fieldOf("#capText")));
+  ok("R2 失败时明确说明「你正在写的内容没被动过」", /没被动过/.test(h2.textOf("#toastText")),
+    h2.textOf("#toastText"));
+}
+
+section("返工 R3（F04）：原生提交在途时撤销完成，不被权威草稿覆盖");
+{
+  const h = createApp();
+  const app = await h.boot();
+  const x = app.makeItem({ title: "原生在途 A", status: "due", triggerAt: Date.now() - 1000 });
+  const y = app.makeItem({ title: "要撤销的 B", status: "due", triggerAt: Date.now() - 1000 });
+  app.state.items = [x, y];
+  await app.saveAsync();
+  app.completeItem(y.id);
+  await app.saveAsync();
+  h.holdCommits(true);
+  const pending = app.handleAlarmAction({ action: "ack", itemId: x.id, itemRev: x.rev });
+  await flush(3);
+  const accepted = app.undoLastComplete();
+  const immediate = app.state.items.find(i => i.id === y.id).status;
+  h.holdCommits(false);
+  h.releaseCommits();
+  await flush(8);
+  await pending;
+  await app.saveAsync();
+  const after = app.state.items.find(i => i.id === y.id).status;
+  const restarted = await restartApp(h.disk);
+  const durable = (restarted.app.state.items.find(i => i.id === y.id) || {}).status;
+  ok("R3 撤销被接受", accepted === true, String(accepted));
+  ok("R3 撤销后立刻回到未完成", immediate === "waiting" || immediate === "due", String(immediate));
+  ok("R3 原生提交发布后仍未被覆盖（旧实现：又变回 archived）", after === immediate, String(after));
+  ok("R3 重启后仍是撤销后的状态（旧实现：restart 后又归档）", durable === immediate, String(durable));
+}
+
+section("返工 R5（F05）：跨过原定时刻的撤销完成不立即补投");
+{
+  const h = createApp();
+  const app = await h.boot();
+  const nativeLib = require(path.join(ROOT, "lib/native-reminders.js"));
+  const at = Date.now() + 1500;
+  const x = app.makeItem({ title: "撤销后不补响", status: "waiting", priority: "normal", triggerAt: at });
+  x.triggerAt = at;
+  x.reminderEvents = { ["0@" + at]: { state: "scheduled", at: at } };
+  app.state.items = [x];
+  app.state.settings.notify = true;
+  app.state.settings.dnd = false;
+  await app.saveAsync();
+  app.completeItem(x.id);
+  await app.saveAsync();
+  // 到点前完成 → 走生产取消记账函数写 cancelled → 原定时刻跨过 → 8 秒内撤销
+  app.applyReminderEvents([], Date.now(), [{ itemId: x.id, key: "0@" + at, at: at }]);
+  await app.saveAsync();
+  await new Promise(resolve => setTimeout(resolve, Math.max(0, at - Date.now() + 80)));
+  const accepted = app.undoLastComplete();
+  await app.saveAsync();
+  const desired = nativeLib.buildDesired(app.state.items, app.state.settings, Date.now());
+  const replays = desired.filter(n => n.extra && n.extra.catchUp === true);
+  ok("R5 撤销被接受", accepted === true, String(accepted));
+  ok("R5 不因撤销立刻补响已经过去的那一次（旧实现：now+2s 的 catchUp 通知）",
+    replays.length === 0, JSON.stringify(replays.map(n => n.extra && n.extra.reminderKey)));
+  ok("R5 该轮次在台账里被标成 suppressed（抑制落在这一条键上，不动全局规则）",
+    (x.reminderEvents["0@" + at] || {}).state === nativeLib.REMINDER_STATE_SUPPRESSED,
+    JSON.stringify(x.reminderEvents["0@" + at]));
+
+  // 对照组：同样是 `cancelled`、同样已过点，但**不是**因「完成」而取消的轮次照旧要补投。
+  // 这条证明上面的「空」不是 buildDesired 恒不产生 catchUp 造成的空转。
+  const controlAt = Date.now() - 60000;
+  const control = [{
+    id: "ctrl", status: "waiting", priority: "normal", triggerAt: controlAt,
+    reminderEvents: { ["0@" + controlAt]: { state: "cancelled", at: controlAt } }
+  }];
+  const controlDesired = nativeLib.buildDesired(control, app.state.settings, Date.now());
+  ok("R5 对照组：未被抑制的 cancelled 轮次仍然补投（上面的空不是空转）",
+    controlDesired.some(n => n.extra && n.extra.catchUp === true),
+    JSON.stringify(controlDesired.map(n => n.extra && n.extra.catchUp)));
+}
+
+section("返工 R6（F04）：撤销的「已撤销」只在落库之后说");
+{
+  const h = createApp();
+  const app = await h.boot();
+  const x = app.makeItem({ title: "撤销写不下去", status: "due", triggerAt: Date.now() - 1000 });
+  app.state.items = [x];
+  await app.saveAsync();
+  app.completeItem(x.id);
+  await app.saveAsync();
+  h.setCommitFailure(true);
+  h.setLocalStorageFailure(true);
+  const accepted = app.undoLastComplete();
+  const announcedEarly = h.textOf("#toastText");
+  await flush(8);
+  const durable = h.persistedStatusOf(x.id);
+  h.setCommitFailure(false);
+  h.setLocalStorageFailure(false);
+  const restarted = await restartApp(h.disk);
+  const afterRestart = (restarted.app.state.items.find(i => i.id === x.id) || {}).status;
+  ok("R6 撤销命令被接受", accepted === true, String(accepted));
+  ok("R6 落库之前绝不说「已撤销」（旧实现：写完就提示）",
+    !/已撤销/.test(announcedEarly), announcedEarly);
+  ok("R6 可见状态退回撤销之前（不留下「界面说撤销了、磁盘没有」）",
+    app.state.items.find(i => i.id === x.id).status === "archived",
+    app.state.items.find(i => i.id === x.id).status);
+  ok("R6 权威存储里没有假的撤销结果", durable === "archived", String(durable));
+  ok("R6 重启后与磁盘一致", afterRestart === "archived", String(afterRestart));
+  ok("R6 如实说明没写进去并给出重试入口",
+    /重试/.test(h.textOf("#toastAction")) && /撤销还没写进本机存储/.test(h.textOf("#toastText")),
+    h.textOf("#toastText") + " / " + h.textOf("#toastAction"));
+}
+
+section("返工 R7 / R7b（F01）：Java 真实行穿过桥与归一化，读不到不伪装成读到了");
+{
+  const evidenceLib2 = require(path.join(ROOT, "lib/delivery-evidence.js"));
+  const cap = installCapacitor();
+  const sb = global.Capacitor.Plugins.SystemBridge;
+  const now = Date.now();
+  const key = "0@" + (now - 1000);
+  // 字段名与 `DeliveryEvidenceStore.rowFor` 写出的**逐字相同**（R7 当时就是这一对名字不一致）
+  const javaRow = {
+    itemId: "java-row", reminderKey: key, plannedAt: now - 1000,
+    carrier: "alarm", receivedAt: now, itemRev: "2", token: "token-2"
+  };
+  sb.deliveryEvidence = async () => ({
+    available: true, evidence: [javaRow], retentionMaxAgeMs: 604800000, retentionCapacity: 300
+  });
+  const got = await native.getDeliveryEvidence({});
+  const norm = evidenceLib2.normalizeEvidence(got.rows, "native");
+  ok("R7 Java 真实行穿过桥后身份完整（旧实现：valid=false / missing-identity）",
+    got.available === true && norm.length === 1 && norm[0].valid === true && norm[0].key === key,
+    JSON.stringify({ available: got.available, norm: norm }));
+  const item = {
+    id: "java-row", rev: 2, triggerAt: now - 1000,
+    reminderEvents: { [key]: { at: now - 1000, state: "scheduled", roundBase: now - 1000 } }
+  };
+  ok("R7 并进事项台账后写成 delivered（证据回流真的通了）",
+    evidenceLib2.mergeEvidence([item], norm, now).applied === 1);
+
+  sb.deliveryEvidence = async () => ({ available: false, evidence: [], error: "storage-unavailable" });
+  const off = await native.getDeliveryEvidence({});
+  ok("R7b 桥说读不到时如实转述 available:false（旧实现：恒 available:true）",
+    off.available === false && (off.rows || []).length === 0, JSON.stringify(off));
+  cap.cleanup();
+}
+
+section("返工 F07：停止测试铃声走 token 限定的停铃链路");
+{
+  const cap = installCapacitor();
+  const sb = global.Capacitor.Plugins.SystemBridge;
+  const stops = [];
+  const startedAt = Date.now();
+  sb.activeAlarmDeliveries = async () => ({
+    alarms: [
+      { id: 90003, token: "tok-this-run", receivedAt: startedAt + 1000 },
+      { id: 90003, token: "tok-last-run", receivedAt: startedAt - 60000 },
+      { id: 7777, token: "tok-user-alarm", receivedAt: startedAt + 1000 }
+    ]
+  });
+  sb.stopAlarmDelivery = async (v) => { stops.push(v); return { stopped: true }; };
+  const h = createApp();
+  const app = await h.boot();
+  app.state.settings.testRun = {
+    id: 90003, startedAt: startedAt, triggerAt: startedAt + 60000, stoppedAt: null
+  };
+  const stopped = await app.stopSetupTestRun();
+  ok("F07 停铃返回本次真正停掉的条数（旧实现：走不到停铃分支，恒 0）", stopped === 1, String(stopped));
+  ok("F07 只停本次测试那一条（id + token 双重限定）",
+    stops.length === 1 && stops[0].id === 90003 && stops[0].token === "tok-this-run",
+    JSON.stringify(stops));
+  ok("F07 绝不误停用户自己的闹钟",
+    stops.every(s => s.token !== "tok-user-alarm"), JSON.stringify(stops));
+  ok("F07 上一次测试的残留投递不被当成本次",
+    stops.every(s => s.token !== "tok-last-run"), JSON.stringify(stops));
+  ok("F07 本次运行记录被标成已停止", app.state.settings.testRun.stoppedAt > 0);
+  cap.cleanup();
+}
+
+section("返工 F08：无时间记录的保存反馈只出一条，撤销入口不被顶掉");
+{
+  const h = createApp();
+  const app = await h.boot();
+  h.setField("#capText", "有空看看这个项目");
+  const accepted = app.saveItemFromForm();
+  await flush(8);
+  await app.saveAsync();
+  ok("F08 无时间记录被收下", accepted === true && app.state.items.length === 1,
+    JSON.stringify({ accepted, count: app.state.items.length }));
+  ok("F08 反馈里保留「待整理」语义", /待整理/.test(h.textOf("#toastText")), h.textOf("#toastText"));
+  ok("F08 同一条反馈里给出去整理的入口", h.textOf("#toastAction") === "去整理", h.textOf("#toastAction"));
+  // 只读文字不够：第二条 toast 只把 `#toastAction2` 置为 hidden、**不清空**它的文字，
+  // 所以必须同时断言「可见」——否则这条断言在注回旧行为后依然是绿的。
+  ok("F08 撤销入口没有被第二条提示顶掉（旧实现：只看到「已收下 · 待整理 / 去整理」）",
+    h.textOf("#toastAction2") === "撤销" && h.hiddenOf("#toastAction2") === false,
+    JSON.stringify({ text: h.textOf("#toastAction2"), hidden: h.hiddenOf("#toastAction2") }));
+}
+
+/* =================================================================
+ * 二次返工：独立复验 X1 / X2 / X4 与 SW 缺口 → 有断言的回归
+ *
+ * 来源：`docs/reviews/user-experience-three-priorities-independent-recheck-20260920.md`
+ * 与它的可复现证据目录 `docs/reviews/verification-runs/20260920-ux-independent-recheck/`。
+ * 那一轮判：X1（旧轮回执仍污染新轮）、X2（AI 迟到结果覆盖新草稿）、
+ * X4（停铃读取失败被当成无铃）不符要求，X3 通过；另裁「SW 预缓存缺项应修」。
+ *
+ * 纪律：每条断言都要能在**拔掉对应修复**时变红；对照组写在断言旁边，
+ * 用来证明「拒绝」不是「通路坏掉」。提示文字只是表象，凡能断言状态/DOM 属性的一律断言它们。
+ * ================================================================= */
+
+section("返工2 R-F06：旧轮回执不得抬高当前轮的核查状态（复验 X1）");
+{
+  const h = createApp();
+  const app = await h.boot();
+  app.deliveryEvidenceState.readable = true;
+  // 默认勿扰（23:00–07:30）会把落在静默时段的触发点顺延到 07:30，
+  // 那会让「稍后提醒」的目标时刻随跑测试的钟点漂移。本节测的是**轮次身份**，
+  // 所以显式关掉勿扰，保证断言与墙上时钟无关。
+  app.state.settings.dnd = false;
+  const now = Date.now();
+  // 旧轮：10 分钟前开始，它的追提醒排在 20 分钟后（**将来**）
+  const oldBase = now - 10 * 60000;
+  const oldAt = now + 20 * 60000;
+  // 新轮：3 分钟前「稍后提醒」到的新起点 —— **早于**旧轮追提醒，这正是漏判的成因
+  const newAt = now - 3 * 60000;
+
+  const x = app.makeItem({ title: "旧轮回执", status: "due", triggerAt: oldBase });
+  x.triggerAt = oldBase;
+  app.state.items = [x];
+  app.applyReminderEvents([
+    { itemId: x.id, key: "0@" + oldBase, at: oldBase },
+    { itemId: x.id, key: "1@" + oldAt, at: oldAt }
+  ], oldBase - 1000, []);
+  ok("R-F06 前置：旧轮的键都带上了轮次身份",
+    x.reminderEvents["0@" + oldBase].roundBase === oldBase &&
+    x.reminderEvents["1@" + oldAt].roundBase === oldBase,
+    JSON.stringify(x.reminderEvents));
+
+  const oldRev = x.rev;
+  app.snoozeItem(x.id, newAt, "elapsed");
+  ok("R-F06 前置：稍后提醒换了起点并推进版本",
+    x.triggerAt === newAt && Number(x.rev) === Number(oldRev) + 1,
+    JSON.stringify({ triggerAt: x.triggerAt, rev: x.rev, oldRev }));
+  await flush(4);
+  app.applyReminderEvents([{ itemId: x.id, key: "0@" + newAt, at: newAt }], now,
+    [{ itemId: x.id, key: "1@" + oldAt, at: oldAt }]);
+
+  ok("R-F06 前置：旧轮追提醒被原生撤销后仍作为历史保留",
+    !!x.reminderEvents["1@" + oldAt] && x.reminderEvents["1@" + oldAt].state === "cancelled",
+    JSON.stringify(x.reminderEvents));
+  ok("R-F06 前置：保留旧键时必须**带着它自己的轮次身份**（丢掉它 = 把旧键当新轮）",
+    x.reminderEvents["1@" + oldAt].roundBase === oldBase &&
+    x.reminderEvents["0@" + newAt].roundBase === newAt,
+    JSON.stringify(x.reminderEvents));
+  ok("R-F06 前置：旧轮的键在时间上确实「落进」当前范围（否则这个反例是假的）",
+    oldAt >= newAt, JSON.stringify({ oldAt: oldAt, newAt: newAt }));
+
+  // X1：旧轮追提醒的回执回来 —— 键登记过、时刻也在范围内，但它是**上一轮**的。
+  // （`receivedAt` 取旧追提醒那一刻：这一条模拟的是「到旧追提醒时刻回读旧版本回执」，
+  //   轮次判据与 `receivedAt` 无关，所以这个取值不影响结论。）
+  const appliedOld = app.applyNativeDeliveryEvidence([
+    { itemId: x.id, reminderKey: "1@" + oldAt, carrier: "alarm",
+      itemRev: String(oldRev), token: "old-round", receivedAt: oldAt }
+  ]);
+  ok("R-F06 旧轮回执不写入台账（旧实现：applied=1）",
+    appliedOld === false && x.reminderEvents["1@" + oldAt].state === "cancelled",
+    JSON.stringify({ appliedOld: appliedOld, entry: x.reminderEvents["1@" + oldAt] }));
+  ok("R-F06 当前轮如实停在「尚未确认」（旧实现：显示「系统已接收这次提醒」）",
+    /尚未确认/.test(app.detailReminderStatusRow(x)) &&
+    !/系统已接收/.test(app.detailReminderStatusRow(x)),
+    app.detailReminderStatusRow(x));
+
+  // 对照组：当前轮的键送达**必须**被接受 —— 否则上面的拒绝可能只是通路坏掉
+  const appliedNew = app.applyNativeDeliveryEvidence([
+    { itemId: x.id, reminderKey: "0@" + newAt, carrier: "alarm",
+      itemRev: String(x.rev), receivedAt: newAt }
+  ]);
+  ok("R-F06 对照组：当前轮的键送达照常写入",
+    appliedNew === true && x.reminderEvents["0@" + newAt].state === "delivered",
+    JSON.stringify(x.reminderEvents));
+  ok("R-F06 对照组：这时才说「系统已接收」",
+    /系统已接收/.test(app.detailReminderStatusRow(x)), app.detailReminderStatusRow(x));
+}
+
+section("返工2 R-F06b：旧轮 delivered 只是历史；同刻重排 / 重复 / 乱序 / 非排程编辑都不误伤");
+{
+  const h = createApp();
+  const app = await h.boot();
+  app.deliveryEvidenceState.readable = true;
+  // 同上一节：关掉勿扰，别让默认静默时段把触发点顺延掉（那会让断言随钟点漂移）
+  app.state.settings.dnd = false;
+  const now = Date.now();
+  const oldBase = now - 120 * 60000;
+  const oldAt = now - 10 * 60000;   // 旧轮的追提醒（**晚于**新起点，所以会被保留下来）
+  const newAt = now - 30 * 60000;
+
+  // ① 旧轮已经 delivered（真实历史），「稍后提醒」换轮后不得再代表「这一次」
+  const a = app.makeItem({ title: "旧轮已送达", status: "waiting", triggerAt: oldBase });
+  a.triggerAt = oldBase;
+  a.reminderEvents = {};
+  a.reminderEvents["1@" + oldAt] = {
+    at: oldAt, state: "delivered", receivedAt: oldAt, carrier: "alarm", level: "received", roundBase: oldBase
+  };
+  app.state.items = [a];
+  app.snoozeItem(a.id, newAt, "elapsed");
+  await flush(4);
+  app.applyReminderEvents([{ itemId: a.id, key: "0@" + newAt, at: newAt }], now, []);
+  ok("R-F06b 旧轮的 delivered 仍在台账里（保留历史，不删）",
+    !!a.reminderEvents["1@" + oldAt] && a.reminderEvents["1@" + oldAt].state === "delivered",
+    JSON.stringify(a.reminderEvents));
+  ok("R-F06b 但它不算当前轮的证据（旧实现：直接显示「系统已接收」）",
+    !/系统已接收/.test(app.detailReminderStatusRow(a)), app.detailReminderStatusRow(a));
+  ok("R-F06b 保存反馈用的「本条排程证据」也不认旧轮（旧实现：返回 delivered，等于说「已安排好」）",
+    app.itemScheduleEvidence(a) !== "delivered", String(app.itemScheduleEvidence(a)));
+
+  // ② 同一时刻重排（承诺没变）⇒ 轮次不换、合法回执照样接受
+  const b = app.makeItem({ title: "同刻重排", status: "waiting", triggerAt: newAt });
+  b.triggerAt = newAt;   // `normalizeItem` 会把触发点对齐到分钟，这里用精确值以免轮次被悄悄改写
+  b.reminderEvents = {};
+  app.state.items = [b];
+  app.applyReminderEvents([{ itemId: b.id, key: "0@" + newAt, at: newAt }], now, []);
+  await flush(4);
+  app.applyReminderEvents([{ itemId: b.id, key: "0@" + newAt, at: newAt }], now, []);
+  ok("R-F06b 同一时刻重排不换轮",
+    b.reminderEvents["0@" + newAt].roundBase === newAt && b.triggerAt === newAt,
+    JSON.stringify(b.reminderEvents));
+  ok("R-F06b 同刻重排后的回执照样写入（不因为「重排过」就判旧轮）",
+    app.applyNativeDeliveryEvidence([
+      { itemId: b.id, reminderKey: "0@" + newAt, carrier: "alarm", itemRev: String(b.rev), receivedAt: now }
+    ]) === true, JSON.stringify(b.reminderEvents));
+
+  // ③ 重复与乱序：第二次同一键幂等；第二个键晚到也照样各自记账
+  ok("R-F06b 重复回执是幂等的",
+    app.applyNativeDeliveryEvidence([
+      { itemId: b.id, reminderKey: "0@" + newAt, carrier: "alarm", itemRev: String(b.rev), receivedAt: now }
+    ]) === false);
+  await flush(4);
+  app.applyReminderEvents([
+    { itemId: b.id, key: "0@" + newAt, at: newAt },
+    { itemId: b.id, key: "1@" + (newAt + 60000), at: newAt + 60000 }
+  ], now, []);
+  ok("R-F06b 乱序到达的第二个键照样记账",
+    app.applyNativeDeliveryEvidence([
+      { itemId: b.id, reminderKey: "1@" + (newAt + 60000), carrier: "notification",
+        itemRev: String(b.rev), receivedAt: now }
+    ]) === true && b.reminderEvents["1@" + (newAt + 60000)].state === "delivered",
+    JSON.stringify(b.reminderEvents));
+
+  // ④ 非排程字段编辑：只改备注（标题与时间框都没动）⇒ 时间不变、版本推进
+  const t2 = Math.floor((now + 60 * 60000) / 60000) * 60000;   // 对齐到分钟，编辑往返不失真
+  const c = app.makeItem({ title: "只改备注", status: "waiting", triggerAt: t2 });
+  c.reminderEvents = {};
+  app.state.items = [c];
+  app.applyReminderEvents([{ itemId: c.id, key: "0@" + t2, at: t2 }], now, []);
+  await flush(4);
+  const revBefore = c.rev;
+  h.setField("#capText", "只改备注");
+  h.setField("#capNote", "只改备注不改时间");
+  h.setField("#capTrigger", localInputOf(t2));
+  app.state.ui.editItemId = c.id;
+  app.saveItemFromForm();
+  await flush(10);
+  await app.saveAsync();
+  app.state.ui.editItemId = null;
+  ok("R-F06b 非排程字段编辑：版本推进了，时间与轮次都没变",
+    Number(c.rev) > Number(revBefore) && c.triggerAt === t2 && c.note === "只改备注不改时间",
+    JSON.stringify({ rev: c.rev, revBefore: revBefore, triggerAt: c.triggerAt, note: c.note }));
+  ok("R-F06b 编排时那个旧版本号回来的回执仍然有效（不能机械要求 rev 相等）",
+    app.applyNativeDeliveryEvidence([
+      { itemId: c.id, reminderKey: "0@" + t2, carrier: "alarm",
+        itemRev: String(revBefore), receivedAt: now }
+    ]) === true && c.reminderEvents["0@" + t2].state === "delivered",
+    JSON.stringify(c.reminderEvents));
+}
+
+section("返工3 Y1：正常接收保留轮次身份，编辑换轮与重启后旧历史不证明新轮");
+{
+  const evidence = require(path.join(ROOT, "lib/delivery-evidence.js"));
+  const h = createApp();
+  const app = await h.boot();
+  app.state.settings.dnd = false;
+  const now = Date.now();
+  const oldBase = now - 31 * 60000;
+  const oldAt = now - 60000;
+  const newBase = Math.floor((now - 2 * 60000) / 60000) * 60000;
+  const x = app.makeItem({ title: "接收后再改期", status: "due", triggerAt: oldBase });
+  x.triggerAt = oldBase;
+  app.state.items = [x];
+
+  // 必须从真实排程登记与真实接收入口构造，不手造 delivered fixture。
+  app.applyReminderEvents([{ itemId: x.id, key: "1@" + oldAt, at: oldAt }], oldBase, []);
+  const received = app.applyNativeDeliveryEvidence([{
+    itemId: x.id, reminderKey: "1@" + oldAt, itemRev: String(x.rev),
+    token: "y1-received", carrier: "alarm", receivedAt: oldAt
+  }]);
+  ok("Y1 正常 scheduled → delivered 入口保留 roundBase",
+    received === true && x.reminderEvents["1@" + oldAt].state === "delivered" &&
+    x.reminderEvents["1@" + oldAt].roundBase === oldBase,
+    JSON.stringify(x.reminderEvents));
+
+  // 通过生产编辑保存入口换到另一轮，再由生产对账登记新轮。
+  app.openEditItem(x.id);
+  h.setField("#capTrigger", localInputOf(newBase));
+  app.markTriggerPicked(true);
+  app.saveItemFromForm();
+  await flush(10);
+  await app.saveAsync();
+  const edited = app.state.items.find(it => it.id === x.id);
+  app.applyReminderEvents([{ itemId: edited.id, key: "0@" + edited.triggerAt, at: edited.triggerAt }], now, []);
+  await app.saveAsync();
+  ok("Y1 编辑换轮后旧 delivered 保留为历史但不冒充当前轮",
+    edited.reminderEvents["1@" + oldAt].roundBase === oldBase &&
+    evidence.evidenceStatusFor(edited, { now, evidenceReadable: true, observable: true }).state !== evidence.STATUS.DELIVERED,
+    JSON.stringify(edited.reminderEvents));
+
+  const restarted = await restartApp(h.disk);
+  const restored = restarted.app.state.items.find(it => it.id === x.id);
+  ok("Y1 重启回读后轮次身份仍在，旧历史仍不能证明新轮已接收",
+    restored.reminderEvents["1@" + oldAt].roundBase === oldBase &&
+    evidence.evidenceStatusFor(restored, { now, evidenceReadable: true, observable: true }).state !== evidence.STATUS.DELIVERED,
+    JSON.stringify(restored.reminderEvents));
+}
+
+section("返工3 Y2：升级前缺身份的三态保持不可验证；可证明的当前对账才补身份");
+{
+  const evidence = require(path.join(ROOT, "lib/delivery-evidence.js"));
+  const now = Date.now();
+  const oldBase = now - 60000;
+  const oldAt = now + 29 * 60000;
+  const newBase = now + 5 * 60000;
+  const legacyStates = ["scheduled", "cancelled", "delivered"];
+  const legacyItems = legacyStates.map((state, index) => ({
+    id: "legacy-round-" + state,
+    title: "旧台账 " + state,
+    status: "due",
+    triggerAt: oldBase,
+    rev: index + 1,
+    reminderEvents: {
+      ["1@" + oldAt]: { at: oldAt, state: state, receivedAt: state === "delivered" ? oldAt : undefined }
+    }
+  }));
+  const seed = {
+    schema: 5,
+    items: legacyItems,
+    notes: [], projects: [],
+    settings: { dnd: false, notifyEnabled: true }
+  };
+  const h = createApp({ seedState: seed });
+  const app = await h.boot();
+
+  app.state.items.forEach(it => {
+    app.snoozeItem(it.id, newBase, "elapsed");
+    app.applyReminderEvents([{ itemId: it.id, key: "0@" + newBase, at: newBase }], now,
+      [{ itemId: it.id, key: "1@" + oldAt, at: oldAt }]);
+  });
+  await flush(8);
+
+  app.state.items.forEach(it => {
+    const first = app.applyNativeDeliveryEvidence([{
+      itemId: it.id, reminderKey: "1@" + oldAt, itemRev: String(it.rev),
+      token: "legacy-first", carrier: "alarm", receivedAt: oldAt
+    }]);
+    const duplicate = app.applyNativeDeliveryEvidence([{
+      itemId: it.id, reminderKey: "1@" + oldAt, itemRev: String(it.rev),
+      token: "legacy-duplicate", carrier: "alarm", receivedAt: oldAt + 1
+    }]);
+    ok("Y2 旧 " + it.title.split(" ")[1] + " 缺 roundBase 的乱序/重复回执均不提升当前轮",
+      first === false && duplicate === false &&
+      evidence.entryRoundBase(it, it.reminderEvents["1@" + oldAt]) === null &&
+      evidence.evidenceStatusFor(it, { now: oldAt + 1000, evidenceReadable: true, observable: true }).state !== evidence.STATUS.DELIVERED,
+      JSON.stringify(it.reminderEvents));
+  });
+
+  // 对照：旧终态缺身份，但当前原生对账明确再次登记了**同一个当前轮键**，归属可证明。
+  const provenBase = now + 60 * 60000;
+  const proven = app.makeItem({ title: "可证明迁移", status: "waiting", triggerAt: provenBase });
+  proven.triggerAt = provenBase;
+  proven.reminderEvents = {
+    ["0@" + provenBase]: { at: provenBase, state: "delivered", receivedAt: provenBase }
+  };
+  app.state.items.push(proven);
+  app.applyReminderEvents([{ itemId: proven.id, key: "0@" + provenBase, at: provenBase }], now, []);
+  ok("Y2 可证明的当前轮对账补齐身份，同时保留 delivered 历史",
+    proven.reminderEvents["0@" + provenBase].roundBase === provenBase &&
+    proven.reminderEvents["0@" + provenBase].state === "delivered",
+    JSON.stringify(proven.reminderEvents));
+
+  await app.saveAsync();
+  const restarted = await restartApp(h.disk);
+  legacyStates.forEach(state => {
+    const restored = restarted.app.state.items.find(it => it.id === "legacy-round-" + state);
+    ok("Y2 重启后旧 " + state + " 仍是历史且身份未知",
+      !!restored && evidence.entryRoundBase(restored, restored.reminderEvents["1@" + oldAt]) === null &&
+      evidence.evidenceStatusFor(restored, { now: oldAt + 1000, evidenceReadable: true, observable: true }).state !== evidence.STATUS.DELIVERED,
+      restored && JSON.stringify(restored.reminderEvents));
+  });
+  const restoredProven = restarted.app.state.items.find(it => it.id === proven.id);
+  ok("Y2 可证明迁移的 roundBase 也能跨重启保留",
+    restoredProven.reminderEvents["0@" + provenBase].roundBase === provenBase);
+}
+
+section("返工2 R-F03：AI 迟到结果不得覆盖新草稿（复验 X2）");
+{
+  const aiReply = (title, iso) => ({
+    ok: true,
+    json: async () => ({
+      choices: [{
+        message: {
+          content: JSON.stringify({
+            title: title, note: "", tags: [], priority: "normal", trigger_at: iso
+          })
+        }
+      }]
+    })
+  });
+  const iso = new Date(Date.now() + 86400000).toISOString();
+  const aiSettings = { enabled: true, autoOnSave: true, apiKey: "fixture-only", baseUrl: "https://fixture.invalid", model: "fixture" };
+
+  // ① 慢响应期间用户继续写第二条草稿 → 落库与界面都不许串
+  const h = createApp();
+  const app = await h.boot();
+  app.state.settings.ai = Object.assign({}, aiSettings);
+  let release = null;
+  h.setFetch(() => new Promise(resolve => { release = resolve; }));
+  h.setField("#capText", "明天下午3点提醒我取快递");
+  app.saveItemFromForm();
+  // AI 还没回来 —— 用户接着写第二条
+  h.setField("#capText", "第二条尚未保存的草稿");
+  h.setField("#capNote", "第二条的备注");
+  release(aiReply("取快递", iso));
+  await flush(12);
+  await app.saveAsync();
+  const saved = app.state.items.map(x => ({ title: x.title, note: x.note }));
+  ok("R-F03 迟到结果不清空新草稿（旧实现：#capText 被清成空）",
+    h.fieldOf("#capText") === "第二条尚未保存的草稿", JSON.stringify(h.fieldOf("#capText")));
+  ok("R-F03 第二条的备注仍在表单上",
+    h.fieldOf("#capNote") === "第二条的备注", JSON.stringify(h.fieldOf("#capNote")));
+  ok("R-F03 第一条**没有**串进第二条的备注（旧实现：标题「取快递」+ 备注「第二条的备注」）",
+    saved.length === 1 && !saved.some(x => x.note === "第二条的备注"), JSON.stringify(saved));
+  ok("R-F03 第一条落库的仍是它自己草稿的内容（AI 归一化标题照常生效）",
+    saved.length === 1 && saved[0].title === "取快递" && saved[0].note === "", JSON.stringify(saved));
+
+  // ② 对照组：表单没被继续改动 ⇒ 照常走完正常路径（AI 标题生效、面板关闭、表单复位），
+  //    用来证明①里的「保护」没有把正常路径一起挡掉
+  const h2 = createApp();
+  const app2 = await h2.boot();
+  app2.state.settings.ai = Object.assign({}, aiSettings);
+  h2.setFetch(async () => aiReply("取快递", iso));
+  h2.setField("#capText", "明天下午3点提醒我取快递");
+  app2.saveItemFromForm();
+  await flush(12);
+  await app2.saveAsync();
+  ok("R-F03 对照组：正常路径照常落库（AI 归一化标题生效）",
+    app2.state.items.length === 1 && app2.state.items[0].title === "取快递",
+    JSON.stringify(app2.state.items.map(x => x.title)));
+  ok("R-F03 对照组：正常路径照常关闭并复位表单（面板用 open 类，不是 hidden）",
+    h2.hasClassOf("#sheetItem", "open") === false && h2.fieldOf("#capText") === "",
+    JSON.stringify({ open: h2.hasClassOf("#sheetItem", "open"), text: h2.fieldOf("#capText") }));
+
+  // ③ AI 拒绝响应：落库用冻结草稿，新草稿一个字都不动
+  const h3 = createApp();
+  const app3 = await h3.boot();
+  app3.state.settings.ai = Object.assign({}, aiSettings);
+  let rejectAi = null;
+  h3.setFetch(() => new Promise((_resolve, reject) => { rejectAi = reject; }));
+  h3.setField("#capText", "明天下午3点提醒我寄快递");
+  h3.setField("#capNote", "第一条的备注");
+  app3.saveItemFromForm();
+  h3.setField("#capText", "第三条草稿");
+  h3.setField("#capNote", "第三条的备注");
+  rejectAi(new Error("HTTP 500"));
+  await flush(12);
+  await app3.saveAsync();
+  const saved3 = app3.state.items.map(x => ({ title: x.title, note: x.note }));
+  ok("R-F03 AI 失败时不吞掉新写的内容",
+    h3.fieldOf("#capText") === "第三条草稿" && h3.fieldOf("#capNote") === "第三条的备注",
+    JSON.stringify({ text: h3.fieldOf("#capText"), note: h3.fieldOf("#capNote") }));
+  ok("R-F03 AI 失败时落库的是**提交时冻结的**那份草稿，不是后来写的那份",
+    saved3.length === 1 && saved3[0].note === "第一条的备注" && /寄快递/.test(saved3[0].title),
+    JSON.stringify(saved3));
+
+  // ④ 关闭重开：内容碰巧一模一样，但那是**另一张表单**，旧结果无权回填
+  const h4 = createApp();
+  const app4 = await h4.boot();
+  app4.state.settings.ai = Object.assign({}, aiSettings);
+  let release4 = null;
+  h4.setFetch(() => new Promise(resolve => { release4 = resolve; }));
+  h4.setField("#capText", "明天的会");
+  app4.saveItemFromForm();
+  const sessionBefore = app4.formSession;
+  app4.openCapture();                      // 关掉重开 = 新会话
+  h4.setField("#capText", "明天的会");      // 用户又写下一模一样的内容
+  ok("R-F03 前置：重开表单确实换了会话身份",
+    app4.formSession !== sessionBefore, JSON.stringify({ before: sessionBefore, after: app4.formSession }));
+  release4(aiReply("开会", iso));
+  await flush(12);
+  await app4.saveAsync();
+  ok("R-F03 换表单之后迟到的 AI 结果不碰新表单（内容相同也不行）",
+    h4.fieldOf("#capText") === "明天的会", JSON.stringify(h4.fieldOf("#capText")));
+
+  // ⑤ 连续两次不同内容的提交：各自的 AI 结果只落到自己那条
+  const h5 = createApp();
+  const app5 = await h5.boot();
+  app5.state.settings.ai = Object.assign({}, aiSettings);
+  const resolvers = [];
+  h5.setFetch(() => new Promise(resolve => { resolvers.push(resolve); }));
+  h5.setField("#capText", "明天下午3点提醒我取快递");
+  app5.saveItemFromForm();
+  h5.setField("#capText", "后天上午10点提醒我交材料");
+  app5.saveItemFromForm();
+  ok("R-F03 前置：两次不同内容的提交各自都在途", resolvers.length === 2, String(resolvers.length));
+  resolvers[1](aiReply("交材料", iso));   // 后发的先回
+  await flush(10);
+  resolvers[0](aiReply("取快递", iso));
+  await flush(12);
+  await app5.saveAsync();
+  const titles5 = app5.state.items.map(x => x.title).sort();
+  ok("R-F03 两次提交各落一条、内容不串写",
+    titles5.length === 2 && titles5[0] === "交材料" && titles5[1] === "取快递",
+    JSON.stringify(titles5));
+}
+
+section("返工3 Y3：新建/编辑的持久化收尾必须绑定表单会话");
+{
+  const text = "明天下午3点提醒我取快递";
+
+  // ① 新建成功：旧会话完成时，新会话即使内容相同也不能被清空；且新会话仍可正常再提交。
+  const h1 = createApp();
+  const app1 = await h1.boot();
+  app1.openCapture();
+  h1.holdCommits(true);
+  h1.setField("#capText", text);
+  const firstSession = app1.formSession;
+  app1.saveItemFromForm();
+  await flush(2);
+  app1.openCapture();
+  h1.setField("#capText", text);
+  const secondSession = app1.formSession;
+  h1.holdCommits(false);
+  h1.releaseCommits();
+  await flush(10);
+  ok("Y3 新建成功回调不清空另一会话的同内容表单",
+    secondSession !== firstSession && h1.fieldOf("#capText") === text && h1.hasClassOf("#sheetItem", "open"),
+    JSON.stringify({ firstSession, secondSession, text: h1.fieldOf("#capText") }));
+  ok("Y3 新会话同内容不是重复点击，仍可独立提交",
+    app1.saveItemFromForm() !== false);
+  await flush(10);
+  await app1.saveAsync();
+  ok("Y3 两个独立会话各自落库一次",
+    app1.state.items.filter(it => /取快递/.test(it.title)).length === 2,
+    JSON.stringify(app1.state.items.map(it => it.title)));
+
+  // ② 新建失败：旧会话失败恢复不能覆盖另一会话；同会话失败仍保留正常恢复。
+  const h2 = createApp();
+  const app2 = await h2.boot();
+  app2.openCapture();
+  h2.holdCommits(true);
+  h2.setField("#capText", text);
+  app2.saveItemFromForm();
+  await flush(2);
+  app2.openCapture();
+  h2.setField("#capText", text);
+  h2.setCommitFailure(true);
+  h2.holdCommits(false);
+  h2.releaseCommits();
+  await flush(10);
+  ok("Y3 新建失败回调不把旧草稿恢复到另一会话",
+    h2.fieldOf("#capText") === text && h2.hasClassOf("#sheetItem", "open"));
+
+  const h3 = createApp();
+  const app3 = await h3.boot();
+  app3.openCapture();
+  h3.holdCommits(true);
+  h3.setField("#capText", "同会话失败要保留");
+  app3.saveItemFromForm();
+  await flush(2);
+  h3.setCommitFailure(true);
+  h3.holdCommits(false);
+  h3.releaseCommits();
+  await flush(10);
+  ok("Y3 对照组：同会话保存失败仍保留草稿并打开表单",
+    h3.fieldOf("#capText") === "同会话失败要保留" && h3.hasClassOf("#sheetItem", "open"));
+
+  // ③ 编辑成功/失败同样受会话约束，不能只修新建路径。
+  for (const shouldFail of [false, true]) {
+    const h = createApp();
+    const app = await h.boot();
+    const item = app.makeItem({ title: "编辑前", status: "waiting", triggerAt: Date.now() + 3600000 });
+    app.state.items = [item];
+    app.openEditItem(item.id);
+    h.holdCommits(true);
+    h.setField("#capText", "编辑后");
+    app.saveItemFromForm();
+    await flush(2);
+    app.openCapture();
+    h.setField("#capText", "编辑后");
+    if (shouldFail) h.setCommitFailure(true);
+    h.holdCommits(false);
+    h.releaseCommits();
+    await flush(10);
+    ok("Y3 编辑" + (shouldFail ? "失败" : "成功") + "回调不碰另一会话的同内容表单",
+      h.fieldOf("#capText") === "编辑后" && h.hasClassOf("#sheetItem", "open"));
+  }
+}
+
+section("返工2 R-F07：停铃读取失败不冒充「没有正在响」（复验 X4）");
+{
+  const runAt = Date.now() - 1000;
+  const seedRun = (app) => {
+    app.state.settings.testRun = {
+      id: 90003, startedAt: runAt, triggerAt: runAt + 60000, stoppedAt: null
+    };
+  };
+
+  // ① 读取失败：只能说「读不到」，不许宣称已停/没有在响，也不许把 stoppedAt 当成功证据
+  {
+    const cap = installCapacitor();
+    const sb = global.Capacitor.Plugins.SystemBridge;
+    sb.activeAlarmDeliveries = async () => { throw new Error("bridge read failed"); };
+    sb.stopAlarmDelivery = async () => ({ stopped: false });
+    const h = createApp();
+    const app = await h.boot();
+    seedRun(app);
+    const stopped = await app.stopSetupTestRun();
+    const text = h.textOf("#toastText");
+    ok("R-F07 读取失败时不报「停掉了几条」", stopped === 0, String(stopped));
+    ok("R-F07 读取失败不说「没有正在响」（旧实现：读异常被吞，照报「没有正在响的测试铃声」）",
+      !/没有正在响/.test(text), text);
+    ok("R-F07 读取失败也不宣称已经停住",
+      !/已停止|已经停了/.test(text), text);
+    ok("R-F07 未确认就不把 stoppedAt 当成功证据（旧实现：无条件写 stoppedAt）",
+      !app.state.settings.testRun.stoppedAt, String(app.state.settings.testRun.stoppedAt));
+    ok("R-F07 未确认时给出重试入口",
+      h.textOf("#toastAction") === "重试" && h.hiddenOf("#toastAction") === false,
+      JSON.stringify({ text: h.textOf("#toastAction"), hidden: h.hiddenOf("#toastAction") }));
+    cap.cleanup();
+  }
+
+  // ② 对照组：读成功且确认没有活跃投递 ⇒ 这就是「确认无铃」，可以记 stoppedAt
+  {
+    const cap = installCapacitor();
+    const sb = global.Capacitor.Plugins.SystemBridge;
+    sb.activeAlarmDeliveries = async () => ({ alarms: [] });
+    sb.stopAlarmDelivery = async () => ({ stopped: true });
+    const h = createApp();
+    const app = await h.boot();
+    seedRun(app);
+    const stopped = await app.stopSetupTestRun();
+    ok("R-F07 对照组：确认无活跃投递时如实说「没有正在响的测试铃声」",
+      stopped === 0 && /没有正在响的测试铃声/.test(h.textOf("#toastText")), h.textOf("#toastText"));
+    ok("R-F07 对照组：确认无铃才算确认，可以记 stoppedAt",
+      app.state.settings.testRun.stoppedAt > 0, String(app.state.settings.testRun.stoppedAt));
+    cap.cleanup();
+  }
+
+  // ③ 对照组：确实停住了 ⇒ 说停住了，并记 stoppedAt
+  {
+    const cap = installCapacitor();
+    const sb = global.Capacitor.Plugins.SystemBridge;
+    sb.activeAlarmDeliveries = async () => ({ alarms: [{ id: 90003, token: "tok-x", receivedAt: runAt + 1000 }] });
+    sb.stopAlarmDelivery = async () => ({ stopped: true });
+    const h = createApp();
+    const app = await h.boot();
+    seedRun(app);
+    const stopped = await app.stopSetupTestRun();
+    ok("R-F07 对照组：真的停住了就报停住", stopped === 1 && /已停止本次测试的铃声/.test(h.textOf("#toastText")),
+      JSON.stringify({ stopped: stopped, text: h.textOf("#toastText") }));
+    ok("R-F07 对照组：停住后记 stoppedAt",
+      app.state.settings.testRun.stoppedAt > 0, String(app.state.settings.testRun.stoppedAt));
+    cap.cleanup();
+  }
+
+  // ④ 有活跃投递但**没停成功** ⇒ 不许宣称已停、也不许说「没有在响」
+  {
+    const cap = installCapacitor();
+    const sb = global.Capacitor.Plugins.SystemBridge;
+    sb.activeAlarmDeliveries = async () => ({ alarms: [{ id: 90003, token: "tok-x", receivedAt: runAt + 1000 }] });
+    sb.stopAlarmDelivery = async () => ({ stopped: false });
+    const h = createApp();
+    const app = await h.boot();
+    seedRun(app);
+    const stopped = await app.stopSetupTestRun();
+    const text = h.textOf("#toastText");
+    ok("R-F07 停不住时不宣称已停", stopped === 0 && !/已停止|已经停了/.test(text), text);
+    ok("R-F07 停不住时也不谎称「没有在响」", !/没有正在响/.test(text), text);
+    ok("R-F07 停不住时同样不记 stoppedAt（那是成功证据，不是尝试记录）",
+      !app.state.settings.testRun.stoppedAt, String(app.state.settings.testRun.stoppedAt));
+    cap.cleanup();
+  }
+}
+
+section("返工2 SW：预缓存必须覆盖 index.html 真正加载的每个脚本，且脚本不得回落成 HTML");
+{
+  const swSource = fs.readFileSync(path.join(ROOT, "sw.js"), "utf8");
+  const htmlSource = fs.readFileSync(path.join(ROOT, "index.html"), "utf8");
+  // 期望集合**从 index.html 推出来**，不是抄一份清单 ——
+  // 抄一份只是把同一个遗漏复制进测试里（这个缺口当初正是这么活下来的）。
+  const wanted = [];
+  htmlSource.replace(/<script[^>]+src="([^"]+)"/g, (_m, src) => {
+    wanted.push("./" + src.replace(/^\.\//, ""));
+    return _m;
+  });
+  ok("SW 前置：index.html 确实加载了脚本", wanted.length >= 6, JSON.stringify(wanted));
+  ok("SW 前置：原生桥脚本在 index.html 的加载清单里（否则这条回归测不到那个缺口）",
+    wanted.indexOf("./lib/native-reminders.js") >= 0, JSON.stringify(wanted));
+
+  // 真跑生产 install / fetch 处理函数：内存缓存 + 离线网络
+  const handlers = {};
+  const cache = new Map();
+  const base = "https://fixture.invalid/";
+  const key = x => new URL(typeof x === "string" ? x : x.url, base).href;
+  const sandbox = {
+    URL,
+    self: {
+      location: { origin: new URL(base).origin },
+      addEventListener: (n, f) => { handlers[n] = f; },
+      skipWaiting: async () => {},
+      clients: { matchAll: async () => [] }
+    },
+    fetch: async () => { throw new Error("offline"); },
+    caches: {
+      open: async () => ({
+        addAll: async paths => paths.forEach(p => {
+          cache.set(key(p), fs.readFileSync(path.join(ROOT, p === "./" ? "index.html" : p), "utf8"));
+        })
+      }),
+      match: async req => cache.get(key(req)),
+      keys: async () => [], delete: async () => {}
+    }
+  };
+  vm.runInNewContext(swSource, sandbox);
+  let installing;
+  handlers.install({ waitUntil: p => { installing = p; } });
+  await installing;
+
+  const missing = wanted.filter(u => !cache.has(base + u.replace(/^\.\//, "")));
+  ok("SW 新装预缓存覆盖 index.html 加载的**全部**脚本（旧实现：漏 lib/native-reminders.js）",
+    missing.length === 0, JSON.stringify(missing));
+
+  const bridgeSrc = fs.readFileSync(path.join(ROOT, "lib/native-reminders.js"), "utf8");
+  let response;
+  handlers.fetch({
+    request: { method: "GET", url: base + "lib/native-reminders.js" },
+    respondWith: p => { response = p; }
+  });
+  const body = await response;
+  ok("SW 离线时原生桥脚本拿回的是**脚本本身**，不是 index.html",
+    body === bridgeSrc && body !== htmlSource,
+    typeof body === "string" ? body.slice(0, 48) : String(body));
+
+  // 预缓存完整**不等于**回落规则正确：上面那条只能证明「清单补全了」。
+  // 缓存未命中的**脚本**（运行时才加载的新模块、被清掉的条目）也必须如实失败，
+  // 而不是回落成 HTML —— 旧实现 `hit || caches.match("./index.html")` 会让它拿到
+  // 一段 HTML，浏览器把它当 JS 执行 → 原生桥无声消失。两条缺一不可。
+  let uncached;
+  handlers.fetch({
+    request: { method: "GET", url: base + "lib/runtime-only.js" },
+    respondWith: p => { uncached = p; }
+  });
+  const uncachedBody = await uncached;
+  ok("SW 缓存未命中的脚本**不回落** index.html（旧实现：`.then(hit => hit || caches.match(\"./index.html\"))`）",
+    uncachedBody !== htmlSource,
+    typeof uncachedBody === "string" ? uncachedBody.slice(0, 48) : String(uncachedBody));
+
+  // 对照：页面导航仍然要有 HTML 兜底，否则离线打开就是白屏
+  let nav;
+  handlers.fetch({
+    request: { method: "GET", url: base + "deep/route", mode: "navigate" },
+    respondWith: p => { nav = p; }
+  });
+  ok("SW 对照组：离线导航仍然回落 index.html",
+    (await nav) === htmlSource);
 }
 }
 
