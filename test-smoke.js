@@ -15,6 +15,8 @@ const libStorage = fs.readFileSync(path.join(ROOT, "lib/storage.js"), "utf8");
 const libFeedback = fs.readFileSync(path.join(ROOT, "lib/feedback.js"), "utf8");
 const libDeliveryEvidence = fs.readFileSync(path.join(ROOT, "lib/delivery-evidence.js"), "utf8");
 const src = fs.readFileSync(path.join(ROOT, "app-core.js"), "utf8");
+const systemBridgeJava = fs.readFileSync(path.join(ROOT,
+  "android/app/src/main/java/space/alliswell/inbox/SystemBridgePlugin.java"), "utf8");
 
 /* ---------- DOM / browser mocks ---------- */
 function el(id) {
@@ -47,7 +49,7 @@ function el(id) {
     querySelectorAll() { return []; },
     closest() { return null; },
     focus() {},
-    click() {},
+    click() { this._clicks = (this._clicks || 0) + 1; },
     appendChild() {},
     remove() {}
   };
@@ -74,8 +76,34 @@ const document = {
   addEventListener() {},
   querySelector(sel) { return getNode(sel); },
   querySelectorAll() { return []; },
-  createElement() { return el("tmp"); },
+  createElement(tag) {
+    const node = el(String(tag || "tmp"));
+    createdElements.push(node);
+    return node;
+  },
   body: { appendChild() {} }
+};
+
+const createdElements = [];
+const objectUrls = [];
+function BlobMock(parts, options) {
+  this.parts = parts || [];
+  this.type = options && options.type || "";
+}
+function FileMock(parts, name, options) {
+  BlobMock.call(this, parts, options);
+  this.name = name;
+}
+const URLMock = {
+  createObjectURL(blob) {
+    const url = "blob:test-" + (objectUrls.length + 1);
+    objectUrls.push({ url, blob, revoked: false });
+    return url;
+  },
+  revokeObjectURL(url) {
+    const row = objectUrls.find(x => x.url === url);
+    if (row) row.revoked = true;
+  }
 };
 
 const sandbox = {
@@ -99,9 +127,10 @@ const sandbox = {
   encodeURIComponent,
   decodeURIComponent,
   URLSearchParams,
-  Blob: function () {},
-  File: function () {},
+  Blob: BlobMock,
+  File: FileMock,
   FileReader: function () {},
+  URL: URLMock,
   history: { replaceState() {} },
   location: { search: "", pathname: "/index.html", href: "http://localhost/index.html" },
   localStorage,
@@ -1418,8 +1447,145 @@ section("11b. A-2 后台链路断了，首页必须直说（基线 §473 / AC-14
     getNode("#homeNotice").innerHTML === "", getNode("#homeNotice").innerHTML.slice(0, 90));
 }
 
-/* ---------- 12. PRD acceptance path ---------- */
-section("12. PRD 验收主路径");
+/* ---------- 12. export behavior ---------- */
+section("12. 导出文件：原生保存、诚实反馈与旧格式兼容");
+{
+  const savedCapacitor = sandbox.window.Capacitor;
+  const savedShare = sandbox.navigator.share;
+  const savedCanShare = sandbox.navigator.canShare;
+
+  app.state.items = [{ id: "export-item", title: "中文事项", status: "waiting" }];
+  app.state.notes = [{ id: "export-note", text: "中文笔记" }];
+  app.state.projects = [{ id: "export-project", name: "中文项目" }];
+  app.state.settings.ai = {
+    enabled: true,
+    baseUrl: "https://secret.example/v1",
+    apiKey: "sk-must-not-export",
+    model: "local-test",
+    autoOnSave: true
+  };
+
+  const payload = app.buildLegacyBackupPayload();
+  ok("导出保持旧 JSON 顶层结构", payload.app === "attention-inbox" &&
+    Array.isArray(payload.items) && Array.isArray(payload.notes) && Array.isArray(payload.projects));
+  ok("中文事项/笔记/项目原样进入备份", payload.items[0].title === "中文事项" &&
+    payload.notes[0].text === "中文笔记" && payload.projects[0].name === "中文项目");
+  ok("AI 密钥与 baseUrl 继续排除", payload.settings.ai.apiKey === "" &&
+    payload.settings.ai.baseUrl === "" && payload.settings.ai.model === "local-test");
+
+  let saveArgs = null;
+  sandbox.window.Capacitor = {
+    getPlatform: () => "android",
+    Plugins: {
+      SystemBridge: {
+        async saveDocument(args) {
+          saveArgs = args;
+          return {
+            status: "saved",
+            fileName: "安心收件箱备份-2026-09-20 (1).json",
+            locationLabel: "内部存储/Download"
+          };
+        }
+      }
+    }
+  };
+  let result = await app.exportData();
+  const nativePayload = JSON.parse(saveArgs.content);
+  ok("Android 通过 SystemBridge 传一次 UTF-8 JSON 快照", result.status === "saved" &&
+    saveArgs.mimeType === "application/json" && nativePayload.items[0].title === "中文事项");
+  ok("保存后显示 provider 返回的真实同名文件名与逻辑位置",
+    /\(1\)\.json/.test(getNode("#toastText").textContent) &&
+    /内部存储\/Download/.test(getNode("#toastText").textContent));
+  ok("原生保存完成后按钮与说明恢复可用", !getNode("#btnExport").disabled &&
+    getNode("#exportSub").textContent === "JSON 备份到文件");
+
+  let resolvePicker;
+  let pickerCalls = 0;
+  sandbox.window.Capacitor.Plugins.SystemBridge.saveDocument = args => {
+    pickerCalls++;
+    saveArgs = args;
+    return new Promise(resolve => { resolvePicker = resolve; });
+  };
+  const first = app.exportData();
+  const second = await app.exportData();
+  ok("系统对话框等待期间防重复点击", second.status === "busy" && pickerCalls === 1 &&
+    getNode("#btnExport").disabled);
+  app.state.items[0].title = "对话框打开后才修改";
+  ok("等待期间业务状态变化不会改写点击时快照",
+    JSON.parse(saveArgs.content).items[0].title === "中文事项");
+  app.noteExportAppVisibility(false);
+  app.noteExportAppVisibility(true);
+  resolvePicker({ status: "cancelled" });
+  result = await first;
+  ok("取消与切后台返回后恢复可重试且不报成功", result.status === "cancelled" &&
+    !getNode("#btnExport").disabled && /已取消导出/.test(getNode("#toastText").textContent));
+
+  let attempt = 0;
+  sandbox.window.Capacitor.Plugins.SystemBridge.saveDocument = async () => {
+    attempt++;
+    return attempt === 1 ? { status: "failed", error: "write-failed" }
+      : { status: "saved", fileName: "重试成功.json", locationLabel: "" };
+  };
+  const failedExport = await app.exportData();
+  const retriedExport = await app.exportData();
+  ok("写入失败恢复按钮且允许重试", failedExport.status === "failed" &&
+    retriedExport.status === "saved" && attempt === 2 && !getNode("#btnExport").disabled);
+  ok("未知路径不虚构普通文件路径", /位置：你选择的位置/.test(getNode("#toastText").textContent));
+
+  const anchorsBeforeUnavailable = createdElements.filter(x => x.id === "a").length;
+  sandbox.window.Capacitor = { getPlatform: () => "android", Plugins: {} };
+  result = await app.exportData();
+  ok("Android 缺少原生保存能力时明确不可用且不退回网页下载",
+    result.status === "unavailable" && /缺少系统保存能力/.test(getNode("#toastText").textContent) &&
+    createdElements.filter(x => x.id === "a").length === anchorsBeforeUnavailable);
+
+  delete sandbox.window.Capacitor;
+  sandbox.navigator.share = undefined;
+  sandbox.navigator.canShare = undefined;
+  const anchorsBeforeDownload = createdElements.filter(x => x.id === "a").length;
+  result = await app.exportData();
+  const downloadAnchors = createdElements.filter(x => x.id === "a");
+  ok("浏览器无分享能力时发起 download", result.status === "download-started" &&
+    downloadAnchors.length === anchorsBeforeDownload + 1 && downloadAnchors.at(-1)._clicks === 1);
+  ok("浏览器下载只提示已发起并引导查看下载记录",
+    /已发起下载/.test(getNode("#toastText").textContent) &&
+    /浏览器下载记录/.test(getNode("#toastText").textContent));
+
+  const anchorsBeforeShare = downloadAnchors.length;
+  sandbox.navigator.canShare = () => true;
+  sandbox.navigator.share = async () => {
+    const error = new Error("user cancelled");
+    error.name = "AbortError";
+    throw error;
+  };
+  result = await app.exportData();
+  ok("分享取消不自动触发第二次下载", result.status === "cancelled" &&
+    createdElements.filter(x => x.id === "a").length === anchorsBeforeShare &&
+    /未再次发起下载/.test(getNode("#toastText").textContent));
+
+  app.state.items = [];
+  app.state.notes = [];
+  app.state.projects = [];
+  const emptyPayload = JSON.parse(JSON.stringify(app.buildLegacyBackupPayload()));
+  ok("空备份仍是可被旧导入识别的数组结构", Array.isArray(emptyPayload.items) &&
+    emptyPayload.items.length === 0 && Array.isArray(emptyPayload.notes) &&
+    Array.isArray(emptyPayload.projects));
+
+  ok("Android 保存使用 ACTION_CREATE_DOCUMENT，交由系统处理同名而非静默覆盖",
+    /new Intent\(Intent\.ACTION_CREATE_DOCUMENT\)/.test(systemBridgeJava) &&
+    /Intent\.EXTRA_TITLE/.test(systemBridgeJava) && /queryDocumentName/.test(systemBridgeJava));
+  ok("原生成功门槛包含 UTF-8 write、flush、close 后 resolve",
+    /StandardCharsets\.UTF_8/.test(systemBridgeJava) && /writer\.flush\(\)/.test(systemBridgeJava) &&
+    systemBridgeJava.indexOf("writeUtf8Document") < systemBridgeJava.indexOf('saved.put("status", "saved")'));
+
+  if (savedCapacitor === undefined) delete sandbox.window.Capacitor;
+  else sandbox.window.Capacitor = savedCapacitor;
+  sandbox.navigator.share = savedShare;
+  sandbox.navigator.canShare = savedCanShare;
+}
+
+/* ---------- 13. PRD acceptance path ---------- */
+section("13. PRD 验收主路径");
 {
   app.state.settings.dnd = false;
   app.state.items = [];

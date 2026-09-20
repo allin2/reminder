@@ -1,35 +1,47 @@
 package space.alliswell.inbox;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.ComponentName;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.PowerManager;
+import android.provider.DocumentsContract;
+import android.provider.OpenableColumns;
 import android.provider.Settings;
 
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
+import androidx.activity.result.ActivityResult;
 
 import com.getcapacitor.JSObject;
 import com.getcapacitor.Plugin;
 import com.getcapacitor.PluginCall;
 import com.getcapacitor.PluginMethod;
 import com.getcapacitor.annotation.CapacitorPlugin;
+import com.getcapacitor.annotation.ActivityCallback;
 import com.getcapacitor.annotation.Permission;
 import com.getcapacitor.annotation.PermissionCallback;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -53,6 +65,143 @@ public class SystemBridgePlugin extends Plugin {
   public static final String CHANNEL_NAME = "提醒测试";
   public static final int REQ_NOTIFY = 21001;
   public static final int REQ_EXACT = 21002;
+
+  /**
+   * 在系统文档选择器中创建文件，并且只在 ContentResolver 完整写入、flush、close 后回报成功。
+   *
+   * <p>这是供备份及后续其他文本导出共用的最小保存通道。它不申请整盘存储权限，也不把
+   * content URI 冒充普通文件路径。内容只存在于 PluginCall 与输出流中，失败日志不记录正文。
+   */
+  @PluginMethod
+  public void saveDocument(PluginCall call) {
+    String content = call.getString("content");
+    if (content == null) {
+      call.reject("缺少要保存的内容");
+      return;
+    }
+
+    String suggestedName = safeSuggestedName(call.getString("fileName"));
+    String mimeType = call.getString("mimeType", "application/octet-stream");
+    try {
+      Intent intent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
+      intent.addCategory(Intent.CATEGORY_OPENABLE);
+      intent.setType(mimeType == null || mimeType.trim().isEmpty()
+        ? "application/octet-stream" : mimeType);
+      intent.putExtra(Intent.EXTRA_TITLE, suggestedName);
+      startActivityForResult(call, intent, "saveDocumentResult");
+    } catch (Exception error) {
+      // 不记录 PluginCall：其中包含完整备份正文及可能的隐私数据。
+      Log.e(TAG, "saveDocument picker launch failed: " + error.getClass().getSimpleName());
+      call.reject("无法打开系统保存对话框");
+    }
+  }
+
+  @ActivityCallback
+  private void saveDocumentResult(PluginCall call, ActivityResult result) {
+    // Activity/进程被系统重建时 Capacitor 会尽力恢复 dangling call；若仍无法恢复，
+    // 此处绝不写文件或虚报成功。新的 WebView 会重新初始化，导出按钮不会保持禁用。
+    if (call == null) {
+      Log.w(TAG, "saveDocument result dropped because the plugin call was not restored");
+      return;
+    }
+
+    if (result == null || result.getResultCode() != Activity.RESULT_OK) {
+      JSObject cancelled = new JSObject();
+      cancelled.put("status", "cancelled");
+      call.resolve(cancelled);
+      return;
+    }
+
+    Intent data = result.getData();
+    Uri uri = data == null ? null : data.getData();
+    if (uri == null) {
+      JSObject failed = new JSObject();
+      failed.put("status", "failed");
+      failed.put("error", "missing-destination");
+      call.resolve(failed);
+      return;
+    }
+
+    try {
+      String content = call.getString("content", "");
+      writeUtf8Document(getContext().getContentResolver(), uri, content);
+
+      String fallbackName = safeSuggestedName(call.getString("fileName"));
+      String actualName = queryDocumentName(getContext().getContentResolver(), uri, fallbackName);
+      JSObject saved = new JSObject();
+      saved.put("status", "saved");
+      saved.put("fileName", actualName);
+      saved.put("locationLabel", documentLocationLabel(uri, actualName));
+      saved.put("bytesWritten", content.getBytes(StandardCharsets.UTF_8).length);
+      call.resolve(saved);
+    } catch (Exception error) {
+      // 失败诊断只保留错误类型，不输出 URI、备份正文或其中的密钥。
+      Log.e(TAG, "saveDocument write failed: " + error.getClass().getSimpleName());
+      JSObject failed = new JSObject();
+      failed.put("status", "failed");
+      failed.put("error", "write-failed");
+      call.resolve(failed);
+    }
+  }
+
+  static void writeUtf8Document(ContentResolver resolver, Uri uri, String content) throws IOException {
+    OutputStream stream = resolver.openOutputStream(uri, "w");
+    if (stream == null) throw new IOException("document output stream unavailable");
+    writeUtf8Stream(stream, content);
+  }
+
+  static void writeUtf8Stream(OutputStream stream, String content) throws IOException {
+    try (BufferedWriter writer = new BufferedWriter(
+      new OutputStreamWriter(stream, StandardCharsets.UTF_8))) {
+      writer.write(content == null ? "" : content);
+      writer.flush();
+    }
+  }
+
+  static String queryDocumentName(ContentResolver resolver, Uri uri, String fallback) {
+    try (Cursor cursor = resolver.query(uri,
+      new String[] { OpenableColumns.DISPLAY_NAME }, null, null, null)) {
+      if (cursor != null && cursor.moveToFirst()) {
+        int index = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME);
+        if (index >= 0) {
+          String name = cursor.getString(index);
+          if (name != null && !name.trim().isEmpty()) return name;
+        }
+      }
+    } catch (Exception ignored) {}
+    return safeSuggestedName(fallback);
+  }
+
+  /**
+   * 只返回系统 URI 明确表达的逻辑位置。其他 provider 没有可靠路径时返回空串，Web 侧会说
+   * “你选择的位置”；绝不从 content URI 猜造一个 /storage/... 文件路径。
+   */
+  static String documentLocationLabel(Uri uri, String fileName) {
+    if (uri == null) return "";
+    String authority = uri.getAuthority();
+    if ("com.android.providers.downloads.documents".equals(authority)) return "下载文件";
+    if (!"com.android.externalstorage.documents".equals(authority)) return "";
+    try {
+      String documentId = DocumentsContract.getDocumentId(uri);
+      String[] parts = documentId == null ? new String[0] : documentId.split(":", 2);
+      if (parts.length == 0) return "";
+      String base = "primary".equalsIgnoreCase(parts[0]) ? "内部存储" : "存储设备";
+      if (parts.length < 2 || parts[1].isEmpty()) return base;
+      String relative = parts[1].replace('\\', '/');
+      int slash = relative.lastIndexOf('/');
+      String folder = slash >= 0 ? relative.substring(0, slash) : "";
+      if (!folder.isEmpty()) return base + "/" + folder;
+      return base;
+    } catch (Exception ignored) {
+      return "";
+    }
+  }
+
+  static String safeSuggestedName(String name) {
+    String safe = name == null ? "" : name.trim();
+    safe = safe.replace('/', '-').replace('\\', '-').replace('\u0000', '-');
+    return safe.isEmpty() ? "export.json" : safe;
+  }
 
   /** P1-4 & Phase D：已排全屏闹钟的持久化记录架构（schemaVersion: 1） */
   public static final String PREFS_SCHEDULES = "attention_alarm_schedules";

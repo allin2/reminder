@@ -1,0 +1,83 @@
+{
+  "app": "attention-inbox",
+  "schema": 5,
+  "exportedAt": "2026-09-19T19:54:51.408Z",
+  "items": [
+    {
+      "id": "export-roundtrip-item",
+      "title": "导出回环事项",
+      "note": "",
+      "tags": [],
+      "url": "",
+      "projectId": "",
+      "priority": "normal",
+      "status": "waiting",
+      "triggerAt": 1789934091000,
+      "windowStart": null,
+      "windowEnd": null,
+      "deadlineAt": null,
+      "repeat": null,
+      "createdAt": 1789847691385,
+      "acknowledgedAt": null,
+      "completedAt": null,
+      "snoozeCount": 0,
+      "deliveredAt": null,
+      "remindCount": 0,
+      "lastRemindAt": null,
+      "lastAlertShownAt": null,
+      "scheduleBasis": "wall-clock",
+      "localTrigger": "2026-09-21T03:54:51",
+      "snoozedAt": null,
+      "snoozeDelayMs": null,
+      "dismissedUntil": null,
+      "review_status": "READY",
+      "reviewed_at": null,
+      "sourceTitle": "",
+      "sourceApp": "",
+      "delivery_mode": "notification",
+      "isFallbackTrigger": false,
+      "deadlineStageKey": null,
+      "deadlineEvents": {},
+      "reminderEvents": {},
+      "deadlinePaused": false,
+      "ackAdvancedAt": null,
+      "rev": 1,
+      "seriesId": null,
+      "repeatParentId": null
+    }
+  ],
+  "notes": [
+    {
+      "id": "export-roundtrip-note",
+      "text": "导出回环笔记",
+      "createdAt": 1789847691389,
+      "updatedAt": 1789847691389,
+      "pinned": false
+    }
+  ],
+  "projects": [
+    {
+      "id": "export-roundtrip-project",
+      "name": "导出回环项目",
+      "color": "#1b6b4a",
+      "createdAt": 1789847691389
+    }
+  ],
+  "settings": {
+    "notify": false,
+    "dnd": true,
+    "importantRepeat": true,
+    "quietStart": "23:00",
+    "quietEnd": "07:30",
+    "dailySummary": false,
+    "privacyNotify": false,
+    "defaultDeliveryMode": "notification",
+    "ai": {
+      "enabled": false,
+      "baseUrl": "",
+      "apiKey": "",
+      "model": "gpt-4o-mini",
+      "autoOnSave": false
+    }
+  }
+}

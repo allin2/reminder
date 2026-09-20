@@ -221,15 +221,20 @@
     return out;
   }
   function downloadFile(name, content, type) {
-    const blob = new Blob([content], { type: type || "application/json" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = name;
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-    setTimeout(() => URL.revokeObjectURL(url), 1000);
+    let url = null;
+    try {
+      const blob = new Blob([content], { type: type || "application/json" });
+      url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = name;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      return true;
+    } finally {
+      if (url) setTimeout(() => URL.revokeObjectURL(url), 1000);
+    }
   }
 
   /* Minimal markdown renderer */
@@ -6776,8 +6781,13 @@
   }
 
   /* ---------- data import/export ---------- */
-  function exportData() {
-    const payload = {
+  let exportInProgress = false;
+  let exportOperationId = 0;
+  let pendingNativeExport = null;
+  const EXPORT_RESULT_GRACE_MS = 8000;
+
+  function buildLegacyBackupPayload() {
+    return {
       app: "attention-inbox",
       schema: SCHEMA,
       exportedAt: new Date().toISOString(),
@@ -6803,17 +6813,147 @@
         }
       }
     };
-    const text = JSON.stringify(payload, null, 2);
-    const name = "安心收件箱备份-" + new Date().toISOString().slice(0, 10) + ".json";
-    const file = new File([text], name, { type: "application/json" });
-    if (navigator.canShare && navigator.canShare({ files: [file] })) {
-      navigator.share({ files: [file], title: "安心收件箱备份" })
-        .then(() => toast("已分享备份"))
-        .catch(() => downloadFile(name, text));
+  }
+
+  function setExportBusy(busy) {
+    const button = $("#btnExport");
+    if (button) {
+      button.disabled = !!busy;
+      button.setAttribute("aria-busy", busy ? "true" : "false");
+    }
+    const sub = $("#exportSub");
+    if (sub) sub.textContent = busy ? "正在等待保存结果…" : "JSON 备份到文件";
+  }
+
+  function clearPendingNativeExport(operationId) {
+    const pending = pendingNativeExport;
+    if (!pending || (operationId != null && pending.id !== operationId)) return;
+    if (pending.timer) clearTimeout(pending.timer);
+    pendingNativeExport = null;
+  }
+
+  /**
+   * 系统文件选择器正常返回时，Capacitor 的 ActivityCallback 会直接兑现 Promise。
+   * 若宿主 Activity 返回前台却一直没有结果（厂商回收/请求丢失），不能让按钮永久卡死；
+   * 等一小段回调宽限期后恢复可重试，并明确说“结果无法确认”，绝不报保存成功。
+   */
+  function noteExportAppVisibility(active) {
+    const pending = pendingNativeExport;
+    if (!pending) return;
+    if (!active) {
+      pending.leftApp = true;
+      if (pending.timer) clearTimeout(pending.timer);
+      pending.timer = null;
       return;
     }
-    downloadFile(name, text);
-    toast("已导出备份文件");
+    if (!pending.leftApp || pending.timer) return;
+    pending.timer = setTimeout(() => {
+      if (pendingNativeExport !== pending || !exportInProgress) return;
+      pendingNativeExport = null;
+      exportOperationId++;
+      exportInProgress = false;
+      setExportBusy(false);
+      toast("保存结果未返回 · 文件状态无法确认，请重试");
+    }, EXPORT_RESULT_GRACE_MS);
+  }
+
+  function isShareCancellation(error) {
+    if (!error) return false;
+    const name = String(error.name || "");
+    const message = String(error.message || error);
+    return name === "AbortError" || /abort|cancel|取消/i.test(message);
+  }
+
+  function savedBackupMessage(result, fallbackName) {
+    const fileName = result && result.fileName ? String(result.fileName) : fallbackName;
+    const location = result && result.locationLabel ? String(result.locationLabel) : "你选择的位置";
+    return "已保存「" + fileName + "」 · 位置：" + location;
+  }
+
+  async function exportData() {
+    if (exportInProgress) {
+      toast("导出正在进行 · 请先完成或取消保存");
+      return { status: "busy" };
+    }
+
+    exportInProgress = true;
+    const operationId = ++exportOperationId;
+    setExportBusy(true);
+
+    // 只在这里拍一次快照。即使系统对话框停留很久，最终写入的仍是点击时的数据。
+    const payload = buildLegacyBackupPayload();
+    const text = JSON.stringify(payload, null, 2);
+    const name = "安心收件箱备份-" + new Date().toISOString().slice(0, 10) + ".json";
+    const mimeType = "application/json";
+
+    try {
+      if (isNativeAndroidRuntime()) {
+        const bridge = systemBridge();
+        if (!bridge || typeof bridge.saveDocument !== "function") {
+          toast("当前版本缺少系统保存能力 · 文件未导出，请更新应用后重试");
+          return { status: "unavailable" };
+        }
+
+        pendingNativeExport = { id: operationId, leftApp: false, timer: null };
+        toast("请选择保存位置和文件名");
+        const result = await bridge.saveDocument({ fileName: name, content: text, mimeType });
+        if (operationId !== exportOperationId) return { status: "stale" };
+        clearPendingNativeExport(operationId);
+        if (result && result.status === "saved") {
+          toast(savedBackupMessage(result, name));
+          return result;
+        }
+        if (result && result.status === "cancelled") {
+          toast("已取消导出 · 未保存文件");
+          return result;
+        }
+        toast("导出失败 · 文件未保存，请重试");
+        return Object.assign({ status: "failed" }, result || {});
+      }
+
+      let file = null;
+      let canShareFile = false;
+      if (typeof navigator.share === "function" && typeof navigator.canShare === "function"
+          && typeof File === "function") {
+        try {
+          file = new File([text], name, { type: mimeType });
+          canShareFile = !!navigator.canShare({ files: [file] });
+        } catch (error) {
+          canShareFile = false;
+        }
+      }
+      if (canShareFile) {
+        toast("正在打开分享面板…");
+        try {
+          await navigator.share({ files: [file], title: "安心收件箱备份" });
+          toast("已分享「" + name + "」");
+          return { status: "shared", fileName: name };
+        } catch (error) {
+          if (isShareCancellation(error)) {
+            toast("已取消分享 · 未再次发起下载");
+            return { status: "cancelled" };
+          }
+          toast("分享失败 · 未再次发起下载，请重试");
+          return { status: "failed" };
+        }
+      }
+
+      downloadFile(name, text, mimeType);
+      toast("已发起下载 · 请查看浏览器下载记录");
+      return { status: "download-started", fileName: name };
+    } catch (error) {
+      if (operationId === exportOperationId) {
+        clearPendingNativeExport(operationId);
+        toast("导出失败 · 文件未保存，请重试");
+      }
+      return { status: "failed" };
+    } finally {
+      if (operationId === exportOperationId) {
+        clearPendingNativeExport(operationId);
+        exportInProgress = false;
+        setExportBusy(false);
+      }
+    }
   }
 
   function importDataFile(file) {
@@ -7684,7 +7824,10 @@
     }, 2000);
     window.addEventListener("online", renderPwaStatus);
     window.addEventListener("offline", renderPwaStatus);
+    window.addEventListener("blur", () => noteExportAppVisibility(false));
+    window.addEventListener("focus", () => noteExportAppVisibility(true));
     document.addEventListener("visibilitychange", () => {
+      noteExportAppVisibility(document.visibilityState === "visible");
       if (document.visibilityState === "visible") {
         // Q6：切回前台是补做原生初始化的天然时机。
         // 冷启动时若桥还没注入（存在稳定时间差），这里的 ensure 会再试一遍并把排程补上。
@@ -7959,6 +8102,10 @@
       load,
       // H-07：降级恢复的取证入口（探测器需要在不重启页面的情况下重放一次）
       loadAsync,
+      // 导出真实入口与旧备份快照：行为测试必须覆盖原生保存、浏览器分享/下载和密钥排除。
+      exportData,
+      buildLegacyBackupPayload,
+      noteExportAppVisibility,
       normalizeAiResult,
       extractJson,
       renderMarkdown,
