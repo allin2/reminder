@@ -103,67 +103,6 @@
       "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
     }[c]));
   }
-
-  /**
-   * O3：**属性上下文**转义。
-   *
-   * 字符集与 `escapeHtml` 相同（`& < > " '` 已覆盖能在属性里闭合引号的每一个字符），
-   * 但语义不同、也必须分开命名：`escapeHtml` 是给**文本节点**用的，这里是给
-   * `attr="…"` 用的。事项 id 未必由内部 `uid()` 生成 —— 导入数据里可以带任意字符串，
-   * 直接拼进 `data-id="…"` 就能闭合引号、往标签里塞新属性。
-   * 分开命名是为了让「改转义字符集」的人一眼看到属性侧也是消费者，不会只改一边。
-   */
-  function escapeAttr(v) {
-    return String(v == null ? "" : v).replace(/[&<>"']/g, c => ({
-      "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
-    }[c]));
-  }
-
-  /**
-   * O3：可点击外部链接的**协议白名单**。
-   *
-   * 只放行「解析后协议是 `http:` / `https:`」的串，其余一律返回 `null`，
-   * 由调用方降级成转义后的**纯文本**（原始数据照旧保留在 `it.url` 里，不静默删除）。
-   *
-   * 为什么不能用 `startsWith("http")` 或 `escapeHtml` 代替：
-   *  · URL 解析器会先剔除 TAB / LF / CR —— `"java\nscript:alert(1)"` 的协议其实是
-   *    `javascript:`，只看字面前缀根本拦不到；`" javascript:…"` 同理；
-   *  · `escapeHtml` 只处理引号，对协议完全无能为力，`href` 里照样是可执行的
-   *    `javascript:` / `data:`。
-   * 因此判定必须落在**解析结果**上，而不是字形上。
-   *
-   * 解析器不可用（老环境 / 提供不了构造函数的测试替身）时退到**保守**字形判定：
-   * 仍然不是前缀检查，而是要求完整的绝对 URL 结构（协议 + 非空格授权段 + 无空白），
-   * 宁可把形态不明的串降级成纯文本，也不放它进 `href`。
-   */
-  function safeExternalHref(raw) {
-    if (raw == null) return null;
-    const trimmed = String(raw).trim();
-    if (!trimmed) return null;
-    // 含控制字符（含 TAB/LF/CR）一律拒绝：解析器会「剔除后再解析」，
-    // 于是 `java\nscript:…` 会变成「看着不像 javascript:、实际就是 javascript:」。
-    if (/[\u0000-\u001f\u007f]/.test(trimmed)) return null;
-
-    if (typeof URL === "function") {
-      let parsed;
-      try {
-        parsed = new URL(trimmed);
-      } catch (error) {
-        // 浏览器提供了解析器却判定输入无效时，不能再用较宽松的字形规则把它放行。
-        return null;
-      }
-      const protocol = String(parsed.protocol || "").toLowerCase();
-      return protocol === "http:" || protocol === "https:" ? trimmed : null;
-    }
-
-    // 仅在运行环境确实没有 URL 构造器时使用保守兼容分支。
-    if (!/^https?:\/\//i.test(trimmed)) return null;
-    if (/\s/.test(trimmed)) return null;
-    const authority = trimmed.replace(/^https?:\/\//i, "").split(/[/?#]/)[0];
-    if (!authority) return null;
-    if (!/^[A-Za-z0-9._~%!$&'()*+,;=:@\[\]-]+$/.test(authority)) return null;
-    return trimmed;
-  }
   function toLocalInput(ts) {
     if (!ts) return "";
     const d = new Date(ts);
@@ -600,6 +539,7 @@
     settings: {
       notify: false,
       notifyPrompted: false,
+      userMode: "beginner",
       onboardDone: false,
       dnd: true,
       importantRepeat: true,
@@ -672,18 +612,11 @@
    *  · **H1 独立快照**：一次提交只序列化一次，再解析出**独立副本**交给后端。
    *    IndexedDB 的 `put` 发生在 microtask 之后，直接传活对象会让期间的内存改动混进
    *    这次提交的内容，让「这笔到底写了什么」不可预测。
-   *  · **O5 同一份独立快照给两个消费者**：后端写入与 `committedAlarmItems` 读的是
-   *    **同一次解析出来的那一份**，正常路径因此少一次全量 `JSON.parse`。
-   *    它们本来就是同一个语义对象（「这次提交了什么」），此前各解析一份纯属重复；
-   *    共享的是**已冻结的独立副本**，不是活对象，H1 不受影响。
    */
   async function writeSnapshot(payload, options) {
     const json = JSON.stringify(payload || currentPayload());
-    // O5：唯一的一次全量解析 —— 结果既交给后端，也作为「已提交快照」发布。
-    // 绝不能用 `payload || currentPayload()` 本身：那是活对象（items 就是 state.items）。
-    const snapshot = JSON.parse(json);
     if (storage && storageReady) {
-      await storage.save(snapshot); // 权威提交：失败即本次提交失败
+      await storage.save(JSON.parse(json)); // 权威提交：失败即本次提交失败
       // H-07：这次写入**没有落进权威后端** —— IDB 本来可用（hasIdb 为真），
       // 但本次会话只降级落在 localStorage 镜像上。必须留待回放凭据，否则下次
       // IDB 恢复正常时 loadAsync 会读到 IDB 里的旧值，这段改动静默消失。
@@ -691,8 +624,7 @@
       // 只在「本该用 IDB 却只落了镜像」时留凭据：设备**根本没有** IndexedDB 时
       // backend 恒为 local，IDB 不可能是权威，留凭据只会让每次启动都做一次无效重放。
       if (authoritativeBackendMissing()) markPendingReplay(json);
-      // 只在**权威提交成功之后**才发布已提交快照（上面 await 抛错到不了这里）。
-      committedAlarmItems = snapshot.items || [];
+      committedAlarmItems = JSON.parse(json).items || [];
       if (!(options && options.deferNativeSync)) {
         bumpNativeSyncVersion();
         queueNativeReminderSync("save");
@@ -704,7 +636,7 @@
     // H-07：降级期的写入**必须留一份待回放凭据**。否则 IDB 一旦恢复，
     // loadAsync 会从 IDB 的旧值加载，这期间用户改的东西静默消失。
     markPendingReplay(json);
-    committedAlarmItems = snapshot.items || [];
+    committedAlarmItems = JSON.parse(json).items || [];
     if (!(options && options.deferNativeSync)) {
       bumpNativeSyncVersion();
       queueNativeReminderSync("save");
@@ -771,22 +703,9 @@
    */
   let commitChain = Promise.resolve();
 
-  /**
-   * O2：闸门只负责**串行与放行**，作业参数由调用方显式给出。
-   *
-   * 旧实现是 `commitChain.then(job, job)` —— `job` 会被当作 `then` 的处理器调用，
-   * 参数是**前一笔的兑现值**（恒为 `undefined`），调用方给的选项原地丢失。
-   * `save({ deferNativeSync: true })` 因此长期形同虚设：选项传不进 `writeSnapshot`，
-   * 「只确认投影结果」的那次保存照旧请求下一轮原生对账。
-   *
-   * **快照仍然在轮到本笔时才取**：`writeSnapshot` 收到的 payload 依旧是 `undefined`，
-   * `currentPayload()` 在作业体内、也就是闸门轮到它执行的那一刻才求值。
-   * 这里只是把「作业 + 它的参数」一起入队，不提前冻结任何状态。
-   */
-  function runCommit(job, args) {
-    const invoke = () => job.apply(null, args || []);
+  function runCommit(job) {
     // 前一笔不论成败都要放行下一笔，否则一次失败会永久卡住后续所有保存
-    const next = commitChain.then(invoke, invoke);
+    const next = commitChain.then(job, job);
     commitChain = next.then(() => {}, () => {});
     return next;
   }
@@ -797,9 +716,8 @@
    * 原生动作队列必须在数据真正落库之后才确认删除，所以不能再「发起了 save 就当已保存」——
    * 那样 handler 一返回原生就把事件删了，此时 IndexedDB 事务可能还没提交，崩溃即丢操作。
    */
-  async function saveAsync(options) {
-    // 位置参数与 `writeSnapshot(payload, options)` 对齐：payload 留空 = 轮到本笔时取当前状态
-    return runCommit(writeSnapshot, [undefined, options]);
+  async function saveAsync() {
+    return runCommit(writeSnapshot);
   }
 
   /**
@@ -816,16 +734,9 @@
    */
   let suppressInnerSave = false;
 
-  /**
-   * O2：`options` 必须能一路走到 `writeSnapshot` 的位置参数上。
-   *
-   * 只有 `deferNativeSync: true` 一种语义：**这次保存只确认已知的排程投影结果**，
-   * 不需要因为落库而再请求一次原生对账。它**不**影响持久化本身 —— 提交、镜像、
-   * pending 回放、失败重试全部照旧；丢的只是由此触发的下一轮对账。
-   */
-  function save(options) {
+  function save() {
     if (suppressInnerSave) return;
-    const pending = saveAsync(options);
+    const pending = saveAsync();
     pending.catch(error => {
       toast("保存失败 · 修改仍保留在本机内存，下一次保存会重试");
       console.error("State save failed:", error && error.message ? error.message : error);
@@ -1011,6 +922,10 @@
     state.notes = Array.isArray(parsed.notes) ? parsed.notes : [];
     state.projects = Array.isArray(parsed.projects) ? parsed.projects : [];
     state.settings = Object.assign(state.settings, parsed.settings || {});
+    if (state.settings.userMode !== "normal" && state.settings.userMode !== "beginner") {
+      state.settings.userMode = "beginner";
+    }
+    syncUserMode();
     if (!state.settings.ai || typeof state.settings.ai !== "object") {
       state.settings.ai = {
         enabled: false,
@@ -1752,46 +1667,19 @@
    * A-2：把 verdict 渲染到首页顶部。断链消失时**主动清空** ——
    * 否则权限恢复后这句警告会一直挂着，变成新的「界面在撒谎」。
    */
-  /**
-   * O6（首页局部更新）：内容与上一次**逐字节相同**时就不动这个容器。
-   *
-   * 为什么不能只看「渲染函数被调用了几次」：首页告知条（`#homeNotice`）与设置入口
-   * （`#homeSetup`）在一次启动里会被各调用多次（原生状态漏斗 `setNativeReminderStatus`
-   * 每读一次权限就调一次），而其中多数次的结论**完全一样**。每次都给同一个容器
-   * `innerHTML = ...` 会整块重建 DOM：焦点、滚动位置和按钮忙碌态都会被打断，
-   * 代价还随容器体量增长。
-   *
-   * 只对**单一写入者**的容器使用（`#homeNotice` / `#homeSetup`）：一旦有第二处代码
-   * 绕过本函数直接写同一个节点，缓存就会失真并开始吞掉必要的更新 —— 所以这里刻意
-   * 逐个容器手工接入，不做全局拦截。
-   *
-   * 跳过写入时事件监听也不重绑：内容相同 ⇒ 判定对象（kind/title/text）相同 ⇒
-   * 旧闭包的行为与新闭包一致。
-   */
-  const lastWrittenHtml = new WeakMap();
-  function writeIfChanged(host, html) {
-    const next = String(html == null ? "" : html);
-    if (lastWrittenHtml.get(host) === next) return false;
-    lastWrittenHtml.set(host, next);
-    host.innerHTML = next;
-    return true;
-  }
-
   function renderHomeNotice() {
     const host = $("#homeNotice");
     if (!host) return;
     const v = homeNoticeVerdict(nativeReminderStatus, state.settings, isNativeAndroidRuntime());
     if (!v) {
-      writeIfChanged(host, "");
+      host.innerHTML = "";
       return;
     }
-    const html =
+    host.innerHTML =
       '<button class="soft-entry notice-entry" id="homeNoticeBtn" data-notice-kind="' + v.kind + '">' +
       '<span><span class="notice-title">' + escapeHtml(v.title) + "</span><br>" +
       '<span style="font-size:0.78rem;color:var(--muted)">' + escapeHtml(v.text) + "</span></span>" +
       '<span style="color:var(--muted)">›</span></button>';
-    // 内容没变 ⇒ DOM 不重建，监听也保持原样（旧闭包读的是同一个 v，行为一致）。
-    if (!writeIfChanged(host, html)) return;
     const btn = $("#homeNoticeBtn");
     if (btn) {
       btn.addEventListener("click", () => {
@@ -1812,26 +1700,22 @@
     if (!host) return;
     const n = needsReviewItems().length;
     if (!n) {
-      writeIfChanged(host, "");
+      host.innerHTML = "";
       return;
     }
     const strong = inReviewHighlight();
-    let html;
     if (strong) {
       // 显著：提到最前，带数字
-      html = '<button class="soft-entry strong-entry" id="openReview" style="margin-bottom:10px;border-color:var(--attention);background:var(--attention-bg)">' +
-        '<span><strong style="color:#7a540e">待整理 · ' + n + "</strong><br><span style=\"font-size:0.78rem;color:#8a6a17\">信息尚未二次确认，不是逾期任务</span></span>" +
+      host.innerHTML = '<button class="soft-entry strong-entry" id="openReview" style="margin-bottom:10px;border-color:var(--attention);background:var(--attention-bg)">' +
+        '<span><strong style="color:#7a540e">待整理 · ' + n + "</strong><br><span class=\"review-sub\" style=\"font-size:0.78rem;color:#8a6a17\">信息尚未二次确认，不是逾期任务</span></span>" +
         "<span>整理 ›</span></button>";
     } else {
       // 弱形态：无数字、无强调色
-      html = '<button class="soft-entry" id="openReview" style="margin-bottom:10px;opacity:.75">' +
+      host.innerHTML = '<button class="soft-entry" id="openReview" style="margin-bottom:10px;opacity:.75">' +
         '<span><strong style="font-weight:500;color:var(--muted)">待整理</strong><br>' +
-        '<span style="font-size:0.78rem;color:var(--muted)">信息尚未二次确认，不是逾期任务</span></span>' +
+        '<span class=\"review-sub\" style=\"font-size:0.78rem;color:var(--muted)\">信息尚未二次确认，不是逾期任务</span></span>' +
         "<span style=\"color:var(--muted)\">›</span></button>";
     }
-    // O6：这个入口在**每一拍** renderHome 都会被调用一次（包括被签名短路的那一拍），
-    // 但内容只在数量 / 高亮窗口变化时才变 —— 单写入者容器，内容相同就不重建。
-    if (!writeIfChanged(host, html)) return;
     const btn = $("#openReview");
     if (btn) btn.addEventListener("click", () => openReviewSession());
   }
@@ -2540,7 +2424,7 @@
    * `data-act` 是行为契约，副说明只是给人看的，不参与任何判断。
    */
   function actionButton(act, id, cls, label, sub) {
-    return '<button class="' + cls + '" data-act="' + act + '" data-id="' + escapeAttr(id) + '">' +
+    return '<button class="' + cls + '" data-act="' + act + '" data-id="' + id + '">' +
       '<span class="act-label">' + escapeHtml(label) + "</span>" +
       (sub ? '<span class="act-sub">' + escapeHtml(sub) + "</span>" : "") +
       "</button>";
@@ -2599,20 +2483,15 @@
         "</div>";
     }
 
-    // O3：链接只走协议白名单；不合格的降级成纯文本，**不删数据**（it.url 原样保留，
-    // 详情页的编辑入口仍能改它）。
-    const safeUrl = safeExternalHref(it.url);
     const link = it.url
-      ? (safeUrl
-        ? '<a class="linkish" href="' + escapeAttr(safeUrl) + '" target="_blank" rel="noopener">' + escapeHtml(it.url) + "</a>"
-        : '<span class="linkish-plain">' + escapeHtml(it.url) + "</span>")
+      ? '<a class="linkish" href="' + escapeHtml(it.url) + '" target="_blank" rel="noopener">' + escapeHtml(it.url) + "</a>"
       : "";
 
     return '<article class="card ' +
       (it.priority === "critical" ? "urgent " : it.priority === "important" ? "important " : "") +
       (mode === "active" ? "acked " : "") +
       (mode === "archived" ? "done" : "") +
-      '" data-id="' + escapeAttr(it.id) + '">' +
+      '" data-id="' + it.id + '">' +
       '<div class="card-title">' + escapeHtml(it.title) + "</div>" +
       '<div class="card-meta">' + pills.join("") + "</div>" +
       (it.note ? '<p style="font-size:0.86rem;color:var(--muted);margin:-4px 0 8px;white-space:pre-wrap">' + escapeHtml(it.note) + "</p>" : "") +
@@ -2638,64 +2517,10 @@
     }
   }
 
-  /**
-   * O6：首页**卡片容器**的渲染签名。
-   *
-   * 为什么不是「把整个 state stringify 一下当签名」：那本身就是一次全量深遍历 + 字符串
-   * 复制，热点只是从 innerHTML 挪到签名上，还顺手让「哪些字段真的会影响这一屏」变得不可读。
-   * 这里只收集**卡片与入口真正读到的那些值**，逐项对应 renderItemCard / 空态模板：
-   *
-   *  · 折叠状态、待整理数量、今日完成数；
-   *  · 项目表的 id/名称/颜色（卡片上的项目药丸，改项目名也要跟着变）；
-   *  · 每个需要注意的事项：id、优先级、项目、**已格式化的时间文案**（`relDue` 是相对时间，
-   *    跨分钟就会变，所以直接把它算出来的文字放进来，比按 rev 判断可靠）、截止日期文案、
-   *    截止保护暂停标记、周期文案、标签、标题、备注、链接；
-   *  · 折叠时**只放数量**，不放卡片内容 —— 折叠态本来就不生成这些卡片，
-   *    放进来只会让每一拍无谓地重建。
-   *
-   * 刻意**不**用 `rev`：改标题也会推进 rev，机械按 rev 失效会在「什么都没显示变化」时重建，
-   * 而 rev 不动的 `lastAlertShownAt` / 时间文案变化又会被漏掉。
-   */
-  function homeCardSignatureRow(kind, it) {
-    return [kind, it.id, it.priority || "", it.projectId || "",
-      it.triggerAt ? relDue(it.triggerAt) : "-",
-      it.deadlineAt ? fmtDate(it.deadlineAt) : "-",
-      it.deadlinePaused ? "P" : "-",
-      (it.repeat && it.repeat.every) ? repeatLabel(it.repeat) + "/" + (it.repeat.mode || "") : "-",
-      (it.tags || []).slice(),
-      it.title || "", it.note || "", it.url || ""];
-  }
-
-  function homeCardSignature(dueList, active, expanded, extra) {
-    // 只序列化这一屏真正读取的字段。嵌套数组保留字段与标签边界，避免逗号、控制字符
-    // 或其他分隔符出现在用户数据时，把两个不同视图误判成同一个签名。
-    const parts = [
-      expanded ? "E" : "C",
-      extra.quiet ? "q" : "n",
-      "r:" + extra.reviewPending,
-      "d:" + extra.doneTodayCount,
-      state.projects.map(p => [p.id, p.name, p.color]),
-      dueList.map(it => homeCardSignatureRow("D", it)),
-      expanded
-        ? active.map(it => homeCardSignatureRow("A", it))
-        : ["A#", active.length]
-    ];
-    return JSON.stringify(parts);
-  }
-
-  /** O6：首页卡片容器最后一次渲染用的签名；null = 还没渲染过。 */
-  let homeViewSignature = null;
-  /** O6：首页渲染的可断言计数（构建次数 / 生成的卡片数 / 被短路跳过的次数）。 */
-  const homeRenderStats = { builds: 0, skipped: 0, dueCards: 0, activeCards: 0 };
-
   function renderHome() {
-    // O6：**业务推进与 DOM 写入必须分开。**
-    // `promoteDue` 会真的改状态并落库（waiting → due），它绝不能藏在渲染短路后面 ——
-    // 否则「没有显示变化」的那一拍会顺手把业务推进也跳过。所以它永远执行。
     promoteDue();
     // A-2 / D68：先摆「后台到底会不会响」这句话 —— 它是对整页的限定，
     // 必须排在「现在需要注意」之前，否则用户读到的是一件件的待办，读不到前提。
-    // 这两个各自写自己的容器（#homeSetup / #homeNotice），与卡片容器无关。
     renderSetupEntry();
     renderHomeNotice();
     const now = Date.now();
@@ -2711,12 +2536,9 @@
       return (a.triggerAt || 0) - (b.triggerAt || 0);
     });
 
-    // D7：「已看到未完成」永远折叠成一行（带数量）。
-    // O6：折叠态只显示数量 ⇒ **不排序、不建卡片**；展开时才按 acknowledgedAt 排一次。
-    const expanded = state.ui.activeExpanded;
     const active = state.items
-      .filter(it => it.status === "acknowledged" && it.review_status !== "NEEDS_REVIEW");
-    if (expanded) active.sort((a, b) => (b.acknowledgedAt || 0) - (a.acknowledgedAt || 0));
+      .filter(it => it.status === "acknowledged" && it.review_status !== "NEEDS_REVIEW")
+      .sort((a, b) => (b.acknowledgedAt || 0) - (a.acknowledgedAt || 0));
 
     const doneToday = state.items.filter(it => {
       if (it.status !== "archived") return false;
@@ -2724,8 +2546,24 @@
       return sameDay(new Date(it.completedAt), new Date());
     });
 
-    const quiet = !dueList.length && !active.length;
-    const reviewPending = needsReviewItems().length;
+    // D5：首页不再出现「即将到来」；顺序 = 需要注意 → 已看到（折叠） → 待整理弱入口 → 空态
+    const homeUpcoming = $("#homeUpcoming");
+    if (homeUpcoming) homeUpcoming.innerHTML = "";
+
+    $("#homeDue").innerHTML = dueList.length
+      ? '<div class="sec"><div class="sec-head"><div class="sec-title">现在需要注意</div><div class="sec-count">' +
+        dueList.length + "</div></div>" +
+        dueList.map(it => renderItemCard(it, "due")).join("") + "</div>"
+      : "";
+
+    // D7：「已看到未完成」永远折叠成一行（带数量）
+    const expanded = state.ui.activeExpanded;
+    $("#homeActive").innerHTML = active.length
+      ? '<button class="soft-entry" id="toggleActive"><span><strong>已看到未完成 · ' + active.length +
+        "</strong></span><span>" + (expanded ? "收起" : "展开") + " ›</span></button>" +
+        '<div id="activeList"' + (expanded ? "" : " hidden") + ">" +
+        active.map(it => renderItemCard(it, "active")).join("") + "</div>"
+      : "";
 
     // D8：空态里一句纯文字完成数 —— 纯文字、不可点击、无徽标、无强调色、不新增区块
     // （当天完成明细走「未来 → 已归档」，不在首页开入口）
@@ -2736,67 +2574,38 @@
     // 两件事**必须分容器**：D8 的纪律是「完成数不得变成伪待办入口」，它检查的是
     // `#homeEmpty` 里没有 `<button>` / `data-act`。把新增入口塞进同一个容器，
     // 那条纪律会当场失效 —— 于是说明留在 `#homeEmpty`，入口挂在兄弟节点 `#homeStart`。
-    const signature = homeCardSignature(dueList, active, expanded, {
-      quiet: quiet, reviewPending: reviewPending, doneTodayCount: doneToday.length
-    });
+    const quiet = !dueList.length && !active.length;
+    const reviewPending = needsReviewItems().length;
+    $("#homeEmpty").innerHTML = quiet
+      ? '<div class="empty"><div class="empty-mark">✓</div><h3>' +
+        (reviewPending ? "暂时没有到点的提醒" : "把要记的事丢进来") + "</h3>" +
+        "<p>" +
+        (reviewPending
+          ? "还有 " + reviewPending + " 条待整理，等你有空再补时间。"
+          : "写一句话就行，例如「明天下午3点提醒我取快递」。到点我会提醒你。") +
+        "</p>" +
+        (doneToday.length
+          ? '<p style="margin-top:12px;font-size:0.92rem;color:var(--ink-2)">今天已完成 ' + doneToday.length + " 件</p>"
+          : "") +
+        "</div>"
+      : "";
 
-    if (signature === homeViewSignature) {
-      // 这一拍要写进容器的内容与上一拍完全一致 ⇒ **不替换任何卡片节点**。
-      // 焦点、滚动位置、按钮忙碌态与事件闭包因此都不受影响；下面的廉价刷新照常执行。
-      homeRenderStats.skipped++;
-    } else {
-      homeViewSignature = signature;
-      homeRenderStats.builds++;
-      homeRenderStats.dueCards = dueList.length;
-      homeRenderStats.activeCards = expanded ? active.length : 0;
-
-      // D5：首页不再出现「即将到来」；顺序 = 需要注意 → 已看到（折叠） → 待整理弱入口 → 空态
-      const homeUpcoming = $("#homeUpcoming");
-      if (homeUpcoming) homeUpcoming.innerHTML = "";
-
-      $("#homeDue").innerHTML = dueList.length
-        ? '<div class="sec"><div class="sec-head"><div class="sec-title">现在需要注意</div><div class="sec-count">' +
-          dueList.length + "</div></div>" +
-          dueList.map(it => renderItemCard(it, "due")).join("") + "</div>"
-        : "";
-
-      // D7：折叠时**只**生成入口与数量，隐藏卡片一张都不生成（`#activeList` 保留为空容器，
-      // 结构不变、可被外部样式与顺序调整引用，但里面没有节点）。展开后按**当前**状态生成，
-      // 收起时整段重写 ⇒ 那些卡片节点随之释放，不再常驻内存。
-      $("#homeActive").innerHTML = active.length
-        ? '<button class="soft-entry" id="toggleActive"><span><strong>已看到未完成 · ' + active.length +
-          "</strong></span><span>" + (expanded ? "收起" : "展开") + " ›</span></button>" +
-          '<div id="activeList"' + (expanded ? "" : " hidden") + ">" +
-          (expanded ? active.map(it => renderItemCard(it, "active")).join("") : "") + "</div>"
-        : "";
-
-      $("#homeEmpty").innerHTML = quiet
-        ? '<div class="empty"><div class="empty-mark">✓</div><h3>' +
-          (reviewPending ? "暂时没有到点的提醒" : "把要记的事丢进来") + "</h3>" +
-          "<p>" +
-          (reviewPending
-            ? "还有 " + reviewPending + " 条待整理，等你有空再补时间。"
-            : "写一句话就行，例如「明天下午3点提醒我取快递」。到点我会提醒你。") +
-          "</p>" +
-          (doneToday.length
-            ? '<p style="margin-top:12px;font-size:0.92rem;color:var(--ink-2)">今天已完成 ' + doneToday.length + " 件</p>"
-            : "") +
+    const homeStart = $("#homeStart");
+    if (homeStart) {
+      const isBeginner = state.settings.userMode !== "normal";
+      homeStart.innerHTML = quiet
+        ? '<div class="empty-start">' +
+          '<button class="btn primary" id="emptyCapture">记一件事</button>' +
+          (isBeginner ? '<button class="soft-entry" id="emptyGuide"><span>新手指南与核心概念</span><span style="color:var(--muted)">›</span></button>' : "") +
+          '<button class="soft-entry" id="emptyDemo"><span>看看演示（只读，不会写入数据）</span><span style="color:var(--muted)">›</span></button>' +
           "</div>"
         : "";
-
-      const homeStart = $("#homeStart");
-      if (homeStart) {
-        homeStart.innerHTML = quiet
-          ? '<div class="empty-start">' +
-            '<button class="btn primary" id="emptyCapture">记一件事</button>' +
-            '<button class="soft-entry" id="emptyDemo"><span>看看演示（只读，不会写入数据）</span><span style="color:var(--muted)">›</span></button>' +
-            "</div>"
-          : "";
-        const emptyCapture = $("#emptyCapture");
-        if (emptyCapture) emptyCapture.addEventListener("click", () => openCapture());
-        const emptyDemo = $("#emptyDemo");
-        if (emptyDemo) emptyDemo.addEventListener("click", () => openDemoPreview());
-      }
+      const emptyCapture = $("#emptyCapture");
+      if (emptyCapture) emptyCapture.addEventListener("click", () => openCapture());
+      const emptyGuide = $("#emptyGuide");
+      if (emptyGuide) emptyGuide.addEventListener("click", () => openSheet("sheetGuide"));
+      const emptyDemo = $("#emptyDemo");
+      if (emptyDemo) emptyDemo.addEventListener("click", () => openDemoPreview());
     }
 
     setBadge(dueList.length);
@@ -2971,7 +2780,7 @@
       (notes.length
         ? notes.map(n => {
             const proj = projectById(n.projectId);
-            return '<article class="note-card" data-note="' + escapeAttr(n.id) + '">' +
+            return '<article class="note-card" data-note="' + n.id + '">' +
               "<h3>" + (n.pinned ? "📌 " : "") + escapeHtml(n.title || "无标题") + "</h3>" +
               "<p>" + escapeHtml(n.body || "") + "</p>" +
               '<div class="note-date">' + fmtTime(n.updatedAt) +
@@ -3008,7 +2817,46 @@
     }
   }
 
+  function syncUserMode() {
+    const isNormal = state.settings.userMode === "normal";
+    if (typeof document !== "undefined" && document.body) {
+      if (document.body.classList && typeof document.body.classList.toggle === "function") {
+        document.body.classList.toggle("mode-normal", isNormal);
+        document.body.classList.toggle("mode-beginner", !isNormal);
+      } else if (typeof document.body.className === "string") {
+        const cls = document.body.className.split(/\s+/).filter(c => c && c !== "mode-normal" && c !== "mode-beginner");
+        cls.push(isNormal ? "mode-normal" : "mode-beginner");
+        document.body.className = cls.join(" ");
+      }
+    }
+  }
+
+  function setUserMode(mode) {
+    state.settings.userMode = mode === "normal" ? "normal" : "beginner";
+    save();
+    syncUserMode();
+    render();
+    if (state.ui.tab === "me") renderMe();
+    toast(state.settings.userMode === "normal"
+      ? "已切换为正常模式（精简小字）"
+      : "已切换为初学者模式（显示释义小字）");
+  }
+
   function renderMe() {
+    // 使用模式：初学者模式 / 正常模式
+    const userModeSeg = $("#userModeSeg");
+    if (userModeSeg) {
+      const mode = state.settings.userMode === "normal" ? "normal" : "beginner";
+      $$("#userModeSeg .seg-item").forEach(b => {
+        b.classList.toggle("on", b.dataset.mode === mode);
+      });
+      const userModeSub = $("#userModeSub");
+      if (userModeSub) {
+        userModeSub.textContent = mode === "normal"
+          ? "正常模式：界面紧凑清爽，隐藏释义小字"
+          : "初学者模式：保留操作释义小字与新手引导";
+      }
+    }
     $("#swNotify").classList.toggle("on", !!state.settings.notify);
     $("#swDnd").classList.toggle("on", !!state.settings.dnd);
     $("#swImp").classList.toggle("on", !!state.settings.importantRepeat);
@@ -3546,12 +3394,19 @@
   function snapshotItemForm() {
     const val = (sel) => ($(sel) ? $(sel).value : "");
     const on = $$("#capPriority .chip.on")[0];
+    const picked = !!(triggerUserPicked || lowConfUserPicked);
+    const triggerVal = val("#capTrigger");
+    let triggerAction = "untouched";
+    if (picked) {
+      triggerAction = triggerVal ? "changed" : "cleared";
+    }
     return {
       text: val("#capText"),
       note: val("#capNote"),
       tags: val("#capTags"),
       url: val("#capUrl"),
-      trigger: val("#capTrigger"),
+      trigger: triggerVal,
+      triggerAction: triggerAction,
       deadline: val("#capDeadline"),
       project: val("#capProject"),
       repeat: val("#capRepeat"),
@@ -3574,16 +3429,19 @@
    *
    * 时间框只在**用户自己选过**时才算数：解析器与兜底会自己往它里面写值，
    * 把它无条件算进来，会让「解析器刚补完时间」被误判成「用户改了草稿」，
-   * 于是面板不再关闭、草稿不再复位。
+   * 于是面板不再关闭、草稿不再复位。编辑时若显式清空或改期，也以 triggerAction 区分。
    */
   function formDraftSignature(snap) {
     if (!snap) return "";
-    const picked = snap.triggerPicked || snap.lowConfPicked;
+    const picked = !!(snap.triggerPicked || snap.lowConfPicked);
+    const triggerPart = picked
+      ? (snap.triggerAction ? snap.triggerAction + ":" : "") + (snap.trigger || "")
+      : (snap.editItemId ? "untouched" : "");
     return [
       snap.editItemId || "new",
       snap.text, snap.note, snap.tags, snap.url, snap.deadline, snap.project,
       snap.repeat, snap.repeatMode, snap.nth, snap.weekday, snap.priority,
-      picked ? snap.trigger : ""
+      triggerPart
     ].join("\u0001");
   }
 
@@ -4227,19 +4085,23 @@
     it.triggerAt = values.triggerAt;
     it.scheduleBasis = values.scheduleBasis === "elapsed" ? "elapsed" : "wall-clock";
     it.localTrigger = it.scheduleBasis === "wall-clock" ? toLocalInput(values.triggerAt) : null;
-    it.snoozedAt = null;
-    it.snoozeDelayMs = null;
-    it.dismissedUntil = null;
     it.deadlineAt = values.deadlineAt;
     it.repeat = values.repeat;
-    if (values.triggerAt && values.triggerAt !== prevTrigger) {
+    if (values.triggerAt !== prevTrigger) {
       // L08：改期等于开启新一轮 —— 轮次与预算一并重置（与 snoozeItem 同一语义）
       it.remindCount = 0;
       it.lastRemindAt = null;
       it.lastAlertShownAt = null;
       it.deliveredAt = null;
+      it.snoozedAt = null;
+      it.snoozeDelayMs = null;
+      it.dismissedUntil = null;
+    } else {
+      it.snoozedAt = values.snoozedAt !== undefined ? values.snoozedAt : it.snoozedAt;
+      it.snoozeDelayMs = values.snoozeDelayMs !== undefined ? values.snoozeDelayMs : it.snoozeDelayMs;
+      it.dismissedUntil = values.dismissedUntil !== undefined ? values.dismissedUntil : it.dismissedUntil;
     }
-    if (values.triggerAt && values.triggerAt > Date.now() && (it.status === "due" || it.status === "acknowledged")) {
+    if (values.triggerAt && values.triggerAt !== prevTrigger && values.triggerAt > Date.now() && (it.status === "due" || it.status === "acknowledged")) {
       it.status = "waiting";
     }
     // V05：编辑保存必须推进版本，否则旧通知的事件版本与当前一致，仍会覆盖新安排
@@ -4327,30 +4189,67 @@
         const local = parseChineseTime(raw);
         parsed = local;
         title = local.title || raw;
-      } else if (raw !== editing.title) {
-        const local = parseChineseTime(raw);
-        parsed = local;
-        title = local.title || raw;
+      } else {
+        title = raw || (editing ? editing.title : "未命名事项");
       }
 
       const extraTags = String(src.tags == null ? "" : src.tags).trim().split(/\s+/).filter(Boolean);
-      const parsedTags = parsed ? (parsed.tags || []) : [];
+      const parsedTags = (!editing && parsed) ? (parsed.tags || []) : [];
       const tags = Array.from(new Set(parsedTags.concat(extraTags)));
       const priority = src.priority || "normal";
-      // L01：时间来源优先级固定为「用户明确选择 > 有效解析 > 兜底」
-      //  · explicitTime  = 用户手选（时间输入框 / 低置信度极简选择）
-      //  · parsedTrigger = 解析器给出的真实时间（低置信度时不算「真实时间」）
-      //  · formTrigger   = 表单当前值，可能是解析器写进去的，因此排在解析结果之后
+
       const formTrigger = parseLocalInput(src.trigger);
-      const parsedTrigger = parsed ? (parsed.trigger || parsed.triggerAt) : null;
-      const userPicked = !!(src.triggerPicked || src.lowConfPicked);
-      const explicitTime = userPicked ? formTrigger : null;
-      const parsedLow = !!(parsed && (parsed.confidence === "low" || parsed.confidence === "none"));
-      const triggerAt = explicitTime || (parsedLow ? null : (parsedTrigger || formTrigger)) || null;
-      const scheduleBasis = !userPicked && !parsedLow && parsed && parsed.scheduleBasis === "elapsed"
-        ? "elapsed" : "wall-clock";
-      const deadlineAt = parseLocalInput(src.deadline) || (parsed ? parsed.deadline || parsed.deadlineAt : null);
-      const repeat = formRepeat(src) || (parsed && parsed.repeat
+      let triggerAt;
+      let scheduleBasis;
+      let snoozedAt = editing ? editing.snoozedAt : null;
+      let snoozeDelayMs = editing ? editing.snoozeDelayMs : null;
+
+      if (editing) {
+        const triggerAction = src.triggerAction || (src.triggerPicked ? (src.trigger ? "changed" : "cleared") : "untouched");
+        const initialFormTrigger = toLocalInput(editing.triggerAt);
+        const formTriggerMatchesInitial = (src.trigger || "") === initialFormTrigger;
+
+        if (triggerAction === "cleared" || (!src.trigger && editing.triggerAt != null && src.triggerPicked)) {
+          // 显式清空时间
+          triggerAt = null;
+          scheduleBasis = "wall-clock";
+          snoozedAt = null;
+          snoozeDelayMs = null;
+        } else if (triggerAction === "changed" || (!formTriggerMatchesInitial && src.trigger)) {
+          // 显式选择新时间 / 改期
+          triggerAt = formTrigger;
+          scheduleBasis = "wall-clock";
+          snoozedAt = null;
+          snoozeDelayMs = null;
+        } else if (!src.trigger && editing.triggerAt == null) {
+          // 本身无时间且保持为空
+          triggerAt = null;
+          scheduleBasis = "wall-clock";
+          snoozedAt = null;
+          snoozeDelayMs = null;
+        } else {
+          // 未动：保留原提醒时间与时间基准（包括稍后产生的 elapsed 提醒元数据）
+          triggerAt = editing.triggerAt;
+          scheduleBasis = editing.scheduleBasis || "wall-clock";
+          snoozedAt = editing.snoozedAt;
+          snoozeDelayMs = editing.snoozeDelayMs;
+        }
+      } else {
+        // L01：时间来源优先级固定为「用户明确选择 > 有效解析 > 兜底」
+        //  · explicitTime  = 用户手选（时间输入框 / 低置信度极简选择）
+        //  · parsedTrigger = 解析器给出的真实时间（低置信度时不算「真实时间」）
+        //  · formTrigger   = 表单当前值，可能是解析器写进去的，因此排在解析结果之后
+        const parsedTrigger = parsed ? (parsed.trigger || parsed.triggerAt) : null;
+        const userPicked = !!(src.triggerPicked || src.lowConfPicked);
+        const explicitTime = userPicked ? formTrigger : null;
+        const parsedLow = !!(parsed && (parsed.confidence === "low" || parsed.confidence === "none"));
+        triggerAt = explicitTime || (parsedLow ? null : (parsedTrigger || formTrigger)) || null;
+        scheduleBasis = !userPicked && !parsedLow && parsed && parsed.scheduleBasis === "elapsed"
+          ? "elapsed" : "wall-clock";
+      }
+
+      const deadlineAt = parseLocalInput(src.deadline) || (!editing && parsed ? parsed.deadline || parsed.deadlineAt : null);
+      const repeat = formRepeat(src) || (!editing && parsed && parsed.repeat
         ? (parsed.repeat.every === "nthWeekday"
             ? { every: "nthWeekday", mode: parsed.repeat.mode || "calendar", nth: parsed.repeat.nth || 1, dow: parsed.repeat.dow != null ? parsed.repeat.dow : 1 }
             : parsed.repeat)
@@ -4370,6 +4269,8 @@
           priority: priority,
           triggerAt: triggerAt,
           scheduleBasis: scheduleBasis,
+          snoozedAt: snoozedAt,
+          snoozeDelayMs: snoozeDelayMs,
           deadlineAt: deadlineAt,
           repeat: repeat
         }], { userFacing: true, itemArg: 0, name: "editItem" });
@@ -4561,36 +4462,34 @@
       (it.acknowledgedAt ? '<div class="detail-row"><dt>确认看到</dt><dd>' + fmtTime(it.acknowledgedAt) + "</dd></div>" : "") +
       (it.completedAt ? '<div class="detail-row"><dt>完成</dt><dd>' + fmtTime(it.completedAt) + "</dd></div>" : "") +
       "</dl>" +
-      (it.url ? (safeExternalHref(it.url)
-        ? '<a class="linkish" href="' + escapeAttr(safeExternalHref(it.url)) + '" target="_blank" rel="noopener">' + escapeHtml(it.url) + "</a>"
-        : '<span class="linkish-plain">' + escapeHtml(it.url) + "</span>") : "") +
-      '<p style="margin-top:16px;font-size:0.78rem;color:var(--muted);line-height:1.5">「我知道了」只表示你真正注意到了，不会自动变成「完成」。已经点过「我知道了」的事项会留在首页的「未完成」里，随时能找到。</p>';
+      (it.url ? '<a class="linkish" href="' + escapeHtml(it.url) + '" target="_blank" rel="noopener">' + escapeHtml(it.url) + "</a>" : "") +
+      '<p class="beginner-hint" style="margin-top:16px;font-size:0.78rem;color:var(--muted);line-height:1.5">「我知道了」只表示你真正注意到了，不会自动变成「完成」。已经点过「我知道了」的事项会留在首页的「未完成」里，随时能找到。</p>';
 
     const ab = actionButton;
     let foot = "";
     if (it.status === "due") {
       foot = ab("snooze", it.id, "btn secondary", "稍后提醒", "改到具体时间") +
         ab("ack", it.id, "btn primary", "我知道了", "停止本轮 · 仍未完成") +
-        '<button class="btn secondary" data-act="done" data-id="' + escapeAttr(it.id) + '" style="flex:0 0 auto">完成</button>';
+        '<button class="btn secondary" data-act="done" data-id="' + it.id + '" style="flex:0 0 auto">完成</button>';
     } else if (it.status === "acknowledged") {
       foot = ab("reopen", it.id, "btn secondary", "稍后提醒", "2 小时后") +
         ab("done", it.id, "btn primary", "完成", "结束并归档");
     } else if (it.status === "waiting" || it.status === "snoozed") {
-      foot = '<button class="btn secondary" data-act="delete" data-id="' + escapeAttr(it.id) + '">删除</button>' +
+      foot = '<button class="btn secondary" data-act="delete" data-id="' + it.id + '">删除</button>' +
         ab("edit", it.id, "btn primary", "修改", "");
     } else {
       // D23：恢复 ≠ 撤销完成 —— 恢复不会自动提醒，也不还原截止保护
       foot = ab("restore", it.id, "btn secondary", "恢复到待办", "不会自动提醒") +
-        '<button class="btn danger" data-act="delete" data-id="' + escapeAttr(it.id) + '">删除</button>';
+        '<button class="btn danger" data-act="delete" data-id="' + it.id + '">删除</button>';
     }
     // L03 / D23：规则级的二级操作与「恢复截止保护」——
     // 不能用「删除当前记录」冒充整条重复规则的终止，也不能让暂停状态没有回去的路。
     const extras = [];
     if (it.repeat && it.repeat.every) {
-      extras.push('<button class="btn secondary" data-act="stopRepeat" data-id="' + escapeAttr(it.id) + '">停止重复</button>');
+      extras.push('<button class="btn secondary" data-act="stopRepeat" data-id="' + it.id + '">停止重复</button>');
     }
     if (it.deadlineAt && it.deadlinePaused && !isTerminal(it)) {
-      extras.push('<button class="btn secondary" data-act="resumeDeadline" data-id="' + escapeAttr(it.id) + '">恢复截止保护</button>');
+      extras.push('<button class="btn secondary" data-act="resumeDeadline" data-id="' + it.id + '">恢复截止保护</button>');
     }
     $("#detailFoot").innerHTML = extras.join("") + foot;
     openSheet("sheetDetail");
@@ -4673,7 +4572,7 @@
           it.status === "acknowledged" ? "active" : "future"
         )).join("") +
         notes.map(n =>
-          '<article class="note-card" data-note="' + escapeAttr(n.id) + '"><h3>' + escapeHtml(n.title) +
+          '<article class="note-card" data-note="' + n.id + '"><h3>' + escapeHtml(n.title) +
           "</h3><p>" + escapeHtml(n.body) + "</p></article>"
         ).join("")
       : '<div class="empty" style="padding:28px 12px"><p>没有找到「' + escapeHtml(q) + "」</p></div>";
@@ -4785,26 +4684,6 @@
   }
 
   /**
-   * O4：**调用内**的 id → 事项 索引。
-   *
-   * 语义与 `list.find(x => x.id === id)` 逐字一致：**先出现者胜**。
-   * 这正是不能用 `new Map(list.map(it => [it.id, it]))` 的原因 —— Map 构造会被后出现者覆盖，
-   * 数据里一旦有重复 id，查找结果会从「首项」静默变成「末项」，行为跟着变。
-   *
-   * 只在单次调用内使用，绝不做跨入口维护的全局缓存：全局缓存一旦漏了某个修改入口，
-   * 缺陷形态是「改了某条事项后对账仍然按旧对象算」，比多扫一遍数组危险得多。
-   */
-  function indexItemsById(list) {
-    const map = new Map();
-    (list || []).forEach(it => {
-      if (!it) return;
-      if (map.has(it.id)) return; // 首项胜
-      map.set(it.id, it);
-    });
-    return map;
-  }
-
-  /**
    * F1 / G3：把对账回传的截止事件按**阶段**写回事项的事件表。
    *
    * 关键约束：只有状态真的变化时才 save。此前两个阶段共用一个槽位，
@@ -4824,7 +4703,7 @@
    * @param {number} now
    * @param {Array} cancelledEvents 本轮被原生确认撤销的截止排程（可选）
    */
-  function applyDeadlineEvents(events, now, cancelledEvents, options) {
+  function applyDeadlineEvents(events, now, cancelledEvents) {
     const planned = new Map();
     (events || []).forEach(ev => {
       if (!ev || !ev.itemId || !ev.stageKey) return;
@@ -4846,13 +4725,8 @@
         targetItemIds.add(it.id);
       }
     });
-    // O4：调用内建一次索引。原先 `targetItemIds.forEach(id => state.items.find(...))`
-    // 是 O(目标数 × n)。索引按**先出现者胜**建，与 `Array.find` 的首项匹配语义逐字一致
-    // （重复 id 时不会像 `new Map(items.map(...))` 那样被末项覆盖）。
-    // 本函数在遍历期间只写 `it.deadlineEvents`，不改动 state.items 成员，索引全程有效。
-    const byId = indexItemsById(state.items);
     targetItemIds.forEach(itemId => {
-      const it = byId.get(itemId);
+      const it = state.items.find(x => x.id === itemId);
       if (!it) return;
       const stages = planned.get(itemId) || new Map();
       const cancelled = cancelledKeys.get(itemId) || null;
@@ -4893,10 +4767,7 @@
         changed = true;
       }
     });
-    // O2：`options.deferNativeSync` 只由**原生对账内部的回写**传入 —— 那时写进去的就是
-    // 刚刚算出来的投影结果本身，再请求一轮对账没有新信息，只会自激。
-    // 其它调用方（导入、迁移、事件回调）不给选项，照常请求同步。
-    if (changed) save(options);
+    if (changed) save();
     return changed;
   }
 
@@ -4917,7 +4788,7 @@
    * 「系统已接收」。有 `roundBase` 才分得开。旧条目没有这个字段时保持不可验证；
    * 只有当前原生对账再次明确登记同一个键，才为它补上可证明的本轮身份。
    */
-  function applyReminderEvents(events, now, cancelledEvents, options) {
+  function applyReminderEvents(events, now, cancelledEvents) {
     const planned = new Map();
     (events || []).forEach(ev => {
       if (!ev || !ev.itemId || !ev.key) return;
@@ -4937,10 +4808,8 @@
       if (it && it.reminderEvents && typeof it.reminderEvents === "object" &&
         Object.keys(it.reminderEvents).length > 0) targetItemIds.add(it.id);
     });
-    // O4：同 applyDeadlineEvents —— 调用内索引，首项胜；遍历期间不改动 state.items 成员。
-    const byId = indexItemsById(state.items);
     targetItemIds.forEach(itemId => {
-      const it = byId.get(itemId);
+      const it = state.items.find(x => x.id === itemId);
       if (!it) return;
       const keys = planned.get(itemId) || new Map();
       const cancelled = cancelledKeys.get(itemId) || null;
@@ -4996,8 +4865,7 @@
         changed = true;
       }
     });
-    // O2：同 applyDeadlineEvents —— 仅原生对账内部的投影结果回写才 defer。
-    if (changed) save(options);
+    if (changed) save();
     return changed;
   }
 
@@ -5079,21 +4947,15 @@
 
         // 业务消费记录仅在版本未漂移时才写回，旧轮结果绝不覆盖新业务状态
         if (capturedVersion === nativeSyncVersion) {
-          // O2：这一段的保存都是**确认刚才这一轮投影结果**，不是新的业务变更 ——
-          // 事件台账写回与下面的结果记账都必须 `deferNativeSync`，否则
-          // save → queue → reconcile 会自激成「一次业务变更 = 至少两轮对账」。
-          // 台账状态本身会在**下一次**真实对账（用户保存 / 回前台 / 权限变化）时被读取，
-          // 不丢语义；被推迟的只是由本次记账凭空触发的那一轮。
-          const ledgerOptions = { deferNativeSync: true };
           if (status && Array.isArray(status.deadlineEvents)) {
-            applyDeadlineEvents(status.deadlineEvents, Date.now(), status.cancelledDeadlineEvents, ledgerOptions);
+            applyDeadlineEvents(status.deadlineEvents, Date.now(), status.cancelledDeadlineEvents);
           }
           if (status && Array.isArray(status.reminderEvents)) {
-            applyReminderEvents(status.reminderEvents, Date.now(), status.cancelledReminderEvents, ledgerOptions);
+            applyReminderEvents(status.reminderEvents, Date.now(), status.cancelledReminderEvents);
           }
           if (idsChanged || sigsChanged) {
             // 纯结果记账使用 deferNativeSync，避免 save → queue → reconcile 自激死循环
-            save(ledgerOptions);
+            save({ deferNativeSync: true });
           }
           if (!nativeSyncPending) {
             break;
@@ -5778,8 +5640,10 @@
     setPill($("#labExactPill"), exactOk ? "精确" : "降级", exactOk, !exactOk);
 
     const batteryOk = !!diag.ignoringBatteryOptimizations;
-    $("#labBattery").textContent = batteryOk ? "已忽略系统电池优化 · 厂商开关仍需手动确认" : "未加入系统白名单 · 请同时检查厂商后台设置";
-    setPill($("#labBatteryPill"), batteryOk ? "正常" : "建议开启", batteryOk, !batteryOk);
+    $("#labBattery").textContent = batteryOk
+      ? "系统优化已放行 · 核心防冻结需在系统确认「允许完全后台行为」与「自启动」"
+      : "未放行系统优化 · 务必去系统设置开启「允许完全后台行为」与「自启动」";
+    setPill($("#labBatteryPill"), batteryOk ? "需在系统确认" : "未放行", batteryOk, true);
 
     // Q3：全屏闹钟的两道门 —— 解锁亮屏靠「显示在其他应用上层」，锁屏靠「全屏通知」
     const overlayOk = !!diag.canDrawOverlays;
@@ -5787,12 +5651,10 @@
     const fullOk = overlayOk && fsiOk;
     const fullEl = $("#labFullScreen");
     if (fullEl) {
-      // V2：这一行只陈述「两项能力齐备」这个事实。此前写「解锁亮屏与锁屏都能弹全屏」，
-      // 与下一行「投递：锁屏也没弹出」并存时会自相矛盾 —— 权限齐备不等于系统一定会展示。
-      if (fullOk) fullEl.textContent = "权限齐备 · 能否弹出以「投递」一行为准";
-      else if (!overlayOk && !fsiOk) fullEl.textContent = "两项都缺 · 只会出通知横幅";
-      else if (!overlayOk) fullEl.textContent = "缺「显示在其他应用上层」· 解锁亮屏只出横幅";
-      else fullEl.textContent = "缺「全屏通知」· 锁屏也只出横幅";
+      if (fullOk) fullEl.textContent = "全屏及悬浮窗已允许 · 锁屏与使用其他应用均可弹出";
+      else if (!overlayOk && !fsiOk) fullEl.textContent = "未配置 · 锁屏及使用其他应用时仅出横幅，不弹全屏";
+      else if (!overlayOk) fullEl.textContent = "缺「悬浮窗 / 上层显示」· 使用其他应用时只出横幅";
+      else fullEl.textContent = "缺「全屏通知 / 锁屏显示」· 锁屏熄屏时不弹全屏";
     }
     setPill($("#labFullScreenPill"), fullOk ? "权限齐备" : "受限", fullOk, !fullOk);
 
@@ -6280,7 +6142,7 @@
     if (it.priority === "critical") pills.push('<span class="pill crit">🚨 关键</span>');
     if (it.deadlineAt) pills.push('<span class="pill warn">有截止</span>');
     if (it.repeat && it.repeat.every) pills.push('<span class="pill future">周期</span>');
-    return '<div class="upcoming-item" data-act="edit" data-id="' + escapeAttr(it.id) + '">' +
+    return '<div class="upcoming-item" data-act="edit" data-id="' + it.id + '">' +
       '<div class="upcoming-when"><b>' + escapeHtml(time) + "</b>" + escapeHtml(day) + "</div>" +
       '<div class="upcoming-body">' +
       '<div class="upcoming-title">' + escapeHtml(it.title || "未命名事项") + "</div>" +
@@ -6379,11 +6241,8 @@
     if (!byItem.size) return false;
     const at = Date.now();
     let changed = false;
-    // O4：调用内索引一次，替代「每个有证据的事项各扫一遍 state.items」。
-    // `mergeEvidenceInto` 只写事项自己的证据字段，不改动 state.items 成员，索引全程有效。
-    const byId = indexItemsById(state.items);
     byItem.forEach((evidences, itemId) => {
-      const it = byId.get(itemId);
+      const it = state.items.find(x => x.id === itemId);
       if (!it) return;
       if (runUserOp(mergeEvidenceInto, [it, evidences, at], {
         userFacing: false,
@@ -6537,20 +6396,18 @@
   function renderSetupEntry() {
     const host = $("#homeSetup");
     if (!host) return;
-    if (!isNativeAndroidRuntime()) { writeIfChanged(host, ""); return; }
-    if (state.settings.setupDone || state.settings.setupDismissed) { writeIfChanged(host, ""); return; }
-    if (!state.settings.setupPromptStarted) { writeIfChanged(host, ""); return; }
+    if (!isNativeAndroidRuntime()) { host.innerHTML = ""; return; }
+    if (state.settings.setupDone || state.settings.setupDismissed) { host.innerHTML = ""; return; }
+    if (!state.settings.setupPromptStarted) { host.innerHTML = ""; return; }
     const f = FeedbackLib;
     const st = f ? f.setupSteps(nativeReminderStatus, setupStepsContext()) : null;
-    if (!st || !st.next) { writeIfChanged(host, ""); return; }
+    if (!st || !st.next) { host.innerHTML = ""; return; }
     const missing = st.steps.filter(s => !s.done);
-    const html = '<button class="soft-entry" id="setupEntry" style="margin-bottom:10px">' +
+    host.innerHTML = '<button class="soft-entry" id="setupEntry" style="margin-bottom:10px">' +
       "<span><strong>提醒还没准备好</strong><br>" +
       '<span style="font-size:0.78rem;color:var(--muted)">还差 ' + missing.length + " 步：" +
       escapeHtml(missing[0].title) + " · 可以跳过，跳过也能记录</span></span>" +
       '<span style="color:var(--muted)">›</span></button>';
-    // O6：内容没变就不重建，也不重复挂监听（单写入者容器，见 writeIfChanged）。
-    if (!writeIfChanged(host, html)) return;
     const btn = $("#setupEntry");
     if (btn) btn.addEventListener("click", () => openSetupSheet());
   }
@@ -6773,7 +6630,12 @@
 
   /** 传给 `FeedbackLib.setupSteps` 的上下文：测试步骤的完成/重测状态由本次运行决定。 */
   function setupStepsContext() {
-    return { testRun: currentTestRun(), testFeedback: state.settings.testFeedback || null };
+    return {
+      testRun: currentTestRun(),
+      testFeedback: state.settings.testFeedback || null,
+      backgroundDone: !!state.settings.backgroundDone,
+      overlayDone: !!state.settings.overlayDone
+    };
   }
 
   function renderSetupSheetBody() {
@@ -6872,6 +6734,22 @@
         try { await NativeReminders.openExactAlarmSettings(); } catch (error) {}
       }
       toast("回到应用后这里会自动更新");
+      return;
+    }
+    if (stepId === "background") {
+      state.settings.backgroundDone = true;
+      save();
+      await openBackgroundGuide("background");
+      toast("请找到「安心收件箱」，勾选「允许完全后台行为」与「自启动」");
+      renderSetupSheetBody();
+      return;
+    }
+    if (stepId === "overlay") {
+      state.settings.overlayDone = true;
+      save();
+      await openSystemSetting("overlay");
+      toast("请允许「显示在其他应用上层 / 悬浮窗」与锁屏显示");
+      renderSetupSheetBody();
       return;
     }
     // 默认：开始 60 秒测试（用户主动开始，不代跑）
@@ -7047,6 +6925,7 @@
         dailySummary: state.settings.dailySummary,
         privacyNotify: state.settings.privacyNotify,
         defaultDeliveryMode: state.settings.defaultDeliveryMode || "notification",
+        userMode: state.settings.userMode || "beginner",
         // do not export AI secrets
         ai: {
           enabled: !!(state.settings.ai && state.settings.ai.enabled),
@@ -7433,7 +7312,10 @@
       renderCaptureSummary();
     });
     // UX-C02：清除手选时间后摘要必须同步更新（否则摘要会一直显示一个已经作废的时间）
-    $("#capTrigger").addEventListener("input", renderCaptureSummary);
+    $("#capTrigger").addEventListener("input", () => {
+      triggerUserPicked = true;
+      renderCaptureSummary();
+    });
     $("#capDeadline").addEventListener("change", renderCaptureSummary);
     $("#capDeadline").addEventListener("input", renderCaptureSummary);
     // UX-C02：「更多选项」默认收起，编辑复杂事项时才自动展开
@@ -7744,6 +7626,23 @@
     $("#swImp").addEventListener("click", () => {
       state.settings.importantRepeat = !state.settings.importantRepeat; save(); renderMe();
     });
+    // 使用模式切换（初学者模式 / 正常模式）
+    $$("#userModeSeg .seg-item").forEach(btn => {
+      btn.addEventListener("click", () => {
+        setUserMode(btn.dataset.mode);
+      });
+    });
+    const btnUserGuide = $("#btnUserGuide");
+    if (btnUserGuide) {
+      btnUserGuide.addEventListener("click", () => openSheet("sheetGuide"));
+    }
+    const btnSwitchToNormal = $("#btnSwitchToNormalFromGuide");
+    if (btnSwitchToNormal) {
+      btnSwitchToNormal.addEventListener("click", () => {
+        closeSheet("sheetGuide");
+        setUserMode("normal");
+      });
+    }
     // D25：默认提醒方式（只影响之后录入）
     $$("#deliveryModeSeg .seg-item").forEach(btn => {
       btn.addEventListener("click", () => {
@@ -8129,6 +8028,7 @@
     });
 
     const loaded = await loadAsync();
+    syncUserMode();
     bind();
     if (schemaMigrationNeeded) {
       schemaMigrationNeeded = false;
@@ -8162,23 +8062,15 @@
     registerPwa();
     bindInstall();
     bindNetwork();
-
-    // O7：**路由先确定，再渲染一次。**
-    //
-    // 原顺序是「分支里 render() → 一串旁路装配 → handleQueryActions() → render()」，
-    // 加上末尾 tick() 内部的 renderHome，干净冷启动最多做 3 次首页 DOM 构建，
-    // 而后两次的输入完全相同（query 路由只改 state.ui，不改任何渲染输入）。
-    //
-    // 现在：`applyShareParams` / `handleQueryActions` 先把 tab、整理会话、深链动作、
-    // 分享预填确定下来，然后只渲染一次。其余语义逐条保留：
-    //  · 干净首启仍然不 seed（UX-C01，本段代码从未 seed 过，只把「不再自动 seed」写实）；
-    //  · 分享入口照旧捕获（返回 true 时把 tab 拉回 home，与旧逻辑一致）；
-    //  · 通知 / 深链 / 整理入口照常触发（它们各自渲染自己的面板）；
-    //  · 后台桥异步初始化不受影响（ensureNativeReminders 在上面，本来就不挡启动链）。
-    // 末尾 `tick()` 仍然执行，负责业务推进与**立即处理已到期事项**，不靠删它省渲染次数；
-    // 它内部的 renderHome 在输入未变时由 O6 的签名短路兜成空操作。
-    const shared = applyShareParams();
-    if (shared) state.ui.tab = "home";
+    if (!applyShareParams()) {
+      // UX-C01：**干净首启** —— 没有任何已保存数据时也不再自动 seed、不弹演示提醒。
+      // 老数据照常加载（`loaded` 为真时走 else 分支的 render，什么都不改）；
+      // 从没见过的用户看到的是空首页 + 用途说明 + 「记一件事」入口（见 renderHome）。
+      render();
+    } else {
+      state.ui.tab = "home";
+      render();
+    }
     handleQueryActions();
     render();
     maybeDailySummary();
@@ -8274,29 +8166,6 @@
       inReviewHighlight,
       // 渲染 / 会话 / 弹条 —— 供测试直接断言行为，无用户可见副作用
       renderHome,
-      // O6：首页卡片容器的渲染计数。「折叠 1000 条不生成隐藏卡片」「无显示变化的一拍
-      // 不替换卡片节点」这两句结论必须能被**计数**证明，而不是只读源码推断。
-      homeRenderStats: () => Object.assign({}, homeRenderStats),
-      resetHomeRenderStats: () => {
-        homeRenderStats.builds = 0;
-        homeRenderStats.skipped = 0;
-        homeRenderStats.dueCards = 0;
-        homeRenderStats.activeCards = 0;
-      },
-      // O2：原生同步的计数台账（同步请求数 / 实际对账轮数 / 去重合并数）——
-      // 「内部记账不再自激下一轮对账」要能在**真实 app 编排链**上数出来。
-      nativeSyncStats: () => ({
-        totalRequests: nativeSyncMetrics.totalRequests,
-        runs: nativeSyncMetrics.runs,
-        deduped: nativeSyncMetrics.deduped,
-        bySource: Object.assign({}, nativeSyncMetrics.bySource)
-      }),
-      resetNativeSyncStats: () => {
-        nativeSyncMetrics.totalRequests = 0;
-        nativeSyncMetrics.runs = 0;
-        nativeSyncMetrics.deduped = 0;
-        nativeSyncMetrics.bySource = {};
-      },
       renderReviewEntry,
       renderReviewCard,
       openReviewSession,
@@ -8371,6 +8240,8 @@
       get formSession() { return itemFormSession; },
       clearAlert: () => { alertItem = null; },
       get state() { return state; },
+      setUserMode,
+      syncUserMode,
       save,
       // 真实的持久化 Promise：测试要断言「落库之后」的状态就必须等它
       saveAsync,
