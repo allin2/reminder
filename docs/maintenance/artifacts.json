@@ -1,0 +1,256 @@
+{
+  "schema_version": 1,
+  "project_root": "/Users/qlyf/Developer/reminder",
+  "runs": [
+    {
+      "run_id": "20260919T182541Z-safe-cleanup",
+      "scope": [
+        "/Users/qlyf/Developer/reminder/.worktrees/android-capacitor",
+        "/Users/qlyf/Developer/reminder/android/app/build",
+        "/Users/qlyf/Developer/reminder/android/.gradle"
+      ],
+      "report": "docs/maintenance/20260919T182541Z-safe-cleanup.md"
+    },
+    {
+      "run_id": "20260920T152214Z-stale-apk-cleanup",
+      "scope": [
+        "/Users/qlyf/Developer/reminder/releases/安心收件箱-debug.apk.stale-20260916"
+      ],
+      "report": "docs/maintenance/20260920T152214Z-stale-apk-cleanup.md"
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "/Users/qlyf/Developer/reminder/.worktrees/android-capacitor",
+      "kind": "worktree",
+      "source": {
+        "task": "android-capacitor",
+        "commit": "c040ed943348787c0c23188ce89ee1f3423b47c5",
+        "created_for": null
+      },
+      "identity": {
+        "content_fingerprint": null,
+        "metadata_fingerprint": null,
+        "worktree_head": "c040ed943348787c0c23188ce89ee1f3423b47c5"
+      },
+      "inventory": {
+        "logical_bytes": 15546108,
+        "complete": true,
+        "report": "docs/maintenance/20260919T182541Z-safe-cleanup.md"
+      },
+      "checks": {
+        "references": {
+          "state": "PRESERVED",
+          "scope": "refs/heads/android-capacitor and refs/tags/archive/local-main-20260916-c040ed9",
+          "evidence": "Both refs still resolve to c040ed943348787c0c23188ce89ee1f3423b47c5 after removal."
+        },
+        "unique_content": {
+          "state": "PRESERVED_IN_GIT_REFS",
+          "evidence": "The worktree was clean before removal; its branch and archive tag remain."
+        },
+        "process_use": {
+          "state": "CLEAR",
+          "checked_at": "2026-09-19T18:25:41Z"
+        },
+        "recovery": {
+          "state": "AVAILABLE",
+          "location": "git worktree add /Users/qlyf/Developer/reminder/.worktrees/android-capacitor android-capacitor",
+          "evidence": "Branch and tag were verified after removal."
+        }
+      },
+      "decision": {
+        "state": "COMPLETED",
+        "reason": "Clean registered worktree removed without deleting its branch or tag.",
+        "checked_at": "2026-09-19T18:25:41Z",
+        "recheck_when": []
+      },
+      "approval": {
+        "source": "User message: 请你进行安全清理",
+        "scope": "The three exact targets confirmed in the immediately preceding cleanup review.",
+        "approved_at": "2026-09-20 Asia/Shanghai"
+      },
+      "actions": [
+        {
+          "action": "git worktree remove",
+          "executed_at": "2026-09-19T18:25:41Z",
+          "result": "SUCCESS",
+          "recovery_location": "refs/heads/android-capacitor"
+        }
+      ]
+    },
+    {
+      "path": "/Users/qlyf/Developer/reminder/android/app/build",
+      "kind": "build-output",
+      "source": {
+        "task": "Android Gradle build",
+        "commit": null,
+        "created_for": "Local Android builds"
+      },
+      "identity": {
+        "content_fingerprint": null,
+        "metadata_fingerprint": "device=16777233,inode=81228091",
+        "worktree_head": null
+      },
+      "inventory": {
+        "logical_bytes": 67016130,
+        "complete": true,
+        "report": "docs/maintenance/20260919T182541Z-safe-cleanup.md"
+      },
+      "checks": {
+        "references": {
+          "state": "GENERATED",
+          "scope": "Android build output",
+          "evidence": "Directory is recreated by the Gradle build."
+        },
+        "unique_content": {
+          "state": "REBUILDABLE",
+          "evidence": "No user data or frozen candidate was identified in the build output."
+        },
+        "process_use": {
+          "state": "CLEAR",
+          "checked_at": "2026-09-19T18:25:41Z"
+        },
+        "recovery": {
+          "state": "MOVED_TO_TRASH",
+          "location": "/Users/qlyf/.Trash/reminder-android-app-build-20260920-cleanup",
+          "evidence": "Source is absent; destination has the same device and inode 81228091."
+        }
+      },
+      "decision": {
+        "state": "COMPLETED",
+        "reason": "Generated and rebuildable output moved to Trash.",
+        "checked_at": "2026-09-19T18:25:41Z",
+        "recheck_when": []
+      },
+      "approval": {
+        "source": "User message: 请你进行安全清理",
+        "scope": "The three exact targets confirmed in the immediately preceding cleanup review.",
+        "approved_at": "2026-09-20 Asia/Shanghai"
+      },
+      "actions": [
+        {
+          "action": "move to Trash",
+          "executed_at": "2026-09-19T18:25:41Z",
+          "result": "SUCCESS",
+          "recovery_location": "/Users/qlyf/.Trash/reminder-android-app-build-20260920-cleanup"
+        }
+      ]
+    },
+    {
+      "path": "/Users/qlyf/Developer/reminder/android/.gradle",
+      "kind": "build-output",
+      "source": {
+        "task": "Gradle project cache",
+        "commit": null,
+        "created_for": "Local Android builds"
+      },
+      "identity": {
+        "content_fingerprint": null,
+        "metadata_fingerprint": "device=16777233,inode=81223953",
+        "worktree_head": null
+      },
+      "inventory": {
+        "logical_bytes": 15744880,
+        "complete": true,
+        "report": "docs/maintenance/20260919T182541Z-safe-cleanup.md"
+      },
+      "checks": {
+        "references": {
+          "state": "GENERATED",
+          "scope": "Project-local Gradle cache",
+          "evidence": "Directory is recreated by Gradle."
+        },
+        "unique_content": {
+          "state": "REBUILDABLE",
+          "evidence": "No user data or frozen candidate was identified in the cache."
+        },
+        "process_use": {
+          "state": "CLEAR",
+          "checked_at": "2026-09-19T18:25:41Z"
+        },
+        "recovery": {
+          "state": "MOVED_TO_TRASH",
+          "location": "/Users/qlyf/.Trash/reminder-android-dot-gradle-20260920-cleanup",
+          "evidence": "Source is absent; destination has the same device and inode 81223953."
+        }
+      },
+      "decision": {
+        "state": "COMPLETED",
+        "reason": "Generated project cache moved to Trash.",
+        "checked_at": "2026-09-19T18:25:41Z",
+        "recheck_when": []
+      },
+      "approval": {
+        "source": "User message: 请你进行安全清理",
+        "scope": "The three exact targets confirmed in the immediately preceding cleanup review.",
+        "approved_at": "2026-09-20 Asia/Shanghai"
+      },
+      "actions": [
+        {
+          "action": "move to Trash",
+          "executed_at": "2026-09-19T18:25:41Z",
+          "result": "SUCCESS",
+          "recovery_location": "/Users/qlyf/.Trash/reminder-android-dot-gradle-20260920-cleanup"
+        }
+      ]
+    },
+    {
+      "path": "/Users/qlyf/Developer/reminder/releases/安心收件箱-debug.apk.stale-20260916",
+      "kind": "stale-apk",
+      "source": {
+        "task": "superseded debug APK",
+        "commit": null,
+        "created_for": "historical local debug build"
+      },
+      "identity": {
+        "content_fingerprint": "sha256:1a0de97607524df2dddcd0d4a95614b1b8738495bad8219bda14f271ded1d86e",
+        "metadata_fingerprint": "device=16777234,inode=81237365",
+        "worktree_head": null
+      },
+      "inventory": {
+        "logical_bytes": 4243418,
+        "complete": true,
+        "report": "docs/maintenance/20260920T152214Z-stale-apk-cleanup.md"
+      },
+      "checks": {
+        "references": {
+          "state": "CLEAR",
+          "scope": "repository source and reports",
+          "evidence": "No reference to the exact .stale-20260916 path was found."
+        },
+        "unique_content": {
+          "state": "STALE_DEBUG_BUILD",
+          "evidence": "The file was explicitly named stale and was not a frozen release candidate or acceptance input."
+        },
+        "process_use": {
+          "state": "CLEAR",
+          "checked_at": "2026-09-20T15:22:14Z"
+        },
+        "recovery": {
+          "state": "MOVED_TO_TRASH",
+          "location": "/Users/qlyf/.Trash/reminder-安心收件箱-debug.apk.stale-20260916-20260920-cleanup",
+          "evidence": "Source is absent; destination preserves size, device, inode, and SHA-256."
+        }
+      },
+      "decision": {
+        "state": "COMPLETED",
+        "reason": "Unreferenced stale debug APK moved recoverably to Trash.",
+        "checked_at": "2026-09-20T15:22:14Z",
+        "recheck_when": []
+      },
+      "approval": {
+        "source": "User response annotation: 按推荐方案执行",
+        "scope": "The one exact stale APK proposed in the immediately preceding cleanup review.",
+        "approved_at": "2026-09-20 Asia/Shanghai"
+      },
+      "actions": [
+        {
+          "action": "move to Trash",
+          "executed_at": "2026-09-20T15:22:14Z",
+          "result": "SUCCESS",
+          "recovery_location": "/Users/qlyf/.Trash/reminder-安心收件箱-debug.apk.stale-20260916-20260920-cleanup"
+        }
+      ]
+    }
+  ]
+}

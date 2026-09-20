@@ -901,7 +901,7 @@ async function run() {
           priority: "normal", tags: [], deadlineEvents: {}, reminderEvents: {},
           scheduleBasis: "wall-clock", localTrigger: null, dismissedUntil: null, rev: 1
         }],
-        notes: [], projects: [], settings: { notify: false }
+        notes: [], projects: [], settings: { notify: false, dnd: false }
       }
     });
     ok("持久数据启动 ready() 为真，且老数据被恢复出来", dataBoot.ready === true &&
@@ -986,7 +986,7 @@ async function run() {
       make(HOSTILE_ID, "https://example.com/q?a=%22x%22&b=1")
     ];
     const h = await bootCombination({
-      seedState: { schema: 5, items: seedItems, notes: [], projects: [], settings: { notify: false } }
+      seedState: { schema: 5, items: seedItems, notes: [], projects: [], settings: { notify: false, dnd: false } }
     });
     const app = h.app;
     const html = h.node("#homeDue").innerHTML;

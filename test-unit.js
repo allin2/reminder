@@ -708,6 +708,37 @@ section("feedback — 动作语义与术语");
     st.steps.every(s => s.why && s.denyImpact));
   const stAll = fb.setupSteps({ notifications: "granted", exactAlarm: "granted" });
   ok("测试步骤仍可达（未测试前不算全通过）", !stAll.allDone || stAll.steps.some(s => s.id === "test"));
+  const background = stAll.steps.find(s => s.id === "background");
+  ok("未打开后台设置且系统未确认时不算完成", background.done === false && background.verified === false);
+  ok("后台说明不再声称所有国产系统锁屏 20 秒必然冻结",
+    !/国产系统锁屏超过\s*20\s*秒/.test(background.why), background.why);
+  const visited = fb.setupSteps(
+    { notifications: "granted", exactAlarm: "granted", overlay: "denied", fullScreenIntent: "denied" },
+    { backgroundVisited: true, overlayVisited: true }
+  );
+  const visitedBackground = visited.steps.find(s => s.id === "background");
+  const visitedOverlay = visited.steps.find(s => s.id === "overlay");
+  ok("打开过后台设置只推进向导，不冒充系统能力已验证",
+    visitedBackground.done === true && visitedBackground.verified === false);
+  ok("打开过悬浮窗设置只推进向导，不承诺一定只显示横幅",
+    visitedOverlay.done === true && visitedOverlay.verified === false && /可能/.test(visitedOverlay.denyImpact));
+  const verified = fb.setupSteps({
+    notifications: "granted", exactAlarm: "granted", ignoringBatteryOptimizations: true,
+    overlay: "granted", fullScreenIntent: "granted"
+  });
+  ok("系统可回读的后台与全屏能力仍可标记为已验证",
+    verified.steps.find(s => s.id === "background").verified === true &&
+    verified.steps.find(s => s.id === "overlay").verified === true);
+  const missedRun = fb.setupSteps({}, {
+    testRun: { startedAt: 1000, feedbackAt: 1100 },
+    testFeedback: { value: "missed", at: 1100 }
+  }).steps.find(s => s.id === "test");
+  ok("60 秒测试有结果不等于验证通过", missedRun.done === true && missedRun.verified === false);
+  const heardRun = fb.setupSteps({}, {
+    testRun: { startedAt: 1000, feedbackAt: 1100 },
+    testFeedback: { value: "heard", at: 1100 }
+  }).steps.find(s => s.id === "test");
+  ok("本次测试明确听到后才可标记为验证通过", heardRun.done === true && heardRun.verified === true);
   ok("未回答测试反馈不等于失败或成功", fb.testFeedbackVerdict(undefined).ok === null);
   ok("不确定既不算失败也不算成功", fb.testFeedbackVerdict("unsure").ok === null);
   ok("区分「没收到」与「不确定」", fb.testFeedbackVerdict("missed").ok === false);

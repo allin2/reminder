@@ -15,6 +15,7 @@ const libStorage = fs.readFileSync(path.join(ROOT, "lib/storage.js"), "utf8");
 const libFeedback = fs.readFileSync(path.join(ROOT, "lib/feedback.js"), "utf8");
 const libDeliveryEvidence = fs.readFileSync(path.join(ROOT, "lib/delivery-evidence.js"), "utf8");
 const src = fs.readFileSync(path.join(ROOT, "app-core.js"), "utf8");
+const indexHtml = fs.readFileSync(path.join(ROOT, "index.html"), "utf8");
 const systemBridgeJava = fs.readFileSync(path.join(ROOT,
   "android/app/src/main/java/space/alliswell/inbox/SystemBridgePlugin.java"), "utf8");
 
@@ -81,7 +82,7 @@ const document = {
     createdElements.push(node);
     return node;
   },
-  body: { appendChild() {} }
+  body: Object.assign(el("body"), { appendChild() {} })
 };
 
 const createdElements = [];
@@ -1618,6 +1619,43 @@ section("13. PRD 验收主路径");
   app.completeItem(item.id);
   ok("⑥ 完成 → archived", item.status === "archived");
   ok("⑦ ACK 过程中从未自动变成 complete", item.completedAt && item.acknowledgedAt);
+}
+
+/* ---------- 13. Dual Mode (Beginner vs Normal) ---------- */
+section("13. 初学者模式与正常模式（双模式）");
+{
+  ok("默认使用模式为初学者模式", app.state.settings.userMode === "beginner");
+  app.syncUserMode();
+  ok("初学者模式下 body 带有 mode-beginner", document.body.classList.contains("mode-beginner"));
+  ok("初学者模式下 body 不带 mode-normal", !document.body.classList.contains("mode-normal"));
+
+  // 空态渲染测试：初学者模式包含新手指南
+  app.state.items = [];
+  app.renderHome();
+  const startHtmlBeginner = getNode("#homeStart").innerHTML;
+  ok("初学者模式空首页包含新手指南入口", /id="emptyGuide"/.test(startHtmlBeginner));
+
+  // 切换为正常模式
+  app.setUserMode("normal");
+  ok("切换后 userMode 为 normal", app.state.settings.userMode === "normal");
+  ok("正常模式下 body 带有 mode-normal", document.body.classList.contains("mode-normal"));
+  ok("正常模式下 body 不带 mode-beginner", !document.body.classList.contains("mode-beginner"));
+  ok("正常模式仍保留首页可靠性设置入口",
+    !/body\.mode-normal\s+#homeSetup\s*\{[^}]*display\s*:\s*none/i.test(indexHtml));
+
+  // 正常模式空态渲染测试：不包含新手指南入口
+  app.renderHome();
+  const startHtmlNormal = getNode("#homeStart").innerHTML;
+  ok("正常模式空首页不包含新手指南入口", !/id="emptyGuide"/.test(startHtmlNormal));
+
+  // 导出数据测试
+  const backup = app.buildLegacyBackupPayload();
+  ok("备份包含 userMode: normal", backup.settings.userMode === "normal");
+
+  // 还原回初学者模式
+  app.setUserMode("beginner");
+  ok("还原后 userMode 为 beginner", app.state.settings.userMode === "beginner");
+  ok("还原后 body 带有 mode-beginner", document.body.classList.contains("mode-beginner"));
 }
 }
 

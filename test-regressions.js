@@ -3517,6 +3517,157 @@ section("返工2 SW：预缓存必须覆盖 index.html 真正加载的每个脚�
   ok("SW 对照组：离线导航仍然回落 index.html",
     (await nav) === htmlSource);
 }
+
+section("返工4：编辑表单保留未修改时间、区分改期/清空/稍后、验证重载持久化（修复方案 第一阶段）");
+{
+  const h = createApp();
+  const app = await h.boot();
+  app.state.settings.dnd = false;
+  const now = Date.now();
+  const origTrigger = Math.floor((now + 24 * 3600000) / 60000) * 60000;
+
+  // ① DV-03 真实编辑入口修改标题不丢失原提醒时间
+  const it1 = app.makeItem({
+    title: "明天15点实机验证编辑反例",
+    status: "waiting",
+    priority: "normal",
+    triggerAt: origTrigger,
+    scheduleBasis: "wall-clock",
+    localTrigger: localInputOf(origTrigger)
+  });
+  app.state.items = [it1];
+  await app.saveAsync();
+  await flush(10);
+
+  // 模拟真实界面操作：打开编辑页，仅修改标题为不带时间词的文本，未碰时间框
+  app.openEditItem(it1.id);
+  h.setField("#capText", "实机验证改标题反例");
+  app.saveItemFromForm();
+  await flush(10);
+  await app.saveAsync();
+
+  const it1After = app.state.items.find(x => x.id === it1.id);
+  ok("P1-01 编辑标题不丢失原时间：triggerAt 保持原值",
+    it1After.triggerAt === origTrigger,
+    String(it1After.triggerAt) + " vs " + origTrigger);
+  ok("P1-01 编辑标题不丢失原时间：localTrigger 保持原值",
+    it1After.localTrigger === localInputOf(origTrigger),
+    String(it1After.localTrigger));
+  ok("P1-01 编辑标题成功更新标题文本",
+    it1After.title === "实机验证改标题反例",
+    it1After.title);
+
+  // 重启验证：持久化在重启后保持
+  const restarted1 = await restartApp(h.disk);
+  const restored1 = restarted1.app.state.items.find(x => x.id === it1.id);
+  ok("P1-01 重启后验证：triggerAt 与 localTrigger 完整保持",
+    restored1 && restored1.triggerAt === origTrigger && restored1.localTrigger === localInputOf(origTrigger),
+    restored1 ? JSON.stringify({ triggerAt: restored1.triggerAt, localTrigger: restored1.localTrigger }) : "missing");
+
+  // ② 编辑标题含新时间词：默认保留编辑页已有时间，不被重新解析覆盖
+  app.openEditItem(it1.id);
+  h.setField("#capText", "明天下午3点改标题带时间词");
+  app.saveItemFromForm();
+  await flush(10);
+  await app.saveAsync();
+  const it1WithTimeWords = app.state.items.find(x => x.id === it1.id);
+  ok("P1-02 编辑标题含时间词不覆盖表单已有时间",
+    it1WithTimeWords.triggerAt === origTrigger && it1WithTimeWords.title === "明天下午3点改标题带时间词",
+    String(it1WithTimeWords.triggerAt));
+
+  // ③ 仅编辑非时间字段（备注、标签、优先级、项目）
+  app.openEditItem(it1.id);
+  h.setField("#capNote", "新增备注内容");
+  h.setField("#capTags", "工作 紧急");
+  app.saveItemFromForm();
+  await flush(10);
+  await app.saveAsync();
+  const it1Fields = app.state.items.find(x => x.id === it1.id);
+  ok("P1-03 编辑非时间字段保持原提醒时间与基准",
+    it1Fields.triggerAt === origTrigger && it1Fields.note === "新增备注内容" && it1Fields.tags.includes("工作"),
+    JSON.stringify({ triggerAt: it1Fields.triggerAt, note: it1Fields.note, tags: it1Fields.tags }));
+
+  // ④ 显式手动改期：采用用户选择，重置轮次并建立新调度
+  const newTrigger = origTrigger + 3 * 3600000;
+  app.openEditItem(it1.id);
+  h.setField("#capTrigger", localInputOf(newTrigger));
+  app.markTriggerPicked(true);
+  it1.remindCount = 2; // 模拟已有催促计数
+  app.saveItemFromForm();
+  await flush(10);
+  await app.saveAsync();
+  const it1Rescheduled = app.state.items.find(x => x.id === it1.id);
+  ok("P1-04 手动选择新时间：triggerAt 更新为新时间",
+    it1Rescheduled.triggerAt === newTrigger,
+    String(it1Rescheduled.triggerAt));
+  ok("P1-04 手动选择新时间：轮次重置 remindCount=0",
+    it1Rescheduled.remindCount === 0,
+    String(it1Rescheduled.remindCount));
+
+  // ⑤ 显式清空时间：保存为无提醒，不得用兜底时间补回
+  app.openEditItem(it1.id);
+  h.setField("#capTrigger", "");
+  app.markTriggerPicked(true);
+  app.saveItemFromForm();
+  await flush(10);
+  await app.saveAsync();
+  const it1Cleared = app.state.items.find(x => x.id === it1.id);
+  ok("P1-05 显式清空时间：triggerAt 为 null",
+    it1Cleared.triggerAt === null,
+    String(it1Cleared.triggerAt));
+  ok("P1-05 显式清空时间：localTrigger 为 null 或空",
+    !it1Cleared.localTrigger,
+    String(it1Cleared.localTrigger));
+
+  // ⑥ 稍后提醒（elapsed）事项仅修改标题：保留 scheduleBasis、snoozedAt、snoozeDelayMs 等语义
+  const snoozedItem = app.makeItem({
+    title: "稍后提醒事项",
+    status: "waiting",
+    priority: "normal",
+    triggerAt: now + 3600000
+  });
+  app.state.items.push(snoozedItem);
+  await app.saveAsync();
+  const snoozeWhen = now + 7200000;
+  app.snoozeItem(snoozedItem.id, snoozeWhen, "elapsed");
+  await app.saveAsync();
+  await flush(10);
+
+  const snoozedBefore = app.state.items.find(x => x.id === snoozedItem.id);
+  const snoozedAtBefore = snoozedBefore.snoozedAt;
+  const snoozeDelayBefore = snoozedBefore.snoozeDelayMs;
+  const statusBefore = snoozedBefore.status;
+
+  // 打开编辑表单，仅改标题
+  app.openEditItem(snoozedItem.id);
+  h.setField("#capText", "稍后事项改标题");
+  app.saveItemFromForm();
+  await flush(10);
+  await app.saveAsync();
+
+  const snoozedAfter = app.state.items.find(x => x.id === snoozedItem.id);
+  ok("P1-06 稍后事项改标题：scheduleBasis 保持 elapsed",
+    snoozedAfter.scheduleBasis === "elapsed",
+    snoozedAfter.scheduleBasis);
+  ok("P1-06 稍后事项改标题：snoozedAt 保持不变",
+    snoozedAfter.snoozedAt === snoozedAtBefore,
+    String(snoozedAfter.snoozedAt));
+  ok("P1-06 稍后事项改标题：snoozeDelayMs 保持不变",
+    snoozedAfter.snoozeDelayMs === snoozeDelayBefore,
+    String(snoozedAfter.snoozeDelayMs));
+  ok("P1-06 稍后事项改标题：status 保持 snoozed",
+    snoozedAfter.status === statusBefore,
+    snoozedAfter.status);
+
+  // ⑦ 重启验证稍后事项持久化
+  const restarted2 = await restartApp(h.disk);
+  const snoozedRestored = restarted2.app.state.items.find(x => x.id === snoozedItem.id);
+  ok("P1-07 重启后稍后事项元数据完整恢复",
+    snoozedRestored && snoozedRestored.scheduleBasis === "elapsed" &&
+    snoozedRestored.snoozedAt === snoozedAtBefore &&
+    snoozedRestored.snoozeDelayMs === snoozeDelayBefore,
+    snoozedRestored ? JSON.stringify({ basis: snoozedRestored.scheduleBasis, snoozedAt: snoozedRestored.snoozedAt }) : "missing");
+}
 }
 
 run().then(() => {

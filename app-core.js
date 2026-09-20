@@ -600,6 +600,7 @@
     settings: {
       notify: false,
       notifyPrompted: false,
+      userMode: "beginner",
       onboardDone: false,
       dnd: true,
       importantRepeat: true,
@@ -1011,6 +1012,10 @@
     state.notes = Array.isArray(parsed.notes) ? parsed.notes : [];
     state.projects = Array.isArray(parsed.projects) ? parsed.projects : [];
     state.settings = Object.assign(state.settings, parsed.settings || {});
+    if (state.settings.userMode !== "normal" && state.settings.userMode !== "beginner") {
+      state.settings.userMode = "beginner";
+    }
+    syncUserMode();
     if (!state.settings.ai || typeof state.settings.ai !== "object") {
       state.settings.ai = {
         enabled: false,
@@ -1820,13 +1825,13 @@
     if (strong) {
       // 显著：提到最前，带数字
       html = '<button class="soft-entry strong-entry" id="openReview" style="margin-bottom:10px;border-color:var(--attention);background:var(--attention-bg)">' +
-        '<span><strong style="color:#7a540e">待整理 · ' + n + "</strong><br><span style=\"font-size:0.78rem;color:#8a6a17\">信息尚未二次确认，不是逾期任务</span></span>" +
+        '<span><strong style="color:#7a540e">待整理 · ' + n + "</strong><br><span class=\"review-sub\" style=\"font-size:0.78rem;color:#8a6a17\">信息尚未二次确认，不是逾期任务</span></span>" +
         "<span>整理 ›</span></button>";
     } else {
       // 弱形态：无数字、无强调色
       html = '<button class="soft-entry" id="openReview" style="margin-bottom:10px;opacity:.75">' +
         '<span><strong style="font-weight:500;color:var(--muted)">待整理</strong><br>' +
-        '<span style="font-size:0.78rem;color:var(--muted)">信息尚未二次确认，不是逾期任务</span></span>' +
+        '<span class=\"review-sub\" style=\"font-size:0.78rem;color:var(--muted)\">信息尚未二次确认，不是逾期任务</span></span>' +
         "<span style=\"color:var(--muted)\">›</span></button>";
     }
     // O6：这个入口在**每一拍** renderHome 都会被调用一次（包括被签名短路的那一拍），
@@ -2645,7 +2650,7 @@
    * 复制，热点只是从 innerHTML 挪到签名上，还顺手让「哪些字段真的会影响这一屏」变得不可读。
    * 这里只收集**卡片与入口真正读到的那些值**，逐项对应 renderItemCard / 空态模板：
    *
-   *  · 折叠状态、待整理数量、今日完成数；
+   *  · 折叠状态、待整理数量、今日完成数、用户模式（决定 `#homeStart` 有没有新手指南）；
    *  · 项目表的 id/名称/颜色（卡片上的项目药丸，改项目名也要跟着变）；
    *  · 每个需要注意的事项：id、优先级、项目、**已格式化的时间文案**（`relDue` 是相对时间，
    *    跨分钟就会变，所以直接把它算出来的文字放进来，比按 rev 判断可靠）、截止日期文案、
@@ -2674,6 +2679,7 @@
       extra.quiet ? "q" : "n",
       "r:" + extra.reviewPending,
       "d:" + extra.doneTodayCount,
+      "m:" + (state.settings.userMode === "normal" ? "n" : "b"),
       state.projects.map(p => [p.id, p.name, p.color]),
       dueList.map(it => homeCardSignatureRow("D", it)),
       expanded
@@ -2786,14 +2792,18 @@
 
       const homeStart = $("#homeStart");
       if (homeStart) {
+        const isBeginner = state.settings.userMode !== "normal";
         homeStart.innerHTML = quiet
           ? '<div class="empty-start">' +
             '<button class="btn primary" id="emptyCapture">记一件事</button>' +
+            (isBeginner ? '<button class="soft-entry" id="emptyGuide"><span>新手指南与核心概念</span><span style="color:var(--muted)">›</span></button>' : "") +
             '<button class="soft-entry" id="emptyDemo"><span>看看演示（只读，不会写入数据）</span><span style="color:var(--muted)">›</span></button>' +
             "</div>"
           : "";
         const emptyCapture = $("#emptyCapture");
         if (emptyCapture) emptyCapture.addEventListener("click", () => openCapture());
+        const emptyGuide = $("#emptyGuide");
+        if (emptyGuide) emptyGuide.addEventListener("click", () => openSheet("sheetGuide"));
         const emptyDemo = $("#emptyDemo");
         if (emptyDemo) emptyDemo.addEventListener("click", () => openDemoPreview());
       }
@@ -3008,7 +3018,46 @@
     }
   }
 
+  function syncUserMode() {
+    const isNormal = state.settings.userMode === "normal";
+    if (typeof document !== "undefined" && document.body) {
+      if (document.body.classList && typeof document.body.classList.toggle === "function") {
+        document.body.classList.toggle("mode-normal", isNormal);
+        document.body.classList.toggle("mode-beginner", !isNormal);
+      } else if (typeof document.body.className === "string") {
+        const cls = document.body.className.split(/\s+/).filter(c => c && c !== "mode-normal" && c !== "mode-beginner");
+        cls.push(isNormal ? "mode-normal" : "mode-beginner");
+        document.body.className = cls.join(" ");
+      }
+    }
+  }
+
+  function setUserMode(mode) {
+    state.settings.userMode = mode === "normal" ? "normal" : "beginner";
+    save();
+    syncUserMode();
+    render();
+    if (state.ui.tab === "me") renderMe();
+    toast(state.settings.userMode === "normal"
+      ? "已切换为正常模式（精简小字）"
+      : "已切换为初学者模式（显示释义小字）");
+  }
+
   function renderMe() {
+    // 使用模式：初学者模式 / 正常模式
+    const userModeSeg = $("#userModeSeg");
+    if (userModeSeg) {
+      const mode = state.settings.userMode === "normal" ? "normal" : "beginner";
+      $$("#userModeSeg .seg-item").forEach(b => {
+        b.classList.toggle("on", b.dataset.mode === mode);
+      });
+      const userModeSub = $("#userModeSub");
+      if (userModeSub) {
+        userModeSub.textContent = mode === "normal"
+          ? "正常模式：界面紧凑清爽，隐藏释义小字"
+          : "初学者模式：保留操作释义小字与新手引导";
+      }
+    }
     $("#swNotify").classList.toggle("on", !!state.settings.notify);
     $("#swDnd").classList.toggle("on", !!state.settings.dnd);
     $("#swImp").classList.toggle("on", !!state.settings.importantRepeat);
@@ -3546,12 +3595,19 @@
   function snapshotItemForm() {
     const val = (sel) => ($(sel) ? $(sel).value : "");
     const on = $$("#capPriority .chip.on")[0];
+    const picked = !!(triggerUserPicked || lowConfUserPicked);
+    const triggerVal = val("#capTrigger");
+    let triggerAction = "untouched";
+    if (picked) {
+      triggerAction = triggerVal ? "changed" : "cleared";
+    }
     return {
       text: val("#capText"),
       note: val("#capNote"),
       tags: val("#capTags"),
       url: val("#capUrl"),
-      trigger: val("#capTrigger"),
+      trigger: triggerVal,
+      triggerAction: triggerAction,
       deadline: val("#capDeadline"),
       project: val("#capProject"),
       repeat: val("#capRepeat"),
@@ -3574,16 +3630,19 @@
    *
    * 时间框只在**用户自己选过**时才算数：解析器与兜底会自己往它里面写值，
    * 把它无条件算进来，会让「解析器刚补完时间」被误判成「用户改了草稿」，
-   * 于是面板不再关闭、草稿不再复位。
+   * 于是面板不再关闭、草稿不再复位。编辑时若显式清空或改期，也以 triggerAction 区分。
    */
   function formDraftSignature(snap) {
     if (!snap) return "";
-    const picked = snap.triggerPicked || snap.lowConfPicked;
+    const picked = !!(snap.triggerPicked || snap.lowConfPicked);
+    const triggerPart = picked
+      ? (snap.triggerAction ? snap.triggerAction + ":" : "") + (snap.trigger || "")
+      : (snap.editItemId ? "untouched" : "");
     return [
       snap.editItemId || "new",
       snap.text, snap.note, snap.tags, snap.url, snap.deadline, snap.project,
       snap.repeat, snap.repeatMode, snap.nth, snap.weekday, snap.priority,
-      picked ? snap.trigger : ""
+      triggerPart
     ].join("\u0001");
   }
 
@@ -4227,19 +4286,23 @@
     it.triggerAt = values.triggerAt;
     it.scheduleBasis = values.scheduleBasis === "elapsed" ? "elapsed" : "wall-clock";
     it.localTrigger = it.scheduleBasis === "wall-clock" ? toLocalInput(values.triggerAt) : null;
-    it.snoozedAt = null;
-    it.snoozeDelayMs = null;
-    it.dismissedUntil = null;
     it.deadlineAt = values.deadlineAt;
     it.repeat = values.repeat;
-    if (values.triggerAt && values.triggerAt !== prevTrigger) {
+    if (values.triggerAt !== prevTrigger) {
       // L08：改期等于开启新一轮 —— 轮次与预算一并重置（与 snoozeItem 同一语义）
       it.remindCount = 0;
       it.lastRemindAt = null;
       it.lastAlertShownAt = null;
       it.deliveredAt = null;
+      it.snoozedAt = null;
+      it.snoozeDelayMs = null;
+      it.dismissedUntil = null;
+    } else {
+      it.snoozedAt = values.snoozedAt !== undefined ? values.snoozedAt : it.snoozedAt;
+      it.snoozeDelayMs = values.snoozeDelayMs !== undefined ? values.snoozeDelayMs : it.snoozeDelayMs;
+      it.dismissedUntil = values.dismissedUntil !== undefined ? values.dismissedUntil : it.dismissedUntil;
     }
-    if (values.triggerAt && values.triggerAt > Date.now() && (it.status === "due" || it.status === "acknowledged")) {
+    if (values.triggerAt && values.triggerAt !== prevTrigger && values.triggerAt > Date.now() && (it.status === "due" || it.status === "acknowledged")) {
       it.status = "waiting";
     }
     // V05：编辑保存必须推进版本，否则旧通知的事件版本与当前一致，仍会覆盖新安排
@@ -4327,30 +4390,67 @@
         const local = parseChineseTime(raw);
         parsed = local;
         title = local.title || raw;
-      } else if (raw !== editing.title) {
-        const local = parseChineseTime(raw);
-        parsed = local;
-        title = local.title || raw;
+      } else {
+        title = raw || (editing ? editing.title : "未命名事项");
       }
 
       const extraTags = String(src.tags == null ? "" : src.tags).trim().split(/\s+/).filter(Boolean);
-      const parsedTags = parsed ? (parsed.tags || []) : [];
+      const parsedTags = (!editing && parsed) ? (parsed.tags || []) : [];
       const tags = Array.from(new Set(parsedTags.concat(extraTags)));
       const priority = src.priority || "normal";
-      // L01：时间来源优先级固定为「用户明确选择 > 有效解析 > 兜底」
-      //  · explicitTime  = 用户手选（时间输入框 / 低置信度极简选择）
-      //  · parsedTrigger = 解析器给出的真实时间（低置信度时不算「真实时间」）
-      //  · formTrigger   = 表单当前值，可能是解析器写进去的，因此排在解析结果之后
+
       const formTrigger = parseLocalInput(src.trigger);
-      const parsedTrigger = parsed ? (parsed.trigger || parsed.triggerAt) : null;
-      const userPicked = !!(src.triggerPicked || src.lowConfPicked);
-      const explicitTime = userPicked ? formTrigger : null;
-      const parsedLow = !!(parsed && (parsed.confidence === "low" || parsed.confidence === "none"));
-      const triggerAt = explicitTime || (parsedLow ? null : (parsedTrigger || formTrigger)) || null;
-      const scheduleBasis = !userPicked && !parsedLow && parsed && parsed.scheduleBasis === "elapsed"
-        ? "elapsed" : "wall-clock";
-      const deadlineAt = parseLocalInput(src.deadline) || (parsed ? parsed.deadline || parsed.deadlineAt : null);
-      const repeat = formRepeat(src) || (parsed && parsed.repeat
+      let triggerAt;
+      let scheduleBasis;
+      let snoozedAt = editing ? editing.snoozedAt : null;
+      let snoozeDelayMs = editing ? editing.snoozeDelayMs : null;
+
+      if (editing) {
+        const triggerAction = src.triggerAction || (src.triggerPicked ? (src.trigger ? "changed" : "cleared") : "untouched");
+        const initialFormTrigger = toLocalInput(editing.triggerAt);
+        const formTriggerMatchesInitial = (src.trigger || "") === initialFormTrigger;
+
+        if (triggerAction === "cleared" || (!src.trigger && editing.triggerAt != null && src.triggerPicked)) {
+          // 显式清空时间
+          triggerAt = null;
+          scheduleBasis = "wall-clock";
+          snoozedAt = null;
+          snoozeDelayMs = null;
+        } else if (triggerAction === "changed" || (!formTriggerMatchesInitial && src.trigger)) {
+          // 显式选择新时间 / 改期
+          triggerAt = formTrigger;
+          scheduleBasis = "wall-clock";
+          snoozedAt = null;
+          snoozeDelayMs = null;
+        } else if (!src.trigger && editing.triggerAt == null) {
+          // 本身无时间且保持为空
+          triggerAt = null;
+          scheduleBasis = "wall-clock";
+          snoozedAt = null;
+          snoozeDelayMs = null;
+        } else {
+          // 未动：保留原提醒时间与时间基准（包括稍后产生的 elapsed 提醒元数据）
+          triggerAt = editing.triggerAt;
+          scheduleBasis = editing.scheduleBasis || "wall-clock";
+          snoozedAt = editing.snoozedAt;
+          snoozeDelayMs = editing.snoozeDelayMs;
+        }
+      } else {
+        // L01：时间来源优先级固定为「用户明确选择 > 有效解析 > 兜底」
+        //  · explicitTime  = 用户手选（时间输入框 / 低置信度极简选择）
+        //  · parsedTrigger = 解析器给出的真实时间（低置信度时不算「真实时间」）
+        //  · formTrigger   = 表单当前值，可能是解析器写进去的，因此排在解析结果之后
+        const parsedTrigger = parsed ? (parsed.trigger || parsed.triggerAt) : null;
+        const userPicked = !!(src.triggerPicked || src.lowConfPicked);
+        const explicitTime = userPicked ? formTrigger : null;
+        const parsedLow = !!(parsed && (parsed.confidence === "low" || parsed.confidence === "none"));
+        triggerAt = explicitTime || (parsedLow ? null : (parsedTrigger || formTrigger)) || null;
+        scheduleBasis = !userPicked && !parsedLow && parsed && parsed.scheduleBasis === "elapsed"
+          ? "elapsed" : "wall-clock";
+      }
+
+      const deadlineAt = parseLocalInput(src.deadline) || (!editing && parsed ? parsed.deadline || parsed.deadlineAt : null);
+      const repeat = formRepeat(src) || (!editing && parsed && parsed.repeat
         ? (parsed.repeat.every === "nthWeekday"
             ? { every: "nthWeekday", mode: parsed.repeat.mode || "calendar", nth: parsed.repeat.nth || 1, dow: parsed.repeat.dow != null ? parsed.repeat.dow : 1 }
             : parsed.repeat)
@@ -4370,6 +4470,8 @@
           priority: priority,
           triggerAt: triggerAt,
           scheduleBasis: scheduleBasis,
+          snoozedAt: snoozedAt,
+          snoozeDelayMs: snoozeDelayMs,
           deadlineAt: deadlineAt,
           repeat: repeat
         }], { userFacing: true, itemArg: 0, name: "editItem" });
@@ -4564,7 +4666,7 @@
       (it.url ? (safeExternalHref(it.url)
         ? '<a class="linkish" href="' + escapeAttr(safeExternalHref(it.url)) + '" target="_blank" rel="noopener">' + escapeHtml(it.url) + "</a>"
         : '<span class="linkish-plain">' + escapeHtml(it.url) + "</span>") : "") +
-      '<p style="margin-top:16px;font-size:0.78rem;color:var(--muted);line-height:1.5">「我知道了」只表示你真正注意到了，不会自动变成「完成」。已经点过「我知道了」的事项会留在首页的「未完成」里，随时能找到。</p>';
+      '<p class="beginner-hint" style="margin-top:16px;font-size:0.78rem;color:var(--muted);line-height:1.5">「我知道了」只表示你真正注意到了，不会自动变成「完成」。已经点过「我知道了」的事项会留在首页的「未完成」里，随时能找到。</p>';
 
     const ab = actionButton;
     let foot = "";
@@ -5778,8 +5880,10 @@
     setPill($("#labExactPill"), exactOk ? "精确" : "降级", exactOk, !exactOk);
 
     const batteryOk = !!diag.ignoringBatteryOptimizations;
-    $("#labBattery").textContent = batteryOk ? "已忽略系统电池优化 · 厂商开关仍需手动确认" : "未加入系统白名单 · 请同时检查厂商后台设置";
-    setPill($("#labBatteryPill"), batteryOk ? "正常" : "建议开启", batteryOk, !batteryOk);
+    $("#labBattery").textContent = batteryOk
+      ? "系统优化已放行 · 核心防冻结需在系统确认「允许完全后台行为」与「自启动」"
+      : "未放行系统优化 · 务必去系统设置开启「允许完全后台行为」与「自启动」";
+    setPill($("#labBatteryPill"), batteryOk ? "需在系统确认" : "未放行", batteryOk, true);
 
     // Q3：全屏闹钟的两道门 —— 解锁亮屏靠「显示在其他应用上层」，锁屏靠「全屏通知」
     const overlayOk = !!diag.canDrawOverlays;
@@ -5787,12 +5891,10 @@
     const fullOk = overlayOk && fsiOk;
     const fullEl = $("#labFullScreen");
     if (fullEl) {
-      // V2：这一行只陈述「两项能力齐备」这个事实。此前写「解锁亮屏与锁屏都能弹全屏」，
-      // 与下一行「投递：锁屏也没弹出」并存时会自相矛盾 —— 权限齐备不等于系统一定会展示。
-      if (fullOk) fullEl.textContent = "权限齐备 · 能否弹出以「投递」一行为准";
-      else if (!overlayOk && !fsiOk) fullEl.textContent = "两项都缺 · 只会出通知横幅";
-      else if (!overlayOk) fullEl.textContent = "缺「显示在其他应用上层」· 解锁亮屏只出横幅";
-      else fullEl.textContent = "缺「全屏通知」· 锁屏也只出横幅";
+      if (fullOk) fullEl.textContent = "全屏及悬浮窗已允许 · 锁屏与使用其他应用均可弹出";
+      else if (!overlayOk && !fsiOk) fullEl.textContent = "未配置 · 锁屏及使用其他应用时仅出横幅，不弹全屏";
+      else if (!overlayOk) fullEl.textContent = "缺「悬浮窗 / 上层显示」· 使用其他应用时只出横幅";
+      else fullEl.textContent = "缺「全屏通知 / 锁屏显示」· 锁屏熄屏时不弹全屏";
     }
     setPill($("#labFullScreenPill"), fullOk ? "权限齐备" : "受限", fullOk, !fullOk);
 
@@ -6014,7 +6116,7 @@
   // 厂商开关不可读；导航成功只说明设置请求被接受，不代表权限已开启。
   async function openBackgroundGuide(kind) {
     const buttons = [$("#labOpenBackground"), $("#labOpenAutoStart")].filter(Boolean);
-    if (buttons.some(button => button.disabled)) return;
+    if (buttons.some(button => button.disabled)) return false;
     const feedback = $("#labSettingsFeedback");
     const report = text => {
       if (feedback) feedback.textContent = text;
@@ -6022,12 +6124,14 @@
     };
     buttons.forEach(button => { button.disabled = true; });
     report("正在打开系统设置…");
+    let opened = false;
     try {
       const bridge = systemBridge();
       const appSet = appSettingsPlugin();
       if (kind === "background" && bridge && bridge.openBackgroundSettings) {
         const result = await bridge.openBackgroundSettings();
         if (result && result.ok === false) throw new Error("设置请求失败");
+        opened = true;
         if (result && result.opened === "batteryOptimization") {
           report("已请求打开后台耗电设置。请找到安心收件箱并允许后台耗电；返回不代表开关已开启。");
         } else {
@@ -6037,6 +6141,7 @@
         if (bridge && bridge.openAppDetailsSettings) await bridge.openAppDetailsSettings();
         else if (appSet && appSet.openAppDetailsSettings) await appSet.openAppDetailsSettings();
         else throw new Error("设置入口不可用");
+        opened = true;
         report(kind === "background"
           ? "已请求打开应用信息，请查找电池或后台运行设置，允许后台耗电。开关仍需手动确认。"
           : "已请求打开应用信息。vivo 请点「查看所有权限」，确认「自启动」和「锁屏显示」；其他手机请查找相近选项。返回不代表已授权。");
@@ -6047,6 +6152,7 @@
     } finally {
       buttons.forEach(button => { button.disabled = false; });
     }
+    return opened;
   }
 
   /**
@@ -6064,29 +6170,32 @@
     const bridge = systemBridge();
     const appSet = appSettingsPlugin();
     try {
+      let opened = false;
       if (kind === "notify") {
-        if (bridge && bridge.openNotificationSettings) await bridge.openNotificationSettings();
-        else if (appSet && appSet.openNotificationSettings) await appSet.openNotificationSettings();
+        if (bridge && bridge.openNotificationSettings) { await bridge.openNotificationSettings(); opened = true; }
+        else if (appSet && appSet.openNotificationSettings) { await appSet.openNotificationSettings(); opened = true; }
       } else if (kind === "exact") {
-        if (bridge && bridge.openExactAlarmSettings) await bridge.openExactAlarmSettings();
-        else if (NativeReminders.openExactAlarmSettings) await NativeReminders.openExactAlarmSettings();
+        if (bridge && bridge.openExactAlarmSettings) { await bridge.openExactAlarmSettings(); opened = true; }
+        else if (NativeReminders.openExactAlarmSettings) { await NativeReminders.openExactAlarmSettings(); opened = true; }
       } else if (kind === "battery") {
-        if (bridge && bridge.openBatterySettings) await bridge.openBatterySettings();
-        else if (appSet && appSet.openBatterySettings) await appSet.openBatterySettings();
+        if (bridge && bridge.openBatterySettings) { await bridge.openBatterySettings(); opened = true; }
+        else if (appSet && appSet.openBatterySettings) { await appSet.openBatterySettings(); opened = true; }
       } else if (kind === "overlay") {
         // Q3：解锁亮屏时全屏闹钟的必要条件（Android 10+ 的 BAL 豁免）
-        if (bridge && bridge.openOverlaySettings) await bridge.openOverlaySettings();
-        else await openSystemSetting("autoStart");
+        if (bridge && bridge.openOverlaySettings) { await bridge.openOverlaySettings(); opened = true; }
+        else opened = await openSystemSetting("autoStart");
       } else if (kind === "fsi") {
         // Q3：Android 14+ 的「全屏通知」特殊权限
-        if (bridge && bridge.openFullScreenIntentSettings) await bridge.openFullScreenIntentSettings();
-        else await openSystemSetting("autoStart");
+        if (bridge && bridge.openFullScreenIntentSettings) { await bridge.openFullScreenIntentSettings(); opened = true; }
+        else opened = await openSystemSetting("autoStart");
       } else if (kind === "autoStart") {
-        await openAutoStartHonest();
+        opened = await openAutoStartHonest();
       }
-      labLog("已请求系统设置（" + kind + "），返回后请点「刷新诊断」");
+      if (opened) labLog("已请求系统设置（" + kind + "），返回后请点「刷新诊断」");
+      return opened;
     } catch (error) {
       toast("无法打开系统设置");
+      return false;
     }
   }
 
@@ -6107,10 +6216,10 @@
       else if (appSet && appSet.openAppDetailsSettings) await appSet.openAppDetailsSettings();
       else {
         report("此系统暂未找到可验证的设置路径。可以先做一次 60 秒测试确认实际效果，再决定要不要手动翻设置。");
-        return;
+        return false;
       }
       report("此系统没有可验证的自启动入口，已改为打开「应用详情」页。请在详情里手动查找「自启动 / 后台启动 / 耗电管理」。厂商开关读不到，勾没勾需要你自己确认。");
-      return;
+      return true;
     }
     const r = await bridge.openAutoStartSettings();
     const landed = r && r.component ? String(r.component) : "";
@@ -6119,13 +6228,14 @@
       report("已打开「应用详情」页 —— 这**不是**自启动授权页。"
         + "vivo/OPPO 在应用详情里找「自启动」或「耗电管理」；ColorOS 16 的自启动列表需要系统签名权限，第三方应用打不开。"
         + "厂商开关读不到：勾没勾由你自己确认，返回这里也不会自动变绿。");
-      return;
+      return !!(r && r.ok !== false);
     }
     if (landed) {
       report("已请求打开厂商设置页（" + landed + "）。是否真到位、开关有没有打开，都需要你回来手动确认 —— 导航成功不等于授权成功。");
-      return;
+      return !!(r && r.ok !== false);
     }
     report("没能确认跳到了哪一页。请手动在手机设置里查找「自启动 / 后台启动」。");
+    return false;
   }
 
   function bindNotifyLab() {
@@ -6773,7 +6883,14 @@
 
   /** 传给 `FeedbackLib.setupSteps` 的上下文：测试步骤的完成/重测状态由本次运行决定。 */
   function setupStepsContext() {
-    return { testRun: currentTestRun(), testFeedback: state.settings.testFeedback || null };
+    return {
+      testRun: currentTestRun(),
+      testFeedback: state.settings.testFeedback || null,
+      // 旧的 *Done 字段来自尚未发布的向导实现，只能迁移成「入口打开过」，
+      // 不能作为权限或后台可靠性已经验证的证据。
+      backgroundVisited: !!(state.settings.backgroundVisited || state.settings.backgroundDone),
+      overlayVisited: !!(state.settings.overlayVisited || state.settings.overlayDone)
+    };
   }
 
   function renderSetupSheetBody() {
@@ -6791,7 +6908,8 @@
         '<p class="demo-note">还剩 ' + missing.length + " 步，一屏一个。任何一步都可以拒绝或跳过，" +
         "拒绝不影响记录功能，也不会再循环把你送回同一页。</p>";
     } else {
-      html += '<div class="setup-step done"><h4>必要设置</h4><p>都已经就绪。</p></div>';
+      html += '<div class="setup-step done"><h4>设置流程已走完</h4>' +
+        '<p>是否真正生效仍取决于系统状态，并需通过本机 60 秒锁屏测试确认。</p></div>';
     }
     // 60 秒测试：由用户主动开始；证据与反馈分列
     const testStep = st.steps.filter(s => s.id === "test")[0] || null;
@@ -6851,7 +6969,7 @@
     const missing = st.steps.filter(s => !s.done);
     sub.textContent = missing.length
       ? "还差 " + missing.length + " 步 · 检查必要设置 · 60 秒测试"
-      : "已就绪 · 可再做一次 60 秒测试";
+      : "设置流程已完成 · 可再做一次 60 秒测试";
   }
 
   async function runSetupStep(stepId) {
@@ -6872,6 +6990,26 @@
         try { await NativeReminders.openExactAlarmSettings(); } catch (error) {}
       }
       toast("回到应用后这里会自动更新");
+      return;
+    }
+    if (stepId === "background") {
+      const opened = await openBackgroundGuide("background");
+      if (opened) {
+        state.settings.backgroundVisited = true;
+        save();
+        toast("已打开设置 · 是否生效以返回后的状态和 60 秒测试为准");
+      }
+      renderSetupSheetBody();
+      return;
+    }
+    if (stepId === "overlay") {
+      const opened = await openSystemSetting("overlay");
+      if (opened) {
+        state.settings.overlayVisited = true;
+        save();
+        toast("已打开设置 · 是否生效以返回后的状态和 60 秒测试为准");
+      }
+      renderSetupSheetBody();
       return;
     }
     // 默认：开始 60 秒测试（用户主动开始，不代跑）
@@ -7047,6 +7185,7 @@
         dailySummary: state.settings.dailySummary,
         privacyNotify: state.settings.privacyNotify,
         defaultDeliveryMode: state.settings.defaultDeliveryMode || "notification",
+        userMode: state.settings.userMode || "beginner",
         // do not export AI secrets
         ai: {
           enabled: !!(state.settings.ai && state.settings.ai.enabled),
@@ -7433,7 +7572,10 @@
       renderCaptureSummary();
     });
     // UX-C02：清除手选时间后摘要必须同步更新（否则摘要会一直显示一个已经作废的时间）
-    $("#capTrigger").addEventListener("input", renderCaptureSummary);
+    $("#capTrigger").addEventListener("input", () => {
+      triggerUserPicked = true;
+      renderCaptureSummary();
+    });
     $("#capDeadline").addEventListener("change", renderCaptureSummary);
     $("#capDeadline").addEventListener("input", renderCaptureSummary);
     // UX-C02：「更多选项」默认收起，编辑复杂事项时才自动展开
@@ -7744,6 +7886,23 @@
     $("#swImp").addEventListener("click", () => {
       state.settings.importantRepeat = !state.settings.importantRepeat; save(); renderMe();
     });
+    // 使用模式切换（初学者模式 / 正常模式）
+    $$("#userModeSeg .seg-item").forEach(btn => {
+      btn.addEventListener("click", () => {
+        setUserMode(btn.dataset.mode);
+      });
+    });
+    const btnUserGuide = $("#btnUserGuide");
+    if (btnUserGuide) {
+      btnUserGuide.addEventListener("click", () => openSheet("sheetGuide"));
+    }
+    const btnSwitchToNormal = $("#btnSwitchToNormalFromGuide");
+    if (btnSwitchToNormal) {
+      btnSwitchToNormal.addEventListener("click", () => {
+        closeSheet("sheetGuide");
+        setUserMode("normal");
+      });
+    }
     // D25：默认提醒方式（只影响之后录入）
     $$("#deliveryModeSeg .seg-item").forEach(btn => {
       btn.addEventListener("click", () => {
@@ -8129,6 +8288,7 @@
     });
 
     const loaded = await loadAsync();
+    syncUserMode();
     bind();
     if (schemaMigrationNeeded) {
       schemaMigrationNeeded = false;
@@ -8371,6 +8531,8 @@
       get formSession() { return itemFormSession; },
       clearAlert: () => { alertItem = null; },
       get state() { return state; },
+      setUserMode,
+      syncUserMode,
       save,
       // 真实的持久化 Promise：测试要断言「落库之后」的状态就必须等它
       saveAsync,

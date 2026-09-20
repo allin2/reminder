@@ -1438,9 +1438,10 @@ async function run() {
     ok("D68/Q6 清单里写明该权限的用途与不用途（政策要的「明确说明需求」）",
       /USE_FULL_SCREEN_INTENT/.test(manifestSrc) &&
       /【为什么需要】/.test(manifestSrc) && /【不用于什么】/.test(manifestSrc));
-    ok("D68/Q6 自检面板第 6 项讲「为什么需要」，且入口两侧都在",
+    ok("D68/Q6 自检面板说明全屏权限用途、保留入口，且要求以本机测试为准",
       /id="labOpenFsi"/.test(htmlSrc) &&
-      /让到点的提醒在锁屏\/息屏时直接亮屏弹到最前/.test(htmlSrc) &&
+      /用于提高锁屏\/息屏或使用其他应用时弹出全屏提醒的机会/.test(htmlSrc) &&
+      /以本机 60 秒测试为准/.test(htmlSrc) &&
       /"#labOpenFsi"/.test(coreSrc));
     ok("D68/Q6 旧文案已撤（只讲机制、不讲需求）",
       !/Android 14\+ 锁屏\/息屏弹全屏的必要条件/.test(htmlSrc));

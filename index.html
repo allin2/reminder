@@ -188,6 +188,13 @@
       line-height: 1.2;
     }
     .card-actions button { padding: 9px 6px; }
+    /* 模式控制：正常模式消除副说明小字，界面更紧凑 */
+    body.mode-normal .act-sub { display: none !important; }
+    body.mode-normal .alert-note { display: none !important; }
+    body.mode-normal .beginner-hint { display: none !important; }
+    body.mode-normal .review-sub { display: none !important; }
+    body.mode-normal .card-actions button { padding: 12px 6px; }
+    body.mode-normal .alert-actions button { padding: 11px 8px; }
     /* UX-C02：识别摘要 —— 有效提醒时间与会影响行为的周期/截止都在这里 */
     .cap-summary {
       font-size: 0.86rem;
@@ -1000,6 +1007,23 @@
       </div>
       <div class="stats-row" id="statsRow"></div>
       <div class="set-group">
+        <div class="set-row" style="align-items:flex-start;flex-direction:column;gap:10px">
+          <div>
+            <div>使用模式</div>
+            <div class="sub" id="userModeSub">初学者模式保留操作释义小字与新手引导；正常模式界面更清爽</div>
+          </div>
+          <div class="seg" id="userModeSeg" style="width:100%">
+            <button class="seg-item on" data-mode="beginner" role="tab">初学者模式</button>
+            <button class="seg-item" data-mode="normal" role="tab">正常模式</button>
+          </div>
+        </div>
+        <button class="set-row" id="btnUserGuide">
+          <div>
+            <div>新手指南与核心概念</div>
+            <div class="sub">了解「我知道了」与「完成」的区别</div>
+          </div>
+          <span style="color:var(--muted)">›</span>
+        </button>
         <div class="set-row">
           <div>
             <div>本地通知</div>
@@ -1652,126 +1676,176 @@
            此前该项只有「排了几条」的内部状态，界面上完全不可见 ——
            一旦排程数为 0，用户只能看到「不响」，却看不到为什么。 -->
       <div class="hint-bar" id="labVerdict" hidden></div>
-      <div class="set-group" style="margin-bottom:14px">
-        <div class="set-row">
-          <div style="min-width:0">
-            <div>后台与锁屏设置</div>
-            <div class="sub" id="labVendorPermissions">请在系统设置确认：允许后台耗电、自启动、锁屏显示。应用无法自动读取这些厂商开关。</div>
-          </div>
-          <span class="pill warn" style="flex-shrink:0;white-space:nowrap">需确认</span>
-        </div>
-        <div class="set-row"><div style="min-width:0;width:100%">
-          <div class="sub">后台耗电：减少后台投递受限；自启动：允许进程退出后被唤起；锁屏显示：允许息屏时显示闹钟界面。不同手机的名称可能不同。</div>
-        </div></div>
-        <button class="set-row" id="labOpenBackground" aria-describedby="labVendorPermissions">
-          <div><div>检查后台耗电设置</div><div class="sub">vivo：找到安心收件箱，选择「允许后台耗电」</div></div>
-          <span aria-hidden="true" style="color:var(--muted)">›</span>
-        </button>
-        <button class="set-row" id="labOpenAutoStart" aria-describedby="labVendorPermissions">
-          <div><div>检查自启动与锁屏显示</div><div class="sub">应用信息 → 查看所有权限 → 自启动、锁屏显示</div></div>
-          <span aria-hidden="true" style="color:var(--muted)">›</span>
-        </button>
-        <div class="set-row"><div class="sub" id="labSettingsFeedback" role="status" aria-live="polite">返回后会刷新可读取的诊断；以上三项仍需你在系统设置中确认。</div></div>
+      <!-- 权限与保活一体化卡片流 -->
+      <div style="display:flex;align-items:center;justify-content:space-between;margin:12px 2px 8px">
+        <span style="font-size:0.9rem;font-weight:600;color:var(--ink)">核心权限与保活配置</span>
+        <button type="button" class="btn secondary sm" id="labRefresh" style="font-size:0.75rem;padding:3px 10px">刷新检测</button>
       </div>
-      <div class="set-group" style="margin-bottom:14px">
+
+      <!-- 1. 系统通知 -->
+      <div class="set-group" style="margin-bottom:12px">
         <div class="set-row">
-          <div>
-            <div>后台提醒</div>
-            <div class="sub" id="labBackground">检测中…</div>
-          </div>
-          <span class="pill" id="labBackgroundPill">…</span>
-        </div>
-        <div class="set-row">
-          <div>
-            <div>已排提醒</div>
-            <div class="sub" id="labScheduled">检测中…</div>
-          </div>
-          <span class="pill" id="labScheduledPill">…</span>
-        </div>
-        <div class="set-row">
-          <div>
-            <div>Capacitor 运行时</div>
-            <div class="sub" id="labBridge">检测中…</div>
-          </div>
-          <span class="pill" id="labBridgePill">…</span>
-        </div>
-        <div class="set-row">
-          <div>
-            <div>系统通知权限</div>
+          <div style="min-width:0;flex:1">
+            <div style="font-weight:600">1. 系统通知与横幅</div>
             <div class="sub" id="labNotifyPerm">检测中…</div>
           </div>
           <span class="pill" id="labNotifyPill">…</span>
         </div>
+        <div class="set-row" style="padding-top:0;border-top:none">
+          <div class="sub" style="margin-top:0">到点在手机顶部出现横幅提醒与常驻通知。未授权时关掉应用将收不到任何通知。</div>
+        </div>
+        <div class="set-row" style="background:var(--paper);gap:8px;padding:8px 14px">
+          <button type="button" class="btn secondary sm" id="labReqNotify" style="flex:1">申请通知权限</button>
+          <button type="button" class="btn secondary sm" id="labOpenNotify" style="flex:1">系统通知设置 ›</button>
+        </div>
+      </div>
+
+      <!-- 2. 精确闹钟 -->
+      <div class="set-group" style="margin-bottom:12px">
         <div class="set-row">
-          <div>
-            <div>精确闹钟</div>
+          <div style="min-width:0;flex:1">
+            <div style="font-weight:600">2. 精确闹钟 (闹钟和提醒)</div>
             <div class="sub" id="labExact">检测中…</div>
           </div>
           <span class="pill" id="labExactPill">…</span>
         </div>
+        <div class="set-row" style="padding-top:0;border-top:none">
+          <div class="sub" style="margin-top:0">保证到点分秒不差准时响铃。若未授权，系统会将提醒推迟数分钟甚至数十分钟。</div>
+        </div>
+        <div class="set-row" style="background:var(--paper);padding:8px 14px">
+          <button type="button" class="btn secondary sm" id="labOpenExact" style="width:100%">前往「闹钟和提醒」开启精确排程 ›</button>
+        </div>
+      </div>
+
+      <!-- 3. 后台保活与自启动 (防系统冻结) -->
+      <div class="set-group" style="margin-bottom:12px">
         <div class="set-row">
-          <div>
-            <div>系统电池优化白名单</div>
+          <div style="min-width:0;flex:1">
+            <div style="font-weight:600;display:flex;align-items:center;gap:6px">
+              <span>3. 后台保活与自启动</span>
+              <span style="font-size:0.72rem;background:#faebd7;color:#b85d19;padding:1px 6px;border-radius:4px;font-weight:normal">核心防冻结</span>
+            </div>
             <div class="sub" id="labBattery">检测中…</div>
           </div>
-          <span class="pill" id="labBatteryPill">…</span>
+          <span class="pill warn" id="labBatteryPill">需在系统确认</span>
         </div>
+        <div class="set-row" style="padding-top:0;border-top:none">
+          <div class="sub" style="margin-top:0;color:var(--ink-2)">
+            <strong>为什么建议检查：</strong>部分 Android 厂商可能限制长时间后台运行，导致提醒延迟，甚至打开 App 后才补响。请按机型检查相关设置，并用 60 秒锁屏测试确认实际效果：
+          </div>
+        </div>
+        <div class="set-row" style="padding-top:0;border-top:none">
+          <div style="font-size:0.78rem;line-height:1.55;background:var(--paper);padding:10px 12px;border-radius:6px;width:100%">
+            <div>📱 <strong>OPPO / 一加 (ColorOS)</strong>：耗电管理 → 选「允许完全后台行为」；自启动管理 → 开启自启动。</div>
+            <div style="margin-top:4px">📱 <strong>vivo / iQOO (OriginOS)</strong>：电池 → 后台高耗电 → 允许；权限管理 → 允许自启动。</div>
+            <div style="margin-top:4px">📱 <strong>小米 / Redmi (HyperOS)</strong>：省电策略 → 选「无限制」；应用权限 → 开启自启动。</div>
+            <div style="margin-top:4px">📱 <strong>华为 / 荣耀 (HarmonyOS)</strong>：应用启动管理 → 关闭自动管理 → 勾选允许自启动与后台活动。</div>
+          </div>
+        </div>
+        <div class="set-row" style="background:var(--paper);gap:8px;padding:8px 14px">
+          <button type="button" class="btn secondary sm" id="labOpenBackground" style="flex:1">打开「耗电管理/电池」›</button>
+          <button type="button" class="btn secondary sm" id="labOpenAutoStart" style="flex:1">打开「自启动/应用详情」›</button>
+        </div>
+        <div class="set-row" style="padding:6px 14px 10px"><div class="sub" id="labSettingsFeedback" role="status" aria-live="polite" style="font-size:0.75rem">返回后请点上方「刷新检测」；以上开关由你在系统手动确认。</div></div>
+      </div>
+
+      <!-- 4. 全屏弹窗与锁屏亮屏 -->
+      <div class="set-group" style="margin-bottom:14px">
         <div class="set-row">
-          <div>
-            <div>全屏闹钟</div>
+          <div style="min-width:0;flex:1">
+            <div style="font-weight:600">4. 锁屏亮屏与全屏弹窗 (悬浮窗)</div>
             <div class="sub" id="labFullScreen">检测中…</div>
           </div>
           <span class="pill" id="labFullScreenPill">…</span>
         </div>
+        <div class="set-row" style="padding-top:0;border-top:none">
+          <div class="sub" style="margin-top:0">这些权限用于提高锁屏/息屏或使用其他应用时弹出全屏提醒的机会。系统仍可能只显示通知、延迟显示或不弹全屏，请以本机 60 秒测试为准。</div>
+        </div>
+        <div class="set-row" style="background:var(--paper);gap:8px;padding:8px 14px">
+          <button type="button" class="btn secondary sm" id="labOpenOverlay" style="flex:1">允许「悬浮窗 / 上层显示」›</button>
+          <button type="button" class="btn secondary sm" id="labOpenFsi" style="flex:1">允许「全屏通知 / 锁屏显示」›</button>
+        </div>
       </div>
 
+      <!-- 折叠：底层运行时与排程状态 -->
+      <details class="set-group" style="margin-bottom:14px;background:var(--paper)">
+        <summary class="set-row" style="cursor:pointer;font-size:0.85rem;color:var(--muted)">
+          <span>底层运行时与系统排程详情</span>
+          <span style="font-size:0.75rem">展开查看 ›</span>
+        </summary>
+        <div class="set-row">
+          <div><div>后台提醒总览</div><div class="sub" id="labBackground">检测中…</div></div>
+          <span class="pill" id="labBackgroundPill">…</span>
+        </div>
+        <div class="set-row">
+          <div><div>系统已排条数</div><div class="sub" id="labScheduled">检测中…</div></div>
+          <span class="pill" id="labScheduledPill">…</span>
+        </div>
+        <div class="set-row">
+          <div><div>原生桥版本</div><div class="sub" id="labBridge">检测中…</div></div>
+          <span class="pill" id="labBridgePill">…</span>
+        </div>
+      </details>
+
+      <!-- 实机功能验证 -->
       <div class="set-group" style="margin-bottom:14px">
-        <button class="set-row" id="labReqNotify">
+        <div class="set-row" style="font-weight:600;background:var(--paper)">
+          <span>提醒功能实机验证</span>
+          <span class="sub" style="margin:0;font-weight:normal">设置完成后请在此实测</span>
+        </div>
+
+        <button class="set-row" id="labTestNow" type="button">
           <div>
-            <div>1. 申请通知权限</div>
-            <div class="sub">Android 13+ 必须显式授权</div>
+            <div style="font-weight:500">1. 即时通知测试</div>
+            <div class="sub">1–2 秒内在顶部通知栏出现横幅及常驻提醒</div>
           </div>
-          <span style="color:var(--muted)">›</span>
+          <span class="pill time">发送通知</span>
         </button>
-        <button class="set-row" id="labOpenNotify">
+
+        <button class="set-row" id="labTest10s" type="button">
           <div>
-            <div>2. 打开系统通知设置</div>
-            <div class="sub">确认通知、悬浮通知/横幅、锁屏通知均开启</div>
+            <div style="font-weight:500">2. 10 秒全屏闹钟 (模拟事项)</div>
+            <div class="sub">模拟事项到点，亮屏弹窗并响铃。⚠️ 需手动点击关闭，不会 5 秒自动关。</div>
           </div>
-          <span style="color:var(--muted)">›</span>
+          <span class="pill time">10s 测试</span>
         </button>
-        <button class="set-row" id="labOpenExact">
+
+        <button class="set-row" id="labTest60s" type="button">
           <div>
-            <div>3. 允许精确闹钟</div>
-            <div class="sub">系统设置 → 闹钟和提醒</div>
+            <div style="font-weight:500">3. 60 秒锁屏后台验证 (核心验收)</div>
+            <div class="sub">点击后立即按电源键锁屏。验证手机在后台休眠 1 分钟后能否准时唤醒亮屏。</div>
           </div>
-          <span style="color:var(--muted)">›</span>
+          <span class="pill time" style="background:var(--signal);color:#fff">60s 锁屏测试</span>
         </button>
-        <button class="set-row" id="labOpenBattery">
+
+        <button class="set-row" id="labTraceTest" type="button">
           <div>
-            <div>4. 关闭电池优化</div>
-            <div class="sub">系统白名单不等于厂商已允许后台运行</div>
+            <div style="font-weight:500">4. 一键多点后台诊断 (10s / 60s / 120s)</div>
+            <div class="sub">自动化诊断专用。一次排 3 轮，弹框 5 秒自动关闭，测完可在下方查看毫秒级轨迹。</div>
           </div>
-          <span style="color:var(--muted)">›</span>
+          <span class="pill time">开始诊断</span>
         </button>
-        <button class="set-row" id="labOpenOverlay">
+
+        <button class="set-row" id="labCancelAlarm" type="button">
           <div>
-            <div>5. 允许「显示在其他应用上层」</div>
-            <div class="sub">解锁亮屏时弹全屏的必要条件，否则只出通知横幅</div>
+            <div style="font-weight:500">取消未触发测试闹钟</div>
+            <div class="sub">清空此前已排但尚未触发的测试闹钟</div>
           </div>
-          <span style="color:var(--muted)">›</span>
+          <span style="color:var(--muted)">取消 ›</span>
         </button>
-        <button class="set-row" id="labOpenFsi">
+
+        <div class="set-row">
           <div>
-            <div>6. 允许「全屏通知」</div>
-            <div class="sub">让到点的提醒在锁屏/息屏时直接亮屏弹到最前，而不是只留一条通知横幅。Android 14+ 需手动允许。</div>
+            <div>上次闹钟投递结果</div>
+            <div class="sub" id="labDelivery">还没有投递记录</div>
           </div>
-          <span style="color:var(--muted)">›</span>
-        </button>
+          <span class="pill" id="labDeliveryPill">—</span>
+        </div>
       </div>
 
+      <!-- 诊断与台账 -->
       <div class="set-group" style="margin-bottom:14px">
-        <button class="set-row" id="labResync">
+        <button class="set-row" id="labResync" type="button">
           <div>
             <div>立即重排后台提醒</div>
             <div class="sub">强制对账一次，并显示系统里实际挂着几条提醒</div>
@@ -1783,49 +1857,10 @@
           <div class="sub">只读显示最近保存的 5 条事项；未记录不等于未投递。</div>
           <pre id="labItemTrace" style="white-space:pre-wrap;overflow-wrap:anywhere;font:inherit;font-size:0.8rem;max-height:420px;overflow:auto">刷新诊断后显示</pre>
         </div></div>
-        <button class="set-row" id="labTraceTest">
-          <div><div>一键后台诊断（10 / 60 / 120 秒）</div>
-          <div class="sub">点一次后返回桌面并锁屏，3 分钟后回来刷新。弹框 5 秒自动关闭。</div></div>
-        </button>
         <div class="set-row"><div style="min-width:0;width:100%">
           <div>逐次诊断记录</div>
           <pre id="labTraceResults" style="white-space:pre-wrap;overflow-wrap:anywhere;font:inherit;font-size:0.8rem;max-height:340px;overflow:auto">刷新诊断后显示</pre>
         </div></div>
-        <button class="set-row" id="labTestNow">
-          <div>
-            <div>立即测试系统通知</div>
-            <div class="sub">应在 1–2 秒内出现在通知栏</div>
-          </div>
-          <span class="pill time">发送</span>
-        </button>
-        <button class="set-row" id="labTest10s">
-          <div>
-            <div>10 秒后全屏闹钟</div>
-            <div class="sub">应亮屏弹出全屏界面并循环响铃；解锁亮屏时需「显示在其他应用上层」</div>
-          </div>
-          <span class="pill time">10s</span>
-        </button>
-        <button class="set-row" id="labTest60s">
-          <div>
-            <div>1 分钟后全屏闹钟</div>
-            <div class="sub">可先锁屏/熄屏，验证真正闹钟行为</div>
-          </div>
-          <span class="pill time">60s</span>
-        </button>
-        <button class="set-row" id="labCancelAlarm">
-          <div>
-            <div>取消未触发闹钟</div>
-            <div class="sub">取消 10s / 60s 测试闹钟</div>
-          </div>
-          <span style="color:var(--muted)">›</span>
-        </button>
-        <div class="set-row">
-          <div>
-            <div>上次闹钟投递结果</div>
-            <div class="sub" id="labDelivery">还没有投递记录</div>
-          </div>
-          <span class="pill" id="labDeliveryPill">—</span>
-        </div>
       </div>
 
       <p style="font-size:0.78rem;color:var(--muted);line-height:1.55" id="labLog">
@@ -1866,6 +1901,53 @@
     <div class="sheet-body" id="demoBody"></div>
     <div class="sheet-foot">
       <button class="btn primary" data-close="sheetDemo">知道了</button>
+    </div>
+  </div>
+
+  <!-- 初学者指南与核心概念 -->
+  <div class="sheet" id="sheetGuide">
+    <div class="sheet-grip"></div>
+    <div class="sheet-head">
+      <h2>新手指南与核心概念</h2>
+      <button class="icon-btn" data-close="sheetGuide" aria-label="关闭">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"/></svg>
+      </button>
+    </div>
+    <div class="sheet-body" style="line-height:1.6;font-size:0.9rem">
+      <div style="margin-bottom:12px;padding:12px;background:var(--paper);border-radius:var(--radius)">
+        <h4 style="margin-bottom:4px;color:var(--signal)">1. 「我知道了」≠「完成」</h4>
+        <p style="color:var(--ink-2);font-size:0.84rem;margin:0">
+          点击「我知道了」只代表你真正注意到了、停止这轮铃声催促。这件事<strong>仍未完成</strong>，会留在首页的「未完成」里，随时可查。
+        </p>
+      </div>
+      <div style="margin-bottom:12px;padding:12px;background:var(--paper);border-radius:var(--radius)">
+        <h4 style="margin-bottom:4px;color:var(--signal)">2. 「稍后提醒」重新安排</h4>
+        <p style="color:var(--ink-2);font-size:0.84rem;margin:0">
+          如果当下抽不出时间处理，点击「稍后提醒」可改到具体时间（或默认 2 小时后再次提醒）。
+        </p>
+      </div>
+      <div style="margin-bottom:12px;padding:12px;background:var(--paper);border-radius:var(--radius)">
+        <h4 style="margin-bottom:4px;color:var(--signal)">3. 「完成」结束并归档</h4>
+        <p style="color:var(--ink-2);font-size:0.84rem;margin:0">
+          事情真正做好后点击「完成」，事项将归档保存；周期事项会自动推进到下一期。
+        </p>
+      </div>
+      <div style="margin-bottom:12px;padding:12px;background:var(--paper);border-radius:var(--radius)">
+        <h4 style="margin-bottom:4px;color:var(--signal)">4. 「右上角 ×」只关本次响铃</h4>
+        <p style="color:var(--ink-2);font-size:0.84rem;margin:0">
+          响铃时点右上角 × 只停止当前铃声，不算「我知道了」，也不算完成。
+        </p>
+      </div>
+      <div style="padding:12px;background:var(--paper);border-radius:var(--radius)">
+        <h4 style="margin-bottom:4px;color:var(--signal)">5. 两种模式自由切换</h4>
+        <p style="color:var(--ink-2);font-size:0.84rem;margin:0">
+          熟悉这些规则后，可随时在「我的」切换为<strong>正常模式</strong>，消除按钮释义小字，界面更紧凑清爽。
+        </p>
+      </div>
+    </div>
+    <div class="sheet-foot" style="gap:10px">
+      <button class="btn secondary" id="btnSwitchToNormalFromGuide">切换到正常模式</button>
+      <button class="btn primary" data-close="sheetGuide">知道了</button>
     </div>
   </div>
 
