@@ -1,0 +1,92 @@
+{
+  "step": "R7",
+  "status": "PASS",
+  "deletedItems": [],
+  "alarmsReferencingR3": [],
+  "r3NotifLeftover": [],
+  "setupPromptStartedRestore": {
+    "before": true,
+    "target": true,
+    "restored": false
+  },
+  "finalItemCount": 1,
+  "userItemsPreserved": true,
+  "changedSettings": {
+    "alarmEventLog": {
+      "before": {
+        "active:133024820:a1d9b2df-3bbf-40c1-91bc-0fb8456c958a:done": 1790149531941,
+        "active:2038356701:fa6c31c2-53a3-4f44-9319-c2edd41df695:done": 1790151285882,
+        "active:1354945827:53f1fa3a-9ffe-4b09-895d-7e4c6dff06d5:done": 1790152767495,
+        "notification:154182028:snooze:1": 1790235485743,
+        "notification:1757707794:ack:1": 1790235506729,
+        "notification:264460990:done:1": 1790235554841,
+        "a1790235668526_0_85811": 1790235668694,
+        "a1790235909612_0_80353": 1790235909753
+      },
+      "after": {
+        "active:133024820:a1d9b2df-3bbf-40c1-91bc-0fb8456c958a:done": 1790149531941,
+        "active:2038356701:fa6c31c2-53a3-4f44-9319-c2edd41df695:done": 1790151285882,
+        "active:1354945827:53f1fa3a-9ffe-4b09-895d-7e4c6dff06d5:done": 1790152767495,
+        "notification:154182028:snooze:1": 1790235485743,
+        "notification:1757707794:ack:1": 1790235506729,
+        "notification:264460990:done:1": 1790235554841,
+        "a1790235668526_0_85811": 1790235668694,
+        "a1790235909612_0_80353": 1790235909753,
+        "notification:2123506709:ack:1": 1790259314457,
+        "a1790259486360_0_47311": 1790259486515
+      }
+    },
+    "review": {
+      "before": {
+        "enabled": true,
+        "hour": 21,
+        "minute": 30,
+        "windowEndHour": 23,
+        "windowEndMinute": 0,
+        "followupMs": 3600000,
+        "maxFollowups": 2,
+        "lastNotifiedAt": 0,
+        "followupCount": 0,
+        "snoozedUntil": 0,
+        "skippedUntil": 0,
+        "sessionStatus": "idle",
+        "lastSessionKey": ""
+      },
+      "after": {
+        "enabled": true,
+        "hour": 21,
+        "minute": 30,
+        "windowEndHour": 23,
+        "windowEndMinute": 0,
+        "followupMs": 3600000,
+        "maxFollowups": 2,
+        "lastNotifiedAt": 1790258501935,
+        "followupCount": 1,
+        "snoozedUntil": 0,
+        "skippedUntil": 0,
+        "sessionStatus": "delivered",
+        "lastSessionKey": "W:2026-9-24T21:30"
+      }
+    }
+  },
+  "diffVsBaseline": {
+    "storesAdded": [],
+    "storesRemoved": [],
+    "records": {
+      "kv/state": {
+        "change": "modified",
+        "itemsAdded": [],
+        "itemsRemoved": [],
+        "itemsModified": {},
+        "itemsIdentical": 1,
+        "topKeysChanged": [
+          "settings"
+        ]
+      }
+    },
+    "localStorage": {
+      "attention-inbox-v2": "modified"
+    }
+  },
+  "screenshot": "/Users/qlyf/Developer/reminder/docs/reviews/verification-runs/20260924T2157-pr3-device-regression/raw/step7-final-app.png"
+}

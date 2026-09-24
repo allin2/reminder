@@ -1,0 +1,28 @@
+{
+  "step": "R5",
+  "status": "PASS",
+  "f4RuleVerified": "[hidden] { display: none !important; } successfully prevents badge leakage",
+  "state1_initial": {
+    "hidden": true,
+    "display": "none",
+    "text": "0",
+    "description": "Initial state before R3B1 due: badge hidden, display none"
+  },
+  "state2_due": {
+    "hidden": false,
+    "display": "grid",
+    "text": "1",
+    "dueCount": 1,
+    "description": "R3B1 due: badge visible, display grid, text matches due count 1"
+  },
+  "state3_cleared": {
+    "hidden": true,
+    "display": "none",
+    "description": "After completion: badge hidden, display none via [hidden] rule"
+  },
+  "screenshots": {
+    "state1_hidden": "/Users/qlyf/Developer/reminder/docs/reviews/verification-runs/20260924T2157-pr3-device-regression/raw/step5-badge-hidden.png",
+    "state2_shown": "/Users/qlyf/Developer/reminder/docs/reviews/verification-runs/20260924T2157-pr3-device-regression/raw/step5-badge-shown.png",
+    "state3_cleared": "/Users/qlyf/Developer/reminder/docs/reviews/verification-runs/20260924T2157-pr3-device-regression/raw/step5-badge-cleared.png"
+  }
+}

@@ -1,0 +1,27 @@
+{
+ "residue": {
+  "rfxItems": [],
+  "pendingRfx": 0,
+  "indexRfxItems": [],
+  "settings": {
+   "dnd": false,
+   "quietStart": "23:00",
+   "quietEnd": "07:30",
+   "defaultDeliveryMode": "alarm"
+  },
+  "rfxNotif": 0,
+  "rfxAlarmLines": 0
+ },
+ "diff": {
+  "storesAdded": [],
+  "storesRemoved": [],
+  "records": {
+   "kv/state": "identical"
+  },
+  "localStorage": {
+   "attention-inbox-delivered-notif-index": "modified",
+   "attention-inbox-v2": "identical"
+  }
+ },
+ "settingsDiff": {}
+}

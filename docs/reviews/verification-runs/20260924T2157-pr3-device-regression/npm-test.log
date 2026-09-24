@@ -1,0 +1,3628 @@
+
+> attention-inbox@1.1.0 test
+> node test-unit.js && node test-native-reminders.js && node scripts/verification/p3a-model-tests.js && node scripts/verification/p3b-persistence-tests.js && node scripts/verification/p3c-transaction-tests.js && node scripts/verification/p3d-items-tests.js && node scripts/verification/p3e-coordinator-tests.js && node scripts/verification/p3f-review-tests.js && node scripts/verification/p3g-alerts-tests.js && node scripts/verification/p3h-platform-tests.js && node scripts/verification/p3i-modularization-tests.js && node test-boot-combination.js && node test-smoke.js && node test-regressions.js && node scripts/verification/parse-single-source.js
+
+
+== P2-F1 AppContent — live 注入、笔记/搜索/项目与幂等绑定 ==
+  ✓ P2-F1 模块求值零副作用
+  ✓ P2-F1 静态与 document 委托 bind 都是实例内幂等
+  ✓ P2-F1 新建笔记保留默认标题、置顶字段与单次保存/渲染
+  ✓ P2-F1 搜索覆盖笔记且输出转义
+  ✓ P2-F1 项目新增经 live state、刷新选择器、保存与提示各一次
+  ✓ P2-F1 删除冲突拒绝不改项目/笔记/事项且不进事务
+  ✓ P2-F1 删除成功只经注入事务清理事项、笔记关联清空
+
+== P2-G1 AppCapture — 表单会话、live 状态与幂等绑定 ==
+  ✓ P2-G1 模块求值零 DOM/state/timer 副作用
+  ✓ P2-G1 reset 每次递增独立会话，手选时间进入签名
+  ✓ P2-G1 同内容重新打开仍是另一会话且走 live 项目刷新
+  ✓ P2-G1 编辑复杂事项保留项目/周期并展开更多字段
+  ✓ P2-G1 重复预览与相似提示真实渲染且危险 id/title 均转义
+  ✓ P2-G1 parse hint 尊重用户手选时间并更新摘要
+  ✓ P2-G1 capture bind 对输入、重复、时间和更多选项幂等
+
+== P2-F2 AppViews — direct live dependencies ==
+  ✓ P2-F2 archive 通过注入 startOfDay 分组
+  ✓ P2-F2 四种卡片 mode 保持属性/文本/危险 URL 安全降级
+  ✓ P2-F2 详情保留暂停截止、周期与注入证据行
+  ✓ P3-I-Q2 views 实例公开 detailReminderStatusRow 且直接调用与详情一致
+  ✓ P2-F2 项目选择器刷新保留选中值
+  ✓ P2-F2 stats 通过注入 pad2
+  ✓ P2-F2 原生 getter 每次渲染读取，Web→native 可见性更新
+
+== parse-cn ==
+  ✓ 周五 trigger
+  ✓ 周五 confidence
+  ✓ 低置信度
+  ✓ 截止
+  ✓ 提前 trigger
+  ✓ biweek ack
+  ✓ monthEnd
+  ✓ nthWeekday
+
+== relative Chinese time ==
+  ✓ 三分钟以后提醒我 精确时长
+  ✓ 三分钟以后提醒我 具体时间判定
+  ✓ 三分钟以后提醒我 保留原文及标题
+  ✓ 三分钟后提醒我喝水 精确时长
+  ✓ 三分钟后提醒我喝水 具体时间判定
+  ✓ 三分钟后提醒我喝水 保留原文及标题
+  ✓ 3分钟之后提醒我喝水 精确时长
+  ✓ 3分钟之后提醒我喝水 具体时间判定
+  ✓ 3分钟之后提醒我喝水 保留原文及标题
+  ✓ ３ 分钟以后提醒我喝水 精确时长
+  ✓ ３ 分钟以后提醒我喝水 具体时间判定
+  ✓ ３ 分钟以后提醒我喝水 保留原文及标题
+  ✓ 过三分钟提醒我喝水 精确时长
+  ✓ 过三分钟提醒我喝水 具体时间判定
+  ✓ 过三分钟提醒我喝水 保留原文及标题
+  ✓ 再过 3 分钟提醒我喝水 精确时长
+  ✓ 再过 3 分钟提醒我喝水 具体时间判定
+  ✓ 再过 3 分钟提醒我喝水 保留原文及标题
+  ✓ 提醒我三分钟后喝水 精确时长
+  ✓ 提醒我三分钟后喝水 具体时间判定
+  ✓ 提醒我三分钟后喝水 保留原文及标题
+  ✓ 半小时后提醒我喝水 精确时长
+  ✓ 半小时后提醒我喝水 具体时间判定
+  ✓ 半小时后提醒我喝水 保留原文及标题
+  ✓ 半个小时以后提醒我喝水 精确时长
+  ✓ 半个小时以后提醒我喝水 具体时间判定
+  ✓ 半个小时以后提醒我喝水 保留原文及标题
+  ✓ 一个半小时之后提醒我喝水 精确时长
+  ✓ 一个半小时之后提醒我喝水 具体时间判定
+  ✓ 一个半小时之后提醒我喝水 保留原文及标题
+  ✓ 一个小时半后提醒我喝水 精确时长
+  ✓ 一个小时半后提醒我喝水 具体时间判定
+  ✓ 一个小时半后提醒我喝水 保留原文及标题
+  ✓ 一小时三十分钟后提醒我喝水 精确时长
+  ✓ 一小时三十分钟后提醒我喝水 具体时间判定
+  ✓ 一小时三十分钟后提醒我喝水 保留原文及标题
+  ✓ 一小时零五分钟后提醒我喝水 精确时长
+  ✓ 一小时零五分钟后提醒我喝水 具体时间判定
+  ✓ 一小时零五分钟后提醒我喝水 保留原文及标题
+  ✓ 四十五分钟后提醒我喝水 精确时长
+  ✓ 四十五分钟后提醒我喝水 具体时间判定
+  ✓ 四十五分钟后提醒我喝水 保留原文及标题
+  ✓ 一百二十分钟后提醒我喝水 精确时长
+  ✓ 一百二十分钟后提醒我喝水 具体时间判定
+  ✓ 一百二十分钟后提醒我喝水 保留原文及标题
+  ✓ 1.5小时后提醒我喝水 精确时长
+  ✓ 1.5小时后提醒我喝水 具体时间判定
+  ✓ 1.5小时后提醒我喝水 保留原文及标题
+  ✓ 三十秒后提醒我喝水 精确时长
+  ✓ 三十秒后提醒我喝水 具体时间判定
+  ✓ 三十秒后提醒我喝水 保留原文及标题
+  ✓ 两分钟三十秒后提醒我喝水 精确时长
+  ✓ 两分钟三十秒后提醒我喝水 具体时间判定
+  ✓ 两分钟三十秒后提醒我喝水 保留原文及标题
+  ✓ 半分钟后提醒我喝水 精确时长
+  ✓ 半分钟后提醒我喝水 具体时间判定
+  ✓ 半分钟后提醒我喝水 保留原文及标题
+  ✓ 两个钟头后提醒我喝水 精确时长
+  ✓ 两个钟头后提醒我喝水 具体时间判定
+  ✓ 两个钟头后提醒我喝水 保留原文及标题
+  ✓ 零分钟后提醒我 不冒充精确识别
+  ✓ 负三分钟后提醒我 不冒充精确识别
+  ✓ -3分钟后提醒我 不冒充精确识别
+  ✓ 几分钟后提醒我 不冒充精确识别
+  ✓ 三分钟后五分钟后提醒我 不冒充精确识别
+  ✓ 三分钟后明天提醒我 不冒充精确识别
+  ✓ 过三分钟前提醒我 不冒充精确识别
+  ✓ 一小时半半后提醒我 不冒充精确识别
+  ✓ 三分钟后9点提醒我 不冒充精确识别
+  ✓ 以后提醒我喝水 不冒充精确识别
+  ✓ 看三分钟视频 不冒充精确识别
+  ✓ 每三分钟后提醒我 不冒充精确识别
+  ✓ 三天以后按日历天且保留时刻
+  ✓ 天数可组合明确钟点
+  ✓ 清除时间但保留事项和标签
+  ✓ 正文含月报不误判为日期冲突
+
+== calendar anchors: 下周 / 下下周 / 每月N号 / 下个月N号 / X前 ==
+  ✓ H-01 下周三 = 09-23（不是 09-30）
+  ✓ H-01 下周日 = 09-27
+  ✓ H-01 两个分支统一为同一日历周
+  ✓ H-01 下下周一 = 09-28
+  ✓ H-02 每月15号 = 10-15（不是 10-18）
+  ✓ H-02 每月15号 周期为 monthly
+  ✓ H-02 次期仍锚 15 号（不再漂到 18）
+  ✓ H-02 每月N号 判为具体时间（不再进延后澄清）
+  ✓ H-03 下个月5号 = 10-05（不是 10-01）
+  ✓ H-03 号数不留在标题里
+  ✓ H-03 未给号数时仍为次月 1 号
+  ✓ H-03 下个月底 = 10-31（不是本月底 09-30）
+  ✓ H-03 月底 仍为当月末
+  ✓ N-04 每周X 不留孤立星期字
+  ✓ N-04 每周一 落在周一 09:00
+  ✓ N-04 下下周X 不留孤立「下」
+  ✓ N-04 本周X 不留孤立「本」
+  ✓ N-04 「半」= 30 分
+  ✓ N-04 「半」不留在标题
+  ✓ N-04 「9点前」产出截止（精确到那一刻）
+  ✓ N-04 「9点前」标题干净
+  ✓ N-04 「之前」产出截止（当天末尾）
+  ✓ N-04 「之前」标题干净
+  ✓ 既有：截止 + 提前五天 仍按原口径
+  ✓ 周期事项不因「最后一天」被加上截止
+  ✓ 周期事项仍是 monthEnd
+  ✓ 无截止语义时不产出截止
+
+== repeat ==
+  ✓ day +1
+  ✓ monthEnd last day
+  ✓ monthEnd is Jan 31 2026
+  ✓ nth weekday Tue
+  ✓ nth in 8-14
+  ✓ preview 5
+  ✓ preview ascending
+
+== reminder ==
+  ✓ 23:30 quiet
+  ✓ 08:00 not quiet
+  ✓ quiet end next 07:30
+  ✓ important realert after 30m
+  ✓ important no realert if disabled
+  ✓ important blocked by dismiss
+  ✓ critical realert after 15m
+  ✓ important max 4
+  ✓ normal no auto realert
+  ✓ acked no realert
+  ✓ window pick 10:00
+  ✓ markReminded +1
+
+== export-format ==
+  ✓ iso 带偏移
+  ✓ iso 往返仍是同一时刻
+  ✓ iso null 安全
+  ✓ utcStamp 以 Z 结尾
+  ✓ DEADLINE_LEAD_MS 与 reminder 一致
+  ✓ ack 周期一律不产出 rrule（硬红线）
+  ✓ day → FREQ=DAILY
+  ✓ monthEnd → BYMONTHDAY=-1
+  ✓ month → 锚在当日
+  ✓ nthWeekday → BYDAY=2TU
+  ✓ nthWeekday 最后 → BYDAY=-1MO
+  ✓ biweek 带 INTERVAL=2
+  ✓ week 带 BYDAY
+  ✓ 无截止 → NONE
+  ✓ 远期 → PENDING
+  ✓ 24h 内 → PROTECTED
+  ✓ 已过 → PASSED
+  ✓ 暂停 → PENDING
+  ✓ 已完成且曾 ACK → ACKNOWLEDGED
+  ✓ 已完成但无 ACK 记录 → 不假装 ACKNOWLEDGED
+  ✓ due → DELIVERED
+  ✓ time_source 只产出 PARSED / FALLBACK（D54）
+  ✓ 无触发时刻 → FALLBACK
+  ✓ 默认范围排除已归档
+  ✓ 默认范围包含待整理
+  ✓ counts 与条目数一致
+  ✓ 绝不导出密钥
+  ✓ 设置子集保留非密钥项
+  ✓ original_capture 如实为 null（不臆造）
+  ✓ derived 标注派生字段
+  ✓ importance 不算派生（它就是存储的 priority）
+  ✓ repeat.rrule 计入 derived
+  ✓ ack 周期条目的 rrule 为 null
+  ✓ ack 周期也不进 derived
+  ✓ ACK 未完成 → ACKNOWLEDGED + ACTIVE
+  ✓ 时间双写指向同一时刻
+  ✓ 条目字段与 schema 完全一致（不多不少）
+  ✓ schema 必填字段齐备
+  ✓ 顶层字段都在 schema 内
+  ✓ scope.mode 是合法枚举
+  ✓ 导出范围过滤可关闭 NEEDS_REVIEW
+  ✓ ICS 用 CRLF 断行
+  ✓ 兜底且无截止的条目不进日历
+  ✓ 兜底但有真实截止的条目降级为 VTODO
+  ✓ 被丢弃的条目确实不在文件里
+  ✓ 普通的条目是 VEVENT
+  ✓ 所有 DT 行都是 UTC（D53）
+  ✓ 写入对外语义契约（ACK != Complete）
+  ✓ 写入 X-ATTENTION 语义标注
+  ✓ ICS 每行不超过 75 字节
+  ✓ ICS 折行真的发生过（存在续行）
+  ✓ ack 周期在 ICS 里没有 RRULE 行
+  ✓ 日历周期有 RRULE 行
+
+== import-extract ==
+  ✓ 按扩展名识别类型
+  ✓ 按 MIME 识别类型
+  ✓ 不认识的后缀 → null
+  ✓ hash32 稳定且能区分
+  ✓ txt 解析成功
+  ✓ txt 跳过分隔线与空行
+  ✓ txt 剥掉列表符
+  ✓ txt 带行定位
+  ✓ md 只抽列表项
+  ✓ md 标题成为标签
+  ✓ md 复选框标记被剥离
+  ✓ md 段落不混入列表结果
+  ✓ md 跳过 front matter
+  ✓ md 无列表时按段落兜底
+  ✓ csv 表头映射出两条
+  ✓ csv 取到标题
+  ✓ csv 取到时间串
+  ✓ csv 取到截止串
+  ✓ csv 引号内的逗号不被拆列
+  ✓ csv 标签按顿号/逗号拆开
+  ✓ csv 表头行本身不成为条目
+  ✓ csv 无表头时回退并告警
+  ✓ ics 抽出两条
+  ✓ ics 是结构化来源
+  ✓ ics 的 UTC 时刻换算正确
+  ✓ ics 周期映射为 week
+  ✓ ics 全天截止落到当天 23:59
+  ✓ ics 不带 when_text（不该绕自然语言解析）
+  ✓ 自家导出件可被识别
+  ✓ 回环携带内部字段
+  ✓ 回环走结构化通道
+  ✓ 回环保留原状态（不被打回 waiting）
+  ✓ 回环保留周期
+  ✓ 通用 JSON 抽出两条
+  ✓ ISO 时间走结构化通道
+  ✓ 自然语言时间走文本通道
+  ✓ 坏 JSON 是真失败（不伪装成 0 条）
+  ✓ 不支持的类型被拒
+  ✓ 超过大小上限被拒
+  ✓ 空文件被拒
+  ✓ 超量截断且如实标记
+  ✓ 正好 200 条不算截断
+
+== import-map ==
+  ✓ 映射出三条
+  ✓ 一律 waiting（绝不直接落 due）
+  ✓ 一律 NEEDS_REVIEW
+  ✓ 一律 priority=normal（AI 不判优先级）
+  ✓ 保留来源引用
+  ✓ 保留来源标题
+  ✓ 打上批次号
+  ✓ 原生投递方式取全局默认快照
+  ✓ 自然语言时间由注入的解析器换算
+  ✓ 无法识别时间 → 兜底时刻 + isFallbackTrigger
+  ✓ 结构化来源直接采信时间戳
+  ✓ 结构化来源忽略 when_text（两条通道不互相污染）
+  ✓ 预览带置信度与时间来源说明
+  ✓ 摘要统计可用
+  ✓ 白名单拒绝非法状态
+  ✓ 白名单不引入未知字段
+  ✓ 白名单恢复合法字段
+  ✓ 白名单允许合法状态回环
+  ✓ 疑似重复只标记、绝不自动合并
+  ✓ 摘要统计疑似重复
+  ✓ 未注入解析器时明确告警
+  ✓ 未注入兜底函数时明确告警
+
+== ui-format ==
+  ✓ ui-format 挂在命名空间 AttentionLib.UiFormat 上（不是扁平合并）
+  ✓ fmtTime 今天
+  ✓ fmtTime 明天
+  ✓ fmtTime 昨天
+  ✓ fmtTime 同年带月日
+  ✓ fmtTime 跨年带年份
+  ✓ fmtTime 空值返回空串
+  ✓ fmtDate 不带钟点
+  ✓ relDue 未来不足 1 分钟 = 现在
+  ✓ relDue 未来 5 分钟
+  ✓ relDue 未来 3 小时
+  ✓ relDue 未来 2 天
+  ✓ relDue 已过不足 1 小时至少报 1 分钟
+  ✓ relDue 已过 2 小时
+  ✓ relDue 已过 3 天
+  ✓ escapeHtml 转义尖引号
+  ✓ escapeAttr 与 escapeHtml 字符集一致（同样的输入同样输出）
+  ✓ escapeHtml 空值安全
+  ✓ renderMarkdown 生成 h1
+  ✓ renderMarkdown 生成 strong 与 code
+  ✓ renderMarkdown 生成 ul/li
+  ✓ renderMarkdown 先转义：用户写 <script> 不会变成真标签
+  ✓ renderMarkdown 只放行 http(s) 链接
+  ✓ renderMarkdown 放行 https 链接
+  ✓ pad 补零
+  ✓ uid 形状为 i_ 前缀的字符串
+  ✓ dayLabel 空值 = 「更早」（与 fmtDate 的 "" 不同，刻意不合并）
+  ✓ dayLabel 今天
+  ✓ dayLabel 昨天
+  ✓ dayLabel 没有「明天」分支（回月日，而 fmtDate 回「明天」）
+  ✓ dayLabel 跨年回完整年月日（fmtDate 不回）
+  ✓ toLocalInput 形状 YYYY-MM-DDTHH:mm（补零到分、不含秒）
+  ✓ toLocalInput 空值 = 空串
+  ✓ parseLocalInput 与 toLocalInput 回环（同一分钟进出不变）
+  ✓ parseLocalInput 解析不出时返回 null（**不**兜底成「现在」）
+  ✓ ui-format 的日判定与 date-utils.sameDay 一致（不是另一套实现）
+
+== app-ui — 弹层 / toast / 确认框 / 外链白名单 ==
+  ✓ createUi 交出 8 支展示能力（$ / $$ / 弹层三支 / 确认框 / toast / hideToast）
+  ✓ safeExternalHref 是模块级纯函数（不需要实例）
+  ✓ 模块求值 + 实例化都不建定时器、不动 DOM（求值无副作用）
+  ✓ openSheet 打开目标层并亮出 backdrop
+  ✓ 还有一层开着时关一层：backdrop 必须留着
+  ✓ 关掉最后一层：backdrop 撤掉
+  ✓ closeAllSheets 关掉全部层并撤遮罩
+  ✓ toast 写入文案并亮出提示条
+  ✓ toast 亮出动作按钮并挂上回调
+  ✓ 未给第二个动作时该槽位置隐藏并清空 onclick
+  ✓ 带动作的提示时长 = 5000ms
+  ✓ 点动作：先收起提示再执行回调
+  ✓ 无动作的提示时长 = 2400ms，且动作槽被收起
+  ✓ 连续两次 toast：前一个定时器必须被撤掉（挂起只剩 1 个）
+  ✓ 抑制反馈时 toast 完全不动 DOM、也不建定时器（M1 的判据）
+  ✓ 解除抑制后 toast 恢复（文案更新、定时器重建、提示条亮出）
+  ✓ hideToast 收起提示条
+  ✓ 确认框弹出：标题/正文回填、层打开、backdrop 亮出
+  ✓ 确认框三个出口都挂上了 onclick
+  ✓ 点确定：层关闭、backdrop 撤掉、三个 onclick 全部清干净
+
+== app-ai — 请求 / 归一 / 设置 / 表单合并 ==
+  ✓ createAppAi 是模块级导出（实例由入口统一装配）
+  ✓ 归一 / 提取 / 本地 ISO 都是模块级纯函数（不需要实例）
+  ✓ 围栏剥离：```json 代码块 + 前后客套话都能剥出 JSON
+  ✓ 围栏剥离：只截第一个 { 到最后一个 }
+  ✓ 围栏剥离：没有 JSON 时**抛出**（不静默返回空对象）
+  ✓ 归一：模型自创的优先级被收窄成 normal（越权值不得绕过重要档的渠道规则）
+  ✓ 归一：白名单外的周期被整体丢弃（不能造一个算不出下一轮的事项）
+  ✓ 归一：标题空时回落用户原话
+  ✓ 归一：标签去空、trim、截到 8 个
+  ✓ 归一：解析不出的时间是 null（**不兜底成现在**），能解析的保留
+  ✓ 归一：confidence 由**提醒时间**推导，不由模型自评 —— 只有 deadline 不算「解析出了时间」（否则低置信度确认面板会整体消失）
+  ✓ 归一：nthWeekday 的 nth / dow 被转成数字（-1 保留）
+  ✓ 归一：mode 不在 calendar/ack 里一律回落 calendar
+  ✓ 缺依赖时 createAppAi **抛错并点名缺哪几项**（不装半残实例）
+  ✓ 实例交出 15 支 AI API
+  ✓ 模块求值不开定时器、不发请求、不读 DOM（装配前 isBusy 为 false、无记录）
+  ✓ 未开启 ⇒ 小字说「未开启」
+  ✓ 已开启且配全 ⇒ 小字带上模型名与「仅手动」
+  ✓ 已开启但没配全 ⇒ 小字提醒「请完善 API 配置」（不是报成可用）
+  ✓ ready() 四样齐全才算能用（enabled / baseUrl / apiKey / model 缺一即 false）
+  ✓ 保存：整段写回（不是逐字段 patch），斜杠去掉、空白 trim
+  ✓ 保存：落库 / 关弹层 / 重渲染「我的」/ 提示，四件事按序发生且各一次
+  ✓ 打开设置弹层：每次都从**当前配置**重画（不留弹层里的旧值）
+  ✓ applyToForm：标题 / 时间 / 截止都写进表单
+  ✓ applyToForm：备注**只在用户没写时**才填（不覆盖人写的上下文）
+  ✓ applyToForm：标签是**并集**（用户手打的一个都不丢）
+  ✓ applyToForm：优先级点亮对应 chip
+  ✓ applyToForm：周期写进 select 并**刷新预览**
+  ✓ applyToForm：提示行以「 · 可修改」收尾（结果不是判决）
+  ✓ mergedDraft：合出了 AI 结果（标题 / 时间 / 截止 / 优先级 / 周期）
+  ✓ mergedDraft：**纯的** —— 提交时冻结的那份草稿一个字都没被改
+  ✓ mergedDraft：标签并集（work + home）
+  ✓ mergedDraft：备注**只在原快照为空时**填（空白串算空）
+
+== app-backup — 导入的读取失败反馈与「成功 = 提交已兑现」 ==
+
+== app-backup — 导出宽限闸门（假计时器：7999 / 8000 ms 与迟到结果） ==
+  ✓ （前置）宽限时长是 8 秒
+  ✓ （前置）原生导出进入在途：按钮被锁 + 副文案改成「正在等待保存结果…」
+  ✓ （前置）回到前台后宽限计时器被装上（离开期间不计时）
+  ✓ 宽限：7999 ms **不触发**（不报「无法确认」、按钮仍保持等待）
+  ✓ 宽限：8000 ms 触发「保存结果未返回 · 文件状态无法确认，请重试」
+  ✓ 宽限：超时时恢复按钮与副文案（可以重试，不是永久卡死）
+  ✓ 宽限：整条超时路径**一句「已保存」都没有出现过**（绝不报成功）
+
+== storage ==
+
+== feedback — 保存结果与排程结果分开 ==
+  ✓ 保存中不得出现「已保存」
+  ✓ 保存失败不伪装成功
+  ✓ 降级保存按实际保障程度提示
+  ✓ 本条已获真实确认 → scheduled
+  ✓ 已确认的文案给出具体时间
+  ✓ 全局正常不能证明刚保存的这一条已排成功
+  ✓ 没有明确时间 → 待补提醒时间
+  ✓ 待整理文案不得暴露兜底时间为事项承诺
+  ✓ 兜底时间不冒充已定的提醒时间
+  ✓ 总开关关闭 → 提醒已关闭
+  ✓ 不擅自替用户宣布已开启
+  ✓ 通知权限被拒 → permission-denied
+  ✓ 权限被拒文案不得说「完全不响」
+  ✓ 闹钟可排但通知受限 → alarm-limited
+  ✓ 受限文案明确「已安排闹钟」而不是「没安排」
+  ✓ 受限文案不误称完全不响
+  ✓ 只能非精确 → 提醒可能延迟
+  ✓ 对账失败 → 排程失败 + 重试
+  ✓ Web/PWA 不显示 Android 就绪结论
+  ✓ 穷举 126 种组合：不产出「漏提醒」结论
+
+== feedback — 动作语义与术语 ==
+  ✓ ACK 语义：停止本轮、仍未完成
+  ✓ ACK 文案不承诺「以后不再提醒」
+  ✓ ACK 首次反馈提供「稍后提醒」入口
+  ✓ 稍后提醒展示具体时间
+  ✓ 原生快捷稍后明确标注 2 小时
+  ✓ 完成：结束当前实例并归档
+  ✓ 完成后撤销窗口为 8 秒
+  ✓ 周期完成的反馈说明是否存在下一周期
+  ✓ 关闭声振不冒充 ACK/完成/稍后
+  ✓ 术语替换 ACK
+  ✓ 术语替换 NEEDS_REVIEW
+  ✓ 术语替换 Capture
+  ✓ 无时间摘要明确说明会被先记下
+  ✓ 摘要展示有效提醒时间
+  ✓ 摘要不隐藏已识别的周期
+  ✓ 摘要展示截止
+  ✓ 已满足的能力不重复申请
+  ✓ 每个步骤都解释「为何需要」与「拒绝后的影响」
+  ✓ 测试步骤仍可达（未测试前不算全通过）
+  ✓ 未打开后台设置且系统未确认时不算完成
+  ✓ 后台说明不再声称所有国产系统锁屏 20 秒必然冻结
+  ✓ 打开过后台设置只推进向导，不冒充系统能力已验证
+  ✓ 打开过悬浮窗设置只推进向导，不承诺一定只显示横幅
+  ✓ 系统可回读的后台与全屏能力仍可标记为已验证
+  ✓ 真机形态：diag 回读悬浮窗与全屏通知均已允许 ⇒ 该步已验证且完成，不再要求去开启
+  ✓ 真机形态：diag 回读未忽略电池优化 ⇒ 后台一步仍未验证、未完成
+  ✓ 真机形态：下一步是后台运行，而不是已开启的悬浮窗
+  ✓ 真机形态：全屏通知未允许时悬浮窗一步不算验证；电池优化已忽略时后台一步已验证
+  ✓ 60 秒测试有结果不等于验证通过
+  ✓ 本次测试明确听到后才可标记为验证通过
+  ✓ 未回答测试反馈不等于失败或成功
+  ✓ 不确定既不算失败也不算成功
+  ✓ 区分「没收到」与「不确定」
+
+== delivery-evidence — 证据合并与事后核查 ==
+  ✓ 展示状态里没有 missed 这一档
+  ✓ 没有代表「漏提醒」的状态值
+  ✓ 身份完整的事件被接受
+  ✓ 最小身份含事项 ID + 提醒键 + 计划时刻 + 载体
+  ✓ 只声明「系统已接收」，不写成用户看到
+  ✓ 首次合并写入 delivered
+  ✓ 送达证据落在三态台账上
+  ✓ 重复回执幂等：第二次不产生变化
+  ✓ 对照组：换一个提醒键会正常写入（上面的幂等不是空转）
+  ✓ 旧轮次回执不写入（不污染新轮次）
+  ✓ 旧轮次回执的判据是 stale-round，不是被身份检查顺带挡掉
+  ✓ 成对差分：仅把原定时刻挪进本轮就必须写入
+  ✓ R4 未登记的轮次不写入（宁可尚未确认，不谎报已接收）
+  ✓ R-F06 条目自带轮次身份时以它为准
+  ✓ Y2 旧版写入的条目没有轮次身份时保持不可验证（不冒充当前轮）
+  ✓ Y2 对照：旧版 0@triggerAt 首期键可证明属于当前轮
+  ✓ Y2 旧版追提醒即使落在当前范围也不可从时刻猜成当前轮
+  ✓ R-F06 登记过但属于上一轮的键不写入（判据 superseded-round，不是被范围判据顺带挡掉）
+  ✓ R-F06 旧轮的键保留为历史（cancelled 不被改写成 delivered）
+  ✓ R-F06 对照组：属于当前轮的回执照常写入（上面的拒绝不是通路故障）
+  ✓ R-F06 旧轮的 delivered 不抬高当前轮的状态（旧实现：直接显示「系统已接收」）
+  ✓ R-F06 对照组：属于当前轮的 delivered 仍然算数
+  ✓ 迟到回执不复活已完成事项
+  ✓ 缺身份的证据计入 unknown
+  ✓ unknown 不等于失败（不产生任何失败标记）
+  ✓ 事项已不存在 → unknown 而不是指控
+  ✓ 没有登记过排程 → 无法核查（不是漏）
+  ✓ 无法核查/未知的文案都不含「漏」
+  ✓ 未到点 → pending
+  ✓ 到点但缺证据 → unknown
+  ✓ 缺证据的文案只说「尚未确认」
+  ✓ 缺证据绝不判成失败
+  ✓ 刚到点 → processing（不立刻断言结果）
+  ✓ 证据通道读不到 → unknown（不指控）
+  ✓ 回读进行中 → processing
+  ✓ 有证据 → delivered
+  ✓ 有证据也只说「系统已接收」
+  ✓ 乱序到达的两轮证据都能各自关联
+  ✓ 乱序下展示取最新已送达轮次
+
+== P2-E AppSetup — 求值、live 注入、60 秒测试与停铃边界 ==
+  ✓ P2-E 模块求值零副作用（不读状态、不绑监听、不起计时器）
+  ✓ P2-E live getter：创建后才接入 Android 原生模块，prompt 才显示入口
+  ✓ P2-E live getter：后续 NativeReminders 装配立即生效（不缓存创建时快照）
+  ✓ P2-E 静态 bind 幂等且动态入口 writeIfChanged 短路不叠监听
+  ✓ P2-E 静态 #btnSetup bind 实例内幂等
+  ✓ 设置入口：原生状态未读回（unknown）时首页不渲染卡片
+  ✓ 设置入口：状态读回后重绘才出现卡片
+  ✓ 点确定 ⇒ 解析为 true
+  ✓ 省略标题时用默认「确认」，正文原样回填
+  ✓ 点取消 ⇒ 解析为 false
+  ✓ 省略正文时用默认「确定继续？」
+  ✓ memory empty load
+  ✓ P2-E 60 秒测试只排独立 90003 闹钟，参数固定为 60000ms
+  ✓ P2-E 排程成功后才保留本次 run 并保存一次
+  ✓ 点关闭 ⇒ 解析为 false
+  ✓ 导入：提交在途时不出现「导入成功」，也不提前渲染
+  ✓ 没有 #sheetConfirm 时落到 window.confirm，返回 false
+  ✓ 请求：baseUrl 的尾斜杠被去掉后再拼 /chat/completions
+  ✓ 请求：Authorization 头是 Bearer + key，Content-Type 是 JSON
+  ✓ 请求：system prompt 带本地时钟，并在 systemExtra 里写明任务类型
+  ✓ 请求：temperature 0.1 与 model 都来自配置
+  ✓ 解析结果走同一套归一（标题来自模型）
+  ✓ P2-E 排程失败不创建或替换 testRun，面板可恢复重试
+  ✓ 兜底路径里 window.confirm 抛错 ⇒ 保守取 true（不静默当作取消）
+  ✓ https 放行
+  ✓ http 放行
+  ✓ javascript: 拒绝
+  ✓ 大小写混杂的 JaVaScRiPt: 拒绝（按解析后的协议判定，不看字形）
+  ✓ 带换行的 java\nscript: 拒绝（解析器会剔除控制字符后再判定）
+  ✓ 带 TAB 的 ja\tvascript: 拒绝
+  ✓ data: 拒绝
+  ✓ 空值 / 空串 / 纯空白一律拒绝
+  ✓ 前后空白被裁掉
+  ✓ 相对路径拒绝（不是绝对 URL）
+  ✓ 解析不出授权段拒绝
+  ✓ P2-E 旧时间投递不算本次测试
+  ✓ 润色用的是另一段 systemExtra（polish）
+  ✓ memory save/load
+  ✓ P2-E 错标题投递不算本次测试
+  ✓ 连通性测试：只求能通（max_tokens 8 + ping），端点同样是 /chat/completions
+  ✓ P2-E 同次且测试标题的投递才更新 seenAt
+  ✓ P2-E 重测隔离旧 feedback，不把上次答案标为本次结果
+  ✓ HTTP 错误**原样冒上去**（带状态码与响应片段），不吞成一句「AI 不可用」
+  ✓ P2-E 停铃读失败不写 stoppedAt、不报成功
+  ✓ 空返回抛「AI 返回为空」（不静默当成解析成功）
+  ✓ runOnCapture：请求在途时 isBusy() 为 true（这是**唯一**的在途闸门）
+  ✓ runOnCapture：按钮被置成「思考中」并 disabled
+  ✓ runOnCapture：**先落本地解析**（等待期间界面不是空的）
+  ✓ runOnCapture：在途期间的第二次调用**立刻返回**且 busy 仍为真（闸门没被绕过）
+  ✓ P2-E 对照：确认空投递才标记 stoppedAt
+  ✓ P2-E 对照：真实在响且 token 匹配时才停住本次测试
+  ✓ runOnCapture：在途期间的第二次调用**没有再发请求**（连点不会叠加两次结果）
+  ✓ runOnCapture：整个连点过程只填了一次表单（没有第二次结果覆盖第一次）
+  ✓ runOnCapture：完成后 busy 复位、按钮文案与 disabled 还原
+  ✓ runOnCapture：AI 结果真的填进了表单
+  ✓ runOnCapture：失败时按钮**仍然**还原（finally 无条件复位，失败也能再按一次）
+  ✓ runOnCapture：失败提示写明「已用本地解析」并带上原因
+  ✓ runOnCapture：空输入不发请求（提示「先写一句话吧」）
+  ✓ runOnCapture：没配置时不发请求，提示去配置并跳过去（跳转由入口编排，模块只回调）
+  ✓ 导入：提交兑现**之后**才渲染并报成功（条数来自归一后的清单）
+  ✓ 迟到结果：超时之后才回来的 saved ⇒ 返回 stale，**不再 toast**、也不再改按钮
+  ✓ 新一轮：上一轮已作废后可以重新导出（按钮重新进入在途）
+  ✓ 新一轮：结果正常时照旧报「已保存」，且用的是**这一轮**的文件名
+  ✓ （前置）第三轮宽限同样在 8000 ms 触发
+  ✓ 导入：提交失败报「数据未能保存」，不报成功、不误报格式错误
+  ✓ 导入：提交失败时内存状态保留（与保存失败路径同一语义，不清空）
+  ✓ 迟到结果：超时之后才回来的 cancelled ⇒ 也不 toast「已取消导出」
+  ✓ （前置）M10 反例补丁真的拔掉了 stale 判断（只改这一行）
+  ✓ 导入：提交成功后渲染 + 成功提示（文案逐字保持）
+  ✓ 导入：读取失败给出明确反馈（不是「点了没反应」）
+  ✓ 导入：读取中止同样给出反馈
+  ✓ 导入：读取失败/中止不触发确认框、不触发提交（反馈止步在读取层）
+
+== app-backup — P2-C-S 整库导入格式安全面 ==
+  ✓ 反例：不是本应用的备份（app = other-app） ⇒ app-mismatch @ app
+  ✓ 反例：缺少 app 标识 ⇒ app-missing @ app
+  ✓ 反例：缺少 schema ⇒ schema-missing @ schema
+  ✓ 反例：schema 是字符串 ⇒ schema-type @ schema
+  ✓ 反例：schema 是浮点 ⇒ schema-type @ schema
+  ✓ 反例：schema 过旧（1） ⇒ schema-too-old @ schema
+  ✓ 反例：schema 是未来版本（当前 + 1） ⇒ schema-too-new @ schema
+  ✓ 反例：schema 是未来版本（999） ⇒ schema-too-new @ schema
+  ✓ 反例：当前版本号取不到（getSchema 坏掉） ⇒ schema-limit-unavailable @ schema
+  ✓ 反例：顶层缺 items ⇒ missing-key @ items
+  ✓ 反例：顶层缺 notes（旧代码会静默清空笔记） ⇒ missing-key @ notes
+  ✓ 反例：顶层缺 projects（旧代码会静默清空项目） ⇒ missing-key @ projects
+  ✓ 反例：顶层缺 settings ⇒ missing-key @ settings
+  ✓ 反例：顶层未知字段 ⇒ unknown-key @ injected
+  ✓ 反例：items 是对象 ⇒ container-type @ items
+  ✓ 反例：notes 是对象（旧代码会静默清空笔记） ⇒ container-type @ notes
+  ✓ 反例：projects 是对象 ⇒ container-type @ projects
+  ✓ 反例：settings 是数组 ⇒ container-type @ settings
+  ✓ 反例：exportedAt 缺失 ⇒ missing-key @ exportedAt
+  ✓ 反例：exportedAt 没有时区 ⇒ time-format @ exportedAt
+  ✓ 反例：exportedAt 不可解析 ⇒ time-format @ exportedAt
+  ✓ 反例：item 是 null ⇒ record-type @ items[0]
+  ✓ 反例：item 是数字 ⇒ record-type @ items[0]
+  ✓ 反例：item 是数组 ⇒ record-type @ items[0]
+  ✓ 反例：item 是空对象 ⇒ id-invalid @ items[0].id
+  ✓ 反例：item 缺 id ⇒ id-invalid @ items[0].id
+  ✓ 反例：item id 是空串 ⇒ id-invalid @ items[0].id
+  ✓ 反例：item id 非字符串 ⇒ id-invalid @ items[0].id
+  ✓ 反例：item 缺 title ⇒ title-invalid @ items[0].title
+  ✓ 反例：item title 是空串 ⇒ title-invalid @ items[0].title
+  ✓ 反例：item title 非字符串 ⇒ title-invalid @ items[0].title
+  ✓ 反例：items 重复 id ⇒ duplicate-id @ items[1].id
+  ✓ 反例：notes 重复 id ⇒ duplicate-id @ notes[1].id
+  ✓ 反例：projects 重复 id ⇒ duplicate-id @ projects[1].id
+  ✓ 反例：note 是 null ⇒ record-type @ notes[0]
+  ✓ 反例：project 缺 name ⇒ name-invalid @ projects[0].name
+  ✓ 反例：item 未知字段 ⇒ unknown-key @ items[0].mystery
+  ✓ 反例：note 未知字段 ⇒ unknown-key @ notes[0].mystery
+  ✓ 反例：project 未知字段 ⇒ unknown-key @ projects[0].mystery
+  ✓ 反例：顶层 __proto__ 键（原型链不算已知字段） ⇒ unknown-key @ __proto__
+  ✓ 反例：tags 不是数组 ⇒ field-type @ items[0].tags
+  ✓ 反例：tags 含非字符串 ⇒ field-type @ items[0].tags[1]
+  ✓ 反例：时间字段是字符串 ⇒ field-type @ items[0].triggerAt
+  ✓ 反例：时间字段为负 ⇒ field-type @ items[0].deadlineAt
+  ✓ 反例：计数为负 ⇒ field-type @ items[0].snoozeCount
+  ✓ 反例：计数是小数 ⇒ field-type @ items[0].remindCount
+  ✓ 反例：rev 为 0（会让版本校验整体失效） ⇒ field-type @ items[0].rev
+  ✓ 反例：布尔字段是字符串 ⇒ field-type @ items[0].deadlinePaused
+  ✓ 反例：priority 非法枚举 ⇒ enum-invalid @ items[0].priority
+  ✓ 反例：status 非法枚举 ⇒ enum-invalid @ items[0].status
+  ✓ 反例：review_status 非法枚举 ⇒ enum-invalid @ items[0].review_status
+  ✓ 反例：delivery_mode 非法枚举 ⇒ enum-invalid @ items[0].delivery_mode
+  ✓ 反例：scheduleBasis 非法枚举 ⇒ enum-invalid @ items[0].scheduleBasis
+  ✓ 反例：repeat 错型 ⇒ field-type @ items[0].repeat
+  ✓ 反例：repeat.every 未知 ⇒ enum-invalid @ items[0].repeat.every
+  ✓ 反例：repeat.mode 未知 ⇒ enum-invalid @ items[0].repeat.mode
+  ✓ 反例：repeat 未知字段 ⇒ unknown-key @ items[0].repeat.rrule
+  ✓ 反例：reminderEvents 是数组 ⇒ field-type @ items[0].reminderEvents
+  ✓ 反例：reminderEvents 状态未知 ⇒ enum-invalid @ items[0].reminderEvents["k"].state
+  ✓ 反例：reminderEvents 条目未知字段 ⇒ unknown-key @ items[0].reminderEvents["k"].extra
+  ✓ 反例：deadlineEvents 是字符串 ⇒ field-type @ items[0].deadlineEvents
+  ✓ 反例：deadlineEvents 状态未知 ⇒ enum-invalid @ items[0].deadlineEvents["p24@1"].state
+  ✓ 反例：settings 未知键 ⇒ unknown-key @ settings.injected
+  ✓ 反例：settings.notify 错型 ⇒ field-type @ settings.notify
+  ✓ 反例：settings.quietStart 错型 ⇒ field-type @ settings.quietStart
+  ✓ 反例：settings.defaultDeliveryMode 非法枚举 ⇒ enum-invalid @ settings.defaultDeliveryMode
+  ✓ 反例：settings.userMode 非法枚举 ⇒ enum-invalid @ settings.userMode
+  ✓ 反例：settings.ai 是数组 ⇒ field-type @ settings.ai
+  ✓ 反例：settings.ai 是 null ⇒ field-type @ settings.ai
+  ✓ 反例：settings.ai 未知键 ⇒ unknown-key @ settings.ai.injected
+  ✓ 反例：settings.ai.apiKey 非空（禁止用备份注入密钥） ⇒ ai-credential-not-empty @ settings.ai.apiKey
+  ✓ 反例：settings.ai.baseUrl 非空（禁止用备份改请求终点） ⇒ ai-credential-not-empty @ settings.ai.baseUrl
+  ✓ 反例：settings.ai.enabled 错型 ⇒ field-type @ settings.ai.enabled
+  ✓ 反例总账：上述 73 组全部「零副作用拒绝」（确认框 0 / 提交 0 / 渲染 0 / 归一 0 / 未曾读 state / 仅一次 toast）
+  ✓ 直测：时间字段是 NaN ⇒ field-type @ items[0].triggerAt（NaN 不是有限数字）
+  ✓ 直测：计数是 Infinity ⇒ field-type @ items[0].snoozeCount
+  ✓ 直测：`__proto__` 被当成未知自有键拒绝（不靠原型链判定）
+  ✓ 直测：根是数组 / null / 字符串 ⇒ root-type
+  ✓ 契约闭合：ITEMS 允许字段集合 == app-model normalizeItem() 返回的字段集合（40 项，逐项相等）
+  ✓ 正向对照：真实 schema 5 事项的字段集合与契约字段集合逐一相等
+  ✓ 回环：buildLegacyBackupPayload() 的真实快照能被自己的契约接受（导出侧与导入侧同一份真相）
+  ✓ 回环：导出外壳的键集合 == 契约顶层键集合；settings 键集合 == 契约白名单（含密钥被脱敏成空串）
+  ✓ 回环：真实快照里的密钥未被带出去（导出侧脱敏），而本机状态里的密钥没被改动
+  ✓ 正向：schema 2/3/4/5 全部通过验证并完成导入（迁移继续交给 normalizeItem），schema 6 被拒
+  ✓ 正向：合法文件经确认后完成整份替换并报成功（条数取自替换后的清单）
+  ✓ 正向：确认文案是覆盖警告「导入将覆盖当前数据，继续？」
+  ✓ 正向：本机 AI 密钥与请求终点不被备份覆盖（文件里是空串），本机私有键（review/onboardDone）保留
+  ✓ 正向：用户取消后零副作用（内存不变 / 不提交 / 不渲染），确认框只对已验证可用的文件弹出
+  ✓ 正向：提醒操作在途时连确认框都不弹（闸门排在确认之前）
+  ✓ M10 变红：拔掉 stale 判断后，超时后迟到的 saved **重新 toast 出「已保存」**⇒ ② 的断言不会恒真
+  ✓ 正向：提交在途时不渲染、不报成功（合法文件也一样）
+  ✓ M10 的对照面：同一路径在**未变异**模块上不 toast（两边合起来才说明判据有分辨力）
+  ✓ （前置）M11 反例补丁真的删掉了宽限计时器的装配
+  ✓ 正向：提交兑现后才渲染并报成功
+  ✓ 正向：提交失败仍用 G02 专属文案，且内存保留（不落回「格式不正确」）
+  ✓ 正向：非 JSON 文件保持搬移前文案「文件格式不正确」（与契约不满足区分开）
+  ✓ 提示按 code 分派：未来版本要求「先更新应用」，别的应用有专属文案，其余错误点名具体路径
+  ✓ （前置）M-S1 只改一行：app 身份检查被拔掉（行数不变）
+  ✓ （对照）未变异时 wrong-app 是干净拒绝 —— 下面那条变红才有意义
+  ✓ M-S1 变红：身份检查拔掉后，别的应用的备份重新被接受（确认 1 / 提交 1 / 内存被替换）
+  ✓ （前置）M-S2 只改一行：schema 上界检查被拔掉（行数不变）
+  ✓ （对照）未变异时 future-schema 是干净拒绝
+  ✓ M-S2 变红：上界拔掉后，未来 schema 的备份重新被接受（确认 1 / 提交 1）
+  ✓ （前置）M-S3 只改一行：settings 未知键检查被拔掉（行数不变）
+  ✓ （对照）未变异时 settings 未知键是干净拒绝
+  ✓ M-S3 变红：未知键检查拔掉后，来历不明的文件重新进入确认并落库（确认 1 / 提交 1；键本身仍进不去 state —— settings 合并是白名单，这是第二道闸）
+  ✓ （前置）M-S4 补丁真的把「验证 + 准备」整段搬到了确认之后
+  ✓ M-S4 变红：验证后置后，坏文件**重新触发确认框**（confirm=1），拒绝也不再是「零副作用」
+  ✓ 收口：四条变异只用临时副本，工作区 lib/app-backup.js 字节未变
+
+== app-backup — P2-C-S B1：真实历史时间数据的导出→导入回环 ==
+  ✓ B1 夹具前置：设备 payload 里 items[0]/notes[0] 的 createdAt 确为带时区 ISO 字符串（不是构造出来的）
+  ✓ B1 ①：真实设备 payload 直接过验证器（修复前在这里 field-type @ items[0].createdAt FAIL）
+  ✓ B1 ②：sanitized 把两处 ISO 迁移为 epoch 毫秒，数字原样保留，输入文件对象不被改写
+  ✓ B1 ③：同一 payload 经 importDataFile 生产路径导入成功（确认 1 / 提交 1 / 渲染 1 / 2 条事项）
+  ✓ B1 ④：落库后的权威状态里 items/notes 时间全部是毫秒数字（字符串不进权威状态）
+  ✓ B1 ⑤：当前导出器对含 ISO createdAt 的历史状态导出的快照，能被当前验证器接受（第二层回环）
+  ✓ B1 ⑥：第二层回环的 sanitized 同样全部收敛为毫秒数字（迁移一次到位，不把字符串写回）
+  ✓ B1 ⑦：第二层快照走完整导入路径同样成功且时间全部为数字
+  ✓ B1 ⑧：新负向 —— 无时区串 / 文字串 / 负数 / 1970 前 ISO（负毫秒）在时间字段全被拒；quietStart/quietEnd 收紧为合法 HH:MM
+  ✓ M11 变红：宽限计时器被删掉后，8000 ms **不再有任何判定** —— 按钮一直锁在等待态，迟到的结果反被当成成功 ⇒ ① 的两个边界断言都不会恒真
+  ✓ M11 的对照面：同一路径在**未变异**模块上，8000 ms 已恢复按钮且判为 stale
+  ✓ 收口：反向编辑只用临时副本，工作区 lib/app-backup.js 未被改写
+
+========== unit results ==========
+通过: 649  失败: 0
+全部通过。
+
+== browser fallback ==
+  ✓ 非 Android 不启用原生适配
+  ✓ Web 状态保持 web
+
+== 到点边界与通道故障隔离 ==
+  ✓ 到点前 500ms 仍保留首次闹钟
+  ✓ 到点前对账不撤销首次闹钟
+  ✓ 到点前 500ms 普通通知仍可排程
+  ✓ 删除事项仍可撤销即将到期闹钟
+  ✓ 普通通知排程失败不阻止首次闹钟
+  ✓ 通道失败返回闹钟台账
+  ✓ 通道失败明确报告错误
+
+== schedule policies ==
+  ✓ 普通事项 1 次
+  ✓ 重要事项共 4 次
+  ✓ 关键事项共 8 次
+  ✓ 重要事项间隔 30 分钟
+  ✓ 关键事项间隔 15 分钟
+  ✓ 渠道按优先级区分
+  ✓ 关闭持续提醒后重要事项仅 1 次
+
+== quiet hours, privacy, deadline ==
+  ✓ 勿扰时普通事项延后到次日 07:30
+  ✓ 重要事项不被应用勿扰延后
+  ✓ 锁屏隐私隐藏正文
+  ✓ Deadline Protection 独立排程
+
+== dismiss and stable ids ==
+  ✓ 关闭弹条不取消首次提醒
+  ✓ 30 分钟内补充提醒被屏蔽
+  ✓ 排程携带显式版本
+  ✓ 通知 ID 与事项顺序无关
+
+== mixed time semantics ==
+  ✓ 旧事项迁移为墙钟时间
+  ✓ 已迁移事项再迁移 ⇒ 报未变更（幂等，不制造每轮冷启动的落地）
+  ✓ 对照：字段确实缺失时仍要迁移一次，且第二次报未变更（幂等不是「永远不迁移」）
+  ✓ 幂等是**真的没改动**（不是改了再改回同一个值）
+  ✓ 相对 Snooze 保持实际时长
+  ✓ 墙钟时间可往返
+  ✓ 跨时区仍保持本地墙钟
+  ✓ 跨时区相对 Snooze 不改变等待时长
+
+== lifecycle projection ==
+  ✓ 关键事项包含常规与 Deadline 排程
+  ✓ V03 两个保护阶段各有独立身份
+  ✓ ACK 取消常规补充但保留独立 Deadline
+  ✓ 完成取消全部剩余排程
+  ✓ 删除事项后没有投影
+  ✓ Snooze 重新排到新时间
+  ✓ 恢复事项重新生成排程
+
+== permission and reconciliation ==
+  ✓ 首次对账创建排程
+  ✓ 重复对账不重复排程
+  ✓ 陈旧排程被取消
+  ✓ 编辑时间会取消旧排程并创建新排程
+  ✓ 通知拒绝时仅应用内提醒
+  ✓ 精确权限拒绝时保留非精确排程
+
+== alarm first delivery (D9 / D25 / A-01) ==
+  ✓ D25 重要档首次走全屏闹钟
+  ✓ D25 关键档首次走全屏闹钟
+  ✓ A-01 默认通知的普通档首次不走闹钟
+  ✓ A-01 delivery_mode=alarm 的普通档首次走闹钟
+  ✓ D25 重要档后续 3 次仍走通知
+  ✓ D25 关键档后续 7 次仍走通知
+
+== alarm reconciliation (P0-2) ==
+  ✓ 首次对账排下全屏闹钟
+  ✓ 对账回报已排闹钟 id
+  ✓ 重复对账不误撤闹钟
+  ✓ 删除事项撤销全屏闹钟
+  ✓ 撤销后不再持有 alarm id
+  ✓ 关闭「本地通知」后撤销全屏闹钟
+  ✓ 关闭后不再新排闹钟
+
+== Q2 排程时刻回读校验 ==
+  ✓ Q2 原生照单排程时不误报
+  ✓ Q2 正常路径确实排下了全屏闹钟
+  ✓ Q2 原生忽略 delayMs 时必须报出回读偏差
+  ✓ Q2 偏差要带出可诊断的 drift 数值
+  ✓ Q2 契约漂移必须让 reliability 变成 error
+  ✓ Q2 漂移的闹钟仍要入账（否则事后撤不掉）
+  ✓ Q2 漂移不影响 alarmScheduled 计数
+
+== Q3 全屏权限与投递台账契约 ==
+  ✓ Manifest 声明 SYSTEM_ALERT_WINDOW（解锁亮屏弹全屏的前提）
+  ✓ Manifest 仍声明 USE_FULL_SCREEN_INTENT（锁屏弹全屏的前提）
+  ✓ 台账键名由 receiver 定义、activity 与 plugin 复用同一常量
+  ✓ receiver 先落「尝试」台账再起全屏（顺序反了会覆盖 shownAt）
+  ✓ activity 启动时记录「全屏真的起来了」
+  ✓ plugin 能回读投递结局 + 两项全屏权限
+  ✓ plugin 暴露悬浮窗 / 全屏通知 / 自启动三个跳转
+  ✓ 自检面板 labOpenOverlay 在 HTML 与诊断模块两侧都接线
+  ✓ 自检面板 labOpenFsi 在 HTML 与诊断模块两侧都接线
+  ✓ 自检面板 labOpenAutoStart 在 HTML 与诊断模块两侧都接线
+  ✓ 自检面板 labFullScreen 在 HTML 与诊断模块两侧都接线
+  ✓ 自检面板 labDelivery 在 HTML 与诊断模块两侧都接线
+  ✓ 自检面板把投递结局翻成人话（缺这一段就只会说「还是弹通知」）
+  ✓ receiver 有通话闸门：只有「解锁 + 通话中」才不放行直起全屏
+  ✓ A-03 直起与系统通知并存：前台请求横幅，锁屏请求全屏
+  ✓ A-03 只有通话让路才跳过直起，前台路径明确含系统横幅
+  ✓ A-03 系统通知落账与原生回读分开于全屏可见
+  ✓ V1 同一次投递被拉起两次时不打断声音（onNewIntent 按 token 幂等）
+  ✓ receiver 用 AudioManager.getMode() 判通话（无需 READ_PHONE_STATE 权限）
+  ✓ 通话状态随台账落盘并回读
+  ✓ 通话中被跳过时自检说「按设计」而不是报故障
+  ✓ V1 原生按「窗口可见或获得焦点」判定显示，并落盘不可见时刻
+  ✓ V1 投递路径写进台账并回读（fsi+direct / direct / banner）
+  ✓ V2 不再凭「锁屏」就断言缺「全屏通知」权限
+  ✓ V2 权限齐备却没弹出时如实说「系统没有展示」，不编原因
+  ✓ V2 排程落地不再无条件承诺「关掉 App 后仍会按时响」
+  ✓ F3 投递载体仍是广播（冻结时被挂起、解冻后补投，不像界面启动那样被直接丢弃）
+  ✓ F3b 解冻器排在「闹钟时钟」位（allow-while-idle 会被 Reason=frozen 挂起）
+  ✓ D64 精确闹钟权限先查再排（不再只靠 try/catch 兜）
+  ✓ D64 解冻器无条件排在精确排程判定之外（精确排程失败也必须把进程拉起来）
+  ✓ D64 解冻器三种形态各自如实记 mode，不假装等价
+  ✓ D64 无精确闹钟权限时降级到非精确且落台账（消除静默降级）
+  ✓ D64 闹钟时钟位排程失败要留痕，不再 catch (Exception ignored) 吞掉
+  ✓ F3b 两处注释都保留 Reason=frozen 的取证（别再退回 allow-while-idle）
+  ✓ F3 解冻器自己不投递闹钟通知（投递逻辑只有 Receiver 一条实现）
+  ✓ D59 服务启动即拿前台身份，并在响铃上限处自停（铃声不再靠「通知被撤」而停）
+  ✓ D59 响铃上限可由测试钩子指定（生产值 6 小时，真机上等不到）
+  ✓ D59 Manifest 声明 mediaPlayback 与配套权限（API 34 类型不匹配会抛异常）
+  ✓ F3 取消时三种 PendingIntent 都撤（广播/前台服务/历史 Activity 直投）
+  ✓ D59 闹钟通知不再带 FLAG_INSISTENT（声音不再由通知承载）
+  ✓ D59 闹钟通知不再 setDefaults(DEFAULT_ALL)（振动不再由通知承载）
+  ✓ D59 渠道无声音无振动，且旧渠道被显式退役（渠道属性创建后不可改）
+  ✓ D59 界面不再自己判断「通知是否持有声音」（所有权已不在通知）
+  ✓ D59 投递侧先起响铃服务再拉界面（响不该被「亮」的失败连带）
+  ✓ T4 界面亮屏齐备（API 27+ setter + 全版本 flag 回退 + manifest 三处）
+  ✓ R-1 提供打开「后台运行」设置页的入口，且用**标准 Action**而非厂商显式组件
+  ✓ R-1 打不开时兜底到本应用详情页，并把实际打开的页面回传
+  ✓ R-1 注释记录「resolveActivity 通过 ≠ 能启动」的实测，防止后人改回显式组件
+  ✓ R-1 注释保留「冻/杀两条都走不通」的取证，避免后人以为能自行绕过
+
+== F6 后台设置引导运行时行为 ==
+  ✓ F6 打开设置期间禁用两个入口并给即时反馈
+  ✓ F6 连点不重复启动设置
+  ✓ F6 成功只表示已请求跳转，不冒充开关已开启
+  ✓ F6 请求完成恢复入口
+  ✓ F6 原生回退应用详情时给正确的手动路径
+  ✓ F6 跳转异常显示失败及手动恢复路径
+  ✓ F6 桥缺失不伪报成功
+  ✓ F6 权限入口直达应用信息并说明两个独立开关
+  ✓ F6 旧桥可退应用详情且仍需手动确认
+
+== N-02 / N-03 生命周期与冷启动基线（2026-09-18 修复守护） ==
+  ✓ N-02 onResume 恢复声振（与 onStop 的静音决策配成一对）
+  ✓ N-02 startAlarmSound 幂等（已在播则复用，不叠加第二路铃声）
+  ✓ N-03 面板轮询保存句柄并在重绑时清理
+  ✓ N-03 加载状态时由持久化实例重建已提交基线（否则旧投递永不被自动忽略）
+  ✓ D45-a onStop 不再停止声振（遮挡期间继续响）
+  ✓ D59 onDestroy 只停回落路径，不停服务（铃声不随界面销毁而中断）
+
+== Q6 原生链路静默失败与可观测性 ==
+  ✓ isNativeAndroidRuntime 有定义（此前被 3 处调用却从未定义）
+  ✓ waitForNativeBridge 有定义
+  ✓ renderBackgroundVerdict 有定义
+  ✓ init 不再阻塞等待原生初始化（V1 同类：静默中断启动链）
+  ✓ 桥未就绪时改为等待 + 留下可见失败记录（不再静默 return）
+  ✓ 安卓运行时不走 Web 通知分支（否则造出「开关开着却没权限」的假象）
+  ✓ 自检面板 labVerdict 在 HTML 与诊断模块两侧都接线
+  ✓ 自检面板 labBackground 在 HTML 与诊断模块两侧都接线
+  ✓ 自检面板 labScheduled 在 HTML 与诊断模块两侧都接线
+  ✓ 自检面板 labResync 在 HTML 与诊断模块两侧都接线
+  ✓ 结论区分「总开关未开」与「权限未授予」（此前共用一句「通知未授权」把人带偏）
+  ✓ 能区分「原生对账从未执行」这种静默失败
+  ✓ 结论用 getPending 的实数，而不是只报「打算排几条」
+  ✓ 没有「当守卫调用却没定义」的函数（本次缺陷类别）：无
+  ✓ queueNativeReminderSync 在桥未就绪时补做初始化，而不是丢弃请求
+  ✓ 原生初始化幂等且可重试（in-flight promise 跑完置回 null）
+  ✓ init 改走 ensureNativeReminders（不阻塞、可重试）
+  ✓ 非安卓容器直接返回，不误报「桥未就绪」（保护 Web 版）
+  ✓ 切回前台会补做原生初始化
+
+== review projection (P0-1 / P1-6 / D18 / D22) ==
+  ✓ C15 同刻闹钟分别排程、不聚合（不证明原生串行展示）
+  ✓ D11 六条待整理每个槽位仅一条会话通知
+  ✓ D11 增加待整理数量不增加会话通知槽位
+  ✓ D22 默认硬窗口仅两次
+  ✓ D22 补提醒间隔 60 分钟
+  ✓ D22 窗口起点 21:30
+  ✓ P1-6 待整理走普通渠道
+  ✓ L06 待整理使用独立动作类型
+  ✓ 关闭整理功能则不排
+  ✓ D18 勿扰结束等于窗口终点，不越窗排程
+  ✓ N4 长窗口首发加两次补充
+  ✓ N4 勿扰顺延在窗内仅保留22点，23点终点不含
+  ✓ N4 午夜后保留前一晚剩余两档
+  ✓ N4 起止相同是空窗口
+  ✓ D20 稍后时刻被排进待整理通知
+  ✓ D20 已过去的稍后不再占槽位
+  ✓ P0-1 待整理并入同一次对账
+  ✓ D18 关闭通知总开关后待整理排程被撤销
+  ✓ D18 关闭整理功能后不排待整理
+  ✓ P0-1 未传待整理上下文时不排
+
+== regressions: review / window / dnd / deadline / ledger ==
+  ✓ L01 兜底待整理不发事项提醒
+  ✓ L01 有真实时间的待整理照常提醒
+  ✓ R5 关闭整理后待整理按普通事项排程
+  ✓ L01 待整理不阻断截止保护（INV-05）
+  ✓ R4 21:25 排出当晚两档
+  ✓ R4 21:35 仍保留当晚末档
+  ✓ R4 槽位身份稳定（不随前面槽位过去而改变）
+  ✓ L07 补提醒不穿透勿扰
+  ✓ L07 次数是上限而非必须发满
+  ✓ R6 进入保护窗口后排一条立即提醒
+  ✓ R6 反复对账身份稳定（不再生成新提醒）
+  ✓ R6 投影与 lib/reminder.js 使用同一阶段身份
+  ✓ R6 已消费的阶段不再重复提醒
+  ✓ V03 消费 p24 后仍预排 p2
+  ✓ V03 已排期但未到投递时刻时身份与时刻保持原样
+  ✓ F1 标记为已送达后不再重排
+  ✓ F1 两个阶段的记录互不覆盖
+  ✓ D23 暂停截止保护后不排任何截止提醒
+  ✓ N-08 多个保护点同时过期只补投一条截止提醒
+  ✓ N-08 补投保留最接近截止的阶段（p2）
+  ✓ N-08 对照：仅 p24 过期时补投 p24、并保留未来的 p2
+  ✓ V06 确认后的兜底记录原生仍不排正式提醒
+  ✓ V06 确认且有真实时间的事项照常提醒
+  ✓ V07 今天跳过 → 当晚不排任何待整理提醒
+  ✓ L08 稍后开启新一轮：原生从 attempt=0 重排
+  ✓ R7 撤销失败时保留台账 id
+  ✓ R7 状态带出失败原因
+  ✓ 隐藏闹钟：排程对账不能移除正在提醒的停止入口
+  ✓ R7 重试成功后才移除台账
+  ✓ V03 对账回传已排的截止事件
+  ✓ V08 排程失败 → reliability=error
+  ✓ F4 开启通知时撤销失败 → reliability=error
+  ✓ F4 关闭通知时撤销失败 → reliability=error（旧闹钟残留不可隐藏）
+
+== D43 单次提醒补投台账（2026-09-18 修复守护） ==
+  ✓ D43-a 触发点已过且无记录 → 补一条提醒（此前直接丢弃）
+  ✓ D43-a 补投落在 now+2s，身份仍是**原定触发点**（不是补投时刻）
+  ✓ D43-b 台账 scheduled → 既不重排也不补发（无法判定是否送达）
+  ✓ D43-c 台账 delivered → 终态，永不再打扰
+  ✓ D43-d 台账 cancelled → 视同「从未排过」，允许补一次
+  ✓ D43-e 超出补投窗口（>24h）不补 —— 事项本身已在首页「待确认」，半夜补通知是净打扰
+  ✓ D43-e 窗口内（<24h）仍补一条
+  ✓ D43-f 补投身份稳定（同 now 反复对账得同一 id，不产生撤销/重排循环）
+  ✓ D43-g 多个尝试全过期只补一条，且保留**最后一次**尝试（与 D44-b 同一取舍）
+  ✓ D43-h 补投**不**走全屏闹钟（错过的提醒不该抢屏）
+  ✓ D43-i dismissedUntil 在未来 → 不补投（不打断用户「别打扰」的承诺）
+  ✓ D43-j 未过期路径完全不受影响（无 catchUp 标记、身份照旧）
+  ✓ D43-k 对账回传 reminderEvents（本地通道）
+  ✓ D43-l 把回传落账后下一轮不再补投（端到端幂等）
+  ✓ D43-m 闹钟通道（关键档首次）也要记入台账 —— 否则到点后重复补投
+  ✓ D43-n 本轮真的被撤销的提醒排程要回传（撤销 ≠ 送达，允许日后补一次）
+
+== H-08 投递台账：无通知权限必须能被归因（2026-09-18 修复守护） ==
+  ✓ H-08 投递台账新增「当时通知是否可用」字段
+  ✓ H-08 投递时把通知可用性写进台账（事后改权限不能篡改当时的结论）
+  ✓ H-08 判权限用 NotificationManagerCompat（API 22 不会 NoSuchMethodError）
+  ✓ D59 只记「屏幕没有载体」，不再暗示整个闹钟静默
+  ✓ H-08 lastAlarmDelivery 回传该字段，且默认 true（老记录不误报无权限）
+  ✓ H-08 归因读取投递台账字段（键名与原生写入一致）
+  ✓ D64 清单只声明 SCHEDULE_EXACT_ALARM，不再声明受限的 USE_EXACT_ALARM
+  ✓ D64 注册精确闹钟权限变更接收器（官方迁移清单第 4 步：授权后重排）
+  ✓ D64 接收器以实测值为准再重排（不把「收到广播」当成「已授权」）
+  ✓ D64 投递时快照精确闹钟与全屏意图两项权限（同 H-08：不能用「现在」解释「当时」）
+  ✓ D64 两个快照默认 true（老 APK 记录缺键，不得凭空变成「没权限」）
+  ✓ D64 归因优先用投递时快照，活值只作老记录回退
+  ✓ D64 全屏意图判定前置版本闸门（API 34+ 方法在 minSdk 22 上抛 NoSuchMethodError，catch(Exception) 兜不住）
+  ✓ D59 台账新增载体归因字段（声音/振动/前台服务分别归因）
+  ✓ D59 载体归属用 trace 而不是时间戳（两条同刻排程谁先跑不确定）
+  ✓ D59 载体陈旧时回 unknown，不沿用上一次投递的旧值
+  ✓ D59 服务把「铃声/振动/前台身份」各自的成功与否都上报
+  ✓ D59 界面回落自播时也上报载体（否则降级路径在面板上不可见）
+  ✓ D59 停铃收口：撤通知的同时显式停服务（否则铃声关不掉）
+
+== D68 自动静音上限 / 首页硬告知 / 全屏意图用途说明（2026-09-19 修复守护） ==
+  ✓ D68/A-1 自动静音上限存在，且远小于 6h 的 MAX_AGE 兜底
+  ✓ D68/A-1 静音到点先落盘「已静音」再停声（顺序反了会被界面回落自播重新播起来）
+  ✓ D68/A-1 自动静音只停声振、保留投递记录、不产生 ACK
+  ✓ D68/A-1 静音与 MAX_AGE 是两个并列上限（不许互相覆盖）
+  ✓ D68/A-1 「同一次投递重复启动」分支不重新 arm 静音计时（否则静音窗口被往后推）
+  ✓ D68/A-1 界面回落自播前先查「本次投递是否已自动静音」
+  ✓ D68/A-1 lastAlarmDelivery 回传 autoSilenced / autoSilencedAt（否则面板看不出静音生效）
+  ✓ D68/A-2 首页有告知条宿主节点
+  ✓ D68/A-2 renderHome 真的会渲染它（宿主存在但没人填 = 死节点）
+  ✓ D68/A-2 原生状态漏斗会刷新它（权限恢复后自动消失，无需另建通路）
+  ✓ D68/A-2 判定与渲染都进了测试钩子（否则只能退回源码级断言）
+  ✓ D68/Q6 清单里写明该权限的用途与不用途（政策要的「明确说明需求」）
+  ✓ D68/Q6 自检面板说明全屏权限用途、保留入口，且要求以本机测试为准
+  ✓ D68/Q6 旧文案已撤（只讲机制、不讲需求）
+
+== UX-T03 原生送达证据：接收侧真的落盘，且身份一路带得到 ==
+  ✓ T03 持久证据台账存在（不是复用 150 条诊断环形日志）
+  ✓ T03 保留策略覆盖「次日重开」（≥24 小时）
+  ✓ T03 有容量上限，不会无限膨胀
+  ✓ T03 身份不全一律不写证据（宁缺一条，不要假证据）
+  ✓ T03 重复回执幂等（保留最早那条，不刷新接收时刻）
+  ✓ T03 Java 的线上字段名与 Web 侧逐一相同（两边各写各的正是这条链断掉的原因）
+  ✓ T03 旧字段名 key/at 已从 Java 协议里撤掉（只作为旧数据的读容错留在 JS）
+  ✓ T03 rowFor 用规范名写行，且不再写出旧名
+  ✓ T03 证据行只有身份与阶段字段（不存标题/正文，也不升级成「用户看到」）
+  ✓ T03 广播接收侧落证据（这就是「系统接收」的落点）
+  ✓ T03 前台服务侧也落证据（两条同刻排程可能只到一条）
+  ✓ T03 接收侧在终止态检查之后才落证据（被拦掉的投递不算送达）
+  ✓ T03 投递 Intent 声明了提醒键与计划时刻两个 extra
+  ✓ T03 广播/服务两条路共用同一套 extras（否则服务那一路没身份）
+  ✓ T03 排程侧把这两个 extra 写进投递 Intent
+  ✓ T03 桥接侧把 JS 的 reminderKey 接进来（否则原生永远拿不到身份）
+  ✓ T03 重排（开机恢复 / 恢复对账）沿用原提醒身份，而不是丢掉
+  ✓ T03 原生快捷稍后（固定 2 小时）也带自解释身份
+  ✓ T03 桥上有读证据的方法，且回传实际保留策略
+  ✓ T03 读失败回 available:false（调用方必须按 unknown 处理，不得指控漏提醒）
+  ✓ T03 JS 侧读失败同样归为「读不到」，并且不看「最后一次投递结果」
+  ✓ T03 通知接收回调覆盖普通提醒（此前只认 deadline ⇒「已响过仍 scheduled」的根因）
+  ✓ T03 排程回执把 reminderKey 带回来（闹钟通道的证据能对上台账键）
+
+== actions and resume ==
+  ✓ 注册三项通知操作
+  ✓ 通知 Snooze 固定为 2 小时
+  ✓ L06 单独注册待整理动作集
+  ✓ L06 待整理动作为 开始整理 / 稍后 30 分钟 / 今天跳过
+  ✓ 创建三个通知渠道
+  ✓ 渠道显式开启声音和震动
+  ✓ 通知 ACK 映射事项
+  ✓ 操作按钮移除已送达通知
+  ✓ Snooze、完成与普通点击动作保持独立
+  ✓ 恢复前台触发对账
+  ✓ U1 通知动作提交未完成前不得移除已送达通知
+  ✓ U1 通知动作提交失败后仍保留已送达通知供重试
+  ✓ F2 处理抛错时不确认删除原生事件
+  ✓ F2 处理成功后才调用 ackAlarmAction 确认删除
+  ✓ Q1 真机契约（同步句柄）下 onAlarmAction 不得抛错
+  ✓ Q1 两个监听都注册上了：SystemBridge.alarmAction + App.appStateChange
+  ✓ Q1 恢复前台会触发一次闹钟动作排空（监听真的生效，不是空注册）
+  ✓ Q1 Promise 契约下 onAlarmAction 同样不得抛错
+  ✓ Q1 平台注册同步抛错时必须被隔离（否则会拖垮整个 init）
+
+== 2026-09-19 四阶段交付验收守护测试矩阵（A1-A3, B1-B3, C1-C4, D1-D3, R1） ==
+  ✓ A1: 全屏闹钟通道正常完成 scheduleAlarm 排程
+  ✓ A1: 普通通知通道被安全拦截，不得在 desired 中伪造排程成功
+  ✓ A2: 业务开关开启但通知权限被拒时，nativeReminders 状态准确报出能力分解与开关状态
+  ✓ A3: 模拟 LocalNotifications 插件缺失，全屏闹钟仍能独立排程，不因普通通知崩溃而中断
+  ✓ B1: ActiveAlarmStore cancelNotification 对 untracked 残留仅清理通知栏，不误停活跃响铃
+  ✓ B1: ActiveAlarmStore stop 对 untracked 请求在 token 为空时拒绝调用 requestStop
+  ✓ B1: AlarmRingService requestStop 校验 token 并拒绝停止不匹配的活跃响铃
+  ✓ B1: AlarmRingService requestStop 校验匹配的 (id, token) 成功定向停声
+  ✓ B1: ActiveAlarmStore 提供明确独立的全局 stopAll 停止一切活跃响铃
+  ✓ B2: isDeliveryTerminated 严格判定 STOPPED, AUTO_SILENCED 与 REPLACED 为终态，其余为非终态
+  ✓ B2: 基于稳定 bootId，同开机会话内用户大幅修改墙钟时间绝不误判为重启终止
+  ✓ B2: 真机重启导致 bootId 变更时，准确识别重启并将进行中的响铃标记为 terminated-on-reboot
+  ✓ B2: onStartCommand 遇到已终止投递在当前正在响铃时严禁调用 stopSelf
+  ✓ B2: onStartCommand 遇到已终止投递在无其他响铃时安全调用 stopSelf 释放前台服务
+  ✓ B3: 迟到已终止投递绝不允许抢占或逆向替换正在响铃的新投递
+  ✓ B3: AlarmActivity 回落自播检测到静音倒计时归零时拒绝播放
+  ✓ B3: AlarmActivity 回落自播在有效静音窗口内允许播放并返回剩余倒计时
+  ✓ C1: 相同计划连续对账 100 次仅初次排程 1 次，后续 99 次跳过底层排程且 ID 保持一致
+  ✓ C2: 在途删除事项时第二轮能感知已排闹钟并执行 cancelAlarm，无幽灵闹钟
+  ✓ C3: 排程失败项不记入 scheduledAlarmIds 并在 errors 中记录，供下次对账重试
+  ✓ C4: 单 token 产生 33 条事件后，严格裁剪至 <= 25 条
+  ✓ C4: 淘汰中间非关键事件，首部 received/ringStarted 与末部 ringAutoSilenced 关键事实完整保留
+  ✓ C4: 经历跨 token 大量事件洪泛后，全局日志严格限制在 150 条以内
+  ✓ C4: 全局淘汰优先淘汰非关键事件，早期关键事件 received 仍被保留
+  ✓ D1: elapsed 语义事项正确传递 scheduleBasis: 'elapsed' 与 localTrigger: null
+  ✓ D1: 真实表单分钟格式（16字符）正确透传至桥接排程且不含 Z 后缀
+  ✓ D1: 秒格式（19字符）正常透传至桥接排程且不含 Z 后缀
+  ✓ D2: 冷启动时即使磁盘存在旧设置，仍须重新向底层下发排程（消除无效镜像阻断）
+  ✓ D3: Direct Boot DE 镜像载荷仅包含排程元数据，绝不包含私密 title/body/notes
+  ✓ D3: 单项排程失败时，成功项正常记入 scheduledAlarmIds，失败项保留供下次重试
+  ✓ D3: 下一轮对账成功对未入账的失败项执行补偿排程，实现失败保留重试闭环
+  ✓ R1: 对账能力状态完整上报 sound / notifications / exact 分解
+
+========== native reminder results ==========
+通过: 324  失败: 0
+全部通过。
+healthy direct behavior: PASS
+events fallback sharing: mutation detected
+live default delivery: mutation detected
+empty default fallback: mutation detected
+repeat series identity: mutation detected
+rev zero terminal gate: mutation detected
+healthy direct behavior: PASS
+write gate removed: mutation detected
+snapshot becomes live: mutation detected
+FIFO locks after failure: mutation detected
+degraded mirror becomes loaded: mutation detected
+replay clears before writeback: mutation detected
+baseline updates before save: mutation detected
+healthy direct behavior: PASS
+draft reducer operating on live state: mutation detected
+writeSnapshot no longer awaited: mutation detected
+draft published before authoritative success: mutation detected
+same-event in-flight Promise reuse removed: mutation detected
+item/series conflict check removed: mutation detected
+unrelated command replay removed or performed on the wrong state: mutation detected
+stable created-ID consumption/fail-closed remainder removed: mutation detected
+inner-save suppression removed: mutation detected
+replay-failure compensation write removed: mutation detected
+lib/app-transaction.js before/after SHA-256 match: e6df807a8330c618ce5d9e4b7a4087bfe7f07fbab1b32a8693a49908b71dea48
+healthy direct behavior: PASS
+ACK repeat derivation bypassed: mutation detected
+Calendar repeat derivation on complete bypassed: mutation detected
+stopRepeat overwrites historical acknowledged status: mutation detected
+promoteDue inflight check removed: mutation detected
+undo complete failure rollback removed: mutation detected
+wrapUserOp wrapper removed on completeItem: mutation detected
+applyNewItem ignores replayCreatedId: mutation detected
+lib/app-items.js before/after SHA-256 match: e807599395caa4f0a69e13ab957a43bd6d377d5dbab682c32c121c4a7a4be519
+healthy coordinator behavior: PASS
+authority write gate check bypassed: mutation detected
+version drift protection bypassed: mutation detected
+deferNativeSync option removed in syncNativeRemindersNow: mutation detected
+ensureNativeReminders retry bypassed on late bridge: mutation detected
+indexItemsById first-item-wins check removed: mutation detected
+inflight dedup counter bypassed: mutation detected
+deliveryEvidenceState readable forced false: mutation detected
+roundBase dropped in applyReminderEvents: mutation detected
+handleAlarmAction removed from REQUIRED_DEPS: mutation detected
+drainAlarmActions incorrectly routes to onNotificationAction: mutation detected
+version drift loop exits early without compensatory second run: mutation detected
+lib/app-native-coordinator.js before/after SHA-256 match: 3de9902b0cb97d3159b5c710a1698908211189c7de71861caf69637b0f30948f
+healthy checks passed
+windowKeyPrefixMutant: prefix W: removed from reviewSessionKey: mutation detected
+quotaLimitBypassMutant: maxNotifications check removed: mutation detected
+markReviewDoneUnwrappedMutant: wrapUserOp bypassed: mutation detected
+writeIfChangedBypassMutant: writeIfChanged short-circuit bypassed: mutation detected
+fallbackSuppressedBypassMutant: isFallbackSuppressed forced false: mutation detected
+completionButtonListenerOmittedMutant: click listener not added to done button: mutation detected
+saveFailureAdvanceMutant: reviewIndex advanced on save error: mutation detected
+appModelDefaultsBypassMutant: hardcoded defaults used instead of getInitialReviewSettings: mutation detected
+lib/app-review.js before/after SHA-256 match: 23611a2375f7705dc77e4d35114458cd0da08f79e3d4c47750bb3016ebf739a5
+healthy checks passed
+dismissSuppressionMutant: 30m suppression duration modified: mutation detected
+autohideAccountingMutant: auto-hide records to dismissedAlerts: mutation detected
+activeAlarmDoneSaveFailMutant: stopAlarmDelivery called even when handleAlarmAction fails: mutation detected
+timerLeakOnDuplicateStartMutant: startPolling does not call stopPolling: mutation detected
+lib/app-alerts.js before/after SHA-256 match: 3e514b7fdde0a4f3028eb4da5a690bf2a1e507e7f2c97296945925d588471136
+healthy checks passed
+mutant1_listenerDoubling: remove installBound / networkBound check: mutation detected
+mutant2_notificationActionBypassed: omit onNotificationAction: mutation detected
+mutant3_nativeAndroidWithoutCapacitor: return true when cap is null: mutation detected
+mutant4_lateBridgePollingBroken: immediate false on first check: mutation detected
+mutant5_deferredPromptNotClearedOnAppInstalled: omit clearing deferredInstallPrompt: mutation detected
+mutant6_swDuplicateRegistrationNotPrevented: remove in-flight and success registration check: mutation detected
+mutant7_swFailurePermanentLockout: do not clear swRegistering on rejection: mutation detected
+mutant8_swLateResolutionEpochIgnored: omit currentEpoch check: mutation detected
+mutant9_workerStateChangeNotUnboundOnUnbindAll: omit worker removeEventListener on unbindAll: mutation detected
+mutant10_appBadgeCountHardcoded: count always 0: mutation detected
+lib/app-platform.js before/after SHA-256 match: 97ed1941dcfc264f20435ebe19c959e73f7559634fc71bb275dcb4180017b247
+== P3-I. AppActionFeedback, AppEvents, AppNotices & AppTestApi 模块自测 ==
+  ✓ lib/app-action-feedback.js：求值期纯净且不主动查询 DOM
+  ✓ lib/app-events.js：求值期纯净且不主动查询 DOM
+  ✓ lib/app-notices.js：求值期纯净且不主动查询 DOM
+  ✓ lib/app-test-api.js：求值期纯净且不主动查询 DOM
+  ✓ AppActionFeedback 挂载于 AttentionLib.AppActionFeedback.createAppActionFeedback
+  ✓ AppActionFeedback 缺必要依赖时同步抛错（fail closed）
+  ✓ AppActionFeedback 包含合同成员 announceSaveOutcome
+  ✓ AppActionFeedback 包含合同成员 settleSaveFeedback
+  ✓ AppActionFeedback 包含合同成员 itemScheduleEvidence
+  ✓ AppActionFeedback 包含合同成员 feedbackNativeSnapshot
+  ✓ AppActionFeedback 包含合同成员 feedbackItemSnapshot
+  ✓ AppActionFeedback 包含合同成员 feedbackVerdictFor
+  ✓ AppActionFeedback 包含合同成员 runFeedbackAction
+  ✓ announceSaveOutcome 记录保存结果并派发 toast
+  ✓ settleSaveFeedback 正常调用无异常
+  ✓ AppEvents 挂载于 AttentionLib.AppEvents.createAppEvents
+  ✓ AppEvents 缺必要依赖时同步抛错（fail closed）
+  ✓ AppEvents 包含合同成员 bind
+  ✓ AppEvents 包含合同成员 isBound
+  ✓ AppEvents 包含合同成员 openSnoozeSheet
+  ✓ AppEvents 包含合同成员 applyShareParams
+  ✓ AppEvents 包含合同成员 handleQueryActions
+  ✓ AppEvents 包含合同成员 demoPreviewRows
+  ✓ AppEvents 包含合同成员 openDemoPreview
+  ✓ AppEvents 包含合同成员 seed
+  ✓ demoPreviewRows 返回只读示例行（长度为 5）
+  ✓ 初始未绑定
+  ✓ 初次 bind() 后 isBound() 为 true
+  ✓ 重复调用 bind() 不累加事件监听（幂等）
+  ✓ AppEvents 对照：健康绑定挂上 document 监听器且宣布已绑定
+  ✓ AppEvents 早段绑定抛错：原样上抛且不宣布已绑定
+  ✓ AppEvents 早段绑定抛错：不留半套监听器
+  ✓ AppEvents 早段抛错后重试真的重进绑定（不短路）
+  ✓ AppEvents 后段绑定抛错：原样上抛且不宣布已绑定
+  ✓ AppEvents 后段绑定抛错：已登记的监听器被整体回滚
+  ✓ AppEvents 后段抛错后重试不翻倍（等于对照计数）
+  ✓ AppEvents 被委托模块已绑定时本模块失败：本模块监听器整体回滚、被委托监听器保留
+  ✓ AppEvents 重试不得让已绑定的被委托监听器翻倍
+  ✓ （前置）变异真的改到了 catch 里的回滚调用（否则下面那条是空断言）
+  ✓ 对照：摘掉回滚后，后段抛错的重试会翻倍（证明上面的回滚断言有牙齿）
+  ✓ AppNotices 挂载于 AttentionLib.AppNotices.createAppNotices
+  ✓ AppNotices 缺必要依赖时同步抛错（fail closed）
+  ✓ AppNotices 判定①：总开关关闭优先于权限 —— 说「开关」不说「去授权」
+  ✓ AppNotices 判定②：系统通知权限被拒 ⇒ permission
+  ✓ AppNotices 判定③：原生桥未就绪 ⇒ bridge
+  ✓ AppNotices 判定④：对账失败 ⇒ error
+  ✓ AppNotices 判定：链路正常 ⇒ null（不出声）
+  ✓ AppNotices 红线：notifications=unknown 是「还没问过」⇒ null
+  ✓ AppNotices 红线：未知桥状态（未定）⇒ null
+  ✓ AppNotices 红线：非原生运行时 ⇒ null（Web 上没有「关掉 App 就不响」这件事）
+  ✓ AppNotices 范围边界：exactAlarm=denied 不进首页（只影响到达时刻）
+  ✓ AppNotices 渲染：链路正常 ⇒ 返回 null 且容器保持空
+  ✓ AppNotices 渲染：断链 ⇒ 返回同一判定并写入告警
+  ✓ AppNotices 渲染：结论未变 ⇒ 不重复写同一容器（单写入者短路）
+  ✓ AppNotices 渲染：断链消失 ⇒ 主动清空（警告不残留）
+  ✓ AppNotices 渲染：无容器时安静返回 null（不抛）
+  ✓ AppNotices 摘要：今天新增 3 条 ⇒ 出摘要（toast + 系统通知各一次、只保存一次）
+  ✓ AppNotices 摘要：20 小时内再调 ⇒ 直接 null（不重复打扰）
+  ✓ AppNotices 摘要：不足 3 条但有重要项 ⇒ 仍然出声
+  ✓ AppNotices 摘要：总开关关闭 ⇒ null 且不保存、不打扰
+  ✓ AppNotices 摘要：不读真实墙钟 —— 两个相隔很远的固定时刻都出摘要
+  ✓ AppNotices 摘要：两个时刻各自保存一次、打扰各一次
+  ✓ AppNotices 摘要：改回 new Date() 后时钟断言变红（对照组有牙齿）
+  ✓ AppTestApi 挂载于 AttentionLib.AppTestApi.createAppTestApi
+  ✓ AppTestApi 缺必要依赖时同步抛错（fail closed）
+  ✓ AppTestApi 包含合同成员 assembleTestApi
+  ✓ AppTestApi 包含合同成员 getTestApi
+  ✓ assembleTestApi 返回测试接口对象
+  ✓ getTestApi 返回测试接口对象
+  ✓ assembleTestApi 挂载到宿主全局 __ATTENTION_INBOX__
+  ✓ api.state 动态读取初始状态
+  ✓ api.state 动态反映运行时状态变更（无陈旧闭包）
+  ✓ api.buildLegacyBackupPayload 是可调用的函数
+  ✓ api.buildLegacyBackupPayload() 返回规范备份快照
+  ✓ applyReminderEvents 透传全部 3 个参数（含 cancelledEvents）
+  ✓ applyDeadlineEvents 透传全部 3 个参数（含 cancelledStages）
+  ✓ api.notices 返回告知实例（动态 getter）
+  ✓ api.maybeDailySummary 桥接到告知实例（不是空返回）
+  ✓ api.homeNoticeVerdict / renderHomeNotice 均已挂载
+  ✓ assembleTestApi 成功将接口挂载至 globalThis.__ATTENTION_INBOX__
+  ✓ lib/app-action-feedback.js：测试运行未篡改源文件内容
+  ✓ lib/app-events.js：测试运行未篡改源文件内容
+  ✓ lib/app-notices.js：测试运行未篡改源文件内容
+  ✓ lib/app-test-api.js：测试运行未篡改源文件内容
+全部通过：共 84 项断言。
+
+== A. 生产组合清单从 index.html 推导（未知脚本 / 缺文件 / 顺序 / 加载期依赖） ==
+  ✓ index.html 的脚本集合与顺序与契约逐项相符（30 支）
+  ✓ 全部脚本形状合法且文件存在
+  ✓ app-core.js 是最后一支（它在 IIFE 开头就取全局模块）
+  ✓ 全部 4 条加载期依赖在真实生产顺序里都成立（不只是第一条）
+
+== A2. 反向对照：坏清单必须被明确判错（不是「长度对不上」） ==
+  ✓ 顺序倒置 ⇒ 报 load-order（真实后果：截止保护只剩 p24 一个阶段）
+  ✓ 未知脚本 ⇒ 报 unknown-script
+  ✓ 缺失文件 ⇒ 报 missing-file
+  ✓ 日历原语被排到解析器之后 ⇒ 报 load-order:lib/parse-cn.js（新声明有牙齿）
+  ✓ 日历原语整支缺席 ⇒ 报 missing-load-time-dependency:lib/parse-cn.js
+  ✓ app-core 不在最后 ⇒ 同时报 app-core-not-last 与 lib-after-app-core
+  ✓ 整份清单里没有 app-core ⇒ 报 missing-app-core
+  ✓ 重复加载同一支 ⇒ 报 duplicate-script
+
+== A3. 预缓存与打包链必须覆盖同一份清单（四件套的收口断言） ==
+  ✓ sw.js 的 ASSETS 覆盖 index.html 加载的每一支脚本
+  ✓ sw.js 的 ASSETS 里没有磁盘上不存在的条目
+  ✓ scripts/sync-www.js 会把每支运行时脚本/目录复制进 www/
+
+== A4. test-smoke.js / test-regressions.js 加载了哪些生产脚本（缺口必须是被声明的，不能是隐形的） ==
+  ✓ 两套 harness 的加载清单都可从源码推导出来（不是空数组）
+  ✓ test-smoke.js 加载的脚本都在生产清单里（没有自创/拼错的脚本名）
+  ✓ test-smoke.js 加载了完整生产清单（缺口为空，不再是「有意的缺席」）
+  ✓ test-smoke.js 的覆盖判定无问题（每一支生产脚本都真的被加载）
+  ✓ test-smoke.js 里 app-core.js 排在最后
+  ✓ test-regressions.js 加载的脚本都在生产清单里（没有自创/拼错的脚本名）
+  ✓ test-regressions.js 加载了完整生产清单（缺口为空，不再是「有意的缺席」）
+  ✓ test-regressions.js 的覆盖判定无问题（每一支生产脚本都真的被加载）
+  ✓ test-regressions.js 里 app-core.js 排在最后
+  ✓ 反向对照：少加载一支且无声明 ⇒ 报 unaccounted-production-script:lib/native-reminders.js
+  ✓ 反向对照：只放一个没有理由的注入声明不算交代，仍然报错
+  ✓ MUT-LOAD-DIAG 变异必红：生产 harness 漏载 app-diagnostics.js 时闭合检查点名缺口
+
+== B. 生产组合在隔离上下文里加载同一顺序，导出与 ready 都要成立 ==
+  ✓ 生产清单的 30 支脚本全部加载成功
+  ✓ 应用 ready() === true（启动链跑到底）
+  ✓ 测试钩子导出存在
+  ✓ AttentionNativeReminders 是**真实现**（不是 undefined / 不是空对象）
+  ✓ AttentionLib 带 Feedback 与 DeliveryEvidence 两套纯逻辑（app-core 的 FeedbackLib/EvidenceLib 来源）
+  ✓ 解析器唯一来源：app-core.parseChineseTime === AttentionLib.parseChineseTime（同一函数对象，不是同名副本）
+  ✓ 周期推进唯一来源：app-core.nextRepeatTrigger === AttentionLib.nextRepeatTrigger
+  ✓ 周期标签唯一来源：app-core.repeatLabel === AttentionLib.repeatLabel
+  ✓ 日历原语唯一来源：AttentionLib.DatePrimitives 存在且带两种 nthWeekdayOfNextMonth 语义
+  ✓ app-core 暴露的两种 nthWeekdayOfNextMonth 直接来自该命名空间（没有中间副本）
+  ✓ 反向对照：抽掉 lib/date-utils.js 后 parse-cn/repeat 求值即失败（不再静默换一套日历算法）
+  ✓ 隔离上下文里 window 就是全局对象本身（平台 mock 与模块看到同一个 Capacitor）
+  ✓ IDB 后端真的被用上了（证明 app-core 抓到的 Lib 是加载进沙箱的那一份）
+  ✓ 反例：去掉 lib/native-reminders.js ⇒ ready() 明确失败（不再缺件硬跑）
+  ✓ 反例：失败面板点名 AttentionNativeReminders，并说清后果是「一条提醒都不会响」
+  ✓ 反例：去掉 lib/native-reminders.js 后不读库、不起业务定时器 （消灭「能存能改却一条都不排」的界面）
+  ✓ 反例：去掉之后 AttentionNativeReminders 确实是 undefined（不是空对象）
+  ✓ 反向对照：覆盖判定把它报成 unaccounted-production-script（不是「数量对不上」）
+  ✓ 反向对照：app-core 在 lib 之前时不抛错（所以只能靠清单顺序判定拦住）
+  ✓ 反向对照：顺序倒置后 app-core 抓到的 Lib 是空的 ⇒ 存储后端没建起来（IDB 一次都没写）
+  ✓ 反向对照：证据模块也就位不了 ⇒ 详情页「提醒结果」这一行直接消失
+  ✓ 反向对照：顺序判定同时报出 app-core-not-last
+
+== B2. P1 装配闸门：唯一来源矩阵闭合，缺模块时明确失败且不进入业务启动 ==
+  ✓ app-core 引用的每个 Lib/DatePrimitives 符号都在必需导出声明表里（矩阵闭合）
+  ✓ 声明表本身非空且至少覆盖日期原语与解析器（防止「把表删空」也能过）
+  ✓ 反向对照：新增一个未声明的 Lib.brandNewThing 直接调用 ⇒ 闭合判定报出来
+  ✓ 守卫引用被豁免（`if (Lib.x) …` 不计入未声明，但必须出现在 guardedRefs 里）
+  ✓ 展示实例 API 双向闭合（源码里的 `appUi.<x>` 与契约逐项对齐）
+  ✓ 反向对照：源码里多用一个实例 API 而契约没写 ⇒ 报 missingInContract
+  ✓ AI 实例 API 双向闭合（源码里的 `ai.<x>` 与契约逐项对齐，内部消费项单列）
+  ✓ 反向对照：源码里多用一个 AI 实例 API 而契约没写 ⇒ 报 missingInContract
+  ✓ 反向对照：删掉 capture 对 AI 的真实消费 ⇒ applyToForm/parseCapture 重新报 unused
+  ✓ P2-D 诊断实例 API 双向闭合（源码里的 `diagnostics.<x>` 与契约逐项对齐）
+  ✓ P2-E 设置实例 API 双向闭合（源码里的 `appSetup.<x>` 与契约逐项对齐）
+  ✓ P2-E 反向对照：源码里多用一个设置实例 API 而契约没写 ⇒ 报 missingInContract
+  ✓ P2-F1 内容实例 API 双向闭合（源码里的 `appContent.<x>` 与契约逐项对齐）
+  ✓ P2-F1 反向对照：源码里多用一个内容实例 API 而契约没写 ⇒ 报 missingInContract
+  ✓ P3-A 模型实例 API 双向闭合（源码里的 `appModel.<x>` 与契约逐项对齐）
+  ✓ P3-A 反向对照：删模型契约成员 ⇒ 真实转发变 missingInContract
+  ✓ P3-A 反向对照：删真实模型转发引用 ⇒ 契约成员变 unusedInContract
+  ✓ P3-B 持久化实例 API 双向闭合（core 转发与实例合同逐项对齐）
+  ✓ P3-B 反向对照：删持久化合同成员 ⇒ 真实转发变 missingInContract
+  ✓ P3-B 反向对照：删真实持久化转发 ⇒ 契约成员变 unusedInContract
+  ✓ P3-C 事务实例 API 双向闭合（core 转发与实例合同逐项对齐）
+  ✓ P3-C 反向对照：删事务合同成员 ⇒ 真实转发变 missingInContract
+  ✓ P3-C 反向对照：删真实事务转发 ⇒ 契约成员变 unusedInContract
+  ✓ P3-D 事项实例 API 双向闭合（core 转发与实例合同逐项对齐）
+  ✓ P3-D 反向对照：删事项合同成员 ⇒ 真实转发变 missingInContract
+  ✓ P3-D 反向对照：删真实事项转发 ⇒ 契约成员变 unusedInContract
+  ✓ P3-E 原生协调实例 API 双向闭合（core 转发与实例合同逐项对齐）
+  ✓ P3-E 反向对照：删协调合同成员 ⇒ 真实转发变 missingInContract
+  ✓ P3-E 反向对照：删真实协调转发 ⇒ 契约成员变 unusedInContract
+  ✓ P3-F 待整理实例 API 双向闭合（core 转发与实例合同逐项对齐）
+  ✓ P3-F 反向对照：删待整理合同成员 ⇒ 真实转发变 missingInContract
+  ✓ P3-F 反向对照：删真实待整理转发 ⇒ 契约成员变 unusedInContract
+  ✓ P3-G 提醒实例 API 双向闭合（core 转发与实例合同逐项对齐）
+  ✓ P3-G 反向对照：删提醒合同成员 ⇒ 真实转发变 missingInContract
+  ✓ P3-G 反向对照：删真实提醒转发 ⇒ 契约成员变 unusedInContract
+  ✓ P3-I-R 告知实例 API 双向闭合（core 转发与实例合同逐项对齐）
+  ✓ P3-I-R 反向对照：删告知合同成员 ⇒ 真实转发变 missingInContract
+  ✓ P3-I-R 反向对照：删真实告知转发 ⇒ 契约成员变 unusedInContract
+  ✓ 反向对照：源码里多用一个诊断实例 API 而契约没写 ⇒ 报 missingInContract
+  ✓ 别名归一生效：`feedbackApi` ⇒ `FeedbackLib`，引用落到 `Feedback.*` 这个声明路径上
+  ✓ 产品源码**没有歧义别名**（`f` 那种一名两义已消除：反馈用 feedbackApi / 上传用 selectedFile / 返回值用 feedbackResult）
+  ✓ 产品源码**没有歧义引用**（扫描器里不存在「证不了归属就跳过」的残留）
+  ✓ 依赖矩阵完全闭合：undeclared / ambiguousAliases / ambiguousRefs / problems 四个都为空
+  ✓ 覆盖判定的扫描面已含实际依赖路径（NativeReminders / FeedbackLib / EvidenceLib）
+  ✓ MUT-A 唯一别名路径：`const feedbackApi = FeedbackLib; feedbackApi.<未声明成员>()` ⇒ 归一成 `Feedback.independentUndeclaredMember` 并进入 undeclared
+  ✓ MUT-B 直接命名空间路径：`FeedbackLib.<未声明成员>()` ⇒ 同样进入 undeclared
+  ✓ （前置）同名歧义夹具真的改到了两处（否则下面那条是空断言）
+  ✓ MUT-C 同名歧义：`ambiguousAliases` 点名 auditAlias，且 `problems` 非空（既有 ambiguous-alias，也有落在它上面的 ambiguous-ref）——「只报告歧义但仍视为闭合」被明确禁止
+  ✓ （前置）MUT-D 夹具真的改到了那行真实调用（否则下面那条是空断言）
+  ✓ MUT-D 根对象守卫（别名）：`feedbackApi ? feedbackApi.<未声明成员>()` ⇒ 进入 undeclared 且 problems 点名（不许再进 guardedRefs 冒充可选）
+  ✓ （前置）MUT-E 夹具真的改到了那行真实调用（否则下面那条是空断言）
+  ✓ MUT-E 根对象守卫（直接命名空间）：`FeedbackLib ? FeedbackLib.<未声明成员>() : null` ⇒ 同样进入 undeclared（说明该缺口与别名解析无关，根因是守卫形态被判错）
+  ✓ 对照：**成员级**守卫仍算可选（`if (Ns.member)` 形态进 guardedRefs，不进 undeclared）
+  ✓ （前置）扫描器变异副本真的加载成功（否则下面两条是空断言）
+  ✓ N3 变红：把根对象守卫加回豁免后，MUT-D / MUT-E 的反例**不再被报出来**（退回第四轮之前的行为 ⇒ 正向断言「根守卫下换成员名必须变红」不是恒真的）
+  ✓ N3 收口：变异只影响守卫形态，**无守卫**路径照样能抓到（证明变异是外科手术式的）
+  ✓ 反向对照：注释里的 Lib.commentOnlyThing 不被误报（剥注释真的生效）
+  ✓ 正向：完整生产组合下启动闸门无问题（startupFailure() === null）
+  ✓ 正向：完整生产组合下 ready() === true
+  ✓ 正向：闸门声明表通过测试钩子可读、且条目数与源码一致
+  ✓ 反例：抽掉 lib/parse-cn.js ⇒ ready() 明确失败（false），不是挂起也不是假装成功
+  ✓ 反例：startupFailure() 点名是 parseChineseTime 缺失（且说明后果）
+  ✓ 反例：未读库/未迁移 ⇒ IDB 一次都没写（不会出现「以为保存了」的界面）
+  ✓ 反例：未启动业务定时器 ⇒ 既没有 15 秒心跳、也没有 2 秒闹钟轮询
+  ✓ 反例：失败面板真的被插进了首页容器（不是只 console.error）
+  ✓ 反例：日志侧也有记录（「有可见面板」与「有可查日志」两件事都成立）
+  ✓ 反例：未做持久化状态恢复 ⇒ state.items 仍为空（没有半套数据被用起来）
+  ✓ 反例：抽掉 lib/feedback.js ⇒ ready 失败且点名 Feedback
+  ✓ 反例：抽掉 lib/storage.js ⇒ ready 失败且点名 createStorage
+  ✓ 反例：日历原语被排到解析器之后 ⇒ 求值即报 eval-failed（顺序错的后果可见）
+  ✓ 反例：顺序错时闸门同样拦住启动（ready=false，且点名 DatePrimitives 缺失）
+  ✓ 反例：顺序错时不读库、不起业务定时器
+  ✓ 边界：纯 Web（脚本齐全、无 Capacitor 桥）⇒ ready=true 且闸门无问题
+  ✓ 边界：这个场景里 Capacitor 真的不在（证明上一条不是「Android 桥碰巧也过了」）
+  ✓ 边界：纯 Web 下原生 JS 模块仍然完整加载（判据是「模块在不在」，不是「桥在不在」）
+  ✓ 边界：纯 Web 下 isNativeAndroid() 为 false（模块在、平台不在 ⇒ 走正常降级）
+  ✓ 边界：纯 Web 下 platform.isNativeAndroidRuntime() 必为 false
+  ✓ 边界：纯 Web 下 platform.registerPwa() 可重复调用且幂等稳定
+  ✓ 对照：Android 组合里同一支模块报到同一批成员（两个场景的差只该在桥）
+  ✓ 反例：抽掉 lib/ui-format.js ⇒ ready 失败且点名 UiFormat
+  ✓ 反例：抽掉 lib/ui-format.js 后不读库、不起业务定时器
+  ✓ 反例：lib/ui-format.js 排到 lib/date-utils.js 之前 ⇒ 求值即报 eval-failed
+  ✓ 反例：顺序错时闸门拦住启动并点名 UiFormat
+  ✓ 反例：抽掉 lib/app-ui.js ⇒ ready 失败且点名 AppUi / AppUi.createUi
+  ✓ 反例：抽掉 lib/app-ui.js 后不读库、不起业务定时器、不落库
+  ✓ 反例：抽掉 lib/app-ui.js 后仍然渲染出可见失败面板（缺的正是 DOM 能力，不能因此静默）
+  ✓ 反例：抽掉 lib/app-ui.js 后失败面板里没有可编辑控件
+  ✓ 反例：面板上真的写出了「哪一支没起来」（点名 AppUi），不是只 console.error
+  ✓ 反例：抽掉 lib/app-ai.js ⇒ ready 失败且点名 AppAi / AppAi.createAppAi
+  ✓ 反例：抽掉 lib/app-ai.js 后不读库、不起业务定时器、不落库
+  ✓ 反例：抽掉 lib/app-ai.js 后仍然渲染出可见失败面板
+  ✓ 反例：面板上真的写出了「哪一支没起来」（点名 AppAi），不是只 console.error
+  ✓ 反例：抽掉 lib/app-ai.js 的失败清单**只**点名 AppAi 系（不是「一支没起来」的连带误报）
+  ✓ P2-C 反例：抽掉 lib/app-backup.js ⇒ ready 失败且点名 AppBackup / AppBackup.createAppBackup
+  ✓ P2-C 反例：抽掉 lib/app-backup.js 后不读库、不起业务定时器、不落库
+  ✓ P2-C 反例：抽掉 lib/app-backup.js 后仍然渲染出可见失败面板
+  ✓ P2-C 反例：面板上真的写出了「哪一支没起来」（点名 AppBackup），不是只 console.error
+  ✓ P2-C 反例：抽掉 lib/app-backup.js 的失败清单**只**点名 AppBackup 系（无连带误报）
+  ✓ P2-D 反例：抽掉 lib/app-diagnostics.js ⇒ ready 失败且点名 AppDiagnostics / AppDiagnostics.createAppDiagnostics
+  ✓ P2-D 反例：抽掉 lib/app-diagnostics.js 后不读库、不起业务定时器、不落库
+  ✓ P2-D 反例：抽掉 lib/app-diagnostics.js 后仍然渲染出可见失败面板
+  ✓ P2-D 反例：面板上真的写出了「哪一支没起来」（点名 AppDiagnostics）
+  ✓ P2-D 反例：抽掉 lib/app-diagnostics.js 的失败清单**只**点名 AppDiagnostics 系（无连带误报）
+  ✓ P2-D 正向：诊断实例真的可用（合同七个成员都在）
+  ✓ P2-E 反例：抽掉 lib/app-setup.js ⇒ ready 失败且只点名 AppSetup 系
+  ✓ P2-E 反例：抽掉 lib/app-setup.js 后不读库、不排程、不起心跳
+  ✓ P2-E 空 AppSetup 命名空间：首次启动点名 AppSetup.createAppSetup 并 ready=false
+  ✓ P2-E 空 AppSetup 命名空间：fail closed 前不读库、不排程、不起业务心跳
+  ✓ P2-E 工厂返回空壳：首次启动点名 AppSetup.bind 并 ready=false
+  ✓ P2-E 工厂返回空壳：fail closed 前不读库、不排程、不起业务心跳
+  ✓ P2-E 工厂抛错：首次启动点名 AppSetup.createAppSetup() 并 ready=false
+  ✓ P2-E 工厂抛错：fail closed 前不读库、不排程、不起业务心跳
+  ✓ P2-E 缺实例成员 bind：首次启动点名 AppSetup.bind 并 ready=false
+  ✓ P2-E 缺实例成员 bind：fail closed 前不读库、不排程、不起业务心跳
+  ✓ P2-E 缺实例成员 maybePromptAndroidNotify：首次启动点名 AppSetup.maybePromptAndroidNotify 并 ready=false
+  ✓ P2-E 缺实例成员 maybePromptAndroidNotify：fail closed 前不读库、不排程、不起业务心跳
+  ✓ P2-E 缺实例成员 noteFirstRemindSaved：首次启动点名 AppSetup.noteFirstRemindSaved 并 ready=false
+  ✓ P2-E 缺实例成员 noteFirstRemindSaved：fail closed 前不读库、不排程、不起业务心跳
+  ✓ P2-E 缺实例成员 openSetupSheet：首次启动点名 AppSetup.openSetupSheet 并 ready=false
+  ✓ P2-E 缺实例成员 openSetupSheet：fail closed 前不读库、不排程、不起业务心跳
+  ✓ P2-E 缺实例成员 renderSetupEntry：首次启动点名 AppSetup.renderSetupEntry 并 ready=false
+  ✓ P2-E 缺实例成员 renderSetupEntry：fail closed 前不读库、不排程、不起业务心跳
+  ✓ P2-E 缺实例成员 renderSetupSheetBody：首次启动点名 AppSetup.renderSetupSheetBody 并 ready=false
+  ✓ P2-E 缺实例成员 renderSetupSheetBody：fail closed 前不读库、不排程、不起业务心跳
+  ✓ P2-E 缺实例成员 runSetupStep：首次启动点名 AppSetup.runSetupStep 并 ready=false
+  ✓ P2-E 缺实例成员 runSetupStep：fail closed 前不读库、不排程、不起业务心跳
+  ✓ P2-E 缺实例成员 setupEvidenceHtml：首次启动点名 AppSetup.setupEvidenceHtml 并 ready=false
+  ✓ P2-E 缺实例成员 setupEvidenceHtml：fail closed 前不读库、不排程、不起业务心跳
+  ✓ P2-E 缺实例成员 setupStepsContext：首次启动点名 AppSetup.setupStepsContext 并 ready=false
+  ✓ P2-E 缺实例成员 setupStepsContext：fail closed 前不读库、不排程、不起业务心跳
+  ✓ P2-E 缺实例成员 startSetupTestRun：首次启动点名 AppSetup.startSetupTestRun 并 ready=false
+  ✓ P2-E 缺实例成员 startSetupTestRun：fail closed 前不读库、不排程、不起业务心跳
+  ✓ P2-E 缺实例成员 stopSetupTestRun：首次启动点名 AppSetup.stopSetupTestRun 并 ready=false
+  ✓ P2-E 缺实例成员 stopSetupTestRun：fail closed 前不读库、不排程、不起业务心跳
+  ✓ P2-E 缺实例成员 updateSetupEntry：首次启动点名 AppSetup.updateSetupEntry 并 ready=false
+  ✓ P2-E 缺实例成员 updateSetupEntry：fail closed 前不读库、不排程、不起业务心跳
+  ✓ P2-E 临时 boot 反例只写 /tmp，工作区 app-setup.js 字节未被改写
+  ✓ P2-E 正向：设置实例合同成员全部接入生产组合
+  ✓ P2-F1 反例：抽掉 lib/app-content.js ⇒ ready 失败且只点名 AppContent 系
+  ✓ P2-F1 反例：抽掉 content 后不读库、不排程、不起业务心跳
+  ✓ P2-F1 空 AppContent 命名空间：首次启动点名 AppContent.createAppContent 并 ready=false
+  ✓ P2-F1 空 AppContent 命名空间：fail closed 前不读库、不排程、不起业务心跳
+  ✓ P2-F1 工厂返回空壳：首次启动点名 AppContent.bind 并 ready=false
+  ✓ P2-F1 工厂返回空壳：fail closed 前不读库、不排程、不起业务心跳
+  ✓ P2-F1 工厂抛错：首次启动点名 AppContent.createAppContent() 并 ready=false
+  ✓ P2-F1 工厂抛错：fail closed 前不读库、不排程、不起业务心跳
+  ✓ P2-F1 缺实例成员 addProject：首次启动点名 AppContent.addProject 并 ready=false
+  ✓ P2-F1 缺实例成员 addProject：fail closed 前不读库、不排程、不起业务心跳
+  ✓ P2-F1 缺实例成员 bind：首次启动点名 AppContent.bind 并 ready=false
+  ✓ P2-F1 缺实例成员 bind：fail closed 前不读库、不排程、不起业务心跳
+  ✓ P2-F1 缺实例成员 deleteProject：首次启动点名 AppContent.deleteProject 并 ready=false
+  ✓ P2-F1 缺实例成员 deleteProject：fail closed 前不读库、不排程、不起业务心跳
+  ✓ P2-F1 缺实例成员 doSearch：首次启动点名 AppContent.doSearch 并 ready=false
+  ✓ P2-F1 缺实例成员 doSearch：fail closed 前不读库、不排程、不起业务心跳
+  ✓ P2-F1 缺实例成员 openNote：首次启动点名 AppContent.openNote 并 ready=false
+  ✓ P2-F1 缺实例成员 openNote：fail closed 前不读库、不排程、不起业务心跳
+  ✓ P2-F1 缺实例成员 renderProjectsSheet：首次启动点名 AppContent.renderProjectsSheet 并 ready=false
+  ✓ P2-F1 缺实例成员 renderProjectsSheet：fail closed 前不读库、不排程、不起业务心跳
+  ✓ P2-F1 缺实例成员 saveNote：首次启动点名 AppContent.saveNote 并 ready=false
+  ✓ P2-F1 缺实例成员 saveNote：fail closed 前不读库、不排程、不起业务心跳
+  ✓ P2-F1 临时 boot 反例只写 /tmp，工作区 app-content.js 字节未被改写
+  ✓ P2-F1 正向：内容实例真的接入生产组合
+  ✓ P2-G1 反例：抽掉 lib/app-capture.js ⇒ ready=false 且只点名 AppCapture 系
+  ✓ P2-G1 抽掉 capture 时 fail closed 前不读库、不排程、不起业务心跳
+  ✓ P2-G1 空 AppCapture 命名空间：首次启动点名 AppCapture.createAppCapture 并 ready=false
+  ✓ P2-G1 空 AppCapture 命名空间：fail closed 前不读库、不排程、不起业务心跳
+  ✓ P2-G1 工厂返回空壳：首次启动点名 AppCapture.bind 并 ready=false
+  ✓ P2-G1 工厂返回空壳：fail closed 前不读库、不排程、不起业务心跳
+  ✓ P2-G1 工厂抛错：首次启动点名 AppCapture.createAppCapture() 并 ready=false
+  ✓ P2-G1 工厂抛错：fail closed 前不读库、不排程、不起业务心跳
+  ✓ P2-G1 缺实例成员 beginSaveSubmit：首次启动点名 AppCapture.beginSaveSubmit 并 ready=false
+  ✓ P2-G1 缺实例成员 beginSaveSubmit：fail closed 前不读库、不排程、不起业务心跳
+  ✓ P2-G1 缺实例成员 bind：首次启动点名 AppCapture.bind 并 ready=false
+  ✓ P2-G1 缺实例成员 bind：fail closed 前不读库、不排程、不起业务心跳
+  ✓ P2-G1 缺实例成员 endSaveSubmit：首次启动点名 AppCapture.endSaveSubmit 并 ready=false
+  ✓ P2-G1 缺实例成员 endSaveSubmit：fail closed 前不读库、不排程、不起业务心跳
+  ✓ P2-G1 缺实例成员 findSimilarItems：首次启动点名 AppCapture.findSimilarItems 并 ready=false
+  ✓ P2-G1 缺实例成员 findSimilarItems：fail closed 前不读库、不排程、不起业务心跳
+  ✓ P2-G1 缺实例成员 finishSaveAfterLowConf：首次启动点名 AppCapture.finishSaveAfterLowConf 并 ready=false
+  ✓ P2-G1 缺实例成员 finishSaveAfterLowConf：fail closed 前不读库、不排程、不起业务心跳
+  ✓ P2-G1 缺实例成员 formDraftSignature：首次启动点名 AppCapture.formDraftSignature 并 ready=false
+  ✓ P2-G1 缺实例成员 formDraftSignature：fail closed 前不读库、不排程、不起业务心跳
+  ✓ P2-G1 缺实例成员 formRepeat：首次启动点名 AppCapture.formRepeat 并 ready=false
+  ✓ P2-G1 缺实例成员 formRepeat：fail closed 前不读库、不排程、不起业务心跳
+  ✓ P2-G1 缺实例成员 markTriggerPicked：首次启动点名 AppCapture.markTriggerPicked 并 ready=false
+  ✓ P2-G1 缺实例成员 markTriggerPicked：fail closed 前不读库、不排程、不起业务心跳
+  ✓ P2-G1 缺实例成员 openCapture：首次启动点名 AppCapture.openCapture 并 ready=false
+  ✓ P2-G1 缺实例成员 openCapture：fail closed 前不读库、不排程、不起业务心跳
+  ✓ P2-G1 缺实例成员 openEditItem：首次启动点名 AppCapture.openEditItem 并 ready=false
+  ✓ P2-G1 缺实例成员 openEditItem：fail closed 前不读库、不排程、不起业务心跳
+  ✓ P2-G1 缺实例成员 openLowConfSheet：首次启动点名 AppCapture.openLowConfSheet 并 ready=false
+  ✓ P2-G1 缺实例成员 openLowConfSheet：fail closed 前不读库、不排程、不起业务心跳
+  ✓ P2-G1 缺实例成员 renderCaptureSummary：首次启动点名 AppCapture.renderCaptureSummary 并 ready=false
+  ✓ P2-G1 缺实例成员 renderCaptureSummary：fail closed 前不读库、不排程、不起业务心跳
+  ✓ P2-G1 缺实例成员 renderSimilarHint：首次启动点名 AppCapture.renderSimilarHint 并 ready=false
+  ✓ P2-G1 缺实例成员 renderSimilarHint：fail closed 前不读库、不排程、不起业务心跳
+  ✓ P2-G1 缺实例成员 resetItemSheet：首次启动点名 AppCapture.resetItemSheet 并 ready=false
+  ✓ P2-G1 缺实例成员 resetItemSheet：fail closed 前不读库、不排程、不起业务心跳
+  ✓ P2-G1 缺实例成员 restoreItemForm：首次启动点名 AppCapture.restoreItemForm 并 ready=false
+  ✓ P2-G1 缺实例成员 restoreItemForm：fail closed 前不读库、不排程、不起业务心跳
+  ✓ P2-G1 缺实例成员 saveItemFromForm：首次启动点名 AppCapture.saveItemFromForm 并 ready=false
+  ✓ P2-G1 缺实例成员 saveItemFromForm：fail closed 前不读库、不排程、不起业务心跳
+  ✓ P2-G1 缺实例成员 session：首次启动点名 AppCapture.session 并 ready=false
+  ✓ P2-G1 缺实例成员 session：fail closed 前不读库、不排程、不起业务心跳
+  ✓ P2-G1 缺实例成员 setLowConfPick：首次启动点名 AppCapture.setLowConfPick 并 ready=false
+  ✓ P2-G1 缺实例成员 setLowConfPick：fail closed 前不读库、不排程、不起业务心跳
+  ✓ P2-G1 缺实例成员 setSaveButtonRunning：首次启动点名 AppCapture.setSaveButtonRunning 并 ready=false
+  ✓ P2-G1 缺实例成员 setSaveButtonRunning：fail closed 前不读库、不排程、不起业务心跳
+  ✓ P2-G1 缺实例成员 snapshotItemForm：首次启动点名 AppCapture.snapshotItemForm 并 ready=false
+  ✓ P2-G1 缺实例成员 snapshotItemForm：fail closed 前不读库、不排程、不起业务心跳
+  ✓ P2-G1 缺实例成员 updateParseHint：首次启动点名 AppCapture.updateParseHint 并 ready=false
+  ✓ P2-G1 缺实例成员 updateParseHint：fail closed 前不读库、不排程、不起业务心跳
+  ✓ P2-G1 缺实例成员 updateRepeatPreview：首次启动点名 AppCapture.updateRepeatPreview 并 ready=false
+  ✓ P2-G1 缺实例成员 updateRepeatPreview：fail closed 前不读库、不排程、不起业务心跳
+  ✓ P2-G1 临时 boot 反例只写 /tmp，工作区 app-capture.js 字节未被改写
+  ✓ P2-G1 正向：capture 实例已进生产组合且会话可读
+  ✓ P2-F2 反例：抽掉 lib/app-views.js ⇒ ready=false 且点名 AppViews
+  ✓ P2-F2 抽掉 views 时 fail closed 前不读库、不排程、不起业务心跳
+  ✓ P2-F2 工厂抛错：ready=false、点名 AppViews.createAppViews() 且零业务副作用
+  ✓ P2-F2 缺实例成员：ready=false、点名 AppViews.priorityRank 且零业务副作用
+  ✓ P3-I-Q2 缺实例成员 detailReminderStatusRow：ready=false、点名 AppViews.detailReminderStatusRow 且零业务副作用
+  ✓ P3-I-Q2 缺具名依赖：ready=false、点名 AppViews.createAppViews() 且零业务副作用
+  ✓ P3-A 缺 lib/app-model.js：ready=false 且点名 AppModel
+  ✓ P3-A 缺 lib/app-model.js：fail closed 前不读库、不排程、不起 15000/2000 心跳
+  ✓ P3-A 空 AppModel 命名空间：ready=false 且点名 AppModel.createAppModel
+  ✓ P3-A 空 AppModel 命名空间：fail closed 前不读库、不排程、不起 15000/2000 心跳
+  ✓ P3-A 工厂抛错：ready=false 且点名 AppModel.createAppModel()
+  ✓ P3-A 工厂抛错：fail closed 前不读库、不排程、不起 15000/2000 心跳
+  ✓ P3-A 缺实例成员 SCHEMA：ready=false 且点名 AppModel.SCHEMA
+  ✓ P3-A 缺实例成员 SCHEMA：fail closed 前不读库、不排程、不起 15000/2000 心跳
+  ✓ P3-A 缺实例成员 PROJECT_COLORS：ready=false 且点名 AppModel.PROJECT_COLORS
+  ✓ P3-A 缺实例成员 PROJECT_COLORS：fail closed 前不读库、不排程、不起 15000/2000 心跳
+  ✓ P3-A 缺实例成员 createInitialState：ready=false 且点名 AppModel.createInitialState
+  ✓ P3-A 缺实例成员 createInitialState：fail closed 前不读库、不排程、不起 15000/2000 心跳
+  ✓ P3-A 缺实例成员 normalizeItem：ready=false 且点名 AppModel.normalizeItem
+  ✓ P3-A 缺实例成员 normalizeItem：fail closed 前不读库、不排程、不起 15000/2000 心跳
+  ✓ P3-A 缺实例成员 makeItem：ready=false 且点名 AppModel.makeItem
+  ✓ P3-A 缺实例成员 makeItem：fail closed 前不读库、不排程、不起 15000/2000 心跳
+  ✓ P3-A 缺实例成员 resolveDeliveryMode：ready=false 且点名 AppModel.resolveDeliveryMode
+  ✓ P3-A 缺实例成员 resolveDeliveryMode：fail closed 前不读库、不排程、不起 15000/2000 心跳
+  ✓ P3-A 缺实例成员 bumpRev：ready=false 且点名 AppModel.bumpRev
+  ✓ P3-A 缺实例成员 bumpRev：fail closed 前不读库、不排程、不起 15000/2000 心跳
+  ✓ P3-A 缺实例成员 isTerminal：ready=false 且点名 AppModel.isTerminal
+  ✓ P3-A 缺实例成员 isTerminal：fail closed 前不读库、不排程、不起 15000/2000 心跳
+  ✓ P3-A 缺实例成员 hasKnownRev：ready=false 且点名 AppModel.hasKnownRev
+  ✓ P3-A 缺实例成员 hasKnownRev：fail closed 前不读库、不排程、不起 15000/2000 心跳
+  ✓ P3-A 唯一来源：模型默认突变沿旧数据恢复路径生效（AI + review）
+  ✓ P3-A 部分旧 AI 设置保留覆盖项并从模型补全默认值（默认突变也沿恢复路径生效）
+  ✓ P3-A 唯一来源：示例重置沿模型默认值恢复 notify/dnd/importantRepeat
+  ✓ P3-A 唯一来源：core 不再保留 AI/review/重置默认表
+  ✓ P3-C 缺 lib/app-transaction.js：ready=false 且点名 AppTransaction
+  ✓ P3-C 缺 lib/app-transaction.js：fail closed 前不读库、不排程、不起 15000/2000 心跳
+  ✓ P3-C 空 AppTransaction 命名空间：ready=false 且点名 AppTransaction.createAppTransaction
+  ✓ P3-C 空 AppTransaction 命名空间：fail closed 前不读库、不排程、不起 15000/2000 心跳
+  ✓ P3-C 工厂抛错：ready=false 且点名 AppTransaction.createAppTransaction()
+  ✓ P3-C 工厂抛错：fail closed 前不读库、不排程、不起 15000/2000 心跳
+  ✓ P3-C 缺实例成员 runUserOp：ready=false 且点名 AppTransaction.runUserOp
+  ✓ P3-C 缺实例成员 runUserOp：fail closed 前不读库、不排程、不起 15000/2000 心跳
+  ✓ P3-C 缺实例成员 wrapUserOp：ready=false 且点名 AppTransaction.wrapUserOp
+  ✓ P3-C 缺实例成员 wrapUserOp：fail closed 前不读库、不排程、不起 15000/2000 心跳
+  ✓ P3-C 缺实例成员 itemConflictsWithActiveAction：ready=false 且点名 AppTransaction.itemConflictsWithActiveAction
+  ✓ P3-C 缺实例成员 itemConflictsWithActiveAction：fail closed 前不读库、不排程、不起 15000/2000 心跳
+  ✓ P3-C 缺实例成员 isItemActionPending：ready=false 且点名 AppTransaction.isItemActionPending
+  ✓ P3-C 缺实例成员 isItemActionPending：fail closed 前不读库、不排程、不起 15000/2000 心跳
+  ✓ P3-C 缺实例成员 rejectPendingItemCommand：ready=false 且点名 AppTransaction.rejectPendingItemCommand
+  ✓ P3-C 缺实例成员 rejectPendingItemCommand：fail closed 前不读库、不排程、不起 15000/2000 心跳
+  ✓ P3-C 缺实例成员 takeReplayCreatedId：ready=false 且点名 AppTransaction.takeReplayCreatedId
+  ✓ P3-C 缺实例成员 takeReplayCreatedId：fail closed 前不读库、不排程、不起 15000/2000 心跳
+  ✓ P3-C 缺实例成员 handleAlarmAction：ready=false 且点名 AppTransaction.handleAlarmAction
+  ✓ P3-C 缺实例成员 handleAlarmAction：fail closed 前不读库、不排程、不起 15000/2000 心跳
+  ✓ P3-C 缺实例成员 alarmEventSeen：ready=false 且点名 AppTransaction.alarmEventSeen
+  ✓ P3-C 缺实例成员 alarmEventSeen：fail closed 前不读库、不排程、不起 15000/2000 心跳
+  ✓ P3-C 缺实例成员 inflightDepth：ready=false 且点名 AppTransaction.inflightDepth
+  ✓ P3-C 缺实例成员 inflightDepth：fail closed 前不读库、不排程、不起 15000/2000 心跳
+  ✓ P3-C 缺实例成员 isFeedbackSuppressed：ready=false 且点名 AppTransaction.isFeedbackSuppressed
+  ✓ P3-C 缺实例成员 isFeedbackSuppressed：fail closed 前不读库、不排程、不起 15000/2000 心跳
+  ✓ P3-C 缺实例成员 shouldSuppressInnerSave：ready=false 且点名 AppTransaction.shouldSuppressInnerSave
+  ✓ P3-C 缺实例成员 shouldSuppressInnerSave：fail closed 前不读库、不排程、不起 15000/2000 心跳
+  ✓ P3-C 正向：事务协调器实例真的接上生产链且方法可用
+  ✓ P3-D 缺 lib/app-items.js：ready=false 且点名 AppItems
+  ✓ P3-D 缺 lib/app-items.js：fail closed 前不读库、不排程、不起 15000/2000 心跳
+  ✓ P3-D 空 AppItems 命名空间：ready=false 且点名 AppItems.createAppItems
+  ✓ P3-D 空 AppItems 命名空间：fail closed 前不读库、不排程、不起 15000/2000 心跳
+  ✓ P3-D 工厂抛错：ready=false 且点名 AppItems.createAppItems()
+  ✓ P3-D 工厂抛错：fail closed 前不读库、不排程、不起 15000/2000 心跳
+  ✓ P3-D 缺实例成员 promoteDue：ready=false 且点名 AppItems.promoteDue
+  ✓ P3-D 缺实例成员 promoteDue：fail closed 前不读库、不排程、不起 15000/2000 心跳
+  ✓ P3-D 缺实例成员 ensureSeriesId：ready=false 且点名 AppItems.ensureSeriesId
+  ✓ P3-D 缺实例成员 ensureSeriesId：fail closed 前不读库、不排程、不起 15000/2000 心跳
+  ✓ P3-D 缺实例成员 seriesMembers：ready=false 且点名 AppItems.seriesMembers
+  ✓ P3-D 缺实例成员 seriesMembers：fail closed 前不读库、不排程、不起 15000/2000 心跳
+  ✓ P3-D 缺实例成员 isUnstartedInstance：ready=false 且点名 AppItems.isUnstartedInstance
+  ✓ P3-D 缺实例成员 isUnstartedInstance：fail closed 前不读库、不排程、不起 15000/2000 心跳
+  ✓ P3-D 缺实例成员 spawnNextInstance：ready=false 且点名 AppItems.spawnNextInstance
+  ✓ P3-D 缺实例成员 spawnNextInstance：fail closed 前不读库、不排程、不起 15000/2000 心跳
+  ✓ P3-D 缺实例成员 advanceSeriesOnArchive：ready=false 且点名 AppItems.advanceSeriesOnArchive
+  ✓ P3-D 缺实例成员 advanceSeriesOnArchive：fail closed 前不读库、不排程、不起 15000/2000 心跳
+  ✓ P3-D 缺实例成员 ackItem：ready=false 且点名 AppItems.ackItem
+  ✓ P3-D 缺实例成员 ackItem：fail closed 前不读库、不排程、不起 15000/2000 心跳
+  ✓ P3-D 缺实例成员 completeItem：ready=false 且点名 AppItems.completeItem
+  ✓ P3-D 缺实例成员 completeItem：fail closed 前不读库、不排程、不起 15000/2000 心跳
+  ✓ P3-D 缺实例成员 snoozeItem：ready=false 且点名 AppItems.snoozeItem
+  ✓ P3-D 缺实例成员 snoozeItem：fail closed 前不读库、不排程、不起 15000/2000 心跳
+  ✓ P3-D 缺实例成员 deleteItem：ready=false 且点名 AppItems.deleteItem
+  ✓ P3-D 缺实例成员 deleteItem：fail closed 前不读库、不排程、不起 15000/2000 心跳
+  ✓ P3-D 缺实例成员 reopenItem：ready=false 且点名 AppItems.reopenItem
+  ✓ P3-D 缺实例成员 reopenItem：fail closed 前不读库、不排程、不起 15000/2000 心跳
+  ✓ P3-D 缺实例成员 restoreItem：ready=false 且点名 AppItems.restoreItem
+  ✓ P3-D 缺实例成员 restoreItem：fail closed 前不读库、不排程、不起 15000/2000 心跳
+  ✓ P3-D 缺实例成员 resumeDeadlineProtection：ready=false 且点名 AppItems.resumeDeadlineProtection
+  ✓ P3-D 缺实例成员 resumeDeadlineProtection：fail closed 前不读库、不排程、不起 15000/2000 心跳
+  ✓ P3-D 缺实例成员 stopRepeat：ready=false 且点名 AppItems.stopRepeat
+  ✓ P3-D 缺实例成员 stopRepeat：fail closed 前不读库、不排程、不起 15000/2000 心跳
+  ✓ P3-D 缺实例成员 applyItemEdit：ready=false 且点名 AppItems.applyItemEdit
+  ✓ P3-D 缺实例成员 applyItemEdit：fail closed 前不读库、不排程、不起 15000/2000 心跳
+  ✓ P3-D 缺实例成员 applyNewItem：ready=false 且点名 AppItems.applyNewItem
+  ✓ P3-D 缺实例成员 applyNewItem：fail closed 前不读库、不排程、不起 15000/2000 心跳
+  ✓ P3-D 缺实例成员 applyProjectRemovalToItems：ready=false 且点名 AppItems.applyProjectRemovalToItems
+  ✓ P3-D 缺实例成员 applyProjectRemovalToItems：fail closed 前不读库、不排程、不起 15000/2000 心跳
+  ✓ P3-D 缺实例成员 applyCompleteUndo：ready=false 且点名 AppItems.applyCompleteUndo
+  ✓ P3-D 缺实例成员 applyCompleteUndo：fail closed 前不读库、不排程、不起 15000/2000 心跳
+  ✓ P3-D 缺实例成员 revertCompleteUndo：ready=false 且点名 AppItems.revertCompleteUndo
+  ✓ P3-D 缺实例成员 revertCompleteUndo：fail closed 前不读库、不排程、不起 15000/2000 心跳
+  ✓ P3-D 缺实例成员 undoLastComplete：ready=false 且点名 AppItems.undoLastComplete
+  ✓ P3-D 缺实例成员 undoLastComplete：fail closed 前不读库、不排程、不起 15000/2000 心跳
+  ✓ P3-D 缺实例成员 undoNewItem：ready=false 且点名 AppItems.undoNewItem
+  ✓ P3-D 缺实例成员 undoNewItem：fail closed 前不读库、不排程、不起 15000/2000 心跳
+  ✓ P3-D 缺实例成员 lastCompleteUndo：ready=false 且点名 AppItems.lastCompleteUndo
+  ✓ P3-D 缺实例成员 lastCompleteUndo：fail closed 前不读库、不排程、不起 15000/2000 心跳
+  ✓ P3-D 正向：事项模块实例真的接上生产链且方法可用
+  ✓ P3-E 缺 lib/app-native-coordinator.js：ready=false 且点名 AppNativeCoordinator
+  ✓ P3-E 缺 lib/app-native-coordinator.js：fail closed 前不读库、不排程、不起 15000/2000 心跳
+  ✓ P3-E 空 AppNativeCoordinator 命名空间：ready=false 且点名 AppNativeCoordinator.createAppNativeCoordinator
+  ✓ P3-E 空 AppNativeCoordinator 命名空间：fail closed 前不读库、不排程、不起 15000/2000 心跳
+  ✓ P3-E 工厂抛错：ready=false 且点名 AppNativeCoordinator.createAppNativeCoordinator()
+  ✓ P3-E 工厂抛错：fail closed 前不读库、不排程、不起 15000/2000 心跳
+  ✓ P3-E 缺实例成员 refreshNativeScheduleBasis：ready=false 且点名 AppNativeCoordinator.refreshNativeScheduleBasis
+  ✓ P3-E 缺实例成员 refreshNativeScheduleBasis：fail closed 前不读库、不排程、不起 15000/2000 心跳
+  ✓ P3-E 缺实例成员 applyDeadlineEvents：ready=false 且点名 AppNativeCoordinator.applyDeadlineEvents
+  ✓ P3-E 缺实例成员 applyDeadlineEvents：fail closed 前不读库、不排程、不起 15000/2000 心跳
+  ✓ P3-E 缺实例成员 applyReminderEvents：ready=false 且点名 AppNativeCoordinator.applyReminderEvents
+  ✓ P3-E 缺实例成员 applyReminderEvents：fail closed 前不读库、不排程、不起 15000/2000 心跳
+  ✓ P3-E 缺实例成员 markDeadlineDelivered：ready=false 且点名 AppNativeCoordinator.markDeadlineDelivered
+  ✓ P3-E 缺实例成员 markDeadlineDelivered：fail closed 前不读库、不排程、不起 15000/2000 心跳
+  ✓ P3-E 缺实例成员 applyReminderDelivered：ready=false 且点名 AppNativeCoordinator.applyReminderDelivered
+  ✓ P3-E 缺实例成员 applyReminderDelivered：fail closed 前不读库、不排程、不起 15000/2000 心跳
+  ✓ P3-E 缺实例成员 syncNativeRemindersNow：ready=false 且点名 AppNativeCoordinator.syncNativeRemindersNow
+  ✓ P3-E 缺实例成员 syncNativeRemindersNow：fail closed 前不读库、不排程、不起 15000/2000 心跳
+  ✓ P3-E 缺实例成员 ensureNativeReminders：ready=false 且点名 AppNativeCoordinator.ensureNativeReminders
+  ✓ P3-E 缺实例成员 ensureNativeReminders：fail closed 前不读库、不排程、不起 15000/2000 心跳
+  ✓ P3-E 缺实例成员 queueNativeReminderSync：ready=false 且点名 AppNativeCoordinator.queueNativeReminderSync
+  ✓ P3-E 缺实例成员 queueNativeReminderSync：fail closed 前不读库、不排程、不起 15000/2000 心跳
+  ✓ P3-E 缺实例成员 readDeliveryEvidence：ready=false 且点名 AppNativeCoordinator.readDeliveryEvidence
+  ✓ P3-E 缺实例成员 readDeliveryEvidence：fail closed 前不读库、不排程、不起 15000/2000 心跳
+  ✓ P3-E 缺实例成员 applyNativeDeliveryEvidence：ready=false 且点名 AppNativeCoordinator.applyNativeDeliveryEvidence
+  ✓ P3-E 缺实例成员 applyNativeDeliveryEvidence：fail closed 前不读库、不排程、不起 15000/2000 心跳
+  ✓ P3-E 缺实例成员 initializeNativeReminders：ready=false 且点名 AppNativeCoordinator.initializeNativeReminders
+  ✓ P3-E 缺实例成员 initializeNativeReminders：fail closed 前不读库、不排程、不起 15000/2000 心跳
+  ✓ P3-E 缺实例成员 getNativeReminderStatus：ready=false 且点名 AppNativeCoordinator.getNativeReminderStatus
+  ✓ P3-E 缺实例成员 getNativeReminderStatus：fail closed 前不读库、不排程、不起 15000/2000 心跳
+  ✓ P3-E 缺实例成员 setNativeReminderStatus：ready=false 且点名 AppNativeCoordinator.setNativeReminderStatus
+  ✓ P3-E 缺实例成员 setNativeReminderStatus：fail closed 前不读库、不排程、不起 15000/2000 心跳
+  ✓ P3-E 缺实例成员 isNativeReady：ready=false 且点名 AppNativeCoordinator.isNativeReady
+  ✓ P3-E 缺实例成员 isNativeReady：fail closed 前不读库、不排程、不起 15000/2000 心跳
+  ✓ P3-E 缺实例成员 getNativeSyncMetrics：ready=false 且点名 AppNativeCoordinator.getNativeSyncMetrics
+  ✓ P3-E 缺实例成员 getNativeSyncMetrics：fail closed 前不读库、不排程、不起 15000/2000 心跳
+  ✓ P3-E 缺实例成员 getNativeSyncVersion：ready=false 且点名 AppNativeCoordinator.getNativeSyncVersion
+  ✓ P3-E 缺实例成员 getNativeSyncVersion：fail closed 前不读库、不排程、不起 15000/2000 心跳
+  ✓ P3-E 缺实例成员 bumpNativeSyncVersion：ready=false 且点名 AppNativeCoordinator.bumpNativeSyncVersion
+  ✓ P3-E 缺实例成员 bumpNativeSyncVersion：fail closed 前不读库、不排程、不起 15000/2000 心跳
+  ✓ P3-E 缺实例成员 deliveryEvidenceReadable：ready=false 且点名 AppNativeCoordinator.deliveryEvidenceReadable
+  ✓ P3-E 缺实例成员 deliveryEvidenceReadable：fail closed 前不读库、不排程、不起 15000/2000 心跳
+  ✓ P3-E 缺实例成员 getDeliveryEvidenceState：ready=false 且点名 AppNativeCoordinator.getDeliveryEvidenceState
+  ✓ P3-E 缺实例成员 getDeliveryEvidenceState：fail closed 前不读库、不排程、不起 15000/2000 心跳
+  ✓ P3-E 缺实例成员 isNativeAndroidRuntime：ready=false 且点名 AppNativeCoordinator.isNativeAndroidRuntime
+  ✓ P3-E 缺实例成员 isNativeAndroidRuntime：fail closed 前不读库、不排程、不起 15000/2000 心跳
+  ✓ P3-E 缺实例成员 waitForNativeBridge：ready=false 且点名 AppNativeCoordinator.waitForNativeBridge
+  ✓ P3-E 缺实例成员 waitForNativeBridge：fail closed 前不读库、不排程、不起 15000/2000 心跳
+  ✓ P3-E 正向：原生协调器实例真的接上生产链且方法可用
+  ✓ P3-F 缺 lib/app-review.js：ready=false 且点名 AppReview
+  ✓ P3-F 缺 lib/app-review.js：fail closed 前不读库、不排程、不起 15000/2000 心跳
+  ✓ P3-F 空 AppReview 命名空间：ready=false 且点名 AppReview.createAppReview
+  ✓ P3-F 空 AppReview 命名空间：fail closed 前不读库、不排程、不起 15000/2000 心跳
+  ✓ P3-F 工厂抛错：ready=false 且点名 AppReview.createAppReview()
+  ✓ P3-F 工厂抛错：fail closed 前不读库、不排程、不起 15000/2000 心跳
+  ✓ P3-F 缺实例成员 ensureReviewSettings：ready=false 且点名 AppReview.ensureReviewSettings
+  ✓ P3-F 缺实例成员 ensureReviewSettings：fail closed 前不读库、不排程、不起 15000/2000 心跳
+  ✓ P3-F 缺实例成员 fallbackTriggerAt：ready=false 且点名 AppReview.fallbackTriggerAt
+  ✓ P3-F 缺实例成员 fallbackTriggerAt：fail closed 前不读库、不排程、不起 15000/2000 心跳
+  ✓ P3-F 缺实例成员 reviewSessionKey：ready=false 且点名 AppReview.reviewSessionKey
+  ✓ P3-F 缺实例成员 reviewSessionKey：fail closed 前不读库、不排程、不起 15000/2000 心跳
+  ✓ P3-F 缺实例成员 nextReviewWindowStart：ready=false 且点名 AppReview.nextReviewWindowStart
+  ✓ P3-F 缺实例成员 nextReviewWindowStart：fail closed 前不读库、不排程、不起 15000/2000 心跳
+  ✓ P3-F 缺实例成员 inReviewWindow：ready=false 且点名 AppReview.inReviewWindow
+  ✓ P3-F 缺实例成员 inReviewWindow：fail closed 前不读库、不排程、不起 15000/2000 心跳
+  ✓ P3-F 缺实例成员 inReviewHighlight：ready=false 且点名 AppReview.inReviewHighlight
+  ✓ P3-F 缺实例成员 inReviewHighlight：fail closed 前不读库、不排程、不起 15000/2000 心跳
+  ✓ P3-F 缺实例成员 isVagueContent：ready=false 且点名 AppReview.isVagueContent
+  ✓ P3-F 缺实例成员 isVagueContent：fail closed 前不读库、不排程、不起 15000/2000 心跳
+  ✓ P3-F 缺实例成员 detectNeedsReview：ready=false 且点名 AppReview.detectNeedsReview
+  ✓ P3-F 缺实例成员 detectNeedsReview：fail closed 前不读库、不排程、不起 15000/2000 心跳
+  ✓ P3-F 缺实例成员 needsReviewItems：ready=false 且点名 AppReview.needsReviewItems
+  ✓ P3-F 缺实例成员 needsReviewItems：fail closed 前不读库、不排程、不起 15000/2000 心跳
+  ✓ P3-F 缺实例成员 fireReviewNotification：ready=false 且点名 AppReview.fireReviewNotification
+  ✓ P3-F 缺实例成员 fireReviewNotification：fail closed 前不读库、不排程、不起 15000/2000 心跳
+  ✓ P3-F 缺实例成员 maybeReviewSession：ready=false 且点名 AppReview.maybeReviewSession
+  ✓ P3-F 缺实例成员 maybeReviewSession：fail closed 前不读库、不排程、不起 15000/2000 心跳
+  ✓ P3-F 缺实例成员 openReviewSession：ready=false 且点名 AppReview.openReviewSession
+  ✓ P3-F 缺实例成员 openReviewSession：fail closed 前不读库、不排程、不起 15000/2000 心跳
+  ✓ P3-F 缺实例成员 currentReviewItem：ready=false 且点名 AppReview.currentReviewItem
+  ✓ P3-F 缺实例成员 currentReviewItem：fail closed 前不读库、不排程、不起 15000/2000 心跳
+  ✓ P3-F 缺实例成员 scheduleNextReviewAlarm：ready=false 且点名 AppReview.scheduleNextReviewAlarm
+  ✓ P3-F 缺实例成员 scheduleNextReviewAlarm：fail closed 前不读库、不排程、不起 15000/2000 心跳
+  ✓ P3-F 缺实例成员 renderReviewCard：ready=false 且点名 AppReview.renderReviewCard
+  ✓ P3-F 缺实例成员 renderReviewCard：fail closed 前不读库、不排程、不起 15000/2000 心跳
+  ✓ P3-F 缺实例成员 resolveReviewTrigger：ready=false 且点名 AppReview.resolveReviewTrigger
+  ✓ P3-F 缺实例成员 resolveReviewTrigger：fail closed 前不读库、不排程、不起 15000/2000 心跳
+  ✓ P3-F 缺实例成员 markReviewDone：ready=false 且点名 AppReview.markReviewDone
+  ✓ P3-F 缺实例成员 markReviewDone：fail closed 前不读库、不排程、不起 15000/2000 心跳
+  ✓ P3-F 缺实例成员 reviewConfirm：ready=false 且点名 AppReview.reviewConfirm
+  ✓ P3-F 缺实例成员 reviewConfirm：fail closed 前不读库、不排程、不起 15000/2000 心跳
+  ✓ P3-F 缺实例成员 reviewSaveEdit：ready=false 且点名 AppReview.reviewSaveEdit
+  ✓ P3-F 缺实例成员 reviewSaveEdit：fail closed 前不读库、不排程、不起 15000/2000 心跳
+  ✓ P3-F 缺实例成员 reviewKeepCurrent：ready=false 且点名 AppReview.reviewKeepCurrent
+  ✓ P3-F 缺实例成员 reviewKeepCurrent：fail closed 前不读库、不排程、不起 15000/2000 心跳
+  ✓ P3-F 缺实例成员 reviewDelete：ready=false 且点名 AppReview.reviewDelete
+  ✓ P3-F 缺实例成员 reviewDelete：fail closed 前不读库、不排程、不起 15000/2000 心跳
+  ✓ P3-F 缺实例成员 snoozeReview：ready=false 且点名 AppReview.snoozeReview
+  ✓ P3-F 缺实例成员 snoozeReview：fail closed 前不读库、不排程、不起 15000/2000 心跳
+  ✓ P3-F 缺实例成员 skipReviewThisTime：ready=false 且点名 AppReview.skipReviewThisTime
+  ✓ P3-F 缺实例成员 skipReviewThisTime：fail closed 前不读库、不排程、不起 15000/2000 心跳
+  ✓ P3-F 缺实例成员 renderReviewEntry：ready=false 且点名 AppReview.renderReviewEntry
+  ✓ P3-F 缺实例成员 renderReviewEntry：fail closed 前不读库、不排程、不起 15000/2000 心跳
+  ✓ P3-F 缺实例成员 bindReviewControls：ready=false 且点名 AppReview.bindReviewControls
+  ✓ P3-F 缺实例成员 bindReviewControls：fail closed 前不读库、不排程、不起 15000/2000 心跳
+  ✓ P3-F 缺实例成员 markReviewTriggerPicked：ready=false 且点名 AppReview.markReviewTriggerPicked
+  ✓ P3-F 缺实例成员 markReviewTriggerPicked：fail closed 前不读库、不排程、不起 15000/2000 心跳
+  ✓ P3-F 缺实例成员 isFallbackSuppressed：ready=false 且点名 AppReview.isFallbackSuppressed
+  ✓ P3-F 缺实例成员 isFallbackSuppressed：fail closed 前不读库、不排程、不起 15000/2000 心跳
+  ✓ P3-F 正向：待整理实例真的接上生产链且方法可用
+  ✓ P3-G 缺 lib/app-alerts.js：ready=false 且点名 AppAlerts
+  ✓ P3-G 缺 lib/app-alerts.js：fail closed 前不读库、不排程、不起 15000/2000 心跳
+  ✓ P3-G 空 AppAlerts 命名空间：ready=false 且点名 AppAlerts.createAppAlerts
+  ✓ P3-G 空 AppAlerts 命名空间：fail closed 前不读库、不排程、不起 15000/2000 心跳
+  ✓ P3-G 工厂抛错：ready=false 且点名 AppAlerts.createAppAlerts()
+  ✓ P3-G 工厂抛错：fail closed 前不读库、不排程、不起 15000/2000 心跳
+  ✓ P3-G 缺实例成员 showAlert：ready=false 且点名 AppAlerts.showAlert
+  ✓ P3-G 缺实例成员 showAlert：fail closed 前不读库、不排程、不起 15000/2000 心跳
+  ✓ P3-G 缺实例成员 hideAlert：ready=false 且点名 AppAlerts.hideAlert
+  ✓ P3-G 缺实例成员 hideAlert：fail closed 前不读库、不排程、不起 15000/2000 心跳
+  ✓ P3-G 缺实例成员 dismissAlert：ready=false 且点名 AppAlerts.dismissAlert
+  ✓ P3-G 缺实例成员 dismissAlert：fail closed 前不读库、不排程、不起 15000/2000 心跳
+  ✓ P3-G 缺实例成员 applyAlertDismissal：ready=false 且点名 AppAlerts.applyAlertDismissal
+  ✓ P3-G 缺实例成员 applyAlertDismissal：fail closed 前不读库、不排程、不起 15000/2000 心跳
+  ✓ P3-G 缺实例成员 shouldSkipAlert：ready=false 且点名 AppAlerts.shouldSkipAlert
+  ✓ P3-G 缺实例成员 shouldSkipAlert：fail closed 前不读库、不排程、不起 15000/2000 心跳
+  ✓ P3-G 缺实例成员 showSystemNotification：ready=false 且点名 AppAlerts.showSystemNotification
+  ✓ P3-G 缺实例成员 showSystemNotification：fail closed 前不读库、不排程、不起 15000/2000 心跳
+  ✓ P3-G 缺实例成员 tick：ready=false 且点名 AppAlerts.tick
+  ✓ P3-G 缺实例成员 tick：fail closed 前不读库、不排程、不起 15000/2000 心跳
+  ✓ P3-G 缺实例成员 getAlertItem：ready=false 且点名 AppAlerts.getAlertItem
+  ✓ P3-G 缺实例成员 getAlertItem：fail closed 前不读库、不排程、不起 15000/2000 心跳
+  ✓ P3-G 缺实例成员 clearAlert：ready=false 且点名 AppAlerts.clearAlert
+  ✓ P3-G 缺实例成员 clearAlert：fail closed 前不读库、不排程、不起 15000/2000 心跳
+  ✓ P3-G 缺实例成员 bindAlertControls：ready=false 且点名 AppAlerts.bindAlertControls
+  ✓ P3-G 缺实例成员 bindAlertControls：fail closed 前不读库、不排程、不起 15000/2000 心跳
+  ✓ P3-G 缺实例成员 handleNotificationAction：ready=false 且点名 AppAlerts.handleNotificationAction
+  ✓ P3-G 缺实例成员 handleNotificationAction：fail closed 前不读库、不排程、不起 15000/2000 心跳
+  ✓ P3-G 缺实例成员 deliveryHandledByCommittedItem：ready=false 且点名 AppAlerts.deliveryHandledByCommittedItem
+  ✓ P3-G 缺实例成员 deliveryHandledByCommittedItem：fail closed 前不读库、不排程、不起 15000/2000 心跳
+  ✓ P3-G 缺实例成员 completeActiveAlarm：ready=false 且点名 AppAlerts.completeActiveAlarm
+  ✓ P3-G 缺实例成员 completeActiveAlarm：fail closed 前不读库、不排程、不起 15000/2000 心跳
+  ✓ P3-G 缺实例成员 refreshActiveAlarmPanel：ready=false 且点名 AppAlerts.refreshActiveAlarmPanel
+  ✓ P3-G 缺实例成员 refreshActiveAlarmPanel：fail closed 前不读库、不排程、不起 15000/2000 心跳
+  ✓ P3-G 缺实例成员 startPolling：ready=false 且点名 AppAlerts.startPolling
+  ✓ P3-G 缺实例成员 startPolling：fail closed 前不读库、不排程、不起 15000/2000 心跳
+  ✓ P3-G 缺实例成员 stopPolling：ready=false 且点名 AppAlerts.stopPolling
+  ✓ P3-G 缺实例成员 stopPolling：fail closed 前不读库、不排程、不起 15000/2000 心跳
+  ✓ P3-G 缺实例成员 onVisibilityChange：ready=false 且点名 AppAlerts.onVisibilityChange
+  ✓ P3-G 缺实例成员 onVisibilityChange：fail closed 前不读库、不排程、不起 15000/2000 心跳
+  ✓ P3-G 正向：提醒实例真的接上生产链且方法可用
+  ✓ P3-H 缺 lib/app-platform.js：ready=false 且点名 AppPlatform
+  ✓ P3-H 缺 lib/app-platform.js：fail closed 前不读库、不排程、不起 15000/2000 心跳
+  ✓ P3-H 空 AppPlatform 命名空间：ready=false 且点名 AppPlatform.createAppPlatform
+  ✓ P3-H 空 AppPlatform 命名空间：fail closed 前不读库、不排程、不起 15000/2000 心跳
+  ✓ P3-H 工厂抛错：ready=false 且点名 AppPlatform.createAppPlatform()
+  ✓ P3-H 工厂抛错：fail closed 前不读库、不排程、不起 15000/2000 心跳
+  ✓ P3-H 缺实例成员 systemBridge：ready=false 且点名 AppPlatform.systemBridge
+  ✓ P3-H 缺实例成员 systemBridge：fail closed 前不读库、不排程、不起 15000/2000 心跳
+  ✓ P3-H 缺实例成员 appSettingsPlugin：ready=false 且点名 AppPlatform.appSettingsPlugin
+  ✓ P3-H 缺实例成员 appSettingsPlugin：fail closed 前不读库、不排程、不起 15000/2000 心跳
+  ✓ P3-H 缺实例成员 isNativeAndroidRuntime：ready=false 且点名 AppPlatform.isNativeAndroidRuntime
+  ✓ P3-H 缺实例成员 isNativeAndroidRuntime：fail closed 前不读库、不排程、不起 15000/2000 心跳
+  ✓ P3-H 缺实例成员 waitForNativeBridge：ready=false 且点名 AppPlatform.waitForNativeBridge
+  ✓ P3-H 缺实例成员 waitForNativeBridge：fail closed 前不读库、不排程、不起 15000/2000 心跳
+  ✓ P3-H 缺实例成员 getDeferredInstallPrompt：ready=false 且点名 AppPlatform.getDeferredInstallPrompt
+  ✓ P3-H 缺实例成员 getDeferredInstallPrompt：fail closed 前不读库、不排程、不起 15000/2000 心跳
+  ✓ P3-H 缺实例成员 promptInstall：ready=false 且点名 AppPlatform.promptInstall
+  ✓ P3-H 缺实例成员 promptInstall：fail closed 前不读库、不排程、不起 15000/2000 心跳
+  ✓ P3-H 缺实例成员 bindInstall：ready=false 且点名 AppPlatform.bindInstall
+  ✓ P3-H 缺实例成员 bindInstall：fail closed 前不读库、不排程、不起 15000/2000 心跳
+  ✓ P3-H 缺实例成员 bindNetwork：ready=false 且点名 AppPlatform.bindNetwork
+  ✓ P3-H 缺实例成员 bindNetwork：fail closed 前不读库、不排程、不起 15000/2000 心跳
+  ✓ P3-H 缺实例成员 registerPwa：ready=false 且点名 AppPlatform.registerPwa
+  ✓ P3-H 缺实例成员 registerPwa：fail closed 前不读库、不排程、不起 15000/2000 心跳
+  ✓ P3-H 正向：平台适配实例真的接上生产链且方法可用
+  ✓ P3-I-R 缺 lib/app-notices.js：ready=false 且点名 AppNotices
+  ✓ P3-I-R 缺 lib/app-notices.js：fail closed 前不读库、不排程、不起 15000/2000 心跳
+  ✓ P3-I-R 空 AppNotices 命名空间：ready=false 且点名 AppNotices.createAppNotices
+  ✓ P3-I-R 空 AppNotices 命名空间：fail closed 前不读库、不排程、不起 15000/2000 心跳
+  ✓ P3-I-R 工厂抛错：ready=false 且点名 AppNotices.createAppNotices()
+  ✓ P3-I-R 工厂抛错：fail closed 前不读库、不排程、不起 15000/2000 心跳
+  ✓ P3-I-R 缺实例成员 homeNoticeVerdict：ready=false 且点名 AppNotices.homeNoticeVerdict
+  ✓ P3-I-R 缺实例成员 homeNoticeVerdict：fail closed 前不读库、不排程、不起 15000/2000 心跳
+  ✓ P3-I-R 缺实例成员 renderHomeNotice：ready=false 且点名 AppNotices.renderHomeNotice
+  ✓ P3-I-R 缺实例成员 renderHomeNotice：fail closed 前不读库、不排程、不起 15000/2000 心跳
+  ✓ P3-I-R 缺实例成员 maybeDailySummary：ready=false 且点名 AppNotices.maybeDailySummary
+  ✓ P3-I-R 缺实例成员 maybeDailySummary：fail closed 前不读库、不排程、不起 15000/2000 心跳
+  ✓ P3-I-R 正向：告知实例真的接上生产链且方法可用
+  ✓ P2-C 正向：备份实例真的可用 —— 快照带 app/schema/items 且**密钥不进备份**
+  ✓ 正向：AI 实例真的可用（判据是调用结果，不是 `typeof ai === 'object'`）
+  ✓ 正向：`mergedDraft` 真的合出了 AI 结果，且**没动**提交时冻结的那份草稿
+  ✓ 正向：归一真的收窄了模型自创的取值（越权优先级 / 白名单外周期都不会进事务）
+  ✓ 正向：正常组合下展示能力实例真的可用（不是「绑定存在」而是「能调用」）
+
+== B3. F02 依赖契约（null / 缺成员 / 空壳实例 / 工厂抛错）与 F03 重试后绑定重建 ==
+  ✓ F02 反例：Feedback = null ⇒ 闸门报出来（旧实现 `typeof === 'object'` 会放行）
+  ✓ F02：失败时**不覆盖**既有绑定（`f ? … : 兜底` 的分支不会突然变成可达的那条）
+  ✓ F02 反例：删掉 Feedback.setupSteps ⇒ 闸门点名该成员（不是等业务跑到才 TypeError）
+  ✓ F02 反例：删掉 DeliveryEvidence.normalizeEvidence ⇒ 闸门点名该成员
+  ✓ F02 反例：DeliveryEvidence = null ⇒ 闸门报出来
+  ✓ F02 反例：AppUi.createUi 返回空壳 ⇒ 闸门逐项点名实例 API（工厂「存在」≠「装上了」）
+  ✓ F02：空壳被拦下时**没有**继续读写库（页面不会停在「能输入却存不下来」）
+  ✓ F02：空壳被拦下时既有绑定保持原样（不会把已在跑的界面换成点不动的那套）
+  ✓ F02 反例：AppUi.createUi 抛异常 ⇒ 闸门报出来（不是让启动链中途炸掉）
+  ✓ P2-A 反例：AppAi.createAppAi 返回空壳 ⇒ 闸门逐项点名全部 15 个实例 API
+  ✓ P2-A：AI 空壳被拦下时既有绑定保持原样（不会把已在跑的界面换成点了没反应的那套）
+  ✓ P2-A 反例：AppAi.createAppAi 抛异常 ⇒ 闸门报出来（不是让启动链中途炸掉）
+  ✓ P2-C 反例：AppBackup.createAppBackup 返回空壳 ⇒ 闸门逐项点名全部 4 个实例 API
+  ✓ P2-C：备份空壳被拦下时既有绑定保持原样（不会把已在跑的备份实例换成点了没反应的那套）
+  ✓ P2-C 反例：AppBackup.createAppBackup 抛异常 ⇒ 闸门报出来（不是让启动链中途炸掉）
+  ✓ P2-D 反例：AppDiagnostics.createAppDiagnostics 返回空壳 ⇒ 闸门逐项点名全部 7 个实例 API
+  ✓ P2-D：诊断空壳被拦下时既有绑定保持原样
+  ✓ P2-D 反例：AppDiagnostics.createAppDiagnostics 抛异常 ⇒ 闸门报出来
+  ✓ F02：全部还原后 bindRuntime() 无问题（上面每条反例都不是把环境改坏了）
+  ✓ F03：每个绑定路径都在必需声明表里（44 条 —— 绑定不得超出闸门检查的范围，这是「同源」的结构保证）
+  ✓ F03①：缺 lib/parse-cn.js 时 ready=false（起点与复验一致）
+  ✓ F03①：补载之前不起业务定时器（失败是干净的失败）
+  ✓ F03①：补载后点「重试」⇒ ready=true
+  ✓ F03①：重试后绑定指向**当前**的 Lib.parseChineseTime（不是求值时抓到的 undefined）
+  ✓ F03①：15 秒心跳只装了一次（重试不得重复注册监听 / 计时器）
+  ✓ F03①：重试后解析器真的可调用（返回对象带 trigger）
+  ✓ F03①：重试后「输入 → 保存」真的落库（不再有「启动成功、保存链路不可用」）
+  ✓ F03②：app-core 在最前（lib 还没加载）⇒ ready=false，不出现「启动成功但不可用」
+  ✓ F03②：失败时绑定保持**空**（而不是绑上一份 undefined 后来变成「假成功」）
+  ✓ （前置）原生成员反例补丁真的改到了源码（`reconcile,` ⇒ `reconcile: undefined,`）
+  ✓ F02 反例：删掉 NativeReminders.reconcile ⇒ 闸门点名该成员（不是等对账跑到才 TypeError，也不是静默不排）
+  ✓ F01 收口：原生成员级失败同样发生在副作用之前（不读库、不排通知、不排闹钟、不起业务心跳）
+  ✓ 对照（防恒真）：同一驱动序列下完整源码真的排起闹钟（证明上面的 0 是「被拦住」，不是「本来就不排」）
+  ✓ 对照（防恒真）：健康组合上同一驱动序列可正常执行（探针本身是良构的）
+  ✓ F01 收口：失败态下走同一驱动序列，**写不进也排不出**（复验表格那一行的反面：落库与排程两个都必须是 0）
+  ✓ （前置）Feedback 成员反例补丁真的改到了导出块（两条 shorthand ⇒ undefined）
+  ✓ F02 反例：删掉 Feedback.UNDO_WINDOW_MS / TEST_FEEDBACK ⇒ 闸门逐条点名（number 型条目同样受闸门保护，不是只有 function/object）
+  ✓ 收口：这两条失败也发生在副作用之前（不读库、不排程、不起心跳）
+  ✓ 对照：`Feedback.TEST_FEEDBACK` 是正常数组时应用照常就绪（这组断言不是「恒不启动」）
+  ✓ F02-R3 反例：非数组（{}） ⇒ 启动前被点名（期望是数组契约）
+  ✓ F02-R3 反例：非数组（{}） ⇒ 报出来的实际值是「object（不是数组）」（说清坏在哪，不只报类型）
+  ✓ F02-R3 收口：非数组（{}） 同其它成员级失败一样发生在副作用之前（不开库、不排程、不起心跳）
+  ✓ F02-R3 反例：元素缺 label ⇒ 启动前被点名（期望是数组契约）
+  ✓ F02-R3 反例：元素缺 label ⇒ 报出来的实际值是「array[0] 缺少 label」（说清坏在哪，不只报类型）
+  ✓ F02-R3 收口：元素缺 label 同其它成员级失败一样发生在副作用之前（不开库、不排程、不起心跳）
+  ✓ F02-R3 反例：空清单（[]） ⇒ 启动前被点名（期望是数组契约）
+  ✓ F02-R3 反例：空清单（[]） ⇒ 报出来的实际值是「空数组（清单至少要有一项）」（说清坏在哪，不只报类型）
+  ✓ F02-R3 收口：空清单（[]） 同其它成员级失败一样发生在副作用之前（不开库、不排程、不起心跳）
+
+== B4. 反向对照：拔掉本轮修复，相应断言必须变红（有分辨力的证明） ==
+  ✓ （前置）M1 反例补丁真的改到了 null 判据
+  ✓ M1 变红：拿掉 null 判据后，`Feedback` 这一条**不再被点名**（只剩成员在报）⇒ B3 断言「path==='Feedback' && actual==='null'」会变红
+  ✓ M1 的对照面：同一注入在**未变异**的 app-core 上会点名 `Feedback`（两条合起来才说明判据有分辨力）
+  ✓ （前置）M2 反例补丁真的改到了闸门循环
+  ✓ M2 变红：闸门不查原生条目后，缺 lib/native-reminders.js 时**不再有任何装配失败反馈**（`startupFailure()` 为 null）⇒ B2 断言「点名 AttentionNativeReminders」不会恒真
+  ✓ M2 补充：缺陷态下业务跑不完（中途抛错）、落库与排程都是 0，而界面仍然没有任何失败反馈 —— 比「照跑」更糟
+  ✓ M3 变红：闸门漏掉那一条成员声明后，`reconcile: undefined` **不再被点名**⇒ B3 ⑨ 的成员级断言不会恒真
+  ✓ （前置）N4 反例补丁真的把期望类型退回 object
+  ✓ N4 变红：`TEST_FEEDBACK` 只按 object 校验时，`{}` **重新被放行**（F02-R3 原缺陷复现：ready 起来后再进那一屏才崩）⇒ ⑪ 的断言不会恒真
+  ✓ N4 的对照面：同一注入在**未变异**的 app-core 上会被点名且带数组期望（两面合起来才说明「array 契约」四个字是有牙齿的）
+  ✓ （前置）N5 反例补丁真的删掉了元素形状核对
+  ✓ N5 变红：删掉元素形状核对后，元素缺 label 的清单**重新被放行**（容器对 ≠ 元素对）⇒ ⑪ 的那条断言不会恒真
+  ✓ （前置）N6 反例补丁真的清空了 AI 实例契约
+  ✓ N6 变红（静态）：契约清空后，源码里用到的 AI 实例 API 全部变成 missingInContract ⇒ ②·3b 那条双向闭合断言不会恒真
+  ✓ N6 变红（运行时）：契约清空后，空壳工厂**重新被放行**（一条 AppAi.* 都不报） ⇒ B3 那条「逐项点名」断言会变红
+  ✓ N6 的对照面：同一空壳在**未变异**的 app-core 上被逐项点名（两边合起来才说明判据有分辨力）
+  ✓ （前置）N7 反例补丁真的删掉了 AppAi 系的声明（4 条）
+  ✓ N7 变红：删掉 AppAi 声明后，静态矩阵立刻报 undeclared（证明这 4 条声明是闭合的一部分，不是注释）
+  ✓ N7 的对照面：未变异源码下 AppAi 系的引用全部闭合（problems 为空）
+  ✓ （前置）N8 反例补丁真的清空了备份实例契约
+  ✓ N8 变红（静态）：契约清空后，源码里用到的备份实例 API 全部变成 missingInContract
+  ✓ N8 变红（运行时）：契约清空后，空壳工厂**重新被放行**（一条 AppBackup.* 都不报）
+  ✓ N8 的对照面：同一空壳在**未变异**的 app-core 上被逐项点名（两边合起来才说明判据有分辨力）
+  ✓ 收口：三条反向编辑都用临时副本，工作区 app-core.js / native-reminders.js 未被改写
+  ✓ 收口：M2/M3 的补丁在语法上与原文件只差那一两行（防止「改坏了才变红」）
+  ✓ （前置）N9 反例补丁真的清空了诊断实例契约
+  ✓ N9 变红（静态）：契约清空后，源码里用到的诊断实例 API 全部变成 missingInContract ⇒ ②·3c 那条双向闭合断言不会恒真
+  ✓ N9 变红（运行时）：契约清空后，空壳工厂**重新被放行**（一条 AppDiagnostics.* 都不报） ⇒ B3 ⑤·6 那条「逐项点名」断言会变红
+  ✓ N9 的对照面：同一空壳在**未变异**的 app-core 上被逐项点名（两边合起来才说明判据有分辨力）
+  ✓ 收口：N6/N7 的补丁同样只差那几行（N6 改 1 行、N7 删 4 条声明）
+  ✓ 收口：N8 的补丁同样只差那几行（把 2 行成员清单压成 1 行 ⇒ 少 1 行）
+
+== B5. P2-C-R：冷启动权威状态保护（三态判定 / 写闸门 / 恢复面板） ==
+  ✓ 首启对照：权威读到空且别处无残留 ⇒ 判 empty、照常就绪（不是恒不启动）
+  ✓ 首启对照：empty 开放写入（写闸门不是「一律不写」）
+  ✓ 首启对照：业务保存照常落库、原生对账照常发生
+  ✓ 读失败：判 failed（原因写明是权威读失败 + 镜像也没有）
+  ✓ 读失败：写闸门关闭（writesAllowed=false）
+  ✓ 读失败：**不读库不写库**（puts 恒为 0，IDB 逐字节未动）
+  ✓ 读失败：**不排通知**（动作类型 / 渠道 / 监听 / 排程一个都没发生）
+  ✓ 读失败：**不启业务心跳**（没有 15 秒 tick）
+  ✓ 读失败：内存空态**没有**被写成镜像，也没有留下待回放凭据
+  ✓ 读失败：显示可见的恢复面板（插进首页容器 + 写明没写任何东西）
+  ✓ 读失败：面板里只有按钮，没有任何可编辑控件（不留下「能输入但存不下来」的界面）
+  ✓ 读失败：绕过启动链的提交同样被拦（state-authority-blocked，落盘痕迹仍然为 0）
+  ✓ 重试成功：判 loaded、原因是从权威读到的（不是镜像兜底）
+  ✓ 重试成功：旧数据真的回来了（1 条「既有事项」），IDB 仍然完好
+  ✓ 重试成功：面板撤掉、业务启动真的跑起来了（心跳 + 原生对账就位）
+  ✓ 打不开：IDB 存在却用不上时，绝不判 empty（否则等于把「读不到」当「不存在」）
+  ✓ 打不开：这次启动同样一笔没写（IDB 里那份 1/1 逐字节未动）
+  ✓ 打不开：重试会**重新尝试打开权威后端**（故 loaded 的原因必须是权威，而非 degraded-mirror）
+  ✓ 打不开：重试真的把那份 1/1 读了回来
+  ✓ 镜像迁移：IDB 读到空但镜像有值 ⇒ 判 loaded，并以镜像内容为准
+  ✓ 镜像迁移：那一刻真的写回了权威后端（IDB 里现在有 1/1「既有事项」）
+  ✓ 残留证据：权威读到空但镜像有不可解析残留 ⇒ failed（不当首启）
+  ✓ 脏值：权威里存的不是对象 ⇒ failed，且一笔都没写
+  ✓ 桥故障：注入真的命中（被点名的方法**被调用过**并且拒绝了，不是只改了配置）
+  ✓ 桥故障：应用仍然就绪（`initializeNativeReminders` 的 catch 兜住，不把启动挂死）
+  ✓ 桥故障：权威判定**不受桥影响**（仍是 loaded/authoritative，writesAllowed=true）
+  ✓ 桥故障：旧数据完好（IDB 里仍是那 1/1，没有被空态覆盖）
+  ✓ 叠加故障：桥故障 + 权威读失败 ⇒ 判 failed、writesAllowed=false
+  ✓ 叠加故障：仍然一笔不写（puts=0）、不留待回放凭据、旧 IDB 逐字节未动
+  ✓ 叠加故障：既不排通知也不起业务心跳（失败态的业务旁路整段跳过）
+  ✓ 叠加故障：恢复面板照样出现（用户看得到「没恢复成功」，而不是一个空收件箱）
+  ✓ （前置）M9 反例补丁真的拔掉了四道闸门（各一处、都命中，且只改了这一行）
+  ✓ 对照面：未变异源码下，失败态既拦住了提交也没有留下任何待回放凭据
+  ✓ M9 变红：拔掉恢复闸门后，读不到权威数据时应用**照常启动**（ready=true、心跳跑起来）
+  ✓ M9 变红：这次提交真的写出了落地痕迹（镜像 + 待回放凭据 = 一份**空基线**快照）
+  ✓ M9 核心（拔掉闸门必红）：下一次冷启动把空快照经待回放写回健康的 IDB ⇒ 旧 1/1 被覆盖成 0/0
+  ✓ 对照面：同一场景下未变异源码的下一次冷启动，旧 1/1 **完好无损**（两边合起来才说明闸门有分辨力）
+  ✓ 收口：反向编辑只用临时副本，工作区 app-core.js 未被改写
+
+== B6. 独立复验缺口：陈旧镜像不得覆盖权威（IDB 两条 / 镜像一条，双启动分叉） ==
+  ✓ B6/get：权威 get 失败 + 镜像有值 ⇒ 判 **failed**（镜像≠权威，不能升格）
+  ✓ B6/get：失败态**不启业务**（没有 15 秒心跳，也没有业务批量往库里写）
+  ✓ B6/get：这次启动对权威后端连碰都没碰（puts=0，IDB 仍是那两条）
+  ✓ B6/get：用户硬要保存也被拦下（state-authority-blocked），**没有**留下待回放凭据（下一步覆盖的正是这张授权书）
+  ✓ B6/get：内存里留下镜像内容只作**只读查看**（这条 OK 不代表它可以写）
+  ✓ B6/get：**下一次健康冷启动仍读到权威那两条** ⇒ 旧镜像没有覆盖掉 `idb-new`
+  ✓ B6/open：权威 open 失败 + 镜像有值 ⇒ 判 **failed**（镜像≠权威，不能升格）
+  ✓ B6/open：失败态**不启业务**（没有 15 秒心跳，也没有业务批量往库里写）
+  ✓ B6/open：这次启动对权威后端连碰都没碰（puts=0，IDB 仍是那两条）
+  ✓ B6/open：用户硬要保存也被拦下（state-authority-blocked），**没有**留下待回放凭据（下一步覆盖的正是这张授权书）
+  ✓ B6/open：内存里留下镜像内容只作**只读查看**（这条 OK 不代表它可以写）
+  ✓ B6/open：**下一次健康冷启动仍读到权威那两条** ⇒ 旧镜像没有覆盖掉 `idb-new`
+  ✓ B6/对照：权威读得到时镜像**被忽略**（仍从权威读到两条，且判 loaded/authoritative）
+  ✓ B6/对照：权威读到**空**而镜像有值 ⇒ 仍走既有的「迁移进权威」语义（loaded，不被本轮收紧误伤）
+  ✓ （前置）M12 补丁三处都命中且行数不变（改的是判定本身，不是删掉代码）
+  ✓ M12 变红/get：拔掉防线的 权威 get 失败 ⇒ 旧镜像被提升为可写 loaded
+  ✓ M12 变红/get：这次保存真的留下了待回放凭据
+  ✓ M12 变红/get：**下一次健康启动用旧快照覆盖权威** ⇒ 两条变一条（`idb-new` 消失）
+  ✓ M12 变红/open：拔掉防线的 权威 open 失败 ⇒ 旧镜像被提升为可写 loaded
+  ✓ M12 变红/open：这次保存真的留下了待回放凭据
+  ✓ M12 变红/open：**下一次健康启动用旧快照覆盖权威** ⇒ 两条变一条（`idb-new` 消失）
+  ✓ 收口：反向编辑只用临时副本，工作区 app-core.js 未被改写
+  ✓ 启动期提交/对照：第一次载入未迁移状态确实需要迁移（IDB 现在已是规范形态）
+  ✓ 启动期提交：**连续第二次冷启动不再产生任何提交**（幂等后 puts=0，迁移不是循环）
+
+== B7. P3-C-R：事务重绑后旧命令包装函数实例更新（A/B 对照与反向变异） ==
+  ✓ P3-C-R 前置：组合启动成功
+  ✓ P3-C-R 前置：prime completeItem 成功
+  ✓ P3-C-R 前置：addUnrelated 调用成功
+  ✓ P3-C-R 对照组：事务实例未改变
+  ✓ P3-C-R 对照组：原生动作进行中 inflightDepth 为 1
+  ✓ P3-C-R 对照组：挂起期间同事项命令被拒绝（返回 false）
+  ✓ P3-C-R 对照组：挂起期间同事项可见状态未被提前修改（waiting）
+  ✓ P3-C-R 对照组：无冲突命令在挂起期间被接受
+  ✓ P3-C-R 对照组：原生动作权威提交成功
+  ✓ P3-C-R 对照组：无冲突命令在提交后成功重放并保留
+  ✓ P3-C-R 前置：组合启动成功
+  ✓ P3-C-R 前置：prime completeItem 成功
+  ✓ P3-C-R 前置：addUnrelated 调用成功
+  ✓ P3-C-R：bindRuntime 重绑无报错
+  ✓ P3-C-R：重绑后 loadAsync 正常载入
+  ✓ P3-C-R 实验组：事务实例已重绑（old !== new）
+  ✓ P3-C-R 实验组：新事务动作进行中 inflightDepth 为 1
+  ✓ P3-C-R 实验组：重绑后旧包装命令仍正确识别冲突并拒绝（返回 false，不绕过新实例）
+  ✓ P3-C-R 实验组：挂起期间同事项可见状态未被提前修改（waiting）
+  ✓ P3-C-R 实验组：无冲突命令被新事务实例接受并记录
+  ✓ P3-C-R 实验组：原生动作权威提交成功
+  ✓ P3-C-R 实验组：无冲突命令在提交后成功重放并保留（不被权威覆盖丢失）
+  ✓ P3-C-R 变异前置：旧永久缓存代码补丁成功应用到临时文本
+  ✓ P3-C-R 前置：组合启动成功
+  ✓ P3-C-R 前置：prime completeItem 成功
+  ✓ P3-C-R 前置：addUnrelated 调用成功
+  ✓ P3-C-R：bindRuntime 重绑无报错
+  ✓ P3-C-R：重绑后 loadAsync 正常载入
+  ✓ P3-C-R 反向变异变红：旧永久缓存写法在重绑后发生同事项命令漏判（返回 true）
+  ✓ P3-C-R 反向变异变红：旧永久缓存写法在重绑后发生状态提前泄露（waiting -> archived）
+  ✓ P3-C-R 反向变异变红：旧永久缓存写法在提交后丢失无冲突命令（unrelatedAfter=false）
+  ✓ P3-C-R 变异收口：临时变异未污染产品文件 app-core.js
+
+== B8. P3-D：事项模块业务组合与关键不变量（正向与反向变异） ==
+  ✓ P3-D 正向：组合启动成功
+  ✓ P3-D 正向：ACK 模式下 ackItem 成功且原事项状态变为 acknowledged
+  ✓ P3-D 正向：ACK 模式下 ackItem 立即派生 1 个下一期
+  ✓ P3-D 正向：ACK 派生下一期继承稳定 seriesId 与 repeatParentId 且处于 waiting
+  ✓ P3-D 正向：Calendar 模式下 ackItem 成功且状态为 acknowledged
+  ✓ P3-D 正向：Calendar 模式下 ackItem 不派生下一期（派生计数 0）
+  ✓ P3-D 正向：Calendar 模式下 completeItem 成功且状态为 archived
+  ✓ P3-D 正向：Calendar 模式下 completeItem 派生出 1 个下一期
+  ✓ P3-D 正向：Calendar 派生下一期继承稳定 seriesId 与 repeatParentId 且处于 waiting
+  ✓ P3-D 正向：stopRepeat 执行成功
+  ✓ P3-D 正向：stopRepeat 归档当前项且清除 repeat 规则
+  ✓ P3-D 正向：stopRepeat 归档未开始的未来实例且 completedAt 为 null
+  ✓ P3-D 正向：stopRepeat 严格保留历史已确认/已投递实例业务状态（仍为 acknowledged）
+  ✓ P3-D 正向：原生动作在途时 inflightDepth 为 1
+  ✓ P3-D 正向：同事项在途命令被拒绝（返回 false）
+  ✓ P3-D 正向：同事项在途可见状态未提前改变（仍为 waiting）
+  ✓ P3-D 正向：无关命令在在途期间被接受
+  ✓ P3-D 正向：promoteDue 在原生动作在途时被抑制（返回 false 且事项状态不跳变）
+  ✓ P3-D 正向：原生动作权威提交成功
+  ✓ P3-D 正向：无关命令在权威提交后成功重放并保留在状态中
+  ✓ P3-D 正向：completeItem 成功建立归档态与 undo 入口
+  ✓ P3-D 正向：持久化失败时撤销操作回滚可见状态（事项仍在 archived）
+  ✓ P3-D 正向：持久化失败时保留撤销重试入口
+  ✓ P3-D 正向：存储恢复后重试撤销成功恢复为 waiting
+  ✓ P3-D 正向：冷启动成功加载 IDB 持久化数据
+  ✓ P3-D 正向：冷启动完整保留重放事项与撤销恢复事项
+  ✓ P3-D 变异 1 前置：补丁成功
+  ✓ P3-D 反向变异 1 变红：ACK 模式未推进下一期（ackDerivedCount=0）
+  ✓ P3-D 变异 2 前置：补丁成功
+  ✓ P3-D 反向变异 2 变红：Calendar 模式完成未推进下一期（calDerivedOnCompleteCount=0）
+  ✓ P3-D 变异 3 前置：补丁成功
+  ✓ P3-D 反向变异 3 变红：撤销写失败未回滚（仍在 waiting 而非 archived）
+  ✓ P3-D 变异 4 前置：补丁成功
+  ✓ P3-D 反向变异 4 变红：promoteDue 在途未抑制（未返回 false 且跳为 due）
+  ✓ P3-D 变异收口：临时变异未污染产品文件 lib/app-items.js
+
+== B9. P3-E：原生提醒协调模块业务组合与关键不变量（正向与反向变异） ==
+  ✓ P3-E 正向：生产组合启动成功
+  ✓ P3-E 正向：单次业务保存静置后恰好执行 1 轮对账（deferNativeSync 生效防止自激）
+  ✓ P3-E 正向：单次版本漂移执行 2 轮对账完成补偿排程（driftSyncRuns === 2）
+  ✓ P3-E 正向：补偿排程后最新业务台账回写生效（driftItemEventsWritten 为 true）
+  ✓ P3-E 正向：全屏闹钟 close 动作经 resume 排空不打开详情页（closeDetailId === null）
+  ✓ P3-E 正向：全屏闹钟 ACK 动作保留 alarmEventId 且事务去重生效（ackSeen === true）
+  ✓ P3-E 正向：全屏闹钟 snooze 动作保留 alarmEventId 且事务去重生效（snzSeen === true）
+  ✓ P3-E 正向：全屏闹钟 done 动作保留 alarmEventId 且事务去重生效（doneSeen === true）
+  ✓ P3-E 正向：权威提交拒绝后事件未被持久去重占用，保留重试资格（rejectedEventSeen === false）
+  ✓ P3-E 正向：重复 ID 首项胜出（首项被修改，次项未被修改）
+  ✓ P3-E 正向：桥晚到重试成功排干对账队列（lateBridgeRuns >= 1）
+  ✓ P3-E 变异 1 前置：补丁成功
+  ✓ P3-E 反向变异 1 变红：去掉 deferNativeSync 导致保存后自激多轮对账（runs > 1）
+  ✓ P3-E 变异 2 前置：补丁成功
+  ✓ P3-E 反向变异 2 变红：漂移后提前 break 导致仅执行 1 轮对账遗漏补偿（driftSyncRuns === 1）
+  ✓ P3-E 变异 3 前置：补丁成功
+  ✓ P3-E 反向变异 3 变红：丢弃重试导致桥晚到未执行对账（lateBridgeRuns === 0）
+  ✓ P3-E 变异 4 前置：补丁成功
+  ✓ P3-E 反向变异 4 变红：首项胜破坏导致重复 ID 次项被篡改（dupSecondModified 变为 true）
+  ✓ P3-E 变异 5 前置：补丁成功
+  ✓ P3-E 反向变异 5 变红：闹钟动作走通知入口导致 close 意外弹出详情面板（closeDetailId !== null）
+  ✓ P3-E 变异收口：临时变异未污染产品文件 lib/app-native-coordinator.js
+
+== C. 可控 Android 桥：真实初始化与生命周期入口 ==
+  ✓ 原生初始化注册了本地通知动作类型（监听注册这一幕真的发生了）
+  ✓ 通知渠道被建起来（ensureChannels 走到了）
+  ✓ 本地通知监听注册了 `localNotificationActionPerformed` 与 `localNotificationReceived`
+  ✓ App 的 appStateChange 监听注册成功（回前台补偿的入口）
+  ✓ 启动时至少做过一轮原生对账（forceRebuild 那一次）
+  ✓ 15 秒心跳与 2 秒闹钟轮询都装上了
+
+== C2. O2：业务保存 → 恰好一轮对账；**内部记账不再自激下一轮** ==
+  ✓ 一次业务保存 = 恰好一轮对账（不是两轮）
+  ✓ 首次对账排下了全屏闹钟（关键档首投走闹钟通道）
+  ✓ 普通提醒通道也照常排程
+  ✓ 排程台账被记进已提交快照（业务侧真的收到了结果）
+  ✓ 提醒三态台账登记了这一轮的键，且都带有限值的 roundBase
+  ✓ 轮次身份是**同一个**（= 登记时事项的触发起点），不是每条各自的 at
+  ✓ 后续追提醒的 at 已经推后，但 roundBase 仍是那一轮的起点（R-F06 的判据）
+  ✓ 静置 500ms 期间**没有**新增对账（内部记账不再自激下一轮）
+  ✓ 静置期间也没有新增桥调用
+
+== C3. 相同计划再对账：允许一轮对账，但不许重排 ==
+  ✓ 第二次保存（计划未变）确实又对账了一轮
+  ✓ 同一计划的第二轮**不重排全屏闹钟**（签名差量生效）
+  ✓ 同一计划的第二轮也不重排普通提醒
+  ✓ 第二轮不误撤闹钟
+
+== C4. 改期：旧排程撤销 + 新排程落下 ==
+  ✓ 改期后旧闹钟被撤销（不留下幽灵闹钟）
+  ✓ 改期后按新时刻重新排下闹钟
+  ✓ 新排程用的是**新**时刻（业务改变后最终计划正确）
+
+== C5. 失败保留重试：排程失败不入账，桥恢复后下一轮补排（不谎报已排） ==
+  ✓ 排程失败的那一条**没有**被记进排程台账（不入账才可能重试）
+  ✓ 失败时既有的那条闹钟仍被保留（不因另一次失败把它忘掉）
+  ✓ 失败没有让对账整体崩掉（异常被收进 status，没有逃逸出 API）
+  ✓ 桥恢复后下一轮把那条补排上（失败保留重试闭环）
+  ✓ 补排真的调到了桥（不是只改台账）
+
+== C6. addListener 两种返回契约（真机同步句柄 / 官方 Promise）都要能启动 ==
+  ✓ 同步句柄契约下 ready() === true（init 未被同步异常打断）
+  ✓ 同步句柄契约下监听确实注册过
+  ✓ Promise 契约下 ready() === true
+  ✓ Promise 契约下监听确实注册过
+  ✓ 两种契约下都真的排起了原生链路（不是「没抛错」这么弱的判据）
+
+== C7. O5：正常保存的序列化计数（同一份独立快照给两个消费者） ==
+  ✓ 一次保存只有 **1 次**全量 JSON.parse
+  ✓ 两次 stringify 各自都有出处：① 生成 json 载荷 ② localStorage 镜像序列化
+  ✓ 镜像仍然照写（不能为了少一次 parse 把镜像去掉）
+  ✓ 权威后端（IDB）上确实落到了这次提交
+  ✓ （前置）提交确实停在半路（put 已发出，事务还没完成）
+  ✓ 落库的是**提交时刻**的独立快照（在途改内存没混进去）
+  ✓ 在途新增的事项没有被塞进这次提交（不是把活数组直接交给后端）
+
+== C8. O5：提交失败不得提前发布已提交快照（旧投递不被误停） ==
+  ✓ 权威提交失败被如实上报（不是静默成功）
+  ✓ 失败时权威后端上没有写入这次内容
+  ✓ 未提交的终态没有被当成已提交 ⇒ 旧投递**没有**被误停
+  ✓ 面板把这条在途投递作为「待处理」展示出来
+  ✓ 提交成功后已提交快照才更新 ⇒ 旧投递被停掉
+  ✓ 真实生命周期入口 visibilitychange 也被接上了（不是只有桥回调）
+
+== D. O7：默认空首页一次启动只做**一次**必要的首页 DOM 构建 ==
+  ✓ 空启动：#homeDue 只被重写 1 次
+  ✓ 空启动：#homeActive / #homeEmpty / #homeStart 各只被重写 1 次
+  ✓ 空首页确实是安静态（空态文案 + 「记一件事」入口）
+  ✓ 末尾 tick 仍然执行（心跳与轮询都装上了）
+  ✓ 持久数据启动 ready() 为真，且老数据被恢复出来
+  ✓ 到期事项在启动当期就被推进为 due（没有等到 15 秒后的那一拍）
+  ✓ 持久数据启动：#homeDue 只被重写 1 次
+  ✓ 持久数据启动：那张到期卡片就在这一次构建里渲染出来（data-id 已在 DOM 里）
+  ✓ 持久数据启动：#homeActive / #homeEmpty / #homeStart 也各只被重写 1 次
+
+== D2. O6：1000 条「已看到未完成」折叠时生成 0 张隐藏卡片 ==
+  ✓ 折叠态 #homeActive 里一张 `<article>` 都没有
+  ✓ 折叠态仍然给出数量入口（数量、文案、展开动作都在）
+  ✓ 折叠态 HTML 体积与卡片数无关（148 字节量级，而不是 600KB 量级）
+  ✓ 渲染计数佐证：折叠态生成的 active 卡片数 = 0
+  ✓ 展开后按当前状态生成全部 1000 张卡片
+  ✓ 展开后没有 hidden 属性（卡片真的可见）
+  ✓ 收起后这些卡片节点被释放（#homeActive 里重新变成 0 张）
+
+== E. O3：危险协议没有可点击入口；含引号 ID 不突破属性（走持久化 → normalizeItem → 渲染真实路径） ==
+  ✓ 13 条带链接的事项都进入「需要注意」并渲染出来（对照有效）
+  ✓ 危险协议一次都没进 href（大小写 / 前导空白 / 内嵌换行 / data / vbscript / file 全覆盖）
+  ✓ 所有可点击 href 都是 https:（白名单以外一个都不放行）
+  ✓ 危险或畸形链接没有生成可点击的 <a class="linkish">（11 条都不行）
+  ✓ 危险或畸形链接以纯文本节点呈现（linkish-plain 计 11 个）
+  ✓ 解析器明确拒绝的畸形 IPv6 / percent encoding / 端口没有被兼容正则二次放行
+  ✓ 纯文本仍然是**转义后**的（data: 那一条的 <script> 变成了 &lt;script&gt;）
+  ✓ 危险值仍然原样留在 it.url 里（降级呈现 ≠ 删用户内容）
+  ✓ 正常 HTTPS 仍然可点击，且 href 里的 & 被转义成 &amp;
+  ✓ 含引号的 ID 在 data-id 里被转义（裸引号不能出现，否则能闭合属性）
+  ✓ 含引号的 ID 没有在 HTML 里留下**裸**的 onmouseover=" 属性
+  ✓ 含引号的 ID 也没有以原始形态出现在任何位置
+  ✓ 含引号的 ID 在动作按钮上也同样被转义
+  ✓ 含引号的 ID 本身没有被改写（不顺带重编号、不删除重复 ID）
+
+== F. O4：100/500/2000 项 × 空台账 / 满台账，不再逐目标整表扫描（含优化前后对照） ==
+  ✓ n=100 空台账：**0 次**对大数组（≥64）的 find（整表扫描已消除）
+  ✓ n=100 空台账：也没有任何变化需要落库（没有借性能改动顺手改语义）
+  ✓ n=100 满台账：同样 **0 次**大数组 find（索引建一次、查 n 次）
+  ✓ n=100 满台账：业务结果正确（100 条都登记成当前轮的 scheduled）
+  ✓ n=500 空台账：**0 次**对大数组（≥64）的 find（整表扫描已消除）
+  ✓ n=500 空台账：也没有任何变化需要落库（没有借性能改动顺手改语义）
+  ✓ n=500 满台账：同样 **0 次**大数组 find（索引建一次、查 n 次）
+  ✓ n=500 满台账：业务结果正确（500 条都登记成当前轮的 scheduled）
+  ✓ n=2000 空台账：**0 次**对大数组（≥64）的 find（整表扫描已消除）
+  ✓ n=2000 空台账：也没有任何变化需要落库（没有借性能改动顺手改语义）
+  ✓ n=2000 满台账：同样 **0 次**大数组 find（索引建一次、查 n 次）
+  ✓ n=2000 满台账：业务结果正确（2000 条都登记成当前轮的 scheduled）
+  ✓ 对照（编辑前 app-core.js，n=2000 空台账）：确实在做逐目标整表扫描
+  ✓ 对照（本轮 app-core.js，n=2000 空台账）：比较次数降到 0
+  ✓ 对照结论可复算：编辑前 ≈ n²/2 量级，本轮为 0（同一数据、同一调用）
+  ✓ 对照两侧的业务结果一致（都判定为「无变化」）
+
+== F2. O4：重复 ID 首项胜、cancelled / delivered / suppressed / roundBase 语义逐条保留 ==
+  ✓ 重复 ID：登记落在**首项**上（首项胜语义没被索引改成末项覆盖）
+  ✓ delivered 是终态：后续对账不抹掉真实送达证据
+  ✓ suppressed 是终态：撤销完成时的抑制不会被对账抹掉
+  ✓ cancelled：原生确认撤销（且撤销在投递时刻之前）被如实记账
+  ✓ roundBase：没有新登记时，旧条目的轮次身份原样保留（不能被改写成当前轮）
+  ✓ 截止台账：delivered 终态保留
+  ✓ 截止台账：原生确认撤销 → cancelled（不谎报送达、也不补发）
+  ✓ 截止台账：delivered / cancelled 两类记录都还在（没有借性能改动清除旧证据）
+
+== G. O6：无显示变化的一拍不重写容器；时间 / 数量 / 展开状态变了必须重建 ==
+  ✓ 首拍：真的渲染出了卡片，且文案是「1 小时后」
+  ✓ 无显示变化的一拍：#homeDue **一次都没被重写**（不是「重写了相同内容」）
+  ✓ 无显示变化的一拍：记为 skipped，builds 不增
+  ✓ 无显示变化的一拍：容器内容逐字节相同 ⇒ 卡片节点没有被替换（焦点/滚动/忙碌态因此不受影响）
+  ✓ 跨日文案变化：容器被重建（不是只有 rev 变了才更新）
+  ✓ 重建后的文案确实换了（1 小时后 → 3 天后）
+  ✓ 新增一条到期事项 → 重建，并且卡片数是 2
+  ✓ 折叠态：入口只有数量，没有卡片
+  ✓ 展开状态变化 ⇒ 重建（展开后卡片出现）
+  ✓ #homeReview 连续两拍无变化 ⇒ 容器不重写（它本来每拍都会被调一次）
+  ✓ #homeReview 数量真的变了 ⇒ 立刻重建（不滞后）
+  ✓ 启动期 #homeNotice 只被写 1 次（原先每读一次原生状态就重写一次同一段内容）
+  ✓ 启动期 #homeSetup 只被写 1 次
+  ✓ 总开关默认关闭 ⇒ 告知条给的是「后台提醒已关闭」，不是权限话术（Q6 的既有结论）
+  ✓ 优先级：总开关关闭 + 权限被拒 → 说的是「开关」，不是「去授权」
+  ✓ 优先级：总开关打开 + 权限被拒 → 才是权限话术
+  ✓ 链路正常（权限给了、对账没报错）→ 没有告知条
+  ✓ 结论**没变**（仍被总开关话术遮住）⇒ 容器不重写，也没被误升级成权限警告
+  ✓ 结论真的变了 ⇒ 立刻更新（不滞后）
+  ✓ 同一结论重复到达 3 次 ⇒ 容器一次都没被重写（内容相同就不重建）
+  ✓ 断链消失 ⇒ 告知条被清空（权限恢复后警告不残留）
+  ✓ 清空之后再次到达同一结论 ⇒ 仍然不重写
+
+== G2. O6：首页签名保留数组与字段边界，用户内容不能制造碰撞 ==
+  ✓ ["work,home"] → ["work", "home"]：无需重载就重建为两个标签
+  ✓ 字段中出现旧 SEP 字符也不会把 title/note 边界混在一起
+  ✓ 项目字段中出现旧 ROW 字符也不会把相邻项目边界混在一起
+  ✓ 结构化签名在内容不变时仍保持短路，不牺牲原优化
+
+== H. O7：深链 / 分享入口不为满足「1 次」而丢功能，也不先渲染一次首页再切走 ==
+  ✓ 深链 ?tab=future：ready 且路由生效
+  ✓ 深链 ?tab=future：futureSeg 被落到 waiting（保留原语义）
+  ✓ 深链 ?tab=future：首页三个卡片容器一次都没被渲染（不是「先渲染首页再切走」）
+  ✓ 深链 ?tab=future：末尾 tick 仍然执行（心跳没被路由分支吞掉）
+  ✓ 分享参数：ready 且被路由回首页
+  ✓ 分享参数：标题确实进了表单（捕获发生在初始化里，不是被渲染短路掉）
+  ✓ 分享参数：首页容器各只写 1 次（捕获与渲染合并成一次）
+
+========== 生产组合启动测试结果 ==========
+通过: 935  失败: 0
+全部通过。
+  ✓ Q1 启动链完整跑完（ready() === true）
+
+== 1. 自然语言时间解析 ==
+  ✓ 周五解析出 trigger
+  ✓ 周五标题含 Horolog
+  ✓ 周五 confidence high/mid
+  ✓ 低置信度
+  ✓ 低置信度仍给出时间（供上层按 D17 覆盖）
+  ✓ D17 兜底落在下一个整理窗口起点
+  ✓ D17 兜底不再是一周后
+  ✓ 截止时间
+  ✓ 提前五天 trigger
+  ✓ deadline 在 9/30
+  ✓ 每两周 ACK 模式
+  ✓ 每月底 monthEnd
+  ✓ 每月第N个星期X
+  ✓ 明天下午3点
+
+== 2. Attention Lifecycle（ACK ≠ Complete） ==
+  ✓ 到期 promote 到 due
+  ✓ due 时 isDue=true
+  ✓ ACK 后 status=acknowledged
+  ✓ ACK 后不是 completed/archived
+  ✓ ACK 后 isDue=false（不再自动算到期）
+  ✓ acknowledgedAt 已写入
+  ✓ Complete 后 archived
+  ✓ completedAt 已写入
+
+== 3. 稍后 / 再提醒 / 恢复 ==
+  ✓ snooze 后 snoozed
+  ✓ snooze 时间正确
+  ✓ snoozeCount+1
+  ✓ reopen 回到 snoozed
+  ✓ restore 回到 waiting
+  ✓ restore 清除 completedAt
+  ✓ restore 不设 trigger_at（D23）
+
+== 3b. 决策落地 D5/D7/D17/D23/D25 ==
+  ✓ D17 NEEDS_REVIEW 不进 due
+  ✓ D17 Review 关闭后正常 due
+  ✓ D25 关键档 delivery_mode=alarm
+  ✓ D25 未标记取默认 notification
+  ✓ D25 默认 alarm 时未标记为 alarm
+  ✓ D22 followupMs=60min
+  ✓ D22 maxFollowups=2
+  ✓ D15 识别具体时间词
+  ✓ D15 模糊词不算具体时间
+
+== 3c. 首页信息架构 D5/D6/D7/D8 ==
+  ✓ D5 首页不出现「即将到来」
+  ✓ D5 #homeUpcoming 不承载任何内容
+  ✓ D5 未来事项不上首页
+  ✓ D5 需要注意区块正常渲染
+  ✓ D7 已看到未完成折叠成一行带数量
+  ✓ D7 明细默认隐藏
+  ✓ D6 有待整理 → 入口常驻
+  ✓ D6 入口形态与窗口/宽限期判定一致
+  ✓ D7 单条也折叠不直接列出
+  ✓ D8 空态含「今天已完成 1 件」
+  ✓ D8 完成数是纯文字不可点击
+  ✓ D6 无待整理 → 入口完全不渲染
+
+== 3d. 整理会话出口（P0-3） ==
+  ✓ P0-3 会话含「稍后」出口
+  ✓ P0-3 会话含「跳过本次」出口
+  ✓ P0-3 卡片三动作仍在
+  ✓ P0-3 二次渲染后出口仍在
+  ✓ P0-3 稍后五档选项未被破坏
+
+== 3e. 弹条与全屏动作语义 D12/D13/D14 ==
+  ✓ D14 弹条已挂起
+  ✓ D14 自动收起不消耗提醒预算
+  ✓ D14 自动收起不写抑制
+  ✓ D13 关闭写入 30 分钟抑制
+  ✓ D13 关闭不写 ACK、不写完成
+  ✓ D12 全屏「关闭」不写 ACK
+  ✓ D12 全屏「我知道了」写 ACK 且不归档
+
+== 3f. 整理会话提醒节奏 D20/D22 ==
+  ✓ D22 窗口内不再每分钟重复发（回归）
+  ✓ D20 稍后到点照发一次
+  ✓ D20 宽限期后 snoozedUntil 被清空
+  ✓ D20 次日窗口仍能正常提醒
+  ✓ 迁移 旧 lastSessionKey 被作废
+  ✓ N4 长窗口首发加两次补充，23:00 不再发
+  ✓ N4 跨午夜同一窗口只有三次
+  ✓ N4 零点窗口不被默认值覆盖
+  ✓ N4 勿扰结束窗内只发一次，终点不含
+  ✓ N4 主动稍后仍遵守勿扰，顺延后跨窗仅一次
+
+== 3g. 环境判断健壮性 ==
+  ✓ 不再使用 `"Notification" in window` 判断
+  ✓ showSystemNotification 走真值判断
+
+== 相对时间实际录入保存 ==
+  ✓ 三分钟以后提醒我 保存为三分钟后
+  ✓ 三分钟以后提醒我 不落兜底
+  ✓ 三分钟以后提醒我 保留有效标题
+  ✓ 三分钟以后提醒我 使用相对时长调度
+  ✓ 三分钟以后提醒我 原生对账不截断秒数
+  ✓ 三分钟以后提醒我 原生排程保持三分钟
+  ✓ 三分钟以后提醒我喝水 保存为三分钟后
+  ✓ 三分钟以后提醒我喝水 不落兜底
+  ✓ 三分钟以后提醒我喝水 保留有效标题
+  ✓ 三分钟以后提醒我喝水 使用相对时长调度
+  ✓ 三分钟以后提醒我喝水 原生对账不截断秒数
+  ✓ 三分钟以后提醒我喝水 原生排程保持三分钟
+  ✓ 手选时间仍覆盖相对表达
+
+== 3h. 业务逻辑回归（L01–L08 / D23） ==
+  ✓ L01 手选时间原样保存
+  ✓ L01 手选时间不落兜底标记
+  ✓ L01 低置信度仍进入待整理（内容质量）
+  ✓ L01 无时间且无手选 → 兜底为下一个整理窗口
+  ✓ L01 有真实时间的待整理照常进 due
+  ✓ L02 截止临近 → 重新唤醒为 due
+  ✓ L02 已记录阶段身份
+  ✓ L02 ACK → acknowledged
+  ✓ L02 同一阶段内 ACK 不再被拉回 due
+  ✓ L02 到下一保护阶段才再次唤醒
+  ✓ L03 calendar 周期 ACK 不改原定日期
+  ✓ L03 完成后生成下期
+  ✓ L03 锚定原定日期（10月1日而非完成日的下月）
+  ✓ L03 ACK 保持 acknowledged（确认不等于完成）
+  ✓ L03 ACK 周期确认后生成下一期实例
+  ✓ L03 下一期按 ACK 时刻 +14 天并保留原时刻
+  ✓ V04 ACK 后完成，仍保留一个活跃的下一期（不归零）
+  ✓ L03 月末不因 setMonth 溢出跳月
+  ✓ V04 「停止重复」终止规则并归档当前实例
+  ✓ F3 ACK 后已派生下一期
+  ✓ F3 「停止重复」终止系列后无未归档或带 repeat 的活跃事项
+  ✓ F3 未来实例未完成不虚增已完成数（completedAt 为空）
+  ✓ F3 完成后生成了下一期
+  ✓ F3 从历史已完成入口停止重复，未来实例同样被终止
+  ✓ V04 月末 09:00 严格推进到下一期
+  ✓ L04 同一完成事件重复投递只推进一次周期
+  ✓ L04 已完成事项不接受旧 ACK
+  ✓ F5 版本缺失的闹钟动作不改动状态
+  ✓ F5 版本为 0 的闹钟动作不改动状态
+  ✓ F5 版本匹配的闹钟动作正常执行
+  ✓ F2 首次事件执行
+  ✓ F2 重放的同一事件被跳过
+  ✓ F2 持久化失败时向外上抛异常
+  ✓ F2 持久化失败时未记录 alarmEventLog
+  ✓ F2 存储恢复后重试成功
+  ✓ L05 会话含两条队列
+  ✓ L05 兜底记录确认后顺延到下一个整理窗口
+  ✓ L05 确认后前进到下一条
+  ✓ L05 「留着待整理」保留本条状态并前进
+  ✓ L05 明确采用的时间被采纳且解除兜底
+  ✓ L06 「稍后 30 分钟」按 30 分钟生效
+  ✓ L06 「今天跳过」到下一个整理窗口前不再提醒
+  ✓ V05 编辑保存推进数据版本
+  ✓ V05 编辑改期重置追提醒轮次（L08 缺口）
+  ✓ V05 旧版本的通知动作被拒绝
+  ✓ F1 首次记账写库
+  ✓ F1 两个阶段同时在表（不互相覆盖）
+  ✓ F1 计划未变时不再写库（不再持续对账）
+  ✓ G3 投递时刻已过也不推断为已送达（保持待定）
+  ✓ F1 待定阶段不再重复对账写库
+  ✓ F1 系统送达回调才落库为已送达
+  ✓ F1 已送达的阶段不再重排
+  ✓ G3 空计划下已过去的排程保持待定，不得推断为已送达
+  ✓ G3 原生确认撤销的排程记为 cancelled
+  ✓ G3 撤销不得覆盖已送达的终态
+  ✓ F1 截止时间清除后历史阶段记录被清理
+  ✓ V06 兜底记录仍被截止保护拉起（INV-05）
+  ✓ V06 过期兜底不出现在「需要注意」
+  ✓ L08 稍后重置轮次与预算
+  ✓ D23 重开不设 trigger_at
+  ✓ D23 重开默认暂停截止保护
+  ✓ D23 暂停期间不因截止被拉回 due
+  ✓ D23 显式恢复后保护重新生效
+
+== 4. Deadline Protection ==
+  ✓ ACK 但截止临近 → 再次 due
+  ✓ 远期截止不强制拉回
+
+== 5. 周期下一跳 ==
+  ✓ 每天 +1 天
+  ✓ monthEnd 是月末
+  ✓ nthWeekday 是周二
+  ✓ nthWeekday 在月内第2个周二区间
+  ✓ repeatLabel monthEnd
+  ✓ repeatLabel nth
+
+== 6. 勿扰时段 ==
+  ✓ 23:30 在勿扰内
+  ✓ 08:00 不在勿扰内
+  ✓ 勿扰结束到次日 07:30
+  ✓ 勿扰中普通事项不立刻 due
+  ✓ 勿扰中重要事项仍 due
+
+== 7. 相似事项提示（不合并） ==
+  ✓ 找到相似
+  ✓ 不相似不提示
+  ✓ 不自动删除/合并
+
+== 8. 本地持久化（模拟离线） ==
+  ✓ 已写入 localStorage
+  ✓ load 成功
+  ✓ load 恢复事项
+
+== 9. 首页分桶规则 ==
+  ✓ Future 不算 due
+  ✓ ACK 不算 due
+  ✓ due 计入首页
+
+== 10. D43 提醒台账与 H-07 降级恢复 ==
+  ✓ D43 落库：已排的触发点记为 scheduled
+  ✓ D43 无变化不写库（否则 save→对账 会自激）
+  ✓ D43 已送达是终态，不被后续对账抹掉
+  ✓ D43 撤销且投递时刻未到 → cancelled（撤销 ≠ 送达）
+  ✓ D43 触发点改到更晚 → 旧触发点的记录作废（台账不无限增长）
+  ✓ H-07 没有待回放凭据时不误判
+  ✓ H-07 有待回放快照时采用它作为权威状态（降级期改动不再静默丢失）
+  ✓ H-07 重放成功后清除凭据（不重复重放）
+  ✓ H-07 降级写入留待回放凭据的接线在位
+  ✓ H-07 加载时先重放再回落到 IDB 旧值（P2-C-R 起：重放成功即判定为 loaded）
+  ✓ H-07 重放**应用失败**不再被折叠成「没有快照」，而是判 failed 并关掉写闸门
+  ✓ H-07 覆盖「IDB 打不开 → 后端整体降级为 local」这条路径（storageReady 仍为 true）
+  ✓ H-07 仍在镜像上跑时不得重放（否则凭据被提前清掉，IDB 恢复后拿不回来）
+  ✓ H-07 待回放键与权威键分离（不会污染镜像）
+
+== 11. H-08 投递归因：无通知权限必须被直说 ==
+  ✓ P2-D：AttentionLib.AppDiagnostics 已加载且导出工厂
+  ✓ P2-D：模块求值零副作用（不注册监听、不起定时器）
+  ✓ P2-D：bind() 第一次绑定诊断按钮与 visibilitychange
+  ✓ P2-D：bind() 幂等 —— 第二次调用不增加任何监听
+  ✓ P2-D：createAppDiagnostics 缺依赖时立刻抛错（不装半套实例）
+  ✓ P2-D：app-core 不再保留 describeAlarmDelivery 算法体（只转发）
+  ✓ P2-D：投递快照优先级逻辑在 lib/app-diagnostics.js
+  ✓ MUT-DIAG-CARRIER 变异必红：删掉 carrier 证据优先级会改变「已响未亮」结论
+  ✓ MUT-DIAG-SNAPSHOT 变异必红：删掉投递时快照优先级会改变缺权限归因
+  ✓ H-08 投递时无通知权限 → 归因指向「全屏没有载体」
+  ✓ H-08 与「缺全屏通知权限」同时命中时，先说根因（通知没有载体）
+  ✓ H-08 老记录（无该键）不被误判成无通知权限
+  ✓ H-08 权限齐备时保持原有归因（不改变既有结论）
+  ✓ A-03 其他应用前台时：通知已提交但全屏未显示，必须明确提示检查系统横幅开关
+  ✓ A-03 其他应用前台时：原生未确认通知提交，不得冒充系统横幅已投递
+  ✓ H-08 界面确实显示出来时仍以「已显示」为准（不误报）
+  ✓ D59 载体为前台服务时 label 改为「已响未亮」，不再说整个闹钟没响
+  ✓ D59 界面回落自播也算「已响」（降级路径必须在面板上可见）
+  ✓ D59 载体确实为空时才保持「无通知权限」，且如实说没有任何载体在响
+  ✓ D59 载体归属不明时不冒充结论（老 APK 读不到该键）
+
+== 11b. D64 门禁：归因用「投递当时」的权限，且非精确排程必须说出来 ==
+  ✓ D64 快照说「缺全屏通知权限」时，活值说「有」也不得盖过它
+  ✓ D64 反向：快照说「有权限」时不得被活值拉回「缺权限」
+  ✓ D64 老记录（无快照键）回退读活值，既有结论不变
+  ✓ D64 投递时无精确闹钟权限 → 归因里明说是「非精确」排程
+  ✓ D64 无通知权限那条分支同样带上非精确提示（不能只在一个分支说）
+  ✓ D64 负向对照：精确排程时不得凭空出现非精确提示
+  ✓ D64 老记录缺 exactAtDelivery 键时按「精确」处理，不凭空指控
+
+== 11b. A-2 后台链路断了，首页必须直说（基线 §473 / AC-14） ==
+  ✓ A-2 无通知权限 → 告知条出现，且必须写「无法保证提醒」
+  ✓ A-2 权限文案不得说成「闹钟不响 / 没有任何提醒」（D59：声音不依赖通知权限）
+  ✓ A-2 权限文案必须点出真正丢失的两项能力：没有通知 + 屏幕不会亮
+  ✓ A-2 总开关未开 → 与「权限没给」分开说，并指向「我的」而不是系统授权
+  ✓ A-2 原生桥始终不就绪 → 告知条说是「提醒能力未就绪」
+  ✓ A-2 对账失败 → 告知条说是「同步失败、排程可能没落地」
+  ✓ A-2 状态未定（unknown）不得出声
+  ✓ A-2 权限齐备且对账正常时首页保持安静（不新增常驻噪音）
+  ✓ A-2 仅「精确闹钟未授权」不进首页
+  ✓ A-2 非原生环境（PWA / 浏览器）不得出现告知条
+  ✓ A-2 权限被撤销后：首页 DOM 里真的出现告知条（带 data-notice-kind）
+  ✓ A-2 权限恢复后：同一条通路把告知条自动清掉（基线 §473 后半句）
+  ✓ A-2 用户自己关掉总开关也出声，且指向「我的」
+  ✓ A-2 复位后首页回到安静态（非原生不得留残余告知条）
+  ✓ A-2 负向对照：Web 下走完整 renderHome() 也不得出告知条
+
+== 12. 导出文件：原生保存、诚实反馈与旧格式兼容 ==
+  ✓ 导出保持旧 JSON 顶层结构
+  ✓ 中文事项/笔记/项目原样进入备份
+  ✓ AI 密钥与 baseUrl 继续排除
+  ✓ Android 通过 SystemBridge 传一次 UTF-8 JSON 快照
+  ✓ 保存后显示 provider 返回的真实同名文件名与逻辑位置
+  ✓ 原生保存完成后按钮与说明恢复可用
+  ✓ 系统对话框等待期间防重复点击
+  ✓ 等待期间业务状态变化不会改写点击时快照
+  ✓ 取消与切后台返回后恢复可重试且不报成功
+  ✓ 写入失败恢复按钮且允许重试
+  ✓ 未知路径不虚构普通文件路径
+  ✓ Android 缺少原生保存能力时明确不可用且不退回网页下载
+  ✓ 浏览器无分享能力时发起 download
+  ✓ 浏览器下载只提示已发起并引导查看下载记录
+  ✓ 分享取消不自动触发第二次下载
+  ✓ 空备份仍是可被旧导入识别的数组结构
+  ✓ Android 保存使用 ACTION_CREATE_DOCUMENT，交由系统处理同名而非静默覆盖
+  ✓ 原生成功门槛包含 UTF-8 write、flush、close 后 resolve
+
+== 13. PRD 验收主路径 ==
+  ✓ ① 解析并保存 waiting
+  ✓ ② 到期 delivered/due
+  ✓ ③ 我知道了 → acknowledged
+  ✓ ④ 稍后 → snoozed/回 Future
+  ✓ ⑤ 再次到期
+  ✓ ⑥ 完成 → archived
+  ✓ ⑦ ACK 过程中从未自动变成 complete
+
+== 13. 初学者模式与正常模式（双模式） ==
+  ✓ 默认使用模式为初学者模式
+  ✓ 初学者模式下 body 带有 mode-beginner
+  ✓ 初学者模式下 body 不带 mode-normal
+  ✓ 初学者模式空首页包含新手指南入口
+  ✓ 切换后 userMode 为 normal
+  ✓ 正常模式下 body 带有 mode-normal
+  ✓ 正常模式下 body 不带 mode-beginner
+  ✓ 正常模式仍保留首页可靠性设置入口
+  ✓ 正常模式空首页不包含新手指南入口
+  ✓ 备份包含 userMode: normal
+  ✓ 还原后 userMode 为 beginner
+  ✓ 还原后 body 带有 mode-beginner
+
+== UI 缺陷回归：收起面板与 hidden 属性（真机截图发现） ==
+  ✓ 收起的面板 visibility: hidden（仅靠位移会在底部露出一截「演示（只读）」等标题）
+  ✓ 收起时 visibility 延迟到位移动画结束才生效
+  ✓ 展开的面板 visibility: visible 且立即可见
+  ✓ [hidden] 统一 display:none，作者样式（如 .nav-badge 的 grid）不能盖过它
+
+========== 结果 ==========
+通过: 270  失败: 0
+全部通过。
+
+== N5 / D13 整理四条即时落盘，重启仅继续剩余六条 ==
+  ✓ D13 第 1 条确认后立即持久化
+  ✓ D13 第 2 条确认后立即持久化
+  ✓ D13 第 3 条确认后立即持久化
+  ✓ D13 第 4 条确认后立即持久化
+  ✓ D13 重启只剩六条待整理
+  ✓ D13 重启会话不包含已经确认的四条
+
+== G1 同一事件的并发消费必须落到同一次提交上 ==
+  ✓ G1 第二次调用不得在首次提交完成前返回成功
+  ✓ G1 提交失败时两次调用一起失败
+  ✓ G1 提交失败后事件不得记入台账（否则重放会被误判为已处理）
+  ✓ G1 提交失败后原事项完整回滚
+  ✓ G1 提交失败后不得残留派生实例
+  ✓ G1 提交恢复后同一事件可正常重试
+
+== G1 提交失败时不得确认删除原生事件；两个消费入口不得重复处理 ==
+  ✓ G1 提交失败时不得确认删除原生事件
+  ✓ G1 提交失败后事件仍在队列里可重试
+  ✓ G1 提交恢复后重试成功
+  ✓ G1 事件只被确认删除一次
+
+== G1 并发进入两个消费入口时，同一事件只处理一次 ==
+  ✓ G1 排空队列是串行的（handler 只被调用一次）
+
+== G2 动作与周期派生必须是一次提交 ==
+  ✓ G2 提交失败向外上抛异常
+  ✓ G2 提交失败后不得残留派生出来的下一期
+  ✓ G2 提交失败后不得残留 ackAdvancedAt
+  ✓ G2 提交失败后原事项完整还原
+  ✓ G2 提交恢复后重试只派生一期（不是两期）
+  ✓ G2 重试后原事项为已确认且记录了推进时刻
+
+== H2 备用镜像（localStorage）写失败，不得把已提交的事务说成没提交 ==
+  ✓ H2 镜像写失败不影响权威提交（不上抛）
+  ✓ H2 内存保持已确认，不回滚用户看到的结果
+  ✓ H2 已派生的下一期保留
+  ✓ H2 事件台账已落库
+  ✓ H2 重启后与用户看到的一致（读回已确认 + 下一期）
+
+== H2 有 IndexedDB 时权威后端说了算；没有它时 localStorage 才是权威 ==
+  ✓ H2 权威提交失败如实上抛
+  ✓ H2 权威失败后内存完整回滚
+  ✓ H2 权威失败后事件不记入台账（原生事件保留待重试）
+State save failed: commit failed
+  ✓ H2 权威失败后重启与回滚后的内存一致（不会反而显示已确认）
+  ✓ H2 无 IndexedDB 时 localStorage 是权威，写失败必须上抛
+  ✓ H2 无 IndexedDB 时写失败同样完整回滚
+
+== H1 闹钟提交进行中，普通用户操作的保存不得被静默丢弃 ==
+  ✓ H1 前置：闹钟动作的写事务已进入队列（数据已克隆）但未提交
+  ✓ H1 普通保存不得被吞掉（已排队待提交）
+  ✓ I1 但它的快照必须排在动作成败之后生成（此刻还没有取快照）
+  ✓ H1 内存里两件事都完成了
+  ✓ H1 提交期间用户完成的另一事项必须落库
+  ✓ H1 闹钟动作本身也落库
+  ✓ H1 重启后与用户看到的一致
+
+== I1 前一笔记账失败、后一笔成功，也不得把失败的那笔重新写回去 ==
+  ✓ I1 前置：A 的提交确实失败
+  ✓ I1 内存：A 回到待处理、派生实例撤回、事件未记台账
+  ✓ I1 磁盘：A 不得被重新写成已确认
+  ✓ I1 磁盘：不得残留派生出来的下一期
+  ✓ I1 磁盘：不得留下该事件的已处理标记
+  ✓ I1 磁盘：B 保持已归档
+  ✓ I1 重启后：A 仍是待处理且无派生残留
+  ✓ I1 重启后：B 仍是已归档
+  ✓ I1 重启后：事件台账没有该事件的已处理标记
+
+== H1 同一事项提交未决时，用户操作必须显式拒绝且不得伪装成功 ==
+  ✓ H1 同事项操作返回 false
+  ✓ H1 拒绝时不修改最后确认状态
+  ✓ H1 拒绝时给出明确反馈
+  ✓ H1 前置：这笔提交确实失败了
+  ✓ H1 原生提交失败后仍保持最后确认状态
+
+== G3 截止阶段：撤销 / 待投递 / 已送达必须分开 ==
+  ✓ G3 已越过计划时刻的待投递阶段不得被改写成已送达
+  ✓ G3 原生确认撤销的排程记为 cancelled
+  ✓ G3 撤销不得覆盖已送达的终态
+  ✓ G3 已越过投递时刻才被撤销的阶段保持待定（不谎报送达、也不盲目补发）
+  ✓ G3 系统送达回调才落库为已送达
+
+== G3 三种状态在原生排程上的行为必须不同 ==
+  ✓ G3 已撤销的阶段在保护点已过时补提醒（这就是被漏掉的那次提醒）
+  ✓ G3 已送达的阶段不再补提醒
+  ✓ G3 待投递且已过点的阶段不重复排、也不补发
+
+== G3 原生对账必须上报被撤销的截止排程 ==
+  ✓ G3 关闭通知后原生上报被撤销的截止排程
+  ✓ G3 撤销本身仍照常执行
+  ✓ G3 仍保留「本轮计划中的截止排程」回传通道
+
+== G4 停止重复 = 终止规则 + 只归档未开始的未来实例 ==
+  ✓ G4 前置：ACK 派生出未开始的下一期
+  ✓ G4 前置：当前实例仍是未完成的历史确认态
+  ✓ G4 已确认但未完成的历史实例不得被归档
+  ✓ G4 历史实例不得被写入 completedAt（不该混进「今天已完成 N 件」）
+  ✓ G4 历史实例的确认时间保持不变
+  ✓ G4 历史实例仍在待处理范围（未进入归档）
+  ✓ G4 整个系列的规则都已终止（历史实例不再派生）
+  ✓ G4 只归档被操作的那一条，历史实例不受牵连
+  ✓ G4 被操作的实例计入完成（用户明确归档它）
+
+== G4 从历史入口停止重复：归档当前实例，但不牵连其他历史 ==
+  ✓ G4 前置：系列里有两条历史 + 一条未来
+  ✓ G4 被操作的那一条归档并记录完成时间
+  ✓ G4 另一条历史实例保留原业务状态
+  ✓ G4 未来实例被归档但不计完成
+
+== G4 停止重复后历史实例不再产生周期提醒排程 ==
+  ✓ G4 终止后历史实例不再排出周期提醒
+
+== J1 队列里已有的普通保存，不得把后到的 ACK 提前提交 ==
+  ✓ J1 前置：S0 已取过快照、写事务排队中
+  ✓ J1 前置：B 的保存已排队但尚未取快照
+  ✓ J1 动作的状态变更必须等轮到它才生效（此刻 A 仍是待处理）
+  ✓ J1 动作不得抢先写内存事件台账
+  ✓ J1 前置：A 的提交确实失败
+  ✓ J1 内存：A 回到待处理、无派生残留、事件未记台账
+  ✓ J1 磁盘：较早的普通保存不得把 A 的 ACK 提前写进去
+  ✓ J1 磁盘：不得残留派生出来的下一期
+  ✓ J1 磁盘：不得留下该事件的已处理标记
+  ✓ J1 磁盘：B 保持已归档
+State save failed: commit failed
+  ✓ J1 重启后：A 仍是待处理且无派生残留
+  ✓ J1 重启后：B 仍是已归档
+State save failed: commit failed
+  ✓ J1 重启后：事件台账没有该事件的已处理标记
+
+== K1 周期 ACK 提交中拒绝完成；失败落定后可安全重试 ==
+  ✓ K1 前置：未提交 ACK 保持隔离，不提前显示派生下一期
+  ✓ K1 前置：提交未决时完成被明确拒绝
+  ✓ K1 ACK 失败落定后允许重试完成
+  ✓ K1 ACK 提交失败如实上抛
+  ✓ K1 用户完成的本期必须保持已完成（不得被回滚覆盖）
+  ✓ K1 恰好存在一个有效下一期（周期不得静默中断）
+  ✓ K1 切掉失败 ACK 的痕迹（不残留 ackAdvancedAt）
+  ✓ K1 不残留已处理失败事件标记
+  ✓ K1 磁盘：本期已完成
+  ✓ K1 磁盘：恰好一个有效下一期
+  ✓ K1 磁盘：不残留已处理失败事件标记
+  ✓ K1 重载后：本期已完成且恰好一个有效下一期
+  ✓ K1 重载后：周期仍在（下一期带 repeat 规则）
+  ✓ K1 重载后：不残留已处理失败事件标记
+
+== K1 对照：ACK 提交成功时，完成本期不得重复派生 ==
+  ✓ K1 对照：ACK 成功派生出下一期
+  ✓ K1 对照：完成本期不重复派生
+  ✓ K1 对照：本期已完成、下一期仍有效
+
+== M1 原生稍后未决时拒绝第二次稍后，失败落定后可重试 ==
+  ✓ M1 前置：未提交原生稍后保持隔离
+  ✓ M1 前置：第二次稍后被明确拒绝
+  ✓ M1 失败落定后第二次稍后可重试
+  ✓ M1 闹钟动作提交失败如实上抛
+  ✓ M1 内存：第二次稍后完整保留（snoozed + elapsed + 四小时后 + 延迟）
+  ✓ M1 内存：elapsed 三件套自洽（snoozedAt + snoozeDelayMs === triggerAt）
+  ✓ M1 内存：不残留失败动作的痕迹（事件未记台账、无确认时间）
+  ✓ M1 磁盘：第二次稍后完整保留
+  ✓ M1 重载后：仍是 snoozed/elapsed，第二次选择的时间与延迟完整保留
+  ✓ M1 重载后：不残留失败动作的已处理标记
+
+== M1 原生稍后未决时拒绝 wall-clock 改期，失败后可重试 ==
+  ✓ M1b 前置：第二次稍后按钟点被明确拒绝
+  ✓ M1b 失败落定后按钟点稍后可重试
+  ✓ M1b 闹钟动作提交失败如实上抛
+  ✓ M1b 内存：按钟点的稍后完整保留
+  ✓ M1b 内存：不残留失败动作的痕迹
+  ✓ M1b 重载后：仍是 snoozed/wall-clock 且按钟点重算得到同一个时刻
+
+== M1 提交在途期间拒绝同事项编辑，并保留表单供重试 ==
+  ✓ M1c 前置：未提交 ACK 不提前进入可见状态
+  ✓ M1c 前置：编辑未写入事项且表单仍保留
+  ✓ M1c ACK 提交失败如实上抛
+  ✓ M1c 编辑结果完整保留（标题 / 备注 / 钟点时间）
+  ✓ M1c 失败的 ACK 不得到处留痕（无确认时间、事件未记台账、状态按编辑结果走）
+  ✓ M1c 磁盘：编辑结果完整保留
+  ✓ M1c 重载后：编辑结果完整保留且不残留已处理失败事件标记
+
+== M1 无关事项的操作不得被重复施加（派生实例不能翻倍） ==
+  ✓ M1d 前置：另一条周期事项已确认并派生一期
+  ✓ M1d 闹钟动作提交失败如实上抛
+  ✓ M1d 无关事项的操作不得被重复施加（派生实例仍是 1 期）
+  ✓ M1d 被操作事项回滚到位
+  ✓ M1d 磁盘：派生实例仍只有 1 期
+  ✓ M1d 重载后：派生实例仍只有 1 期
+
+== N1 周期事项提交中拒绝 UI 确认，失败后重试只派生一期 ==
+  ✓ N1 前置：未提交原生稍后不污染可见状态
+  ✓ N1 前置：UI 确认被明确拒绝
+  ✓ N1 失败落定后 UI 确认可重试
+  ✓ N1 原生稍后提交失败如实上抛
+  ✓ N1 用户确认保留（已完成的操作不得被回滚吃掉）
+  ✓ N1 恰好一个下一期（首次执行的副作用必须已被撤销）
+  ✓ N1 下一期按**有效状态**计算（不得带上失败动作的时间影响）
+  ✓ N1 下一期沿用同一个 id（后续针对它的操作才不会失联）
+  ✓ N1 失败动作不留已处理标记
+  ✓ N1 失败动作的状态痕迹已清除（不再是被它改成的稍后）
+  ✓ N1 重载后：仍是「已确认 + 恰好一个下一期」
+  ✓ N1 重载后：下一期的时刻仍按有效状态
+  ✓ N1 重载后：不留失败动作的已处理标记
+
+== N1 相关事务未决时拒绝，落定后连续操作不得丢失 ==
+  ✓ N1b 未决时确认被拒绝且不暴露派生实例
+  ✓ N1b 落定后派生实例已被连续改到 3 小时后
+  ✓ N1b 提交失败如实上抛
+  ✓ N1b 仍是恰好一个下一期
+  ✓ N1b 用户对派生实例的修改被保留（id 复用 + 重放命中同一个实例）
+  ✓ N1b 源事项仍是已确认
+  ✓ N1b 重载后：派生实例的修改仍在、且只有一个下一期
+
+== N1 日历周期：提交中拒绝完成，落定后顺延仍锚定有效状态 ==
+  ✓ N1c 前置：未提交 ACK 保持隔离
+  ✓ N1c 前置：完成被明确拒绝且未派生
+  ✓ N1c 失败落定后完成可重试
+  ✓ N1c 提交失败如实上抛
+  ✓ N1c 完成结果保留且只派生一期
+  ✓ N1c 日历周期的顺延锚定原定日期（不是完成时刻，更不是失败动作改过的时间）
+  ✓ N1c 失败的 ACK 不留痕迹
+  ✓ N1c 重载后：本期已完成、恰好一个有效下一期
+
+== P1-A 保存期间用真实表单新建的事项，回滚不得删掉 ==
+  ✓ P1-A 前置：真实表单新建成功
+  ✓ P1-A 失败动作如实上抛
+  ✓ P1-A 新建的事项仍在（内存）
+  ✓ P1-A 失败动作自身被撤销（不残留稍后）
+  ✓ P1-A 新建的事项已落库
+  ✓ P1-A 重载后：新建的事项完整保留（标题 / 时间）
+
+== P1-A 期间连续新建两条，都不得丢 ==
+  ✓ P1-A2 前置：两条都已建立且 id 不同
+  ✓ P1-A2 两条新建都保留且各只有一条
+  ✓ P1-A2 顺序与时间都保持
+  ✓ P1-A2 重载后：两条都在
+
+== P1-A 期间新建后再编辑 / 再删除，结果都要保住 ==
+  ✓ P1-A3 前置：编辑已生效
+  ✓ P1-A3 新建后编辑：不重复、且保留编辑结果
+  ✓ P1-A3 重载后：编辑结果仍在
+  ✓ P1-A4 前置：新建后删除已生效
+  ✓ P1-A4 用户的删除被保留（不得复活）
+  ✓ P1-A4 重载后：仍然没有那条
+
+== P1-B 未决时不暴露派生实例，失败落定后可派生并编辑 ==
+  ✓ P1-B 前置：同事项确认被拒绝且派生实例不可见
+  ✓ P1-B 落定后派生实例的编辑已生效
+  ✓ P1-B 失败动作如实上抛
+  ✓ P1-B 仍只有一个下一期且 id 不变
+  ✓ P1-B 用户在派生实例上的编辑被保留（不得写到已被替换的旧对象上）
+  ✓ P1-B 重载后：编辑仍在
+
+== P1-B 落定后派生 → 编辑 → 再稍后，三件事都要保住 ==
+  ✓ P1-B2 前置：同事项确认被拒绝
+  ✓ P1-B2 只有一个下一期
+  ✓ P1-B2 编辑与稍后都被保留（id 复用 + 按 id 重放）
+  ✓ P1-B2 重载后：编辑与稍后都还在
+
+== P1 兜底：没有被记进日志的用户写入一律保留（fail-safe） ==
+  ✓ P1 兜底：未记录的新建被保留（宁可留下也不能静默删掉）
+  ✓ P1 兜底：未被重放改写的既有事项保持原样（不拿旧快照覆盖）
+  ✓ P1 兜底：动作自身仍被正确撤销
+
+== Q1 提交中拒绝 ACK/删除，落定后按顺序执行不得误删下一期 ==
+  ✓ Q1 前置：同事项 ACK 与删除均被拒绝
+  ✓ Q1 失败动作如实上抛
+  ✓ Q1 用户的删除仍然生效（本期不得复活）
+  ✓ Q1 恰好保留一条下一期（更早的 ACK 必须在删除之前被重放）
+  ✓ Q1 下一期按**有效状态**计算（不带失败动作的时间位移）
+  ✓ Q1 失败动作不留已处理标记
+  ✓ Q1 磁盘：本期已删、恰一条下一期
+  ✓ Q1 重载后：本期已删、恰一条下一期且时刻仍按有效状态
+  ✓ Q1 重载后：不留失败动作的已处理标记
+
+== Q1 提交中拒绝完成/删除，落定后顺延仍要保住 ==
+  ✓ Q1b 前置：完成与删除均被拒绝
+  ✓ Q1b 本期保持已删、恰一条下一期
+  ✓ Q1b 顺延仍锚定原定日期
+  ✓ Q1b 重载后：本期已删、恰一条下一期
+
+== Q1 提交中拒绝编辑/删除，落定后执行仍不留残影 ==
+  ✓ Q1c 前置：编辑与删除均未改变事项
+  ✓ Q1c 最终仍是已删除（不得因「更早的编辑要重放」而复活）
+  ✓ Q1c 重载后：仍然没有它
+
+== Q1 未决时不暴露派生项，落定后删除派生项不得恢复 ==
+  ✓ Q1d 前置：确认被拒绝且下一期不可见
+  ✓ Q1d 本期的确认保留
+  ✓ Q1d 用户删掉的下一期不得被恢复
+  ✓ Q1d 重载后：本期已确认、下一期仍是删除状态
+
+== 隐藏闹钟：完成必须提交成功，旧提醒与截止保护不能误处理 ==
+  ✓ 完成提交前仍保留原状态与停止入口
+  ✓ 完成落库失败不得止响或假归档
+  ✓ 重试提交成功后才停止对应投递
+  ✓ 旧投递不能完成新版事项
+  ✓ 已确认事项的同版本截止保护保持可处理
+  ✓ 稍后事项的同版本截止保护保持可处理
+  ✓ 已提交的新确认只清理旧版本投递
+
+== T1 原生 ACK 派生实例在创建提交确认前不可见、确认后可安全修改 ==
+  ✓ T1 创建提交确认前：源事项仍是最后确认状态
+  ✓ T1 创建提交确认前：下一期不暴露给 UI，不能接受依赖编辑
+  ✓ T1 创建提交确认后：下一期才发布
+  ✓ T1 下一期带稳定父实例身份
+  ✓ T1 确认后接受的稍后完整落库并可重载
+  ✓ T1 全程只有一个下一期
+
+== T1 对照：创建提交失败时不发布幽灵下一期 ==
+  ✓ T1 失败如实返回 Promise 拒绝
+  ✓ T1 失败后内存没有下一期或假 ACK
+  ✓ T1 失败事件不进入已处理台账
+State save failed: commit failed
+  ✓ T1 失败后重载仍无幽灵下一期
+
+== U2 同周期串行化与多步操作：相关项拒绝、无关项继续 ==
+  ✓ U2 连续三个同事项/同周期命令都被拒绝
+  ✓ U2 同周期未来事项保持原样
+  ✓ U2 无关事项命令继续执行
+  ✓ U2 原生稍后成功且同周期项未被误改
+  ✓ U2 多步结果经权威存储与重启保持一致
+
+== U2 36 组合矩阵：原生动作 × 同事项 UI 命令 × 原生成败 ==
+  ✓ U2 矩阵恰好覆盖 36 种组合
+  ✓ U2 ack×ack×成功：UI 命令明确返回 false
+  ✓ U2 ack×ack×成功：拒绝期间内存保持最后确认状态
+  ✓ U2 ack×ack×成功：拒绝反馈不是成功提示
+  ✓ U2 ack×ack×成功：原生成败如实向外返回
+  ✓ U2 ack×ack×成功：内存只包含原生事务结果
+  ✓ U2 ack×ack×成功：权威快照与内存一致
+  ✓ U2 ack×ack×成功：重载与内存/权威快照一致
+  ✓ U2 ack×ack×成功：事件台账只记录成功原生动作
+  ✓ U2 ack×ack×成功：同一父实例无重复派生
+  ✓ U2 ack×ack×失败：UI 命令明确返回 false
+  ✓ U2 ack×ack×失败：拒绝期间内存保持最后确认状态
+  ✓ U2 ack×ack×失败：拒绝反馈不是成功提示
+State save failed: commit failed
+  ✓ U2 ack×ack×失败：原生成败如实向外返回
+  ✓ U2 ack×ack×失败：内存只包含原生事务结果
+  ✓ U2 ack×ack×失败：权威快照与内存一致
+  ✓ U2 ack×ack×失败：重载与内存/权威快照一致
+  ✓ U2 ack×ack×失败：事件台账只记录成功原生动作
+  ✓ U2 ack×ack×失败：同一父实例无重复派生
+  ✓ U2 ack×complete×成功：UI 命令明确返回 false
+  ✓ U2 ack×complete×成功：拒绝期间内存保持最后确认状态
+  ✓ U2 ack×complete×成功：拒绝反馈不是成功提示
+  ✓ U2 ack×complete×成功：原生成败如实向外返回
+  ✓ U2 ack×complete×成功：内存只包含原生事务结果
+  ✓ U2 ack×complete×成功：权威快照与内存一致
+  ✓ U2 ack×complete×成功：重载与内存/权威快照一致
+  ✓ U2 ack×complete×成功：事件台账只记录成功原生动作
+  ✓ U2 ack×complete×成功：同一父实例无重复派生
+  ✓ U2 ack×complete×失败：UI 命令明确返回 false
+  ✓ U2 ack×complete×失败：拒绝期间内存保持最后确认状态
+  ✓ U2 ack×complete×失败：拒绝反馈不是成功提示
+State save failed: commit failed
+  ✓ U2 ack×complete×失败：原生成败如实向外返回
+  ✓ U2 ack×complete×失败：内存只包含原生事务结果
+  ✓ U2 ack×complete×失败：权威快照与内存一致
+  ✓ U2 ack×complete×失败：重载与内存/权威快照一致
+  ✓ U2 ack×complete×失败：事件台账只记录成功原生动作
+  ✓ U2 ack×complete×失败：同一父实例无重复派生
+  ✓ U2 ack×snooze×成功：UI 命令明确返回 false
+  ✓ U2 ack×snooze×成功：拒绝期间内存保持最后确认状态
+  ✓ U2 ack×snooze×成功：拒绝反馈不是成功提示
+  ✓ U2 ack×snooze×成功：原生成败如实向外返回
+  ✓ U2 ack×snooze×成功：内存只包含原生事务结果
+  ✓ U2 ack×snooze×成功：权威快照与内存一致
+  ✓ U2 ack×snooze×成功：重载与内存/权威快照一致
+  ✓ U2 ack×snooze×成功：事件台账只记录成功原生动作
+  ✓ U2 ack×snooze×成功：同一父实例无重复派生
+  ✓ U2 ack×snooze×失败：UI 命令明确返回 false
+  ✓ U2 ack×snooze×失败：拒绝期间内存保持最后确认状态
+  ✓ U2 ack×snooze×失败：拒绝反馈不是成功提示
+State save failed: commit failed
+  ✓ U2 ack×snooze×失败：原生成败如实向外返回
+  ✓ U2 ack×snooze×失败：内存只包含原生事务结果
+  ✓ U2 ack×snooze×失败：权威快照与内存一致
+  ✓ U2 ack×snooze×失败：重载与内存/权威快照一致
+  ✓ U2 ack×snooze×失败：事件台账只记录成功原生动作
+  ✓ U2 ack×snooze×失败：同一父实例无重复派生
+  ✓ U2 ack×edit×成功：UI 命令明确返回 false
+  ✓ U2 ack×edit×成功：拒绝期间内存保持最后确认状态
+  ✓ U2 ack×edit×成功：拒绝反馈不是成功提示
+  ✓ U2 ack×edit×成功：编辑输入保留供重试
+  ✓ U2 ack×edit×成功：原生成败如实向外返回
+  ✓ U2 ack×edit×成功：内存只包含原生事务结果
+  ✓ U2 ack×edit×成功：权威快照与内存一致
+  ✓ U2 ack×edit×成功：重载与内存/权威快照一致
+  ✓ U2 ack×edit×成功：事件台账只记录成功原生动作
+  ✓ U2 ack×edit×成功：同一父实例无重复派生
+  ✓ U2 ack×edit×失败：UI 命令明确返回 false
+  ✓ U2 ack×edit×失败：拒绝期间内存保持最后确认状态
+  ✓ U2 ack×edit×失败：拒绝反馈不是成功提示
+  ✓ U2 ack×edit×失败：编辑输入保留供重试
+State save failed: commit failed
+  ✓ U2 ack×edit×失败：原生成败如实向外返回
+  ✓ U2 ack×edit×失败：内存只包含原生事务结果
+  ✓ U2 ack×edit×失败：权威快照与内存一致
+  ✓ U2 ack×edit×失败：重载与内存/权威快照一致
+  ✓ U2 ack×edit×失败：事件台账只记录成功原生动作
+  ✓ U2 ack×edit×失败：同一父实例无重复派生
+  ✓ U2 ack×delete×成功：UI 命令明确返回 false
+  ✓ U2 ack×delete×成功：拒绝期间内存保持最后确认状态
+  ✓ U2 ack×delete×成功：拒绝反馈不是成功提示
+  ✓ U2 ack×delete×成功：原生成败如实向外返回
+  ✓ U2 ack×delete×成功：内存只包含原生事务结果
+  ✓ U2 ack×delete×成功：权威快照与内存一致
+  ✓ U2 ack×delete×成功：重载与内存/权威快照一致
+  ✓ U2 ack×delete×成功：事件台账只记录成功原生动作
+  ✓ U2 ack×delete×成功：同一父实例无重复派生
+  ✓ U2 ack×delete×失败：UI 命令明确返回 false
+  ✓ U2 ack×delete×失败：拒绝期间内存保持最后确认状态
+  ✓ U2 ack×delete×失败：拒绝反馈不是成功提示
+State save failed: commit failed
+  ✓ U2 ack×delete×失败：原生成败如实向外返回
+  ✓ U2 ack×delete×失败：内存只包含原生事务结果
+  ✓ U2 ack×delete×失败：权威快照与内存一致
+  ✓ U2 ack×delete×失败：重载与内存/权威快照一致
+  ✓ U2 ack×delete×失败：事件台账只记录成功原生动作
+  ✓ U2 ack×delete×失败：同一父实例无重复派生
+  ✓ U2 ack×stopRepeat×成功：UI 命令明确返回 false
+  ✓ U2 ack×stopRepeat×成功：拒绝期间内存保持最后确认状态
+  ✓ U2 ack×stopRepeat×成功：拒绝反馈不是成功提示
+  ✓ U2 ack×stopRepeat×成功：原生成败如实向外返回
+  ✓ U2 ack×stopRepeat×成功：内存只包含原生事务结果
+  ✓ U2 ack×stopRepeat×成功：权威快照与内存一致
+  ✓ U2 ack×stopRepeat×成功：重载与内存/权威快照一致
+  ✓ U2 ack×stopRepeat×成功：事件台账只记录成功原生动作
+  ✓ U2 ack×stopRepeat×成功：同一父实例无重复派生
+  ✓ U2 ack×stopRepeat×失败：UI 命令明确返回 false
+  ✓ U2 ack×stopRepeat×失败：拒绝期间内存保持最后确认状态
+  ✓ U2 ack×stopRepeat×失败：拒绝反馈不是成功提示
+State save failed: commit failed
+  ✓ U2 ack×stopRepeat×失败：原生成败如实向外返回
+  ✓ U2 ack×stopRepeat×失败：内存只包含原生事务结果
+  ✓ U2 ack×stopRepeat×失败：权威快照与内存一致
+  ✓ U2 ack×stopRepeat×失败：重载与内存/权威快照一致
+  ✓ U2 ack×stopRepeat×失败：事件台账只记录成功原生动作
+  ✓ U2 ack×stopRepeat×失败：同一父实例无重复派生
+  ✓ U2 snooze×ack×成功：UI 命令明确返回 false
+  ✓ U2 snooze×ack×成功：拒绝期间内存保持最后确认状态
+  ✓ U2 snooze×ack×成功：拒绝反馈不是成功提示
+  ✓ U2 snooze×ack×成功：原生成败如实向外返回
+  ✓ U2 snooze×ack×成功：内存只包含原生事务结果
+  ✓ U2 snooze×ack×成功：权威快照与内存一致
+  ✓ U2 snooze×ack×成功：重载与内存/权威快照一致
+  ✓ U2 snooze×ack×成功：事件台账只记录成功原生动作
+  ✓ U2 snooze×ack×成功：同一父实例无重复派生
+  ✓ U2 snooze×ack×失败：UI 命令明确返回 false
+  ✓ U2 snooze×ack×失败：拒绝期间内存保持最后确认状态
+  ✓ U2 snooze×ack×失败：拒绝反馈不是成功提示
+State save failed: commit failed
+  ✓ U2 snooze×ack×失败：原生成败如实向外返回
+  ✓ U2 snooze×ack×失败：内存只包含原生事务结果
+  ✓ U2 snooze×ack×失败：权威快照与内存一致
+  ✓ U2 snooze×ack×失败：重载与内存/权威快照一致
+  ✓ U2 snooze×ack×失败：事件台账只记录成功原生动作
+  ✓ U2 snooze×ack×失败：同一父实例无重复派生
+  ✓ U2 snooze×complete×成功：UI 命令明确返回 false
+  ✓ U2 snooze×complete×成功：拒绝期间内存保持最后确认状态
+  ✓ U2 snooze×complete×成功：拒绝反馈不是成功提示
+  ✓ U2 snooze×complete×成功：原生成败如实向外返回
+  ✓ U2 snooze×complete×成功：内存只包含原生事务结果
+  ✓ U2 snooze×complete×成功：权威快照与内存一致
+  ✓ U2 snooze×complete×成功：重载与内存/权威快照一致
+  ✓ U2 snooze×complete×成功：事件台账只记录成功原生动作
+  ✓ U2 snooze×complete×成功：同一父实例无重复派生
+  ✓ U2 snooze×complete×失败：UI 命令明确返回 false
+  ✓ U2 snooze×complete×失败：拒绝期间内存保持最后确认状态
+  ✓ U2 snooze×complete×失败：拒绝反馈不是成功提示
+State save failed: commit failed
+  ✓ U2 snooze×complete×失败：原生成败如实向外返回
+  ✓ U2 snooze×complete×失败：内存只包含原生事务结果
+  ✓ U2 snooze×complete×失败：权威快照与内存一致
+  ✓ U2 snooze×complete×失败：重载与内存/权威快照一致
+  ✓ U2 snooze×complete×失败：事件台账只记录成功原生动作
+  ✓ U2 snooze×complete×失败：同一父实例无重复派生
+  ✓ U2 snooze×snooze×成功：UI 命令明确返回 false
+  ✓ U2 snooze×snooze×成功：拒绝期间内存保持最后确认状态
+  ✓ U2 snooze×snooze×成功：拒绝反馈不是成功提示
+  ✓ U2 snooze×snooze×成功：原生成败如实向外返回
+  ✓ U2 snooze×snooze×成功：内存只包含原生事务结果
+  ✓ U2 snooze×snooze×成功：权威快照与内存一致
+  ✓ U2 snooze×snooze×成功：重载与内存/权威快照一致
+  ✓ U2 snooze×snooze×成功：事件台账只记录成功原生动作
+  ✓ U2 snooze×snooze×成功：同一父实例无重复派生
+  ✓ U2 snooze×snooze×失败：UI 命令明确返回 false
+  ✓ U2 snooze×snooze×失败：拒绝期间内存保持最后确认状态
+  ✓ U2 snooze×snooze×失败：拒绝反馈不是成功提示
+State save failed: commit failed
+  ✓ U2 snooze×snooze×失败：原生成败如实向外返回
+  ✓ U2 snooze×snooze×失败：内存只包含原生事务结果
+  ✓ U2 snooze×snooze×失败：权威快照与内存一致
+  ✓ U2 snooze×snooze×失败：重载与内存/权威快照一致
+  ✓ U2 snooze×snooze×失败：事件台账只记录成功原生动作
+  ✓ U2 snooze×snooze×失败：同一父实例无重复派生
+  ✓ U2 snooze×edit×成功：UI 命令明确返回 false
+  ✓ U2 snooze×edit×成功：拒绝期间内存保持最后确认状态
+  ✓ U2 snooze×edit×成功：拒绝反馈不是成功提示
+  ✓ U2 snooze×edit×成功：编辑输入保留供重试
+  ✓ U2 snooze×edit×成功：原生成败如实向外返回
+  ✓ U2 snooze×edit×成功：内存只包含原生事务结果
+  ✓ U2 snooze×edit×成功：权威快照与内存一致
+  ✓ U2 snooze×edit×成功：重载与内存/权威快照一致
+  ✓ U2 snooze×edit×成功：事件台账只记录成功原生动作
+  ✓ U2 snooze×edit×成功：同一父实例无重复派生
+  ✓ U2 snooze×edit×失败：UI 命令明确返回 false
+  ✓ U2 snooze×edit×失败：拒绝期间内存保持最后确认状态
+  ✓ U2 snooze×edit×失败：拒绝反馈不是成功提示
+  ✓ U2 snooze×edit×失败：编辑输入保留供重试
+State save failed: commit failed
+  ✓ U2 snooze×edit×失败：原生成败如实向外返回
+  ✓ U2 snooze×edit×失败：内存只包含原生事务结果
+  ✓ U2 snooze×edit×失败：权威快照与内存一致
+  ✓ U2 snooze×edit×失败：重载与内存/权威快照一致
+  ✓ U2 snooze×edit×失败：事件台账只记录成功原生动作
+  ✓ U2 snooze×edit×失败：同一父实例无重复派生
+  ✓ U2 snooze×delete×成功：UI 命令明确返回 false
+  ✓ U2 snooze×delete×成功：拒绝期间内存保持最后确认状态
+  ✓ U2 snooze×delete×成功：拒绝反馈不是成功提示
+  ✓ U2 snooze×delete×成功：原生成败如实向外返回
+  ✓ U2 snooze×delete×成功：内存只包含原生事务结果
+  ✓ U2 snooze×delete×成功：权威快照与内存一致
+  ✓ U2 snooze×delete×成功：重载与内存/权威快照一致
+  ✓ U2 snooze×delete×成功：事件台账只记录成功原生动作
+  ✓ U2 snooze×delete×成功：同一父实例无重复派生
+  ✓ U2 snooze×delete×失败：UI 命令明确返回 false
+  ✓ U2 snooze×delete×失败：拒绝期间内存保持最后确认状态
+  ✓ U2 snooze×delete×失败：拒绝反馈不是成功提示
+State save failed: commit failed
+  ✓ U2 snooze×delete×失败：原生成败如实向外返回
+  ✓ U2 snooze×delete×失败：内存只包含原生事务结果
+  ✓ U2 snooze×delete×失败：权威快照与内存一致
+  ✓ U2 snooze×delete×失败：重载与内存/权威快照一致
+  ✓ U2 snooze×delete×失败：事件台账只记录成功原生动作
+  ✓ U2 snooze×delete×失败：同一父实例无重复派生
+  ✓ U2 snooze×stopRepeat×成功：UI 命令明确返回 false
+  ✓ U2 snooze×stopRepeat×成功：拒绝期间内存保持最后确认状态
+  ✓ U2 snooze×stopRepeat×成功：拒绝反馈不是成功提示
+  ✓ U2 snooze×stopRepeat×成功：原生成败如实向外返回
+  ✓ U2 snooze×stopRepeat×成功：内存只包含原生事务结果
+  ✓ U2 snooze×stopRepeat×成功：权威快照与内存一致
+  ✓ U2 snooze×stopRepeat×成功：重载与内存/权威快照一致
+  ✓ U2 snooze×stopRepeat×成功：事件台账只记录成功原生动作
+  ✓ U2 snooze×stopRepeat×成功：同一父实例无重复派生
+  ✓ U2 snooze×stopRepeat×失败：UI 命令明确返回 false
+  ✓ U2 snooze×stopRepeat×失败：拒绝期间内存保持最后确认状态
+  ✓ U2 snooze×stopRepeat×失败：拒绝反馈不是成功提示
+State save failed: commit failed
+  ✓ U2 snooze×stopRepeat×失败：原生成败如实向外返回
+  ✓ U2 snooze×stopRepeat×失败：内存只包含原生事务结果
+  ✓ U2 snooze×stopRepeat×失败：权威快照与内存一致
+  ✓ U2 snooze×stopRepeat×失败：重载与内存/权威快照一致
+  ✓ U2 snooze×stopRepeat×失败：事件台账只记录成功原生动作
+  ✓ U2 snooze×stopRepeat×失败：同一父实例无重复派生
+  ✓ U2 done×ack×成功：UI 命令明确返回 false
+  ✓ U2 done×ack×成功：拒绝期间内存保持最后确认状态
+  ✓ U2 done×ack×成功：拒绝反馈不是成功提示
+  ✓ U2 done×ack×成功：原生成败如实向外返回
+  ✓ U2 done×ack×成功：内存只包含原生事务结果
+  ✓ U2 done×ack×成功：权威快照与内存一致
+  ✓ U2 done×ack×成功：重载与内存/权威快照一致
+  ✓ U2 done×ack×成功：事件台账只记录成功原生动作
+  ✓ U2 done×ack×成功：同一父实例无重复派生
+  ✓ U2 done×ack×失败：UI 命令明确返回 false
+  ✓ U2 done×ack×失败：拒绝期间内存保持最后确认状态
+  ✓ U2 done×ack×失败：拒绝反馈不是成功提示
+State save failed: commit failed
+  ✓ U2 done×ack×失败：原生成败如实向外返回
+  ✓ U2 done×ack×失败：内存只包含原生事务结果
+  ✓ U2 done×ack×失败：权威快照与内存一致
+  ✓ U2 done×ack×失败：重载与内存/权威快照一致
+  ✓ U2 done×ack×失败：事件台账只记录成功原生动作
+  ✓ U2 done×ack×失败：同一父实例无重复派生
+  ✓ U2 done×complete×成功：UI 命令明确返回 false
+  ✓ U2 done×complete×成功：拒绝期间内存保持最后确认状态
+  ✓ U2 done×complete×成功：拒绝反馈不是成功提示
+  ✓ U2 done×complete×成功：原生成败如实向外返回
+  ✓ U2 done×complete×成功：内存只包含原生事务结果
+  ✓ U2 done×complete×成功：权威快照与内存一致
+  ✓ U2 done×complete×成功：重载与内存/权威快照一致
+  ✓ U2 done×complete×成功：事件台账只记录成功原生动作
+  ✓ U2 done×complete×成功：同一父实例无重复派生
+  ✓ U2 done×complete×失败：UI 命令明确返回 false
+  ✓ U2 done×complete×失败：拒绝期间内存保持最后确认状态
+  ✓ U2 done×complete×失败：拒绝反馈不是成功提示
+State save failed: commit failed
+  ✓ U2 done×complete×失败：原生成败如实向外返回
+  ✓ U2 done×complete×失败：内存只包含原生事务结果
+  ✓ U2 done×complete×失败：权威快照与内存一致
+  ✓ U2 done×complete×失败：重载与内存/权威快照一致
+  ✓ U2 done×complete×失败：事件台账只记录成功原生动作
+  ✓ U2 done×complete×失败：同一父实例无重复派生
+  ✓ U2 done×snooze×成功：UI 命令明确返回 false
+  ✓ U2 done×snooze×成功：拒绝期间内存保持最后确认状态
+  ✓ U2 done×snooze×成功：拒绝反馈不是成功提示
+  ✓ U2 done×snooze×成功：原生成败如实向外返回
+  ✓ U2 done×snooze×成功：内存只包含原生事务结果
+  ✓ U2 done×snooze×成功：权威快照与内存一致
+  ✓ U2 done×snooze×成功：重载与内存/权威快照一致
+  ✓ U2 done×snooze×成功：事件台账只记录成功原生动作
+  ✓ U2 done×snooze×成功：同一父实例无重复派生
+  ✓ U2 done×snooze×失败：UI 命令明确返回 false
+  ✓ U2 done×snooze×失败：拒绝期间内存保持最后确认状态
+  ✓ U2 done×snooze×失败：拒绝反馈不是成功提示
+State save failed: commit failed
+  ✓ U2 done×snooze×失败：原生成败如实向外返回
+  ✓ U2 done×snooze×失败：内存只包含原生事务结果
+  ✓ U2 done×snooze×失败：权威快照与内存一致
+  ✓ U2 done×snooze×失败：重载与内存/权威快照一致
+  ✓ U2 done×snooze×失败：事件台账只记录成功原生动作
+  ✓ U2 done×snooze×失败：同一父实例无重复派生
+  ✓ U2 done×edit×成功：UI 命令明确返回 false
+  ✓ U2 done×edit×成功：拒绝期间内存保持最后确认状态
+  ✓ U2 done×edit×成功：拒绝反馈不是成功提示
+  ✓ U2 done×edit×成功：编辑输入保留供重试
+  ✓ U2 done×edit×成功：原生成败如实向外返回
+  ✓ U2 done×edit×成功：内存只包含原生事务结果
+  ✓ U2 done×edit×成功：权威快照与内存一致
+  ✓ U2 done×edit×成功：重载与内存/权威快照一致
+  ✓ U2 done×edit×成功：事件台账只记录成功原生动作
+  ✓ U2 done×edit×成功：同一父实例无重复派生
+  ✓ U2 done×edit×失败：UI 命令明确返回 false
+  ✓ U2 done×edit×失败：拒绝期间内存保持最后确认状态
+  ✓ U2 done×edit×失败：拒绝反馈不是成功提示
+  ✓ U2 done×edit×失败：编辑输入保留供重试
+State save failed: commit failed
+  ✓ U2 done×edit×失败：原生成败如实向外返回
+  ✓ U2 done×edit×失败：内存只包含原生事务结果
+  ✓ U2 done×edit×失败：权威快照与内存一致
+  ✓ U2 done×edit×失败：重载与内存/权威快照一致
+  ✓ U2 done×edit×失败：事件台账只记录成功原生动作
+  ✓ U2 done×edit×失败：同一父实例无重复派生
+  ✓ U2 done×delete×成功：UI 命令明确返回 false
+  ✓ U2 done×delete×成功：拒绝期间内存保持最后确认状态
+  ✓ U2 done×delete×成功：拒绝反馈不是成功提示
+  ✓ U2 done×delete×成功：原生成败如实向外返回
+  ✓ U2 done×delete×成功：内存只包含原生事务结果
+  ✓ U2 done×delete×成功：权威快照与内存一致
+  ✓ U2 done×delete×成功：重载与内存/权威快照一致
+  ✓ U2 done×delete×成功：事件台账只记录成功原生动作
+  ✓ U2 done×delete×成功：同一父实例无重复派生
+  ✓ U2 done×delete×失败：UI 命令明确返回 false
+  ✓ U2 done×delete×失败：拒绝期间内存保持最后确认状态
+  ✓ U2 done×delete×失败：拒绝反馈不是成功提示
+State save failed: commit failed
+  ✓ U2 done×delete×失败：原生成败如实向外返回
+  ✓ U2 done×delete×失败：内存只包含原生事务结果
+  ✓ U2 done×delete×失败：权威快照与内存一致
+  ✓ U2 done×delete×失败：重载与内存/权威快照一致
+  ✓ U2 done×delete×失败：事件台账只记录成功原生动作
+  ✓ U2 done×delete×失败：同一父实例无重复派生
+  ✓ U2 done×stopRepeat×成功：UI 命令明确返回 false
+  ✓ U2 done×stopRepeat×成功：拒绝期间内存保持最后确认状态
+  ✓ U2 done×stopRepeat×成功：拒绝反馈不是成功提示
+  ✓ U2 done×stopRepeat×成功：原生成败如实向外返回
+  ✓ U2 done×stopRepeat×成功：内存只包含原生事务结果
+  ✓ U2 done×stopRepeat×成功：权威快照与内存一致
+  ✓ U2 done×stopRepeat×成功：重载与内存/权威快照一致
+  ✓ U2 done×stopRepeat×成功：事件台账只记录成功原生动作
+  ✓ U2 done×stopRepeat×成功：同一父实例无重复派生
+  ✓ U2 done×stopRepeat×失败：UI 命令明确返回 false
+  ✓ U2 done×stopRepeat×失败：拒绝期间内存保持最后确认状态
+  ✓ U2 done×stopRepeat×失败：拒绝反馈不是成功提示
+State save failed: commit failed
+  ✓ U2 done×stopRepeat×失败：原生成败如实向外返回
+  ✓ U2 done×stopRepeat×失败：内存只包含原生事务结果
+  ✓ U2 done×stopRepeat×失败：权威快照与内存一致
+  ✓ U2 done×stopRepeat×失败：重载与内存/权威快照一致
+  ✓ U2 done×stopRepeat×失败：事件台账只记录成功原生动作
+  ✓ U2 done×stopRepeat×失败：同一父实例无重复派生
+
+== G5 初始化完成信号必须真正代表「状态已恢复」 ==
+  ✓ G5 ready 之后持久化状态已完整恢复
+  ✓ G5 就绪后准备的状态不会被初始化恢复覆盖
+  ✓ G5 反例：不等就绪时准备的 state 会被初始化恢复覆盖（证明必须先等）
+
+== Q1. 启动链完整性 / addListener 返回契约 ==
+  ✓ Q1 真机契约：addListener 确实被调用到了（否则本用例在空转）
+  ✓ Q1 真机契约（同步句柄）：ready() === true，init 未被中断
+  ✓ Q1 真机契约：干净首启不自动写入演示数据（UX-C01）
+  ✓ Q1 真机契约：15 秒心跳已装上（启动链跑到底的标志）
+  ✓ Q1 Promise 契约：同样能注册且不中断启动
+  ✓ Q1 Promise 契约：启动链照常跑到底（首启无演示数据 + 15 秒心跳装上）
+  ✓ Q1 注册同步抛错：错误被隔离，ready() 仍为 true
+  ✓ Q1 注册同步抛错：其余启动动作照常完成（15 秒心跳装上）
+
+== UX-C01 演示是只读预览，不是「载入示例数据」 ==
+  ✓ C01 演示有实际内容（空壳预览等于没做）
+  ✓ C01 打开演示不写事项
+  ✓ C01 打开演示不写便签 / 项目（老入口正是从这两处覆盖用户状态）
+  ✓ C01 用户那条还在原位（数量与 id 都没动）
+  ✓ C01 演示条目一条都没进用户数据
+
+== UX-C03 新建的有限撤销（幽灵排程 / 误删的红线） ==
+  ✓ C03 新建后版本未变可撤销
+  ✓ C03 撤销真的撤掉了这条
+  ✓ C03 版本已变 → 拒绝撤销
+  ✓ C03 拒绝后事项仍在（没有误删）
+  ✓ C03 已开始处理（ACK）→ 拒绝撤销
+  ✓ C03 拒绝后这条仍在
+  ✓ C03 已开始投递 → 拒绝撤销（否则旧提醒照响）
+  ✓ C03 被拒的这条没被删
+
+== UX-A03 完成的有限撤销（周期成组还原 / 不误删下一期） ==
+  ✓ A03 完成后提供撤销入口
+  ✓ A03 完成即归档（主动作不因撤销倒计时延迟）
+  ✓ A03 撤销后回到未完成
+  ✓ A03 周期完成确实派生了下一期（否则下面两条在空转）
+  ✓ A03 撤销成组还原并回收未被处理的下一期
+  ✓ A03 周期完成派生了下一期（③ 的前置）
+  ✓ A03 下一期已处理 → 拒绝撤销
+  ✓ A03 拒绝后下一期不被误删
+  ✓ A03 已进入投递 → 拒绝撤销（不回放旧铃）
+  ✓ A03 被拒后仍保持完成状态
+
+== UX-T03 送达证据回流：只有拿到证据才下结论，缺证据绝不指控 ==
+  ✓ T03 读不到证据时不指控漏提醒
+  ✓ T03 新回执确实写进台账（对照不是空转）
+  ✓ T03 层级只声明「系统已接收」，不写用户看到
+  ✓ T03 证据回流绝不改 status（完成事项不能被回执复活）
+  ✓ T03 有证据时说「系统已接收」，不说已看到/已读
+  ✓ T03 重复回执是幂等的
+  ✓ T03 缺身份（无提醒键）的回执不动任何事项
+  ✓ T03 缺身份后状态仍是 delivered（没有把它降级成失败）
+  ✓ T03 旧轮次回执不写入（新轮次不被污染）
+  ✓ T03 本轮内但未登记的轮次不写入（宁可尚未确认，不谎报已接收）
+  ✓ T03 缺 receivedAt/carrier/itemRev 的回执不作数（不接受「用当前时间补上」）
+  ✓ T03 同一条补全规范字段后即可写入（上面的拒绝不是通路故障）
+
+== 返工 R1（F02）：同一份表单连续提交只落一条 ==
+  ✓ R1 第一次提交被接受
+  ✓ R1 第二次提交被同一份提交身份拒绝（旧实现：两次都返回 true）
+  ✓ R1 内存里只有一条
+  ✓ R1 权威存储里也只有一条
+  ✓ R1 对照组：提交结束后新的一条照常保存
+
+== 返工 R2（F03）：上一笔保存的结果不碰用户新写的草稿 ==
+  ✓ R2 旧保存成功不清掉新输入（旧实现：输入被清成空字符串）
+State save failed: commit failed
+  ✓ R2 旧保存失败不覆盖新输入（改成给一个显式的找回入口）
+  ✓ R2 失败时明确说明「你正在写的内容没被动过」
+
+== 返工 R3（F04）：原生提交在途时撤销完成，不被权威草稿覆盖 ==
+  ✓ R3 撤销被接受
+  ✓ R3 撤销后立刻回到未完成
+  ✓ R3 原生提交发布后仍未被覆盖（旧实现：又变回 archived）
+  ✓ R3 重启后仍是撤销后的状态（旧实现：restart 后又归档）
+
+== 返工 R5（F05）：跨过原定时刻的撤销完成不立即补投 ==
+  ✓ R5 撤销被接受
+  ✓ R5 不因撤销立刻补响已经过去的那一次（旧实现：now+2s 的 catchUp 通知）
+  ✓ R5 该轮次在台账里被标成 suppressed（抑制落在这一条键上，不动全局规则）
+  ✓ R5 对照组：未被抑制的 cancelled 轮次仍然补投（上面的空不是空转）
+
+== 返工 R6（F04）：撤销的「已撤销」只在落库之后说 ==
+State save failed: commit failed
+  ✓ R6 撤销命令被接受
+  ✓ R6 落库之前绝不说「已撤销」（旧实现：写完就提示）
+  ✓ R6 可见状态退回撤销之前（不留下「界面说撤销了、磁盘没有」）
+  ✓ R6 权威存储里没有假的撤销结果
+  ✓ R6 重启后与磁盘一致
+  ✓ R6 如实说明没写进去并给出重试入口
+
+== 返工 R7 / R7b（F01）：Java 真实行穿过桥与归一化，读不到不伪装成读到了 ==
+  ✓ R7 Java 真实行穿过桥后身份完整（旧实现：valid=false / missing-identity）
+  ✓ R7 并进事项台账后写成 delivered（证据回流真的通了）
+  ✓ R7b 桥说读不到时如实转述 available:false（旧实现：恒 available:true）
+
+== 返工 F07：停止测试铃声走 token 限定的停铃链路 ==
+  ✓ F07 停铃返回本次真正停掉的条数（旧实现：走不到停铃分支，恒 0）
+  ✓ F07 只停本次测试那一条（id + token 双重限定）
+  ✓ F07 绝不误停用户自己的闹钟
+  ✓ F07 上一次测试的残留投递不被当成本次
+  ✓ F07 本次运行记录被标成已停止
+
+== 返工 F08：无时间记录的保存反馈只出一条，撤销入口不被顶掉 ==
+  ✓ F08 无时间记录被收下
+  ✓ F08 反馈里保留「待整理」语义
+  ✓ F08 同一条反馈里给出去整理的入口
+  ✓ F08 撤销入口没有被第二条提示顶掉（旧实现：只看到「已收下 · 待整理 / 去整理」）
+
+== 返工2 R-F06：旧轮回执不得抬高当前轮的核查状态（复验 X1） ==
+  ✓ R-F06 前置：旧轮的键都带上了轮次身份
+  ✓ R-F06 前置：稍后提醒换了起点并推进版本
+  ✓ R-F06 前置：旧轮追提醒被原生撤销后仍作为历史保留
+  ✓ R-F06 前置：保留旧键时必须**带着它自己的轮次身份**（丢掉它 = 把旧键当新轮）
+  ✓ R-F06 前置：旧轮的键在时间上确实「落进」当前范围（否则这个反例是假的）
+  ✓ R-F06 旧轮回执不写入台账（旧实现：applied=1）
+  ✓ R-F06 当前轮如实停在「尚未确认」（旧实现：显示「系统已接收这次提醒」）
+  ✓ R-F06 对照组：当前轮的键送达照常写入
+  ✓ R-F06 对照组：这时才说「系统已接收」
+
+== 返工2 R-F06b：旧轮 delivered 只是历史；同刻重排 / 重复 / 乱序 / 非排程编辑都不误伤 ==
+  ✓ R-F06b 旧轮的 delivered 仍在台账里（保留历史，不删）
+  ✓ R-F06b 但它不算当前轮的证据（旧实现：直接显示「系统已接收」）
+  ✓ R-F06b 保存反馈用的「本条排程证据」也不认旧轮（旧实现：返回 delivered，等于说「已安排好」）
+  ✓ R-F06b 同一时刻重排不换轮
+  ✓ R-F06b 同刻重排后的回执照样写入（不因为「重排过」就判旧轮）
+  ✓ R-F06b 重复回执是幂等的
+  ✓ R-F06b 乱序到达的第二个键照样记账
+  ✓ R-F06b 非排程字段编辑：版本推进了，时间与轮次都没变
+  ✓ R-F06b 编排时那个旧版本号回来的回执仍然有效（不能机械要求 rev 相等）
+
+== 返工3 Y1：正常接收保留轮次身份，编辑换轮与重启后旧历史不证明新轮 ==
+  ✓ Y1 正常 scheduled → delivered 入口保留 roundBase
+  ✓ Y1 编辑换轮后旧 delivered 保留为历史但不冒充当前轮
+  ✓ Y1 重启回读后轮次身份仍在，旧历史仍不能证明新轮已接收
+
+== 返工3 Y2：升级前缺身份的三态保持不可验证；可证明的当前对账才补身份 ==
+  ✓ Y2 旧 scheduled 缺 roundBase 的乱序/重复回执均不提升当前轮
+  ✓ Y2 旧 cancelled 缺 roundBase 的乱序/重复回执均不提升当前轮
+  ✓ Y2 旧 delivered 缺 roundBase 的乱序/重复回执均不提升当前轮
+  ✓ Y2 可证明的当前轮对账补齐身份，同时保留 delivered 历史
+  ✓ Y2 重启后旧 scheduled 仍是历史且身份未知
+  ✓ Y2 重启后旧 cancelled 仍是历史且身份未知
+  ✓ Y2 重启后旧 delivered 仍是历史且身份未知
+  ✓ Y2 可证明迁移的 roundBase 也能跨重启保留
+
+== 返工2 R-F03：AI 迟到结果不得覆盖新草稿（复验 X2） ==
+  ✓ R-F03 迟到结果不清空新草稿（旧实现：#capText 被清成空）
+  ✓ R-F03 第二条的备注仍在表单上
+  ✓ R-F03 第一条**没有**串进第二条的备注（旧实现：标题「取快递」+ 备注「第二条的备注」）
+  ✓ R-F03 第一条落库的仍是它自己草稿的内容（AI 归一化标题照常生效）
+  ✓ R-F03 对照组：正常路径照常落库（AI 归一化标题生效）
+  ✓ R-F03 对照组：正常路径照常关闭并复位表单（面板用 open 类，不是 hidden）
+  ✓ R-F03 AI 失败时不吞掉新写的内容
+  ✓ R-F03 AI 失败时落库的是**提交时冻结的**那份草稿，不是后来写的那份
+  ✓ R-F03 前置：重开表单确实换了会话身份
+  ✓ R-F03 换表单之后迟到的 AI 结果不碰新表单（内容相同也不行）
+  ✓ R-F03 前置：两次不同内容的提交各自都在途
+  ✓ R-F03 两次提交各落一条、内容不串写
+
+== 返工3 Y3：新建/编辑的持久化收尾必须绑定表单会话 ==
+  ✓ Y3 新建成功回调不清空另一会话的同内容表单
+  ✓ Y3 新会话同内容不是重复点击，仍可独立提交
+  ✓ Y3 两个独立会话各自落库一次
+State save failed: commit failed
+  ✓ Y3 新建失败回调不把旧草稿恢复到另一会话
+State save failed: commit failed
+  ✓ Y3 对照组：同会话保存失败仍保留草稿并打开表单
+  ✓ Y3 编辑成功回调不碰另一会话的同内容表单
+State save failed: commit failed
+  ✓ Y3 编辑失败回调不碰另一会话的同内容表单
+
+== 返工2 R-F07：停铃读取失败不冒充「没有正在响」（复验 X4） ==
+  ✓ R-F07 读取失败时不报「停掉了几条」
+  ✓ R-F07 读取失败不说「没有正在响」（旧实现：读异常被吞，照报「没有正在响的测试铃声」）
+  ✓ R-F07 读取失败也不宣称已经停住
+  ✓ R-F07 未确认就不把 stoppedAt 当成功证据（旧实现：无条件写 stoppedAt）
+  ✓ R-F07 未确认时给出重试入口
+  ✓ R-F07 对照组：确认无活跃投递时如实说「没有正在响的测试铃声」
+  ✓ R-F07 对照组：确认无铃才算确认，可以记 stoppedAt
+  ✓ R-F07 对照组：真的停住了就报停住
+  ✓ R-F07 对照组：停住后记 stoppedAt
+  ✓ R-F07 停不住时不宣称已停
+  ✓ R-F07 停不住时也不谎称「没有在响」
+  ✓ R-F07 停不住时同样不记 stoppedAt（那是成功证据，不是尝试记录）
+
+== 返工2 SW：预缓存必须覆盖 index.html 真正加载的每个脚本，且脚本不得回落成 HTML ==
+  ✓ SW 前置：index.html 确实加载了脚本
+  ✓ SW 前置：原生桥脚本在 index.html 的加载清单里（否则这条回归测不到那个缺口）
+  ✓ SW 新装预缓存覆盖 index.html 加载的**全部**脚本（旧实现：漏 lib/native-reminders.js）
+  ✓ SW 离线时原生桥脚本拿回的是**脚本本身**，不是 index.html
+  ✓ SW 缓存未命中的脚本**不回落** index.html（旧实现：`.then(hit => hit || caches.match("./index.html"))`）
+  ✓ SW 对照组：离线导航仍然回落 index.html
+
+== 返工4：编辑表单保留未修改时间、区分改期/清空/稍后、验证重载持久化（修复方案 第一阶段） ==
+  ✓ P1-01 编辑标题不丢失原时间：triggerAt 保持原值
+  ✓ P1-01 编辑标题不丢失原时间：localTrigger 保持原值
+  ✓ P1-01 编辑标题成功更新标题文本
+  ✓ P1-01 重启后验证：triggerAt 与 localTrigger 完整保持
+  ✓ P1-02 编辑标题含时间词不覆盖表单已有时间
+  ✓ P1-03 编辑非时间字段保持原提醒时间与基准
+  ✓ P1-04 手动选择新时间：triggerAt 更新为新时间
+  ✓ P1-04 手动选择新时间：轮次重置 remindCount=0
+  ✓ P1-05 显式清空时间：triggerAt 为 null
+  ✓ P1-05 显式清空时间：localTrigger 为 null 或空
+  ✓ P1-06 稍后事项改标题：scheduleBasis 保持 elapsed
+  ✓ P1-06 稍后事项改标题：snoozedAt 保持不变
+  ✓ P1-06 稍后事项改标题：snoozeDelayMs 保持不变
+  ✓ P1-06 稍后事项改标题：status 保持 snoozed
+  ✓ P1-07 重启后稍后事项元数据完整恢复
+
+========== 回归结果 ==========
+通过: 730  失败: 0
+全部通过。
+
+== A. 结构：app-core 里不再持有任何算法副本（只允许「取模块导出」的绑定） ==
+  ✓ app-core 不再定义 function parseChineseTime（中文时间解析器（唯一来源 lib/parse-cn.js））
+  ✓ app-core 不再定义 function cnInt（中文数字转换（唯一来源 lib/parse-cn.js））
+  ✓ app-core 不再定义 const CN_NUM（中文数字表（唯一来源 lib/parse-cn.js））
+  ✓ app-core 不再定义 function hasSpecificTimeWord（明确时间词判定（唯一来源 lib/parse-cn.js））
+  ✓ app-core 不再定义 function nextRepeatTrigger（周期推进（唯一来源 lib/repeat.js））
+  ✓ app-core 不再定义 function repeatLabel（周期文案（唯一来源 lib/repeat.js））
+  ✓ app-core 不再定义 function nextRepeatPreview（周期预演（唯一来源 lib/repeat.js））
+  ✓ app-core 不再定义 function startOfDay（日历原语（唯一来源 lib/date-utils.js））
+  ✓ app-core 不再定义 function endOfDay（日历原语（唯一来源 lib/date-utils.js））
+  ✓ app-core 不再定义 function addDays（日历原语（唯一来源 lib/date-utils.js））
+  ✓ app-core 不再定义 function applyClock（日历原语（唯一来源 lib/date-utils.js））
+  ✓ app-core 不再定义 function lastDayOfMonth（日历原语（唯一来源 lib/date-utils.js））
+  ✓ app-core 不再定义 function nthWeekdayInMonth（日历原语（唯一来源 lib/date-utils.js））
+  ✓ app-core 不再定义 function nthWeekdayOfNextMonth（日历原语（唯一来源 lib/date-utils.js））
+  ✓ app-core 不再定义 function weekdayOfNextWeek（日历原语（唯一来源 lib/date-utils.js））
+  ✓ app-core 不再定义 function dayOfMonthIn（日历原语（唯一来源 lib/date-utils.js））
+  ✓ app-core 不再定义 function nextDayOfMonth（日历原语（唯一来源 lib/date-utils.js））
+  ✓ app-core 不再定义 function nextWeekend（日历原语（唯一来源 lib/date-utils.js））
+  ✓ inQuietHours 是单行转发（读 state.settings 后交给 lib/reminder.js），不再内联算法
+  ✓ quietEnd 是单行转发（同上）
+  ✓ 免打扰算法标记 parseHHMM 已从 app-core 消失（它是内联副本的伴生函数）
+  ✓ 免打扰的兜底常量已消失（旧副本的 `23, 0` / `7, 30` 默认值）
+  ✓ 反向对照：塞回 function startOfDay / function cnInt 后，判据确实变红
+  ✓ 反向对照：注释里的 function cnInt 不被误判（剥注释生效）
+
+== A2. 结构：UI 纯格式化已搬出 app-core（只留 UiFormat 委托，不留算法体） ==
+  ✓ app-core 的 uid 只剩单行委托（不内联算法）
+  ✓ app-core 的 pad 只剩单行委托（不内联算法）
+  ✓ app-core 的 fmtTime 只剩单行委托（不内联算法）
+  ✓ app-core 的 fmtDate 只剩单行委托（不内联算法）
+  ✓ app-core 的 relDue 只剩单行委托（不内联算法）
+  ✓ app-core 的 escapeHtml 只剩单行委托（不内联算法）
+  ✓ app-core 的 escapeAttr 只剩单行委托（不内联算法）
+  ✓ app-core 的 renderMarkdown 只剩单行委托（不内联算法）
+  ✓ app-core 的 dayLabel 只剩单行委托（不内联算法）
+  ✓ app-core 的 toLocalInput 只剩单行委托（不内联算法）
+  ✓ app-core 的 parseLocalInput 只剩单行委托（不内联算法）
+  ✓ app-core 不再含「事项 id 生成算法体」
+  ✓ app-core 不再含「补零算法体」
+  ✓ app-core 不再含「时间拼接算法体」
+  ✓ app-core 不再含「转义字符表（文本侧与属性侧共用一份）」
+  ✓ app-core 不再含「相对到期算法体」
+  ✓ app-core 不再含「Markdown 渲染算法体」
+  ✓ app-core 不再含「归档日标签的跨年分支（`dayLabel` 与 `fmtDate` 的差异点之一）」
+  ✓ app-core 不再含「本地时间串拼接（`toLocalInput` 算法体；`aiNowIso` 是另一支，不共用此行）」
+  ✓ 反向对照：把 id 生成算法体塞回 app-core 后，标记「事项 id 生成算法体」确实被检出
+  ✓ ui-format 仍导出 dayLabel 与 fmtDate **两支**（未被合并）
+  ✓ 空值语义不同：dayLabel(null)="更早"，fmtDate(null)=""
+  ✓ 「明天」分支不同：fmtDate 认「明天」，dayLabel 回「9月19日」
+  ✓ 跨年分支不同：dayLabel 回「2025年12月31日」，fmtDate 回「12月31日」
+
+== A3. 结构：DOM 共用展示能力已搬出 app-core（唯一来源 lib/app-ui.js） ==
+  ✓ app-core 不再定义 function openSheet（弹层开关（唯一来源 lib/app-ui.js））
+  ✓ app-core 不再定义 function closeSheet（弹层关闭（唯一来源 lib/app-ui.js））
+  ✓ app-core 不再定义 function closeAllSheets（全部弹层关闭（唯一来源 lib/app-ui.js））
+  ✓ app-core 不再定义 function confirmDialog（确认框（唯一来源 lib/app-ui.js））
+  ✓ app-core 不再定义 function toast（浮动提示（唯一来源 lib/app-ui.js））
+  ✓ app-core 不再定义 function hideToast（提示收起（唯一来源 lib/app-ui.js））
+  ✓ app-core 不再定义 function safeExternalHref（外链协议白名单（唯一来源 lib/app-ui.js））
+  ✓ app-core 不再定义 let toastTimer（提示定时器（必须随实现一起走，否则会出现两个定时器口径））
+  ✓ app-core 不再含「DOM 查询实现体」
+  ✓ app-core 不再含「DOM 批量查询实现体」
+  ✓ app-core 不再含「弹层开启算法体」
+  ✓ app-core 不再含「backdrop 的多层关闭判据」
+  ✓ app-core 不再含「closeAllSheets 算法体」
+  ✓ app-core 不再含「确认框文案回填算法体」
+  ✓ app-core 不再含「确认框兜底路径」
+  ✓ app-core 不再含「提示时长口径」
+  ✓ app-core 不再含「提示定时器实现体」
+  ✓ app-core 不再含「外链控制字符判定」
+  ✓ app-core 不再含「外链协议白名单判定」
+  ✓ 装配函数 bindRuntime() 存在且非空（下面所有绑定判据的前提）
+  ✓ bindRuntime() 绑定「$」
+  ✓ bindRuntime() 绑定「$$」
+  ✓ bindRuntime() 绑定「openSheet」
+  ✓ bindRuntime() 绑定「closeSheet」
+  ✓ bindRuntime() 绑定「closeAllSheets」
+  ✓ bindRuntime() 绑定「confirmDialog」
+  ✓ bindRuntime() 绑定「toast」
+  ✓ bindRuntime() 绑定「hideToast」
+  ✓ bindRuntime() 绑定「safeExternalHref」
+  ✓ 旧的 const 捕获形态一个都不剩（求值时抓一次就会被钉死）
+  ✓ 抑制反馈按取值函数注入（按值传会让 M1 静默失效）
+  ✓ 没有把抑制反馈按值传进去
+  ✓ 搬移后的名字在 app-core 里仍被真实引用（11 种引用形状）
+  ✓ 反向对照：把 $("#backdrop").classList.add("show") 塞回 app-core 后，判据变红
+
+== B. 绑定：app-core 取的是模块导出，且 lib 的别名就是同一函数对象 ==
+  ✓ bindRuntime() 绑定「parseChineseTime」（解析器）
+  ✓ bindRuntime() 绑定「cnInt」（中文数字）
+  ✓ bindRuntime() 绑定「hasSpecificTimeWord」（明确时间词）
+  ✓ bindRuntime() 绑定「nextRepeatTrigger」（周期推进）
+  ✓ bindRuntime() 绑定「repeatLabel」（周期文案）
+  ✓ bindRuntime() 绑定「nextRepeatPreview」（周期预演）
+  ✓ bindRuntime() 绑定「startOfDay」（startOfDay）
+  ✓ bindRuntime() 绑定「endOfDay」（endOfDay）
+  ✓ bindRuntime() 绑定「addDays」（addDays）
+  ✓ bindRuntime() 绑定「applyClock」（applyClock）
+  ✓ bindRuntime() 绑定「nextWeekend」（nextWeekend）
+  ✓ 旧的 const 捕获形态一个都不剩（解析器 / 周期 / 日历原语）
+  ✓ lib/parse-cn.js 的 startOfDay 就是 lib/date-utils.js 那一个（同一函数对象）
+  ✓ lib/parse-cn.js 的 addDays 就是 lib/date-utils.js 那一个
+  ✓ lib/repeat.js 的 lastDayOfMonth 就是 lib/date-utils.js 那一个
+  ✓ lib/repeat.js 的 applyClock 就是 lib/date-utils.js 那一个
+  ✓ lib/repeat.js 的 nthWeekdayInMonth 就是 lib/date-utils.js 那一个
+  ✓ parse 的 nthWeekdayOfNextMonth 指向 ByInstant（首期候选：按具体时刻比较）
+  ✓ repeat 的 nthWeekdayOfNextMonth 指向 ByDay（周期推进：按「日」比较）
+  ✓ 两个语义确实是**两个不同的函数**（不是同一个实现换了名字）
+  ✓ 锚点落在目标星期几且早于 10:00 时，两种语义分叉（ByInstant 留在本月、ByDay 推下月）
+  ✓ 普通锚点（周二）上两种语义一致（说明分叉只发生在那个边界）
+
+== C. 规则语义：语料走唯一入口，逐条断言可独立推导的性质 ==
+  ✓ 「明天上午9点」= 2026-09-19 09:00（明天 + 句内钟点）
+  ✓ 「明天上午9点」的记账基准是 wall-clock（不是 elapsed）
+  ✓ 「今天晚上8点」= 2026-09-18 20:00（当天 + 句内钟点）
+  ✓ 「下周三」落在星期三
+  ✓ 「下周三」= 2026-09-23（下个日历周的周三）
+  ✓ 「下周三」确实在基准日之后（不是已过去的那一周）
+  ✓ 「下周日」落在星期日
+  ✓ 「下周日」= 2026-09-27（下个日历周的周日，与「下周三」同一周）
+  ✓ 「每周一早上9点」触发点落在星期一
+  ✓ 「每周一早上9点」钟点为 09:00
+  ✓ 「每周一早上9点」被识别为每周重复（every=week）
+  ✓ 「每周一早上9点」后续 4 轮都落在星期一 09:00（星期几由锚点承载，不由 dow 字段承载）
+  ✓ 「每周一早上9点」后续 4 轮严格 +7 天推进
+  ✓ 「每月31号」在 9 月收敛到月末（30 日，不溢出成 10-01）
+  ✓ 「每月最后一天」落在当月最后一天
+  ✓ 「下个月5号」= 2026-10-05
+  ✓ 「3天后」按 elapsed 基准（保留当前时刻，而不是跳到 10:00）
+  ✓ 「3天后」= 2026-09-21 14:00（基准时刻 +3 天）
+  ✓ 无时间词的「记得买牛奶」= low 置信度
+  ✓ 无时间词时不产生重复规则
+
+== D. 周期推进：每一步都落在正确的那一天（按日历，不按毫秒） ==
+  ✓ 每周重复：四次推进每次恰好 +7 天
+  ✓ 每周重复：每一步都落在星期一 09:00（不会被锚点的钟点带偏）
+  ✓ 月末重复：每一步都落在当月最后一天（10/31、11/30、12/31）
+  ✓ 月末重复：严格向后推进且每一步都晚于上一步
+  ✓ 周期推进在「锚点=目标周几且早于 10:00」时不原地打转（必须晚于锚点）
+
+== E. 中文数字：唯一入口的结果语义（含旧守护保留的用例） ==
+  ✓ cnInt(四十) = 40
+  ✓ cnInt(九十) = 90
+  ✓ cnInt(一百) = 100
+  ✓ cnInt(三十五) = 35
+  ✓ cnInt(二十三) = 23
+  ✓ cnInt(二零二三) = 2023
+  ✓ cnInt(三百零五) = 305
+
+== F. 覆盖矩阵：app-core 的每个 Lib 引用都在启动闸门的声明表里 ==
+  ✓ 矩阵闭合：无未声明的 Lib / DatePrimitives 引用
+  ✓ 产品源码没有歧义别名（一名两义已被消除）
+  ✓ 产品源码没有歧义引用（不存在「证不了归属就跳过」的残留）
+  ✓ 唯一判定出口 problems 为空（undeclared + 两类歧义都进来）
+  ✓ 别名归一生效：`feedbackApi` ⇒ `FeedbackLib`（别名调用确实落在声明路径上）
+  ✓ 声明表规模合理（≥25 项，且含解析器与日历原语）
+  ✓ Feedback.TEST_FEEDBACK 声明的是**数组契约**（`array`），不是笼统的 object
+  ✓ Feedback.UNDO_WINDOW_MS 仍是 number（数组改制没有顺手改坏常量契约）
+  ✓ 类型白名单：声明表里出现的类型取值都在闸门认得的契约内（写错类型不会静默失效）
+  ✓ （前置）非法类型夹具真的改到了那一条声明（否则下面那条是空断言）
+  ✓ 反向对照：写成白名单外的类型 ⇒ 这条声明不再被认 ⟹ 引用变 undeclared（fail closed）
+  ✓ 对照：写成合法类型 `array` 时该声明被正常识别（上面的变红不是「从不识别」）
+  ✓ 反向对照：未声明的 Lib.brandNewThing 直接调用会被报出来（闭合判定有牙齿）
+  ✓ 反向对照：带守卫的可选引用被豁免，且出现在 guardedRefs 里（可选 ≠ 不需要声明）
+  ✓ 反向对照（别名路径）：`const feedbackApi = FeedbackLib; feedbackApi.<未声明成员>()` ⇒ 归一成 `Feedback.independentUndeclaredMember` 并进入 undeclared
+  ✓ 反向对照（直接路径）：`FeedbackLib.<未声明成员>()` ⇒ 同样进入 undeclared
+  ✓ （前置）同名歧义夹具真的改到了两处（否则下面那条是空断言）
+  ✓ 反向对照（同名歧义）：证不了归属 ⇒ `problems` 必须非空，而不是「只报告歧义但仍视为闭合」
+  ✓ （前置）根对象守卫（别名）夹具真的改到了那行真实调用（否则下面那条是空断言）
+  ✓ 反向对照（根守卫·别名）：`feedbackApi ? feedbackApi.<未声明成员>()` ⇒ 进入 undeclared 且 problems 点名，不进 guardedRefs
+  ✓ （前置）根对象守卫（直接命名空间）夹具真的改到了那行真实调用（否则下面那条是空断言）
+  ✓ 反向对照（根守卫·直接命名空间）：`FeedbackLib ? FeedbackLib.<未声明成员>() : null` ⇒ 同样进入 undeclared（该缺口与别名解析无关）
+  ✓ 对照：**成员级**守卫仍算可选（`if (Ns.member)` 进 guardedRefs，不进 undeclared）—— 没有这一条，「所有守卫都不豁免」也能让上面两条变绿，那是另一种错
+
+== G. 语料冒烟：整份语料走唯一入口，输出形状必须合法 ==
+  ✓ 语料 35 条全部返回合法形状（trigger / confidence / title）
+
+通过 160 项，失败 0 项
+结果：单一来源已闭合（PASS）

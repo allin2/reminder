@@ -1,0 +1,63 @@
+{
+ "window": [
+  "05:13",
+  "05:20"
+ ],
+ "quietEndTs": 1790284800000,
+ "A1": {
+  "item": {
+   "id": "i_aebx4xcnmug15sxs",
+   "title": "RFX 复验勿扰甲",
+   "status": "waiting",
+   "rev": 1,
+   "triggerAt": 1790284609405,
+   "priority": "normal",
+   "review_status": "READY"
+  },
+  "pending": [],
+  "pendingAtMs": null,
+  "diffFromQuietEnd": null,
+  "notifAtOrigPlus30s": 0,
+  "verdict": "FAIL"
+ },
+ "A3": {
+  "deliveredAt": 1790284803383,
+  "afterQuietEndMs": 3383,
+  "verdict": "PASS"
+ },
+ "A4": {
+  "stateBeforeDelete": {
+   "id": "i_aebx4xcnmug15sxs",
+   "title": "RFX 复验勿扰甲",
+   "status": "archived",
+   "rev": 2,
+   "triggerAt": 1790284800000,
+   "snoozedAt": null,
+   "snoozeCount": 0,
+   "acknowledgedAt": null,
+   "completedAt": 1790284805904,
+   "archivedAt": null,
+   "priority": "normal",
+   "delivery_mode": "alarm",
+   "reminderKey": null,
+   "lastDeliveredAt": null,
+   "deliveredAt": 1790284803985,
+   "seriesId": null
+  },
+  "deleteAt": 1790284806921,
+  "goneAt": 1790284810371,
+  "goneAfterMs": 3450,
+  "status": {
+   "removed": [],
+   "cleanupError": null,
+   "errors": []
+  },
+  "notifId": null,
+  "verdict": "FAIL"
+ },
+ "restored": {
+  "dnd": false,
+  "quietStart": "23:00",
+  "quietEnd": "07:30"
+ }
+}

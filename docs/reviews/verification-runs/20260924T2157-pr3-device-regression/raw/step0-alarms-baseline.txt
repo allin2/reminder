@@ -1,0 +1,59 @@
+#1: Reason=alarm_cancelled elapsed=-6h7m45s188ms rtc=2026-09-24 15:53:24.977
+        Snapshot:
+          type=RTC_WAKEUP tag=*walarm*:space.alliswell.inbox/com.capacitorjs.plugins.localnotifications.TimedNotificationPublisher 
+          policyWhenElapsed: requester=-4h44m10s165ms app_standby=-6h11m4s301ms device_idle=-- battery_saver=-6h11m4s301ms --unknown(4)--=--
+      #2: Reason=alarm_cancelled elapsed=-6h7m45s191ms rtc=2026-09-24 15:53:24.973
+        Snapshot:
+          type=RTC_WAKEUP tag=*walarm*:space.alliswell.inbox/com.capacitorjs.plugins.localnotifications.TimedNotificationPublisher 
+          policyWhenElapsed: requester=+28m49s835ms app_standby=-6h7m45s530ms device_idle=-- battery_saver=-6h7m45s530ms --unknown(4)--=--
+      #3: Reason=alarm_cancelled elapsed=-6h7m45s195ms rtc=2026-09-24 15:53:24.970
+        Snapshot:
+          type=RTC_WAKEUP tag=*walarm*:space.alliswell.inbox/com.capacitorjs.plugins.localnotifications.TimedNotificationPublisher 
+          policyWhenElapsed: requester=-5h44m10s164ms app_standby=-6h11m4s321ms device_idle=-- battery_saver=-6h11m4s321ms --unknown(4)--=--
+      #4: Reason=alarm_cancelled elapsed=-6h7m45s198ms rtc=2026-09-24 15:53:24.967
+        Snapshot:
+          type=RTC_WAKEUP tag=*walarm*:space.alliswell.inbox/com.capacitorjs.plugins.localnotifications.TimedNotificationPublisher 
+          policyWhenElapsed: requester=-5h14m10s164ms app_standby=-6h11m4s385ms device_idle=-- battery_saver=-6h11m4s385ms --unknown(4)--=--
+      #5: Reason=alarm_cancelled elapsed=-6h7m45s200ms rtc=2026-09-24 15:53:24.964
+        Snapshot:
+          type=RTC_WAKEUP tag=*walarm*:space.alliswell.inbox/com.capacitorjs.plugins.localnotifications.TimedNotificationPublisher 
+          policyWhenElapsed: requester=-31m10s164ms app_standby=-6h7m45s544ms device_idle=-- battery_saver=-6h7m45s544ms --unknown(4)--=--
+      #6: Reason=alarm_cancelled elapsed=-6h7m45s595ms rtc=2026-09-24 15:53:24.569
+        Snapshot:
+          type=RTC_WAKEUP tag=*walarm*:space.alliswell.inbox/com.capacitorjs.plugins.localnotifications.TimedNotificationPublisher 
+          policyWhenElapsed: requester=-31m10s164ms app_standby=-6h7m45s733ms device_idle=-- battery_saver=-6h7m45s733ms --unknown(4)--=--
+      #7: Reason=alarm_cancelled elapsed=-6h7m45s598ms rtc=2026-09-24 15:53:24.567
+        Snapshot:
+          type=RTC_WAKEUP tag=*walarm*:space.alliswell.inbox/com.capacitorjs.plugins.localnotifications.TimedNotificationPublisher 
+          policyWhenElapsed: requester=+28m49s836ms app_standby=-6h7m45s724ms device_idle=-- battery_saver=-6h7m45s724ms --unknown(4)--=--
+      #8: Reason=alarm_cancelled elapsed=-6h7m45s785ms rtc=2026-09-24 15:53:24.379
+        Snapshot:
+          type=RTC_WAKEUP tag=*walarm*:space.alliswell.inbox/com.capacitorjs.plugins.localnotifications.TimedNotificationPublisher 
+          policyWhenElapsed: requester=-31m10s165ms app_standby=-6h7m45s943ms device_idle=-- battery_saver=-6h7m45s943ms --unknown(4)--=--
+      #9: Reason=alarm_cancelled elapsed=-6h7m45s789ms rtc=2026-09-24 15:53:24.376
+        Snapshot:
+          type=RTC_WAKEUP tag=*walarm*:space.alliswell.inbox/com.capacitorjs.plugins.localnotifications.TimedNotificationPublisher 
+          policyWhenElapsed: requester=+28m49s835ms app_standby=-6h7m45s937ms device_idle=-- battery_saver=-6h7m45s937ms --unknown(4)--=--
+      #10: Reason=alarm_cancelled elapsed=-6h7m45s988ms rtc=2026-09-24 15:53:24.176
+        Snapshot:
+          type=RTC_WAKEUP tag=*walarm*:space.alliswell.inbox/com.capacitorjs.plugins.localnotifications.TimedNotificationPublisher 
+          policyWhenElapsed: requester=-4h23m4s421ms app_standby=-6h11m4s331ms device_idle=-- battery_saver=-6h11m4s331ms --unknown(4)--=--
+  
+  Top Alarms:
+    +1m35s92ms running, 0 wakeups, 2459 alarms: 1000:android
+      *alarm*:JobRestriction.JobTracker.PERIODIC_STATS_WIN
+    +1m34s558ms running, 0 wakeups, 2923 alarms: 1000:android
+--
+    +2s598ms 0 wakes 4 alarms, last -18h35m30s8ms:
+      *alarm*:com.vivo.Tips.ACTION_PRE_LOAD
+  u0a285:space.alliswell.inbox +747ms running, 10 wakeups:
+    +581ms 3 wakes 3 alarms, last -6h14m10s152ms:
+      *walarm*:space.alliswell.inbox.ACTION_TEST_ALARM
+    +166ms 4 wakes 4 alarms, last -53m11s363ms:
+      *walarm*:space.alliswell.inbox/com.capacitorjs.plugins.localnotifications.TimedNotificationPublisher
+    +55ms 3 wakes 3 alarms, last -6h14m10s152ms:
+      *walarm*:space.alliswell.inbox/.AlarmRingService
+  
+  Alarm manager stats:
+    REORDER_ALARMS_FOR_STANDBY: count=4410, total=1406.8ms, avg=0.319ms, max calls/s=9 max dur/s=17.1ms max time=17.0ms
+    HAS_SCHEDULE_EXACT_ALARM: count=6767, total=3374.0ms, avg=0.499ms, max calls/s=130 max dur/s=1743.7ms max time=1743.1ms

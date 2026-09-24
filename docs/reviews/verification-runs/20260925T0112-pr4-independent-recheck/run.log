@@ -1,0 +1,48 @@
+01:12:53 == PR4 independent recheck baseline Fri Sep 25 01:12:52 CST 2026
+01:12:56 ready {'ready': True, 'status': 'loaded', 'writesAllowed': True, 'native': True}
+01:12:56 baseline {"items": ["i_24rm31samufjri6d"], "dnd": true, "quietStart": "23:00", "quietEnd": "07:30", "index": "{}"}
+01:12:56 == A1 recheck (user's real quiet window)
+01:12:57 created {"id": "i_81ttgndmmufsiqo6", "title": "RFX 复验勿扰甲", "status": "waiting", "rev": 1, "triggerAt": 1790270096452, "priority": "normal", "review_status": "READY"}
+01:13:01 pending [{"id": 722310209, "at": "Fri Sep 25 07:30:00 GMT+08:00 2026", "event": "primary"}]
+05:13:33 == R1 resume after interruption Fri Sep 25 05:13:33 2026
+05:13:33 candidate 83be4ea9a847d0d9d87dcd7856c6b27c23d0b096dd29f64e298e2cddf8dfb579 device base.apk 83be4ea9a847d0d9d87dcd7856c6b27c23d0b096dd29f64e298e2cddf8dfb579 MATCH
+05:13:34 pkg versionName=1.1 |     lastUpdateTime=2026-09-25 00:36:09
+05:13:34 ready {'ready': True, 'status': 'loaded', 'writesAllowed': True, 'native': True}
+05:13:34 state {"now": 1790284414169, "items": [{"id": "i_24rm31samufjri6d", "rfx": false, "status": "archived", "triggerAt": 1790255278802, "title": null}, {"id": "i_81ttgndmmufsiqo6", "rfx": true, "status": "waiting", "triggerAt": 1790292600000, "title": "RFX 复验勿扰甲"}, {"id": "i_t6t8kjrbmufskit9", "rfx": false, "status": "waiting", "triggerAt": 1790292600000, "title": null}, {"id": "i_ve90y9vxmufskxvx", "rfx": false, "status": "waiting", "triggerAt": 1790292600000, "title": null}, {"id": "i_ksgrct0wmufslps2", "rfx": false, "status": "waiting", "triggerAt": 1790343000000, "title": null}, {"id": "i_32p3og4nmufsly70", "rfx": false, "status": "archived", "triggerAt": 1790270129172, "title": null}, {"id": "i_jaggipg8mufsmipq", "rfx": false, "status": "acknowledged", "triggerAt": 1790270157765, "title": null}], "dnd": false, "quietStart": "23:00", "quietEnd": "07:30", "index": "{\"722310209\":{\"itemId\":\"i_81ttgndmmufsiqo6\",\"itemRev\":1,\"seenAt\":1790270170603},\"1167903030\":{\"itemId\":\"i_ve90y9vxmufskxvx\",\"itemRev\":1,\"seenAt\":1790270170603},\"1700184369\":{\"itemId\":\"i_t6t8kjrbmufskit9\",\"itemRev\":1,\"seenAt\":1790270170603}}", "pending": [{"id": 1384418989, "at": "Fri Sep 25 21:30:00 GMT+08:00 2026", "itemId": "review-session", "event": "review"}, {"id": 1167903030, "at": "Fri Sep 25 07:30:00 GMT+08:00 2026", "itemId": "i_ve90y9vxmufskxvx", "event": "primary"}, {"id": 1376612475, "at": "Fri Sep 25 22:30:00 GMT+08:00 2026", "itemId": "review-session", "event": "review"}, {"id": 722310209, "at": "Fri Sep 25 07:30:00 GMT+08:00 2026", "itemId": "i_81ttgndmmufsiqo6", "event": "primary"}, {"id": 1700184369, "at": "Fri Sep 25 07:30:00 GMT+08:00 2026", "itemId": "i_t6t8kjrbmufskit9", "event": "primary"}]}
+05:13:35 RFX notifications in shade: 0
+05:13:38 deleted leftover {"id": "i_81ttgndmmufsiqo6", "ok": true, "pendingAfter": [], "state": null, "idb": {"found": false, "count": 6}}
+05:13:39 R1 done
+05:14:44 == R2 A1/A3/A4 recheck (temp window)
+05:14:48 baseline settings {"dnd": false, "quietStart": "23:00", "quietEnd": "07:30", "review": {"enabled": true, "hour": 21, "minute": 30, "windowEndHour": 23, "windowEndMinute": 0, "followupMs": 3600000, "maxFollowups": 2, "lastNotifiedAt": 1790258501935, "followupCount": 1, "snoozedUntil": 0, "skippedUntil": 0, "sessionStatus": "idle", "lastSessionKey": "W:2026-9-24T21:30"}}
+05:14:49 temp window set {'dnd': True, 'quietStart': '05:13', 'quietEnd': '05:20'}
+05:14:50 A1 created {"id": "i_aebx4xcnmug15sxs", "title": "RFX 复验勿扰甲", "status": "waiting", "rev": 1, "triggerAt": 1790284609405, "priority": "normal", "review_status": "READY"}
+05:14:56 A1 pending []
+05:17:19 A1 FAIL diff None notif@orig+30s 0
+05:20:03 A3 {'deliveredAt': 1790284803383, 'afterQuietEndMs': 3383, 'verdict': 'PASS'}
+05:20:10 A4 {"stateBeforeDelete": {"id": "i_aebx4xcnmug15sxs", "title": "RFX 复验勿扰甲", "status": "archived", "rev": 2, "triggerAt": 1790284800000, "snoozedAt": null, "snoozeCount": 0, "acknowledgedAt": null, "completedAt": 1790284805904, "archivedAt": null, "priority": "normal", "delivery_mode": "alarm", "reminderKey": null, "lastDeliveredAt": null, "deliveredAt": 1790284803985, "seriesId": null}, "deleteAt": 1790284806921, "goneAt": 1790284810371, "goneAfterMs": 3450, "status": {"removed": [], "cleanupError": null, "errors": []}, "notifId": null, "verdict": "FAIL"}
+05:20:12 restored {'dnd': False, 'quietStart': '23:00', 'quietEnd': '07:30'}
+05:20:12 R2 done
+05:26:13 == R3 start (user consented to temporary defaultDeliveryMode=notification)
+05:26:16 baseline {'dnd': False, 'quietStart': '23:00', 'quietEnd': '07:30', 'defaultDeliveryMode': 'alarm'}
+05:26:17 mode -> notification
+05:26:18 temp window {'dnd': True, 'quietStart': '05:25', 'quietEnd': '05:32'}
+05:26:20 created {"id": "i_w5rrkpztmug1kkt2", "title": "RFX 复验勿扰丁", "status": "waiting", "rev": 1, "triggerAt": 1790285298708, "priority": "normal", "review_status": "READY"} assert True
+05:28:49 A1 PASS pending [{'id': 2098440493, 'at': 'Fri Sep 25 05:32:00 GMT+08:00 2026', 'event': 'primary'}] diff 0 notif@+30s 0
+05:32:01 A3 {'deliveredAt': 1790285521870, 'afterQuietEndMs': 1870, 'verdict': 'PASS'}
+05:32:07 A4 {"notifId": 2098440493, "stateBefore": {"id": "i_w5rrkpztmug1kkt2", "title": "RFX 复验勿扰丁", "status": "due", "rev": 1, "triggerAt": 1790285520000, "snoozedAt": null, "snoozeCount": 0, "acknowledgedAt": null, "completedAt": null, "archivedAt": null, "priority": "normal", "delivery_mode": "notification", "reminderKey": null, "lastDeliveredAt": null, "deliveredAt": 1790285522629, "seriesId": null}, "deleteAt": 1790285525538, "goneAt": 1790285526264, "goneAfterMs": 726, "removedSeen": [2098440493], "statusAfter": {"removed": [2098440493], "cleanupError": null, "errors": []}, "notifIdInRemoved": true, "verdict": "PASS"}
+05:32:08 dnd restored {'dnd': False, 'quietStart': '23:00', 'quietEnd': '07:30'}
+05:32:09 created {"id": "i_75e35si9mug1s2ej", "title": "RFX 复验删除乙", "status": "waiting", "rev": 1, "triggerAt": 1790285648106, "priority": "normal", "review_status": "READY"} assert True
+05:32:10 created {"id": "i_yuvmx1xfmug1s3et", "title": "RFX 复验保留丙", "status": "waiting", "rev": 1, "triggerAt": 1790285649412, "priority": "normal", "review_status": "READY"} assert True
+05:32:11 B pending [{'id': 1860032609, 'at': 'Fri Sep 25 05:34:08 GMT+08:00 2026', 'event': 'primary'}] [{'id': 701794945, 'at': 'Fri Sep 25 05:34:09 GMT+08:00 2026', 'event': 'primary'}]
+05:34:10 B delivered 1790285650092 1790285650653
+05:34:24 B5 {"item": {"id": "i_yuvmx1xfmug1s3et", "title": "RFX 复验保留丙", "status": "waiting", "rev": 1, "triggerAt": 1790285649412, "priority": "normal", "review_status": "READY"}, "notifId": 701794945, "deliveredAt": 1790285650653, "syncStatus": {"removed": [], "cleanupError": null}, "statusAfterResume": {"removed": [], "cleanupError": null, "errors": []}, "notifStillPresent": 1, "verdict": "PASS"}
+05:34:26 B1 {"item": {"id": "i_75e35si9mug1s2ej", "title": "RFX 复验删除乙", "status": "waiting", "rev": 1, "triggerAt": 1790285648106, "priority": "normal", "review_status": "READY"}, "notifId": 1860032609, "deliveredAt": 1790285650092, "deleteAt": 1790285664162, "goneAt": 1790285664846, "goneAfterMs": 684, "removedSeen": [1860032609], "statusAfter": {"removed": [1860032609], "cleanupError": null, "errors": []}, "notifIdInRemoved": true, "verdict": "PASS", "b5StillPresentAfterB1Delete": 1}
+05:34:37 cold start {'oldPid': '23295', 'newPid': '27898', 'b1NotifAfterCold': 0, 'b5NotifAfterCold': 1, 'indexAfterCold': {'701794945': {'itemId': 'i_yuvmx1xfmug1s3et', 'itemRev': 1, 'seenAt': 1790285648269}, '1167903030': {'itemId': 'i_ve90y9vxmufskxvx', 'itemRev': 1, 'seenAt': 1790285670098}, '1700184369': {'itemId': 'i_t6t8kjrbmufskit9', 'itemRev': 1, 'seenAt': 1790285670098}}}
+05:34:39 cleanup B5 {"deleteAt": 1790285678498, "goneAt": 1790285679250, "goneAfterMs": 752, "removedSeen": [701794945], "statusAfter": {"removed": [701794945], "cleanupError": null, "errors": []}, "notifIdInRemoved": true, "verdict": "PASS"}
+05:34:40 mode restored alarm
+05:34:40 R3 done
+05:35:04 == R4 final residue & snapshot
+05:35:14 residue {"rfxItems": [], "pendingRfx": 0, "indexRfxItems": [], "settings": {"dnd": false, "quietStart": "23:00", "quietEnd": "07:30", "defaultDeliveryMode": "alarm"}, "rfxNotif": 0, "rfxAlarmLines": 0}
+05:35:14 diff {"storesAdded": [], "storesRemoved": [], "records": {"kv/state": "identical"}, "localStorage": {"attention-inbox-delivered-notif-index": "modified", "attention-inbox-v2": "identical"}}
+05:35:14 settingsDiff {}
+05:35:14 R4 done

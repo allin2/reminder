@@ -1,0 +1,10 @@
+0x05babbab: pkg=space.alliswell.inbox user=UserHandle{0} id=1210130484 tag=null importance=3 key=0|space.alliswell.inbox|1210130484|null|10285: Notification(channel=attention-normal-v2 shortcut=null contentView=null vibrate=null sound=null defaults=0 flags=ONLY_ALERT_ONCE|AUTO_CANCEL color=0xff1b6b4a actions=3 vis=PRIVATE internalType=0 internalPriority=0 internalGroupPriority=0 internalFlag=0))
+      uid=10285 userId=0
+      icon=Icon(typ=RESOURCE pkg=space.alliswell.inbox id=0x7f070062)
+      flags=ONLY_ALERT_ONCE|AUTO_CANCEL
+      key=0|space.alliswell.inbox|1210130484|null|10285
+            when=1790260440015/1790260440015
+            actions={
+                android.title=String (安心收件箱提醒)
+      mAttributes= AudioAttributes: usage=USAGE_NOTIFICATION content=CONTENT_TYPE_SONIFICATION flags=0x800 tags= bundle=null
+      effectiveNotificationChannel=NotificationChannel{mId='attention-normal-v2', mName=普通提醒, mDescription=hasDescription , mImportance=3, mBypassDnd=false, mLockscreenVisibility=-1000, mSound=android.resource://space.alliswell.inbox/raw/attention_reminder, mLights=false, mLightColor=0, mVibrationPattern=null, mVibrationEffect=null, mUserLockedFields=0, mUserVisibleTaskShown=false, mVibrationEnabled=true, mShowBadge=false, mDeleted=false, mDeletedTimeMs=-1, mGroup='null', mAudioAttributes=AudioAttributes: usage=USAGE_NOTIFICATION content=CONTENT_TYPE_SONIFICATION flags=0x800 tags= bundle=null, mBlockableSystem=false, mAllowBubbles=-1, mImportanceLockedDefaultApp=

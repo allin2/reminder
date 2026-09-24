@@ -1,0 +1,689 @@
+{
+  "step": "R4",
+  "status": "PASS",
+  "sheetOperations": [
+    {
+      "sheet": "sheetSetup",
+      "openConfirmed": true,
+      "leakResult": {
+        "totalSheets": 17,
+        "leakingCount": 0,
+        "leaking": [],
+        "allSheets": [
+          {
+            "id": "sheetItem",
+            "top": 808.7797241210938,
+            "innerHeight": 742,
+            "visibility": "hidden",
+            "display": "flex",
+            "isOpen": false,
+            "isLeaking": false
+          },
+          {
+            "id": "sheetDetail",
+            "top": 787.21875,
+            "innerHeight": 742,
+            "visibility": "hidden",
+            "display": "flex",
+            "isOpen": false,
+            "isLeaking": false
+          },
+          {
+            "id": "sheetSnooze",
+            "top": 781.2906494140625,
+            "innerHeight": 742,
+            "visibility": "hidden",
+            "display": "flex",
+            "isOpen": false,
+            "isLeaking": false
+          },
+          {
+            "id": "sheetNote",
+            "top": 807.0135498046875,
+            "innerHeight": 742,
+            "visibility": "hidden",
+            "display": "flex",
+            "isOpen": false,
+            "isLeaking": false
+          },
+          {
+            "id": "sheetSearch",
+            "top": 757.7999877929688,
+            "innerHeight": 742,
+            "visibility": "hidden",
+            "display": "flex",
+            "isOpen": false,
+            "isLeaking": false
+          },
+          {
+            "id": "sheetProjects",
+            "top": 773.1234741210938,
+            "innerHeight": 742,
+            "visibility": "hidden",
+            "display": "flex",
+            "isOpen": false,
+            "isLeaking": false
+          },
+          {
+            "id": "sheetQuiet",
+            "top": 774.074462890625,
+            "innerHeight": 742,
+            "visibility": "hidden",
+            "display": "flex",
+            "isOpen": false,
+            "isLeaking": false
+          },
+          {
+            "id": "sheetAi",
+            "top": 808.7797241210938,
+            "innerHeight": 742,
+            "visibility": "hidden",
+            "display": "flex",
+            "isOpen": false,
+            "isLeaking": false
+          },
+          {
+            "id": "sheetLowConf",
+            "top": 779.051025390625,
+            "innerHeight": 742,
+            "visibility": "hidden",
+            "display": "flex",
+            "isOpen": false,
+            "isLeaking": false
+          },
+          {
+            "id": "sheetConfirm",
+            "top": 759.3797607421875,
+            "innerHeight": 742,
+            "visibility": "hidden",
+            "display": "flex",
+            "isOpen": false,
+            "isLeaking": false
+          },
+          {
+            "id": "sheetReview",
+            "top": 759.3797607421875,
+            "innerHeight": 742,
+            "visibility": "hidden",
+            "display": "flex",
+            "isOpen": false,
+            "isLeaking": false
+          },
+          {
+            "id": "sheetReviewSnooze",
+            "top": 771.21875,
+            "innerHeight": 742,
+            "visibility": "hidden",
+            "display": "flex",
+            "isOpen": false,
+            "isLeaking": false
+          },
+          {
+            "id": "sheetReviewSchedule",
+            "top": 788.082275390625,
+            "innerHeight": 742,
+            "visibility": "hidden",
+            "display": "flex",
+            "isOpen": false,
+            "isLeaking": false
+          },
+          {
+            "id": "sheetNotifyLab",
+            "top": 808.7797241210938,
+            "innerHeight": 742,
+            "visibility": "hidden",
+            "display": "flex",
+            "isOpen": false,
+            "isLeaking": false
+          },
+          {
+            "id": "sheetSetup",
+            "top": 808.7797241210938,
+            "innerHeight": 742,
+            "visibility": "hidden",
+            "display": "flex",
+            "isOpen": false,
+            "isLeaking": false
+          },
+          {
+            "id": "sheetDemo",
+            "top": 808.7797241210938,
+            "innerHeight": 742,
+            "visibility": "hidden",
+            "display": "flex",
+            "isOpen": false,
+            "isLeaking": false
+          },
+          {
+            "id": "sheetGuide",
+            "top": 808.7797241210938,
+            "innerHeight": 742,
+            "visibility": "hidden",
+            "display": "flex",
+            "isOpen": false,
+            "isLeaking": false
+          }
+        ]
+      }
+    },
+    {
+      "sheet": "sheetItem",
+      "interactive": {
+        "isOpen": true,
+        "isVisible": true,
+        "inputFocused": true
+      },
+      "leakResult": {
+        "totalSheets": 17,
+        "leakingCount": 0,
+        "leaking": [],
+        "allSheets": [
+          {
+            "id": "sheetItem",
+            "top": 786.8895874023438,
+            "innerHeight": 742,
+            "visibility": "hidden",
+            "display": "flex",
+            "isOpen": false,
+            "isLeaking": false
+          },
+          {
+            "id": "sheetDetail",
+            "top": 787.21875,
+            "innerHeight": 742,
+            "visibility": "hidden",
+            "display": "flex",
+            "isOpen": false,
+            "isLeaking": false
+          },
+          {
+            "id": "sheetSnooze",
+            "top": 781.2906494140625,
+            "innerHeight": 742,
+            "visibility": "hidden",
+            "display": "flex",
+            "isOpen": false,
+            "isLeaking": false
+          },
+          {
+            "id": "sheetNote",
+            "top": 807.0135498046875,
+            "innerHeight": 742,
+            "visibility": "hidden",
+            "display": "flex",
+            "isOpen": false,
+            "isLeaking": false
+          },
+          {
+            "id": "sheetSearch",
+            "top": 757.7999877929688,
+            "innerHeight": 742,
+            "visibility": "hidden",
+            "display": "flex",
+            "isOpen": false,
+            "isLeaking": false
+          },
+          {
+            "id": "sheetProjects",
+            "top": 773.1234741210938,
+            "innerHeight": 742,
+            "visibility": "hidden",
+            "display": "flex",
+            "isOpen": false,
+            "isLeaking": false
+          },
+          {
+            "id": "sheetQuiet",
+            "top": 774.074462890625,
+            "innerHeight": 742,
+            "visibility": "hidden",
+            "display": "flex",
+            "isOpen": false,
+            "isLeaking": false
+          },
+          {
+            "id": "sheetAi",
+            "top": 808.7797241210938,
+            "innerHeight": 742,
+            "visibility": "hidden",
+            "display": "flex",
+            "isOpen": false,
+            "isLeaking": false
+          },
+          {
+            "id": "sheetLowConf",
+            "top": 779.051025390625,
+            "innerHeight": 742,
+            "visibility": "hidden",
+            "display": "flex",
+            "isOpen": false,
+            "isLeaking": false
+          },
+          {
+            "id": "sheetConfirm",
+            "top": 759.3797607421875,
+            "innerHeight": 742,
+            "visibility": "hidden",
+            "display": "flex",
+            "isOpen": false,
+            "isLeaking": false
+          },
+          {
+            "id": "sheetReview",
+            "top": 759.3797607421875,
+            "innerHeight": 742,
+            "visibility": "hidden",
+            "display": "flex",
+            "isOpen": false,
+            "isLeaking": false
+          },
+          {
+            "id": "sheetReviewSnooze",
+            "top": 771.21875,
+            "innerHeight": 742,
+            "visibility": "hidden",
+            "display": "flex",
+            "isOpen": false,
+            "isLeaking": false
+          },
+          {
+            "id": "sheetReviewSchedule",
+            "top": 788.082275390625,
+            "innerHeight": 742,
+            "visibility": "hidden",
+            "display": "flex",
+            "isOpen": false,
+            "isLeaking": false
+          },
+          {
+            "id": "sheetNotifyLab",
+            "top": 808.7797241210938,
+            "innerHeight": 742,
+            "visibility": "hidden",
+            "display": "flex",
+            "isOpen": false,
+            "isLeaking": false
+          },
+          {
+            "id": "sheetSetup",
+            "top": 808.7797241210938,
+            "innerHeight": 742,
+            "visibility": "hidden",
+            "display": "flex",
+            "isOpen": false,
+            "isLeaking": false
+          },
+          {
+            "id": "sheetDemo",
+            "top": 808.7797241210938,
+            "innerHeight": 742,
+            "visibility": "hidden",
+            "display": "flex",
+            "isOpen": false,
+            "isLeaking": false
+          },
+          {
+            "id": "sheetGuide",
+            "top": 808.7797241210938,
+            "innerHeight": 742,
+            "visibility": "hidden",
+            "display": "flex",
+            "isOpen": false,
+            "isLeaking": false
+          }
+        ]
+      }
+    },
+    {
+      "sheet": "sheetDemo",
+      "openConfirmed": true,
+      "leakResult": {
+        "totalSheets": 17,
+        "leakingCount": 0,
+        "leaking": [],
+        "allSheets": [
+          {
+            "id": "sheetItem",
+            "top": 786.8895874023438,
+            "innerHeight": 742,
+            "visibility": "hidden",
+            "display": "flex",
+            "isOpen": false,
+            "isLeaking": false
+          },
+          {
+            "id": "sheetDetail",
+            "top": 787.21875,
+            "innerHeight": 742,
+            "visibility": "hidden",
+            "display": "flex",
+            "isOpen": false,
+            "isLeaking": false
+          },
+          {
+            "id": "sheetSnooze",
+            "top": 781.2906494140625,
+            "innerHeight": 742,
+            "visibility": "hidden",
+            "display": "flex",
+            "isOpen": false,
+            "isLeaking": false
+          },
+          {
+            "id": "sheetNote",
+            "top": 807.0135498046875,
+            "innerHeight": 742,
+            "visibility": "hidden",
+            "display": "flex",
+            "isOpen": false,
+            "isLeaking": false
+          },
+          {
+            "id": "sheetSearch",
+            "top": 757.7999877929688,
+            "innerHeight": 742,
+            "visibility": "hidden",
+            "display": "flex",
+            "isOpen": false,
+            "isLeaking": false
+          },
+          {
+            "id": "sheetProjects",
+            "top": 773.1234741210938,
+            "innerHeight": 742,
+            "visibility": "hidden",
+            "display": "flex",
+            "isOpen": false,
+            "isLeaking": false
+          },
+          {
+            "id": "sheetQuiet",
+            "top": 774.074462890625,
+            "innerHeight": 742,
+            "visibility": "hidden",
+            "display": "flex",
+            "isOpen": false,
+            "isLeaking": false
+          },
+          {
+            "id": "sheetAi",
+            "top": 808.7797241210938,
+            "innerHeight": 742,
+            "visibility": "hidden",
+            "display": "flex",
+            "isOpen": false,
+            "isLeaking": false
+          },
+          {
+            "id": "sheetLowConf",
+            "top": 779.051025390625,
+            "innerHeight": 742,
+            "visibility": "hidden",
+            "display": "flex",
+            "isOpen": false,
+            "isLeaking": false
+          },
+          {
+            "id": "sheetConfirm",
+            "top": 759.3797607421875,
+            "innerHeight": 742,
+            "visibility": "hidden",
+            "display": "flex",
+            "isOpen": false,
+            "isLeaking": false
+          },
+          {
+            "id": "sheetReview",
+            "top": 759.3797607421875,
+            "innerHeight": 742,
+            "visibility": "hidden",
+            "display": "flex",
+            "isOpen": false,
+            "isLeaking": false
+          },
+          {
+            "id": "sheetReviewSnooze",
+            "top": 771.21875,
+            "innerHeight": 742,
+            "visibility": "hidden",
+            "display": "flex",
+            "isOpen": false,
+            "isLeaking": false
+          },
+          {
+            "id": "sheetReviewSchedule",
+            "top": 788.082275390625,
+            "innerHeight": 742,
+            "visibility": "hidden",
+            "display": "flex",
+            "isOpen": false,
+            "isLeaking": false
+          },
+          {
+            "id": "sheetNotifyLab",
+            "top": 808.7797241210938,
+            "innerHeight": 742,
+            "visibility": "hidden",
+            "display": "flex",
+            "isOpen": false,
+            "isLeaking": false
+          },
+          {
+            "id": "sheetSetup",
+            "top": 808.7797241210938,
+            "innerHeight": 742,
+            "visibility": "hidden",
+            "display": "flex",
+            "isOpen": false,
+            "isLeaking": false
+          },
+          {
+            "id": "sheetDemo",
+            "top": 808.7797241210938,
+            "innerHeight": 742,
+            "visibility": "hidden",
+            "display": "flex",
+            "isOpen": false,
+            "isLeaking": false
+          },
+          {
+            "id": "sheetGuide",
+            "top": 808.7797241210938,
+            "innerHeight": 742,
+            "visibility": "hidden",
+            "display": "flex",
+            "isOpen": false,
+            "isLeaking": false
+          }
+        ]
+      }
+    },
+    {
+      "sheet": "sheetDetail",
+      "openConfirmed": true,
+      "leakResult": {
+        "totalSheets": 17,
+        "leakingCount": 0,
+        "leaking": [],
+        "allSheets": [
+          {
+            "id": "sheetItem",
+            "top": 786.8895874023438,
+            "innerHeight": 742,
+            "visibility": "hidden",
+            "display": "flex",
+            "isOpen": false,
+            "isLeaking": false
+          },
+          {
+            "id": "sheetDetail",
+            "top": 787.21875,
+            "innerHeight": 742,
+            "visibility": "hidden",
+            "display": "flex",
+            "isOpen": false,
+            "isLeaking": false
+          },
+          {
+            "id": "sheetSnooze",
+            "top": 781.2906494140625,
+            "innerHeight": 742,
+            "visibility": "hidden",
+            "display": "flex",
+            "isOpen": false,
+            "isLeaking": false
+          },
+          {
+            "id": "sheetNote",
+            "top": 807.0135498046875,
+            "innerHeight": 742,
+            "visibility": "hidden",
+            "display": "flex",
+            "isOpen": false,
+            "isLeaking": false
+          },
+          {
+            "id": "sheetSearch",
+            "top": 757.7999877929688,
+            "innerHeight": 742,
+            "visibility": "hidden",
+            "display": "flex",
+            "isOpen": false,
+            "isLeaking": false
+          },
+          {
+            "id": "sheetProjects",
+            "top": 773.1234741210938,
+            "innerHeight": 742,
+            "visibility": "hidden",
+            "display": "flex",
+            "isOpen": false,
+            "isLeaking": false
+          },
+          {
+            "id": "sheetQuiet",
+            "top": 774.074462890625,
+            "innerHeight": 742,
+            "visibility": "hidden",
+            "display": "flex",
+            "isOpen": false,
+            "isLeaking": false
+          },
+          {
+            "id": "sheetAi",
+            "top": 808.7797241210938,
+            "innerHeight": 742,
+            "visibility": "hidden",
+            "display": "flex",
+            "isOpen": false,
+            "isLeaking": false
+          },
+          {
+            "id": "sheetLowConf",
+            "top": 779.051025390625,
+            "innerHeight": 742,
+            "visibility": "hidden",
+            "display": "flex",
+            "isOpen": false,
+            "isLeaking": false
+          },
+          {
+            "id": "sheetConfirm",
+            "top": 759.3797607421875,
+            "innerHeight": 742,
+            "visibility": "hidden",
+            "display": "flex",
+            "isOpen": false,
+            "isLeaking": false
+          },
+          {
+            "id": "sheetReview",
+            "top": 759.3797607421875,
+            "innerHeight": 742,
+            "visibility": "hidden",
+            "display": "flex",
+            "isOpen": false,
+            "isLeaking": false
+          },
+          {
+            "id": "sheetReviewSnooze",
+            "top": 771.21875,
+            "innerHeight": 742,
+            "visibility": "hidden",
+            "display": "flex",
+            "isOpen": false,
+            "isLeaking": false
+          },
+          {
+            "id": "sheetReviewSchedule",
+            "top": 788.082275390625,
+            "innerHeight": 742,
+            "visibility": "hidden",
+            "display": "flex",
+            "isOpen": false,
+            "isLeaking": false
+          },
+          {
+            "id": "sheetNotifyLab",
+            "top": 808.7797241210938,
+            "innerHeight": 742,
+            "visibility": "hidden",
+            "display": "flex",
+            "isOpen": false,
+            "isLeaking": false
+          },
+          {
+            "id": "sheetSetup",
+            "top": 808.7797241210938,
+            "innerHeight": 742,
+            "visibility": "hidden",
+            "display": "flex",
+            "isOpen": false,
+            "isLeaking": false
+          },
+          {
+            "id": "sheetDemo",
+            "top": 808.7797241210938,
+            "innerHeight": 742,
+            "visibility": "hidden",
+            "display": "flex",
+            "isOpen": false,
+            "isLeaking": false
+          },
+          {
+            "id": "sheetGuide",
+            "top": 808.7797241210938,
+            "innerHeight": 742,
+            "visibility": "hidden",
+            "display": "flex",
+            "isOpen": false,
+            "isLeaking": false
+          }
+        ]
+      }
+    }
+  ],
+  "tabResults": {
+    "home": {
+      "leakingCount": 0,
+      "fullScreenshot": "/Users/qlyf/Developer/reminder/docs/reviews/verification-runs/20260924T2157-pr3-device-regression/raw/step4-tab-home.png",
+      "bottomCropScreenshot": "/Users/qlyf/Developer/reminder/docs/reviews/verification-runs/20260924T2157-pr3-device-regression/raw/step4-tab-home-bottom.png"
+    },
+    "future": {
+      "leakingCount": 0,
+      "fullScreenshot": "/Users/qlyf/Developer/reminder/docs/reviews/verification-runs/20260924T2157-pr3-device-regression/raw/step4-tab-future.png",
+      "bottomCropScreenshot": "/Users/qlyf/Developer/reminder/docs/reviews/verification-runs/20260924T2157-pr3-device-regression/raw/step4-tab-future-bottom.png"
+    },
+    "notes": {
+      "leakingCount": 0,
+      "fullScreenshot": "/Users/qlyf/Developer/reminder/docs/reviews/verification-runs/20260924T2157-pr3-device-regression/raw/step4-tab-notes.png",
+      "bottomCropScreenshot": "/Users/qlyf/Developer/reminder/docs/reviews/verification-runs/20260924T2157-pr3-device-regression/raw/step4-tab-notes-bottom.png"
+    },
+    "me": {
+      "leakingCount": 0,
+      "fullScreenshot": "/Users/qlyf/Developer/reminder/docs/reviews/verification-runs/20260924T2157-pr3-device-regression/raw/step4-tab-me.png",
+      "bottomCropScreenshot": "/Users/qlyf/Developer/reminder/docs/reviews/verification-runs/20260924T2157-pr3-device-regression/raw/step4-tab-me-bottom.png"
+    }
+  },
+  "allLeakCountsZero": true
+}

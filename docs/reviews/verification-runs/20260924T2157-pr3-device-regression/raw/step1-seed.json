@@ -1,0 +1,15 @@
+{
+  "seed_id": "i_9p2lyykvmufloh4y",
+  "token": "R3P1-220127",
+  "item": {
+    "id": "i_9p2lyykvmufloh4y",
+    "title": "R3P1-220127 安装比对隔离事项",
+    "status": "waiting",
+    "rev": 1,
+    "triggerAt": 1790352060000,
+    "priority": "important",
+    "delivery_mode": "alarm",
+    "scheduleBasis": "wall-clock",
+    "reminderKey": null
+  }
+}
