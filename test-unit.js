@@ -2009,9 +2009,10 @@ const appBackupDone = beginAsyncSection();
      *     历史状态**导出，再喂回当前验证器（复验 §5.5 要求的第二层）。
      */
     section("app-backup — P2-C-S B1：真实历史时间数据的导出→导入回环");
+    // 夹具取自复验 run `20260922T134219-independent-p2cs-recheck/evidence/device-preexisting-backup.json`，
+    // 仅把 items[1] 的个人标题换成占位文本；其余字段（含 createdAt 的 ISO/数字混合形态）逐字节保留。
     const DEVICE_PAYLOAD_PATH = path.join(__dirname,
-      "docs/reviews/verification-runs/20260922T134219-independent-p2cs-recheck" +
-      "/evidence/device-preexisting-backup.json");
+      "test-fixtures/device-preexisting-backup.redacted.json");
     const deviceText = fs.readFileSync(DEVICE_PAYLOAD_PATH, "utf8");
     const devicePayload = JSON.parse(deviceText);
     const ISO_AT = "2026-09-21T08:00:00+08:00";
