@@ -1,0 +1,5 @@
+AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+
+false !== true
+
+    at /Users/qlyf/Developer/reminder/docs/reviews/verification-runs/20260923T0735-p3c-independent-recheck/repro-stale-transaction.js:86:10

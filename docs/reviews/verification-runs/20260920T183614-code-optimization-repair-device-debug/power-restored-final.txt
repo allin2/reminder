@@ -1,0 +1,2 @@
+  mWakefulness=Dozing
+Display Power: com.android.server.power.PowerManagerService$1@6c9f28e

@@ -1,0 +1,70 @@
+ROUNDS=3 PKG=space.alliswell.inbox.exportrecheck
+run-start=2026-09-22T10:42:24+0800
+
+## timepoint A (启动前 · 进程活着)
+IDB_STATE_SHA256=0625aacabcd5068a
+BYTES=2443
+IDB_FILES=5 IDB_BYTES=138521 IDB_SHA256=16f3596ac768f349ab57152ddcd69906b2008358db49da1d52c1d1d2e9ab1032
+MIRROR_FILES=5 MIRROR_BYTES=16735 MIRROR_SHA256=f8fa11b0cc304943dd7591985a6855b40ab79e4a2d99a7b4d0287ad58e3ecd29
+IDB_WAL_BYTES=137696
+MIRROR_WAL_BYTES=15988
+PAGE={"items":2,"projects":1,"title":"P2C 复验事项","status":"loaded","reason":"authoritative","backend":"idb","writesAllowed":true,"blockedWriteCount":0,"nativeBlocked":0,"mirrorLen":2443,"mirrorSha16":"0625aacabcd5068a","panel":false}
+BASE_WAL=137696（冷启动前 WAL 字节数；下面每轮与它比，看有没有新增提交）
+WAL_A_LOCAL=/tmp/p2cr2-wal/wal-A.bin BYTES=137696
+
+════ round 1 / 3 ════
+## [1] timepoint B (进程死亡后且尚未启动)
+B1: IDB_FILES=5 IDB_BYTES=138521 IDB_SHA256=16f3596ac768f349ab57152ddcd69906b2008358db49da1d52c1d1d2e9ab1032 MIRROR_FILES=5 MIRROR_BYTES=16735 MIRROR_SHA256=f8fa11b0cc304943dd7591985a6855b40ab79e4a2d99a7b4d0287ad58e3ecd29 IDB_WAL_BYTES=137696 MIRROR_WAL_BYTES=15988
+pid-after-kill=[]
+B2: IDB_FILES=5 IDB_BYTES=138521 IDB_SHA256=16f3596ac768f349ab57152ddcd69906b2008358db49da1d52c1d1d2e9ab1032 MIRROR_FILES=5 MIRROR_BYTES=16735 MIRROR_SHA256=f8fa11b0cc304943dd7591985a6855b40ab79e4a2d99a7b4d0287ad58e3ecd29 IDB_WAL_BYTES=137696 MIRROR_WAL_BYTES=15988
+  ✓ 死亡窗口静止（3 秒间隔两次文件哈希相同；此期间没有任何写入者）
+
+## [1] timepoint C (启动恢复完成后)
+IDB_STATE_SHA256=0625aacabcd5068a
+BYTES=2443
+file: IDB_FILES=5 IDB_BYTES=138543 IDB_SHA256=d1be88971267168b60705448c2486a9433ff4387d323242e77678f958b768ae8 MIRROR_FILES=5 MIRROR_BYTES=16738 MIRROR_SHA256=62b4c99bb081217d512898b6dc8edb8dd681977eb185a645b7adbc30ac5615eb IDB_WAL_BYTES=137715 MIRROR_WAL_BYTES=15988
+PAGE={"items":2,"projects":1,"title":"P2C 复验事项","status":"loaded","reason":"authoritative","backend":"idb","writesAllowed":true,"blockedWriteCount":0,"nativeBlocked":0,"mirrorLen":2443,"mirrorSha16":"0625aacabcd5068a","panel":false}
+
+## [1] 判定
+  ✓ 记录级哈希 A==C（0625aacabcd5068a）：冷启动后权威记录与启动前逐字节一致 ⇒ 未被空快照覆盖
+  WAL 字节：137696 -> 137715（相对 A 时点累计 +19 B；**逐轮增量**见下面这一行）
+  ✓ 追加记录为**空标记**（OPS=0，RECORD_KIND=EMPTY_MARKER）：零键操作、序号不前进 ⇒ 本轮冷启动没有产生任何提交
+
+════ round 2 / 3 ════
+## [2] timepoint B (进程死亡后且尚未启动)
+B1: IDB_FILES=5 IDB_BYTES=138543 IDB_SHA256=d1be88971267168b60705448c2486a9433ff4387d323242e77678f958b768ae8 MIRROR_FILES=5 MIRROR_BYTES=16738 MIRROR_SHA256=62b4c99bb081217d512898b6dc8edb8dd681977eb185a645b7adbc30ac5615eb IDB_WAL_BYTES=137715 MIRROR_WAL_BYTES=15988
+pid-after-kill=[]
+B2: IDB_FILES=5 IDB_BYTES=138543 IDB_SHA256=d1be88971267168b60705448c2486a9433ff4387d323242e77678f958b768ae8 MIRROR_FILES=5 MIRROR_BYTES=16738 MIRROR_SHA256=62b4c99bb081217d512898b6dc8edb8dd681977eb185a645b7adbc30ac5615eb IDB_WAL_BYTES=137715 MIRROR_WAL_BYTES=15988
+  ✓ 死亡窗口静止（3 秒间隔两次文件哈希相同；此期间没有任何写入者）
+
+## [2] timepoint C (启动恢复完成后)
+IDB_STATE_SHA256=0625aacabcd5068a
+BYTES=2443
+file: IDB_FILES=5 IDB_BYTES=138565 IDB_SHA256=946b957c7712599465c2db7ef3597542fdf67e8b2ec998a82583b7b85165ac71 MIRROR_FILES=5 MIRROR_BYTES=16741 MIRROR_SHA256=31cbeed74d29adeac4b2ddf7f867f43403a8e00b7c500407cd9e2b57d6bd10ea IDB_WAL_BYTES=137734 MIRROR_WAL_BYTES=15988
+PAGE={"items":2,"projects":1,"title":"P2C 复验事项","status":"loaded","reason":"authoritative","backend":"idb","writesAllowed":true,"blockedWriteCount":0,"nativeBlocked":0,"mirrorLen":2443,"mirrorSha16":"0625aacabcd5068a","panel":false}
+
+## [2] 判定
+  ✓ 记录级哈希 A==C（0625aacabcd5068a）：冷启动后权威记录与启动前逐字节一致 ⇒ 未被空快照覆盖
+  WAL 字节：137696 -> 137734（相对 A 时点累计 +38 B；**逐轮增量**见下面这一行）
+  ✓ 追加记录为**空标记**（OPS=0，RECORD_KIND=EMPTY_MARKER）：零键操作、序号不前进 ⇒ 本轮冷启动没有产生任何提交
+
+════ round 3 / 3 ════
+## [3] timepoint B (进程死亡后且尚未启动)
+B1: IDB_FILES=5 IDB_BYTES=138565 IDB_SHA256=946b957c7712599465c2db7ef3597542fdf67e8b2ec998a82583b7b85165ac71 MIRROR_FILES=5 MIRROR_BYTES=16741 MIRROR_SHA256=31cbeed74d29adeac4b2ddf7f867f43403a8e00b7c500407cd9e2b57d6bd10ea IDB_WAL_BYTES=137734 MIRROR_WAL_BYTES=15988
+pid-after-kill=[]
+B2: IDB_FILES=5 IDB_BYTES=138565 IDB_SHA256=946b957c7712599465c2db7ef3597542fdf67e8b2ec998a82583b7b85165ac71 MIRROR_FILES=5 MIRROR_BYTES=16741 MIRROR_SHA256=31cbeed74d29adeac4b2ddf7f867f43403a8e00b7c500407cd9e2b57d6bd10ea IDB_WAL_BYTES=137734 MIRROR_WAL_BYTES=15988
+  ✓ 死亡窗口静止（3 秒间隔两次文件哈希相同；此期间没有任何写入者）
+
+## [3] timepoint C (启动恢复完成后)
+IDB_STATE_SHA256=0625aacabcd5068a
+BYTES=2443
+file: IDB_FILES=5 IDB_BYTES=138584 IDB_SHA256=426d15a1ee9af1eba53a8621612545be607683d977bf50b9d4cd16f6d330e753 MIRROR_FILES=5 MIRROR_BYTES=16741 MIRROR_SHA256=1b7d75d3df5b7a5df0e2694e871ae44b05d8b22c4d4ab1177947ef9e218b434d IDB_WAL_BYTES=137753 MIRROR_WAL_BYTES=15988
+PAGE={"items":2,"projects":1,"title":"P2C 复验事项","status":"loaded","reason":"authoritative","backend":"idb","writesAllowed":true,"blockedWriteCount":0,"nativeBlocked":0,"mirrorLen":2443,"mirrorSha16":"0625aacabcd5068a","panel":false}
+
+## [3] 判定
+  ✓ 记录级哈希 A==C（0625aacabcd5068a）：冷启动后权威记录与启动前逐字节一致 ⇒ 未被空快照覆盖
+  WAL 字节：137696 -> 137753（相对 A 时点累计 +57 B；**逐轮增量**见下面这一行）
+  ✓ 追加记录为**空标记**（OPS=0，RECORD_KIND=EMPTY_MARKER）：零键操作、序号不前进 ⇒ 本轮冷启动没有产生任何提交
+
+## 复验结束 2026-09-22T10:43:36+0800
+OVERALL=PASS

@@ -1,0 +1,200 @@
+{
+  "format": "attention-inbox.export",
+  "format_version": "1.0",
+  "generator": {
+    "app": "attention-inbox",
+    "app_version": "0.2.0",
+    "internal_schema": 5
+  },
+  "exported_at": "2026-09-18T15:26:58+08:00",
+  "exported_at_ms": 1789716418000,
+  "timezone": "Asia/Shanghai",
+  "locale": "zh-CN",
+  "scope": {
+    "mode": "active",
+    "include_archived": false,
+    "include_completed": false,
+    "include_needs_review": true
+  },
+  "counts": {
+    "items": 3,
+    "by_attention_status": { "WAITING": 2, "DELIVERED": 0, "ACKNOWLEDGED": 1 },
+    "by_completion_status": { "ACTIVE": 3 },
+    "by_review_status": { "READY": 2, "NEEDS_REVIEW": 1 },
+    "by_deadline_status": { "NONE": 2, "PENDING": 1 }
+  },
+  "items": [
+    {
+      "id": "it_7f3a91",
+      "rev": 3,
+      "title": "交房租",
+      "content": "转账给房东",
+      "original_capture": null,
+      "url": null,
+      "tags": ["生活"],
+      "attention_status": "WAITING",
+      "review_status": "READY",
+      "completion_status": "ACTIVE",
+      "deadline_status": "NONE",
+      "importance": "NORMAL",
+      "trigger_at_iso": "2026-09-21T09:00:00+08:00",
+      "trigger_at_ms": 1789952400000,
+      "trigger_window_start_iso": null,
+      "trigger_window_end_iso": null,
+      "time_source": "PARSED",
+      "deadline_at_iso": null,
+      "deadline_at_ms": null,
+      "deadline_paused": false,
+      "repeat": {
+        "every": "month",
+        "mode": "calendar",
+        "rrule": "FREQ=MONTHLY;BYMONTHDAY=1"
+      },
+      "source_title": null,
+      "source_url": null,
+      "source_app": null,
+      "source_quote": null,
+      "created_at_iso": "2026-09-16T10:12:00+08:00",
+      "created_at_ms": 1789524720000,
+      "acknowledged_at_iso": null,
+      "acknowledged_at_ms": null,
+      "reviewed_at_iso": null,
+      "completed_at_iso": null,
+      "completed_at_ms": null,
+      "archived_at_iso": null,
+      "derived": [
+        "attention_status",
+        "completion_status",
+        "deadline_status",
+        "importance",
+        "time_source",
+        "repeat.rrule"
+      ],
+      "extensions": {
+        "internal": {
+          "status": "waiting",
+          "scheduleBasis": "calendar",
+          "seriesId": "s_7f3a91",
+          "repeatParentId": null
+        }
+      }
+    },
+    {
+      "id": "it_2c88b0",
+      "rev": 5,
+      "title": "报名截止，提前确认材料",
+      "content": "需要成绩单扫描件 + 证件照",
+      "original_capture": null,
+      "url": null,
+      "tags": ["行政"],
+      "attention_status": "ACKNOWLEDGED",
+      "review_status": "READY",
+      "completion_status": "ACTIVE",
+      "deadline_status": "PENDING",
+      "importance": "IMPORTANT",
+      "trigger_at_iso": null,
+      "trigger_at_ms": null,
+      "trigger_window_start_iso": null,
+      "trigger_window_end_iso": null,
+      "time_source": "USER",
+      "deadline_at_iso": "2026-09-23T23:59:00+08:00",
+      "deadline_at_ms": 1790179140000,
+      "deadline_paused": false,
+      "repeat": null,
+      "source_title": null,
+      "source_url": null,
+      "source_app": null,
+      "source_quote": null,
+      "created_at_iso": "2026-09-17T09:30:00+08:00",
+      "created_at_ms": 1789608600000,
+      "acknowledged_at_iso": "2026-09-18T09:05:00+08:00",
+      "acknowledged_at_ms": 1789693500000,
+      "reviewed_at_iso": null,
+      "completed_at_iso": null,
+      "completed_at_ms": null,
+      "archived_at_iso": null,
+      "derived": [
+        "attention_status",
+        "completion_status",
+        "deadline_status",
+        "importance",
+        "time_source"
+      ],
+      "extensions": {
+        "internal": {
+          "status": "acknowledged",
+          "delivery_mode": "alarm",
+          "deadlineStageKey": "p24@1790179140000",
+          "deadlineEvents": {
+            "p24@1790179140000": { "at": 1790006340000, "state": "scheduled" }
+          }
+        }
+      }
+    },
+    {
+      "id": "it_9d4e12",
+      "rev": 1,
+      "title": "下周三之前提交季度报销",
+      "content": "需要附发票扫描件",
+      "original_capture": null,
+      "url": null,
+      "tags": ["工作"],
+      "attention_status": "WAITING",
+      "review_status": "NEEDS_REVIEW",
+      "completion_status": "ACTIVE",
+      "deadline_status": "NONE",
+      "importance": "NORMAL",
+      "trigger_at_iso": "2026-09-23T21:30:00+08:00",
+      "trigger_at_ms": 1790151000000,
+      "trigger_window_start_iso": null,
+      "trigger_window_end_iso": null,
+      "time_source": "PARSED",
+      "deadline_at_iso": null,
+      "deadline_at_ms": null,
+      "deadline_paused": false,
+      "repeat": null,
+      "source_title": "周会纪要.md · 第 12 行",
+      "source_url": null,
+      "source_app": "import",
+      "source_quote": "下周三之前提交季度报销，需要附发票扫描件",
+      "created_at_iso": "2026-09-18T15:20:00+08:00",
+      "created_at_ms": 1789716000000,
+      "acknowledged_at_iso": null,
+      "acknowledged_at_ms": null,
+      "reviewed_at_iso": null,
+      "completed_at_iso": null,
+      "completed_at_ms": null,
+      "archived_at_iso": null,
+      "derived": [
+        "attention_status",
+        "completion_status",
+        "deadline_status",
+        "importance",
+        "time_source"
+      ],
+      "extensions": {
+        "internal": {
+          "status": "waiting",
+          "isFallbackTrigger": false,
+          "importBatchId": "sha256:3f1c9a...",
+          "review_status": "NEEDS_REVIEW"
+        }
+      }
+    }
+  ],
+  "extensions": {
+    "internal": {
+      "note": "本区块仅供本应用回环导入使用；第三方消费方必须忽略。",
+      "app_internal_schema": 5,
+      "notes": [],
+      "projects": [
+        { "id": "p_life", "name": "生活", "color": "#9a6b12" }
+      ],
+      "settings_subset": {
+        "defaultDeliveryMode": "notification",
+        "quietStart": "23:00",
+        "quietEnd": "07:30"
+      }
+    }
+  }
+}

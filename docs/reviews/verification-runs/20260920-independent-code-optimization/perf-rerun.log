@@ -1,0 +1,46 @@
+O4 复杂度对照…
+  O4 baseline n=100 empty → deadlines.bigPreds=5050
+  O4 baseline n=100 full → deadlines.bigPreds=5050
+  O4 baseline n=500 empty → deadlines.bigPreds=125250
+  O4 baseline n=500 full → deadlines.bigPreds=125250
+  O4 baseline n=2000 empty → deadlines.bigPreds=2001000
+  O4 baseline n=2000 full → deadlines.bigPreds=2001000
+  O4 current n=100 empty → deadlines.bigPreds=0
+  O4 current n=100 full → deadlines.bigPreds=0
+  O4 current n=500 empty → deadlines.bigPreds=0
+  O4 current n=500 full → deadlines.bigPreds=0
+  O4 current n=2000 empty → deadlines.bigPreds=0
+  O4 current n=2000 full → deadlines.bigPreds=0
+O2 同步/对账计数…
+O5 序列化计数…
+O6 折叠/展开卡片…
+  O6 baseline n=100 折叠 100 张 / 59598 bytes
+  O6 baseline n=500 折叠 500 张 / 299598 bytes
+  O6 baseline n=2000 折叠 2000 张 / 1204599 bytes
+  O6 current n=100 折叠 0 张 / 147 bytes
+  O6 current n=500 折叠 0 张 / 147 bytes
+  O6 current n=2000 折叠 0 张 / 148 bytes
+O7 启动渲染…
+耗时样本…
+  timing baseline n=500 median=1.099ms
+  timing current n=500 median=0.315083ms
+  timing current n=2000 median=1.127917ms
+wrote /private/var/folders/3z/wj46qg4j2pn2fwgtccdj093m0000gn/T/reminder-independent-acceptance-2ezva0fb/docs/reviews/verification-runs/20260920T1706-code-optimization/perf-counts.json
+
+O4 deadline 台账 find 谓词比较（空台账）:
+  n=100  编辑前 5050  →  本轮 0
+  n=500  编辑前 125250  →  本轮 0
+  n=2000  编辑前 2001000  →  本轮 0
+
+O4 reminder 台账 find 谓词比较（满台账）:
+  n=100  编辑前 5050  →  本轮 0
+  n=500  编辑前 125250  →  本轮 0
+  n=2000  编辑前 2001000  →  本轮 0
+
+O2 一次业务保存: {"totalRequests":1,"runs":1,"deduped":0,"bySource":{"save":1}}
+O2 静置 600ms 后: {"totalRequests":1,"runs":1,"deduped":0,"bySource":{"save":1}}
+O5 一次正常保存 JSON: {"parse":1,"stringify":2,"idbPuts":1}
+O6 折叠卡片数: 编辑前 n=100=100 | 编辑前 n=500=500 | 编辑前 n=2000=2000  ⇒  本轮 n=100=0 | 本轮 n=500=0 | 本轮 n=2000=0
+O7 启动卡片容器写入: 编辑前 {"#homeSetup":4,"#homeNotice":6,"#homeUpcoming":3,"#homeDue":3,"#homeActive":3,"#homeEmpty":3,"#homeStart":3,"#homeReview":3,"#capProject":2,"#noteProject":2,"#activeAlarmPanel":1}
+                    本轮 {"#homeSetup":1,"#homeNotice":3,"#homeUpcoming":1,"#homeDue":1,"#homeActive":1,"#homeEmpty":1,"#homeStart":1,"#homeReview":1,"#capProject":1,"#noteProject":1,"#activeAlarmPanel":1}
+计时（参考）: baseline_n500 median=1.099ms | current_n500 median=0.315083ms | current_n2000 median=1.127917ms

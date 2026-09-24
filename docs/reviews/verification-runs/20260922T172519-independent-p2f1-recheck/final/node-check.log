@@ -1,0 +1,12 @@
+node:internal/modules/esm/get_format:160
+  throw new ERR_UNKNOWN_FILE_EXTENSION(ext, filepath);
+        ^
+
+TypeError [ERR_UNKNOWN_FILE_EXTENSION]: Unknown file extension ".html" for /Users/qlyf/Developer/reminder/index.html
+    at Object.getFileProtocolModuleFormat [as file:] (node:internal/modules/esm/get_format:160:9)
+    at defaultGetFormat (node:internal/modules/esm/get_format:203:36)
+    at checkSyntax (node:internal/main/check_syntax:68:26) {
+  code: 'ERR_UNKNOWN_FILE_EXTENSION'
+}
+
+Node.js v20.17.0

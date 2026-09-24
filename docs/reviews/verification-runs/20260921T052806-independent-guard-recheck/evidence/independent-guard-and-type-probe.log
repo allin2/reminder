@@ -1,0 +1,114 @@
+{
+  "checks": {
+    "baseline_closed": true,
+    "guarded_alias_detected": true,
+    "guarded_namespace_detected": true,
+    "member_guard_preserved": true,
+    "declarations_visible": true,
+    "missing_constants_blocked": true,
+    "wrong_undo_type_blocked": true,
+    "test_feedback_object_wrongly_passes_gate": true,
+    "test_feedback_object_breaks_real_consumer": true
+  },
+  "baseline": {
+    "declaredConstants": [
+      "Feedback.TEST_FEEDBACK",
+      "Feedback.UNDO_WINDOW_MS",
+      "Feedback.actionSpec",
+      "Feedback.captureSummary",
+      "Feedback.reminderFeedback",
+      "Feedback.saveFeedback",
+      "Feedback.setupSteps",
+      "Feedback.testFeedbackVerdict"
+    ],
+    "undeclared": [],
+    "ambiguousAliases": [],
+    "ambiguousRefs": [],
+    "problems": []
+  },
+  "guardCases": {
+    "guardedAlias": {
+      "undeclared": [
+        {
+          "path": "Feedback.independentGuardedMember",
+          "lines": [
+            6637
+          ]
+        }
+      ],
+      "guardedRefs": [],
+      "ambiguousAliases": [],
+      "ambiguousRefs": [],
+      "problems": [
+        "undeclared-dependency:Feedback.independentGuardedMember（app-core.js:6637）"
+      ],
+      "declared": [
+        "Feedback.TEST_FEEDBACK",
+        "Feedback.UNDO_WINDOW_MS"
+      ]
+    },
+    "guardedNamespace": {
+      "undeclared": [
+        {
+          "path": "Feedback.independentGuardedMember",
+          "lines": [
+            2175
+          ]
+        }
+      ],
+      "guardedRefs": [],
+      "ambiguousAliases": [],
+      "ambiguousRefs": [],
+      "problems": [
+        "undeclared-dependency:Feedback.independentGuardedMember（app-core.js:2175）"
+      ],
+      "declared": [
+        "Feedback.TEST_FEEDBACK",
+        "Feedback.UNDO_WINDOW_MS"
+      ]
+    },
+    "trueMemberGuard": {
+      "undeclared": [],
+      "guardedRefs": [
+        "Feedback.independentOptionalMember"
+      ],
+      "ambiguousAliases": [],
+      "ambiguousRefs": [],
+      "problems": [],
+      "declared": [
+        "Feedback.TEST_FEEDBACK",
+        "Feedback.UNDO_WINDOW_MS"
+      ]
+    }
+  },
+  "runtimeConstants": {
+    "missing": {
+      "ready": false,
+      "puts": 0,
+      "intervals": [],
+      "paths": [
+        "Feedback.TEST_FEEDBACK",
+        "Feedback.UNDO_WINDOW_MS"
+      ]
+    },
+    "wrongUndo": {
+      "ready": false,
+      "problems": [
+        {
+          "path": "Feedback.UNDO_WINDOW_MS",
+          "expected": "number",
+          "actual": "string",
+          "why": "lib/feedback.js 导出被破坏 —— 完成态撤销窗口静默退回 8000，与库里配置的时长不一致"
+        }
+      ]
+    },
+    "testFeedbackObject": {
+      "ready": true,
+      "startupFailure": null,
+      "call": {
+        "threw": true,
+        "message": "list.map is not a function"
+      }
+    }
+  }
+}

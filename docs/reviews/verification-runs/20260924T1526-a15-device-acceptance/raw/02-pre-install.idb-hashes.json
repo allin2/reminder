@@ -1,0 +1,33 @@
+{
+ "dbVersion": 1,
+ "localStorage": {
+  "attention-inbox-v2": {
+   "bytes": 2265,
+   "sha256": "12ff91d2b4841612ab36cd89ecd43fcd43bb118b29a320b971d50ac7db73f179"
+  }
+ },
+ "stores": {
+  "kv": {
+   "state": {
+    "bytes": 2265,
+    "itemCount": 1,
+    "items": {
+     "i_49kecme9muf7quxh": {
+      "rev": 1,
+      "sha256": "dfa531480cc08945169e637574b980dc791ece267089ce633eab6b70b21b9eb0",
+      "status": "waiting",
+      "triggerAt": 1790328660000
+     }
+    },
+    "sha256": "0562f4bb515e77b2ecf5d244dabb75c1863765d764d655ecfed0db723bef2fb4",
+    "topKeys": {
+     "items": "280b95322814a954874c51415c121260a08bb8791e3391465df720b9903770f8",
+     "notes": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+     "projects": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+     "schema": "ef2d127de37b942baad06145e54b0c619a1f22327b2ebbcfbec78f5564afe39d",
+     "settings": "f6b8f885676e134fa25ccc2083b35f8beb8a14317eb9b7d5ce4d7b4b291a55a7"
+    }
+   }
+  }
+ }
+}

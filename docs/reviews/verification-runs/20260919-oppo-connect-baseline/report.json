@@ -1,0 +1,346 @@
+{
+  "verdict": "FAIL",
+  "startedAt": "2026-09-19T13:28:15Z",
+  "finishedAt": "2026-09-19T13:28:25Z",
+  "counts": {
+    "PASS": 20,
+    "FAIL": 1,
+    "WARN": 1,
+    "SKIP": 2
+  },
+  "meta": {
+    "host": "QLYFdeMacBook-Air.local",
+    "adb": "/Users/qlyf/Library/Android/sdk/platform-tools/adb",
+    "package": "space.alliswell.inbox",
+    "liveMode": false,
+    "ro.product.manufacturer": "OPPO",
+    "ro.product.model": "PKC130",
+    "ro.build.version.release": "16",
+    "ro.build.version.sdk": "36",
+    "ro.build.display.id": "PKC130_16.0.10.500(CN01)",
+    "serial": "QSKFAE95CQEUJZ8L"
+  },
+  "checks": [
+    {
+      "id": "A-01",
+      "title": "adb 可用",
+      "status": "PASS",
+      "detail": "Android Debug Bridge version 1.0.41",
+      "note": ""
+    },
+    {
+      "id": "A-02",
+      "title": "设备发现",
+      "status": "PASS",
+      "detail": {
+        "serial": "QSKFAE95CQEUJZ8L"
+      },
+      "note": ""
+    },
+    {
+      "id": "A-03",
+      "title": "调试授权",
+      "status": "PASS",
+      "detail": {
+        "state": "device"
+      },
+      "note": ""
+    },
+    {
+      "id": "A-04",
+      "title": "连接稳定性（连续 5 次取样）",
+      "status": "PASS",
+      "detail": {
+        "samples": [
+          "device",
+          "device",
+          "device",
+          "device",
+          "device"
+        ],
+        "transportIds": [
+          "4"
+        ]
+      },
+      "note": ""
+    },
+    {
+      "id": "A-05",
+      "title": "设备身份与传输通道",
+      "status": "PASS",
+      "detail": {
+        "serial": "QSKFAE95CQEUJZ8L",
+        "transport": "usb(有线)",
+        "manufacturer": "OPPO",
+        "model": "PKC130",
+        "android": "16",
+        "sdk": "36",
+        "rom": ""
+      },
+      "note": ""
+    },
+    {
+      "id": "B-01",
+      "title": "命令通道往返",
+      "status": "PASS",
+      "detail": {
+        "sent": "dvda3d01fd0d4c",
+        "received": "dvda3d01fd0d4c",
+        "rc": 0
+      },
+      "note": ""
+    },
+    {
+      "id": "B-02",
+      "title": "设备时钟一致性",
+      "status": "PASS",
+      "detail": {
+        "deviceMs": 1789824500626,
+        "hostMs": 1789824501455,
+        "skewMs": -829
+      },
+      "note": ""
+    },
+    {
+      "id": "B-03",
+      "title": "文件通道一致性（64KB 往返）",
+      "status": "PASS",
+      "detail": {
+        "algo": "sha256",
+        "hostHash": "3a7812433fa55be80fd15c1f9bba0c0941734d16802ea26b104d55722c2b480f",
+        "deviceHash": "3a7812433fa55be80fd15c1f9bba0c0941734d16802ea26b104d55722c2b480f",
+        "pulledHash": "3a7812433fa55be80fd15c1f9bba0c0941734d16802ea26b104d55722c2b480f",
+        "pushRc": 0,
+        "pullRc": 0
+      },
+      "note": ""
+    },
+    {
+      "id": "B-04",
+      "title": "二进制通道（exec-out 截屏）",
+      "status": "PASS",
+      "detail": {
+        "bytes": 325708,
+        "rc": 0
+      },
+      "note": ""
+    },
+    {
+      "id": "B-05",
+      "title": "端口转发通道",
+      "status": "PASS",
+      "detail": {
+        "port": "64050",
+        "listed": true,
+        "rc": 0
+      },
+      "note": ""
+    },
+    {
+      "id": "B-06",
+      "title": "日志通道（logcat 回读）",
+      "status": "PASS",
+      "detail": {
+        "marker": "dvlogfb1c2ae519",
+        "matched": true,
+        "logWriteRc": 0
+      },
+      "note": ""
+    },
+    {
+      "id": "B-07",
+      "title": "包管理通道（pm path）",
+      "status": "PASS",
+      "detail": {
+        "out": "package:/data/app/~~3GcZOHv_c6Owz4NeyFtU1A==/space.alliswell.inbox-nGW99T-vbEnLxQbuLVd09A==/base.apk",
+        "rc": 0
+      },
+      "note": ""
+    },
+    {
+      "id": "F-01",
+      "title": "设备能力（屏幕/电量/存储）",
+      "status": "PASS",
+      "detail": {
+        "wmSize": "1080x2376",
+        "wmDensity": "560\nOverride density: 480",
+        "batteryLevel": 33,
+        "batteryStatus": "2",
+        "dataFree": "613303728",
+        "wakefulness": "Awake"
+      },
+      "note": ""
+    },
+    {
+      "id": "F-02",
+      "title": "应用安装与版本",
+      "status": "PASS",
+      "detail": {
+        "versionName": "1.0",
+        "versionCode": "1",
+        "targetSdk": "34",
+        "minSdk": "22",
+        "firstInstallTime": "2026-09-18",
+        "lastUpdateTime": "2026-09-18",
+        "apkPath": "/data/app/~~3GcZOHv_c6Owz4NeyFtU1A==/space.alliswell.inbox-nGW99T-vbEnLxQbuLVd09A==/base.apk",
+        "apkSha256": "b4eb10c410e3537a88cf0f4821d714a9d97dd1c22dfa73b5b5cf983eb7c7acfc",
+        "debuggable": true
+      },
+      "note": ""
+    },
+    {
+      "id": "F-03",
+      "title": "关键权限授予状态",
+      "status": "FAIL",
+      "detail": {
+        "granted": {
+          "POST_NOTIFICATIONS": false,
+          "SCHEDULE_EXACT_ALARM": null,
+          "USE_EXACT_ALARM": true,
+          "USE_FULL_SCREEN_INTENT": true,
+          "SYSTEM_ALERT_WINDOW": null,
+          "RECEIVE_BOOT_COMPLETED": true,
+          "WAKE_LOCK": true,
+          "FOREGROUND_SERVICE": true,
+          "VIBRATE": true
+        },
+        "denied": [
+          "POST_NOTIFICATIONS"
+        ],
+        "unknown": [
+          "SCHEDULE_EXACT_ALARM",
+          "SYSTEM_ALERT_WINDOW"
+        ],
+        "missing": [
+          "POST_NOTIFICATIONS",
+          "SCHEDULE_EXACT_ALARM",
+          "SYSTEM_ALERT_WINDOW"
+        ]
+      },
+      "note": "明确未授予：POST_NOTIFICATIONS —— 会直接阻断送达"
+    },
+    {
+      "id": "F-04",
+      "title": "后台策略（appops / 电池白名单）",
+      "status": "PASS",
+      "detail": {
+        "ops": {
+          "RUN_ANY_IN_BACKGROUND": "allow",
+          "SYSTEM_ALERT_WINDOW": "allow",
+          "START_FOREGROUND": "allow",
+          "WAKE_LOCK": "allow"
+        },
+        "batteryWhitelisted": true
+      },
+      "note": ""
+    },
+    {
+      "id": "F-05",
+      "title": "通知渠道（3/3）",
+      "status": "PASS",
+      "detail": {
+        "expected": [
+          "attention-alarm-v3",
+          "attention-bridge-v2",
+          "attention-alarm-guard"
+        ],
+        "found": [
+          "attention-alarm-v3",
+          "attention-bridge-v2",
+          "attention-alarm-guard"
+        ],
+        "allChannelIds": [
+          "000",
+          "0001_importance",
+          "0002_normal",
+          "001",
+          "053316530413edba#voip_ringtone_channel_1780973913682",
+          "0aMedia",
+          "0channel_channels_b9fad_5020521729286737216",
+          "0channel_channels_ia_b9fad_-9042652039152746832",
+          "0channel_groups_b9fad_1427634778486154148",
+          "0channel_groups_ia_b9fad_6326307311525627674",
+          "0channel_private_b9fad_-7743023924064934681",
+          "0channel_private_ia_b9fad_-2739444200003013038",
+          "0channel_silent_b2b3a_5256151778451186018",
+          "0x66",
+          "1",
+          "10",
+          "100",
+          "100001",
+          "100002",
+          "100028"
+        ]
+      },
+      "note": ""
+    },
+    {
+      "id": "F-06",
+      "title": "闹钟排程（dumpsys alarm）",
+      "status": "PASS",
+      "detail": {
+        "entriesForPackage": 14,
+        "frozenMarkers": 3,
+        "sample": [
+          "          type=RTC_WAKEUP tag=*walarm*:space.alliswell.inbox/com.capacitorjs.plugins.localnotifications.TimedNotificationPublisher ",
+          "          type=RTC_WAKEUP tag=*walarm*:space.alliswell.inbox/com.capacitorjs.plugins.localnotifications.TimedNotificationPublisher ",
+          "          type=RTC_WAKEUP tag=*walarm*:space.alliswell.inbox/com.capacitorjs.plugins.localnotifications.TimedNotificationPublisher "
+        ]
+      },
+      "note": "检测到 3 处 frozen 标记 —— 按已知结论：进程被冻结时任何投递都进不去"
+    },
+    {
+      "id": "F-07",
+      "title": "进程与冻结态",
+      "status": "WARN",
+      "detail": {
+        "pid": null,
+        "cgroupFrozenHint": false,
+        "cgroup": ""
+      },
+      "note": "应用当前无进程（未启动 / 已被回收）"
+    },
+    {
+      "id": "F-08",
+      "title": "原生排程台账（shared_prefs）",
+      "status": "PASS",
+      "detail": {
+        "entries": 0
+      },
+      "note": ""
+    },
+    {
+      "id": "F-09",
+      "title": "Web 运行时 ready()",
+      "status": "SKIP",
+      "detail": {},
+      "note": "--skip cdp 已跳过"
+    },
+    {
+      "id": "F-10",
+      "title": "业务逻辑真机回归",
+      "status": "SKIP",
+      "detail": {},
+      "note": "--skip cdp 已跳过"
+    },
+    {
+      "id": "D-01",
+      "title": "结束时链路仍在线",
+      "status": "PASS",
+      "detail": {
+        "state": "device"
+      },
+      "note": ""
+    },
+    {
+      "id": "D-02",
+      "title": "全程链路掉线次数",
+      "status": "PASS",
+      "detail": {
+        "linkDrops": 0,
+        "adbCalls": 50
+      },
+      "note": ""
+    }
+  ]
+}

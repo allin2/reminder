@@ -1,0 +1,7 @@
+    versionCode=2 minSdk=22 targetSdk=34
+    versionName=1.1
+    flags=[ HAS_CODE ALLOW_CLEAR_USER_DATA ALLOW_BACKUP ]
+    lastUpdateTime=2026-09-20 21:41:30
+      firstInstallTime=2026-09-20 15:07:22
+        android.permission.POST_NOTIFICATIONS: granted=true, flags=[ USER_SET|USER_SENSITIVE_WHEN_GRANTED|USER_SENSITIVE_WHEN_DENIED]
+      firstInstallTime=1970-01-01 08:00:00

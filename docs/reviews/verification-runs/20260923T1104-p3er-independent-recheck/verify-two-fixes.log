@@ -1,0 +1,27 @@
+{
+  "verdict": "PASS",
+  "healthy": {
+    "direct": [
+      "evt-close",
+      "evt-ack"
+    ],
+    "notification": 0,
+    "driftRuns": 2,
+    "secondSnapshot": "old,new"
+  },
+  "routeMutant": {
+    "direct": [],
+    "notification": 2,
+    "driftRuns": 2,
+    "secondSnapshot": "old,new"
+  },
+  "driftMutant": {
+    "direct": [
+      "evt-close",
+      "evt-ack"
+    ],
+    "notification": 0,
+    "driftRuns": 1,
+    "secondSnapshot": null
+  }
+}

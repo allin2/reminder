@@ -1,0 +1,144 @@
+
+DevTools listening on ws://127.0.0.1:18782/devtools/browser/9ad242bf-c979-4e09-a89e-db2e620d0f77
+Trying to load the allocator multiple times. This is *not* supported.
+[97994:4347771:0922/205644.761564:ERROR:ui/display/mac/cv_display_link_mac.mm:195] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670
+[97994:4347771:0922/205644.762103:ERROR:ui/display/mac/cv_display_link_mac.mm:195] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670
+[97994:4347771:0922/205644.762167:ERROR:ui/display/mac/cv_display_link_mac.mm:195] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670
+[97994:4347771:0922/205644.762217:ERROR:ui/display/mac/cv_display_link_mac.mm:195] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670
+[97994:4347771:0922/205644.762263:ERROR:ui/display/mac/cv_display_link_mac.mm:195] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670
+[97994:4347771:0922/205644.762315:ERROR:ui/display/mac/cv_display_link_mac.mm:195] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670
+[97994:4347771:0922/205644.820659:ERROR:ui/display/mac/cv_display_link_mac.mm:195] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670
+[97994:4347771:0922/205644.821784:ERROR:ui/display/mac/cv_display_link_mac.mm:195] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670
+[97994:4347771:0922/205644.822436:ERROR:ui/display/mac/cv_display_link_mac.mm:195] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670
+[97994:4347771:0922/205644.822509:ERROR:ui/display/mac/cv_display_link_mac.mm:195] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670
+[97994:4347771:0922/205644.822567:ERROR:ui/display/mac/cv_display_link_mac.mm:195] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670
+[97994:4347771:0922/205646.858972:ERROR:ui/display/mac/cv_display_link_mac.mm:195] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670
+[97994:4347771:0922/205646.931116:ERROR:ui/display/mac/cv_display_link_mac.mm:195] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670
+[97994:4347771:0922/205646.994270:ERROR:ui/display/mac/cv_display_link_mac.mm:195] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670
+[97994:4347771:0922/205647.044948:ERROR:ui/display/mac/cv_display_link_mac.mm:195] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670
+[97994:4347771:0922/205647.072893:ERROR:ui/display/mac/cv_display_link_mac.mm:195] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670
+[97994:4347771:0922/205647.113812:ERROR:ui/display/mac/cv_display_link_mac.mm:195] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670
+[97994:4347771:0922/205647.140640:ERROR:ui/display/mac/cv_display_link_mac.mm:195] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670
+[97994:4347771:0922/205647.157496:ERROR:ui/display/mac/cv_display_link_mac.mm:195] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670
+[97990:4347706:0922/205647.813349:ERROR:google_apis/gcm/engine/registration_request.cc:291] Registration response error message: DEPRECATED_ENDPOINT
+[97990:4347717:0922/205648.818436:ERROR:base/process/process_mac.cc:53] task_policy_set TASK_CATEGORY_POLICY: (os/kern) invalid argument (4)
+[97990:4347717:0922/205648.818473:ERROR:base/process/process_mac.cc:98] task_policy_set TASK_SUPPRESSION_POLICY: (os/kern) invalid argument (4)
+[97994:4347771:0922/205648.896304:ERROR:ui/display/mac/cv_display_link_mac.mm:195] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670
+[97994:4347771:0922/205648.897763:ERROR:ui/display/mac/cv_display_link_mac.mm:195] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670
+[97994:4347771:0922/205648.898887:ERROR:ui/display/mac/cv_display_link_mac.mm:195] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670
+[97994:4347771:0922/205648.898973:ERROR:ui/display/mac/cv_display_link_mac.mm:195] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670
+[97994:4347771:0922/205648.899107:ERROR:ui/display/mac/cv_display_link_mac.mm:195] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670
+[97990:4347717:0922/205652.472179:ERROR:base/process/process_mac.cc:53] task_policy_set TASK_CATEGORY_POLICY: (os/kern) invalid argument (4)
+[97990:4347717:0922/205652.472481:ERROR:base/process/process_mac.cc:98] task_policy_set TASK_SUPPRESSION_POLICY: (os/kern) invalid argument (4)
+[97994:4347771:0922/205652.540129:ERROR:ui/display/mac/cv_display_link_mac.mm:195] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670
+[97994:4347771:0922/205652.541867:ERROR:ui/display/mac/cv_display_link_mac.mm:195] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670
+[97994:4347771:0922/205652.542833:ERROR:ui/display/mac/cv_display_link_mac.mm:195] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670
+[97994:4347771:0922/205652.542958:ERROR:ui/display/mac/cv_display_link_mac.mm:195] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670
+[97994:4347771:0922/205652.543036:ERROR:ui/display/mac/cv_display_link_mac.mm:195] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670
+[97990:4347717:0922/205656.514539:ERROR:base/process/process_mac.cc:53] task_policy_set TASK_CATEGORY_POLICY: (os/kern) invalid argument (4)
+[97990:4347717:0922/205656.514600:ERROR:base/process/process_mac.cc:98] task_policy_set TASK_SUPPRESSION_POLICY: (os/kern) invalid argument (4)
+[97994:4347771:0922/205656.587938:ERROR:ui/display/mac/cv_display_link_mac.mm:195] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670
+[97994:4347771:0922/205656.588887:ERROR:ui/display/mac/cv_display_link_mac.mm:195] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670
+[97994:4347771:0922/205656.589450:ERROR:ui/display/mac/cv_display_link_mac.mm:195] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670
+[97994:4347771:0922/205656.589514:ERROR:ui/display/mac/cv_display_link_mac.mm:195] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670
+[97994:4347771:0922/205656.589563:ERROR:ui/display/mac/cv_display_link_mac.mm:195] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670
+Created TensorFlow Lite XNNPACK delegate for CPU.
+[97990:4347717:0922/205659.344968:ERROR:base/process/process_mac.cc:53] task_policy_set TASK_CATEGORY_POLICY: (os/kern) invalid argument (4)
+[97990:4347717:0922/205659.345011:ERROR:base/process/process_mac.cc:98] task_policy_set TASK_SUPPRESSION_POLICY: (os/kern) invalid argument (4)
+[97994:4347771:0922/205659.403884:ERROR:ui/display/mac/cv_display_link_mac.mm:195] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670
+[97994:4347771:0922/205659.404760:ERROR:ui/display/mac/cv_display_link_mac.mm:195] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670
+[97994:4347771:0922/205659.405236:ERROR:ui/display/mac/cv_display_link_mac.mm:195] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670
+[97994:4347771:0922/205659.405306:ERROR:ui/display/mac/cv_display_link_mac.mm:195] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670
+[97994:4347771:0922/205659.405373:ERROR:ui/display/mac/cv_display_link_mac.mm:195] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670
+[97990:4347717:0922/205702.170300:ERROR:base/process/process_mac.cc:53] task_policy_set TASK_CATEGORY_POLICY: (os/kern) invalid argument (4)
+[97990:4347717:0922/205702.170390:ERROR:base/process/process_mac.cc:98] task_policy_set TASK_SUPPRESSION_POLICY: (os/kern) invalid argument (4)
+[97994:4347771:0922/205702.223701:ERROR:ui/display/mac/cv_display_link_mac.mm:195] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670
+[97994:4347771:0922/205702.224659:ERROR:ui/display/mac/cv_display_link_mac.mm:195] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670
+[97994:4347771:0922/205702.225333:ERROR:ui/display/mac/cv_display_link_mac.mm:195] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670
+[97994:4347771:0922/205702.225392:ERROR:ui/display/mac/cv_display_link_mac.mm:195] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670
+[97994:4347771:0922/205702.225444:ERROR:ui/display/mac/cv_display_link_mac.mm:195] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670
+[98254:4349672:0922/205703.619700:VERBOSE1:chrome/updater/updater.cc:374] Version: 152.0.7933.0, opt, ARM_64, command line: /Users/qlyf/Library/Application Support/Google/GoogleUpdater/152.0.7933.0/GoogleUpdater.app/Contents/MacOS/GoogleUpdater --wake-all --enable-logging --vmodule=*/components/update_client/*=2,*/chrome/enterprise_companion/*=2,*/chrome/updater/*=2
+[98254:4349672:0922/205703.620080:VERBOSE1:chrome/updater/updater.cc:377] OS version: 15.8.0, arch: arm64, System uptime (seconds): 72753, parent pid: 97990
+[98254:4349672:0922/205703.621464:VERBOSE1:chrome/updater/updater.cc:382] Available disk space in install directory (/Users/qlyf/Library/Application Support/Google/GoogleUpdater): 89329717248B (83.195GiB) / 245107195904B (228.274GiB)
+[98254:4349672:0922/205703.621475:VERBOSE1:chrome/updater/updater.cc:386] Available disk space in temporary directory (/var/folders/3z/wj46qg4j2pn2fwgtccdj093m0000gn/T/): 89329717248B (83.195GiB) / 245107195904B (228.274GiB)
+[98254:4349672:0922/205703.621525:VERBOSE2:chrome/updater/event_history.cc:265] Emitted a UPDATER_PROCESS START event to the history log
+[98256:4349676:0922/205703.626885:VERBOSE1:chrome/updater/updater.cc:374] Version: 152.0.7933.0, opt, ARM_64, command line: /Users/qlyf/Library/Application Support/Google/GoogleUpdater/152.0.7933.0/GoogleUpdater.app/Contents/MacOS/GoogleUpdater --crash-handler --database=/Users/qlyf/Library/Application Support/Google/GoogleUpdater/152.0.7933.0/Crashpad --url=https://clients2.google.com/cr/report --annotation=prod=Update4 --annotation=ver=152.0.7933.0 --handshake-fd=6 --enable-logging --vmodule=*/components/update_client/*=2,*/chrome/enterprise_companion/*=2,*/chrome/updater/*=2
+[98256:4349676:0922/205703.627183:VERBOSE1:chrome/updater/updater.cc:377] OS version: 15.8.0, arch: arm64, System uptime (seconds): 72753, parent pid: 1
+[98256:4349676:0922/205703.628259:VERBOSE1:chrome/updater/updater.cc:382] Available disk space in install directory (/Users/qlyf/Library/Application Support/Google/GoogleUpdater): 89329717248B (83.195GiB) / 245107195904B (228.274GiB)
+[98256:4349676:0922/205703.628269:VERBOSE1:chrome/updater/updater.cc:386] Available disk space in temporary directory (/var/folders/3z/wj46qg4j2pn2fwgtccdj093m0000gn/T/): 89329717248B (83.195GiB) / 245107195904B (228.274GiB)
+[98256:4349676:0922/205703.628318:VERBOSE2:chrome/updater/event_history.cc:265] Emitted a UPDATER_PROCESS START event to the history log
+[98254:4349672:0922/205703.628597:VERBOSE1:chrome/updater/crash_reporter.cc:124] Crash handler launched and ready.
+[98254:4349672:0922/205703.629176:VERBOSE1:chrome/updater/crash_client.cc:108] Found 1 completed crash reports
+[98254:4349672:0922/205703.629186:VERBOSE1:chrome/updater/crash_client.cc:117] Crash since last run: ID "", created at 1790000679, 1 upload attempts, file path "/Users/qlyf/Library/Application Support/Google/GoogleUpdater/152.0.7933.0/Crashpad/completed/27b16e46-abf4-4919-a60b-0c7b04fcdd89.dmp", unique ID "27b16e46-abf4-4919-a60b-0c7b04fcdd89"; uploaded: no
+[98254:4349672:0922/205703.629225:VERBOSE1:chrome/updater/crash_client.cc:132] Found 0 pending crash reports
+[98254:4349672:0922/205703.629274:ERROR:third_party/crashpad/crashpad/util/file/file_io_posix.cc:145] open /Users/qlyf/Library/Application Support/Google/RLZ/Crashpad/settings.dat: No such file or directory (2)
+[98254:4349672:0922/205703.629284:ERROR:third_party/crashpad/crashpad/util/file/file_io_posix.cc:145] open /Users/qlyf/Library/Application Support/Google/Chrome for Testing/Crashpad/settings.dat: No such file or directory (2)
+[98254:4349672:0922/205703.629413:VERBOSE1:chrome/updater/updater.cc:105] Crash reporting initialized.
+[98254:4349684:0922/205703.629584:VERBOSE1:chrome/updater/app/app_wakeall.cc:58] Launching `/Users/qlyf/Library/Application Support/Google/GoogleUpdater/152.0.7933.0/GoogleUpdater.app/Contents/MacOS/GoogleUpdater --wake`
+[98257:4349688:0922/205703.634036:VERBOSE1:chrome/updater/updater.cc:374] Version: 152.0.7933.0, opt, ARM_64, command line: /Users/qlyf/Library/Application Support/Google/GoogleUpdater/152.0.7933.0/GoogleUpdater.app/Contents/MacOS/GoogleUpdater --wake --enable-logging --vmodule=*/components/update_client/*=2,*/chrome/enterprise_companion/*=2,*/chrome/updater/*=2
+[98257:4349688:0922/205703.634285:VERBOSE1:chrome/updater/updater.cc:377] OS version: 15.8.0, arch: arm64, System uptime (seconds): 72753, parent pid: 98254
+[98257:4349688:0922/205703.635261:VERBOSE1:chrome/updater/updater.cc:382] Available disk space in install directory (/Users/qlyf/Library/Application Support/Google/GoogleUpdater): 89329717248B (83.195GiB) / 245107195904B (228.274GiB)
+[98257:4349688:0922/205703.635269:VERBOSE1:chrome/updater/updater.cc:386] Available disk space in temporary directory (/var/folders/3z/wj46qg4j2pn2fwgtccdj093m0000gn/T/): 89329717248B (83.195GiB) / 245107195904B (228.274GiB)
+[98257:4349688:0922/205703.635308:VERBOSE2:chrome/updater/event_history.cc:265] Emitted a UPDATER_PROCESS START event to the history log
+[98259:4349692:0922/205703.640295:VERBOSE1:chrome/updater/updater.cc:374] Version: 152.0.7933.0, opt, ARM_64, command line: /Users/qlyf/Library/Application Support/Google/GoogleUpdater/152.0.7933.0/GoogleUpdater.app/Contents/MacOS/GoogleUpdater --crash-handler --database=/Users/qlyf/Library/Application Support/Google/GoogleUpdater/152.0.7933.0/Crashpad --url=https://clients2.google.com/cr/report --annotation=prod=Update4 --annotation=ver=152.0.7933.0 --handshake-fd=6 --enable-logging --vmodule=*/components/update_client/*=2,*/chrome/enterprise_companion/*=2,*/chrome/updater/*=2
+[98259:4349692:0922/205703.640551:VERBOSE1:chrome/updater/updater.cc:377] OS version: 15.8.0, arch: arm64, System uptime (seconds): 72753, parent pid: 1
+[98259:4349692:0922/205703.641455:VERBOSE1:chrome/updater/updater.cc:382] Available disk space in install directory (/Users/qlyf/Library/Application Support/Google/GoogleUpdater): 89329717248B (83.195GiB) / 245107195904B (228.274GiB)
+[98259:4349692:0922/205703.641462:VERBOSE1:chrome/updater/updater.cc:386] Available disk space in temporary directory (/var/folders/3z/wj46qg4j2pn2fwgtccdj093m0000gn/T/): 89329717248B (83.195GiB) / 245107195904B (228.274GiB)
+[98259:4349692:0922/205703.641504:VERBOSE2:chrome/updater/event_history.cc:265] Emitted a UPDATER_PROCESS START event to the history log
+[98257:4349688:0922/205703.641748:VERBOSE1:chrome/updater/crash_reporter.cc:124] Crash handler launched and ready.
+[98257:4349688:0922/205703.642245:VERBOSE1:chrome/updater/crash_client.cc:108] Found 1 completed crash reports
+[98257:4349688:0922/205703.642254:VERBOSE1:chrome/updater/crash_client.cc:117] Crash since last run: ID "", created at 1790000679, 1 upload attempts, file path "/Users/qlyf/Library/Application Support/Google/GoogleUpdater/152.0.7933.0/Crashpad/completed/27b16e46-abf4-4919-a60b-0c7b04fcdd89.dmp", unique ID "27b16e46-abf4-4919-a60b-0c7b04fcdd89"; uploaded: no
+[98257:4349688:0922/205703.642291:VERBOSE1:chrome/updater/crash_client.cc:132] Found 0 pending crash reports
+[98257:4349688:0922/205703.642332:ERROR:third_party/crashpad/crashpad/util/file/file_io_posix.cc:145] open /Users/qlyf/Library/Application Support/Google/RLZ/Crashpad/settings.dat: No such file or directory (2)
+[98257:4349688:0922/205703.642340:ERROR:third_party/crashpad/crashpad/util/file/file_io_posix.cc:145] open /Users/qlyf/Library/Application Support/Google/Chrome for Testing/Crashpad/settings.dat: No such file or directory (2)
+[98257:4349688:0922/205703.642497:VERBOSE1:chrome/updater/updater.cc:105] Crash reporting initialized.
+[98257:4349688:0922/205703.642657:VERBOSE1:chrome/updater/ipc/update_service_internal_proxy_mojo.cc:61] Run
+[97990:4347717:0922/205704.989492:ERROR:base/process/process_mac.cc:53] task_policy_set TASK_CATEGORY_POLICY: (os/kern) invalid argument (4)
+[97990:4347717:0922/205704.989528:ERROR:base/process/process_mac.cc:98] task_policy_set TASK_SUPPRESSION_POLICY: (os/kern) invalid argument (4)
+[97994:4347771:0922/205705.059314:ERROR:ui/display/mac/cv_display_link_mac.mm:195] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670
+[97994:4347771:0922/205705.060290:ERROR:ui/display/mac/cv_display_link_mac.mm:195] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670
+[97994:4347771:0922/205705.061093:ERROR:ui/display/mac/cv_display_link_mac.mm:195] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670
+[97994:4347771:0922/205705.061242:ERROR:ui/display/mac/cv_display_link_mac.mm:195] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670
+[97994:4347771:0922/205705.061345:ERROR:ui/display/mac/cv_display_link_mac.mm:195] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670
+[97990:4347717:0922/205707.834797:ERROR:base/process/process_mac.cc:53] task_policy_set TASK_CATEGORY_POLICY: (os/kern) invalid argument (4)
+[97990:4347717:0922/205707.834886:ERROR:base/process/process_mac.cc:98] task_policy_set TASK_SUPPRESSION_POLICY: (os/kern) invalid argument (4)
+[97994:4347771:0922/205707.911337:ERROR:ui/display/mac/cv_display_link_mac.mm:195] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670
+[97994:4347771:0922/205707.912208:ERROR:ui/display/mac/cv_display_link_mac.mm:195] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670
+[97994:4347771:0922/205707.912786:ERROR:ui/display/mac/cv_display_link_mac.mm:195] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670
+[97994:4347771:0922/205707.912850:ERROR:ui/display/mac/cv_display_link_mac.mm:195] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670
+[97994:4347771:0922/205707.912906:ERROR:ui/display/mac/cv_display_link_mac.mm:195] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670
+[97990:4347717:0922/205710.675353:ERROR:base/process/process_mac.cc:53] task_policy_set TASK_CATEGORY_POLICY: (os/kern) invalid argument (4)
+[97990:4347717:0922/205710.679455:ERROR:base/process/process_mac.cc:98] task_policy_set TASK_SUPPRESSION_POLICY: (os/kern) invalid argument (4)
+[97994:4347771:0922/205710.732780:ERROR:ui/display/mac/cv_display_link_mac.mm:195] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670
+[97994:4347771:0922/205710.736498:ERROR:ui/display/mac/cv_display_link_mac.mm:195] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670
+[97994:4347771:0922/205710.737441:ERROR:ui/display/mac/cv_display_link_mac.mm:195] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670
+[97994:4347771:0922/205710.737522:ERROR:ui/display/mac/cv_display_link_mac.mm:195] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670
+[97994:4347771:0922/205710.737633:ERROR:ui/display/mac/cv_display_link_mac.mm:195] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670
+[97990:4347706:0922/205710.799903:ERROR:google_apis/gcm/engine/registration_request.cc:291] Registration response error message: DEPRECATED_ENDPOINT
+[97990:4347717:0922/205713.494772:ERROR:base/process/process_mac.cc:53] task_policy_set TASK_CATEGORY_POLICY: (os/kern) invalid argument (4)
+[97990:4347717:0922/205713.494859:ERROR:base/process/process_mac.cc:98] task_policy_set TASK_SUPPRESSION_POLICY: (os/kern) invalid argument (4)
+[97994:4347771:0922/205713.559199:ERROR:ui/display/mac/cv_display_link_mac.mm:195] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670
+[97994:4347771:0922/205713.565488:ERROR:ui/display/mac/cv_display_link_mac.mm:195] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670
+[97994:4347771:0922/205713.566338:ERROR:ui/display/mac/cv_display_link_mac.mm:195] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670
+[97994:4347771:0922/205713.566467:ERROR:ui/display/mac/cv_display_link_mac.mm:195] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670
+[97994:4347771:0922/205713.569912:ERROR:ui/display/mac/cv_display_link_mac.mm:195] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670
+[97990:4347717:0922/205716.343027:ERROR:base/process/process_mac.cc:53] task_policy_set TASK_CATEGORY_POLICY: (os/kern) invalid argument (4)
+[97990:4347717:0922/205716.343079:ERROR:base/process/process_mac.cc:98] task_policy_set TASK_SUPPRESSION_POLICY: (os/kern) invalid argument (4)
+[97994:4347771:0922/205716.411543:ERROR:ui/display/mac/cv_display_link_mac.mm:195] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670
+[97994:4347771:0922/205716.412356:ERROR:ui/display/mac/cv_display_link_mac.mm:195] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670
+[97994:4347771:0922/205716.412896:ERROR:ui/display/mac/cv_display_link_mac.mm:195] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670
+[97994:4347771:0922/205716.412967:ERROR:ui/display/mac/cv_display_link_mac.mm:195] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670
+[97994:4347771:0922/205716.413029:ERROR:ui/display/mac/cv_display_link_mac.mm:195] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670
+[98257:4349688:0922/205718.843171:VERBOSE1:chrome/updater/app/app.cc:52] Shutdown: 0
+[98257:4349688:0922/205718.843765:VERBOSE2:chrome/updater/event_history.cc:265] Emitted a UPDATER_PROCESS END event to the history log
+[98257:4349688:0922/205718.843801:VERBOSE1:chrome/updater/updater.cc:419] UpdaterMain (--wake) returned 0.
+[98254:4349684:0922/205719.088134:VERBOSE1:chrome/updater/app/app_wakeall.cc:68] `/Users/qlyf/Library/Application Support/Google/GoogleUpdater/152.0.7933.0/GoogleUpdater.app/Contents/MacOS/GoogleUpdater --wake` exited 0
+[98254:4349672:0922/205719.088545:VERBOSE1:chrome/updater/app/app.cc:52] Shutdown: 0
+[98254:4349672:0922/205719.089107:VERBOSE2:chrome/updater/event_history.cc:265] Emitted a UPDATER_PROCESS END event to the history log
+[98254:4349672:0922/205719.089136:VERBOSE1:chrome/updater/updater.cc:419] UpdaterMain (--wake-all) returned 0.
+[97990:4347717:0922/205723.231739:ERROR:base/process/process_mac.cc:53] task_policy_set TASK_CATEGORY_POLICY: (os/kern) invalid argument (4)
+[97990:4347717:0922/205723.231833:ERROR:base/process/process_mac.cc:98] task_policy_set TASK_SUPPRESSION_POLICY: (os/kern) invalid argument (4)
+[98259:4349692:0922/205728.855553:VERBOSE2:chrome/updater/event_history.cc:265] Emitted a UPDATER_PROCESS END event to the history log
+[98259:4349692:0922/205728.855682:VERBOSE1:chrome/updater/updater.cc:419] UpdaterMain (--crash-handler) returned 0.
+[98256:4349676:0922/205728.857435:VERBOSE2:chrome/updater/event_history.cc:265] Emitted a UPDATER_PROCESS END event to the history log
+[98256:4349676:0922/205728.857490:VERBOSE1:chrome/updater/updater.cc:419] UpdaterMain (--crash-handler) returned 0.

@@ -1,0 +1,76 @@
+运行时依赖矩阵闭合报告（P2-b 后）
+
+引用符号数: 45
+声明条目数: 46
+未声明（必须为空）: []
+声明但未被 app-core 直接引用: ["deadlineStagePoints"]
+
+引用的全部符号:
+  AppUi
+  AppUi.createUi
+  AppUi.safeExternalHref
+  DatePrimitives
+  DatePrimitives.addDays
+  DatePrimitives.applyClock
+  DatePrimitives.dayOfMonthIn
+  DatePrimitives.endOfDay
+  DatePrimitives.lastDayOfMonth
+  DatePrimitives.nextDayOfMonth
+  DatePrimitives.nextWeekend
+  DatePrimitives.nthWeekdayInMonth
+  DatePrimitives.nthWeekdayOfNextMonthByDay
+  DatePrimitives.nthWeekdayOfNextMonthByInstant
+  DatePrimitives.sameDay
+  DatePrimitives.startOfDay
+  DatePrimitives.weekdayOfNextWeek
+  DeliveryEvidence
+  Feedback
+  UiFormat
+  UiFormat.dayLabel
+  UiFormat.escapeAttr
+  UiFormat.escapeHtml
+  UiFormat.fmtDate
+  UiFormat.fmtTime
+  UiFormat.pad
+  UiFormat.parseLocalInput
+  UiFormat.relDue
+  UiFormat.renderMarkdown
+  UiFormat.toLocalInput
+  UiFormat.uid
+  applyWindowTrigger
+  cnInt
+  createStorage
+  deadlineStageKey
+  hasIdb
+  hasSpecificTimeWord
+  inQuietHours
+  markReminded
+  nextRepeatPreview
+  nextRepeatTrigger
+  parseChineseTime
+  quietEnd
+  repeatLabel
+  shouldRealert
+
+生产脚本清单（11 支）:
+  0: lib/date-utils.js
+  1: lib/ui-format.js
+  2: lib/app-ui.js
+  3: lib/parse-cn.js
+  4: lib/repeat.js
+  5: lib/reminder.js
+  6: lib/storage.js
+  7: lib/feedback.js
+  8: lib/delivery-evidence.js
+  9: lib/native-reminders.js
+  10: app-core.js
+
+加载期依赖声明:
+  lib/parse-cn.js -> lib/date-utils.js   // 它在求值时就把 AttentionLib.DatePrimitives 抓进闭包常量 P（拿不到直接抛「缺日历原语」）
+  lib/repeat.js -> lib/date-utils.js   // 同上：求值时抓 AttentionLib.DatePrimitives，拿不到直接抛错而不是退回另一套日历算法
+  lib/ui-format.js -> lib/date-utils.js   // 同上：求值时抓 AttentionLib.DatePrimitives（sameDay / addDays）做「今天/明天/昨天」判定
+  lib/native-reminders.js -> lib/reminder.js   // 它在求值时就把 AttentionLib.deadlineStageKey/deadlineStagePoints/inQuietHours/quietEnd 抓进闭包常量 Lib，而那些标识符定义在 lib/reminder.js
+
+inspectList 问题: []
+precacheProblems: []
+packagingProblems: []

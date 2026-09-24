@@ -1,0 +1,2 @@
+  mCurrentFocus=Window{510b37a u0 space.alliswell.inbox/space.alliswell.inbox.MainActivity}
+  mFocusedApp=ActivityRecord{37122408 u0 space.alliswell.inbox/.MainActivity t18737}

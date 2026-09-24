@@ -1,0 +1,22 @@
+{
+  "apkSha256": "c949ad2861bd47680a29384d4f4bdc8a69a594473a366936a9eb239ca8bac7a3",
+  "deviceApkPath": "/data/app/~~b-v18SRL8oHobSrhFYAD1g==/space.alliswell.inbox-HFbFwxJqJEfPJU1Fd7ZHMw==/base.apk",
+  "cdpCheck": {
+    "ready": true,
+    "isNative": true,
+    "hasSysBridge": true,
+    "hasAppSettings": true,
+    "hasActionFeedback": true,
+    "fbContractLength": 7,
+    "hasAllFbContract": true,
+    "hasEvents": true,
+    "evContractLength": 7,
+    "hasAllEvContract": true,
+    "isBound": true,
+    "demoRowsCount": 5,
+    "hasTestApi": true,
+    "testApiContractLength": 2,
+    "hasAllTestApiContract": true,
+    "schedEvHasScheduled": false
+  }
+}

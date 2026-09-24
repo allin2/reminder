@@ -1,0 +1,12 @@
+=== 第五轮 F02-R3 静态取证 ===
+  ✓ 修复后四出口全空
+  ✓ TEST_FEEDBACK 声明为 array
+  ✓ UNDO_WINDOW_MS 仍为 number
+  ✓ 类型白名单闭合
+  ✓ 退回 object 时静态**看不出问题**（运行时闸门是唯一防线）
+  ✓ 写成白名单外的类型 ⇒ 静态变红
+
+出口：全部成立
+修复后类型表："array"
+声明类型取值：["array","function","number","object"]
+JSON 已写入：docs/reviews/verification-runs/20260921T0545-array-contract/evidence/array-contract-probe.json

@@ -1,0 +1,30 @@
+{
+  "id": 12,
+  "result": {
+    "result": {
+      "type": "object",
+      "value": {
+        "before": {
+          "review_status": "REVIEWED",
+          "reviewed_at": 1789903725726,
+          "rev": 2,
+          "status": "waiting",
+          "triggerAt": 1789911000000,
+          "localTrigger": "2026-09-20T21:30",
+          "isFallbackTrigger": true
+        },
+        "after": {
+          "review_status": "NEEDS_REVIEW",
+          "reviewed_at": null,
+          "rev": 3,
+          "status": "waiting",
+          "triggerAt": 1789911000000,
+          "localTrigger": "2026-09-20T21:30",
+          "isFallbackTrigger": true
+        },
+        "pendingBytes": 6507,
+        "itemCount": 5
+      }
+    }
+  }
+}

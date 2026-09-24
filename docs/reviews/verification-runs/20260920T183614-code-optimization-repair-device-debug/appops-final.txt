@@ -1,0 +1,56 @@
+Uid mode: COARSE_LOCATION: ignore
+FINE_LOCATION: ignore
+READ_CONTACTS: ignore
+WRITE_CONTACTS: ignore
+READ_CALL_LOG: ignore
+WRITE_CALL_LOG: ignore
+READ_CALENDAR: ignore
+WRITE_CALENDAR: ignore
+CALL_PHONE: ignore
+READ_SMS: ignore
+RECEIVE_SMS: ignore
+RECEIVE_MMS: ignore
+RECEIVE_WAP_PUSH: ignore
+SEND_SMS: ignore
+CAMERA: ignore
+RECORD_AUDIO: ignore
+READ_PHONE_STATE: ignore
+ADD_VOICEMAIL: ignore
+USE_SIP: ignore
+PROCESS_OUTGOING_CALLS: ignore
+BODY_SENSORS: ignore
+READ_CELL_BROADCASTS: ignore
+READ_EXTERNAL_STORAGE: ignore
+WRITE_EXTERNAL_STORAGE: ignore
+GET_ACCOUNTS: ignore
+READ_PHONE_NUMBERS: ignore
+ANSWER_PHONE_CALLS: ignore
+ACCEPT_HANDOVER: ignore
+BLUETOOTH_SCAN: ignore
+ACTIVITY_RECOGNITION: ignore
+READ_MEDIA_AUDIO: ignore
+READ_MEDIA_VIDEO: ignore
+READ_MEDIA_IMAGES: ignore
+ACCESS_MEDIA_LOCATION: ignore
+SCHEDULE_EXACT_ALARM: allow
+BLUETOOTH_CONNECT: ignore
+UWB_RANGING: ignore
+BLUETOOTH_ADVERTISE: ignore
+NEARBY_WIFI_DEVICES: ignore
+READ_MEDIA_VISUAL_USER_SELECTED: ignore
+READ_HEART_RATE: ignore
+READ_SKIN_TEMPERATURE: ignore
+RANGING: ignore
+READ_OXYGEN_SATURATION: ignore
+VIBRATE: allow; time=+3h36m30s655ms ago; duration=+3s847ms
+SYSTEM_ALERT_WINDOW: allow; time=+3h36m30s605ms ago; rejectTime=+5h19m58s755ms ago
+READ_CLIPBOARD: allow; time=+4h59m32s160ms ago
+WRITE_CLIPBOARD: foreground
+WAKE_LOCK: allow; time=+3h36m30s635ms ago; duration=+54ms
+RUN_ANY_IN_BACKGROUND: allow
+START_FOREGROUND: allow; time=+7m17s128ms ago (running)
+ACCESS_RESTRICTED_SETTINGS: default; rejectTime=+5h0m34s452ms ago
+USE_FULL_SCREEN_INTENT: default; rejectTime=+3h36m30s584ms ago
+CONTROL_AUDIO: foreground; time=+3h52m42s350ms ago; duration=+22ms
+CONTROL_AUDIO_PARTIAL: foreground; time=+3h36m26s941ms ago; duration=+7ms
+BACKGROUND_START_ACTIVITY: ignore

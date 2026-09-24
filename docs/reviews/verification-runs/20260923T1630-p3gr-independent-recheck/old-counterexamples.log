@@ -1,0 +1,2 @@
+{"case":"repeat-bind","listenerCount":1,"toastCount":1,"expected":1,"duplicateBinding":false}
+{"case":"save-rejected","result":false,"toasts":[],"falseSuccess":false}

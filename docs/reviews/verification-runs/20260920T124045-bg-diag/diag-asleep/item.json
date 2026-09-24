@@ -1,0 +1,30 @@
+{
+  "id": "diag-asleep-1789881338618",
+  "rev": 1,
+  "triggerAt": 1789881368000,
+  "localTrigger": "2026-09-20T13:16:08",
+  "priority": "important",
+  "delivery_mode": "alarm",
+  "reminderEvents": {
+    "0@1789881368000": {
+      "at": 1789881368000,
+      "state": "scheduled",
+      "roundBase": 1789881368000
+    },
+    "1@1789883168000": {
+      "at": 1789883168000,
+      "state": "scheduled",
+      "roundBase": 1789881368000
+    },
+    "2@1789884968000": {
+      "at": 1789884968000,
+      "state": "scheduled",
+      "roundBase": 1789881368000
+    },
+    "3@1789886768000": {
+      "at": 1789886768000,
+      "state": "scheduled",
+      "roundBase": 1789881368000
+    }
+  }
+}

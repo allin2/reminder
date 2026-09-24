@@ -1,0 +1,8 @@
+--- p3a-d41
++++ p3b-d41
+@@ -168,4 +168,5 @@
+     return ops.length;
+   }
+ 
++  /* Core owns live state normalization only; appPersistence establishes its committed baseline after recovery. */
+   

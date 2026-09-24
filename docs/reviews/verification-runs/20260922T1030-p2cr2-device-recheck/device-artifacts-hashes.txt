@@ -1,0 +1,53 @@
+# 本轮产物哈希清单
+# 生成于 2026-09-22T10:50:18+0800
+
+## run 目录内的设备侧产物
+3d7c66616f5b952678822260ec543bf6199265069e381af5ef0d721c091c5912  docs/reviews/verification-runs/20260922T1030-p2cr2-device-recheck/README.md
+1cf3e303cf0e478b44e62cddaf39416a8d91d83eac001d20ca5c6ccb5a02fd8a  docs/reviews/verification-runs/20260922T1030-p2cr2-device-recheck/apk-hash.txt
+c87f34759c1fad654b78ebc336be4ab7fde8d6b4731ab5bb4427cc92de5e92b9  docs/reviews/verification-runs/20260922T1030-p2cr2-device-recheck/device-coldstart-rounds-BYTE-PROXY-falsepositive.txt
+40aa74532d51b7fe649b8eae4fd35fc8f614e0ce07c6cc0e16df4b5455f531f8  docs/reviews/verification-runs/20260922T1030-p2cr2-device-recheck/device-coldstart-rounds.txt
+c4077de56d66a3aea5d23f3f23869d2980413d9d61b9dd95e33b52852290a5f2  docs/reviews/verification-runs/20260922T1030-p2cr2-device-recheck/device-kill-modes.txt
+421f173d9a9b6944ac3873ac13e15a447a374e4fc69b7a27156f05f2f5f772f2  docs/reviews/verification-runs/20260922T1030-p2cr2-device-recheck/device-storage-A-preinstall.txt
+9f07fbb3efaf30cd0d7133d98fd93ef91a881692cb33a3714d070fefb48a4be1  docs/reviews/verification-runs/20260922T1030-p2cr2-device-recheck/device-storage-B-postinstall.txt
+a2e680ff4077be5d2777db84e1d18d12659112a489d889e52e00d3ac5da27378  docs/reviews/verification-runs/20260922T1030-p2cr2-device-recheck/device-storage-FINAL.txt
+a3146b7b4a7814149cd2828979c7aaebe4798c9b93b93eb046bc8d4a3938623d  docs/reviews/verification-runs/20260922T1030-p2cr2-device-recheck/device-test-log.md
+a01517b992ef3ece0a8413508fceb91ae8b1e5797be81434094dfed04a7e3c80  docs/reviews/verification-runs/20260922T1030-p2cr2-device-recheck/device-wal-A-preinstall.txt
+bd6f56a6cb3977518cf79abaa7a799d9fd1746697045fab7ec525dc6caa86a6f  docs/reviews/verification-runs/20260922T1030-p2cr2-device-recheck/device-wal-B-postinstall.txt
+53fa4d5c18e64d5f96abd65ed0411289460b59c8d65dcccdfb02e7b8f3a3edb7  docs/reviews/verification-runs/20260922T1030-p2cr2-device-recheck/device-wal-FINAL.txt
+6a222c18bdf6c88204c7bfd0ea8d2294779d805869d6e914d8675f0fd9a5a7d5  docs/reviews/verification-runs/20260922T1030-p2cr2-device-recheck/fault-injection/PRE-R2-faulted-state.txt
+b7a665253bb497ea92e8091e02a85eef94ad0319aeab2fd6370a5cf3a29dcf11  docs/reviews/verification-runs/20260922T1030-p2cr2-device-recheck/fault-injection/R2-after-restore-2nd-boot.txt
+f02b1cf8f685d2bf84d0153563e4b0f3d824506fbe4738c16bf996f79ab24ae3  docs/reviews/verification-runs/20260922T1030-p2cr2-device-recheck/fault-injection/R2-after-restore.txt
+4559161df6946a1f7bbaafe6ae19e20fd980f2169367f078049cb1e59954d917  docs/reviews/verification-runs/20260922T1030-p2cr2-device-recheck/fault-injection/R2-faulted-state.txt
+e34266a86af54386dcd244c0ea46c59a08d9a5aa74181b993c9ae38c122957ce  docs/reviews/verification-runs/20260922T1030-p2cr2-device-recheck/fault-injection/prefault-idb-000003.log
+fe3b471921537a44036feac8678202322e0384b24cf97635a05955548ae90381  docs/reviews/verification-runs/20260922T1030-p2cr2-device-recheck/fault-injection/prefault-idb-SHA256SUMS.txt
+d9304a368a776ef7aa0d91f0c1723ab5cb7096e649f49db0e9b909171c03c717  docs/reviews/verification-runs/20260922T1030-p2cr2-device-recheck/fault-injection/prefault-mirror-000003.log
+154a67e3b5bee15a4aa4473d4b8c5979b1c7221b60ef41a64f15bf9b8fde54f8  docs/reviews/verification-runs/20260922T1030-p2cr2-device-recheck/fault-injection/prefault-mirror-SHA256SUMS.txt
+5614baef0c25a728789bed59adab7dbfe536552fd0b83b480fbe164ed67bcc37  docs/reviews/verification-runs/20260922T1030-p2cr2-device-recheck/fault-injection/restore-verify.txt
+a2a394df8a574001bb54cea33df8ffdc255eacc2c5774a459c54dfcf7bf10205  docs/reviews/verification-runs/20260922T1030-p2cr2-device-recheck/git-head.txt
+2d2e5dada91af99ee47a31a35518df1429132b4dc5bc0579bc5a3bc4fe137b79  docs/reviews/verification-runs/20260922T1030-p2cr2-device-recheck/idb-record-A-preinstall.txt
+781a31c82430c97897af612ece5e0ca2205e301cb5ff121ce2660541ea5182c7  docs/reviews/verification-runs/20260922T1030-p2cr2-device-recheck/install-output.txt
+5722a5bd30f531d57521b9f6b3823747d67afa5afba407043dbaa34bb32c3f41  docs/reviews/verification-runs/20260922T1030-p2cr2-device-recheck/not-performed.md
+727ec4f9c17a5d0e991dc5d3d2056ce7bc767cc0d331e351702fa4ac0b8c57e5  docs/reviews/verification-runs/20260922T1030-p2cr2-device-recheck/package-identity-final.txt
+23d40cb6de05cee1004e045c541033eb6c6980502b56730595e4bfd148a73e8d  docs/reviews/verification-runs/20260922T1030-p2cr2-device-recheck/package-identity.txt
+483cd253721bf90948abc8d5722363bf2486b6abd624f7e2087aea3754b2800d  docs/reviews/verification-runs/20260922T1030-p2cr2-device-recheck/production-source-hashes.txt
+1b00f5de997b38588f6ca4cdce28ed6d8af53fc291f7b7d4cd7de20962b6e895  docs/reviews/verification-runs/20260922T1030-p2cr2-device-recheck/run-started-at.txt
+0625aacabcd5068ab0d762e44b25b2937a7bdc7a47004b3f3bea1e3e4e8f77d2  docs/reviews/verification-runs/20260922T1030-p2cr2-device-recheck/state-raw-preinstall.json
+748b6cea7b9a45033b3a32f26ca94d9d6d246cfc6d12db15297310c7f482e961  docs/reviews/verification-runs/20260922T1030-p2cr2-device-recheck/wal-delta-round-1.txt
+748b6cea7b9a45033b3a32f26ca94d9d6d246cfc6d12db15297310c7f482e961  docs/reviews/verification-runs/20260922T1030-p2cr2-device-recheck/wal-delta-round-2.txt
+748b6cea7b9a45033b3a32f26ca94d9d6d246cfc6d12db15297310c7f482e961  docs/reviews/verification-runs/20260922T1030-p2cr2-device-recheck/wal-delta-round-3.txt
+
+## 本轮使用的脚本（可复算入口）
+91f1f7d3af089790266060b24fd666e23c3a2aa3d00f47e8c26e42a52fe13b29  scripts/idb-state-hash.py
+0818a695892bfc526f531bb212b5a72a715456bdcb53c2b7e98623f70c0d78ae  scripts/android-cdp-eval.py
+4247254dc9af54c6b405f5be12d8184e7ed8cfe06531e46cba0c02f16e4cb15a  scripts/idb-wal-inspect.py
+05a063887079d32ac968851fd698639c651e716449e7bac39b78b3969afb4462  scripts/verification/device-storage-hash.sh
+cb913c6e97f371876a60e2efa490ae5b7081394291aa4ee540c5b82dfb38fe11  scripts/verification/idb-wal-size.sh
+ee32c3fda9d02541ad4cbc0b26804245c24feab3e93affe36086bb5d091cfacc  scripts/verification/idb-wal-delta.py
+89a926481c4604a594f07b767ea4970183e725872d63a48b0999840152361698  scripts/verification/p2cr-coldstart-rounds.sh
+452fa5bb988d11f74fc4ef7003e59417354225c4b8de0a05dbe3bf229ac05132  scripts/verification/p2cr-kill-modes.sh
+860b8897b1af14e677a4287ea7a5c57635fd77b9e380726f9c2401ee563b0afa  scripts/verification/p2cr-idb-fault-inject.sh
+e98ea30db87724da41b06e4957b5b913411f32aaac423739e43fc1344ed7651e  scripts/verification/p2cr-failure-state-probe.py
+
+## 两个被测/对照 APK
+62e5c876d4e1b9d707369c79f72631e3f51e76840070cf65fb3936c518191b4f  releases/candidates/20260922T0055-p2cr-mirror-failclosed/attention-inbox-p2cr-mirror-failclosed-debug.apk
+314321a20a705a91c6b0e23205a8e2021febd3e55fc8d0002bfa56c44785a4b5  releases/candidates/20260921T2355-p2cr-authority-gate/attention-inbox-p2cr-authority-gate-debug.apk

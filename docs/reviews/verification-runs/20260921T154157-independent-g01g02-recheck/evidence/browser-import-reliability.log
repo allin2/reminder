@@ -1,0 +1,114 @@
+{
+  "ready": {
+    "hook": true,
+    "ready": true,
+    "failure": null,
+    "panel": false,
+    "panelText": "",
+    "bindings": {
+      "parseChineseTime": "current",
+      "nextRepeatTrigger": "current",
+      "cnInt": "current",
+      "hasQuery": true,
+      "feedback": true,
+      "feedbackIsCurrent": true,
+      "evidence": true,
+      "evidenceIsCurrent": true,
+      "native": true,
+      "nativeIsCurrent": true
+    }
+  },
+  "setup": true,
+  "pendingSetup": true,
+  "whilePending": {
+    "stateIds": [
+      "pending-import"
+    ],
+    "toast": "",
+    "history": [],
+    "homeText": "||✓把要记的事丢进来写一句话就行，例如「明天下午3点提醒我取快递」。到点我会提醒你。"
+  },
+  "afterResolve": {
+    "toast": "导入成功 · 1 条事项",
+    "history": [
+      "导入成功 · 1 条事项"
+    ],
+    "homeText": "现在需要注意1pending-import已过 1 分钟稍后提醒改到具体时间我知道了停止本轮 · 仍未完成完成结束并归档||"
+  },
+  "rejectSetup": true,
+  "afterReject": {
+    "stateIds": [
+      "rejected-import"
+    ],
+    "toast": "导入失败 · 数据未能保存，请重新导入",
+    "history": [
+      "导入失败 · 数据未能保存，请重新导入"
+    ],
+    "confirmOpen": false
+  },
+  "readerError": {
+    "toast": "导入失败：文件读取失败，请重试",
+    "history": [
+      "导入失败：文件读取失败，请重试"
+    ],
+    "confirmOpen": false,
+    "stateIds": [
+      "rejected-import"
+    ]
+  },
+  "readerAbort": {
+    "toast": "导入失败 · 文件读取已取消",
+    "history": [
+      "导入失败 · 文件读取已取消"
+    ],
+    "confirmOpen": false,
+    "stateIds": [
+      "rejected-import"
+    ]
+  },
+  "successSetup": true,
+  "afterSuccess": {
+    "stateIds": [
+      "durable-import"
+    ],
+    "toast": "导入成功 · 1 条事项",
+    "history": [
+      "导入成功 · 1 条事项"
+    ],
+    "meter": {
+      "opens": 1,
+      "puts": 1,
+      "names": [
+        "attention-inbox"
+      ],
+      "error": null
+    }
+  },
+  "afterReload": {
+    "stateIds": [
+      "durable-import"
+    ]
+  },
+  "checks": {
+    "ready": true,
+    "pending-mutates-memory": true,
+    "pending-no-success": true,
+    "pending-no-render": true,
+    "resolve-then-success": true,
+    "resolve-then-render": true,
+    "reject-keeps-memory": true,
+    "reject-specific-final": true,
+    "reject-no-success": true,
+    "reject-no-format-error": true,
+    "reader-error-message": true,
+    "reader-error-no-confirm": true,
+    "reader-error-no-state-change": true,
+    "reader-abort-message": true,
+    "reader-abort-no-confirm": true,
+    "reader-abort-no-state-change": true,
+    "real-success": true,
+    "real-idb-write": true,
+    "real-survives-reload": true
+  },
+  "failed": []
+}

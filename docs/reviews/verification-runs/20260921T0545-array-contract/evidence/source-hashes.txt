@@ -1,0 +1,33 @@
+# 交付身份（工作区字节）—— 第五轮 F02-R3 修复后
+# generated: 2026-09-21T06:00:20+0800
+# 本轮改动的文件用 * 标出
+
+ef37935be81929b98cb7b5f8eeb34e88c1e787c5d5c2be8dcea4cfdde394b0cc  app-core.js  404171 bytes  *
+ad706717c2accb966aaac2cc4db49d2be68fa3f202b38f63449fc7ecc06b9653  index.html  79352 bytes
+a342b66ab62c6269971b7d0d36f737156f5f60849dc95217a39b32230fdaf102  sw.js  4586 bytes  *
+660c2314cc921232ed9f9c3f7271839f57109e6640e1a9b0cf2a7259ca42e2f1  manifest.json  1232 bytes
+405d767ff54451448f1cedf337179523a7c9dd67e260bf068b373b9dfec8e93f  capacitor.config.json  312 bytes
+bfdd3c88f9d14d3a1e391dc2f5e290c8319708dc0f7036d6856dc0ac67f4b581  styles.css  17250 bytes
+84e3e97663c2a7525ff25432f335a5a422791c83e26f81014b34443d63b632e4  lib/app-ui.js  8394 bytes
+7328f1e6ec1634a523deb21ba96ff9f9bf50f6b2ebe827b3a1e7765394cdb46c  lib/date-utils.js  7506 bytes
+7ee77186881d8462450c8fe8a550840647ec9d7626c259fb9e29768290062d03  lib/delivery-evidence.js  15664 bytes
+37e60a07624c2dda1f1afadec8c1b2d61fe5b4a5a34b4c9c82f2c10ed0270423  lib/export-format.js  20728 bytes
+bfe41dd392d5ff27d8c92b41154fc7e4e5a125eaaa1c8fae6ae3298186669eb3  lib/feedback.js  16445 bytes
+edd959660e9fb9525ba7c290cde3019a81d53f1873c0ce31af24da30e1714bfa  lib/import-extract.js  25093 bytes
+51fe5528bb7189400946685ab0b9e9819f71eae8096166920deb048a4a0529d9  lib/import-map.js  10218 bytes
+22d183c857ce060047054b524d3f2cae0c37d54e30553134091c26884ff3d6bb  lib/native-reminders.js  60999 bytes
+80c6e4db43ebe018c2fc90fbe1e8b1cc126be801aec5ae790490cb5fe53a9f9d  lib/parse-cn.js  22716 bytes
+886ab9eb1a438b34122b71a461ed89a4a5b37fa85dedf8ee7afa558ee58f62fd  lib/reminder.js  5598 bytes
+d48b8d67336976c4d514101b9990c904d8a00a9aa1ecabf3fe6abace86afd83a  lib/repeat.js  5918 bytes
+d7f5ca0d766f796cdeea6f4ce0b73875dc5778ed4eefdb8c939cae6b5b27d2d1  lib/storage.js  5006 bytes
+3dcccc41863aef136abe513527d79955c5b80be9d997f5ff90d68f0fd5850c9f  lib/ui-format.js  9232 bytes
+ca3b9f905c171a334540bb54934638a59b37e30b4c01d0274aa35f8ab0fd6f51  test-unit.js  75329 bytes
+a0008176e878766a56e58846e4e5f0452e6d88a966d260b5670081a442369330  test-native-reminders.js  133988 bytes
+d79d0e7cfc0a49b975e3f1486bdca5be1f7ab9b7815de9a08932cc38ab0e8336  test-boot-combination.js  146194 bytes  *
+f8d790cdc03ba0cb6be70cfc7dd0516f9a918d64fe06c482fa88e32069e7e10d  test-smoke.js  82749 bytes
+53d5e47fb22886cc524636bbcd75738e3f1c0307ab962798a9f3868c85caef25  test-regressions.js  179497 bytes
+f59fa78ae41d29f4678c6c6ce3c40005809c33204a6731e6cce6ec18fde03bf8  scripts/verification/production-scripts.js  28667 bytes  *
+08922995df3233a09030b7b2ec70c8e27137da0b101b0cf37ecf9170584a7ba9  scripts/verification/parse-single-source.js  48860 bytes  *
+e72eb4319b95b38a9dd33f47c958a01fff211d63179544b2355da6ab0156ce4a  scripts/verification/browser-recovery-check.py  18702 bytes  *
+964e079ffab84a8fa17b62c0b599b70846dba1a436858578386b9111c3b4abae  scripts/verification/ui-format-parity.js  8451 bytes
+d2fe2962006ad314780ebf195bcaca95b0c3323f1f14fcecd9995172239a28e7  scripts/verification/ui-dom-parity.js  24946 bytes

@@ -1,0 +1,282 @@
+{
+  "app-core.js": {
+    "source": "12e841dcb401f584f17d3b0abf21d534315e0a6f89f515e172f38bdfe0c61e9e",
+    "www": "12e841dcb401f584f17d3b0abf21d534315e0a6f89f515e172f38bdfe0c61e9e",
+    "android": "12e841dcb401f584f17d3b0abf21d534315e0a6f89f515e172f38bdfe0c61e9e",
+    "intermediate": null,
+    "apk": "12e841dcb401f584f17d3b0abf21d534315e0a6f89f515e172f38bdfe0c61e9e",
+    "match": true
+  },
+  "icon-192.png": {
+    "source": "48e5078385c990aa02f164874609dccb1108a54cdb8fb8882bdbfb3caaf38411",
+    "www": "48e5078385c990aa02f164874609dccb1108a54cdb8fb8882bdbfb3caaf38411",
+    "android": "48e5078385c990aa02f164874609dccb1108a54cdb8fb8882bdbfb3caaf38411",
+    "intermediate": null,
+    "apk": "48e5078385c990aa02f164874609dccb1108a54cdb8fb8882bdbfb3caaf38411",
+    "match": true
+  },
+  "icon-512.png": {
+    "source": "a558b0502031e078b7a3087779f2777dffe5f5f7f8ccb3869783cc28f776f3af",
+    "www": "a558b0502031e078b7a3087779f2777dffe5f5f7f8ccb3869783cc28f776f3af",
+    "android": "a558b0502031e078b7a3087779f2777dffe5f5f7f8ccb3869783cc28f776f3af",
+    "intermediate": null,
+    "apk": "a558b0502031e078b7a3087779f2777dffe5f5f7f8ccb3869783cc28f776f3af",
+    "match": true
+  },
+  "icon.svg": {
+    "source": "fb09a46eae6dcd7c165811710d8fb91ae47f4273bb7228711076ea016ce8ddbb",
+    "www": "fb09a46eae6dcd7c165811710d8fb91ae47f4273bb7228711076ea016ce8ddbb",
+    "android": "fb09a46eae6dcd7c165811710d8fb91ae47f4273bb7228711076ea016ce8ddbb",
+    "intermediate": null,
+    "apk": "fb09a46eae6dcd7c165811710d8fb91ae47f4273bb7228711076ea016ce8ddbb",
+    "match": true
+  },
+  "index.html": {
+    "source": "0cc4e73abd6a7d7303e662d695bfbe4170e5834bf0b4192180158ff4dd5d46d8",
+    "www": "0cc4e73abd6a7d7303e662d695bfbe4170e5834bf0b4192180158ff4dd5d46d8",
+    "android": "0cc4e73abd6a7d7303e662d695bfbe4170e5834bf0b4192180158ff4dd5d46d8",
+    "intermediate": null,
+    "apk": "0cc4e73abd6a7d7303e662d695bfbe4170e5834bf0b4192180158ff4dd5d46d8",
+    "match": true
+  },
+  "lib/app-ai.js": {
+    "source": "e55a286009b102129e2efe3e1bdc0a9dc8b9fbb2f1bd4884b02b56d8e20862d9",
+    "www": "e55a286009b102129e2efe3e1bdc0a9dc8b9fbb2f1bd4884b02b56d8e20862d9",
+    "android": "e55a286009b102129e2efe3e1bdc0a9dc8b9fbb2f1bd4884b02b56d8e20862d9",
+    "intermediate": null,
+    "apk": "e55a286009b102129e2efe3e1bdc0a9dc8b9fbb2f1bd4884b02b56d8e20862d9",
+    "match": true
+  },
+  "lib/app-alerts.js": {
+    "source": "3523164453158ed80a54ecde6e61bcf008449bb053df3b8d96c0980ff53e5bb3",
+    "www": "3523164453158ed80a54ecde6e61bcf008449bb053df3b8d96c0980ff53e5bb3",
+    "android": "3523164453158ed80a54ecde6e61bcf008449bb053df3b8d96c0980ff53e5bb3",
+    "intermediate": null,
+    "apk": "3523164453158ed80a54ecde6e61bcf008449bb053df3b8d96c0980ff53e5bb3",
+    "match": true
+  },
+  "lib/app-backup.js": {
+    "source": "6871da9c87c906b943762a75c73573cbf9b9c13c84c40e8860652f3a3c8104e0",
+    "www": "6871da9c87c906b943762a75c73573cbf9b9c13c84c40e8860652f3a3c8104e0",
+    "android": "6871da9c87c906b943762a75c73573cbf9b9c13c84c40e8860652f3a3c8104e0",
+    "intermediate": null,
+    "apk": "6871da9c87c906b943762a75c73573cbf9b9c13c84c40e8860652f3a3c8104e0",
+    "match": true
+  },
+  "lib/app-capture.js": {
+    "source": "cbf3285f427c8aec7394b8305255a545e84c4ec8152faf0d1d8c6ce35da57a4b",
+    "www": "cbf3285f427c8aec7394b8305255a545e84c4ec8152faf0d1d8c6ce35da57a4b",
+    "android": "cbf3285f427c8aec7394b8305255a545e84c4ec8152faf0d1d8c6ce35da57a4b",
+    "intermediate": null,
+    "apk": "cbf3285f427c8aec7394b8305255a545e84c4ec8152faf0d1d8c6ce35da57a4b",
+    "match": true
+  },
+  "lib/app-content.js": {
+    "source": "82be748ea5719244cb725602a78599c1daff9a7fc349128d3e64eb7d76ab4289",
+    "www": "82be748ea5719244cb725602a78599c1daff9a7fc349128d3e64eb7d76ab4289",
+    "android": "82be748ea5719244cb725602a78599c1daff9a7fc349128d3e64eb7d76ab4289",
+    "intermediate": null,
+    "apk": "82be748ea5719244cb725602a78599c1daff9a7fc349128d3e64eb7d76ab4289",
+    "match": true
+  },
+  "lib/app-diagnostics.js": {
+    "source": "36f91c1b7612628e6b7fab7c6d99560afd132f72ecc6c3df4622ad5df3c78b54",
+    "www": "36f91c1b7612628e6b7fab7c6d99560afd132f72ecc6c3df4622ad5df3c78b54",
+    "android": "36f91c1b7612628e6b7fab7c6d99560afd132f72ecc6c3df4622ad5df3c78b54",
+    "intermediate": null,
+    "apk": "36f91c1b7612628e6b7fab7c6d99560afd132f72ecc6c3df4622ad5df3c78b54",
+    "match": true
+  },
+  "lib/app-items.js": {
+    "source": "e807599395caa4f0a69e13ab957a43bd6d377d5dbab682c32c121c4a7a4be519",
+    "www": "e807599395caa4f0a69e13ab957a43bd6d377d5dbab682c32c121c4a7a4be519",
+    "android": "e807599395caa4f0a69e13ab957a43bd6d377d5dbab682c32c121c4a7a4be519",
+    "intermediate": null,
+    "apk": "e807599395caa4f0a69e13ab957a43bd6d377d5dbab682c32c121c4a7a4be519",
+    "match": true
+  },
+  "lib/app-model.js": {
+    "source": "0219c576a82d4df6fefe4dca62561c491f1b36c97d59de426afff7ccad41f94e",
+    "www": "0219c576a82d4df6fefe4dca62561c491f1b36c97d59de426afff7ccad41f94e",
+    "android": "0219c576a82d4df6fefe4dca62561c491f1b36c97d59de426afff7ccad41f94e",
+    "intermediate": null,
+    "apk": "0219c576a82d4df6fefe4dca62561c491f1b36c97d59de426afff7ccad41f94e",
+    "match": true
+  },
+  "lib/app-native-coordinator.js": {
+    "source": "3de9902b0cb97d3159b5c710a1698908211189c7de71861caf69637b0f30948f",
+    "www": "3de9902b0cb97d3159b5c710a1698908211189c7de71861caf69637b0f30948f",
+    "android": "3de9902b0cb97d3159b5c710a1698908211189c7de71861caf69637b0f30948f",
+    "intermediate": null,
+    "apk": "3de9902b0cb97d3159b5c710a1698908211189c7de71861caf69637b0f30948f",
+    "match": true
+  },
+  "lib/app-persistence.js": {
+    "source": "d31a3112044af28c5efe14f770ccec99e9a5a3ce18172d81d79376ce3d6aab50",
+    "www": "d31a3112044af28c5efe14f770ccec99e9a5a3ce18172d81d79376ce3d6aab50",
+    "android": "d31a3112044af28c5efe14f770ccec99e9a5a3ce18172d81d79376ce3d6aab50",
+    "intermediate": null,
+    "apk": "d31a3112044af28c5efe14f770ccec99e9a5a3ce18172d81d79376ce3d6aab50",
+    "match": true
+  },
+  "lib/app-platform.js": {
+    "source": "10a2118c85ff9383ddaaffc494a4f949d001246d4ddab38b2e4c087346252cc5",
+    "www": "10a2118c85ff9383ddaaffc494a4f949d001246d4ddab38b2e4c087346252cc5",
+    "android": "10a2118c85ff9383ddaaffc494a4f949d001246d4ddab38b2e4c087346252cc5",
+    "intermediate": null,
+    "apk": "10a2118c85ff9383ddaaffc494a4f949d001246d4ddab38b2e4c087346252cc5",
+    "match": true
+  },
+  "lib/app-review.js": {
+    "source": "03b846fb783e8b377028c7c6f3ac2454c48e4b8b74574ee43ed4cfbf9608a831",
+    "www": "03b846fb783e8b377028c7c6f3ac2454c48e4b8b74574ee43ed4cfbf9608a831",
+    "android": "03b846fb783e8b377028c7c6f3ac2454c48e4b8b74574ee43ed4cfbf9608a831",
+    "intermediate": null,
+    "apk": "03b846fb783e8b377028c7c6f3ac2454c48e4b8b74574ee43ed4cfbf9608a831",
+    "match": true
+  },
+  "lib/app-setup.js": {
+    "source": "e7b000620da77777f0bd1cc5537d1f4a87aee0efc7aed6566d9248077a8ce112",
+    "www": "e7b000620da77777f0bd1cc5537d1f4a87aee0efc7aed6566d9248077a8ce112",
+    "android": "e7b000620da77777f0bd1cc5537d1f4a87aee0efc7aed6566d9248077a8ce112",
+    "intermediate": null,
+    "apk": "e7b000620da77777f0bd1cc5537d1f4a87aee0efc7aed6566d9248077a8ce112",
+    "match": true
+  },
+  "lib/app-transaction.js": {
+    "source": "e6df807a8330c618ce5d9e4b7a4087bfe7f07fbab1b32a8693a49908b71dea48",
+    "www": "e6df807a8330c618ce5d9e4b7a4087bfe7f07fbab1b32a8693a49908b71dea48",
+    "android": "e6df807a8330c618ce5d9e4b7a4087bfe7f07fbab1b32a8693a49908b71dea48",
+    "intermediate": null,
+    "apk": "e6df807a8330c618ce5d9e4b7a4087bfe7f07fbab1b32a8693a49908b71dea48",
+    "match": true
+  },
+  "lib/app-ui.js": {
+    "source": "84e3e97663c2a7525ff25432f335a5a422791c83e26f81014b34443d63b632e4",
+    "www": "84e3e97663c2a7525ff25432f335a5a422791c83e26f81014b34443d63b632e4",
+    "android": "84e3e97663c2a7525ff25432f335a5a422791c83e26f81014b34443d63b632e4",
+    "intermediate": null,
+    "apk": "84e3e97663c2a7525ff25432f335a5a422791c83e26f81014b34443d63b632e4",
+    "match": true
+  },
+  "lib/app-views.js": {
+    "source": "2ef2c72b6319feb3414fd07914804296d4f9fa7888a834b3d95f1a98b2fafa37",
+    "www": "2ef2c72b6319feb3414fd07914804296d4f9fa7888a834b3d95f1a98b2fafa37",
+    "android": "2ef2c72b6319feb3414fd07914804296d4f9fa7888a834b3d95f1a98b2fafa37",
+    "intermediate": null,
+    "apk": "2ef2c72b6319feb3414fd07914804296d4f9fa7888a834b3d95f1a98b2fafa37",
+    "match": true
+  },
+  "lib/date-utils.js": {
+    "source": "7328f1e6ec1634a523deb21ba96ff9f9bf50f6b2ebe827b3a1e7765394cdb46c",
+    "www": "7328f1e6ec1634a523deb21ba96ff9f9bf50f6b2ebe827b3a1e7765394cdb46c",
+    "android": "7328f1e6ec1634a523deb21ba96ff9f9bf50f6b2ebe827b3a1e7765394cdb46c",
+    "intermediate": null,
+    "apk": "7328f1e6ec1634a523deb21ba96ff9f9bf50f6b2ebe827b3a1e7765394cdb46c",
+    "match": true
+  },
+  "lib/delivery-evidence.js": {
+    "source": "7ee77186881d8462450c8fe8a550840647ec9d7626c259fb9e29768290062d03",
+    "www": "7ee77186881d8462450c8fe8a550840647ec9d7626c259fb9e29768290062d03",
+    "android": "7ee77186881d8462450c8fe8a550840647ec9d7626c259fb9e29768290062d03",
+    "intermediate": null,
+    "apk": "7ee77186881d8462450c8fe8a550840647ec9d7626c259fb9e29768290062d03",
+    "match": true
+  },
+  "lib/export-format.js": {
+    "source": "37e60a07624c2dda1f1afadec8c1b2d61fe5b4a5a34b4c9c82f2c10ed0270423",
+    "www": "37e60a07624c2dda1f1afadec8c1b2d61fe5b4a5a34b4c9c82f2c10ed0270423",
+    "android": "37e60a07624c2dda1f1afadec8c1b2d61fe5b4a5a34b4c9c82f2c10ed0270423",
+    "intermediate": null,
+    "apk": "37e60a07624c2dda1f1afadec8c1b2d61fe5b4a5a34b4c9c82f2c10ed0270423",
+    "match": true
+  },
+  "lib/feedback.js": {
+    "source": "bfe41dd392d5ff27d8c92b41154fc7e4e5a125eaaa1c8fae6ae3298186669eb3",
+    "www": "bfe41dd392d5ff27d8c92b41154fc7e4e5a125eaaa1c8fae6ae3298186669eb3",
+    "android": "bfe41dd392d5ff27d8c92b41154fc7e4e5a125eaaa1c8fae6ae3298186669eb3",
+    "intermediate": null,
+    "apk": "bfe41dd392d5ff27d8c92b41154fc7e4e5a125eaaa1c8fae6ae3298186669eb3",
+    "match": true
+  },
+  "lib/import-extract.js": {
+    "source": "edd959660e9fb9525ba7c290cde3019a81d53f1873c0ce31af24da30e1714bfa",
+    "www": "edd959660e9fb9525ba7c290cde3019a81d53f1873c0ce31af24da30e1714bfa",
+    "android": "edd959660e9fb9525ba7c290cde3019a81d53f1873c0ce31af24da30e1714bfa",
+    "intermediate": null,
+    "apk": "edd959660e9fb9525ba7c290cde3019a81d53f1873c0ce31af24da30e1714bfa",
+    "match": true
+  },
+  "lib/import-map.js": {
+    "source": "51fe5528bb7189400946685ab0b9e9819f71eae8096166920deb048a4a0529d9",
+    "www": "51fe5528bb7189400946685ab0b9e9819f71eae8096166920deb048a4a0529d9",
+    "android": "51fe5528bb7189400946685ab0b9e9819f71eae8096166920deb048a4a0529d9",
+    "intermediate": null,
+    "apk": "51fe5528bb7189400946685ab0b9e9819f71eae8096166920deb048a4a0529d9",
+    "match": true
+  },
+  "lib/native-reminders.js": {
+    "source": "723f218c68866309f364e1e71968eb3efc6ae8b9b85aea7e211c878bee6e031b",
+    "www": "723f218c68866309f364e1e71968eb3efc6ae8b9b85aea7e211c878bee6e031b",
+    "android": "723f218c68866309f364e1e71968eb3efc6ae8b9b85aea7e211c878bee6e031b",
+    "intermediate": null,
+    "apk": "723f218c68866309f364e1e71968eb3efc6ae8b9b85aea7e211c878bee6e031b",
+    "match": true
+  },
+  "lib/parse-cn.js": {
+    "source": "80c6e4db43ebe018c2fc90fbe1e8b1cc126be801aec5ae790490cb5fe53a9f9d",
+    "www": "80c6e4db43ebe018c2fc90fbe1e8b1cc126be801aec5ae790490cb5fe53a9f9d",
+    "android": "80c6e4db43ebe018c2fc90fbe1e8b1cc126be801aec5ae790490cb5fe53a9f9d",
+    "intermediate": null,
+    "apk": "80c6e4db43ebe018c2fc90fbe1e8b1cc126be801aec5ae790490cb5fe53a9f9d",
+    "match": true
+  },
+  "lib/reminder.js": {
+    "source": "886ab9eb1a438b34122b71a461ed89a4a5b37fa85dedf8ee7afa558ee58f62fd",
+    "www": "886ab9eb1a438b34122b71a461ed89a4a5b37fa85dedf8ee7afa558ee58f62fd",
+    "android": "886ab9eb1a438b34122b71a461ed89a4a5b37fa85dedf8ee7afa558ee58f62fd",
+    "intermediate": null,
+    "apk": "886ab9eb1a438b34122b71a461ed89a4a5b37fa85dedf8ee7afa558ee58f62fd",
+    "match": true
+  },
+  "lib/repeat.js": {
+    "source": "d48b8d67336976c4d514101b9990c904d8a00a9aa1ecabf3fe6abace86afd83a",
+    "www": "d48b8d67336976c4d514101b9990c904d8a00a9aa1ecabf3fe6abace86afd83a",
+    "android": "d48b8d67336976c4d514101b9990c904d8a00a9aa1ecabf3fe6abace86afd83a",
+    "intermediate": null,
+    "apk": "d48b8d67336976c4d514101b9990c904d8a00a9aa1ecabf3fe6abace86afd83a",
+    "match": true
+  },
+  "lib/storage.js": {
+    "source": "b710ec23d819dfdc7eeeafa4688e44d69a11062a18c35b931c2240177721478a",
+    "www": "b710ec23d819dfdc7eeeafa4688e44d69a11062a18c35b931c2240177721478a",
+    "android": "b710ec23d819dfdc7eeeafa4688e44d69a11062a18c35b931c2240177721478a",
+    "intermediate": null,
+    "apk": "b710ec23d819dfdc7eeeafa4688e44d69a11062a18c35b931c2240177721478a",
+    "match": true
+  },
+  "lib/ui-format.js": {
+    "source": "3dcccc41863aef136abe513527d79955c5b80be9d997f5ff90d68f0fd5850c9f",
+    "www": "3dcccc41863aef136abe513527d79955c5b80be9d997f5ff90d68f0fd5850c9f",
+    "android": "3dcccc41863aef136abe513527d79955c5b80be9d997f5ff90d68f0fd5850c9f",
+    "intermediate": null,
+    "apk": "3dcccc41863aef136abe513527d79955c5b80be9d997f5ff90d68f0fd5850c9f",
+    "match": true
+  },
+  "manifest.json": {
+    "source": "660c2314cc921232ed9f9c3f7271839f57109e6640e1a9b0cf2a7259ca42e2f1",
+    "www": "660c2314cc921232ed9f9c3f7271839f57109e6640e1a9b0cf2a7259ca42e2f1",
+    "android": "660c2314cc921232ed9f9c3f7271839f57109e6640e1a9b0cf2a7259ca42e2f1",
+    "intermediate": null,
+    "apk": "660c2314cc921232ed9f9c3f7271839f57109e6640e1a9b0cf2a7259ca42e2f1",
+    "match": true
+  },
+  "sw.js": {
+    "source": "1135264eccca2a0a36376616c74ca2d7367e1f3467c4eb2d3cdf540ab39f880a",
+    "www": "1135264eccca2a0a36376616c74ca2d7367e1f3467c4eb2d3cdf540ab39f880a",
+    "android": "1135264eccca2a0a36376616c74ca2d7367e1f3467c4eb2d3cdf540ab39f880a",
+    "intermediate": null,
+    "apk": "1135264eccca2a0a36376616c74ca2d7367e1f3467c4eb2d3cdf540ab39f880a",
+    "match": true
+  }
+}

@@ -1,0 +1,38 @@
+运行时依赖矩阵闭合报告（P1）
+
+引用符号数: 30
+声明条目数: 31
+未声明（必须为空）: []
+声明但未被 app-core 直接引用: ["deadlineStagePoints"]
+
+引用的全部符号:
+  DatePrimitives
+  DatePrimitives.addDays
+  DatePrimitives.applyClock
+  DatePrimitives.dayOfMonthIn
+  DatePrimitives.endOfDay
+  DatePrimitives.lastDayOfMonth
+  DatePrimitives.nextDayOfMonth
+  DatePrimitives.nextWeekend
+  DatePrimitives.nthWeekdayInMonth
+  DatePrimitives.nthWeekdayOfNextMonthByDay
+  DatePrimitives.nthWeekdayOfNextMonthByInstant
+  DatePrimitives.sameDay
+  DatePrimitives.startOfDay
+  DatePrimitives.weekdayOfNextWeek
+  DeliveryEvidence
+  Feedback
+  applyWindowTrigger
+  cnInt
+  createStorage
+  deadlineStageKey
+  hasIdb
+  hasSpecificTimeWord
+  inQuietHours
+  markReminded
+  nextRepeatPreview
+  nextRepeatTrigger
+  parseChineseTime
+  quietEnd
+  repeatLabel
+  shouldRealert

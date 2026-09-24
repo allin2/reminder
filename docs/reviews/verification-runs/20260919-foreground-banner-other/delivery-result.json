@@ -1,0 +1,92 @@
+{
+  "itemId": "matrix_other_1789819090",
+  "received": true,
+  "visible": false,
+  "lagMs": 245,
+  "rows": [
+    {
+      "token": "1412877708:dd821353-e159-43d8-a969-eb2e278e4357",
+      "stage": "requested",
+      "at": 1789819089308,
+      "detail": "delayMs=44707"
+    },
+    {
+      "token": "1412877708:dd821353-e159-43d8-a969-eb2e278e4357",
+      "stage": "item",
+      "at": 1789819089313,
+      "detail": "matrix_other_1789819090"
+    },
+    {
+      "token": "1412877708:dd821353-e159-43d8-a969-eb2e278e4357",
+      "stage": "unfreezerScheduled",
+      "at": 1789819089330,
+      "detail": "triggerAt=1789819134023;mode=alarmClock"
+    },
+    {
+      "token": "1412877708:dd821353-e159-43d8-a969-eb2e278e4357",
+      "stage": "scheduled",
+      "at": 1789819089335,
+      "detail": "triggerAt=1789819134023;mode=alarmClock"
+    },
+    {
+      "token": "1412877708:dd821353-e159-43d8-a969-eb2e278e4357",
+      "stage": "carrierRecorded",
+      "at": 1789819134215,
+      "detail": "sound=native;vibrate=native;foreground=true"
+    },
+    {
+      "token": "1412877708:dd821353-e159-43d8-a969-eb2e278e4357",
+      "stage": "ringStarted",
+      "at": 1789819134228,
+      "detail": "carrier=native;foreground=true;sound=true;vibrate=true"
+    },
+    {
+      "token": "1412877708:dd821353-e159-43d8-a969-eb2e278e4357",
+      "stage": "received",
+      "at": 1789819134245,
+      "detail": ""
+    },
+    {
+      "token": "1412877708:dd821353-e159-43d8-a969-eb2e278e4357",
+      "stage": "environment",
+      "at": 1789819134260,
+      "detail": "screenOn=true;locked=false;inCall=false;path=direct+banner"
+    },
+    {
+      "token": "1412877708:dd821353-e159-43d8-a969-eb2e278e4357",
+      "stage": "ringServiceRequested",
+      "at": 1789819134304,
+      "detail": "foreground service asked to hold sound+vibration"
+    },
+    {
+      "token": "1412877708:dd821353-e159-43d8-a969-eb2e278e4357",
+      "stage": "launchLikelyBlocked",
+      "at": 1789819134307,
+      "detail": "no SYSTEM_ALERT_WINDOW"
+    },
+    {
+      "token": "1412877708:dd821353-e159-43d8-a969-eb2e278e4357",
+      "stage": "launchRequested",
+      "at": 1789819134332,
+      "detail": "direct launch alongside full-screen intent"
+    },
+    {
+      "token": "1412877708:dd821353-e159-43d8-a969-eb2e278e4357",
+      "stage": "systemNotificationPosted",
+      "at": 1789819134391,
+      "detail": "NotificationManager accepted active delivery"
+    },
+    {
+      "token": "1412877708:dd821353-e159-43d8-a969-eb2e278e4357",
+      "stage": "notifyReturned",
+      "at": 1789819134411,
+      "detail": "system notification posted; fullScreenIntent=true; sound+vibration carried by AlarmRingService; banner visibility is OEM-controlled"
+    },
+    {
+      "token": "1412877708:dd821353-e159-43d8-a969-eb2e278e4357",
+      "stage": "ringDuplicateStart",
+      "at": 1789819134443,
+      "detail": "same delivery already ringing; kept as-is"
+    }
+  ]
+}

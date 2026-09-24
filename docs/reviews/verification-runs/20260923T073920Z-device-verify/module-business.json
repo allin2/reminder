@@ -1,0 +1,19 @@
+{
+  "parseTriggerable": true,
+  "parse": {
+    "title": "明天下午3点",
+    "trigger": 1790233200000,
+    "deadline": null,
+    "window": null,
+    "repeat": null,
+    "confidence": "high",
+    "raw": "明天下午3点",
+    "tags": [],
+    "scheduleBasis": "wall-clock"
+  },
+  "makeItemHasId": true,
+  "makeItemDeliveryMode": "alarm",
+  "isDueNow": true,
+  "quietHoursType": "boolean",
+  "uid": true
+}

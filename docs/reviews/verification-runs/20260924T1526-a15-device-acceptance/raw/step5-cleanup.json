@@ -1,0 +1,161 @@
+{
+ "deleted": [
+  [
+   "A15P1-153123",
+   {
+    "ok": true,
+    "remaining": 6
+   }
+  ],
+  [
+   "A15N1-153356",
+   {
+    "ok": true,
+    "remaining": 5
+   }
+  ],
+  [
+   "A15N2-153356",
+   {
+    "ok": true,
+    "remaining": 4
+   }
+  ],
+  [
+   "A15N3-153356",
+   {
+    "ok": true,
+    "remaining": 3
+   }
+  ],
+  [
+   "A15A1-153958",
+   {
+    "ok": true,
+    "remaining": 2
+   }
+  ],
+  [
+   "A15A2-153958",
+   {
+    "ok": true,
+    "remaining": 1
+   }
+  ],
+  [
+   "A15A3-154553",
+   {
+    "ok": true,
+    "remaining": 0
+   }
+  ]
+ ],
+ "alarmsBefore": [
+  [
+   1790237820000,
+   "*walarm*:space.alliswell.inbox/com.capacitorjs.plugins.localnotifications.TimedNotificationPublisher"
+  ],
+  [
+   1790239620000,
+   "*walarm*:space.alliswell.inbox/com.capacitorjs.plugins.localnotifications.TimedNotificationPublisher"
+  ],
+  [
+   1790241420000,
+   "*walarm*:space.alliswell.inbox/com.capacitorjs.plugins.localnotifications.TimedNotificationPublisher"
+  ],
+  [
+   1790242685743,
+   "*walarm*:space.alliswell.inbox/com.capacitorjs.plugins.localnotifications.TimedNotificationPublisher"
+  ],
+  [
+   1790256600000,
+   "*walarm*:space.alliswell.inbox/com.capacitorjs.plugins.localnotifications.TimedNotificationPublisher"
+  ],
+  [
+   1790260200000,
+   "*walarm*:space.alliswell.inbox/com.capacitorjs.plugins.localnotifications.TimedNotificationPublisher"
+  ],
+  [
+   1790328660110,
+   "*walarm*:space.alliswell.inbox.ACTION_TEST_ALARM"
+  ],
+  [
+   1790328660110,
+   "*walarm*:space.alliswell.inbox/.AlarmRingService"
+  ],
+  [
+   1790330460000,
+   "*walarm*:space.alliswell.inbox/com.capacitorjs.plugins.localnotifications.TimedNotificationPublisher"
+  ],
+  [
+   1790332260000,
+   "*walarm*:space.alliswell.inbox/com.capacitorjs.plugins.localnotifications.TimedNotificationPublisher"
+  ],
+  [
+   1790334060000,
+   "*walarm*:space.alliswell.inbox/com.capacitorjs.plugins.localnotifications.TimedNotificationPublisher"
+  ]
+ ],
+ "nativeStatusAfter": {
+  "desired": 0,
+  "scheduled": 0,
+  "alarmScheduled": 0,
+  "alarmCount": 0,
+  "scheduledAlarmIds": [],
+  "errors": []
+ },
+ "alarmsAfter": [],
+ "alarmsReferencingA15Triggers": [],
+ "alarmsNewSinceBaseline": [],
+ "notifA15": [],
+ "ringService": "* ServiceRecord{f07f3c6 u0 space.alliswell.inbox/org.chromium.content.app.SandboxedProcessService0:0 c:space.alliswell.inbox}",
+ "diffVsBaseline": {
+  "storesAdded": [],
+  "storesRemoved": [],
+  "records": {
+   "kv/state": {
+    "change": "modified",
+    "itemsAdded": [],
+    "itemsRemoved": [],
+    "itemsModified": {},
+    "itemsIdentical": 0,
+    "topKeysChanged": [
+     "settings"
+    ]
+   }
+  },
+  "localStorage": {
+   "attention-inbox-v2": "modified"
+  }
+ },
+ "finalItemCount": 0,
+ "finalA15": [],
+ "changedTopKeys": [
+  "settings"
+ ],
+ "changedSettings": {
+  "alarmEventLog": {
+   "before": {
+    "active:133024820:a1d9b2df-3bbf-40c1-91bc-0fb8456c958a:done": 1790149531941,
+    "active:2038356701:fa6c31c2-53a3-4f44-9319-c2edd41df695:done": 1790151285882,
+    "active:1354945827:53f1fa3a-9ffe-4b09-895d-7e4c6dff06d5:done": 1790152767495
+   },
+   "after": {
+    "active:133024820:a1d9b2df-3bbf-40c1-91bc-0fb8456c958a:done": 1790149531941,
+    "active:2038356701:fa6c31c2-53a3-4f44-9319-c2edd41df695:done": 1790151285882,
+    "active:1354945827:53f1fa3a-9ffe-4b09-895d-7e4c6dff06d5:done": 1790152767495,
+    "notification:154182028:snooze:1": 1790235485743,
+    "notification:1757707794:ack:1": 1790235506729,
+    "notification:264460990:done:1": 1790235554841,
+    "a1790235668526_0_85811": 1790235668694,
+    "a1790235909612_0_80353": 1790235909753
+   }
+  },
+  "setupPromptStarted": {
+   "before": false,
+   "after": true
+  }
+ },
+ "alarmsAfterRestart": [],
+ "notifA15AfterRestart": []
+}

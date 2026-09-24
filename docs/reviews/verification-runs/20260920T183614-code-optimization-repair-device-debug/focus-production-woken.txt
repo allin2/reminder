@@ -1,0 +1,2 @@
+  mCurrentFocus=Window{bb8c351 u0 NotificationShade}
+  mFocusedApp=ActivityRecord{37122408 u0 space.alliswell.inbox/.MainActivity t18737}

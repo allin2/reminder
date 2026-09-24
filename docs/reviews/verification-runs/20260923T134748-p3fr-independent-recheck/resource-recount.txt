@@ -1,0 +1,2 @@
+rows 33 mismatches [] inventory_difference [] apk_sha256 a220d8b080c006965b47f40d5acf2ee313c9cc0a1a2e41e36a36786b8586cae2
+scripts 24 missing_from_sw []

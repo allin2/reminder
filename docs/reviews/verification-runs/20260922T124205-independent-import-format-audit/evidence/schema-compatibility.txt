@@ -1,0 +1,47 @@
+CURRENT:
+/* 安心收件箱 — Local-first attention hub
+ * 原则：Attention ≠ Task · Acknowledged ≠ Completed · Future 默认不可见
+ */
+(function () {
+  "use strict";
+
+  const KEY = "attention-inbox-v2";
+  // D43：schema 5 = 事项新增 `reminderEvents`（单次提醒台账，与 deadlineEvents 同构）。
+  // 旧记录缺这个字段时由 normalizeItem 补 `{}`；`schemaMigrationNeeded` 触发一次重写落库。
+  const SCHEMA = 5;
+  const Lib = (typeof AttentionLib !== "undefined" && AttentionLib) || {};
+
+
+HISTORICAL_SCHEMAS:
+35748243 5 feat: harden reminder editing and setup verification
+beeb9284 4 feat: harden Android alarm delivery and document vivo validation
+c040ed94 3 feat: add reliable native Android reminders
+d6e17931 2 fix: seed on empty load regardless of idb; do not let window override snooze; persist lastAlertShownAt
+
+RELEASE_1_0:
+/* 安心收件箱 — Local-first attention hub
+ * 原则：Attention ≠ Task · Acknowledged ≠ Completed · Future 默认不可见
+ */
+(function () {
+  "use strict";
+
+  const KEY = "attention-inbox-v2";
+  // D43：schema 5 = 事项新增 `reminderEvents`（单次提醒台账，与 deadlineEvents 同构）。
+  // 旧记录缺这个字段时由 normalizeItem 补 `{}`；`schemaMigrationNeeded` 触发一次重写落库。
+  const SCHEMA = 5;
+  const $ = (s, r) => (r || document).querySelector(s);
+  const $$ = (s, r) => Array.from((r || document).querySelectorAll(s));
+
+RELEASE_1_1:
+/* 安心收件箱 — Local-first attention hub
+ * 原则：Attention ≠ Task · Acknowledged ≠ Completed · Future 默认不可见
+ */
+(function () {
+  "use strict";
+
+  const KEY = "attention-inbox-v2";
+  // D43：schema 5 = 事项新增 `reminderEvents`（单次提醒台账，与 deadlineEvents 同构）。
+  // 旧记录缺这个字段时由 normalizeItem 补 `{}`；`schemaMigrationNeeded` 触发一次重写落库。
+  const SCHEMA = 5;
+  const $ = (s, r) => (r || document).querySelector(s);
+  const $$ = (s, r) => Array.from((r || document).querySelectorAll(s));

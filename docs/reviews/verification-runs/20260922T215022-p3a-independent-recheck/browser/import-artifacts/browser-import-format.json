@@ -1,0 +1,788 @@
+[
+  {
+    "case": "control-valid",
+    "observed": {
+      "steps": [
+        "change-dispatched",
+        "clicked-ok"
+      ],
+      "ready": true,
+      "itemsBefore": 0,
+      "notesBefore": 0,
+      "meterBefore": {
+        "opens": 1,
+        "puts": 0,
+        "names": [
+          "attention-inbox"
+        ],
+        "error": null
+      },
+      "confirmOpen": true,
+      "confirmBody": "导入将覆盖当前数据，继续？",
+      "toast": "",
+      "pendingState": {
+        "items": [],
+        "notes": 0,
+        "settingsKeys": [
+          "ai",
+          "dailySummary",
+          "defaultDeliveryMode",
+          "dnd",
+          "importantRepeat",
+          "lastSummaryAt",
+          "notify",
+          "notifyPrompted",
+          "onboardDone",
+          "privacyNotify",
+          "quietEnd",
+          "quietStart",
+          "review",
+          "userMode"
+        ]
+      },
+      "meterAfterReject": {
+        "opens": 1,
+        "puts": 0,
+        "names": [
+          "attention-inbox"
+        ],
+        "error": null
+      },
+      "items": [
+        "new-item"
+      ],
+      "itemTitles": [
+        "新事项"
+      ],
+      "createdAtTypes": [
+        "number"
+      ],
+      "noteCreatedAtTypes": [
+        "number"
+      ],
+      "notes": 1,
+      "projects": 1,
+      "settingsNotify": true,
+      "toastFinal": "导入成功 · 1 条事项",
+      "meter": {
+        "opens": 1,
+        "puts": 1,
+        "names": [
+          "attention-inbox"
+        ],
+        "error": null
+      },
+      "startupPanel": false
+    }
+  },
+  {
+    "case": "control-cancel",
+    "observed": {
+      "steps": [
+        "change-dispatched",
+        "clicked-cancel"
+      ],
+      "ready": true,
+      "itemsBefore": 0,
+      "notesBefore": 0,
+      "meterBefore": {
+        "opens": 1,
+        "puts": 0,
+        "names": [
+          "attention-inbox"
+        ],
+        "error": null
+      },
+      "confirmOpen": true,
+      "confirmBody": "导入将覆盖当前数据，继续？",
+      "toast": "",
+      "pendingState": {
+        "items": [],
+        "notes": 0,
+        "settingsKeys": [
+          "ai",
+          "dailySummary",
+          "defaultDeliveryMode",
+          "dnd",
+          "importantRepeat",
+          "lastSummaryAt",
+          "notify",
+          "notifyPrompted",
+          "onboardDone",
+          "privacyNotify",
+          "quietEnd",
+          "quietStart",
+          "review",
+          "userMode"
+        ]
+      },
+      "meterAfterReject": {
+        "opens": 1,
+        "puts": 0,
+        "names": [
+          "attention-inbox"
+        ],
+        "error": null
+      },
+      "items": [],
+      "itemTitles": [],
+      "createdAtTypes": [],
+      "noteCreatedAtTypes": [],
+      "notes": 0,
+      "projects": 0,
+      "settingsNotify": false,
+      "toastFinal": "",
+      "meter": {
+        "opens": 1,
+        "puts": 0,
+        "names": [
+          "attention-inbox"
+        ],
+        "error": null
+      },
+      "startupPanel": false
+    }
+  },
+  {
+    "case": "legacy-schema2",
+    "observed": {
+      "steps": [
+        "change-dispatched",
+        "clicked-ok"
+      ],
+      "ready": true,
+      "itemsBefore": 0,
+      "notesBefore": 0,
+      "meterBefore": {
+        "opens": 1,
+        "puts": 0,
+        "names": [
+          "attention-inbox"
+        ],
+        "error": null
+      },
+      "confirmOpen": true,
+      "confirmBody": "导入将覆盖当前数据，继续？",
+      "toast": "",
+      "pendingState": {
+        "items": [],
+        "notes": 0,
+        "settingsKeys": [
+          "ai",
+          "dailySummary",
+          "defaultDeliveryMode",
+          "dnd",
+          "importantRepeat",
+          "lastSummaryAt",
+          "notify",
+          "notifyPrompted",
+          "onboardDone",
+          "privacyNotify",
+          "quietEnd",
+          "quietStart",
+          "review",
+          "userMode"
+        ]
+      },
+      "meterAfterReject": {
+        "opens": 1,
+        "puts": 0,
+        "names": [
+          "attention-inbox"
+        ],
+        "error": null
+      },
+      "items": [
+        "new-item"
+      ],
+      "itemTitles": [
+        "新事项"
+      ],
+      "createdAtTypes": [
+        "number"
+      ],
+      "noteCreatedAtTypes": [
+        "number"
+      ],
+      "notes": 1,
+      "projects": 1,
+      "settingsNotify": false,
+      "toastFinal": "导入成功 · 1 条事项",
+      "meter": {
+        "opens": 1,
+        "puts": 1,
+        "names": [
+          "attention-inbox"
+        ],
+        "error": null
+      },
+      "startupPanel": false
+    }
+  },
+  {
+    "case": "wrong-app",
+    "observed": {
+      "steps": [
+        "change-dispatched"
+      ],
+      "ready": true,
+      "itemsBefore": 0,
+      "notesBefore": 0,
+      "meterBefore": {
+        "opens": 1,
+        "puts": 0,
+        "names": [
+          "attention-inbox"
+        ],
+        "error": null
+      },
+      "confirmOpen": false,
+      "confirmBody": "",
+      "toast": "导入失败：这不是「安心收件箱」的备份文件",
+      "pendingState": {
+        "items": [],
+        "notes": 0,
+        "settingsKeys": [
+          "ai",
+          "dailySummary",
+          "defaultDeliveryMode",
+          "dnd",
+          "importantRepeat",
+          "lastSummaryAt",
+          "notify",
+          "notifyPrompted",
+          "onboardDone",
+          "privacyNotify",
+          "quietEnd",
+          "quietStart",
+          "review",
+          "userMode"
+        ]
+      },
+      "meterAfterReject": {
+        "opens": 1,
+        "puts": 0,
+        "names": [
+          "attention-inbox"
+        ],
+        "error": null
+      },
+      "items": [],
+      "itemTitles": [],
+      "createdAtTypes": [],
+      "noteCreatedAtTypes": [],
+      "notes": 0,
+      "projects": 0,
+      "settingsNotify": false,
+      "toastFinal": "导入失败：这不是「安心收件箱」的备份文件",
+      "meter": {
+        "opens": 1,
+        "puts": 0,
+        "names": [
+          "attention-inbox"
+        ],
+        "error": null
+      },
+      "startupPanel": false
+    }
+  },
+  {
+    "case": "future-schema",
+    "observed": {
+      "steps": [
+        "change-dispatched"
+      ],
+      "ready": true,
+      "itemsBefore": 0,
+      "notesBefore": 0,
+      "meterBefore": {
+        "opens": 1,
+        "puts": 0,
+        "names": [
+          "attention-inbox"
+        ],
+        "error": null
+      },
+      "confirmOpen": false,
+      "confirmBody": "",
+      "toast": "导入失败：这份备份来自更新版本（schema 999）· 请先更新应用再导入",
+      "pendingState": {
+        "items": [],
+        "notes": 0,
+        "settingsKeys": [
+          "ai",
+          "dailySummary",
+          "defaultDeliveryMode",
+          "dnd",
+          "importantRepeat",
+          "lastSummaryAt",
+          "notify",
+          "notifyPrompted",
+          "onboardDone",
+          "privacyNotify",
+          "quietEnd",
+          "quietStart",
+          "review",
+          "userMode"
+        ]
+      },
+      "meterAfterReject": {
+        "opens": 1,
+        "puts": 0,
+        "names": [
+          "attention-inbox"
+        ],
+        "error": null
+      },
+      "items": [],
+      "itemTitles": [],
+      "createdAtTypes": [],
+      "noteCreatedAtTypes": [],
+      "notes": 0,
+      "projects": 0,
+      "settingsNotify": false,
+      "toastFinal": "导入失败：这份备份来自更新版本（schema 999）· 请先更新应用再导入",
+      "meter": {
+        "opens": 1,
+        "puts": 0,
+        "names": [
+          "attention-inbox"
+        ],
+        "error": null
+      },
+      "startupPanel": false
+    }
+  },
+  {
+    "case": "missing-notes",
+    "observed": {
+      "steps": [
+        "change-dispatched"
+      ],
+      "ready": true,
+      "itemsBefore": 0,
+      "notesBefore": 0,
+      "meterBefore": {
+        "opens": 1,
+        "puts": 0,
+        "names": [
+          "attention-inbox"
+        ],
+        "error": null
+      },
+      "confirmOpen": false,
+      "confirmBody": "",
+      "toast": "导入失败：备份格式不正确（notes）",
+      "pendingState": {
+        "items": [],
+        "notes": 0,
+        "settingsKeys": [
+          "ai",
+          "dailySummary",
+          "defaultDeliveryMode",
+          "dnd",
+          "importantRepeat",
+          "lastSummaryAt",
+          "notify",
+          "notifyPrompted",
+          "onboardDone",
+          "privacyNotify",
+          "quietEnd",
+          "quietStart",
+          "review",
+          "userMode"
+        ]
+      },
+      "meterAfterReject": {
+        "opens": 1,
+        "puts": 0,
+        "names": [
+          "attention-inbox"
+        ],
+        "error": null
+      },
+      "items": [],
+      "itemTitles": [],
+      "createdAtTypes": [],
+      "noteCreatedAtTypes": [],
+      "notes": 0,
+      "projects": 0,
+      "settingsNotify": false,
+      "toastFinal": "导入失败：备份格式不正确（notes）",
+      "meter": {
+        "opens": 1,
+        "puts": 0,
+        "names": [
+          "attention-inbox"
+        ],
+        "error": null
+      },
+      "startupPanel": false
+    }
+  },
+  {
+    "case": "notes-object",
+    "observed": {
+      "steps": [
+        "change-dispatched"
+      ],
+      "ready": true,
+      "itemsBefore": 0,
+      "notesBefore": 0,
+      "meterBefore": {
+        "opens": 1,
+        "puts": 0,
+        "names": [
+          "attention-inbox"
+        ],
+        "error": null
+      },
+      "confirmOpen": false,
+      "confirmBody": "",
+      "toast": "导入失败：备份格式不正确（notes）",
+      "pendingState": {
+        "items": [],
+        "notes": 0,
+        "settingsKeys": [
+          "ai",
+          "dailySummary",
+          "defaultDeliveryMode",
+          "dnd",
+          "importantRepeat",
+          "lastSummaryAt",
+          "notify",
+          "notifyPrompted",
+          "onboardDone",
+          "privacyNotify",
+          "quietEnd",
+          "quietStart",
+          "review",
+          "userMode"
+        ]
+      },
+      "meterAfterReject": {
+        "opens": 1,
+        "puts": 0,
+        "names": [
+          "attention-inbox"
+        ],
+        "error": null
+      },
+      "items": [],
+      "itemTitles": [],
+      "createdAtTypes": [],
+      "noteCreatedAtTypes": [],
+      "notes": 0,
+      "projects": 0,
+      "settingsNotify": false,
+      "toastFinal": "导入失败：备份格式不正确（notes）",
+      "meter": {
+        "opens": 1,
+        "puts": 0,
+        "names": [
+          "attention-inbox"
+        ],
+        "error": null
+      },
+      "startupPanel": false
+    }
+  },
+  {
+    "case": "duplicate-item-id",
+    "observed": {
+      "steps": [
+        "change-dispatched"
+      ],
+      "ready": true,
+      "itemsBefore": 0,
+      "notesBefore": 0,
+      "meterBefore": {
+        "opens": 1,
+        "puts": 0,
+        "names": [
+          "attention-inbox"
+        ],
+        "error": null
+      },
+      "confirmOpen": false,
+      "confirmBody": "",
+      "toast": "导入失败：备份格式不正确（items[1].id）",
+      "pendingState": {
+        "items": [],
+        "notes": 0,
+        "settingsKeys": [
+          "ai",
+          "dailySummary",
+          "defaultDeliveryMode",
+          "dnd",
+          "importantRepeat",
+          "lastSummaryAt",
+          "notify",
+          "notifyPrompted",
+          "onboardDone",
+          "privacyNotify",
+          "quietEnd",
+          "quietStart",
+          "review",
+          "userMode"
+        ]
+      },
+      "meterAfterReject": {
+        "opens": 1,
+        "puts": 0,
+        "names": [
+          "attention-inbox"
+        ],
+        "error": null
+      },
+      "items": [],
+      "itemTitles": [],
+      "createdAtTypes": [],
+      "noteCreatedAtTypes": [],
+      "notes": 0,
+      "projects": 0,
+      "settingsNotify": false,
+      "toastFinal": "导入失败：备份格式不正确（items[1].id）",
+      "meter": {
+        "opens": 1,
+        "puts": 0,
+        "names": [
+          "attention-inbox"
+        ],
+        "error": null
+      },
+      "startupPanel": false
+    }
+  },
+  {
+    "case": "ai-secret-endpoint",
+    "observed": {
+      "steps": [
+        "change-dispatched"
+      ],
+      "ready": true,
+      "itemsBefore": 0,
+      "notesBefore": 0,
+      "meterBefore": {
+        "opens": 1,
+        "puts": 0,
+        "names": [
+          "attention-inbox"
+        ],
+        "error": null
+      },
+      "confirmOpen": false,
+      "confirmBody": "",
+      "toast": "导入失败：备份格式不正确（settings.ai.baseUrl）",
+      "pendingState": {
+        "items": [],
+        "notes": 0,
+        "settingsKeys": [
+          "ai",
+          "dailySummary",
+          "defaultDeliveryMode",
+          "dnd",
+          "importantRepeat",
+          "lastSummaryAt",
+          "notify",
+          "notifyPrompted",
+          "onboardDone",
+          "privacyNotify",
+          "quietEnd",
+          "quietStart",
+          "review",
+          "userMode"
+        ]
+      },
+      "meterAfterReject": {
+        "opens": 1,
+        "puts": 0,
+        "names": [
+          "attention-inbox"
+        ],
+        "error": null
+      },
+      "items": [],
+      "itemTitles": [],
+      "createdAtTypes": [],
+      "noteCreatedAtTypes": [],
+      "notes": 0,
+      "projects": 0,
+      "settingsNotify": false,
+      "toastFinal": "导入失败：备份格式不正确（settings.ai.baseUrl）",
+      "meter": {
+        "opens": 1,
+        "puts": 0,
+        "names": [
+          "attention-inbox"
+        ],
+        "error": null
+      },
+      "startupPanel": false
+    }
+  },
+  {
+    "case": "unknown-settings-key",
+    "observed": {
+      "steps": [
+        "change-dispatched"
+      ],
+      "ready": true,
+      "itemsBefore": 0,
+      "notesBefore": 0,
+      "meterBefore": {
+        "opens": 1,
+        "puts": 0,
+        "names": [
+          "attention-inbox"
+        ],
+        "error": null
+      },
+      "confirmOpen": false,
+      "confirmBody": "",
+      "toast": "导入失败：备份格式不正确（settings.injected）",
+      "pendingState": {
+        "items": [],
+        "notes": 0,
+        "settingsKeys": [
+          "ai",
+          "dailySummary",
+          "defaultDeliveryMode",
+          "dnd",
+          "importantRepeat",
+          "lastSummaryAt",
+          "notify",
+          "notifyPrompted",
+          "onboardDone",
+          "privacyNotify",
+          "quietEnd",
+          "quietStart",
+          "review",
+          "userMode"
+        ]
+      },
+      "meterAfterReject": {
+        "opens": 1,
+        "puts": 0,
+        "names": [
+          "attention-inbox"
+        ],
+        "error": null
+      },
+      "items": [],
+      "itemTitles": [],
+      "createdAtTypes": [],
+      "noteCreatedAtTypes": [],
+      "notes": 0,
+      "projects": 0,
+      "settingsNotify": false,
+      "toastFinal": "导入失败：备份格式不正确（settings.injected）",
+      "meter": {
+        "opens": 1,
+        "puts": 0,
+        "names": [
+          "attention-inbox"
+        ],
+        "error": null
+      },
+      "startupPanel": false
+    }
+  },
+  {
+    "case": "legacy-iso-time",
+    "observed": {
+      "steps": [
+        "change-dispatched",
+        "clicked-ok"
+      ],
+      "ready": true,
+      "itemsBefore": 0,
+      "notesBefore": 0,
+      "meterBefore": {
+        "opens": 1,
+        "puts": 0,
+        "names": [
+          "attention-inbox"
+        ],
+        "error": null
+      },
+      "confirmOpen": true,
+      "confirmBody": "导入将覆盖当前数据，继续？",
+      "toast": "",
+      "pendingState": {
+        "items": [],
+        "notes": 0,
+        "settingsKeys": [
+          "ai",
+          "dailySummary",
+          "defaultDeliveryMode",
+          "dnd",
+          "importantRepeat",
+          "lastSummaryAt",
+          "notify",
+          "notifyPrompted",
+          "onboardDone",
+          "privacyNotify",
+          "quietEnd",
+          "quietStart",
+          "review",
+          "userMode"
+        ]
+      },
+      "meterAfterReject": {
+        "opens": 1,
+        "puts": 0,
+        "names": [
+          "attention-inbox"
+        ],
+        "error": null
+      },
+      "items": [
+        "p2c-item-1",
+        "i_1eofm1s6mubh9kso"
+      ],
+      "itemTitles": [
+        "P2C 复验事项",
+        "<personal-item-title-2>"
+      ],
+      "createdAtTypes": [
+        "number",
+        "number"
+      ],
+      "noteCreatedAtTypes": [
+        "number"
+      ],
+      "notes": 1,
+      "projects": 1,
+      "settingsNotify": false,
+      "toastFinal": "导入成功 · 2 条事项",
+      "meter": {
+        "opens": 1,
+        "puts": 1,
+        "names": [
+          "attention-inbox"
+        ],
+        "error": null
+      },
+      "startupPanel": false
+    },
+    "readback": {
+      "items": [
+        {
+          "id": "p2c-item-1",
+          "createdAtType": "number"
+        },
+        {
+          "id": "i_1eofm1s6mubh9kso",
+          "createdAtType": "number"
+        }
+      ],
+      "notes": [
+        {
+          "id": "p2c-note-1",
+          "createdAtType": "number"
+        }
+      ]
+    }
+  }
+]

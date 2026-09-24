@@ -1,0 +1,3 @@
+List of devices attached
+QSKFAE95CQEUJZ8L       device usb:1048576X product:PKC130 model:PKC130 device:OP5A41L1 transport_id:4
+

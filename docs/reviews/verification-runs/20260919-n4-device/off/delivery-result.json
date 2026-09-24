@@ -1,0 +1,140 @@
+{
+  "itemId": "matrix_off_1789817483",
+  "received": true,
+  "visible": true,
+  "lagMs": 448,
+  "rows": [
+    {
+      "token": "1085106673:38d0d059-2077-4896-af68-34165abd25ed",
+      "stage": "requested",
+      "at": 1789817481524,
+      "detail": "delayMs=44495"
+    },
+    {
+      "token": "1085106673:38d0d059-2077-4896-af68-34165abd25ed",
+      "stage": "item",
+      "at": 1789817481530,
+      "detail": "matrix_off_1789817483"
+    },
+    {
+      "token": "1085106673:38d0d059-2077-4896-af68-34165abd25ed",
+      "stage": "unfreezerScheduled",
+      "at": 1789817481549,
+      "detail": "triggerAt=1789817526028;mode=alarmClock"
+    },
+    {
+      "token": "1085106673:38d0d059-2077-4896-af68-34165abd25ed",
+      "stage": "scheduled",
+      "at": 1789817481553,
+      "detail": "triggerAt=1789817526028;mode=alarmClock"
+    },
+    {
+      "token": "1085106673:38d0d059-2077-4896-af68-34165abd25ed",
+      "stage": "carrierRecorded",
+      "at": 1789817526308,
+      "detail": "sound=native;vibrate=native;foreground=true"
+    },
+    {
+      "token": "1085106673:38d0d059-2077-4896-af68-34165abd25ed",
+      "stage": "ringStarted",
+      "at": 1789817526317,
+      "detail": "carrier=native;foreground=true;sound=true;vibrate=true"
+    },
+    {
+      "token": "1085106673:38d0d059-2077-4896-af68-34165abd25ed",
+      "stage": "received",
+      "at": 1789817526448,
+      "detail": ""
+    },
+    {
+      "token": "1085106673:38d0d059-2077-4896-af68-34165abd25ed",
+      "stage": "environment",
+      "at": 1789817526541,
+      "detail": "screenOn=false;locked=true;inCall=false;path=fsi+direct"
+    },
+    {
+      "token": "1085106673:38d0d059-2077-4896-af68-34165abd25ed",
+      "stage": "ringServiceRequested",
+      "at": 1789817526575,
+      "detail": "foreground service asked to hold sound+vibration"
+    },
+    {
+      "token": "1085106673:38d0d059-2077-4896-af68-34165abd25ed",
+      "stage": "launchLikelyBlocked",
+      "at": 1789817526580,
+      "detail": "no SYSTEM_ALERT_WINDOW"
+    },
+    {
+      "token": "1085106673:38d0d059-2077-4896-af68-34165abd25ed",
+      "stage": "launchRequested",
+      "at": 1789817526612,
+      "detail": "direct launch alongside full-screen intent"
+    },
+    {
+      "token": "1085106673:38d0d059-2077-4896-af68-34165abd25ed",
+      "stage": "notifyReturned",
+      "at": 1789817526633,
+      "detail": "silent; sound+vibration carried by AlarmRingService; returned; not proof of display"
+    },
+    {
+      "token": "1085106673:38d0d059-2077-4896-af68-34165abd25ed",
+      "stage": "ringDuplicateStart",
+      "at": 1789817526648,
+      "detail": "same delivery already ringing; kept as-is"
+    },
+    {
+      "token": "1085106673:38d0d059-2077-4896-af68-34165abd25ed",
+      "stage": "created",
+      "at": 1789817527105,
+      "detail": "test=false"
+    },
+    {
+      "token": "1085106673:38d0d059-2077-4896-af68-34165abd25ed",
+      "stage": "localFallbackStopped",
+      "at": 1789817527160,
+      "detail": "service-owned sound is stopped separately"
+    },
+    {
+      "token": "1085106673:38d0d059-2077-4896-af68-34165abd25ed",
+      "stage": "resumed",
+      "at": 1789817527172,
+      "detail": "lifecycle only"
+    },
+    {
+      "token": "1085106673:38d0d059-2077-4896-af68-34165abd25ed",
+      "stage": "localFallbackStopped",
+      "at": 1789817527175,
+      "detail": "service-owned sound is stopped separately"
+    },
+    {
+      "token": "1085106673:38d0d059-2077-4896-af68-34165abd25ed",
+      "stage": "focus",
+      "at": 1789817527442,
+      "detail": "true"
+    },
+    {
+      "token": "1085106673:38d0d059-2077-4896-af68-34165abd25ed",
+      "stage": "windowVisible",
+      "at": 1789817527445,
+      "detail": "via=focus;focused=true;shown=true"
+    },
+    {
+      "token": "1085106673:38d0d059-2077-4896-af68-34165abd25ed",
+      "stage": "windowSample",
+      "at": 1789817527480,
+      "detail": "after=300ms;focus=true;shown=true;visibility=0;playing=false"
+    },
+    {
+      "token": "1085106673:38d0d059-2077-4896-af68-34165abd25ed",
+      "stage": "windowSample",
+      "at": 1789817527979,
+      "detail": "after=800ms;focus=true;shown=true;visibility=0;playing=false"
+    },
+    {
+      "token": "1085106673:38d0d059-2077-4896-af68-34165abd25ed",
+      "stage": "windowSample",
+      "at": 1789817528679,
+      "detail": "after=1500ms;focus=true;shown=true;visibility=0;playing=false"
+    }
+  ]
+}

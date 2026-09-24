@@ -32,13 +32,13 @@ Current Notification Manager state:
                 [4] "close" -> PendingIntent{721dc06: PendingIntentRecord{6a0efec tv.danmaku.bili broadcastIntent (allowlist: a30016f:+30s0ms/0/NOTIFICATION_SERVICE/NotificationManagerService)}}
               }
             extras={
-                android.title=String (凌玉玲飞升灵界后一打听傻眼了，韩立已经成为灵界第一大乘，青元宫更是风元大陆第一势力)
+                android.title=String (<other-app-notification-60>)
                 android.reduced.images=Boolean (true)
                 oplus_smallicon_use_app_icon=Boolean (true)
                 android.subText=null
                 android.template=String (android.app.Notification$MediaStyle)
                 android.showChronometer=Boolean (false)
-                android.text=String (何为师·后台听视频省流量)
+                android.text=String (<other-app-notification-62>)
                 android.progress=Integer (0)
                 android.progressMax=Integer (0)
                 android.appInfo=ApplicationInfo (ApplicationInfo{d18b2c7 tv.danmaku.bili})
@@ -329,7 +329,7 @@ Current Notification Manager state:
             number=0
             groupAlertBehavior=0
             when=1789671075235/1789671075235
-            tickerText=02:51画面变动
+            tickerText=<other-app-notification-63>
             vis=1
             contentView=null
             bigContentView=null
@@ -337,13 +337,13 @@ Current Notification Manager state:
             color=0x00000000
             timeout=PT72H
             extras={
-                android.title=String (02:51画面变动)
+                android.title=String (<other-app-notification-63>)
                 android.reduced.images=Boolean (true)
                 oplus_smallicon_use_app_icon=Boolean (true)
                 small_app=Boolean (false)
                 opushMsgTime=Long (1789671075262)
                 is_commercial=Integer (0)
-                android.text=String (【小米智能摄像机2 云台版-客厅-3023124025】)
+                android.text=String (<other-app-notification-61>)
                 high_priority_noti_end_time=Long (0)
                 android.appInfo=ApplicationInfo (ApplicationInfo{79ceb5 com.xiaomi.smarthome})
                 android.showWhen=Boolean (true)
@@ -423,7 +423,7 @@ Current Notification Manager state:
             number=0
             groupAlertBehavior=0
             when=1789670464551/1789670464551
-            tickerText=02:41画面变动
+            tickerText=<other-app-notification-64>
             vis=1
             contentView=null
             bigContentView=null
@@ -431,13 +431,13 @@ Current Notification Manager state:
             color=0x00000000
             timeout=PT72H
             extras={
-                android.title=String (02:41画面变动)
+                android.title=String (<other-app-notification-64>)
                 android.reduced.images=Boolean (true)
                 oplus_smallicon_use_app_icon=Boolean (true)
                 small_app=Boolean (false)
                 opushMsgTime=Long (1789670464678)
                 is_commercial=Integer (0)
-                android.text=String (【小米智能摄像机2 云台版-客厅-3023124025】)
+                android.text=String (<other-app-notification-61>)
                 high_priority_noti_end_time=Long (0)
                 android.appInfo=ApplicationInfo (ApplicationInfo{188dd0d com.xiaomi.smarthome})
                 android.showWhen=Boolean (true)
@@ -599,12 +599,12 @@ Current Notification Manager state:
                 [0] "断开" -> PendingIntent{f66ac: PendingIntentRecord{5006eed com.nextin.m78 startService (allowlist: a30016f:+30s0ms/0/NOTIFICATION_SERVICE/NotificationManagerService)}}
               }
             extras={
-                android.title=String (M78加速器 VPN)
+                android.title=String (<other-app-notification-9>)
                 android.reduced.images=Boolean (true)
                 oplus_smallicon_use_app_icon=Boolean (true)
                 android.subText=null
                 android.showChronometer=Boolean (false)
-                android.text=String (↑ 0 B/s  ↓ 0 B/s)
+                android.text=String (<other-app-notification-23>)
                 android.progress=Integer (0)
                 android.progressMax=Integer (0)
                 android.appInfo=ApplicationInfo (ApplicationInfo{cdf4f75 com.nextin.m78})
@@ -650,7 +650,7 @@ Current Notification Manager state:
       mAllowBubble=false
       isBubble=false
       mIsInterruptive=false
-      effectiveNotificationChannel=NotificationChannel{mId='nextin_vpn', mName=M78加速器 VPN, mDescription=, mImportance=2, mBypassDnd=false, mLockscreenVisibility=-1000, mSound=content://settings/system/notification_sound, mLights=false, mLightColor=0, mVibrationPattern=null, mVibrationEffect=null, mUserLockedFields=0, mUserVisibleTaskShown=true, mVibrationEnabled=false, mShowBadge=true, mDeleted=false, mDeletedTimeMs=-1, mDeletedByMcs=false, mGroup='null', mAudioAttributes=AudioAttributes: usage=USAGE_NOTIFICATION content=CONTENT_TYPE_SONIFICATION flags=0x800 tags= bundle=null, mBlockableSystem=false, mAllowBubbles=-1, mImportanceLockedDefaultApp=false, mOriginalImp=2, mParent=null, mConversationId=null, mDemoted=false, mImportantConvo=false, mLastNotificationUpdateTimeMs=0, mShowBanner=false, mFold=false, mOpush=false, mShowIcon=true, mMaxMessages=-1, mSupportNumBadge=false, mBadgeOption=0, mChangeableFold=true, mChangeableShowIcon=true, mUnimportant=true, mTempShowBadge=true}
+      effectiveNotificationChannel=NotificationChannel{mId='nextin_vpn', mName=<other-app-notification-9>, mDescription=, mImportance=2, mBypassDnd=false, mLockscreenVisibility=-1000, mSound=content://settings/system/notification_sound, mLights=false, mLightColor=0, mVibrationPattern=null, mVibrationEffect=null, mUserLockedFields=0, mUserVisibleTaskShown=true, mVibrationEnabled=false, mShowBadge=true, mDeleted=false, mDeletedTimeMs=-1, mDeletedByMcs=false, mGroup='null', mAudioAttributes=AudioAttributes: usage=USAGE_NOTIFICATION content=CONTENT_TYPE_SONIFICATION flags=0x800 tags= bundle=null, mBlockableSystem=false, mAllowBubbles=-1, mImportanceLockedDefaultApp=false, mOriginalImp=2, mParent=null, mConversationId=null, mDemoted=false, mImportantConvo=false, mLastNotificationUpdateTimeMs=0, mShowBanner=false, mFold=false, mOpush=false, mShowIcon=true, mMaxMessages=-1, mSupportNumBadge=false, mBadgeOption=0, mChangeableFold=true, mChangeableShowIcon=true, mUnimportant=true, mTempShowBadge=true}
       mAdjustments=[]
       shortcut=null found valid? false
       mUserVisOverride=-1
@@ -2186,7 +2186,7 @@ PackagePreferences:
         NotificationChannel{mId='hupu_push_match', mName=赛事资讯, mDescription=hasDescription , mImportance=3, mBypassDnd=false, mLockscreenVisibility=-1, mSound=null, mLights=false, mLightColor=0, mVibrationPattern=null, mVibrationEffect=null, mUserLockedFields=2, mUserVisibleTaskShown=false, mVibrationEnabled=false, mShowBadge=true, mDeleted=false, mDeletedTimeMs=-1, mDeletedByMcs=false, mGroup='hupu_push', mAudioAttributes=AudioAttributes: usage=USAGE_NOTIFICATION content=CONTENT_TYPE_SONIFICATION flags=0x800 tags= bundle=null, mBlockableSystem=false, mAllowBubbles=-1, mImportanceLockedDefaultApp=false, mOriginalImp=3, mParent=null, mConversationId=null, mDemoted=false, mImportantConvo=false, mLastNotificationUpdateTimeMs=0, mShowBanner=false, mFold=false, mOpush=false, mShowIcon=true, mMaxMessages=-1, mSupportNumBadge=false, mBadgeOption=0, mChangeableFold=true, mChangeableShowIcon=true, mUnimportant=false, mTempShowBadge=true}
         NotificationChannelGroup{mId='hupu_push', mName=赛事通知, mDescription=hasDescription , mBlocked=false, mChannels=[], mUserLockedFields=0}
         NotificationChannelGroup{mId='oplus_mcs_standard_index##200', mName=通知通道, mDescription=, mBlocked=false, mChannels=[], mUserLockedFields=0}
-        NotificationChannelGroup{mId='JIGUANG_CHANNEL_GROUP', mName=虎扑, mDescription=, mBlocked=false, mChannels=[], mUserLockedFields=0}
+        NotificationChannelGroup{mId='JIGUANG_CHANNEL_GROUP', mName=<other-app-notification-52>, mDescription=, mBlocked=false, mChannels=[], mUserLockedFields=0}
       AppSettings: com.android.systemui.overlay.fingerprint.anim.sw.press (10538) promoted=true
       AppSettings: com.google.android.overlay.gmsconfig.nosafetycenter (10029)
       AppSettings: com.android.role.notes.enabled (10022)
@@ -2466,7 +2466,7 @@ PackagePreferences:
       AppSettings: com.android.skip (10454) importance=NONE userSet=false
       AppSettings: com.coloros.bootreg (10127) importance=NONE userSet=false
       AppSettings: com.nextin.m78 (10499) importance=DEFAULT userSet=true promoted=true
-        NotificationChannel{mId='nextin_vpn', mName=M78加速器 VPN, mDescription=, mImportance=2, mBypassDnd=false, mLockscreenVisibility=-1000, mSound=content://settings/system/notification_sound, mLights=false, mLightColor=0, mVibrationPattern=null, mVibrationEffect=null, mUserLockedFields=0, mUserVisibleTaskShown=true, mVibrationEnabled=false, mShowBadge=true, mDeleted=false, mDeletedTimeMs=-1, mDeletedByMcs=false, mGroup='null', mAudioAttributes=AudioAttributes: usage=USAGE_NOTIFICATION content=CONTENT_TYPE_SONIFICATION flags=0x800 tags= bundle=null, mBlockableSystem=false, mAllowBubbles=-1, mImportanceLockedDefaultApp=false, mOriginalImp=2, mParent=null, mConversationId=null, mDemoted=false, mImportantConvo=false, mLastNotificationUpdateTimeMs=0, mShowBanner=false, mFold=false, mOpush=false, mShowIcon=true, mMaxMessages=-1, mSupportNumBadge=false, mBadgeOption=0, mChangeableFold=true, mChangeableShowIcon=true, mUnimportant=true, mTempShowBadge=true}
+        NotificationChannel{mId='nextin_vpn', mName=<other-app-notification-9>, mDescription=, mImportance=2, mBypassDnd=false, mLockscreenVisibility=-1000, mSound=content://settings/system/notification_sound, mLights=false, mLightColor=0, mVibrationPattern=null, mVibrationEffect=null, mUserLockedFields=0, mUserVisibleTaskShown=true, mVibrationEnabled=false, mShowBadge=true, mDeleted=false, mDeletedTimeMs=-1, mDeletedByMcs=false, mGroup='null', mAudioAttributes=AudioAttributes: usage=USAGE_NOTIFICATION content=CONTENT_TYPE_SONIFICATION flags=0x800 tags= bundle=null, mBlockableSystem=false, mAllowBubbles=-1, mImportanceLockedDefaultApp=false, mOriginalImp=2, mParent=null, mConversationId=null, mDemoted=false, mImportantConvo=false, mLastNotificationUpdateTimeMs=0, mShowBanner=false, mFold=false, mOpush=false, mShowIcon=true, mMaxMessages=-1, mSupportNumBadge=false, mBadgeOption=0, mChangeableFold=true, mChangeableShowIcon=true, mUnimportant=true, mTempShowBadge=true}
       AppSettings: com.google.android.cellbroadcastservice.overlay (10000)
       AppSettings: com.coloros.smartlock (10198)
       AppSettings: com.oplus.healthservice (1000) fixedImportance=true

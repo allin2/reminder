@@ -1,0 +1,65 @@
+{
+ "token": "A15A3-154553",
+ "id": "i_706wk32imuf89ik8",
+ "trig": 1790236020000,
+ "before": {
+  "id": "i_706wk32imuf89ik8",
+  "title": "A15A3-154553 冷进程闹钟",
+  "status": "waiting",
+  "rev": 1,
+  "triggerAt": 1790236020000,
+  "priority": "important",
+  "delivery_mode": "alarm",
+  "scheduleBasis": "wall-clock",
+  "reminderKey": null
+ },
+ "pidKilled": "6788",
+ "killOut": [
+  0,
+  "",
+  ""
+ ],
+ "pidAfterKill": "",
+ "alarmRegisteredAfterKill": true,
+ "alarmFocus": "Window{d053943 u0 com.bbk.launcher2/com.bbk.launcher2.Launcher type=1 }",
+ "pidAtAlarm": "",
+ "tapped": false,
+ "memAfterManualLaunch": {
+  "id": "i_706wk32imuf89ik8",
+  "title": "A15A3-154553 冷进程闹钟",
+  "status": "due",
+  "rev": 1,
+  "triggerAt": 1790236020000,
+  "snoozedAt": null,
+  "snoozeCount": 0,
+  "acknowledgedAt": null,
+  "completedAt": null,
+  "archivedAt": null,
+  "priority": "important",
+  "delivery_mode": "alarm",
+  "reminderKey": null,
+  "lastDeliveredAt": null,
+  "deliveredAt": 1790236205896,
+  "seriesId": null
+ },
+ "idbAfterManualLaunch": {
+  "found": true,
+  "id": "i_706wk32imuf89ik8",
+  "title": "A15A3-154553 冷进程闹钟",
+  "status": "due",
+  "rev": 1,
+  "triggerAt": 1790236020000,
+  "snoozedAt": null,
+  "snoozeCount": 0,
+  "acknowledgedAt": null,
+  "completedAt": null,
+  "archivedAt": null
+ },
+ "focusAfterManualLaunch": "Window{4b5cd08 u0 space.alliswell.inbox/space.alliswell.inbox.MainActivity type=1 }",
+ "notifAfterManualLaunch": false,
+ "verdict": "FAIL: system alarm fired 15:47:00.013 (device_idle_wake_from_idle) but process not started, no panel/notification; OEM cold-start block",
+ "detailRowAfterLaunch": {
+  "row": "提醒结果本次提醒结果尚未确认",
+  "alertVisible": false
+ }
+}

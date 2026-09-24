@@ -1,0 +1,17 @@
+{
+  "apkSha256": "a0e192968a4e4c01ffbf959eb29fe81b39805a512acf4e6883af0a23be0c4a99",
+  "cdpPlatformCheck": {
+    "ready": true,
+    "hasPlatform": true,
+    "hasAllContract": true,
+    "contractLength": 9,
+    "isNative": true,
+    "hasSysBridge": true,
+    "sysBridgeType": "object",
+    "hasAppSettings": true,
+    "appSettingsType": "object",
+    "waitResult": true,
+    "deferredPromptIsNull": true,
+    "btnInstallHidden": true
+  }
+}

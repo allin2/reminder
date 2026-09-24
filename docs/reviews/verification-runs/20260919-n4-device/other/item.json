@@ -1,0 +1,59 @@
+{
+  "id": "matrix_other_1789817401",
+  "title": "后台验收 other",
+  "note": "",
+  "tags": [],
+  "url": "",
+  "projectId": "",
+  "priority": "important",
+  "status": "waiting",
+  "triggerAt": 1789817444000,
+  "windowStart": null,
+  "windowEnd": null,
+  "deadlineAt": null,
+  "repeat": null,
+  "createdAt": 1789817399702,
+  "acknowledgedAt": null,
+  "completedAt": null,
+  "snoozeCount": 0,
+  "deliveredAt": null,
+  "remindCount": 0,
+  "lastRemindAt": null,
+  "lastAlertShownAt": null,
+  "scheduleBasis": "wall-clock",
+  "localTrigger": "2026-09-19T19:30:44",
+  "snoozedAt": null,
+  "snoozeDelayMs": null,
+  "dismissedUntil": null,
+  "review_status": "READY",
+  "reviewed_at": null,
+  "sourceTitle": "",
+  "sourceApp": "",
+  "delivery_mode": "alarm",
+  "isFallbackTrigger": false,
+  "deadlineStageKey": null,
+  "deadlineEvents": {},
+  "reminderEvents": {
+    "0@1789817444000": {
+      "at": 1789817444000,
+      "state": "scheduled"
+    },
+    "1@1789819244000": {
+      "at": 1789819244000,
+      "state": "scheduled"
+    },
+    "2@1789821044000": {
+      "at": 1789821044000,
+      "state": "scheduled"
+    },
+    "3@1789822844000": {
+      "at": 1789822844000,
+      "state": "scheduled"
+    }
+  },
+  "deadlinePaused": false,
+  "ackAdvancedAt": null,
+  "rev": 1,
+  "seriesId": null,
+  "repeatParentId": null
+}

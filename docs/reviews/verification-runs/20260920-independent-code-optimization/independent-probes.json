@@ -1,0 +1,171 @@
+{
+  "node": "v20.17.0",
+  "results": [
+    {
+      "name": "tags refresh current",
+      "pass": false,
+      "detail": {
+        "before": [
+          "<span class=\"pill tag\">#work,home</span>"
+        ],
+        "after": [
+          "<span class=\"pill tag\">#work,home</span>"
+        ]
+      }
+    },
+    {
+      "name": "tags refresh pre-edit",
+      "pass": true,
+      "detail": {
+        "before": [
+          "<span class=\"pill tag\">#work,home</span>"
+        ],
+        "after": [
+          "<span class=\"pill tag\">#work</span>",
+          "<span class=\"pill tag\">#home</span>"
+        ]
+      }
+    },
+    {
+      "name": "in-flight reschedule converges",
+      "pass": true,
+      "detail": {
+        "snoozeResult": true,
+        "expected": [
+          1759419732
+        ],
+        "actual": [
+          1759419732
+        ],
+        "metrics": {
+          "totalRequests": 3,
+          "runs": 3,
+          "deduped": 2,
+          "bySource": {
+            "save": 3
+          }
+        },
+        "alarms": [
+          {
+            "id": 759286461,
+            "delayMs": 3599589,
+            "itemRev": 1
+          },
+          {
+            "id": 1759419732,
+            "delayMs": 7199997,
+            "itemRev": 2
+          }
+        ],
+        "cancel": [
+          {
+            "id": 759286461
+          }
+        ],
+        "persistedStatus": "snoozed"
+      }
+    },
+    {
+      "name": "reschedule survives restart",
+      "pass": true,
+      "detail": {
+        "status": "snoozed"
+      }
+    },
+    {
+      "name": "FIFO snapshot at execution time",
+      "pass": true,
+      "detail": {
+        "first": "A",
+        "second": "B"
+      }
+    },
+    {
+      "name": "in-flight completeItem cancels old plan",
+      "pass": true,
+      "detail": {
+        "state": [
+          "archived"
+        ],
+        "ids": [],
+        "cancels": [
+          {
+            "id": 1675564619
+          }
+        ],
+        "metrics": {
+          "totalRequests": 3,
+          "runs": 3,
+          "deduped": 2,
+          "bySource": {
+            "save": 3
+          }
+        }
+      }
+    },
+    {
+      "name": "completeItem persists restart",
+      "pass": true,
+      "detail": {
+        "state": [
+          "archived"
+        ]
+      }
+    },
+    {
+      "name": "in-flight deleteItem cancels old plan",
+      "pass": true,
+      "detail": {
+        "state": [],
+        "ids": [],
+        "cancels": [
+          {
+            "id": 63008966
+          }
+        ],
+        "metrics": {
+          "totalRequests": 3,
+          "runs": 3,
+          "deduped": 2,
+          "bySource": {
+            "save": 3
+          }
+        }
+      }
+    },
+    {
+      "name": "deleteItem persists restart",
+      "pass": true,
+      "detail": {
+        "state": []
+      }
+    },
+    {
+      "name": "cancel failure retry retains then clears ID",
+      "pass": true,
+      "detail": {
+        "retained": true,
+        "ids": [],
+        "attempts": 2
+      }
+    },
+    {
+      "name": "memory backend snapshot isolated after load",
+      "pass": true,
+      "detail": {
+        "title": "persisted",
+        "status": "waiting",
+        "stopped": 0
+      }
+    },
+    {
+      "name": "regression native actually injected",
+      "pass": true,
+      "detail": {
+        "reconcile": "function",
+        "onAlarmAction": "function",
+        "isNativeAndroid": false
+      }
+    }
+  ]
+}

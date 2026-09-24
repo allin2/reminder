@@ -1,0 +1,7 @@
+Starting: Intent { cmp=space.alliswell.inbox/.MainActivity }
+Status: ok
+LaunchState: COLD
+Activity: space.alliswell.inbox/.MainActivity
+TotalTime: 264
+WaitTime: 266
+Complete

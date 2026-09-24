@@ -1,0 +1,18 @@
+valid-schema5: accepted=True changed=True confirm=1 save=1 render=1 toast=导入成功 · 1 条事项
+valid-schema2: accepted=True changed=True confirm=1 save=1 render=1 toast=导入成功 · 1 条事项
+foreign-app: accepted=True changed=True confirm=1 save=1 render=1 toast=导入成功 · 1 条事项
+missing-app: accepted=True changed=True confirm=1 save=1 render=1 toast=导入成功 · 1 条事项
+future-schema: accepted=True changed=True confirm=1 save=1 render=1 toast=导入成功 · 1 条事项
+schema-string: accepted=True changed=True confirm=1 save=1 render=1 toast=导入成功 · 1 条事项
+too-old-schema: accepted=True changed=True confirm=1 save=1 render=1 toast=导入成功 · 1 条事项
+missing-notes: accepted=True changed=True confirm=1 save=1 render=1 toast=导入成功 · 1 条事项
+notes-object: accepted=True changed=True confirm=1 save=1 render=1 toast=导入成功 · 1 条事项
+projects-object: accepted=True changed=True confirm=1 save=1 render=1 toast=导入成功 · 1 条事项
+settings-array: accepted=True changed=True confirm=1 save=1 render=1 toast=导入成功 · 1 条事项
+settings-unknown: accepted=True changed=True confirm=1 save=1 render=1 toast=导入成功 · 1 条事项
+top-level-unknown: accepted=True changed=True confirm=1 save=1 render=1 toast=导入成功 · 1 条事项
+empty-item: accepted=True changed=True confirm=1 save=1 render=1 toast=导入成功 · 1 条事项
+number-item: accepted=True changed=True confirm=1 save=1 render=1 toast=导入成功 · 1 条事项
+null-item: accepted=False changed=False confirm=1 save=0 render=0 toast=导入失败：文件格式不正确
+duplicate-item-id: accepted=True changed=True confirm=1 save=1 render=1 toast=导入成功 · 2 条事项
+ai-secret-and-endpoint: accepted=True changed=True confirm=1 save=1 render=1 toast=导入成功 · 1 条事项

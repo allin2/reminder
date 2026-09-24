@@ -1,0 +1,27 @@
+{
+  "beforeCount": 6,
+  "mode": {
+    "normalApplied": true,
+    "homeSetupVisible": true,
+    "restored": true
+  },
+  "setupSemantics": {
+    "backgroundVisitedNotVerified": true,
+    "overlayVisitedNotVerified": true,
+    "missedIsResultNotPass": true,
+    "honestCopy": true
+  },
+  "edit": {
+    "titleUpdated": true,
+    "triggerPreservedBeforeReload": true,
+    "localTriggerPreservedBeforeReload": true,
+    "persistedAcrossReload": true
+  },
+  "cleanup": {
+    "temporaryItemRemoved": true,
+    "countRestored": true,
+    "identitySetRestored": true,
+    "remainingAfterDelete": 6
+  },
+  "pass": true
+}

@@ -1,0 +1,1 @@
+  mCurrentFocus=Window{3808eed u0 com.android.documentsui/com.android.documentsui.picker.PickActivity}

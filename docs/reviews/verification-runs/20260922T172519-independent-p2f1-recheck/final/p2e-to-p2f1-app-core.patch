@@ -1,0 +1,345 @@
+--- p2e-app-core.js
++++ p2f1-app-core.js
+@@ -50,6 +50,9 @@
+   let diagnostics = null;
+   let AppSetup = {};
+   let appSetup = null;
++  // P2-F1：笔记、项目与搜索由 `lib/app-content.js` 的同一实例承接。
++  let AppContent = {};
++  let appContent = null;
+   let $ = null;
+   let $$ = null;
+   let openSheet = null;
+@@ -239,6 +242,8 @@
+       "lib/app-diagnostics.js 导出被破坏（诊断能力装配入口）"],
+     ["AppSetup", "object", "lib/app-setup.js 未加载 —— 首次提醒设置与 60 秒测试整体失效"],
+     ["AppSetup.createAppSetup", "function", "lib/app-setup.js 导出被破坏（设置能力装配入口）"],
++    ["AppContent", "object", "lib/app-content.js 未加载 —— 笔记、项目与搜索入口整体失效"],
++    ["AppContent.createAppContent", "function", "lib/app-content.js 导出被破坏（内容能力装配入口）"],
+     ["parseChineseTime", "function",
+       "lib/parse-cn.js 未加载 —— 中文时间解析唯一来源，缺了「明天 9 点」这类输入将全部解析不出时间"],
+     ["cnInt", "function", "lib/parse-cn.js 导出被破坏（中文数字）"],
+@@ -454,6 +459,12 @@
+     instanceWhy: "lib/app-setup.js 的 createAppSetup 返回的实例缺少设置 API —— 首次提醒设置与测试反馈会静默失效",
+     factoryThrowWhy: "lib/app-setup.js 的 createAppSetup 抛了异常 —— 设置向导无法装配"
+   };
++  const APP_CONTENT_INSTANCE_CONTRACT = {
++    factory: "AppContent.createAppContent",
++    instance: ["bind", "openNote", "saveNote", "doSearch", "renderProjectsSheet", "addProject", "deleteProject"],
++    instanceWhy: "lib/app-content.js 的 createAppContent 返回的实例缺少内容 API —— 笔记、项目或搜索入口会静默失效",
++    factoryThrowWhy: "lib/app-content.js 的 createAppContent 抛了异常 —— 笔记、项目与搜索能力无法装配"
++  };
+ 
+   /** 按 `a.b.c` 取路径；任一段缺失返回 undefined。 */
+   function readPath(obj, dotted) {
+@@ -516,6 +527,7 @@
+     ["AppBackup", "AppBackup"],
+     ["AppDiagnostics", "AppDiagnostics"],
+     ["AppSetup", "AppSetup"],
++    ["AppContent", "AppContent"],
+     ["Feedback", "FeedbackLib"],
+     ["DeliveryEvidence", "EvidenceLib"],
+     ["DatePrimitives", "DatePrimitives"],
+@@ -709,6 +721,23 @@
+     };
+   }
+ 
++  /** P2-F1：内容模块只拿 live getter 与具名命令，不接触 core 的事务实现细节。 */
++  function contentRuntimeDeps() {
++    return {
++      query: (sel) => $(sel), queryAll: (sel) => $$(sel), getDocument: () => document,
++      openSheet: (id) => openSheet(id), closeSheet: (id) => closeSheet(id), toast: (msg) => toast(msg),
++      confirmDialog: (msg, title) => confirmDialog(msg, title),
++      escapeHtml: (s) => escapeHtml(s), escapeAttr: (s) => escapeAttr(s), renderMarkdown: (s) => renderMarkdown(s),
++      getState: () => state, save: () => save(), render: () => render(),
++      renderItemCard: (item, mode) => renderItemCard(item, mode), refreshProjectSelects: () => refreshProjectSelects(),
++      uid: () => uid(), getProjectColors: () => PROJECT_COLORS,
++      itemConflictsWithActiveAction: (item) => itemConflictsWithActiveAction(item),
++      rejectPendingItemCommand: () => rejectPendingItemCommand(),
++      // 事项 projectId/rev 仍由 core 的 user-operation 事务域清理，content 绝不复制循环。
++      removeProjectFromItems: (id) => runUserOp(applyProjectRemovalToItems, [id])
++    };
++  }
++
+   /**
+    * **检查 + 取值**（同一次操作）。
+    *
+@@ -861,10 +890,28 @@
+     });
+     if (problems.length) return { problems: problems, bindings: null };
+ 
++    let contentInstance = null;
++    const contentFactory = readRuntimePath(roots, APP_CONTENT_INSTANCE_CONTRACT.factory);
++    try { contentInstance = contentFactory(contentRuntimeDeps()); }
++    catch (error) {
++      problems.push({ path: APP_CONTENT_INSTANCE_CONTRACT.factory + "()", expected: "instance",
++        actual: "threw:" + (error && error.message ? error.message : String(error)),
++        why: APP_CONTENT_INSTANCE_CONTRACT.factoryThrowWhy });
++      return { problems: problems, bindings: null };
++    }
++    APP_CONTENT_INSTANCE_CONTRACT.instance.forEach(function (name) {
++      if (contentInstance == null || typeof contentInstance[name] !== "function") {
++        problems.push({ path: "AppContent." + name, expected: "function",
++          actual: contentInstance == null ? describeGot(contentInstance) : describeGot(contentInstance[name]),
++          why: APP_CONTENT_INSTANCE_CONTRACT.instanceWhy });
++      }
++    });
++    if (problems.length) return { problems: problems, bindings: null };
++
+     // 走到这里说明每一项都核对过了 —— 下面绑的就是刚才核对过的那批值。
+     const bindings = {
+       appUi: instance, ai: aiInstance, backup: backupInstance,
+-      diagnostics: diagnosticsInstance, setup: setupInstance
++      diagnostics: diagnosticsInstance, setup: setupInstance, content: contentInstance
+     };
+     for (let i = 0; i < RUNTIME_BINDING_PATHS.length; i++) {
+       bindings[RUNTIME_BINDING_PATHS[i][1]] = readRuntimePath(roots, RUNTIME_BINDING_PATHS[i][0]);
+@@ -903,6 +950,8 @@
+     diagnostics = b.diagnostics;
+     AppSetup = b.AppSetup;
+     appSetup = b.setup;
++    AppContent = b.AppContent;
++    appContent = b.content;
+     $ = appUi.$;
+     $$ = appUi.$$;
+     openSheet = appUi.openSheet;
+@@ -5232,130 +5281,13 @@
+     openSheet("sheetDetail");
+   }
+ 
+-  /* ---------- notes ---------- */
+-  function openNote(id) {
+-    state.ui.editNoteId = id || null;
+-    refreshProjectSelects();
+-    if (id) {
+-      const n = state.notes.find(x => x.id === id);
+-      $("#sheetNoteTitle").textContent = "编辑笔记";
+-      $("#noteTitle").value = n.title || "";
+-      $("#noteBody").value = n.body || "";
+-      $("#noteProject").value = n.projectId || "";
+-      state.ui.notePin = !!n.pinned;
+-    } else {
+-      $("#sheetNoteTitle").textContent = "新建笔记";
+-      $("#noteTitle").value = "";
+-      $("#noteBody").value = "";
+-      $("#noteProject").value = "";
+-      state.ui.notePin = false;
+-    }
+-    $("#swNotePin").classList.toggle("on", state.ui.notePin);
+-    $("#notePreviewWrap").hidden = true;
+-    $("#btnNotePreview").textContent = "预览";
+-    openSheet("sheetNote");
+-  }
+-
+-  function saveNote() {
+-    const title = $("#noteTitle").value.trim() || "无标题";
+-    const body = $("#noteBody").value.trim();
+-    const projectId = $("#noteProject").value || "";
+-    if (state.ui.editNoteId) {
+-      const n = state.notes.find(x => x.id === state.ui.editNoteId);
+-      if (n) {
+-        n.title = title; n.body = body; n.projectId = projectId;
+-        n.pinned = state.ui.notePin;
+-        n.updatedAt = Date.now();
+-      }
+-    } else {
+-      state.notes.push({
+-        id: uid(), title, body, projectId,
+-        pinned: state.ui.notePin,
+-        createdAt: Date.now(), updatedAt: Date.now()
+-      });
+-    }
+-    save();
+-    closeSheet("sheetNote");
+-    render();
+-    toast("笔记已保存");
+-  }
+-
+-  /* ---------- search ---------- */
+-  function doSearch(q) {
+-    q = (q || "").trim().toLowerCase();
+-    const box = $("#searchResults");
+-    if (!q) {
+-      box.innerHTML = '<p style="color:var(--muted);font-size:0.88rem">输入关键词，覆盖 Future、已看到未完成、归档、项目与笔记。</p>';
+-      return;
+-    }
+-    const items = state.items.filter(it =>
+-      (it.title || "").toLowerCase().includes(q) ||
+-      (it.note || "").toLowerCase().includes(q) ||
+-      (it.tags || []).some(t => t.toLowerCase().includes(q)) ||
+-      (it.url || "").toLowerCase().includes(q)
+-    );
+-    const notes = state.notes.filter(n =>
+-      (n.title || "").toLowerCase().includes(q) || (n.body || "").toLowerCase().includes(q)
+-    );
+-    const projects = state.projects.filter(p => (p.name || "").toLowerCase().includes(q));
+-
+-    box.innerHTML = (items.length || notes.length || projects.length)
+-      ? (projects.length
+-          ? '<div class="sec-head"><div class="sec-title">项目</div></div>' +
+-            projects.map(p => '<div class="note-card"><h3>' + escapeHtml(p.name) + "</h3><p>项目</p></div>").join("")
+-          : "") +
+-        items.map(it => renderItemCard(it,
+-          it.status === "archived" ? "archived" :
+-          it.status === "acknowledged" ? "active" : "future"
+-        )).join("") +
+-        notes.map(n =>
+-          '<article class="note-card" data-note="' + escapeAttr(n.id) + '"><h3>' + escapeHtml(n.title) +
+-          "</h3><p>" + escapeHtml(n.body) + "</p></article>"
+-        ).join("")
+-      : '<div class="empty" style="padding:28px 12px"><p>没有找到「' + escapeHtml(q) + "」</p></div>";
+-  }
+-
+-  /* ---------- projects ---------- */
+-  let selectedColor = PROJECT_COLORS[0];
+-  function renderProjectsSheet() {
+-    $("#projectsList").innerHTML = state.projects.length
+-      ? state.projects.map(p => {
+-          const count = state.items.filter(it => it.projectId === p.id).length;
+-          return '<div class="note-card" style="display:flex;align-items:center;gap:10px">' +
+-            '<span style="width:12px;height:12px;border-radius:50%;background:' + escapeHtml(p.color) + ';flex-shrink:0"></span>' +
+-            '<div style="flex:1"><h3>' + escapeHtml(p.name) + "</h3><p>" + count + " 个事项</p></div>" +
+-            '<button class="chip" data-del-proj="' + escapeHtml(p.id) + '">删除</button></div>';
+-        }).join("")
+-      : '<p style="color:var(--muted);font-size:0.88rem">还没有项目。项目用于轻量归类，不是完整任务管理。</p>';
+-
+-    $("#projColors").innerHTML = PROJECT_COLORS.map(c =>
+-      '<button type="button" class="chip' + (c === selectedColor ? " on" : "") + '" data-color="' + c + '" ' +
+-      'style="min-width:36px;background:' + c + ';border-color:transparent;color:transparent">' + c + "</button>"
+-    ).join("");
+-  }
+-
+-  function addProject() {
+-    const name = $("#projName").value.trim();
+-    if (!name) { toast("请输入项目名称"); return; }
+-    state.projects.push({ id: "p_" + uid(), name, color: selectedColor });
+-    $("#projName").value = "";
+-    save();
+-    renderProjectsSheet();
+-    refreshProjectSelects();
+-    toast("已添加项目");
+-  }
+-
+-  function deleteProject(id) {
+-    const affected = state.items.filter(it => it.projectId === id);
+-    if (affected.some(itemConflictsWithActiveAction)) return rejectPendingItemCommand();
+-    state.projects = state.projects.filter(p => p.id !== id);
+-    runUserOp(applyProjectRemovalToItems, [id]);
+-    state.notes.forEach(n => { if (n.projectId === id) n.projectId = ""; });
+-    save();
+-    renderProjectsSheet();
+-    toast("已删除项目");
+-    return true;
+-  }
++  /* ---------- P2-F1 content forwarding: implementation is lib/app-content.js ---------- */
++  function openNote(id) { return appContent.openNote(id); }
++  function saveNote() { return appContent.saveNote(); }
++  function doSearch(q) { return appContent.doSearch(q); }
++  function renderProjectsSheet() { return appContent.renderProjectsSheet(); }
++  function addProject() { return appContent.addProject(); }
++  function deleteProject(id) { return appContent.deleteProject(id); }
+ 
+   function applyProjectRemovalToItems(id) {
+     state.items.forEach(it => {
+@@ -6850,6 +6782,7 @@
+   function bind() {
+     // 诊断面板（按钮 + visibilitychange）由实例幂等绑定；setup/review 留在 core。
+     if (diagnostics) diagnostics.bind();
++    if (appContent) appContent.bind();
+     bindSetupReviewControls();
+     $$(".nav-item").forEach(btn => {
+       btn.addEventListener("click", () => {
+@@ -6980,19 +6913,6 @@
+         return;
+       }
+ 
+-      const delProj = e.target.closest("[data-del-proj]");
+-      if (delProj) {
+-        const okP = await confirmDialog("删除该项目？事项会保留但去掉项目。", "删除项目");
+-        if (okP) deleteProject(delProj.dataset.delProj);
+-        return;
+-      }
+-      const colorBtn = e.target.closest("[data-color]");
+-      if (colorBtn && colorBtn.closest("#projColors")) {
+-        selectedColor = colorBtn.dataset.color;
+-        renderProjectsSheet();
+-        return;
+-      }
+-
+       const calNav = e.target.closest("[data-cal]");
+       if (calNav) {
+         const kind = calNav.dataset.cal;
+@@ -7030,15 +6950,11 @@
+         return;
+       }
+ 
+-      const note = e.target.closest("[data-note]");
+-      if (note) { openNote(note.dataset.note); return; }
+-
+       if (e.target.closest("#toggleActive")) {
+         state.ui.activeExpanded = !state.ui.activeExpanded;
+         renderHome();
+         return;
+       }
+-      if (e.target.closest("#btnNewNote")) openNote(null);
+     });
+ 
+     $$("#futureSeg .seg-item").forEach(b => {
+@@ -7112,31 +7028,6 @@
+       $$("#snoozeChips .chip").forEach(x => x.classList.remove("on"));
+       $("#snoozeCustom").value = "";
+     });
+-
+-    $("#btnSaveNote").addEventListener("click", saveNote);
+-    $("#swNotePin").addEventListener("click", () => {
+-      state.ui.notePin = !state.ui.notePin;
+-      $("#swNotePin").classList.toggle("on", state.ui.notePin);
+-    });
+-    $("#btnNotePreview").addEventListener("click", () => {
+-      const wrap = $("#notePreviewWrap");
+-      const show = wrap.hidden;
+-      wrap.hidden = !show;
+-      $("#btnNotePreview").textContent = show ? "隐藏预览" : "预览";
+-      if (show) $("#notePreview").innerHTML = renderMarkdown($("#noteBody").value);
+-    });
+-    $("#noteBody").addEventListener("input", () => {
+-      if (!$("#notePreviewWrap").hidden) {
+-        $("#notePreview").innerHTML = renderMarkdown($("#noteBody").value);
+-      }
+-    });
+-
+-    $("#btnSearch").addEventListener("click", () => {
+-      openSheet("sheetSearch");
+-      doSearch("");
+-      setTimeout(() => $("#searchInput").focus(), 280);
+-    });
+-    $("#searchInput").addEventListener("input", e => doSearch(e.target.value));
+ 
+     $("#swNotify").addEventListener("click", async () => {
+       if (!state.settings.notify) {
+@@ -7253,12 +7144,6 @@
+       save(); renderMe();
+       toast(state.settings.privacyNotify ? "锁屏隐私已开启" : "锁屏隐私已关闭");
+     });
+-
+-    $("#btnProjects").addEventListener("click", () => {
+-      renderProjectsSheet();
+-      openSheet("sheetProjects");
+-    });
+-    $("#btnAddProject").addEventListener("click", addProject);
+ 
+     $("#btnQuiet").addEventListener("click", () => {
+       $("#quietStart").value = state.settings.quietStart || "23:00";
+@@ -8011,6 +7896,12 @@
+       // P2-D：诊断实例取**当前绑定**（取值器）—— 与 backup/AI 同一条 F03 规矩。
+       get diagnostics() { return diagnostics; },
+       get setup() { return appSetup; },
++      get content() { return appContent; },
++      get contentSurface() {
++        if (!appContent) return { missing: true };
++        return { hasBind: typeof appContent.bind === "function", hasNotes: typeof appContent.openNote === "function",
++          hasSearch: typeof appContent.doSearch === "function", hasProjects: typeof appContent.deleteProject === "function" };
++      },
+       get setupSurface() {
+         if (!appSetup) return { missing: true };
+         return { hasBind: typeof appSetup.bind === "function", hasPrompt: typeof appSetup.maybePromptAndroidNotify === "function",

@@ -1,0 +1,177 @@
+{
+  "asExported": {
+    "ok": false,
+    "code": "field-type",
+    "path": "items[0].createdAt",
+    "message": "时间戳必须是有限数字（毫秒）或 null"
+  },
+  "afterItemTimeCoercion": {
+    "ok": false,
+    "code": "field-type",
+    "path": "notes[0].createdAt",
+    "message": "时间戳必须是有限数字（毫秒）或 null"
+  },
+  "afterBothTimeCoercions": {
+    "ok": true,
+    "code": "ok",
+    "path": "",
+    "message": "",
+    "sanitized": {
+      "app": "attention-inbox",
+      "schema": 5,
+      "exportedAt": "2026-09-22T05:42:22.770Z",
+      "items": [
+        {
+          "id": "p2c-item-1",
+          "title": "P2C 复验事项",
+          "note": "真机收口合成数据",
+          "tags": [
+            "复验"
+          ],
+          "url": "",
+          "projectId": "",
+          "priority": "normal",
+          "status": "waiting",
+          "triggerAt": null,
+          "windowStart": null,
+          "windowEnd": null,
+          "deadlineAt": null,
+          "repeat": null,
+          "createdAt": 1789948800000,
+          "acknowledgedAt": null,
+          "completedAt": null,
+          "snoozeCount": 0,
+          "deliveredAt": null,
+          "remindCount": 0,
+          "lastRemindAt": null,
+          "lastAlertShownAt": null,
+          "scheduleBasis": "wall-clock",
+          "localTrigger": null,
+          "snoozedAt": null,
+          "snoozeDelayMs": null,
+          "dismissedUntil": null,
+          "review_status": "READY",
+          "reviewed_at": null,
+          "sourceTitle": "",
+          "sourceApp": "",
+          "delivery_mode": "notification",
+          "isFallbackTrigger": false,
+          "deadlineStageKey": null,
+          "deadlineEvents": {},
+          "reminderEvents": {},
+          "deadlinePaused": false,
+          "ackAdvancedAt": null,
+          "rev": 1,
+          "seriesId": null,
+          "repeatParentId": null
+        },
+        {
+          "id": "i_1eofm1s6mubh9kso",
+          "title": "<personal-item-title-2>",
+          "note": "",
+          "tags": [],
+          "url": "",
+          "projectId": "",
+          "priority": "important",
+          "status": "waiting",
+          "triggerAt": 1790128800000,
+          "windowStart": null,
+          "windowEnd": null,
+          "deadlineAt": null,
+          "repeat": null,
+          "createdAt": 1790009208456,
+          "acknowledgedAt": null,
+          "completedAt": null,
+          "snoozeCount": 0,
+          "deliveredAt": null,
+          "remindCount": 0,
+          "lastRemindAt": null,
+          "lastAlertShownAt": null,
+          "scheduleBasis": "wall-clock",
+          "localTrigger": "2026-09-23T10:00",
+          "snoozedAt": null,
+          "snoozeDelayMs": null,
+          "dismissedUntil": null,
+          "review_status": "READY",
+          "reviewed_at": null,
+          "sourceTitle": "",
+          "sourceApp": "",
+          "delivery_mode": "alarm",
+          "isFallbackTrigger": false,
+          "deadlineStageKey": null,
+          "deadlineEvents": {},
+          "reminderEvents": {},
+          "deadlinePaused": false,
+          "ackAdvancedAt": null,
+          "rev": 1,
+          "seriesId": null,
+          "repeatParentId": null
+        }
+      ],
+      "notes": [
+        {
+          "id": "p2c-note-1",
+          "text": "P2C 复验笔记",
+          "createdAt": 1789948800000
+        }
+      ],
+      "projects": [
+        {
+          "id": "p2c-project-1",
+          "name": "P2C 复验项目",
+          "color": "#1b6b4a"
+        }
+      ],
+      "settings": {
+        "notify": false,
+        "dnd": true,
+        "importantRepeat": true,
+        "quietStart": "23:00",
+        "quietEnd": "07:30",
+        "dailySummary": false,
+        "privacyNotify": false,
+        "defaultDeliveryMode": "notification",
+        "userMode": "beginner",
+        "ai": {
+          "enabled": false,
+          "baseUrl": "",
+          "apiKey": "",
+          "model": "gpt-4o-mini",
+          "autoOnSave": false
+        }
+      }
+    }
+  },
+  "emptyBackup": {
+    "ok": true,
+    "code": "ok",
+    "path": "",
+    "message": "",
+    "sanitized": {
+      "app": "attention-inbox",
+      "schema": 5,
+      "exportedAt": "2026-09-22T13:00:00.000Z",
+      "items": [],
+      "notes": [],
+      "projects": [],
+      "settings": {}
+    }
+  },
+  "invalidQuietStart": {
+    "ok": true,
+    "code": "ok",
+    "path": "",
+    "message": "",
+    "sanitized": {
+      "app": "attention-inbox",
+      "schema": 5,
+      "exportedAt": "2026-09-22T13:00:00.000Z",
+      "items": [],
+      "notes": [],
+      "projects": [],
+      "settings": {
+        "quietStart": "not-a-time"
+      }
+    }
+  }
+}

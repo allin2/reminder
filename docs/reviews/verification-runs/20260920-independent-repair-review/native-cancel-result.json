@@ -1,0 +1,92 @@
+{
+  "id": "i_ggouutqdmu9calbm",
+  "oldTime": 1789894320000,
+  "newTime": 1789897920000,
+  "initial": [
+    {
+      "id": 2026865616,
+      "title": "安心收件箱提醒",
+      "body": "独立复验撤销-1789879925340",
+      "schedule": {
+        "at": "Sun Sep 20 16:52:00 GMT+08:00 2026",
+        "count": 1,
+        "repeats": false
+      },
+      "extra": {
+        "managedKind": "attention-reminder",
+        "scheduleVersion": 2,
+        "itemId": "i_ggouutqdmu9calbm",
+        "itemRev": 1,
+        "event": "primary",
+        "attempt": 0,
+        "scheduleKey": "2|i_ggouutqdmu9calbm|1|primary|0|1789894320000|安心收件箱提醒|独立复验撤销-1789879925340|attention-normal-v2",
+        "reminderKey": "0@1789894320000"
+      }
+    }
+  ],
+  "changed": [
+    {
+      "id": 723379514,
+      "title": "安心收件箱提醒",
+      "body": "独立复验撤销-1789879925340",
+      "schedule": {
+        "at": "Sun Sep 20 17:52:00 GMT+08:00 2026",
+        "count": 1,
+        "repeats": false
+      },
+      "extra": {
+        "managedKind": "attention-reminder",
+        "scheduleVersion": 2,
+        "itemId": "i_ggouutqdmu9calbm",
+        "itemRev": 2,
+        "event": "primary",
+        "attempt": 0,
+        "scheduleKey": "2|i_ggouutqdmu9calbm|2|primary|0|1789897920000|安心收件箱提醒|独立复验撤销-1789879925340|attention-normal-v2",
+        "reminderKey": "0@1789897920000"
+      }
+    }
+  ],
+  "cleared": [],
+  "final": {
+    "id": "i_ggouutqdmu9calbm",
+    "title": "独立复验撤销-1789879925340",
+    "note": "",
+    "tags": [],
+    "url": "",
+    "projectId": "",
+    "priority": "normal",
+    "status": "waiting",
+    "triggerAt": null,
+    "windowStart": null,
+    "windowEnd": null,
+    "deadlineAt": null,
+    "repeat": null,
+    "createdAt": 1789879925362,
+    "acknowledgedAt": null,
+    "completedAt": null,
+    "snoozeCount": 0,
+    "deliveredAt": null,
+    "remindCount": 0,
+    "lastRemindAt": null,
+    "lastAlertShownAt": null,
+    "scheduleBasis": "wall-clock",
+    "localTrigger": "",
+    "snoozedAt": null,
+    "snoozeDelayMs": null,
+    "dismissedUntil": null,
+    "review_status": "NEEDS_REVIEW",
+    "reviewed_at": null,
+    "sourceTitle": "",
+    "sourceApp": "",
+    "delivery_mode": "notification",
+    "isFallbackTrigger": false,
+    "deadlineStageKey": null,
+    "deadlineEvents": {},
+    "deadlinePaused": false,
+    "ackAdvancedAt": null,
+    "rev": 3,
+    "seriesId": null,
+    "repeatParentId": null
+  },
+  "pass": true
+}

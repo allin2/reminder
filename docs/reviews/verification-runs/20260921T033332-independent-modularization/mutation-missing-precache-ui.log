@@ -1,0 +1,5 @@
+[
+  'not-precached:lib/app-ui.js（全新安装 + 第一次就没网 ⇒ caches.match 未命中，脚本回落成 HTML，桥静默缺失）'
+]
+
+EXIT_CODE=1

@@ -1,0 +1,202 @@
+
+> attention-inbox@1.1.0 test
+> node test-unit.js && node test-native-reminders.js && node test-boot-combination.js && node test-smoke.js && node test-regressions.js && node scripts/verification/parse-single-source.js
+
+
+== parse-cn ==
+  ✓ 周五 trigger
+  ✓ 周五 confidence
+  ✓ 低置信度
+  ✓ 截止
+  ✓ 提前 trigger
+  ✓ biweek ack
+  ✓ monthEnd
+  ✓ nthWeekday
+
+== relative Chinese time ==
+  ✓ 三分钟以后提醒我 精确时长
+  ✓ 三分钟以后提醒我 具体时间判定
+  ✓ 三分钟以后提醒我 保留原文及标题
+  ✓ 三分钟后提醒我喝水 精确时长
+  ✓ 三分钟后提醒我喝水 具体时间判定
+  ✓ 三分钟后提醒我喝水 保留原文及标题
+  ✓ 3分钟之后提醒我喝水 精确时长
+  ✓ 3分钟之后提醒我喝水 具体时间判定
+  ✓ 3分钟之后提醒我喝水 保留原文及标题
+  ✓ ３ 分钟以后提醒我喝水 精确时长
+  ✓ ３ 分钟以后提醒我喝水 具体时间判定
+  ✓ ３ 分钟以后提醒我喝水 保留原文及标题
+  ✓ 过三分钟提醒我喝水 精确时长
+  ✓ 过三分钟提醒我喝水 具体时间判定
+  ✓ 过三分钟提醒我喝水 保留原文及标题
+  ✓ 再过 3 分钟提醒我喝水 精确时长
+  ✓ 再过 3 分钟提醒我喝水 具体时间判定
+  ✓ 再过 3 分钟提醒我喝水 保留原文及标题
+  ✓ 提醒我三分钟后喝水 精确时长
+  ✓ 提醒我三分钟后喝水 具体时间判定
+  ✓ 提醒我三分钟后喝水 保留原文及标题
+  ✓ 半小时后提醒我喝水 精确时长
+  ✓ 半小时后提醒我喝水 具体时间判定
+  ✓ 半小时后提醒我喝水 保留原文及标题
+  ✓ 半个小时以后提醒我喝水 精确时长
+  ✓ 半个小时以后提醒我喝水 具体时间判定
+  ✓ 半个小时以后提醒我喝水 保留原文及标题
+  ✓ 一个半小时之后提醒我喝水 精确时长
+  ✓ 一个半小时之后提醒我喝水 具体时间判定
+  ✓ 一个半小时之后提醒我喝水 保留原文及标题
+  ✓ 一个小时半后提醒我喝水 精确时长
+  ✓ 一个小时半后提醒我喝水 具体时间判定
+  ✓ 一个小时半后提醒我喝水 保留原文及标题
+  ✓ 一小时三十分钟后提醒我喝水 精确时长
+  ✓ 一小时三十分钟后提醒我喝水 具体时间判定
+  ✓ 一小时三十分钟后提醒我喝水 保留原文及标题
+  ✓ 一小时零五分钟后提醒我喝水 精确时长
+  ✓ 一小时零五分钟后提醒我喝水 具体时间判定
+  ✓ 一小时零五分钟后提醒我喝水 保留原文及标题
+  ✓ 四十五分钟后提醒我喝水 精确时长
+  ✓ 四十五分钟后提醒我喝水 具体时间判定
+  ✓ 四十五分钟后提醒我喝水 保留原文及标题
+  ✓ 一百二十分钟后提醒我喝水 精确时长
+  ✓ 一百二十分钟后提醒我喝水 具体时间判定
+  ✓ 一百二十分钟后提醒我喝水 保留原文及标题
+  ✓ 1.5小时后提醒我喝水 精确时长
+  ✓ 1.5小时后提醒我喝水 具体时间判定
+  ✓ 1.5小时后提醒我喝水 保留原文及标题
+  ✓ 三十秒后提醒我喝水 精确时长
+  ✓ 三十秒后提醒我喝水 具体时间判定
+  ✓ 三十秒后提醒我喝水 保留原文及标题
+  ✓ 两分钟三十秒后提醒我喝水 精确时长
+  ✓ 两分钟三十秒后提醒我喝水 具体时间判定
+  ✓ 两分钟三十秒后提醒我喝水 保留原文及标题
+  ✓ 半分钟后提醒我喝水 精确时长
+  ✓ 半分钟后提醒我喝水 具体时间判定
+  ✓ 半分钟后提醒我喝水 保留原文及标题
+  ✓ 两个钟头后提醒我喝水 精确时长
+  ✓ 两个钟头后提醒我喝水 具体时间判定
+  ✓ 两个钟头后提醒我喝水 保留原文及标题
+  ✓ 零分钟后提醒我 不冒充精确识别
+  ✓ 负三分钟后提醒我 不冒充精确识别
+  ✓ -3分钟后提醒我 不冒充精确识别
+  ✓ 几分钟后提醒我 不冒充精确识别
+  ✓ 三分钟后五分钟后提醒我 不冒充精确识别
+  ✓ 三分钟后明天提醒我 不冒充精确识别
+  ✓ 过三分钟前提醒我 不冒充精确识别
+  ✓ 一小时半半后提醒我 不冒充精确识别
+  ✓ 三分钟后9点提醒我 不冒充精确识别
+  ✓ 以后提醒我喝水 不冒充精确识别
+  ✓ 看三分钟视频 不冒充精确识别
+  ✓ 每三分钟后提醒我 不冒充精确识别
+  ✓ 三天以后按日历天且保留时刻
+  ✓ 天数可组合明确钟点
+  ✓ 清除时间但保留事项和标签
+  ✓ 正文含月报不误判为日期冲突
+
+== calendar anchors: 下周 / 下下周 / 每月N号 / 下个月N号 / X前 ==
+  ✓ H-01 下周三 = 09-23（不是 09-30）
+  ✓ H-01 下周日 = 09-27
+  ✓ H-01 两个分支统一为同一日历周
+  ✓ H-01 下下周一 = 09-28
+  ✓ H-02 每月15号 = 10-15（不是 10-18）
+  ✓ H-02 每月15号 周期为 monthly
+  ✓ H-02 次期仍锚 15 号（不再漂到 18）
+  ✓ H-02 每月N号 判为具体时间（不再进延后澄清）
+  ✓ H-03 下个月5号 = 10-05（不是 10-01）
+  ✓ H-03 号数不留在标题里
+  ✓ H-03 未给号数时仍为次月 1 号
+  ✓ H-03 下个月底 = 10-31（不是本月底 09-30）
+  ✓ H-03 月底 仍为当月末
+  ✓ N-04 每周X 不留孤立星期字
+  ✓ N-04 每周一 落在周一 09:00
+  ✓ N-04 下下周X 不留孤立「下」
+  ✓ N-04 本周X 不留孤立「本」
+  ✓ N-04 「半」= 30 分
+  ✓ N-04 「半」不留在标题
+  ✓ N-04 「9点前」产出截止（精确到那一刻）
+  ✓ N-04 「9点前」标题干净
+  ✓ N-04 「之前」产出截止（当天末尾）
+  ✓ N-04 「之前」标题干净
+  ✓ 既有：截止 + 提前五天 仍按原口径
+  ✓ 周期事项不因「最后一天」被加上截止
+  ✓ 周期事项仍是 monthEnd
+  ✓ 无截止语义时不产出截止
+
+== repeat ==
+  ✓ day +1
+  ✓ monthEnd last day
+  ✓ monthEnd is Jan 31 2026
+  ✓ nth weekday Tue
+  ✓ nth in 8-14
+  ✓ preview 5
+  ✓ preview ascending
+
+== reminder ==
+  ✓ 23:30 quiet
+  ✓ 08:00 not quiet
+  ✓ quiet end next 07:30
+  ✓ important realert after 30m
+  ✓ important no realert if disabled
+  ✓ important blocked by dismiss
+  ✓ critical realert after 15m
+  ✓ important max 4
+  ✓ normal no auto realert
+  ✓ acked no realert
+  ✓ window pick 10:00
+  ✓ markReminded +1
+
+== export-format ==
+  ✓ iso 带偏移
+  ✓ iso 往返仍是同一时刻
+  ✓ iso null 安全
+  ✓ utcStamp 以 Z 结尾
+  ✓ DEADLINE_LEAD_MS 与 reminder 一致
+  ✓ ack 周期一律不产出 rrule（硬红线）
+  ✓ day → FREQ=DAILY
+  ✓ monthEnd → BYMONTHDAY=-1
+  ✓ month → 锚在当日
+  ✓ nthWeekday → BYDAY=2TU
+  ✓ nthWeekday 最后 → BYDAY=-1MO
+  ✓ biweek 带 INTERVAL=2
+  ✓ week 带 BYDAY
+  ✓ 无截止 → NONE
+  ✓ 远期 → PENDING
+  ✓ 24h 内 → PROTECTED
+  ✓ 已过 → PASSED
+  ✓ 暂停 → PENDING
+  ✓ 已完成且曾 ACK → ACKNOWLEDGED
+  ✓ 已完成但无 ACK 记录 → 不假装 ACKNOWLEDGED
+  ✓ due → DELIVERED
+  ✓ time_source 只产出 PARSED / FALLBACK（D54）
+  ✓ 无触发时刻 → FALLBACK
+  ✓ 默认范围排除已归档
+  ✓ 默认范围包含待整理
+  ✓ counts 与条目数一致
+  ✓ 绝不导出密钥
+  ✓ 设置子集保留非密钥项
+  ✓ original_capture 如实为 null（不臆造）
+  ✓ derived 标注派生字段
+  ✓ importance 不算派生（它就是存储的 priority）
+  ✓ repeat.rrule 计入 derived
+  ✓ ack 周期条目的 rrule 为 null
+  ✓ ack 周期也不进 derived
+  ✓ ACK 未完成 → ACKNOWLEDGED + ACTIVE
+  ✓ 时间双写指向同一时刻
+node:fs:453
+    return binding.readFileUtf8(path, stringToFlags(options.flag));
+                   ^
+
+Error: ENOENT: no such file or directory, open '/Users/qlyf/Developer/reminder/docs/reviews/verification-runs/20260921T033332-independent-modularization/snapshot/docs/compose/spec/schemas/attention-inbox.export.v1.schema.json'
+    at Object.readFileSync (node:fs:453:20)
+    at Object.<anonymous> (/Users/qlyf/Developer/reminder/docs/reviews/verification-runs/20260921T033332-independent-modularization/snapshot/test-unit.js:356:32)
+    at Module._compile (node:internal/modules/cjs/loader:1376:14)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1435:10)
+    at Module.load (node:internal/modules/cjs/loader:1207:32)
+    at Module._load (node:internal/modules/cjs/loader:1023:12)
+    at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:135:12)
+    at node:internal/main/run_main_module:28:49 {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/qlyf/Developer/reminder/docs/reviews/verification-runs/20260921T033332-independent-modularization/snapshot/docs/compose/spec/schemas/attention-inbox.export.v1.schema.json'
+}
+
+Node.js v20.10.0

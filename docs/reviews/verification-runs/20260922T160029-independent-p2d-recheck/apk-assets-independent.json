@@ -1,0 +1,123 @@
+{
+  "apk": "/Users/qlyf/Developer/reminder/android/app/build/outputs/apk/debug/app-debug.apk",
+  "apk_sha256": "db82962601a5bf0c8ce4df15edd688e082f19fc0552fb90c929f9ecc24e693fa",
+  "web_resource_count": 19,
+  "all_match": true,
+  "missing": [],
+  "resources": [
+    {
+      "path": "index.html",
+      "source_sha256": "8d3aa59cfbb40dd1ff6c7520da62506656fd5d689705b9845a79ff0ee13f6c69",
+      "apk_sha256": "8d3aa59cfbb40dd1ff6c7520da62506656fd5d689705b9845a79ff0ee13f6c69",
+      "match": true
+    },
+    {
+      "path": "app-core.js",
+      "source_sha256": "205638c2adf37779350b36badf96f52b1fbed77034b75dc249a033105da84b79",
+      "apk_sha256": "205638c2adf37779350b36badf96f52b1fbed77034b75dc249a033105da84b79",
+      "match": true
+    },
+    {
+      "path": "sw.js",
+      "source_sha256": "3f9964180dd7b84cdf88f150890557a74604f9088ececfc0df049a2b9265244c",
+      "apk_sha256": "3f9964180dd7b84cdf88f150890557a74604f9088ececfc0df049a2b9265244c",
+      "match": true
+    },
+    {
+      "path": "lib/app-ai.js",
+      "source_sha256": "e55a286009b102129e2efe3e1bdc0a9dc8b9fbb2f1bd4884b02b56d8e20862d9",
+      "apk_sha256": "e55a286009b102129e2efe3e1bdc0a9dc8b9fbb2f1bd4884b02b56d8e20862d9",
+      "match": true
+    },
+    {
+      "path": "lib/app-backup.js",
+      "source_sha256": "6871da9c87c906b943762a75c73573cbf9b9c13c84c40e8860652f3a3c8104e0",
+      "apk_sha256": "6871da9c87c906b943762a75c73573cbf9b9c13c84c40e8860652f3a3c8104e0",
+      "match": true
+    },
+    {
+      "path": "lib/app-diagnostics.js",
+      "source_sha256": "36f91c1b7612628e6b7fab7c6d99560afd132f72ecc6c3df4622ad5df3c78b54",
+      "apk_sha256": "36f91c1b7612628e6b7fab7c6d99560afd132f72ecc6c3df4622ad5df3c78b54",
+      "match": true
+    },
+    {
+      "path": "lib/app-ui.js",
+      "source_sha256": "84e3e97663c2a7525ff25432f335a5a422791c83e26f81014b34443d63b632e4",
+      "apk_sha256": "84e3e97663c2a7525ff25432f335a5a422791c83e26f81014b34443d63b632e4",
+      "match": true
+    },
+    {
+      "path": "lib/date-utils.js",
+      "source_sha256": "7328f1e6ec1634a523deb21ba96ff9f9bf50f6b2ebe827b3a1e7765394cdb46c",
+      "apk_sha256": "7328f1e6ec1634a523deb21ba96ff9f9bf50f6b2ebe827b3a1e7765394cdb46c",
+      "match": true
+    },
+    {
+      "path": "lib/delivery-evidence.js",
+      "source_sha256": "7ee77186881d8462450c8fe8a550840647ec9d7626c259fb9e29768290062d03",
+      "apk_sha256": "7ee77186881d8462450c8fe8a550840647ec9d7626c259fb9e29768290062d03",
+      "match": true
+    },
+    {
+      "path": "lib/export-format.js",
+      "source_sha256": "37e60a07624c2dda1f1afadec8c1b2d61fe5b4a5a34b4c9c82f2c10ed0270423",
+      "apk_sha256": "37e60a07624c2dda1f1afadec8c1b2d61fe5b4a5a34b4c9c82f2c10ed0270423",
+      "match": true
+    },
+    {
+      "path": "lib/feedback.js",
+      "source_sha256": "bfe41dd392d5ff27d8c92b41154fc7e4e5a125eaaa1c8fae6ae3298186669eb3",
+      "apk_sha256": "bfe41dd392d5ff27d8c92b41154fc7e4e5a125eaaa1c8fae6ae3298186669eb3",
+      "match": true
+    },
+    {
+      "path": "lib/import-extract.js",
+      "source_sha256": "edd959660e9fb9525ba7c290cde3019a81d53f1873c0ce31af24da30e1714bfa",
+      "apk_sha256": "edd959660e9fb9525ba7c290cde3019a81d53f1873c0ce31af24da30e1714bfa",
+      "match": true
+    },
+    {
+      "path": "lib/import-map.js",
+      "source_sha256": "51fe5528bb7189400946685ab0b9e9819f71eae8096166920deb048a4a0529d9",
+      "apk_sha256": "51fe5528bb7189400946685ab0b9e9819f71eae8096166920deb048a4a0529d9",
+      "match": true
+    },
+    {
+      "path": "lib/native-reminders.js",
+      "source_sha256": "723f218c68866309f364e1e71968eb3efc6ae8b9b85aea7e211c878bee6e031b",
+      "apk_sha256": "723f218c68866309f364e1e71968eb3efc6ae8b9b85aea7e211c878bee6e031b",
+      "match": true
+    },
+    {
+      "path": "lib/parse-cn.js",
+      "source_sha256": "80c6e4db43ebe018c2fc90fbe1e8b1cc126be801aec5ae790490cb5fe53a9f9d",
+      "apk_sha256": "80c6e4db43ebe018c2fc90fbe1e8b1cc126be801aec5ae790490cb5fe53a9f9d",
+      "match": true
+    },
+    {
+      "path": "lib/reminder.js",
+      "source_sha256": "886ab9eb1a438b34122b71a461ed89a4a5b37fa85dedf8ee7afa558ee58f62fd",
+      "apk_sha256": "886ab9eb1a438b34122b71a461ed89a4a5b37fa85dedf8ee7afa558ee58f62fd",
+      "match": true
+    },
+    {
+      "path": "lib/repeat.js",
+      "source_sha256": "d48b8d67336976c4d514101b9990c904d8a00a9aa1ecabf3fe6abace86afd83a",
+      "apk_sha256": "d48b8d67336976c4d514101b9990c904d8a00a9aa1ecabf3fe6abace86afd83a",
+      "match": true
+    },
+    {
+      "path": "lib/storage.js",
+      "source_sha256": "b710ec23d819dfdc7eeeafa4688e44d69a11062a18c35b931c2240177721478a",
+      "apk_sha256": "b710ec23d819dfdc7eeeafa4688e44d69a11062a18c35b931c2240177721478a",
+      "match": true
+    },
+    {
+      "path": "lib/ui-format.js",
+      "source_sha256": "3dcccc41863aef136abe513527d79955c5b80be9d997f5ff90d68f0fd5850c9f",
+      "apk_sha256": "3dcccc41863aef136abe513527d79955c5b80be9d997f5ff90d68f0fd5850c9f",
+      "match": true
+    }
+  ]
+}

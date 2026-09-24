@@ -1,0 +1,12 @@
+{
+  "healthy": true,
+  "mutationsDetected": [
+    "gate",
+    "live-snapshot",
+    "fifo-lock",
+    "degraded-promoted",
+    "early-replay-clear",
+    "early-baseline"
+  ],
+  "sourceSha256": "d31a3112044af28c5efe14f770ccec99e9a5a3ce18172d81d79376ce3d6aab50"
+}

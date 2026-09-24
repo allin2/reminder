@@ -1,0 +1,26 @@
+[
+  {
+    "token": "1333403291:accca5ee-6125-4c78-ab0b-d78af2d3cc43",
+    "stage": "requested",
+    "at": 1789878039990,
+    "detail": "delayMs=24014"
+  },
+  {
+    "token": "1333403291:accca5ee-6125-4c78-ab0b-d78af2d3cc43",
+    "stage": "item",
+    "at": 1789878039992,
+    "detail": "verify-cold-log-1789878039894"
+  },
+  {
+    "token": "1333403291:accca5ee-6125-4c78-ab0b-d78af2d3cc43",
+    "stage": "unfreezerScheduled",
+    "at": 1789878040012,
+    "detail": "triggerAt=1789878064007;mode=alarmClock"
+  },
+  {
+    "token": "1333403291:accca5ee-6125-4c78-ab0b-d78af2d3cc43",
+    "stage": "scheduled",
+    "at": 1789878040014,
+    "detail": "triggerAt=1789878064007;mode=alarmClock"
+  }
+]

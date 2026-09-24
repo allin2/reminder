@@ -1,0 +1,1 @@
+{"delta_bytes": 19, "record_kind": "EMPTY_MARKER", "ops": 0, "seq": 548, "entries": [], "records_appended": 1, "batch_records": [{"record_index": 0, "offset": 0, "record_type": "FULL", "payload_bytes": 12, "seq": 548, "ops": 0}], "note": "新增 1 条记录、1 条含 WriteBatch（其中空标记 1 条），操作数合计 0", "verdict": "NO_OPERATIONS"}

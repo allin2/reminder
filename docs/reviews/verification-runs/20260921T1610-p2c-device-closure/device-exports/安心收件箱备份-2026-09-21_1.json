@@ -1,0 +1,83 @@
+{
+  "app": "attention-inbox",
+  "schema": 5,
+  "exportedAt": "2026-09-21T08:16:27.561Z",
+  "items": [
+    {
+      "id": "p2c-item-1",
+      "title": "P2C 复验事项",
+      "note": "真机收口合成数据",
+      "tags": [
+        "复验"
+      ],
+      "url": "",
+      "projectId": "",
+      "priority": "normal",
+      "status": "waiting",
+      "triggerAt": null,
+      "windowStart": null,
+      "windowEnd": null,
+      "deadlineAt": null,
+      "repeat": null,
+      "createdAt": "2026-09-21T08:00:00+08:00",
+      "acknowledgedAt": null,
+      "completedAt": null,
+      "snoozeCount": 0,
+      "deliveredAt": null,
+      "remindCount": 0,
+      "lastRemindAt": null,
+      "lastAlertShownAt": null,
+      "scheduleBasis": "wall-clock",
+      "localTrigger": null,
+      "snoozedAt": null,
+      "snoozeDelayMs": null,
+      "dismissedUntil": null,
+      "review_status": "READY",
+      "reviewed_at": null,
+      "sourceTitle": "",
+      "sourceApp": "",
+      "delivery_mode": "notification",
+      "isFallbackTrigger": false,
+      "deadlineStageKey": null,
+      "deadlineEvents": {},
+      "reminderEvents": {},
+      "deadlinePaused": false,
+      "ackAdvancedAt": null,
+      "rev": 1,
+      "seriesId": null,
+      "repeatParentId": null
+    }
+  ],
+  "notes": [
+    {
+      "id": "p2c-note-1",
+      "text": "P2C 复验笔记",
+      "createdAt": "2026-09-21T08:00:00+08:00"
+    }
+  ],
+  "projects": [
+    {
+      "id": "p2c-project-1",
+      "name": "P2C 复验项目",
+      "color": "#1b6b4a"
+    }
+  ],
+  "settings": {
+    "notify": false,
+    "dnd": true,
+    "importantRepeat": true,
+    "quietStart": "23:00",
+    "quietEnd": "07:30",
+    "dailySummary": false,
+    "privacyNotify": false,
+    "defaultDeliveryMode": "notification",
+    "userMode": "beginner",
+    "ai": {
+      "enabled": false,
+      "baseUrl": "",
+      "apiKey": "",
+      "model": "gpt-4o-mini",
+      "autoOnSave": false
+    }
+  }
+}

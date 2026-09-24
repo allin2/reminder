@@ -1,0 +1,18 @@
+## locale 矩阵：同一条语句在不同 LC_CTYPE 下的行为
+
+沙箱默认（脚本日常被执行的环境）：
+  LC_CTYPE="C"
+  裸形式: x=1234（a）
+  exit=0
+
+UTF-8 locale（用户终端 / CI 的环境）：
+  LC_ALL=en_US.UTF-8  裸形式 ->       bash: BASE_WALM-o: unbound variable
+  LC_ALL=en_US.UTF-8  花括号 -> x=1234（a）
+  LC_ALL=zh_CN.UTF-8  裸形式 ->       bash: BASE_WALM-o: unbound variable
+  LC_ALL=zh_CN.UTF-8  花括号 -> x=1234（a）
+  LC_ALL=C.UTF-8      裸形式 ->       bash: BASE_WALM-o: unbound variable
+  LC_ALL=C.UTF-8      花括号 -> x=1234（a）
+
+## 修复后静态扫描
+  scripts/verification/p2cr-coldstart-rounds.sh        裸(紧邻全角)=0  花括号引用=134
+  scripts/verification/p2cr-idb-fault-inject.sh        裸(紧邻全角)=0  花括号引用=9

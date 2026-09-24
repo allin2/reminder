@@ -1,0 +1,17 @@
+{
+  "controlReady": true,
+  "mutantReady": false,
+  "problems": [
+    {
+      "path": "AppViews.createAppViews()",
+      "expected": "instance",
+      "actual": "threw:AppViews missing dependencies: evidenceStatusFor",
+      "why": "lib/app-views.js 的 createAppViews 抛了异常 —— 展示能力无法装配"
+    }
+  ],
+  "puts": 0,
+  "schedules": 0,
+  "businessHeartbeat": false
+}
+EXACT_MISSING_DEP_FAIL_CLOSED=PASS
+EXIT=0

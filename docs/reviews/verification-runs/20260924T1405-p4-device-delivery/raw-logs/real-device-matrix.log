@@ -1,0 +1,54 @@
+==================================================================
+  Android Real Device Verification: P4 Final Candidate
+  Device: vivo V2238A (10ACBF2D3D000RS), Android 16
+  Candidate APK: /Users/qlyf/Developer/reminder/releases/candidates/20260924T1405-p4-device-candidate/app-debug.apk
+==================================================================
+
+[STEP 1] Pre-install Status Verification
+  Local Candidate SHA-256: e14438de38b3ee05d678e15025d09c1adceebb51f67f3f8d954fb26488fe20c1
+  Pre-install base.apk path: /data/app/~~f6u-dbaWJ0-chbS4N2KmXw==/space.alliswell.inbox-f2INISivuYX593d4PpjJDQ==/base.apk
+  Pre-install on-device base.apk SHA-256: e14438de38b3ee05d678e15025d09c1adceebb51f67f3f8d954fb26488fe20c1
+
+[STEP 2] Verifying or Performing In-place Overlay Installation (adb install -r)...
+  Candidate APK already installed on device with exact hash match!
+  Post-install on-device base.apk SHA-256: e14438de38b3ee05d678e15025d09c1adceebb51f67f3f8d954fb26488fe20c1
+  => EXACT MATCH: On-device APK matches candidate SHA-256!
+
+[STEP 3] Cold Start & State Authority Verification...
+  Boot state: {
+  "ready": true,
+  "isNative": true,
+  "sa": {
+    "status": "loaded",
+    "reason": "authoritative",
+    "backend": "idb",
+    "writesAllowed": true
+  },
+  "hasDetailStatusRow": true,
+  "itemsCount": 0
+}
+  Screenshot saved: raw-logs/01-boot-ready.png
+
+[STEP 4] Multi-Round Force-Stop Data Persistence with Isolated Item...
+  Seeded isolated item: id=P4_DEV_ISOLATED_1790233027, hash=71e129ee91aec4d7
+  Force-Stop Round 1...
+    Round 1 PASS: Item intact across force-stop, hash verified.
+  Force-Stop Round 2...
+    Round 2 PASS: Item intact across force-stop, hash verified.
+  Force-Stop Round 3...
+    Round 3 PASS: Item intact across force-stop, hash verified.
+  Screenshot saved: raw-logs/02-force-stop-survived.png
+
+[STEP 5] Native Reminder Schedule & Delivery Verification...
+  Scheduled isolated item for triggerAt=1790233047244 (in 5s)...
+  System notification posted for P4_DEV_ISOLATED_1790233027: True
+  Screenshot saved: raw-logs/03-notification-delivered.png
+  App delivery check: {"itemStatus": "waiting", "rowHtml": "<div class=\"detail-row\"><dt>提醒结果</dt><dd>正在处理 · 稍后会自动更新</dd></div>"}
+
+[STEP 6] Cleaning up Isolated Test Item...
+  Isolated test item removed cleanly, real data unchanged.
+  Screenshot saved: raw-logs/04-final-clean.png
+
+==================================================================
+  ALL ANDROID REAL DEVICE MATRIX TESTS PASSED!
+==================================================================

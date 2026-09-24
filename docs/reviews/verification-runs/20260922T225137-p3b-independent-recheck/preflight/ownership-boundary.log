@@ -1,0 +1,66 @@
+== unique ownership scan ==
+lib/app-persistence.js:26:    let lastReplayFailure = null;
+lib/app-persistence.js:27:    let commitChain = Promise.resolve();
+lib/app-persistence.js:28:    let committedAlarmItems = [];
+lib/app-persistence.js:47:    function authoritativeBackendMissing(storage) {
+lib/app-persistence.js:53:    function stateCameFromMirror() {
+lib/app-persistence.js:58:    function markPendingReplay(json) {
+lib/app-persistence.js:59:      if (!authoritativeWritesAllowed() || stateCameFromMirror()) return false;
+lib/app-persistence.js:63:    function readPendingReplay() {
+lib/app-persistence.js:71:    function clearPendingReplay() { try { deps.removeLocal(pendingKey); } catch (_) {} }
+lib/app-persistence.js:83:        const blocked = new Error("state-authority-" + stateAuthority);
+lib/app-persistence.js:84:        blocked.code = "state-authority-blocked";
+lib/app-persistence.js:92:        if (authoritativeBackendMissing(storage)) markPendingReplay(json);
+lib/app-persistence.js:95:        if (idbIsAvailable()) markPendingReplay(json);
+lib/app-persistence.js:104:      const next = commitChain.then(invoke, invoke);
+lib/app-persistence.js:105:      commitChain = next.then(function() {}, function() {});
+lib/app-persistence.js:115:      lastReplayFailure = null;
+lib/app-persistence.js:116:      const pending = readPendingReplay();
+lib/app-persistence.js:120:      catch (_) { clearPendingReplay(); return false; }
+lib/app-persistence.js:121:      if (!payload || typeof payload !== "object" || Array.isArray(payload)) { clearPendingReplay(); return false; }
+lib/app-persistence.js:124:      catch (error) { lastReplayFailure = error; return false; }
+lib/app-persistence.js:125:      try { await getStorage().save(payload); clearPendingReplay(); }
+lib/app-persistence.js:129:    function recoverFromMirror() {
+lib/app-persistence.js:151:          if (lastReplayFailure) return publishLoadReport(LOAD_FAILED, "pending-replay-failed", attempt, at, lastReplayFailure, storage);
+lib/app-persistence.js:153:            if (authoritativeBackendMissing(storage)) return publishLoadReport(LOAD_FAILED, "authoritative-backend-degraded", attempt, at, null, storage);
+lib/app-persistence.js:154:            if (mirrorBytes() != null || readPendingReplay() != null) return publishLoadReport(LOAD_FAILED, "authoritative-empty-with-residual-evidence", attempt, at, null, storage);
+lib/app-persistence.js:159:          if (authoritativeBackendMissing(storage)) return publishLoadReport(LOAD_FAILED, "degraded-mirror-unconfirmed-authority", attempt, at, null, storage);
+lib/app-persistence.js:163:      const mirror = recoverFromMirror();
+app-core.js:1092:          if (error && error.code === "state-authority-blocked") toast("数据尚未恢复 · 已阻止写入，请先重试恢复");
+app-core.js:1326:    const marker = "state-authority-recovery";
+app-core.js:1340:    box.setAttribute("data-state-authority-failure", "1");
+app-core.js:1396:      const existing = document.getElementById("state-authority-recovery");
+== core forwarders ==
+1418:      if (appPersistence) appPersistence.reopen();
+1559:  function currentPayload() {
+1560:    return appPersistence.currentPayload();
+1564:  function writeSnapshot(payload, options) {
+1565:    return appPersistence.writeSnapshot(payload, options);
+1574:  function authoritativeWritesAllowed() { return !!(appPersistence && appPersistence.authoritativeWritesAllowed()); }
+1575:  function runCommit(job, args) { return appPersistence.runCommit(job, args); }
+1576:  function saveAsync(options) { return appPersistence.saveAsync(options); }
+1580:  function save(options) {
+1582:    return appPersistence.save(options);
+1785:  function replayPendingSnapshot() { return appPersistence.replayPendingSnapshot(); }
+1786:  function loadAsync() { return appPersistence.loadAsync(); }
+1787:  function loadSync() { return appPersistence.loadSync(); }
+1788:  function load() { return appPersistence.load(); }
+1789:  function mirrorBytes() { return appPersistence ? appPersistence.authoritySnapshot().mirrorBytes : null; }
+3507:  function saveItemFromForm() { return appCapture.saveItemFromForm(); }
+3514:  function saveNote() { return appContent.saveNote(); }
+5564:        const committedItem = appPersistence ? appPersistence.committedItemById(alarm.itemId) : null;
+5846:      if (appPersistence && appPersistence.authoritySnapshot().status === LOAD_FAILED) {
+6054:      get storage() { return appPersistence ? appPersistence.getStorage() : null; },
+6150:      stateAuthority: () => Object.assign({}, appPersistence ? appPersistence.authoritySnapshot() : {
+== forbidden broad deps in module ==
+97:      // `snapshot` is the one JSON round-trip and is already detached from live state.
+== protected source hashes current vs P3A apk ==
+lib/storage.js current b710ec23d819dfdc7eeeafa4688e44d69a11062a18c35b931c2240177721478a
+lib/storage.js p3a-apk b710ec23d819dfdc7eeeafa4688e44d69a11062a18c35b931c2240177721478a
+lib/native-reminders.js current 723f218c68866309f364e1e71968eb3efc6ae8b9b85aea7e211c878bee6e031b
+lib/native-reminders.js p3a-apk 723f218c68866309f364e1e71968eb3efc6ae8b9b85aea7e211c878bee6e031b
+D41 block equal= False
+D41 old sha= bbab23dc9b5b8be529d1cfd656848ce905a211af06dbca62b552b0f605ee82fa
+D41 new sha= 2e9ec61fc95347d101f60c6b335391cb0d1a57e3d6357383887a067345849c41
+app-core bytes= 295649
+app-persistence bytes= 10454

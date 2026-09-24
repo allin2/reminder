@@ -1,0 +1,18 @@
+{
+ "toasts": [
+  [
+   1790236344441,
+   "导入成功 · 7 条事项\n    修改\n    撤销"
+  ]
+ ],
+ "diff": {
+  "storesAdded": [],
+  "storesRemoved": [],
+  "records": {
+   "kv/state": "identical"
+  },
+  "localStorage": {
+   "attention-inbox-v2": "identical"
+  }
+ }
+}

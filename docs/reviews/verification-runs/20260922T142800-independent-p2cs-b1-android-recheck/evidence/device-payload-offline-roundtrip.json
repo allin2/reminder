@@ -1,0 +1,64 @@
+{
+  "sourceSha256": "6871da9c87c906b943762a75c73573cbf9b9c13c84c40e8860652f3a3c8104e0",
+  "fixtureSha256": "ce58631d809ed48c8849d9077ea0d246fa9839c5f52c5e0fc535277ebea0b487",
+  "verdict": {
+    "ok": true,
+    "code": "ok",
+    "path": "",
+    "message": "",
+    "sanitizedCreatedAt": [
+      {
+        "id": "p2c-item-1",
+        "createdAt": 1789948800000,
+        "type": "number"
+      },
+      {
+        "id": "i_1eofm1s6mubh9kso",
+        "createdAt": 1790009208456,
+        "type": "number"
+      }
+    ],
+    "sanitizedNoteCreatedAt": [
+      {
+        "id": "p2c-note-1",
+        "createdAt": 1789948800000,
+        "type": "number"
+      }
+    ]
+  },
+  "inputUnchanged": true,
+  "negativeControls": {
+    "noTimezone": {
+      "ok": false,
+      "code": "field-type",
+      "path": "items[0].createdAt",
+      "message": "时间戳必须是有限数字（毫秒）、null 或带时区的 ISO 时间字符串",
+      "sanitizedCreatedAt": null,
+      "sanitizedNoteCreatedAt": null
+    },
+    "text": {
+      "ok": false,
+      "code": "field-type",
+      "path": "items[0].createdAt",
+      "message": "时间戳必须是有限数字（毫秒）、null 或带时区的 ISO 时间字符串",
+      "sanitizedCreatedAt": null,
+      "sanitizedNoteCreatedAt": null
+    },
+    "negative": {
+      "ok": false,
+      "code": "field-type",
+      "path": "items[0].createdAt",
+      "message": "时间戳必须是有限数字（毫秒）、null 或带时区的 ISO 时间字符串",
+      "sanitizedCreatedAt": null,
+      "sanitizedNoteCreatedAt": null
+    },
+    "preEpoch": {
+      "ok": false,
+      "code": "field-type",
+      "path": "items[0].createdAt",
+      "message": "时间戳必须是有限数字（毫秒）、null 或带时区的 ISO 时间字符串",
+      "sanitizedCreatedAt": null,
+      "sanitizedNoteCreatedAt": null
+    }
+  }
+}

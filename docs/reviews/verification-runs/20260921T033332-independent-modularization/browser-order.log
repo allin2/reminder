@@ -1,0 +1,70 @@
+[
+  {
+    "case": "parser-after-core",
+    "initial": {
+      "ready": true,
+      "failure": null,
+      "panel": false,
+      "visibleInputs": [
+        "capText",
+        "capTrigger",
+        "snoozeCustom",
+        "noteTitle",
+        "noteBody",
+        "searchInput",
+        "projName",
+        "quietStart",
+        "quietEnd",
+        "aiBaseUrl",
+        "aiApiKey",
+        "aiModel",
+        "lowConfCustom",
+        "reviewStart",
+        "reviewEnd"
+      ],
+      "audit": {
+        "errors": [],
+        "opens": 1,
+        "puts": 0,
+        "intervals": [
+          2000,
+          15000
+        ]
+      }
+    },
+    "capture": {
+      "open": true,
+      "value": "三分钟后提醒我独立验收"
+    },
+    "saveClick": true,
+    "saved": {
+      "items": [],
+      "audit": {
+        "errors": [
+          "Uncaught TypeError: parseChineseTime is not a function",
+          "App error: Uncaught TypeError: parseChineseTime is not a function TypeError: parseChineseTime is not a function",
+          "Uncaught TypeError: parseChineseTime is not a function",
+          "App error: Uncaught TypeError: parseChineseTime is not a function TypeError: parseChineseTime is not a function"
+        ],
+        "opens": 1,
+        "puts": 1,
+        "intervals": [
+          2000,
+          15000
+        ]
+      }
+    },
+    "reloaded": {
+      "items": [],
+      "audit": {
+        "errors": [],
+        "opens": 1,
+        "puts": 0,
+        "intervals": [
+          2000,
+          15000
+        ]
+      }
+    }
+  }
+]

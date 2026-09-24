@@ -1,0 +1,24 @@
+ M app-core.js
+ M index.html
+ M lib/native-reminders.js
+ M lib/parse-cn.js
+ M lib/repeat.js
+ M lib/storage.js
+ M package.json
+ D scripts/verification/parse-parity.js
+ M scripts/verification/production-scripts.js
+ M sw.js
+ M test-boot-combination.js
+ M test-native-reminders.js
+ M test-regressions.js
+ M test-smoke.js
+ M test-unit.js
+?? docs/handoff/2026-09-21-app-core-modularization-plan.md
+?? docs/handoff/2026-09-22-p2d-app-diagnostics-extraction-plan.md
+?? docs/reviews/code-optimization-device-acceptance-20260920T183614.md
+?? docs/reviews/directboot-locked-route-and-control-closure-2026-09-19.md
+?? docs/reviews/foreground-system-banner-implementation-2026-09-19.md
+?? docs/reviews/oppo-current-build-live-verification-2026-09-19.md
+?? docs/reviews/repair-plan-background-delivery-2026-09-20.md
+?? docs/reviews/repair-plan-device-blockers-2026-09-20.md
+?? docs/reviews/verification-runs/20260919-foreground-banner-cold/

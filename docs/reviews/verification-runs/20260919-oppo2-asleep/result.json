@@ -1,0 +1,139 @@
+{
+  "scenario": "asleep",
+  "itemId": "oppo2_asleep_1789825202",
+  "triggerAt": 1789825279000,
+  "observeSec": 25,
+  "screenAtTrigger": "Dozing",
+  "screenSamples": [
+    [
+      1789825208074,
+      "Dozing"
+    ],
+    [
+      1789825211286,
+      "Dozing"
+    ],
+    [
+      1789825214452,
+      "Dozing"
+    ],
+    [
+      1789825217624,
+      "Dozing"
+    ],
+    [
+      1789825220789,
+      "Dozing"
+    ],
+    [
+      1789825223979,
+      "Dozing"
+    ],
+    [
+      1789825227294,
+      "Dozing"
+    ],
+    [
+      1789825230644,
+      "Dozing"
+    ],
+    [
+      1789825233988,
+      "Dozing"
+    ],
+    [
+      1789825237168,
+      "Dozing"
+    ],
+    [
+      1789825240352,
+      "Dozing"
+    ],
+    [
+      1789825243593,
+      "Dozing"
+    ],
+    [
+      1789825246845,
+      "Dozing"
+    ],
+    [
+      1789825250105,
+      "Dozing"
+    ],
+    [
+      1789825253361,
+      "Dozing"
+    ],
+    [
+      1789825256537,
+      "Dozing"
+    ],
+    [
+      1789825259712,
+      "Dozing"
+    ],
+    [
+      1789825262892,
+      "Dozing"
+    ],
+    [
+      1789825266074,
+      "Dozing"
+    ],
+    [
+      1789825269257,
+      "Dozing"
+    ],
+    [
+      1789825272509,
+      "Dozing"
+    ],
+    [
+      1789825275724,
+      "Dozing"
+    ],
+    [
+      1789825280067,
+      "Dozing"
+    ],
+    [
+      1789825283243,
+      "Dozing"
+    ],
+    [
+      1789825286424,
+      "Dozing"
+    ],
+    [
+      1789825289673,
+      "Dozing"
+    ],
+    [
+      1789825292885,
+      "Dozing"
+    ],
+    [
+      1789825296068,
+      "Dozing"
+    ],
+    [
+      1789825299244,
+      "Dozing"
+    ],
+    [
+      1789825302448,
+      "Dozing"
+    ]
+  ],
+  "received": false,
+  "windowVisible": false,
+  "lagMs": null,
+  "environment": null,
+  "stages": [
+    "requested",
+    "item",
+    "unfreezerScheduled",
+    "scheduled"
+  ]
+}

@@ -1,0 +1,7 @@
+checked_at_local=2026-09-20
+adb=/Users/qlyf/Library/Android/sdk/platform-tools/adb
+command=adb devices -l
+output=List of devices attached
+recognized_devices=0
+result=NOT_PERFORMED
+note=No connected or authorized Android device was visible to adb. Browser evidence is not treated as Android device evidence.

@@ -1,0 +1,34 @@
+== P3-I-R / F1 覆盖面：7 个绑定模块的后段失败 / 回滚 / 重试不翻倍 ==
+  lib/app-events.js  (bind)  T=53  N=53
+  ✓ lib/app-events.js：注入的晚段失败真的被抛出
+  ✓ lib/app-events.js：抛错时前面已经挂上了监听器（否则本用例没有牙齿）
+  ✓ lib/app-events.js：失败后已挂上的监听器被回滚摘净（net===0）
+  ✓ lib/app-events.js：重试后净监听器数 === N 而不是 2N（不翻倍）
+  lib/app-content.js  (bind)  T=9  N=9
+  ✓ lib/app-content.js：注入的晚段失败真的被抛出
+  ✓ lib/app-content.js：抛错时前面已经挂上了监听器（否则本用例没有牙齿）
+  ✓ lib/app-content.js：失败后已挂上的监听器被回滚摘净（net===0）
+  ✓ lib/app-content.js：重试后净监听器数 === N 而不是 2N（不翻倍）
+  lib/app-capture.js  (bind)  T=15  N=15
+  ✓ lib/app-capture.js：注入的晚段失败真的被抛出
+  ✓ lib/app-capture.js：抛错时前面已经挂上了监听器（否则本用例没有牙齿）
+  ✓ lib/app-capture.js：失败后已挂上的监听器被回滚摘净（net===0）
+  ✓ lib/app-capture.js：重试后净监听器数 === N 而不是 2N（不翻倍）
+  lib/app-diagnostics.js  (bind)  T=17  N=17
+  ✓ lib/app-diagnostics.js：注入的晚段失败真的被抛出
+  ✓ lib/app-diagnostics.js：抛错时前面已经挂上了监听器（否则本用例没有牙齿）
+  ✓ lib/app-diagnostics.js：失败后已挂上的监听器被回滚摘净（net===0）
+  ✓ lib/app-diagnostics.js：重试后净监听器数 === N 而不是 2N（不翻倍）
+  lib/app-setup.js  (bind)  T=1  N=1
+  ✓ lib/app-setup.js：T=1，结构上不存在「部分注册后抛错」，改测幂等不翻倍
+  lib/app-alerts.js  (bindAlertControls)  T=4  N=4
+  ✓ lib/app-alerts.js：注入的晚段失败真的被抛出
+  ✓ lib/app-alerts.js：抛错时前面已经挂上了监听器（否则本用例没有牙齿）
+  ✓ lib/app-alerts.js：失败后已挂上的监听器被回滚摘净（net===0）
+  ✓ lib/app-alerts.js：重试后净监听器数 === N 而不是 2N（不翻倍）
+  lib/app-review.js  (bindReviewControls)  T=5  N=5
+  ✓ lib/app-review.js：注入的晚段失败真的被抛出
+  ✓ lib/app-review.js：抛错时前面已经挂上了监听器（否则本用例没有牙齿）
+  ✓ lib/app-review.js：失败后已挂上的监听器被回滚摘净（net===0）
+  ✓ lib/app-review.js：重试后净监听器数 === N 而不是 2N（不翻倍）
+PASS 25 assertions

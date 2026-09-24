@@ -1,0 +1,67 @@
+{
+  "lib/app-platform.js": {
+    "expected": "10a2118c85ff9383ddaaffc494a4f949d001246d4ddab38b2e4c087346252cc5",
+    "actual": "10a2118c85ff9383ddaaffc494a4f949d001246d4ddab38b2e4c087346252cc5",
+    "match": true
+  },
+  "sw.js": {
+    "expected": "1135264eccca2a0a36376616c74ca2d7367e1f3467c4eb2d3cdf540ab39f880a",
+    "actual": "1135264eccca2a0a36376616c74ca2d7367e1f3467c4eb2d3cdf540ab39f880a",
+    "match": true
+  },
+  "app-core.js": {
+    "expected": "12e841dcb401f584f17d3b0abf21d534315e0a6f89f515e172f38bdfe0c61e9e",
+    "actual": "12e841dcb401f584f17d3b0abf21d534315e0a6f89f515e172f38bdfe0c61e9e",
+    "match": true
+  },
+  "index.html": {
+    "expected": "0cc4e73abd6a7d7303e662d695bfbe4170e5834bf0b4192180158ff4dd5d46d8",
+    "actual": "0cc4e73abd6a7d7303e662d695bfbe4170e5834bf0b4192180158ff4dd5d46d8",
+    "match": true
+  },
+  "lib/app-native-coordinator.js": {
+    "expected": "3de9902b0cb97d3159b5c710a1698908211189c7de71861caf69637b0f30948f",
+    "actual": "3de9902b0cb97d3159b5c710a1698908211189c7de71861caf69637b0f30948f",
+    "match": true
+  },
+  "scripts/verification/production-scripts.js": {
+    "expected": "734d23bfcefaa24ee76adb19cd6936c0f9cd2002475ff6f5731d59fbada1b2a7",
+    "actual": "734d23bfcefaa24ee76adb19cd6936c0f9cd2002475ff6f5731d59fbada1b2a7",
+    "match": true
+  },
+  "scripts/verification/p3h-platform-tests.js": {
+    "expected": "2d5e1a018c8cae75dae357c6c4a266438189bf8d29631e69d04020102555bf9b",
+    "actual": "2d5e1a018c8cae75dae357c6c4a266438189bf8d29631e69d04020102555bf9b",
+    "match": true
+  },
+  "scripts/verification/browser-platform-check.py": {
+    "expected": "8f0a41fbb2cf47544c8801ef03cd7c8bec8db4fdee3e142edc1174bce99c73e5",
+    "actual": "8f0a41fbb2cf47544c8801ef03cd7c8bec8db4fdee3e142edc1174bce99c73e5",
+    "match": true
+  },
+  "scripts/verification/p3h-device-verify.py": {
+    "expected": "0443ba9e861242d3df1a652a42a7ae97526602e80481016d56b4ebacefaa57cd",
+    "actual": "0443ba9e861242d3df1a652a42a7ae97526602e80481016d56b4ebacefaa57cd",
+    "match": true
+  },
+  "test-boot-combination.js": {
+    "expected": "7e8a3de2ecefaf66c5fc6b1e556517db4ed07a8a40951bcd4a1bc5e274dc004c",
+    "actual": "7e8a3de2ecefaf66c5fc6b1e556517db4ed07a8a40951bcd4a1bc5e274dc004c",
+    "match": true
+  },
+  "package.json": {
+    "expected": "a1056927ae22dcd74f484b316c8b372be4f9dcc06349c2852826b8b26515c811",
+    "actual": "a1056927ae22dcd74f484b316c8b372be4f9dcc06349c2852826b8b26515c811",
+    "match": true
+  },
+  "releases/candidates/20260923T1745-p3hr-candidate/app-debug.apk": {
+    "expected": "dc1f21fe1578f4a8e8cc49eb0d4ed5a1e68fa4a1a521d2e19df667fc3e859554",
+    "actual": "dc1f21fe1578f4a8e8cc49eb0d4ed5a1e68fa4a1a521d2e19df667fc3e859554",
+    "match": true
+  },
+  "releases/candidates/20260923T1719-p3h-candidate/app-debug.apk": {
+    "expected": "6fd03728a329f05e6a3676718779a161a0863ba6c76c99f2511072050c9fada0",
+    "actual": "6fd03728a329f05e6a3676718779a161a0863ba6c76c99f2511072050c9fada0",
+    "match": true
+  }
+}

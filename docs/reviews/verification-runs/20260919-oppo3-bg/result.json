@@ -1,0 +1,325 @@
+{
+  "scenario": "bg",
+  "itemId": "oppo3_bg_1789825708",
+  "triggerAt": 1789825765000,
+  "observeSec": 45,
+  "envNote": "HOME→com.android.settings 前台(亮屏)",
+  "screenAtTrigger": "Awake",
+  "keyguardAtTrigger": "false",
+  "screenSamples": [
+    [
+      1789825717845,
+      "Awake",
+      "false"
+    ],
+    [
+      1789825721150,
+      "Awake",
+      "false"
+    ],
+    [
+      1789825724401,
+      "Awake",
+      "false"
+    ],
+    [
+      1789825727692,
+      "Awake",
+      "false"
+    ],
+    [
+      1789825730977,
+      "Awake",
+      "false"
+    ],
+    [
+      1789825734281,
+      "Awake",
+      "false"
+    ],
+    [
+      1789825737543,
+      "Awake",
+      "false"
+    ],
+    [
+      1789825740866,
+      "Awake",
+      "false"
+    ],
+    [
+      1789825744131,
+      "Awake",
+      "false"
+    ],
+    [
+      1789825747399,
+      "Awake",
+      "false"
+    ],
+    [
+      1789825750667,
+      "Awake",
+      "false"
+    ],
+    [
+      1789825753931,
+      "Awake",
+      "false"
+    ],
+    [
+      1789825757199,
+      "Awake",
+      "false"
+    ],
+    [
+      1789825760452,
+      "Awake",
+      "false"
+    ],
+    [
+      1789825763839,
+      "Awake",
+      "false"
+    ],
+    [
+      1789825767098,
+      "Awake",
+      "false"
+    ],
+    [
+      1789825770861,
+      "Awake",
+      "false"
+    ],
+    [
+      1789825774565,
+      "Awake",
+      "false"
+    ],
+    [
+      1789825777846,
+      "Awake",
+      "false"
+    ],
+    [
+      1789825781155,
+      "Awake",
+      "false"
+    ],
+    [
+      1789825784501,
+      "Awake",
+      "false"
+    ],
+    [
+      1789825787871,
+      "Awake",
+      "false"
+    ],
+    [
+      1789825791232,
+      "Awake",
+      "false"
+    ],
+    [
+      1789825794599,
+      "Awake",
+      "false"
+    ],
+    [
+      1789825797948,
+      "Awake",
+      "false"
+    ],
+    [
+      1789825801341,
+      "Awake",
+      "false"
+    ],
+    [
+      1789825804698,
+      "Awake",
+      "false"
+    ],
+    [
+      1789825808034,
+      "Awake",
+      "false"
+    ]
+  ],
+  "screenshots": [
+    "/Users/qlyf/Developer/reminder/docs/reviews/verification-runs/20260919-oppo3-bg/shot_bg_+3s.png",
+    "/Users/qlyf/Developer/reminder/docs/reviews/verification-runs/20260919-oppo3-bg/shot_bg_+8s.png"
+  ],
+  "notifLines": "45",
+  "received": true,
+  "windowVisible": true,
+  "lagMs": 86,
+  "environment": "screenOn=true;locked=false;inCall=false;path=direct+banner",
+  "stages": [
+    "requested",
+    "item",
+    "unfreezerScheduled",
+    "scheduled",
+    "carrierRecorded",
+    "ringStarted",
+    "received",
+    "environment",
+    "ringServiceRequested",
+    "launchRequested",
+    "systemNotificationPosted",
+    "notifyReturned",
+    "ringDuplicateStart",
+    "created",
+    "localFallbackStopped",
+    "resumed",
+    "localFallbackStopped",
+    "focus",
+    "windowVisible",
+    "windowSample",
+    "windowSample",
+    "windowSample",
+    "cancelled"
+  ],
+  "traceRows": [
+    {
+      "token": "471126791:0d6a85fb-20a1-4514-a690-f12e8a776d92",
+      "stage": "requested",
+      "at": 1789825710673,
+      "detail": "delayMs=54340"
+    },
+    {
+      "token": "471126791:0d6a85fb-20a1-4514-a690-f12e8a776d92",
+      "stage": "item",
+      "at": 1789825710679,
+      "detail": "oppo3_bg_1789825708"
+    },
+    {
+      "token": "471126791:0d6a85fb-20a1-4514-a690-f12e8a776d92",
+      "stage": "unfreezerScheduled",
+      "at": 1789825710702,
+      "detail": "triggerAt=1789825765022;mode=alarmClock"
+    },
+    {
+      "token": "471126791:0d6a85fb-20a1-4514-a690-f12e8a776d92",
+      "stage": "scheduled",
+      "at": 1789825710706,
+      "detail": "triggerAt=1789825765022;mode=alarmClock"
+    },
+    {
+      "token": "471126791:0d6a85fb-20a1-4514-a690-f12e8a776d92",
+      "stage": "carrierRecorded",
+      "at": 1789825765079,
+      "detail": "sound=native;vibrate=native;foreground=true"
+    },
+    {
+      "token": "471126791:0d6a85fb-20a1-4514-a690-f12e8a776d92",
+      "stage": "ringStarted",
+      "at": 1789825765081,
+      "detail": "carrier=native;foreground=true;sound=true;vibrate=true"
+    },
+    {
+      "token": "471126791:0d6a85fb-20a1-4514-a690-f12e8a776d92",
+      "stage": "received",
+      "at": 1789825765086,
+      "detail": ""
+    },
+    {
+      "token": "471126791:0d6a85fb-20a1-4514-a690-f12e8a776d92",
+      "stage": "environment",
+      "at": 1789825765090,
+      "detail": "screenOn=true;locked=false;inCall=false;path=direct+banner"
+    },
+    {
+      "token": "471126791:0d6a85fb-20a1-4514-a690-f12e8a776d92",
+      "stage": "ringServiceRequested",
+      "at": 1789825765097,
+      "detail": "foreground service asked to hold sound+vibration"
+    },
+    {
+      "token": "471126791:0d6a85fb-20a1-4514-a690-f12e8a776d92",
+      "stage": "launchRequested",
+      "at": 1789825765112,
+      "detail": "direct launch alongside full-screen intent"
+    },
+    {
+      "token": "471126791:0d6a85fb-20a1-4514-a690-f12e8a776d92",
+      "stage": "systemNotificationPosted",
+      "at": 1789825765118,
+      "detail": "NotificationManager accepted active delivery"
+    },
+    {
+      "token": "471126791:0d6a85fb-20a1-4514-a690-f12e8a776d92",
+      "stage": "notifyReturned",
+      "at": 1789825765119,
+      "detail": "system notification posted; fullScreenIntent=true; sound+vibration carried by AlarmRingService; banner visibility is OEM-controlled"
+    },
+    {
+      "token": "471126791:0d6a85fb-20a1-4514-a690-f12e8a776d92",
+      "stage": "ringDuplicateStart",
+      "at": 1789825765121,
+      "detail": "same delivery already ringing; kept as-is"
+    },
+    {
+      "token": "471126791:0d6a85fb-20a1-4514-a690-f12e8a776d92",
+      "stage": "created",
+      "at": 1789825765133,
+      "detail": "test=false"
+    },
+    {
+      "token": "471126791:0d6a85fb-20a1-4514-a690-f12e8a776d92",
+      "stage": "localFallbackStopped",
+      "at": 1789825765150,
+      "detail": "service-owned sound is stopped separately"
+    },
+    {
+      "token": "471126791:0d6a85fb-20a1-4514-a690-f12e8a776d92",
+      "stage": "resumed",
+      "at": 1789825765152,
+      "detail": "lifecycle only"
+    },
+    {
+      "token": "471126791:0d6a85fb-20a1-4514-a690-f12e8a776d92",
+      "stage": "localFallbackStopped",
+      "at": 1789825765153,
+      "detail": "service-owned sound is stopped separately"
+    },
+    {
+      "token": "471126791:0d6a85fb-20a1-4514-a690-f12e8a776d92",
+      "stage": "focus",
+      "at": 1789825765198,
+      "detail": "true"
+    },
+    {
+      "token": "471126791:0d6a85fb-20a1-4514-a690-f12e8a776d92",
+      "stage": "windowVisible",
+      "at": 1789825765199,
+      "detail": "via=focus;focused=true;shown=true"
+    },
+    {
+      "token": "471126791:0d6a85fb-20a1-4514-a690-f12e8a776d92",
+      "stage": "windowSample",
+      "at": 1789825765453,
+      "detail": "after=300ms;focus=true;shown=true;visibility=0;playing=false"
+    },
+    {
+      "token": "471126791:0d6a85fb-20a1-4514-a690-f12e8a776d92",
+      "stage": "windowSample",
+      "at": 1789825765955,
+      "detail": "after=800ms;focus=true;shown=true;visibility=0;playing=false"
+    },
+    {
+      "token": "471126791:0d6a85fb-20a1-4514-a690-f12e8a776d92",
+      "stage": "windowSample",
+      "at": 1789825766660,
+      "detail": "after=1500ms;focus=true;shown=true;visibility=0;playing=false"
+    },
+    {
+      "token": "471126791:0d6a85fb-20a1-4514-a690-f12e8a776d92",
+      "stage": "cancelled",
+      "at": 1789825766981,
+      "detail": "cancel API succeeded"
+    }
+  ]
+}

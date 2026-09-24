@@ -1,0 +1,19 @@
+{
+  "sha256": "dfceaf1c673d8655562c1fad3ed67bae1caf8e84b7bcdd7dd0aef37dae125b63",
+  "webResourcesMatched": [
+    "index.html",
+    "app-core.js",
+    "sw.js",
+    "manifest.json",
+    "lib/feedback.js",
+    "lib/delivery-evidence.js",
+    "lib/import-extract.js",
+    "lib/parse-cn.js",
+    "lib/export-format.js",
+    "lib/native-reminders.js",
+    "lib/import-map.js",
+    "lib/reminder.js",
+    "lib/repeat.js",
+    "lib/storage.js"
+  ]
+}

@@ -1,0 +1,2 @@
+online upgrade: {'ready': True, 'controller': True, 'keys': ['attention-inbox-v40']} new caches: ['attention-inbox-v42']
+fresh-process offline: {'ready': True, 'controller': True, 'keys': ['attention-inbox-v42'], 'item': True}

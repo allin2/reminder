@@ -1,0 +1,5 @@
+two-record-real-op expected_exit=2 actual_exit=2
+marker-only expected_exit=0 actual_exit=0
+truncated expected_exit=3 actual_exit=3
+rotated-prefix expected_exit=3 actual_exit=3
+no-baseline expected_exit=3 actual_exit=3

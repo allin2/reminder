@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+
+        <activity
+            android:configChanges="orientation|keyboardHidden|keyboard|screenSize|locale|smallestScreenSize|screenLayout|uiMode"
+            android:name=".MainActivity"
+            android:label="@string/title_activity_main"
+            android:theme="@style/AppTheme.NoActionBarLaunch"
+            android:launchMode="singleTask"
+            android:exported="true">
+
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
+        </activity>
+
+        <activity
+            android:name=".AlarmActivity"
+            android:directBootAware="true"
+            android:excludeFromRecents="true"
+            android:exported="false"
+            android:launchMode="singleInstance"
+            android:showOnLockScreen="true"
+            android:showWhenLocked="true"
+            android:turnScreenOn="true"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:theme="@style/AppTheme.Alarm" />
+
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths"></meta-data>
+        </provider>
+
+        <receiver
+            android:name="com.capacitorjs.plugins.localnotifications.LocalNotificationRestoreReceiver"
+            android:directBootAware="true"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
+            </intent-filter>
+        </receiver>
+
+        <receiver
+            android:name=".AlarmTestReceiver"
+            android:directBootAware="true"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="space.alliswell.inbox.ACTION_TEST_ALARM" />
+            </intent-filter>
+        </receiver>
+
+        <receiver
+            android:name=".AlarmStopReceiver"
+            android:directBootAware="true"
+            android:exported="false" />
+
+        <!--
+          F3 + D59：闹钟档的「解冻投递器」兼「铃声与振动的唯一持有者」。
+
+          两个身份共用一个服务，因为它们的触发时刻本来就是同一个（闹钟到点）：
+          · 解冻：vivo/OriginOS 的 fast_freezer 会把后台进程冻进 cgroup，广播投递不会解冻它
+            （真机实测晚 77 秒），服务启动会强制把进程拉起来；
+          · 响铃：D59 把声音与振动的所有权从通知收回应用，由本服务自播
+            （MediaPlayer + USAGE_ALARM / Vibrator 波形）。
+
+          类型必须是 mediaPlayback 而不是 shortService：shortService 有硬性时长上限，
+          而闹钟要一直响到用户处理或撞上 MAX_AGE_MS(6h) 兜底。
+          mediaPlayback 类型的 FGS 不需要 POST_NOTIFICATIONS 权限即可运行。
+        -->
+        <service
+            android:name=".AlarmRingService"
+            android:directBootAware="true"
+            android:exported="false"
+            android:foregroundServiceType="mediaPlayback" />
+
+        <!-- P1-4 & Phase D：恢复 SystemBridge 排下的全屏闹钟（开机、更新、时区变更与时间调整） -->
+        <receiver
+            android:name=".BootRestoreReceiver"
+            android:enabled="true"
+            android:exported="true"
+            android:directBootAware="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.LOCKED_BOOT_COMPLETED" />
+                <action android:name="android.intent.action.USER_UNLOCKED" />
+                <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
+                <action android:name="android.intent.action.TIME_SET" />
+                <action android:name="android.intent.action.TIMEZONE_CHANGED" />
+            </intent-filter>
+        </receiver>
+
+        <!--
+          D64：精确闹钟权限被**授予**后自动重排已持久化的闹钟。
+          官方迁移清单明写要监听 ACTION_SCHEDULE_EXACT_ALARM_PERMISSION_STATE_CHANGED；
+          缺它会出现静默失效：用户在设置里刚把权限打开，此前降级成非精确的闹钟
+          却不会变回精确，要等到下次开机才恢复。
+          exported=false 仍可收到系统广播（非导出接收器可接收系统发送的广播），
+          同时避免第三方应用伪造该广播触发重排。
+        -->
+        <receiver
+            android:name=".ExactAlarmPermissionReceiver"
+            android:directBootAware="true"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.app.action.SCHEDULE_EXACT_ALARM_PERMISSION_STATE_CHANGED" />
+            </intent-filter>
+        </receiver>
+    </application>
+
+    <!-- Permissions -->
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <!--
+      D64：精确闹钟**只声明 `SCHEDULE_EXACT_ALARM`，不再声明 `USE_EXACT_ALARM`**。
+
+      `USE_EXACT_ALARM` 是 Google Play 的**受限权限**，官方政策（support.google.com/
+      googleplay/android-developer/answer/16558241）限定只有核心功能属于下列之一的应用才可声明：
+        · 闹钟或计时器应用
+        · 显示活动通知的日历应用
+      并明写「若是应用程式不符合使用限制条件,就禁止在 Google Play 发布」。
+      本应用核心功能是提醒/待办（注意力收件箱），**不满足资格** ——
+      继续声明它属于政策里被列为「错误做法」的用法。
+
+      官方给的正是我们这条替换路径：
+      「如果应用程式会设定精确闹钟,但未符合以上清单的任一情况,请继续声明
+        SCHEDULE_EXACT_ALARM 权限,并做好使用者拒绝应用程式的备案。」
+
+      代价（必须知道）：Android 14 起 `SCHEDULE_EXACT_ALARM` 对 targetSdk ≥ 33 的新装应用
+      **默认拒绝**（官方：「no longer being pre-granted ... targeting Android 13 and higher」），
+      所以精确排程要等用户在「闹钟和提醒」页授权（入口见自检面板第 3 项与应用设置页）。
+      未授权时排程会降级为非精确并**如实记 mode**（见 AlarmScheduler，D64），
+      授权后由 ExactAlarmPermissionReceiver 自动重排回精确。
+
+      回退：把 USE_EXACT_ALARM 的 uses-permission 行加回本清单即可恢复「安装即精确」，
+      但会同时恢复 Play 拒审风险。
+      （此处刻意不写字面的 permission 标签：那会让「是否仍声明该权限」这类
+        文本检索得到假阳性，本项目正是靠这类检索守住上架门禁的。）
+    -->
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <!-- D59：AlarmRingService 用 mediaPlayback 类型（API 34+ 要求类型与权限匹配） -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" />
+    <!--
+      Q6（D68）：`USE_FULL_SCREEN_INTENT` 的用途说明 —— Google Play 对**非「闹钟/通话」类应用**
+      声明该权限时要求应用**明确说明需求**；这段就是那份说明的正式落点（清单 + 应用内自检第 6 项）。
+      不改运行行为，只有说明：该权限的声明自 D60/V3 起就已在清单里。
+
+      【为什么需要】本应用的核心承诺是「到点的提醒一定送到用户眼前」。而用户锁屏或息屏时，
+      恰恰是最需要被提醒、也最容易错过的时候。Android 14 起，非闹钟类应用要把提醒界面
+      **直接送到屏幕最前**（而非只留一条通知横幅），只能靠本权限，且必须由用户手动允许。
+
+      【不用它会怎样】锁屏/息屏时提醒只出通知横幅、**不亮屏**；若同时没有通知权限，
+      则连横幅都没有 —— 只剩铃声与振动，界面永远到不了眼前（H-08 实测：无权限 + 息屏 0/4）。
+
+      【不用于什么】本权限只服务于「提醒到点把界面送到眼前」这一件事：
+      不做营销/广告推送，不做常驻悬浮窗，不在用户没有设定提醒的时刻使用。
+      用户随时可在系统设置里撤回，撤回后提醒仍会响铃与振动，只是不再抢屏。
+    -->
+    <uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT" />
+    <uses-permission android:name="android.permission.DISABLE_KEYGUARD" />
+    <!--
+      Q3：解锁亮屏时要弹全屏闹钟，靠的是「后台启动 Activity」豁免（BAL）。
+
+      ⚠️ 原文写「Android 10+ 的豁免清单里，第三方应用唯一能拿到的就是 SYSTEM_ALERT_WINDOW」——
+      **这句不准确**，已按官方清单更正。官方（developer.android.com/guide/components/
+      activities/secure-bal）给的放行条件是枚举，能落到第三方身上的有两条：
+        · **应用已获 `SYSTEM_ALERT_WINDOW`**（本权限）—— 唯一**不依赖通知**的那条；
+        · **活动由「系统发送的 PendingIntent」启动**（通知点击/全屏意图属此类）
+          —— 可达，但它的载体是通知，所以**需要通知权限**（见 D61 的降级矩阵）。
+      `START_ACTIVITIES_FROM_BACKGROUND` 是 signature|privileged，第三方拿不到。
+
+      D68/B-1（2026-09-19）真机受控实验：把**闹钟时钟位**上的操作 PendingIntent 换成
+      `PendingIntent.getActivity`（指望走「系统发送」那条路），在「通知权限已撤销 + 息屏锁屏」
+      下**不执行该启动** —— 台账无 `created`、`dumpsys activity | grep AlarmActivity` = 0、
+      屏幕全程 `mDreamingLockscreen=true`；而同刻的解冻器对照组正常起来
+      （`carrierRecorded sound=native;vibrate=native`），**排除了「进程压根没醒」的假阴性**。
+      ⇒ 闹钟档想在不依赖通知权限的前提下拿到界面，**只剩本权限这一条**。
+
+      没有它，`AlarmTestReceiver` 里的 `startActivity` 会被系统静默拦下
+      （logcat：Background activity launch blocked … BAL_BLOCK），只剩通知横幅。
+
+      ⚠️ 另一层前提（不由本权限解决，见 `docs/reviews/android-vivo-freezer-rootcause-20260917.md` §4.2）：
+      进程长期不在（深冻结/被杀）时，该 ROM **连后台自启动都不放行**，任何 PendingIntent 形态
+      都不会被执行 —— 那种状态只能靠用户在厂商设置里放行本应用（应用侧无解）。
+    -->
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+</manifest>

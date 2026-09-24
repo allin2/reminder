@@ -1,0 +1,1 @@
+{"delta_bytes": 30, "record_kind": "ROTATED", "ops": null, "seq": null, "entries": [], "records_appended": 0, "note": "前缀不一致：WAL 被轮转/重写，不是追加（前 137620 字节已不同）", "verdict": "INCONCLUSIVE"}

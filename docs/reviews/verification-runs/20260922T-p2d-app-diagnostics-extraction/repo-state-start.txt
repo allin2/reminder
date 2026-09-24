@@ -1,0 +1,132 @@
+ M app-core.js
+ M index.html
+ M lib/native-reminders.js
+ M lib/parse-cn.js
+ M lib/repeat.js
+ M lib/storage.js
+ M package.json
+ D scripts/verification/parse-parity.js
+ M scripts/verification/production-scripts.js
+ M sw.js
+ M test-boot-combination.js
+ M test-native-reminders.js
+ M test-regressions.js
+ M test-smoke.js
+ M test-unit.js
+?? docs/handoff/2026-09-21-app-core-modularization-plan.md
+?? docs/handoff/2026-09-22-p2d-app-diagnostics-extraction-plan.md
+?? docs/reviews/code-optimization-device-acceptance-20260920T183614.md
+?? docs/reviews/directboot-locked-route-and-control-closure-2026-09-19.md
+?? docs/reviews/foreground-system-banner-implementation-2026-09-19.md
+?? docs/reviews/oppo-current-build-live-verification-2026-09-19.md
+?? docs/reviews/repair-plan-background-delivery-2026-09-20.md
+?? docs/reviews/repair-plan-device-blockers-2026-09-20.md
+?? docs/reviews/verification-runs/20260919-foreground-banner-cold/
+?? docs/reviews/verification-runs/20260919-foreground-banner-off/
+?? docs/reviews/verification-runs/20260919-foreground-banner-other/
+?? docs/reviews/verification-runs/20260919-n4-device/
+?? docs/reviews/verification-runs/20260919-n4-window/
+?? docs/reviews/verification-runs/20260919-oppo-cold-diag/
+?? docs/reviews/verification-runs/20260919-oppo-connect-baseline/
+?? docs/reviews/verification-runs/20260919-oppo-current-build-full/
+?? docs/reviews/verification-runs/20260919-oppo-current-cold/
+?? docs/reviews/verification-runs/20260919-oppo-current-off/
+?? docs/reviews/verification-runs/20260919-oppo-current-other/
+?? docs/reviews/verification-runs/20260919-oppo-interaction/
+?? docs/reviews/verification-runs/20260919-oppo-warm-control/
+?? docs/reviews/verification-runs/20260919-oppo2-asleep/
+?? docs/reviews/verification-runs/20260919-oppo2-cold/
+?? docs/reviews/verification-runs/20260919-oppo3-asleep/
+?? docs/reviews/verification-runs/20260919-oppo3-bg/
+?? docs/reviews/verification-runs/20260919-oppo3-cold/
+?? docs/reviews/verification-runs/20260919-u2-delivered-writer/
+?? docs/reviews/verification-runs/20260919-u3-autostart-landing/
+?? docs/reviews/verification-runs/20260919-vivo-candidate/
+?? docs/reviews/verification-runs/20260919T043348Z-device-verify/
+?? docs/reviews/verification-runs/20260919T043405Z-device-verify/
+?? docs/reviews/verification-runs/20260919T051023Z-device-verify/
+?? docs/reviews/verification-runs/20260919T054627Z-device-verify/
+?? docs/reviews/verification-runs/20260919T071920Z-device-verify/
+?? docs/reviews/verification-runs/20260919T103321Z-audit-remediation/
+?? docs/reviews/verification-runs/20260920-code-optimization-baseline/
+?? docs/reviews/verification-runs/20260920-independent-code-optimization/
+?? docs/reviews/verification-runs/20260920-independent-repair-review/
+?? docs/reviews/verification-runs/20260920T115939-full-device/
+?? docs/reviews/verification-runs/20260920T124045-bg-diag/
+?? docs/reviews/verification-runs/20260920T152214Z-grilling-followup/
+?? docs/reviews/verification-runs/20260920T154419Z-grilling-main-device/
+?? docs/reviews/verification-runs/20260920T1706-code-optimization/baseline-npm-test.log
+?? docs/reviews/verification-runs/20260920T1706-code-optimization/diff-app-core.js.patch
+?? docs/reviews/verification-runs/20260920T1706-code-optimization/diff-native-reminders.js.patch
+?? docs/reviews/verification-runs/20260920T1706-code-optimization/final-npm-test.log
+?? docs/reviews/verification-runs/20260920T1706-code-optimization/perf-counts.json
+?? docs/reviews/verification-runs/20260920T1706-code-optimization/perf-counts.log
+?? docs/reviews/verification-runs/20260920T1706-code-optimization/pre-edit/index.html
+?? docs/reviews/verification-runs/20260920T1706-code-optimization/pre-edit/native-reminders.js
+?? docs/reviews/verification-runs/20260920T1706-code-optimization/pre-edit/test-regressions.js
+?? docs/reviews/verification-runs/20260920T1706-code-optimization/pre-edit/test-smoke.js
+?? docs/reviews/verification-runs/20260920T1706-code-optimization/repo-state-end.txt
+?? docs/reviews/verification-runs/20260920T1706-code-optimization/script-combination-check.txt
+?? docs/reviews/verification-runs/20260920T1706-code-optimization/source-hashes.txt
+?? docs/reviews/verification-runs/20260920T181826-code-optimization-repair/
+?? docs/reviews/verification-runs/20260920T183614-code-optimization-repair-device-debug/
+?? docs/reviews/verification-runs/20260921T0230-app-core-modularization/
+?? docs/reviews/verification-runs/20260921T033332-independent-modularization/
+?? docs/reviews/verification-runs/20260921T0411-f01f02f03-rework/
+?? docs/reviews/verification-runs/20260921T042905-independent-f01f02f03-recheck/
+?? docs/reviews/verification-runs/20260921T050350-independent-alias-recheck/
+?? docs/reviews/verification-runs/20260921T052806-independent-guard-recheck/
+?? docs/reviews/verification-runs/20260921T0530-alias-fail-closed/
+?? docs/reviews/verification-runs/20260921T0535-guard-fail-closed/
+?? docs/reviews/verification-runs/20260921T0545-array-contract/
+?? docs/reviews/verification-runs/20260921T060755-independent-array-contract-recheck/
+?? docs/reviews/verification-runs/20260921T0900-p2a-app-ai-extraction/
+?? docs/reviews/verification-runs/20260921T090750-independent-p2a-app-ai-recheck/
+?? docs/reviews/verification-runs/20260921T1330-p2c-app-backup-extraction/
+?? docs/reviews/verification-runs/20260921T134843-independent-p2c-backup-recheck/
+?? docs/reviews/verification-runs/20260921T1425-g01g02-import-reliability/
+?? docs/reviews/verification-runs/20260921T154157-independent-g01g02-recheck/
+?? docs/reviews/verification-runs/20260921T1610-p2c-device-closure/
+?? docs/reviews/verification-runs/20260921T2355-p2cr-authority-gate/
+?? docs/reviews/verification-runs/20260922T-p2d-app-diagnostics-extraction/
+?? docs/reviews/verification-runs/20260922T001914-independent-p2cr-recheck/
+?? docs/reviews/verification-runs/20260922T0055-p2cr-mirror-failclosed/
+?? docs/reviews/verification-runs/20260922T1030-p2cr2-device-recheck/
+?? docs/reviews/verification-runs/20260922T110036-independent-p2cr2-recheck/
+?? docs/reviews/verification-runs/20260922T1130-evidence-script-gaps/
+?? docs/reviews/verification-runs/20260922T114349-independent-evidence-gaps-recheck/
+?? docs/reviews/verification-runs/20260922T124205-independent-import-format-audit/
+?? docs/reviews/verification-runs/20260922T1304-p2cs-import-format-hardening/
+?? docs/reviews/verification-runs/20260922T134219-independent-p2cs-recheck/
+?? docs/reviews/verification-runs/20260922T1400-p2cs-b1-iso-time-fix/
+?? docs/reviews/verification-runs/20260922T142800-independent-p2cs-b1-android-recheck/
+?? lib/app-ai.js
+?? lib/app-backup.js
+?? lib/app-ui.js
+?? lib/date-utils.js
+?? lib/ui-format.js
+?? releases/Reminder-Release-1.0.apk
+?? releases/Reminder-Release-1.1.apk
+?? releases/candidates/
+?? "releases/\345\256\211\345\277\203\346\224\266\344\273\266\347\256\261-Release-1.0.apk"
+?? "releases/\345\256\211\345\277\203\346\224\266\344\273\266\347\256\261-Release-1.1.apk"
+?? "releases/\345\256\211\345\277\203\346\224\266\344\273\266\347\256\261-release.apk"
+?? scripts/idb-state-hash.py
+?? scripts/idb-wal-inspect.py
+?? scripts/verification/__pycache__/
+?? scripts/verification/browser-import-format-check.py
+?? scripts/verification/browser-recovery-check.py
+?? scripts/verification/core-inventory.js
+?? scripts/verification/device-storage-hash.sh
+?? scripts/verification/idb-wal-delta.py
+?? scripts/verification/idb-wal-size.sh
+?? scripts/verification/idb-write-caller.py
+?? scripts/verification/idb-write-probe.py
+?? scripts/verification/module-map-gen.js
+?? scripts/verification/p2cr-coldstart-rounds.sh
+?? scripts/verification/p2cr-failure-state-probe.py
+?? scripts/verification/p2cr-idb-fault-inject.sh
+?? scripts/verification/p2cr-kill-modes.sh
+?? scripts/verification/parse-single-source.js
+?? scripts/verification/ui-dom-parity.js
+?? scripts/verification/ui-format-parity.js

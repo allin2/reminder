@@ -1,0 +1,18 @@
+{
+  "verdict": "PASS",
+  "npmExit": 0,
+  "browserExit": 0,
+  "androidBuildExit": 0,
+  "sourceHashDiffBytes": 0,
+  "apkAssets": 22,
+  "apkAssetMismatches": [],
+  "wrongRecordCmp": true,
+  "wrongStorageFactsEqual": true,
+  "secretRecordCmp": true,
+  "secretStorageFactsEqual": true,
+  "secretFileSetCmp": true,
+  "secretWalVerdict": "NO_OPERATIONS",
+  "coldStartExit": 0,
+  "coldStartOverall": true,
+  "validColdStartRawCmp": true
+}

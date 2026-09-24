@@ -1,0 +1,40 @@
+cwd=/Users/qlyf/Developer/reminder
+node=v20.17.0
+npm=10.8.2
+collected_at=2026-09-23T16:46:12Z
+---
+01-npm-test                        exit=0
+02-test-unit                       exit=0
+03-test-native-reminders           exit=0
+04-p3a-model-tests                 exit=0
+05-p3b-persistence-tests           exit=0
+06-p3c-transaction-tests           exit=0
+07-p3d-items-tests                 exit=0
+08-p3e-coordinator-tests           exit=0
+09-p3f-review-tests                exit=0
+10-p3g-alerts-tests                exit=0
+11-p3h-platform-tests              exit=0
+12-p3i-modularization-tests        exit=0
+13-test-boot-combination           exit=0
+14-test-smoke                      exit=0
+15-test-regressions                exit=0
+16-parse-single-source             exit=0
+17-browser-views                   exit=1
+18-browser-capture                 exit=1
+19-browser-recovery                exit=0
+---
+done=2026-09-23T16:53:37Z
+
+#### 第二轮采集（时钟缺陷修复之后，最终有效值）
+collected_at=2026-09-23T16:46Z
+01-npm-test                        exit=0  # 3055/0
+02..16 全部 node 套件                exit=0
+12-p3i-modularization-tests        exit=0  # 83 项断言（新增时钟一致性 + 其变异对照）
+17-browser-views（适配副本）          exit=0
+18-browser-capture（适配副本）        exit=0
+19-browser-recovery                exit=0  # 12 用例 0 失败
+verify-resources.py                exit=0  # 五层 39/39
+候选 APK sha256=16d14484dd00d326637c2f41543ce79c9f3584ea27a9ca2b054d77027d487138
+
+#### 第三轮补交（2026-09-24）：F2 责任归属表的复算脚本
+20-compose-stats               exit=0  # 报告口径 A/B/C 与合计 254/2377 全部 MATCH；D/E 各差 2 行（边界假象）；自检 6 项全绿

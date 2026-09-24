@@ -1,0 +1,16 @@
+--- node test-boot-combination.js ---
+  ✗ 别名归一生效：`feedbackApi` ⇒ `FeedbackLib`，引用落到 `Feedback.*` 这个声明路径上 — {"aliases":{},"feedbackRefs":["Feedback","Feedback.saveFeedback","Feedback.UNDO_WINDOW_MS","Feedback.actionSpec","Feedback.testFeedbackVerdict"]}
+  ✗ 产品源码**没有歧义别名**（`f` 那种一名两义已消除：反馈用 feedbackApi / 上传用 selectedFile / 返回值用 feedbackResult） — ["f"]
+  ✗ 产品源码**没有歧义引用**（扫描器里不存在「证不了归属就跳过」的残留） — ["f.TEST_FEEDBACK","f.captureSummary","f.reminderFeedback","f.setupSteps"]
+  ✗ 依赖矩阵完全闭合：undeclared / ambiguousAliases / ambiguousRefs / problems 四个都为空 — {"undeclared":[],"ambiguousAliases":["f"],"ambiguousRefs":["f.TEST_FEEDBACK","f.captureSummary","f.reminderFeedback","f.setupSteps"],"problems":["ambiguous-alias:f（同一名字既被赋成已知命名空间、又被赋成别的东西）","ambiguous-ref:f.TEST_FEEDBACK（归属不可证明）","ambiguous-ref:f.captureSummary（归属不可证明）","ambiguous-ref:f.reminderFeedback（归属不可证明）","ambiguous-ref:f.setupSteps（归属不可证明）"]}
+通过: 257  失败: 4
+--- node scripts/verification/parse-single-source.js ---
+  ✗ 产品源码没有歧义别名（一名两义已被消除） — ["f"]
+  ✗ 产品源码没有歧义引用（不存在「证不了归属就跳过」的残留） — ["f.TEST_FEEDBACK","f.captureSummary","f.reminderFeedback","f.setupSteps"]
+  ✗ 唯一判定出口 problems 为空（undeclared + 两类歧义都进来） — ["ambiguous-alias:f（同一名字既被赋成已知命名空间、又被赋成别的东西）","ambiguous-ref:f.TEST_FEEDBACK（归属不可证明）","ambiguous-ref:f.captureSummary（归属不可证明）","ambiguous-ref:f.reminderFeedback（归属不可证明）","ambiguous-ref:f.setupSteps（归属不可证明）"]
+  ✗ 别名归一生效：`feedbackApi` ⇒ `FeedbackLib`（别名调用确实落在声明路径上） — {"aliases":{},"feedbackRefs":["Feedback","Feedback.saveFeedback","Feedback.UNDO_WINDOW_MS","Feedback.actionSpec","Feedback.testFeedbackVerdict"]}
+通过 145 项，失败 4 项
+  ✗ 产品源码没有歧义别名（一名两义已被消除） — ["f"]
+  ✗ 产品源码没有歧义引用（不存在「证不了归属就跳过」的残留） — ["f.TEST_FEEDBACK","f.captureSummary","f.reminderFeedback","f.setupSteps"]
+  ✗ 唯一判定出口 problems 为空（undeclared + 两类歧义都进来） — ["ambiguous-alias:f（同一名字既被赋成已知命名空间、又被赋成别的东西）","ambiguous-ref:f.TEST_FEEDBACK（归属不可证明）","ambiguous-ref:f.captureSummary（归属不可证明）","ambiguous-ref:f.reminderFeedback（归属不可证明）","ambiguous-ref:f.setupSteps（归属不可证明）"]
+  ✗ 别名归一生效：`feedbackApi` ⇒ `FeedbackLib`（别名调用确实落在声明路径上） — {"aliases":{},"feedbackRefs":["Feedback","Feedback.saveFeedback","Feedback.UNDO_WINDOW_MS","Feedback.actionSpec","Feedback.testFeedbackVerdict"]}

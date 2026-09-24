@@ -1,0 +1,6 @@
+=== 复原后冷启动：记录级内容 ===
+IDB_STATE_SHA256=0625aacabcd5068a
+IDB_STATE_FULL_SHA256=0625aacabcd5068ab0d762e44b25b2937a7bdc7a47004b3f3bea1e3e4e8f77d2
+BYTES=2443
+=== 复原后冷启动：状态判定 ===
+FAILED_STATE={"before":{"status":"loaded","reason":"authoritative","backend":"idb","writesAllowed":true,"blockedWriteCount":0,"nativeBlocked":0,"recoveryPanel":false,"panelPresent":false,"panelHidden":null,"panelText":null,"items":2,"projects":1,"title":"P2C 复验事项","mirrorLen":2443,"mirrorSha16":"0625aacabcd5068a","pendingReplay":null,"storageBackend":"idb"},"writeAttempt":{"threw":false},"after":{"status":"loaded","reason":"authoritative","backend":"idb","writesAllowed":true,"blockedWriteCount":0,"nativeBlocked":0,"recoveryPanel":false,"panelPresent":false,"panelHidden":null,"panelText":null,"items":2,"projects":1,"title":"P2C 复验事项","mirrorLen":2443,"mirrorSha16":"0625aacabcd5068a","pendingReplay":null,"storageBackend":"idb"},"pendingReplayKey":null}

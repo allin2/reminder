@@ -1,0 +1,5 @@
+c7e0e09fd4bdb4235c4a653cb07232ddb26d54adc04625ca18b5e84de7a47cda  app-core.js
+4d38ecb6e42d00173bb72187806df28298b9b417277c3e9342f7412b889bb4eb  lib/app-backup.js
+13a6cde50eafd16ada51e0c2e227bdd745b058102ceb857ab267d69babf181e6  test-unit.js
+a1bad774c8e574c953b726fd08b56b0f03402230ecd3d57fe6ff682eca300d43  sw.js
+677ddfdbeb197b4644eb2fa65e99afd3a7e241b8264ab9b4d06f5d6e81550c20  scripts/verification/browser-recovery-check.py

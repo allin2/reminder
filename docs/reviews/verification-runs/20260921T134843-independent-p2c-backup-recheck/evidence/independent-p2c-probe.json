@@ -1,0 +1,314 @@
+{
+  "root": "/Users/qlyf/Developer/reminder",
+  "generatedAt": "2026-09-21T05:54:56.943Z",
+  "passed": 14,
+  "failed": 0,
+  "results": [
+    {
+      "name": "生产脚本只加载一次 app-backup，且早于 app-core",
+      "pass": true,
+      "detail": [
+        "lib/date-utils.js",
+        "lib/ui-format.js",
+        "lib/app-ui.js",
+        "lib/app-ai.js",
+        "lib/app-backup.js",
+        "lib/parse-cn.js",
+        "lib/repeat.js",
+        "lib/reminder.js",
+        "lib/storage.js",
+        "lib/feedback.js",
+        "lib/delivery-evidence.js",
+        "lib/native-reminders.js",
+        "app-core.js"
+      ]
+    },
+    {
+      "name": "Service Worker 只预缓存一次 app-backup",
+      "pass": true,
+      "detail": [
+        "",
+        "index.html",
+        "app-core.js",
+        "lib/date-utils.js",
+        "lib/ui-format.js",
+        "lib/app-ui.js",
+        "lib/app-ai.js",
+        "lib/app-backup.js",
+        "lib/parse-cn.js",
+        "lib/repeat.js",
+        "lib/reminder.js",
+        "lib/storage.js",
+        "lib/feedback.js",
+        "lib/delivery-evidence.js",
+        "lib/native-reminders.js",
+        "manifest.json",
+        "icon.svg"
+      ]
+    },
+    {
+      "name": "备份行为在 app-core 无实现体、在 app-backup 各有唯一实现",
+      "pass": true,
+      "detail": {
+        "coreDefinitions": [],
+        "moduleDefinitionCounts": {
+          "downloadFile": 1,
+          "buildLegacyBackupPayload": 1,
+          "setExportBusy": 1,
+          "clearPendingNativeExport": 1,
+          "noteExportAppVisibility": 1,
+          "isShareCancellation": 1,
+          "savedBackupMessage": 1,
+          "exportData": 1,
+          "importDataFile": 1
+        }
+      }
+    },
+    {
+      "name": "app-backup 求值期只有命名空间导出，没有定时器、监听、存储或 DOM 副作用",
+      "pass": true,
+      "detail": {
+        "evalError": null,
+        "evalEffects": {
+          "timers": 0,
+          "listeners": 0,
+          "storage": 0,
+          "dom": 0,
+          "writes": [
+            "AppBackup"
+          ]
+        },
+        "exports": [
+          "EXPORT_RESULT_GRACE_MS",
+          "createAppBackup",
+          "isShareCancellation"
+        ]
+      }
+    },
+    {
+      "name": "备份实例静态契约基线闭合",
+      "pass": true,
+      "detail": {
+        "local": "backup",
+        "contract": "APP_BACKUP_INSTANCE_CONTRACT",
+        "used": [
+          "buildLegacyBackupPayload",
+          "exportData",
+          "importDataFile",
+          "noteExportAppVisibility"
+        ],
+        "declared": [
+          "buildLegacyBackupPayload",
+          "exportData",
+          "importDataFile",
+          "noteExportAppVisibility"
+        ],
+        "internalOnly": [],
+        "missingInContract": [],
+        "unusedInContract": []
+      }
+    },
+    {
+      "name": "新增未声明 backup 成员的变异会被静态契约点名",
+      "pass": true,
+      "detail": {
+        "local": "backup",
+        "contract": "APP_BACKUP_INSTANCE_CONTRACT",
+        "used": [
+          "buildLegacyBackupPayload",
+          "exportData",
+          "importDataFile",
+          "independentMissing",
+          "noteExportAppVisibility"
+        ],
+        "declared": [
+          "buildLegacyBackupPayload",
+          "exportData",
+          "importDataFile",
+          "noteExportAppVisibility"
+        ],
+        "internalOnly": [],
+        "missingInContract": [
+          "independentMissing"
+        ],
+        "unusedInContract": []
+      }
+    },
+    {
+      "name": "缺 app-backup 时启动 fail closed 且零持久化/排程/心跳副作用",
+      "pass": true,
+      "detail": {
+        "ready": false,
+        "failurePaths": [
+          "AppBackup",
+          "AppBackup.createAppBackup"
+        ],
+        "puts": 0,
+        "schedules": 0,
+        "alarms": 0,
+        "intervals": []
+      }
+    },
+    {
+      "name": "迟加载 app-backup 后同一页面可恢复，成功后再次启动不重复心跳",
+      "pass": true,
+      "detail": {
+        "recoveredReady": true,
+        "secondReady": true,
+        "failure": null,
+        "intervals": [
+          2000,
+          15000
+        ]
+      }
+    },
+    {
+      "name": "备份工厂退化为空壳时逐项报错，失败重绑不覆盖健康实例",
+      "pass": true,
+      "detail": {
+        "expectedCount": 4,
+        "actualCount": 4,
+        "paths": [
+          "AppBackup.exportData",
+          "AppBackup.importDataFile",
+          "AppBackup.noteExportAppVisibility",
+          "AppBackup.buildLegacyBackupPayload"
+        ],
+        "preservedIdentity": true
+      }
+    },
+    {
+      "name": "备份实例每次读取当前状态，并从快照排除 AI 密钥与地址",
+      "pass": true,
+      "detail": {
+        "firstItem": {
+          "id": "old"
+        },
+        "secondItem": {
+          "id": "new"
+        },
+        "ai": {
+          "enabled": true,
+          "baseUrl": "",
+          "apiKey": "",
+          "model": "m",
+          "autoOnSave": true
+        }
+      }
+    },
+    {
+      "name": "原生导出把快照交给同一 saveDocument，并只在 saved 后宣告成功",
+      "pass": true,
+      "detail": {
+        "nativeResult": {
+          "status": "saved",
+          "fileName": "安心收件箱备份-2026-09-21.json",
+          "locationLabel": "测试位置"
+        },
+        "toasts": [
+          "请选择保存位置和文件名",
+          "已保存「安心收件箱备份-2026-09-21.json」 · 位置：测试位置"
+        ],
+        "button": {
+          "disabled": false,
+          "attrs": {
+            "aria-busy": "false"
+          }
+        }
+      }
+    },
+    {
+      "name": "有效导入经过确认和 normalizeItem，并走注入的 save/render",
+      "pass": true,
+      "detail": {
+        "calls": {
+          "save": 1,
+          "render": 1,
+          "toast": [
+            "导入成功 · 1 条事项"
+          ],
+          "confirm": 1,
+          "normalize": 1
+        },
+        "state": {
+          "items": [
+            {
+              "normalized": true,
+              "id": "imported"
+            }
+          ],
+          "notes": [
+            {
+              "id": "n"
+            }
+          ],
+          "projects": [
+            {
+              "id": "p"
+            }
+          ],
+          "settings": {
+            "notify": false,
+            "dnd": false,
+            "importantRepeat": true,
+            "quietStart": "22:00",
+            "quietEnd": "07:00",
+            "dailySummary": true,
+            "privacyNotify": false,
+            "defaultDeliveryMode": "notification",
+            "userMode": "normal",
+            "ai": {
+              "enabled": true,
+              "baseUrl": "https://secret.example/v1",
+              "apiKey": "sk-secret",
+              "model": "m",
+              "autoOnSave": true
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "用户取消导入时不改状态、不保存、不渲染",
+      "pass": true,
+      "detail": {
+        "save": 0,
+        "render": 0,
+        "toast": [],
+        "confirm": 1,
+        "normalize": 0
+      }
+    },
+    {
+      "name": "事务在途时导入被拒绝且不改状态",
+      "pass": true,
+      "detail": {
+        "save": 0,
+        "render": 0,
+        "toast": [
+          "提醒操作正在保存 · 请稍后重新导入"
+        ],
+        "confirm": 1,
+        "normalize": 0
+      }
+    }
+  ],
+  "observations": [
+    {
+      "name": "FileReader 读取失败没有用户反馈（迁移前已有，P2-C 未修）",
+      "detail": {
+        "toasts": [],
+        "save": 0,
+        "render": 0
+      }
+    },
+    {
+      "name": "导入在持久化 Promise 兑现前即提示成功（迁移前已有，P2-C 未修）",
+      "detail": {
+        "saveCalls": 1,
+        "successToastBeforeCommit": true,
+        "renderBeforeCommit": 1
+      }
+    }
+  ]
+}

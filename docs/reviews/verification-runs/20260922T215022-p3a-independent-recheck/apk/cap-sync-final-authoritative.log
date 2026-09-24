@@ -1,0 +1,18 @@
+
+> attention-inbox@1.1.0 cap:sync
+> npm run sync:www && npx cap sync android
+
+
+> attention-inbox@1.1.0 sync:www
+> node scripts/sync-www.js
+
+www synced: 29 entries 
+✔ Copying web assets from www to android/app/src/main/assets/public in 8.41ms
+✔ Creating capacitor.config.json in android/app/src/main/assets in 353.71μs
+✔ copy android in 10.94ms
+✔ Updating Android plugins in 218.04μs
+[info] Found 2 Capacitor plugins for android:
+       @capacitor/app@6.0.3
+       @capacitor/local-notifications@6.1.3
+✔ update android in 16.25ms
+[info] Sync finished in 0.031s

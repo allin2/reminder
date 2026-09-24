@@ -1,0 +1,62 @@
+{
+  "verdict": "PASS",
+  "timestamp": "2026-09-23T07:45:36.978458+00:00",
+  "serial": "10ACBF2D3D000RS",
+  "deviceSha256": "bc87fe0530330ab3011af2b3254b784fcc94a429ac34c470dca6b6f15b7f2783",
+  "candidateSha256": "bc87fe0530330ab3011af2b3254b784fcc94a429ac34c470dca6b6f15b7f2783",
+  "results": {
+    "apkSha256": "bc87fe0530330ab3011af2b3254b784fcc94a429ac34c470dca6b6f15b7f2783",
+    "contract": {
+      "hasA": true,
+      "hasAlerts": true,
+      "contractCount": 17,
+      "missing": [],
+      "pass": true
+    },
+    "banner": {
+      "shown": true,
+      "isCrit": true,
+      "titleText": "🚨 关键提醒",
+      "bodyText": "真机弹条自检事项",
+      "dismissResult": true,
+      "closed": true,
+      "skippedNow": true,
+      "itemSuppressedUntil": 1790151304312,
+      "pass": true
+    },
+    "panel": {
+      "panelExists": true,
+      "bridgeAvailable": true,
+      "activeAlarmsCount": 0,
+      "panelHidden": true,
+      "pass": true
+    },
+    "scheduledItem": {
+      "itemId": "device_p3g_alarm_1790149506",
+      "triggerAt": 1790149523000,
+      "notifySetting": true
+    },
+    "activeAlarmPanel": {
+      "panelHidden": false,
+      "cardText": "闹钟待处理\n\nP3-G 真机响铃 9506\n\n全屏未显示时，也可以在这里处理。\n\n停止声振 完成事项",
+      "deliveriesCount": 1,
+      "deliveries": [
+        {
+          "id": 133024820,
+          "token": "133024820:a1d9b2df-3bbf-40c1-91bc-0fb8456c958a",
+          "itemId": "device_p3g_alarm_1790149506",
+          "itemRev": "1",
+          "title": "🚨 关键事项",
+          "body": "P3-G 真机响铃 9506",
+          "receivedAt": 1790149523295
+        }
+      ]
+    },
+    "completeAction": {
+      "completeSuccess": true,
+      "errorMsg": null,
+      "remainingAlarmsCount": 0,
+      "itemStatus": "archived"
+    }
+  }
+}

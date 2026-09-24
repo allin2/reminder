@@ -1,0 +1,118 @@
+{
+  "generatedAt": "2026-09-20T21:54:41.510Z",
+  "after": {
+    "exits": {
+      "undeclared": [],
+      "ambiguousAliases": [],
+      "ambiguousRefs": [],
+      "problems": []
+    },
+    "declaredTypeOf": {
+      "AppUi": "object",
+      "AppUi.createUi": "function",
+      "AppUi.safeExternalHref": "function",
+      "AttentionLib": "object",
+      "AttentionNativeReminders": "object",
+      "DatePrimitives": "object",
+      "DatePrimitives.addDays": "function",
+      "DatePrimitives.applyClock": "function",
+      "DatePrimitives.dayOfMonthIn": "function",
+      "DatePrimitives.endOfDay": "function",
+      "DatePrimitives.lastDayOfMonth": "function",
+      "DatePrimitives.nextDayOfMonth": "function",
+      "DatePrimitives.nextWeekend": "function",
+      "DatePrimitives.nthWeekdayInMonth": "function",
+      "DatePrimitives.nthWeekdayOfNextMonthByDay": "function",
+      "DatePrimitives.nthWeekdayOfNextMonthByInstant": "function",
+      "DatePrimitives.sameDay": "function",
+      "DatePrimitives.startOfDay": "function",
+      "DatePrimitives.weekdayOfNextWeek": "function",
+      "DeliveryEvidence": "object",
+      "DeliveryEvidence.entryRoundBase": "function",
+      "DeliveryEvidence.evidenceStatusFor": "function",
+      "DeliveryEvidence.mergeEvidence": "function",
+      "DeliveryEvidence.normalizeEvidence": "function",
+      "Feedback": "object",
+      "Feedback.TEST_FEEDBACK": "array",
+      "Feedback.UNDO_WINDOW_MS": "number",
+      "Feedback.actionSpec": "function",
+      "Feedback.captureSummary": "function",
+      "Feedback.reminderFeedback": "function",
+      "Feedback.saveFeedback": "function",
+      "Feedback.setupSteps": "function",
+      "Feedback.testFeedbackVerdict": "function",
+      "NativeReminders.buildDesired": "function",
+      "NativeReminders.drainAlarmActions": "function",
+      "NativeReminders.getDeliveryEvidence": "function",
+      "NativeReminders.getPermissionState": "function",
+      "NativeReminders.initialize": "function",
+      "NativeReminders.isNativeAndroid": "function",
+      "NativeReminders.migrateItem": "function",
+      "NativeReminders.onAlarmAction": "function",
+      "NativeReminders.openExactAlarmSettings": "function",
+      "NativeReminders.reconcile": "function",
+      "NativeReminders.requestNotificationPermission": "function",
+      "NativeReminders.suppressPastReminderReplay": "function",
+      "NativeReminders.systemBridge": "function",
+      "UiFormat": "object",
+      "UiFormat.dayLabel": "function",
+      "UiFormat.escapeAttr": "function",
+      "UiFormat.escapeHtml": "function",
+      "UiFormat.fmtDate": "function",
+      "UiFormat.fmtTime": "function",
+      "UiFormat.pad": "function",
+      "UiFormat.parseLocalInput": "function",
+      "UiFormat.relDue": "function",
+      "UiFormat.renderMarkdown": "function",
+      "UiFormat.toLocalInput": "function",
+      "UiFormat.uid": "function",
+      "applyWindowTrigger": "function",
+      "cnInt": "function",
+      "createStorage": "function",
+      "deadlineStageKey": "function",
+      "deadlineStagePoints": "function",
+      "hasIdb": "function",
+      "hasSpecificTimeWord": "function",
+      "inQuietHours": "function",
+      "markReminded": "function",
+      "nextRepeatPreview": "function",
+      "nextRepeatTrigger": "function",
+      "parseChineseTime": "function",
+      "quietEnd": "function",
+      "repeatLabel": "function",
+      "shouldRealert": "function"
+    },
+    "declaredTypes": [
+      "array",
+      "function",
+      "number",
+      "object"
+    ],
+    "counts": {
+      "declared": 73,
+      "refs": 66,
+      "guarded": 12
+    }
+  },
+  "beforeShapeFix": {
+    "applied": true,
+    "typeOfTestFeedback": "object",
+    "exits": {
+      "undeclared": [],
+      "ambiguousAliases": [],
+      "ambiguousRefs": [],
+      "problems": []
+    },
+    "staticStillClosed": true
+  },
+  "bogusTypeIsCaught": {
+    "applied": true,
+    "declaredTypeOf": null,
+    "undeclared": [
+      "Feedback.TEST_FEEDBACK"
+    ],
+    "problems": [
+      "undeclared-dependency:Feedback.TEST_FEEDBACK（app-core.js:6867）"
+    ]
+  }
+}

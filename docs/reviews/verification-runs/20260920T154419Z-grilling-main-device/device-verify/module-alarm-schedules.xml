@@ -1,0 +1,6 @@
+<?xml version='1.0' encoding='utf-8' standalone='yes' ?>
+<map>
+    <int name="schemaVersion" value="1" />
+    <string name="alarms">[{&quot;id&quot;:1937556330,&quot;triggerAtMs&quot;:1789932600073,&quot;triggerAt&quot;:1789932600073,&quot;scheduleBasis&quot;:&quot;wall-clock&quot;,&quot;elapsedTriggerAtMs&quot;:261016642,&quot;durationMs&quot;:13415891,&quot;bootId&quot;:&quot;2a74773a-377e-44b8-a5da-e28db0afb21d&quot;,&quot;localTrigger&quot;:&quot;2026-09-21T03:30&quot;,&quot;title&quot;:&quot;🚨 关键事项&quot;,&quot;body&quot;:&quot;凌晨 使用Codex额度。&quot;,&quot;itemId&quot;:&quot;i_r2g1xjfimu9yj9h5&quot;,&quot;level&quot;:&quot;🚨 关键&quot;,&quot;itemRev&quot;:&quot;1&quot;,&quot;reminderKey&quot;:&quot;0@1789932600000&quot;}]</string>
+    <string name="missed_alarms">[{&quot;id&quot;:90002,&quot;itemId&quot;:&quot;&quot;,&quot;title&quot;:&quot;安心收件箱闹钟测试&quot;,&quot;triggerAt&quot;:1789888524442,&quot;missedAt&quot;:1789908550625,&quot;reason&quot;:&quot;android.intent.action.MY_PACKAGE_REPLACED&quot;},{&quot;id&quot;:90003,&quot;itemId&quot;:&quot;&quot;,&quot;title&quot;:&quot;安心收件箱闹钟测试&quot;,&quot;triggerAt&quot;:1789889463254,&quot;missedAt&quot;:1789908550625,&quot;reason&quot;:&quot;android.intent.action.MY_PACKAGE_REPLACED&quot;}]</string>
+</map>

@@ -1,0 +1,9 @@
+U1 修复 run（20260924T0950）退出码汇总
+01-npm-test                exit=0  # 642+324+84+933+266+730+160 = 3139/0
+02-browser-views           exit=0  # ready/views/home/future/archive/notes/me/stats 全 ✓
+03-browser-capture         exit=0  # capture 全 ✓
+04-gradle                  exit=0  # BUILD SUCCESSFUL（候选 340975ff…）
+snooze-entry/01-unit       exit=0  # 16 项断言全绿 + MUTANT_RED=1（变异对照变红）
+snooze-entry/repro-fixed   exit=0  # U1_REAL_CHROME=PASS（sheetOpen=true, errors=[]）
+compose-stats              exit=0  # 六项自检绿 + 六类 MATCH（254/2370）
+verify-resources           exit=0  # 五层闭合 39/39，0 不一致

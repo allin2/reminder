@@ -1,0 +1,2765 @@
+diff --git a/app-core.js b/app-core.js
+index 6b2f1b2..06c1eb1 100644
+--- a/app-core.js
++++ b/app-core.js
+@@ -8,10 +8,37 @@
+   // D43：schema 5 = 事项新增 `reminderEvents`（单次提醒台账，与 deadlineEvents 同构）。
+   // 旧记录缺这个字段时由 normalizeItem 补 `{}`；`schemaMigrationNeeded` 触发一次重写落库。
+   const SCHEMA = 5;
+-  const $ = (s, r) => (r || document).querySelector(s);
+-  const $$ = (s, r) => Array.from((r || document).querySelectorAll(s));
+   const Lib = (typeof AttentionLib !== "undefined" && AttentionLib) || {};
+   const NativeReminders = (typeof AttentionNativeReminders !== "undefined" && AttentionNativeReminders) || {};
++
++  /* ---------- 共用展示能力：唯一来源 lib/app-ui.js ---------- */
++
++  /**
++   * DOM 查询 / 弹层开关 / toast / 确认框 / 外链白名单。
++   *
++   * `createUi` 只**装配**：不注册监听、不开定时器、不碰业务状态，所以在这里
++   * （IIFE 顶部）实例化不产生副作用。取不到 `AppUi` 就退回 `{}`，让下面几个名字成为
++   * `undefined` —— 这与会话里其它必需模块（`Lib.nextRepeatTrigger` 等）的约定一致：
++   * **别名不做兜底**，缺件由 `assertRuntimeDependencies()` 在业务启动之前拦下并报出
++   * 「哪一支脚本没起来、后果是什么」，而不是在这里悄悄换一套实现继续跑。
++   *
++   * `isFeedbackSuppressed` 必须按**取值函数**注入：装配发生在 IIFE 顶部，那一刻
++   * `suppressUserFeedback` 必然是 `false`；按值传进来会把整段重放期的抑制逻辑
++   * 钉死成「永不抑制」，等于把 M1 的重复提示问题放回来。
++   */
++  const AppUi = Lib.AppUi || {};
++  const appUi = typeof AppUi.createUi === "function"
++    ? AppUi.createUi({ isFeedbackSuppressed: () => suppressUserFeedback })
++    : {};
++  const $ = appUi.$;
++  const $$ = appUi.$$;
++  const openSheet = appUi.openSheet;
++  const closeSheet = appUi.closeSheet;
++  const closeAllSheets = appUi.closeAllSheets;
++  const confirmDialog = appUi.confirmDialog;
++  const toast = appUi.toast;
++  const hideToast = appUi.hideToast;
++
+   // UX-T01/T02/A01/A03：反馈与动作语义的纯逻辑层（判定全在 lib，编排只在这里）
+   const FeedbackLib = Lib.Feedback || null;
+   // UX-T03：原生送达证据的合并与事后核查判定
+@@ -45,67 +72,264 @@
+     reliability: "web"
+   };
+ 
+-  /* ---------- utils ---------- */
+-  function uid() {
+-    return "i_" + Math.random().toString(36).slice(2, 10) + Date.now().toString(36);
++  /* ---------- 装配依赖闸门（P1：启动前唯一收口） ---------- */
++
++  /**
++   * **必需的运行时导出**（声明表）。
++   *
++   * 为什么必须有这张表：拆分之后，「某个 `lib/*.js` 没加载 / 顺序错 / 文件损坏」的后果
++   * 只是 `AttentionLib` 上少几个键。而 app-core 里到处是 `Lib.xxx`、`FeedbackLib ? … : null`
++   * 这类写法 —— 缺件**不抛错**，只会静默换一套规则继续跑：界面照常可点、数据永不落库。
++   * 四套业务 harness 也照绿，因为它们在沙箱里注入的是自己那份模块。
++   *
++   * 所以唯一能拦住它的位置是「业务启动之前」：把必需项写成可枚举的声明，
++   * 逐项检查存在性与类型，缺任何一项就**明确失败**并停在原地。
++   *
++   * 刻意**不包含** `AttentionNativeReminders` / `Capacitor`：原生桥是「旁路能力」，
++   * 纯 Web 环境里它本来就不存在，那是**正常状态**而不是装配错误。
++   *
++   * 每项格式：`[路径, 期望类型, 缺了会怎样]`。第三项会原样出现在失败面板上，
++   * 让用户看到的不是「undefined is not a function」而是「哪一支脚本没起来、后果是什么」。
++   */
++  const REQUIRED_RUNTIME_EXPORTS = [
++    ["DatePrimitives", "object",
++      "lib/date-utils.js 未加载（或不在其它 lib 之前）——日历原语唯一来源，解析与周期推进都靠它"],
++    ["DatePrimitives.startOfDay", "function", "lib/date-utils.js 导出被破坏"],
++    ["DatePrimitives.endOfDay", "function", "lib/date-utils.js 导出被破坏"],
++    ["DatePrimitives.addDays", "function", "lib/date-utils.js 导出被破坏"],
++    ["DatePrimitives.sameDay", "function", "lib/date-utils.js 导出被破坏"],
++    ["DatePrimitives.nextWeekend", "function", "lib/date-utils.js 导出被破坏"],
++    ["DatePrimitives.applyClock", "function", "lib/date-utils.js 导出被破坏"],
++    ["DatePrimitives.lastDayOfMonth", "function", "lib/date-utils.js 导出被破坏"],
++    ["DatePrimitives.nthWeekdayInMonth", "function", "lib/date-utils.js 导出被破坏"],
++    ["DatePrimitives.weekdayOfNextWeek", "function", "lib/date-utils.js 导出被破坏"],
++    ["DatePrimitives.dayOfMonthIn", "function", "lib/date-utils.js 导出被破坏"],
++    ["DatePrimitives.nextDayOfMonth", "function", "lib/date-utils.js 导出被破坏"],
++    ["DatePrimitives.nthWeekdayOfNextMonthByInstant", "function",
++      "首期候选语义（按具体时刻比较）缺失 —— 与周期推进的「按日比较」不能混用"],
++    ["DatePrimitives.nthWeekdayOfNextMonthByDay", "function",
++      "周期推进语义（按日比较）缺失 —— 拿首期候选那支顶上会让周期原地打转"],
++    ["UiFormat", "object",
++      "lib/ui-format.js 未加载（或在 lib/date-utils.js 之前）—— 所有时间/转义/Markdown 显示都会退化"],
++    ["UiFormat.pad", "function", "lib/ui-format.js 导出被破坏（补零）"],
++    ["UiFormat.uid", "function", "lib/ui-format.js 导出被破坏（事项 id 生成）"],
++    ["UiFormat.escapeHtml", "function", "lib/ui-format.js 导出被破坏（文本转义）"],
++    ["UiFormat.escapeAttr", "function", "lib/ui-format.js 导出被破坏（属性转义）"],
++    ["UiFormat.fmtTime", "function", "lib/ui-format.js 导出被破坏（时间显示）"],
++    ["UiFormat.fmtDate", "function", "lib/ui-format.js 导出被破坏（日期显示）"],
++    ["UiFormat.relDue", "function", "lib/ui-format.js 导出被破坏（相对到期显示）"],
++    ["UiFormat.dayLabel", "function", "lib/ui-format.js 导出被破坏（归档日标签）"],
++    ["UiFormat.toLocalInput", "function", "lib/ui-format.js 导出被破坏（时间输入框回填）"],
++    ["UiFormat.parseLocalInput", "function", "lib/ui-format.js 导出被破坏（时间输入框取值）"],
++    ["UiFormat.renderMarkdown", "function", "lib/ui-format.js 导出被破坏（Markdown 渲染）"],
++    ["AppUi", "object",
++      "lib/app-ui.js 未加载 —— DOM 查询/弹层/toast/确认框全部失效：界面看似能渲染，但点不动、也没有任何反馈"],
++    ["AppUi.createUi", "function", "lib/app-ui.js 导出被破坏（展示能力装配入口）"],
++    ["AppUi.safeExternalHref", "function",
++      "lib/app-ui.js 导出被破坏 —— 外链协议白名单失效：`javascript:` / `data:` 这类用户数据可能被渲染成可点 href"],
++    ["parseChineseTime", "function",
++      "lib/parse-cn.js 未加载 —— 中文时间解析唯一来源，缺了「明天 9 点」这类输入将全部解析不出时间"],
++    ["cnInt", "function", "lib/parse-cn.js 导出被破坏（中文数字）"],
++    ["hasSpecificTimeWord", "function", "lib/parse-cn.js 导出被破坏（是否含明确时间词）"],
++    ["nextRepeatTrigger", "function",
++      "lib/repeat.js 未加载 —— 周期推进唯一来源，缺了所有重复事项的下一轮都将算不出来"],
++    ["repeatLabel", "function", "lib/repeat.js 导出被破坏（周期文案）"],
++    ["nextRepeatPreview", "function", "lib/repeat.js 导出被破坏（预演时刻）"],
++    ["createStorage", "function",
++      "lib/storage.js 未加载 —— 持久化后端建不起来，读写的都是内存副本，重启即丢"],
++    ["hasIdb", "function",
++      "lib/storage.js 导出被破坏 —— 无法判断当前是否跑在降级后端上，降级期保护会静默失效"],
++    ["deadlineStageKey", "function",
++      "lib/reminder.js 未加载 —— 截止保护阶段身份丢失（p24 / p2 判定会静默换标准）"],
++    ["deadlineStagePoints", "function",
++      "lib/reminder.js 未加载 —— 截止保护只排得出一个点（丢掉 p2 档）"],
++    // ↑ `deadlineStagePoints` 的直接消费者是 `lib/native-reminders.js`（且被它当作
++    //   「AttentionLib 是不是真货」的判据之一），app-core 自己不调它。
++    //   仍在这里声明，是因为它和 `deadlineStageKey` 同属 `lib/reminder.js`：
++    //   该模块缺席时两者一起没，分列两条只是把「后果」写到最贴切的位置。
++    //   `runtimeDependencyCoverage()` 会把它报成 unusedDeclarations —— 那是**已知的**
++    //   冗余，不是漏洞（覆盖判定只对 undeclared 报警）。
++    ["inQuietHours", "function", "lib/reminder.js 导出被破坏（免打扰时段判定）"],
++    ["quietEnd", "function", "lib/reminder.js 导出被破坏（免打扰结束时刻）"],
++    ["applyWindowTrigger", "function",
++      "lib/reminder.js 导出被破坏 —— 柔性窗口不再生效：带 windowStart/End 的事项会按硬时刻触发"],
++    ["shouldRealert", "function",
++      "lib/reminder.js 导出被破坏 —— 重要事项的重复提醒会**整体不再触发**（判定被静默转成 false）"],
++    ["markReminded", "function",
++      "lib/reminder.js 导出被破坏 —— 重复提醒台账不落，下一拍会把同一事项再当「未提醒」重新弹"],
++    ["Feedback", "object",
++      "lib/feedback.js 未加载 —— 动作语义与撤销窗口缺失，撤销会退化成兜底时长"],
++    ["DeliveryEvidence", "object",
++      "lib/delivery-evidence.js 未加载 —— 送达证据无法合并，「提醒结果」这一行会消失"]
++  ];
++
++  /** 按 `a.b.c` 取路径；任一段缺失返回 undefined。 */
++  function readPath(obj, dotted) {
++    return String(dotted).split(".").reduce(function (o, k) {
++      return (o == null ? undefined : o[k]);
++    }, obj);
+   }
+-  function pad(n) { return String(n).padStart(2, "0"); }
+-  function startOfDay(d) { const x = new Date(d); x.setHours(0, 0, 0, 0); return x; }
+-  function endOfDay(d) { const x = new Date(d); x.setHours(23, 59, 59, 999); return x; }
+-  function addDays(d, n) { const x = new Date(d); x.setDate(x.getDate() + n); return x; }
+-  function sameDay(a, b) {
+-    return a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate();
++
++  /**
++   * 逐项核对必需导出，返回**问题清单**（空数组 = 装配完好）。
++   *
++   * 纯函数：只读 `AttentionLib`，不碰 DOM、不写状态、不排钟。因此可以直接在测试里
++   * 用不同的 `Lib` 形状反复调用，也可以在启动前安全地跑一次。
++   */
++  function assertRuntimeDependencies() {
++    const problems = [];
++    for (let i = 0; i < REQUIRED_RUNTIME_EXPORTS.length; i++) {
++      const path0 = REQUIRED_RUNTIME_EXPORTS[i][0];
++      const want = REQUIRED_RUNTIME_EXPORTS[i][1];
++      const why = REQUIRED_RUNTIME_EXPORTS[i][2];
++      const got = readPath(Lib, path0);
++      if (typeof got !== want) {
++        problems.push({
++          path: path0,
++          expected: want,
++          actual: got === null ? "null" : typeof got,
++          why: why
++        });
++      }
++    }
++    return problems;
++  }
++
++  /**
++   * 可见的启动失败面板。
++   *
++   * 契约：**不能只 console.error 之后留下一个可编辑但不落库的界面** —— 那个界面最坏：
++   * 用户照常输入、照常点保存，而写入永远不会到磁盘。所以这里必须
++   *   · 抢占首页容器，让「能点但没用」的界面不被呈现；
++   *   · 用**纯文本 + 两个按钮**（重试 / 重新加载），不放任何可编辑控件；
++   *   · 写明「哪一支没起来」与「后果」，而不是抛一个 TypeError 给用户。
++   */
++  function renderStartupFailure(problems) {
++    const marker = "startup-dependency-failure";
++    // 宿主选取：真实浏览器里 `getElementById` 恒在，但测试沙箱可能只提供 `querySelector`。
++    // 这里按可用性逐个退，而不是假定某一个存在 —— 否则「渲染失败面板」本身会抛错，
++    // 于是失败面板什么都不显示，又退回「安静地留下一个能点但没用」的界面。
++    let host = null;
++    if (typeof document.getElementById === "function") {
++      host = document.getElementById("main") || document.getElementById("homeEmpty");
++    }
++    if (!host && typeof document.querySelector === "function") {
++      host = document.querySelector("#main") || document.querySelector("#homeEmpty");
++    }
++    if (!host) host = document.body;
++    if (!host) return;
++    if (typeof document.getElementById === "function") {
++      const existing = document.getElementById(marker);
++      if (existing && existing.parentNode && typeof existing.parentNode.removeChild === "function") {
++        existing.parentNode.removeChild(existing);
++      }
++    }
++
++    const box = document.createElement("section");
++    box.id = marker;
++    box.setAttribute("data-startup-failure", "1");
++    box.style.cssText = "margin:16px;padding:14px 16px;border:1px solid #d9b8b8;" +
++      "border-radius:10px;background:#fdf4f4;color:#5b2b2b;font-size:14px;line-height:1.6;";
++    // 只有「关键档」才渲染：一条标题、一条原因、两条去路。不铺问题清单的全部细节，
++    // 但保留第一条与条数，让用户至少能说清「哪一支没起来」。
++    const head = document.createElement("p");
++    head.style.cssText = "margin:0 0 8px;font-weight:600;";
++    head.textContent = "应用没能启动：依赖的脚本没有就位（" + problems.length + " 项）";
++    box.appendChild(head);
++
++    const cause = document.createElement("p");
++    cause.style.cssText = "margin:0 0 6px;";
++    cause.textContent = "首要原因：" + problems[0].path + " 期望是 " + problems[0].expected +
++      "，实际是 " + problems[0].actual + "。";
++    box.appendChild(cause);
++
++    const detail = document.createElement("p");
++    detail.style.cssText = "margin:0 0 10px;color:#7a4a4a;";
++    detail.textContent = problems[0].why;
++    box.appendChild(detail);
++
++    const hint = document.createElement("p");
++    hint.style.cssText = "margin:0 0 10px;color:#7a4a4a;";
++    // 关键安全性说明：停在原地是为了**不让你以为已经保存了**。
++    hint.textContent = "为免出现「能输入但存不下来」的界面，本次未加载数据、未做迁移、未安排提醒、未启动后台心跳。";
++    box.appendChild(hint);
++
++    const row = document.createElement("div");
++    row.style.cssText = "display:flex;gap:8px;flex-wrap:wrap;";
++    const retry = document.createElement("button");
++    retry.type = "button";
++    retry.id = "startupRetry";
++    retry.textContent = "重试";
++    retry.style.cssText = "padding:6px 14px;border:1px solid #a87676;border-radius:8px;" +
++      "background:#fff;color:#5b2b2b;cursor:pointer;";
++    retry.addEventListener("click", function () {
++      if (box.parentNode) box.parentNode.removeChild(box);
++      startApp();
++    });
++    const reload = document.createElement("button");
++    reload.type = "button";
++    reload.id = "startupReload";
++    reload.textContent = "重新加载";
++    reload.style.cssText = "padding:6px 14px;border:1px solid #a87676;border-radius:8px;" +
++      "background:#fff;color:#5b2b2b;cursor:pointer;";
++    reload.addEventListener("click", function () {
++      try { location.reload(); } catch (error) {}
++    });
++    row.appendChild(retry);
++    row.appendChild(reload);
++    box.appendChild(row);
++
++    host.insertBefore(box, host.firstChild);
+   }
++
++  /* ---------- utils ---------- */
++
++  /**
++   * 日历原语：**唯一来源 `lib/date-utils.js`**。
++   *
++   * 走**命名空间**（`AttentionLib.DatePrimitives`）而不是扁平 `AttentionLib.startOfDay` ——
++   * 后者是 UMD `Object.assign` 合并出来的，parse-cn / repeat 都往里写过同名键，
++   * 「哪一份在跑」由 `<script>` 顺序决定，而顺序错了不抛错。
++   * 拿不到由 `assertRuntimeDependencies()` 在启动前拦下并给出可读失败。
++   */
++  const DatePrimitives = (Lib && Lib.DatePrimitives) || {};
++
++  /* ---------- UI 纯格式化：唯一来源 lib/ui-format.js ---------- */
++
++  /**
++   * 命名空间挂载（同 `DatePrimitives`），不取扁平导出。
++   * 这里的每一个都是**纯函数**（输入 → 字符串），不碰 DOM、不读 `state`：
++   * 它们此前和几千行编排逻辑挤在同一个 IIFE 里，导致「时间怎么显示」这种事
++   * 也得先把整个 app-core 跑起来才能验。
++   * 取不到 = 装配错误，由 `assertRuntimeDependencies()` 在启动前拦下。
++   */
++  const UiFormat = (Lib && Lib.UiFormat) || {};
++
++  function uid() {
++    return UiFormat.uid();
++  }
++  function pad(n) { return UiFormat.pad(n); }
++  // 兼容别名：同一来源的委托，不另存算法体
++  const startOfDay = DatePrimitives.startOfDay;
++  const endOfDay = DatePrimitives.endOfDay;
++  const addDays = DatePrimitives.addDays;
++  const sameDay = DatePrimitives.sameDay;
+   function fmtTime(ts) {
+-    if (!ts) return "";
+-    const d = new Date(ts), now = new Date();
+-    const t = pad(d.getHours()) + ":" + pad(d.getMinutes());
+-    if (sameDay(d, now)) return "今天 " + t;
+-    if (sameDay(d, addDays(now, 1))) return "明天 " + t;
+-    if (sameDay(d, addDays(now, -1))) return "昨天 " + t;
+-    const md = (d.getMonth() + 1) + "月" + d.getDate() + "日";
+-    if (d.getFullYear() !== now.getFullYear()) return d.getFullYear() + "年" + md + " " + t;
+-    return md + " " + t;
++    return UiFormat.fmtTime(ts);
+   }
+   function fmtDate(ts) {
+-    if (!ts) return "";
+-    const d = new Date(ts), now = new Date();
+-    if (sameDay(d, now)) return "今天";
+-    if (sameDay(d, addDays(now, 1))) return "明天";
+-    if (sameDay(d, addDays(now, -1))) return "昨天";
+-    return (d.getMonth() + 1) + "月" + d.getDate() + "日";
++    return UiFormat.fmtDate(ts);
+   }
+   function relDue(ts) {
+-    const diff = ts - Date.now();
+-    const abs = Math.abs(diff);
+-    const h = Math.round(abs / 3600000);
+-    if (diff < 0) {
+-      if (abs < 3600000) return "已过 " + Math.max(1, Math.round(abs / 60000)) + " 分钟";
+-      if (h < 24) return "已过 " + h + " 小时";
+-      return "已过 " + Math.round(abs / 86400000) + " 天";
+-    }
+-    if (abs < 60000) return "现在";
+-    if (abs < 3600000) return Math.round(abs / 60000) + " 分钟后";
+-    if (abs < 86400000) return h + " 小时后";
+-    return Math.round(abs / 86400000) + " 天后";
+-  }
+-  function nextWeekend(from) {
+-    const d = startOfDay(from || new Date());
+-    const day = d.getDay();
+-    let add = (6 - day + 7) % 7;
+-    if (day === 0) add = 6;
+-    const sat = addDays(d, add);
+-    sat.setHours(10, 0, 0, 0);
+-    return sat.getTime();
++    return UiFormat.relDue(ts);
+   }
++  const nextWeekend = DatePrimitives.nextWeekend;
+   function escapeHtml(s) {
+-    return String(s == null ? "" : s).replace(/[&<>"']/g, c => ({
+-      "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+-    }[c]));
++    return UiFormat.escapeHtml(s);
+   }
+ 
+   /**
+-   * O3：**属性上下文**转义。
++   * O3：**属性上下文**转义 —— 唯一来源 `lib/ui-format.js`。
+    *
+    * 字符集与 `escapeHtml` 相同（`& < > " '` 已覆盖能在属性里闭合引号的每一个字符），
+    * 但语义不同、也必须分开命名：`escapeHtml` 是给**文本节点**用的，这里是给
+@@ -114,173 +338,67 @@
+    * 分开命名是为了让「改转义字符集」的人一眼看到属性侧也是消费者，不会只改一边。
+    */
+   function escapeAttr(v) {
+-    return String(v == null ? "" : v).replace(/[&<>"']/g, c => ({
+-      "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+-    }[c]));
++    return UiFormat.escapeAttr(v);
+   }
+ 
+   /**
+-   * O3：可点击外部链接的**协议白名单**。
++   * O3：可点击外部链接的**协议白名单** —— 唯一来源 `lib/app-ui.js`。
+    *
+    * 只放行「解析后协议是 `http:` / `https:`」的串，其余一律返回 `null`，
+    * 由调用方降级成转义后的**纯文本**（原始数据照旧保留在 `it.url` 里，不静默删除）。
+    *
+-   * 为什么不能用 `startsWith("http")` 或 `escapeHtml` 代替：
+-   *  · URL 解析器会先剔除 TAB / LF / CR —— `"java\nscript:alert(1)"` 的协议其实是
+-   *    `javascript:`，只看字面前缀根本拦不到；`" javascript:…"` 同理；
+-   *  · `escapeHtml` 只处理引号，对协议完全无能为力，`href` 里照样是可执行的
+-   *    `javascript:` / `data:`。
+-   * 因此判定必须落在**解析结果**上，而不是字形上。
++   * 为什么不能用 `startsWith("http")` 或 `escapeHtml` 代替（完整理由随实现写在
++   * `lib/app-ui.js` 的同名函数上，不在这里复制一份）：判定必须落在 **URL 解析结果**上，
++   * 而不是字形上 —— 解析器会先剔除 TAB / LF / CR，于是 `"java\nscript:alert(1)"` 的
++   * 真实协议是 `javascript:`，只看字面前缀根本拦不到。
+    *
+-   * 解析器不可用（老环境 / 提供不了构造函数的测试替身）时退到**保守**字形判定：
+-   * 仍然不是前缀检查，而是要求完整的绝对 URL 结构（协议 + 非空格授权段 + 无空白），
+-   * 宁可把形态不明的串降级成纯文本，也不放它进 `href`。
++   * 无 `URL` 构造器时的保守字形分支也一并搬走，因此**没有第二份**可放行路径；
++   * 该降级已登记（触发条件 / 唯一实现 / 失败反馈 / 覆盖用例见 `lib/app-ui.js`）。
+    */
+-  function safeExternalHref(raw) {
+-    if (raw == null) return null;
+-    const trimmed = String(raw).trim();
+-    if (!trimmed) return null;
+-    // 含控制字符（含 TAB/LF/CR）一律拒绝：解析器会「剔除后再解析」，
+-    // 于是 `java\nscript:…` 会变成「看着不像 javascript:、实际就是 javascript:」。
+-    if (/[\u0000-\u001f\u007f]/.test(trimmed)) return null;
+-
+-    if (typeof URL === "function") {
+-      let parsed;
+-      try {
+-        parsed = new URL(trimmed);
+-      } catch (error) {
+-        // 浏览器提供了解析器却判定输入无效时，不能再用较宽松的字形规则把它放行。
+-        return null;
+-      }
+-      const protocol = String(parsed.protocol || "").toLowerCase();
+-      return protocol === "http:" || protocol === "https:" ? trimmed : null;
+-    }
++  const safeExternalHref = AppUi.safeExternalHref;
+ 
+-    // 仅在运行环境确实没有 URL 构造器时使用保守兼容分支。
+-    if (!/^https?:\/\//i.test(trimmed)) return null;
+-    if (/\s/.test(trimmed)) return null;
+-    const authority = trimmed.replace(/^https?:\/\//i, "").split(/[/?#]/)[0];
+-    if (!authority) return null;
+-    if (!/^[A-Za-z0-9._~%!$&'()*+,;=:@\[\]-]+$/.test(authority)) return null;
+-    return trimmed;
+-  }
++  /* 时间输入的本地串转换与归档日标签 —— 唯一来源 lib/ui-format.js */
++
++  /** `<input type="datetime-local">` 的本地串（不含秒）。 */
+   function toLocalInput(ts) {
+-    if (!ts) return "";
+-    const d = new Date(ts);
+-    return d.getFullYear() + "-" + pad(d.getMonth() + 1) + "-" + pad(d.getDate()) +
+-      "T" + pad(d.getHours()) + ":" + pad(d.getMinutes());
++    return UiFormat.toLocalInput(ts);
+   }
++  /** `datetime-local` 串 → 时间戳；解析不出返回 `null`（**不兜底成「现在」**）。 */
+   function parseLocalInput(v) {
+-    if (!v) return null;
+-    const t = new Date(v).getTime();
+-    return Number.isFinite(t) ? t : null;
++    return UiFormat.parseLocalInput(v);
+   }
++  /**
++   * 归档/列表用的「日」标签。
++   *
++   * 与 `fmtDate` **刻意不合并**（不是遗漏）：空值语义（`"更早"` vs `""`）、有无「明天」
++   * 分支、跨年是否回完整年月日，三处都不同。合并任何一条都是显示行为变更，须单独立项。
++   */
+   function dayLabel(ts) {
+-    if (!ts) return "更早";
+-    const d = new Date(ts), now = new Date();
+-    if (sameDay(d, now)) return "今天";
+-    if (sameDay(d, addDays(now, -1))) return "昨天";
+-    if (d.getFullYear() !== now.getFullYear()) {
+-      return d.getFullYear() + "年" + (d.getMonth() + 1) + "月" + d.getDate() + "日";
+-    }
+-    return (d.getMonth() + 1) + "月" + d.getDate() + "日";
+-  }
+-  function applyClock(day, likeTs) {
+-    const d = new Date(day);
+-    if (likeTs) {
+-      const s = new Date(likeTs);
+-      d.setHours(s.getHours(), s.getMinutes(), 0, 0);
+-    } else d.setHours(10, 0, 0, 0);
+-    return d.getTime();
++    return UiFormat.dayLabel(ts);
+   }
++  /* ---------- 日历 / 周期：全部委托给唯一来源，本文件不再持有算法体 ---------- */
+ 
+-  function lastDayOfMonth(d) {
+-    return new Date(d.getFullYear(), d.getMonth() + 1, 0);
+-  }
+-
+-  /** nth weekday of month. nth=-1 means last. */
+-  function nthWeekdayInMonth(year, month, nth, dow) {
+-    if (nth === -1) {
+-      const last = new Date(year, month + 1, 0);
+-      const delta = (last.getDay() - dow + 7) % 7;
+-      last.setDate(last.getDate() - delta);
+-      return last;
+-    }
+-    const first = new Date(year, month, 1);
+-    let delta = (dow - first.getDay() + 7) % 7;
+-    const d = new Date(year, month, 1 + delta + (nth - 1) * 7);
+-    if (d.getMonth() !== month) return new Date(year, month + 1, 0);
+-    return d;
+-  }
+-
+-  function nthWeekdayOfNextMonth(from, nth, dow, hour, minute) {
+-    const base = from instanceof Date ? new Date(from.getTime()) : new Date(from);
+-    // V04：按「日」比较（与 lib/repeat.js 同一实现）
+-    const baseDay = new Date(base.getFullYear(), base.getMonth(), base.getDate()).getTime();
+-    let y = base.getFullYear(), m = base.getMonth();
+-    let d = nthWeekdayInMonth(y, m, nth, dow);
+-    d.setHours(10, 0, 0, 0);
+-    if (new Date(d.getFullYear(), d.getMonth(), d.getDate()).getTime() <= baseDay) {
+-      m += 1;
+-      if (m > 11) { m = 0; y += 1; }
+-      d = nthWeekdayInMonth(y, m, nth, dow);
+-      d.setHours(10, 0, 0, 0);
+-    }
+-    if (hour != null) d.setHours(hour, minute || 0, 0, 0);
+-    return d.getTime();
+-  }
++  // lib/date-utils.js（命名空间）
++  const applyClock = DatePrimitives.applyClock;
++  const lastDayOfMonth = DatePrimitives.lastDayOfMonth;
++  const nthWeekdayInMonth = DatePrimitives.nthWeekdayInMonth;
++  const weekdayOfNextWeek = DatePrimitives.weekdayOfNextWeek;
++  const dayOfMonthIn = DatePrimitives.dayOfMonthIn;
++  const nextDayOfMonth = DatePrimitives.nextDayOfMonth;
+ 
+   /**
+-   * 与 lib/parse-cn.js 同名函数保持一致（H-01）。
++   * L03：下一周期时刻 —— 唯一来源 `lib/repeat.js`。
+    *
+-   * 本文件自带一份解析器副本，只在 lib/*.js 未加载时兜底；`Lib.parseChineseTime`
+-   * 一旦可用就会覆盖本副本（见文件末尾的覆盖块）。两副本必须同步，否则线上跑的是
+-   * lib、兜底跑的是另一套规则。M-10 记录了「整份重复已分叉」这件事。
++   * 本文件此前自带一份逐字副本，靠文件中的「Lib 有就覆盖」块换掉；那套做法让
++   * 「哪一份在跑」取决于脚本顺序与覆盖块是否被执行，而副本已经分叉（M-10）。
++   * 现在直接取模块导出：取不到就是装配错误，由 `assertRuntimeDependencies()` 拦下。
+    */
+-  function weekdayOfNextWeek(from, weekOffset, target) {
+-    const d = startOfDay(from);
+-    const day = d.getDay();
+-    const toMonday = ((8 - day) % 7) || 7;
+-    const monday = addDays(d, toMonday + (weekOffset - 1) * 7);
+-    return addDays(monday, (target + 6) % 7);
+-  }
+-
+-  function dayOfMonthIn(year, month, day) {
+-    const last = new Date(year, month + 1, 0).getDate();
+-    return new Date(year, month, Math.min(day, last), 10, 0, 0, 0);
+-  }
+-
+-  function nextDayOfMonth(from, day) {
+-    const base = startOfDay(from);
+-    const today = dayOfMonthIn(base.getFullYear(), base.getMonth(), day);
+-    if (today.getTime() > new Date(from).getTime()) return today.getTime();
+-    const y = base.getMonth() === 11 ? base.getFullYear() + 1 : base.getFullYear();
+-    return dayOfMonthIn(y, (base.getMonth() + 1) % 12, day).getTime();
+-  }
+-
+-  function repeatLabel(rep) {
+-    if (!rep || !rep.every) return "";
+-    const map = {
+-      day: "每天", week: "每周", biweek: "每两周",
+-      month: "每月", monthEnd: "每月最后一天",
+-      nthWeekday: "每月第 " + (rep.nth === -1 ? "最后" : (rep.nth || 1)) + " 个周" +
+-        ["日", "一", "二", "三", "四", "五", "六"][rep.dow != null ? rep.dow : 1]
+-    };
+-    return map[rep.every] || rep.every;
+-  }
++  const nextRepeatTrigger = Lib.nextRepeatTrigger;
++
++  // lib/repeat.js
++  const repeatLabel = Lib.repeatLabel;
++  const nextRepeatPreview = Lib.nextRepeatPreview;
+ 
+-  function nextRepeatPreview(rep, from, count) {
+-    count = count || 5;
+-    const out = [];
+-    let cursor = from ? new Date(from) : new Date();
+-    for (let i = 0; i < count; i++) {
+-      const ts = nextRepeatTrigger({ repeat: rep, triggerAt: cursor.getTime() }, cursor.getTime());
+-      if (!ts) break;
+-      out.push(ts);
+-      cursor = new Date(ts + 60000);
+-    }
+-    return out;
+-  }
+   function downloadFile(name, content, type) {
+     let url = null;
+     try {
+@@ -298,296 +416,27 @@
+     }
+   }
+ 
+-  /* Minimal markdown renderer */
++  /* Minimal markdown renderer —— 唯一来源 lib/ui-format.js */
+   function renderMarkdown(src) {
+-    let text = escapeHtml(src || "");
+-    // fenced code
+-    text = text.replace(/```([\s\S]*?)```/g, (_, code) => "<pre><code>" + code.trim() + "</code></pre>");
+-    // headings
+-    text = text.replace(/^### (.+)$/gm, "<h3>$1</h3>");
+-    text = text.replace(/^## (.+)$/gm, "<h2>$1</h2>");
+-    text = text.replace(/^# (.+)$/gm, "<h1>$1</h1>");
+-    // blockquote
+-    text = text.replace(/^&gt; (.+)$/gm, "<blockquote><p>$1</p></blockquote>");
+-    // bold / italic / code
+-    text = text.replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>");
+-    text = text.replace(/\*([^*]+)\*/g, "<em>$1</em>");
+-    text = text.replace(/`([^`]+)`/g, "<code>$1</code>");
+-    // links
+-    text = text.replace(/\[([^\]]+)\]\((https?:[^)\s]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>');
+-    // lists
+-    text = text.replace(/(?:^|\n)((?:- .+(?:\n|$))+)/g, (m, block) => {
+-      const items = block.trim().split(/\n/).map(l => "<li>" + l.replace(/^- /, "") + "</li>").join("");
+-      return "\n<ul>" + items + "</ul>";
+-    });
+-    text = text.replace(/(?:^|\n)((?:\d+\. .+(?:\n|$))+)/g, (m, block) => {
+-      const items = block.trim().split(/\n/).map(l => "<li>" + l.replace(/^\d+\. /, "") + "</li>").join("");
+-      return "\n<ol>" + items + "</ol>";
+-    });
+-    // paragraphs
+-    text = text.split(/\n{2,}/).map(chunk => {
+-      const t = chunk.trim();
+-      if (!t) return "";
+-      if (/^<(h\d|ul|ol|pre|blockquote)/.test(t)) return t;
+-      return "<p>" + t.replace(/\n/g, "<br/>") + "</p>";
+-    }).join("\n");
+-    return text;
+-  }
+-
+-  /* ---------- Chinese NL parser ---------- */
+-  const CN_NUM = {
+-    "零": 0, "〇": 0, "一": 1, "二": 2, "两": 2, "三": 3, "四": 4, "五": 5, "六": 6,
+-    "七": 7, "八": 8, "九": 9, "十": 10, "十一": 11, "十二": 12, "十三": 13, "十四": 14,
+-    "十五": 15, "十六": 16, "十七": 17, "十八": 18, "十九": 19, "二十": 20, "二十一": 21,
+-    "二十二": 22, "二十三": 23, "三十": 30, "三十一": 31
+-  };
+-  function cnInt(str) {
+-    if (str == null || str === "") return null;
+-    if (/^\d+$/.test(str)) return parseInt(str, 10);
+-    if (CN_NUM[str] != null) return CN_NUM[str];
+-    if (str.startsWith("三十")) return 30 + (str.length > 2 ? (CN_NUM[str.slice(2)] || 0) : 0);
+-    if (str.startsWith("二十")) return 20 + (str.length > 2 ? (CN_NUM[str.slice(2)] || 0) : 0);
+-    if (str.startsWith("十")) return 10 + (str.length > 1 ? (CN_NUM[str.slice(1)] || 0) : 0);
+-    return null;
++    return UiFormat.renderMarkdown(src);
+   }
+ 
+-  function parseChineseTime(input, now) {
+-    now = now || new Date();
+-    let text = String(input || "").trim();
+-    let confidence = "none";
+-    let trigger = null;
+-    let deadline = null;
+-    let win = null;
+-    let repeat = null;
+-    /** H-02：「每月 N 号」里的 N；为 null 表示只说「每月」没说号数 */
+-    let monthDay = null;
+-    let cleaned = text;
+-    const base = startOfDay(now);
+-
+-    if (/每两周|隔周|每两星期/.test(text)) {
+-      repeat = { mode: "ack", every: "biweek" };
+-      cleaned = cleaned.replace(/每两周|隔周|每两星期/g, "");
+-    } else if (/每月.{0,4}(最后一天|月底|月末)|每月底|每月末/.test(text)) {
+-      repeat = { mode: "calendar", every: "monthEnd" };
+-      cleaned = cleaned.replace(/每月.{0,4}(最后一天|月底|月末)|每月底|每月末/g, "");
+-    } else if (/每月第\s*([一二三四五六日天]|\d)\s*个\s*(星期|周)?\s*([一二三四五六日天])/.test(text)) {
+-      const m = text.match(/每月第\s*([一二三四五六日天]|\d)\s*个\s*(?:星期|周)?\s*([一二三四五六日天])/);
+-      const nthMap = { "一": 1, "二": 2, "三": 3, "四": 4, "1": 1, "2": 2, "3": 3, "4": 4 };
+-      const dowMap = { "一": 1, "二": 2, "三": 3, "四": 4, "五": 5, "六": 6, "日": 0, "天": 0 };
+-      const nth = nthMap[m[1]] || 1;
+-      const dow = dowMap[m[2]];
+-      repeat = { mode: "calendar", every: "nthWeekday", nth, dow };
+-      cleaned = cleaned.replace(m[0], "");
+-    } else if (/每周|每星期/.test(text)) {
+-      repeat = { mode: "calendar", every: "week" };
+-      // N-04：星期几必须跟着「每周」一起剥掉，否则标题会留下孤立的「一」（「一站会」）。
+-      const wm = text.match(/每(?:周|星期)\s*[一二三四五六日天]?/);
+-      cleaned = cleaned.replace(wm ? wm[0] : /每周|每星期/g, "");
+-    } else if (/每天|每日/.test(text)) {
+-      repeat = { mode: "calendar", every: "day" };
+-      cleaned = cleaned.replace(/每天|每日/g, "");
+-    } else if (/每月|每个月/.test(text)) {
+-      repeat = { mode: "calendar", every: "month" };
+-      // H-02：「每月15号」必须留下 15，否则落「+30 天」兜底并永久漂移到 18 号。
+-      const md = text.match(/每(?:个)?月\s*(\d{1,2}|[一二三四五六七八九十]+)\s*[日号]/);
+-      if (md) monthDay = cnInt(md[1]);
+-      cleaned = cleaned.replace(md ? md[0] : /每月|每个月/g, "");
+-    }
+-
+-    /**
+-     * N-04 / M-03：截止语义不能只认「截止/到期」等硬词，否则「9点前」「之前」既丢截止又污染标题。
+-     * 刻意不用 lookbehind —— 老 Android WebView 会直接抛语法错误，让整个文件加载失败。
+-     */
+-    const beforeAlt = text.match(/之前|以前/);
+-    let beforeToken = null;
+-    if (beforeAlt) beforeToken = beforeAlt[0];
+-    else if (/[点時时]\s*\d*\s*分?\s*前|半\s*前|[:：]\s*\d{2}\s*前|\d{1,2}\s*[日号]\s*前|(?:周|星期)[一二三四五六日天末]\s*前|(?:今天|明天|后天|大后天|今晚|今早|月底|月末|下个月|下月)\s*前/.test(text)) beforeToken = "前";
+-
+-    const hasDeadlineKw = /截止|最后一天|到期|报名结束|提交截止|deadline/i.test(text) || beforeToken != null;
+-    if (beforeToken) cleaned = cleaned.replace(beforeToken, "");
+-    let advanceDays = null;
+-    const adv = text.match(/提前\s*([0-9一二两三四五六七八九十]+)\s*天/);
+-    if (adv) {
+-      advanceDays = cnInt(adv[1]);
+-      cleaned = cleaned.replace(adv[0], "");
+-    }
+-
+-    let deadlineAnchor = null;
+-    const absDate = text.match(/(\d{1,2}|[一二三四五六七八九十]+)\s*月\s*(\d{1,2}|[一二三四五六七八九十]+)\s*[日号]/);
+-    if (absDate) {
+-      const m = cnInt(absDate[1]);
+-      const d = cnInt(absDate[2]);
+-      if (m && d) {
+-        const y = now.getFullYear();
+-        let dt = new Date(y, m - 1, d, 10, 0, 0, 0);
+-        if (dt < startOfDay(now)) dt = new Date(y + 1, m - 1, d, 10, 0, 0, 0);
+-        deadlineAnchor = dt.getTime();
+-        cleaned = cleaned.replace(absDate[0], "");
+-        if (hasDeadlineKw) deadline = endOfDay(dt).getTime();
+-      }
+-    }
+-
+-    let hour = null, minute = 0;
+-    const clock = text.match(/(上午|中午|下午|晚上|早上)?\s*(\d{1,2})[:：](\d{2})/);
+-    if (clock) {
+-      hour = parseInt(clock[2], 10);
+-      minute = parseInt(clock[3], 10);
+-      const mer = clock[1];
+-      if ((mer === "下午" || mer === "晚上") && hour < 12) hour += 12;
+-      if (mer === "中午") hour = 12;
+-      cleaned = cleaned.replace(clock[0], "");
+-    } else {
+-      const clock2 = text.match(/(上午|中午|下午|晚上|早上)?\s*([0-9一二两三四五六七八九十]+)\s*[点時时](\s*(半|[0-9一二三四五六七八九十]+)\s*分?)?/);
+-      if (clock2) {
+-        hour = cnInt(clock2[2]);
+-        minute = clock2[4] === "半" ? 30 : (clock2[4] ? (cnInt(clock2[4]) || 0) : 0);
+-        const mer = clock2[1];
+-        if ((mer === "下午" || mer === "晚上") && hour != null && hour < 12) hour += 12;
+-        if (mer === "中午" && hour != null) hour = 12;
+-        cleaned = cleaned.replace(clock2[0], "");
+-      }
+-    }
++  /* ---------- Chinese NL parser：唯一来源 lib/parse-cn.js ---------- */
+ 
+-    function applyTime(ts, h, m) {
+-      const d = new Date(ts);
+-      if (h != null) d.setHours(h, m || 0, 0, 0);
+-      else d.setHours(10, 0, 0, 0);
+-      return d.getTime();
+-    }
+-
+-    if (/大后天/.test(text)) {
+-      trigger = applyTime(addDays(base, 3).getTime(), hour, minute);
+-      confidence = "high";
+-      cleaned = cleaned.replace(/大后天/g, "");
+-    } else if (/后天/.test(text)) {
+-      trigger = applyTime(addDays(base, 2).getTime(), hour, minute);
+-      confidence = "high";
+-      cleaned = cleaned.replace(/后天/g, "");
+-    } else if (/明天/.test(text)) {
+-      trigger = applyTime(addDays(base, 1).getTime(), hour, minute);
+-      confidence = "high";
+-      cleaned = cleaned.replace(/明天/g, "");
+-    } else if (/今天|今晚|今早/.test(text)) {
+-      let h = hour;
+-      if (h == null) h = /今晚/.test(text) ? 20 : (/今早/.test(text) ? 9 : now.getHours() + 1);
+-      trigger = applyTime(base.getTime(), h, minute);
+-      if (trigger < now.getTime() && !/今晚|今早/.test(text)) trigger = now.getTime() + 5 * 60000;
+-      confidence = "high";
+-      cleaned = cleaned.replace(/今天|今晚|今早/g, "");
+-    } else if (/周末/.test(text)) {
+-      const t = nextWeekend(now);
+-      trigger = hour != null ? applyTime(t, hour, minute) : t;
+-      win = { start: t, end: endOfDay(addDays(t, 1)).getTime() };
+-      confidence = "mid";
+-      cleaned = cleaned.replace(/周末/g, "");
+-    } else if (/(下+)周([一二三四五六日天])|(下+)星期([一二三四五六日天])/.test(text)) {
+-      // H-01：合并原「下周日」「下周X」两分支（语义相同、实现不一致 → 「下周三」晚一周）。
+-      // 「下+」同时覆盖「下下周X」，不再留下孤立的「下」（「下开会」）。
+-      const m = text.match(/(下+)周([一二三四五六日天])|(下+)星期([一二三四五六日天])/);
+-      const weekOffset = (m[1] || m[3] || "下").length;
+-      const ch = m[2] || m[4];
+-      const map = { "一": 1, "二": 2, "三": 3, "四": 4, "五": 5, "六": 6, "日": 0, "天": 0 };
+-      trigger = applyTime(weekdayOfNextWeek(now, weekOffset, map[ch]).getTime(), hour, minute);
+-      confidence = "high";
+-      cleaned = cleaned.replace(m[0], "");
+-    } else if (/(这|本)?周([一二三四五六日天])|(这|本)?星期([一二三四五六日天])/.test(text)) {
+-      // N-04：「本周五」的「本」要一起剥掉，否则标题留下孤立的「本」
+-      const m = text.match(/(这|本)?周([一二三四五六日天])|(这|本)?星期([一二三四五六日天])/);
+-      const ch = m[2] || m[4];
+-      const map = { "一": 1, "二": 2, "三": 3, "四": 4, "五": 5, "六": 6, "日": 0, "天": 0 };
+-      const target = map[ch];
+-      const d = startOfDay(now);
+-      const day = d.getDay();
+-      const delta = (target - day + 7) % 7;
+-      let ts = applyTime(addDays(d, delta).getTime(), hour, minute);
+-      if (ts <= now.getTime() && hour == null) ts = now.getTime() + 60 * 60000;
+-      trigger = ts;
+-      confidence = "high";
+-      cleaned = cleaned.replace(m[0], "");
+-    } else if (/月底|月末/.test(text)) {
+-      // 「下个月底」此前落到「本月底」（先匹配到「月底」），日期整整早一个月
+-      const nextMonth = /下个月|下月/.test(text);
+-      const y = nextMonth && now.getMonth() === 11 ? now.getFullYear() + 1 : now.getFullYear();
+-      const m2 = nextMonth ? (now.getMonth() + 1) % 12 : now.getMonth();
+-      trigger = new Date(y, m2 + 1, 0, 10, 0, 0, 0).getTime();
+-      confidence = "mid";
+-      cleaned = cleaned.replace(nextMonth ? /下个月底|下个月末|下月底|下月末/g : /月底|月末/g, "");
+-    } else if (/下个月|下月/.test(text)) {
+-      // H-03：号数此前被丢掉、硬编码成 1 号（「下个月5号」→ 10-01，应 10-05）
+-      const nm = text.match(/(?:下个月|下月)\s*(\d{1,2}|[一二三四五六七八九十]+)\s*[日号]/);
+-      const day = nm ? cnInt(nm[1]) : 1;
+-      const y = now.getMonth() === 11 ? now.getFullYear() + 1 : now.getFullYear();
+-      const d = dayOfMonthIn(y, (now.getMonth() + 1) % 12, day);
+-      trigger = hour != null ? applyTime(d.getTime(), hour, minute) : d.getTime();
+-      confidence = "mid";
+-      cleaned = cleaned.replace(nm ? nm[0] : /下个月|下月/g, "");
+-    } else if (/过两天/.test(text)) {
+-      trigger = applyTime(addDays(base, 2).getTime(), hour, minute);
+-      confidence = "mid";
+-      cleaned = cleaned.replace(/过两天/g, "");
+-    } else if (/过阵子|以后|回头|改天|之后/.test(text)) {
+-      trigger = applyTime(addDays(base, 7).getTime(), hour, minute);
+-      confidence = "low";
+-      cleaned = cleaned.replace(/过阵子|以后|回头|改天|之后/g, "");
+-    } else if (/([0-9一二两三四五六七八九十]+)\s*[天日]\s*后/.test(text)) {
+-      const m = text.match(/([0-9一二两三四五六七八九十]+)\s*[天日]\s*后/);
+-      const n = cnInt(m[1]) || 1;
+-      trigger = applyTime(addDays(base, n).getTime(), hour, minute);
+-      confidence = "high";
+-      cleaned = cleaned.replace(m[0], "");
+-    } else if (absDate && deadlineAnchor) {
+-      if (hasDeadlineKw) {
+-        const off = advanceDays != null ? advanceDays : 3;
+-        trigger = applyTime(addDays(new Date(deadlineAnchor), -off).getTime(), hour, minute);
+-        deadline = endOfDay(new Date(deadlineAnchor)).getTime();
+-        confidence = "high";
+-      } else {
+-        trigger = deadlineAnchor;
+-        confidence = "mid";
+-      }
+-    } else if (hour != null) {
+-      let ts = applyTime(base.getTime(), hour, minute);
+-      if (ts <= now.getTime()) ts = applyTime(addDays(base, 1).getTime(), hour, minute);
+-      trigger = ts;
+-      confidence = "mid";
+-    } else if (repeat) {
+-      if (repeat.every === "day") trigger = applyTime(addDays(base, 1).getTime(), 10, 0);
+-      else if (repeat.every === "week") trigger = applyTime(addDays(base, 7).getTime(), 10, 0);
+-      else if (repeat.every === "biweek") trigger = applyTime(addDays(base, 14).getTime(), 10, 0);
+-      else if (repeat.every === "monthEnd") trigger = applyTime(new Date(now.getFullYear(), now.getMonth() + 1, 0, 10, 0, 0, 0).getTime(), 10, 0);
+-      else if (repeat.every === "nthWeekday") trigger = nthWeekdayOfNextMonth(now, repeat.nth || 1, repeat.dow != null ? repeat.dow : 1, hour, minute);
+-      // H-02：「每月N号」锚到 N 号的下一次出现
+-      else if (monthDay != null) trigger = applyTime(nextDayOfMonth(now, monthDay), hour, minute);
+-      else trigger = applyTime(addDays(base, 30).getTime(), 10, 0);
+-      confidence = "mid";
+-    }
+-
+-    if (!trigger) {
+-      trigger = applyTime(addDays(base, 7).getTime(), 10, 0);
+-      confidence = "low";
+-    }
+-
+-    // N-04 / M-03：带截止语义的表达，其时间点即截止（有明确时刻精确到那一刻，否则取当天末尾）。
+-    // 只对「X 前 / 之前」生效 —— 按 hasDeadlineKw 放宽会把「每月最后一天交房租」这类
+-    // **周期**表达也变成截止事项，每个周期多一轮截止提醒，净增打扰。
+-    if (beforeToken != null && deadline == null && trigger != null) {
+-      deadline = hour != null ? trigger : endOfDay(new Date(trigger)).getTime();
+-    }
+-
+-    let title = cleaned
+-      .replace(/提醒我|提醒一下|提醒|记得|别忘了|需要|帮我|请/g, " ")
+-      .replace(/看一眼|看一下|看看|瞧瞧/g, "看看")
+-      .replace(/\s+/g, " ")
+-      .trim();
+-    if (!title) title = text.trim() || "未命名事项";
+-
+-    const tags = [];
+-    const hashTags = title.match(/#([^\s#]+)/g) || [];
+-    hashTags.forEach(t => tags.push(t.slice(1)));
+-    title = title.replace(/#[^\s#]+/g, "").replace(/\s+/g, " ").trim();
+-
+-    return { title, trigger, deadline, window: win, repeat, confidence, raw: text, tags };
+-  }
++  /**
++   * 解析器与中文数字**唯一实现在 `lib/parse-cn.js`**。
++   *
++   * 本文件此前自带一整份副本（CN_NUM / cnInt / parseChineseTime），名义上只作「Lib 缺失时兜底」，
++   * 再由文件末尾的 `if (Lib.parseChineseTime) parseChineseTime = Lib.parseChineseTime;` 覆盖回去。
++   * 但两份**已经分叉**，所以「兜底」并不是同一套规则，而是悄悄换一套：
++   *   · cnInt 副本只认「三十/二十/十」前缀；lib 还认「二零二三」式逐位与「百/千」段位单位。
++   *   · parseChineseTime 副本缺全角数字归一（normalizeTimeText）与时长复合表达（extractDuration），
++   *     返回对象也没有 scheduleBasis 字段（elapsed / wall-clock 的判据就压在那里）。
++   * 现在只保留唯一来源；取不到 = 装配错误，由 assertRuntimeDependencies() 在启动前拦下。
++   */
++  const parseChineseTime = Lib.parseChineseTime;
++  const cnInt = Lib.cnInt;
++  const hasSpecificTimeWord = Lib.hasSpecificTimeWord;
+ 
+   /* ---------- state ---------- */
+   const PROJECT_COLORS = ["#1b6b4a", "#3d5a80", "#9a6b12", "#8f3a3a", "#5b4b8a", "#2f6f7a"];
+@@ -722,7 +571,7 @@
+    */
+   function authoritativeBackendMissing() {
+     try {
+-      return typeof Lib.hasIdb === "function" && Lib.hasIdb() && storage.backend !== "idb";
++      return Lib.hasIdb() && storage.backend !== "idb";
+     } catch (error) {
+       return false;
+     }
+@@ -1213,15 +1062,13 @@
+ 
+   /**
+    * 截止保护的阶段身份（L02 / INV-05）。
+-   * 规范实现在 lib/reminder.js；这里只做转发 + 兜底，避免两份规则各自漂移。
++   *
++   * **唯一实现在 `lib/reminder.js`**。这里不再保留「Lib 缺失时按 24h/2h 自己算一份」的兜底 ——
++   * 那份兜底与规范实现是**两套边界常量**，一旦生效，界面上看不出任何差异，只是阶段判定
++   * 悄悄换了标准（与 native-reminders 里「只排 p24、丢掉 p2」是同一类静默降级）。
+    */
+   function deadlineStageKeyOf(deadlineAt, now) {
+-    if (Lib.deadlineStageKey) return Lib.deadlineStageKey(deadlineAt, now);
+-    const dl = Number(deadlineAt) || 0;
+-    if (!dl) return null;
+-    const left = dl - Number(now == null ? Date.now() : now);
+-    if (left > 24 * 3600000 || left <= -24 * 3600000) return null;
+-    return (left <= 2 * 3600000 ? "p2" : "p24") + "@" + dl;
++    return Lib.deadlineStageKey(deadlineAt, now);
+   }
+ 
+   /** 已完成 / 已归档是终态：只允许通过明确的恢复动作重开（L04） */
+@@ -1308,11 +1155,6 @@
+     return d.getTime();
+   }
+ 
+-  function hasSpecificTimeWord(text) {
+-    if (Lib.hasSpecificTimeWord) return Lib.hasSpecificTimeWord(text);
+-    return /明天|后天|下周|下周|月底|今晚/.test(String(text || ""));
+-  }
+-
+   const VAGUE_RE = /^(这个|那个|它|something)?\s*(以后|后面|之后|过阵子|回头|有空|有时间)?\s*(看看|看一下|关注|处理|研究|了解)?\s*$/;
+ 
+   function isVagueContent(title, note, url) {
+@@ -1860,37 +1702,20 @@
+     return item.triggerAt <= now;
+   }
+ 
+-  function parseHHMM(s, fallbackH, fallbackM) {
+-    const m = String(s || "").match(/^(\d{1,2}):(\d{2})$/);
+-    if (!m) return { h: fallbackH, m: fallbackM };
+-    return { h: parseInt(m[1], 10), m: parseInt(m[2], 10) };
+-  }
+-
++  /**
++   * 勿扰规则**唯一实现在 `lib/reminder.js`**（`inQuietHours` / `quietEnd` / `parseHHMM`）。
++   *
++   * 本文件此前是「`Lib.*` 有就调用，没有就走内联副本」——内联副本是第二套算法，
++   * 于是「Lib 没加载」这件事不会浮出水面，只是**换一套规则继续跑**。
++   * 现在不再有副本：规则模块属于必需依赖，缺失在启动前就被拦下。
++   * 这里只保留**读取当前设置**这一层适配（不参与任何算法）。
++   */
+   function inQuietHours(d) {
+-    if (Lib.inQuietHours) return Lib.inQuietHours(d, state.settings);
+-    if (!state.settings.dnd) return false;
+-    const start = parseHHMM(state.settings.quietStart, 23, 0);
+-    const end = parseHHMM(state.settings.quietEnd, 7, 30);
+-    const mins = d.getHours() * 60 + d.getMinutes();
+-    const s = start.h * 60 + start.m;
+-    const e = end.h * 60 + end.m;
+-    if (s === e) return false;
+-    if (s < e) return mins >= s && mins < e;
+-    return mins >= s || mins < e;
++    return Lib.inQuietHours(d, state.settings);
+   }
+ 
+   function quietEnd(d) {
+-    if (Lib.quietEnd) return Lib.quietEnd(d, state.settings);
+-    const end = parseHHMM(state.settings.quietEnd, 7, 30);
+-    const x = new Date(d);
+-    const mins = d.getHours() * 60 + d.getMinutes();
+-    const s = parseHHMM(state.settings.quietStart, 23, 0);
+-    const startM = s.h * 60 + s.m;
+-    const endM = end.h * 60 + end.m;
+-    const wrapped = startM >= endM;
+-    if (wrapped && mins >= startM) x.setDate(x.getDate() + 1);
+-    x.setHours(end.h, end.m, 0, 0);
+-    return x.getTime();
++    return Lib.quietEnd(d, state.settings);
+   }
+ 
+   function promoteDue(now) {
+@@ -1905,7 +1730,7 @@
+       const fallbackSuppressed = isFallbackSuppressed(it);
+       if (!fallbackSuppressed && (it.status === "waiting" || it.status === "snoozed")) {
+         // 柔性窗口：仅对 waiting 生效，避免覆盖用户 snooze
+-        if (it.status === "waiting" && Lib.applyWindowTrigger && (it.windowStart || it.windowEnd)) {
++        if (it.status === "waiting" && (it.windowStart || it.windowEnd)) {
+           const winTs = Lib.applyWindowTrigger(it, now);
+           if (winTs && winTs !== it.triggerAt) { it.triggerAt = winTs; changed = true; }
+         }
+@@ -1944,51 +1769,7 @@
+     if (changed) save();
+   }
+ 
+-  /* L03：与 lib/repeat.js 保持同一实现（本文件内的副本仅作 Lib 缺失时的兜底） */
+-  function nextRepeatTrigger(it, fromTs) {
+-    const rep = (it && it.repeat) || {};
+-    const every = rep.every;
+-    if (!every) return null;
+-    const ackBased = rep.mode === "ack";
+-    const from = fromTs != null
+-      ? Number(fromTs)
+-      : (ackBased
+-        ? (it.acknowledgedAt || Date.now())
+-        : (it.triggerAt || it.acknowledgedAt || Date.now()));
+-    if (!Number.isFinite(from)) return null;
+-    if (every === "day") return applyClock(addDays(new Date(from), 1), it.triggerAt);
+-    if (every === "week") return applyClock(addDays(new Date(from), 7), it.triggerAt);
+-    if (every === "biweek") return applyClock(addDays(new Date(from), 14), it.triggerAt);
+-    if (every === "month") {
+-      const base = new Date(from);
+-      const m = base.getMonth() + 1;
+-      const ny = base.getFullYear() + Math.floor(m / 12);
+-      const nm = ((m % 12) + 12) % 12;
+-      const day = Math.min(base.getDate(), new Date(ny, nm + 1, 0).getDate());
+-      return applyClock(new Date(ny, nm, day), it.triggerAt);
+-    }
+-    if (every === "monthEnd") {
+-      // V04：按「日」比较（与 lib/repeat.js 同一实现）
+-      const base = new Date(from);
+-      const baseDay = new Date(base.getFullYear(), base.getMonth(), base.getDate()).getTime();
+-      let d = lastDayOfMonth(base);
+-      if (new Date(d.getFullYear(), d.getMonth(), d.getDate()).getTime() <= baseDay) {
+-        d = lastDayOfMonth(new Date(base.getFullYear(), base.getMonth() + 1, 1));
+-      }
+-      return applyClock(d, it.triggerAt);
+-    }
+-    if (every === "nthWeekday") {
+-      const s = new Date(it.triggerAt || from);
+-      return nthWeekdayOfNextMonth(
+-        from,
+-        rep.nth || 1,
+-        rep.dow != null ? rep.dow : 1,
+-        s.getHours(),
+-        s.getMinutes()
+-      );
+-    }
+-    return null;
+-  }
++  /* nextRepeatTrigger 见文件顶部的别名声明（唯一来源 lib/repeat.js） */
+ 
+   /**
+    * F3：保证周期事项有稳定的系列身份。
+@@ -2130,12 +1911,6 @@
+     return true;
+   }
+ 
+-  // Prefer lib implementations when loaded (single source of truth)
+-  if (Lib.parseChineseTime) parseChineseTime = Lib.parseChineseTime;
+-  if (Lib.nextRepeatTrigger) nextRepeatTrigger = Lib.nextRepeatTrigger;
+-  if (Lib.repeatLabel) repeatLabel = Lib.repeatLabel;
+-  if (Lib.nextRepeatPreview) nextRepeatPreview = Lib.nextRepeatPreview;
+-
+   /**
+    * 完成 —— 归档当前实例。
+    *
+@@ -3469,86 +3244,18 @@
+     else el.textContent = "已开启 · " + (c.model || "模型") + (c.autoOnSave ? " · 保存时自动" : " · 仅手动");
+   }
+ 
+-  /* ---------- sheets ---------- */
+-  function openSheet(id) {
+-    $("#backdrop").classList.add("show");
+-    $("#" + id).classList.add("open");
+-  }
+-  function closeSheet(id) {
+-    $("#" + id).classList.remove("open");
+-    if (!$$(".sheet.open").length) $("#backdrop").classList.remove("show");
+-  }
+-  function closeAllSheets() {
+-    $$(".sheet").forEach(s => s.classList.remove("open"));
+-    $("#backdrop").classList.remove("show");
+-  }
+-
+-  /* In-app confirm (preview may block native confirm) */
+-  function confirmDialog(message, title) {
+-    return new Promise((resolve) => {
+-      const sheet = $("#sheetConfirm");
+-      const body = $("#confirmBody");
+-      const titleEl = $("#confirmTitle");
+-      if (!sheet || !body) {
+-        // last resort
+-        try { resolve(window.confirm(message)); } catch (e) { resolve(true); }
+-        return;
+-      }
+-      titleEl.textContent = title || "确认";
+-      body.textContent = message || "确定继续？";
+-      openSheet("sheetConfirm");
+-
+-      const cleanup = (val) => {
+-        $("#confirmOk").onclick = null;
+-        $("#confirmCancel").onclick = null;
+-        $("#confirmClose").onclick = null;
+-        closeSheet("sheetConfirm");
+-        resolve(val);
+-      };
+-      $("#confirmOk").onclick = () => cleanup(true);
+-      $("#confirmCancel").onclick = () => cleanup(false);
+-      $("#confirmClose").onclick = () => cleanup(false);
+-    });
+-  }
++  /* ---------- sheets / toast / confirm：唯一来源 lib/app-ui.js ---------- */
+ 
+-  let toastTimer = null;
+   /**
+-   * 浮动提示。
++   * 弹层与提示的**唯一实现**在 lib/app-ui.js（由文件顶部的 createUi 装配绑定）。
++   *
++   * 这里只留一条说明，是因为这几支最容易被人「就近补一个」：它们的调用点散布在
++   * 视图、表单、备份、原生回调各处，看上去像本文件自己的小工具。实际情况相反 ——
++   * 它们是唯一一处「有状态的展示会话」（toastTimer、确认框的 cleanup、backdrop 的
++   * 引用计数式关闭），第二份实现会让「关掉哪一层、什么时候撤掉 backdrop」出现两套口径。
+    *
+-   * `second` 是 UX-C03/A03 需要的**第二个动作**（例如「查看」旁边的「撤销」）——
+-   * 一个提示槽只有一个按钮时，「撤销」这种限时入口就没有位置，
+-   * 会被迫缩成不可点的一句说明，等于没有恢复路径。
++   * 由此往上，本文件不再持有任何 DOM 展示动作的定义；`$` / `$$` 也来自同一处。
+    */
+-  function toast(msg, actionLabel, onAction, second, opts) {
+-    // M1：重放用户操作时不重复弹提示 —— 那一次提示在用户操作时已经弹过了
+-    if (suppressUserFeedback) return;
+-    const t = $("#toast"), a = $("#toastAction"), b = $("#toastAction2");
+-    $("#toastText").textContent = msg;
+-    if (actionLabel) {
+-      a.hidden = false;
+-      a.textContent = actionLabel;
+-      a.onclick = () => { hideToast(); if (onAction) onAction(); };
+-    } else {
+-      a.hidden = true;
+-      a.onclick = null;
+-    }
+-    if (b) {
+-      if (second && second.label) {
+-        b.hidden = false;
+-        b.textContent = second.label;
+-        b.onclick = () => { hideToast(); if (second.onClick) second.onClick(); };
+-      } else {
+-        b.hidden = true;
+-        b.onclick = null;
+-      }
+-    }
+-    t.classList.add("show");
+-    clearTimeout(toastTimer);
+-    const hasAction = !!(actionLabel || (second && second.label));
+-    const duration = (opts && opts.durationMs) || (hasAction ? 5000 : 2400);
+-    toastTimer = setTimeout(hideToast, duration);
+-  }
+-  function hideToast() { $("#toast").classList.remove("show"); }
+ 
+   /* ---------- UX-T01：保存结果与排程结果分开 ---------- */
+ 
+@@ -7140,7 +6847,6 @@
+       if (it.status !== "due") return false;
+       if (shouldSkipAlert(it)) return false;
+       if (!it.lastAlertShownAt) return true;
+-      if (!Lib.shouldRealert) return false;
+       return Lib.shouldRealert(it, now, {
+         importantRepeat: state.settings.importantRepeat !== false,
+         dismissedAt: dismissedAlerts[it.id] || null
+@@ -7153,7 +6859,7 @@
+         return (a.triggerAt || 0) - (b.triggerAt || 0);
+       });
+       const next = candidates[0];
+-      if (next.lastAlertShownAt && Lib.markReminded) Lib.markReminded(next, now);
++      if (next.lastAlertShownAt) Lib.markReminded(next, now);
+       next.lastAlertShownAt = now;
+       save();
+       showAlert(next);
+@@ -8359,7 +8065,35 @@
+    */
+   let readyPromise = null;
+ 
++  /**
++   * 最近一次装配闸门的判定结果（`null` = 装配完好）。
++   *
++   * 失败面板是给用户看的，测试不该只靠「DOM 里多了一个节点」来判断闸门有没有生效 ——
++   * 那测的是渲染，不是判定。所以把判定本身留在这里，`ready() === false` 与该字段
++   * 一起构成「启动被明确拒绝」的两个可断言事实。
++   */
++  let lastStartupFailure = null;
++
+   function startApp() {
++    // P1：**装配闸门在业务启动之前**。
++    //
++    // 顺序上必须早于 `init()` 的全部内容 —— 一旦进了 init，就会依次发生
++    // loadAsync（读库并整体替换 state）、schema 迁移的 save()、ensureNativeReminders
++    // （排钟 / 建通知渠道）、`setInterval(tick, 15000)`。缺模块时这些都会带着
++    // 「半套规则」跑起来，而且不报错。
++    const depProblems = assertRuntimeDependencies();
++    lastStartupFailure = depProblems.length ? depProblems : null;
++    if (depProblems.length) {
++      console.error("Startup dependency check failed:", depProblems);
++      try {
++        renderStartupFailure(depProblems);
++      } catch (error) {
++        console.error("Failed to render startup failure:", error && error.message ? error.message : error);
++      }
++      // ready 必须**明确失败**（false），而不是挂起或假装成功。
++      readyPromise = Promise.resolve(false);
++      return readyPromise;
++    }
+     // 同步启动，保持与之前一致的启动时机；只把结果包成一个总是兑现的 Promise
+     const running = init();
+     readyPromise = running.then(() => true, err => {
+@@ -8411,7 +8145,10 @@
+       parseChineseTime,
+       makeItem,
+       nextRepeatTrigger,
+-      nthWeekdayOfNextMonth,
++      // 同名函数两种语义必须**显式命名**（见 lib/date-utils.js）：
++      // 首期候选按具体时刻比较，周期推进按「日」比较，合并就会让周期原地打转。
++      nthWeekdayOfNextMonthByInstant: DatePrimitives.nthWeekdayOfNextMonthByInstant,
++      nthWeekdayOfNextMonthByDay: DatePrimitives.nthWeekdayOfNextMonthByDay,
+       nthWeekdayInMonth,
+       lastDayOfMonth,
+       repeatLabel,
+@@ -8550,7 +8287,31 @@
+       startOfDay,
+       addDays,
+       sameDay,
+-      applyClock
++      applyClock,
++      // P1：装配闸门本身可被直接驱动 —— 只有这样才能构造「缺模块」的反例。
++      // 光测「正常组合能起来」证明不了闸门有效：闸门的作用对象恰恰是坏组合。
++      assertRuntimeDependencies,
++      renderStartupFailure,
++      REQUIRED_RUNTIME_EXPORTS,
++      startupFailure: () => (lastStartupFailure ? lastStartupFailure.slice() : null),
++      // P2-b：展示能力的接线证明。断言对象是**调用结果**而不是「绑定是否存在」——
++      // `typeof $ === "function"` 才能说明 AppUi 真的装上了；只看 `appUi` 是不是空对象
++      // 会漏掉「模块在、但 createUi 返回了空壳」。
++      uiSurface: () => ({
++        hasQuery: typeof $ === "function",
++        hasQueryAll: typeof $$ === "function",
++        hasSheet: typeof openSheet === "function",
++        hasCloseSheet: typeof closeSheet === "function",
++        hasCloseAllSheets: typeof closeAllSheets === "function",
++        hasConfirm: typeof confirmDialog === "function",
++        hasToast: typeof toast === "function",
++        hasHideToast: typeof hideToast === "function",
++        hasSafeHref: typeof safeExternalHref === "function",
++        // 三档协议判定的实测结果（相对断言容易写成恒真，这里取真实返回值）。
++        hrefHttps: safeExternalHref ? safeExternalHref("https://example.com/x") : "MISSING",
++        hrefJs: safeExternalHref ? safeExternalHref("javascript:alert(1)") : "MISSING",
++        hrefTab: safeExternalHref ? safeExternalHref("ja\tvascript:alert(1)") : "MISSING"
++      })
+     };
+     // Console helper for manual recovery in preview
+     globalThis.seedAttentionInbox = seed;
+diff --git a/index.html b/index.html
+index 088b595..496fc07 100644
+--- a/index.html
++++ b/index.html
+@@ -1976,6 +1976,18 @@
+   <input type="file" id="importFile" accept="application/json,.json" hidden />
+ </div>
+ 
++<!-- 日历原语：startOfDay / addDays / applyClock / nthWeekdayInMonth 等的唯一来源。
++     必须排在 parse-cn / repeat 之前：这两支在**求值时**就把 DatePrimitives 抓进闭包常量，
++     顺序错了不抛错，只会让它们拿到空实现。由 production-scripts.js 的
++     LOAD_TIME_DEPENDENCIES 与测试组合断言守住。 -->
++<script src="lib/date-utils.js"></script>
++<!-- UI 纯格式化：时间显示 / 转义 / Markdown / 补零 / id。纯函数，依赖 date-utils。 -->
++<script src="lib/ui-format.js"></script>
++<!-- 共用展示能力：$ / $$ / 弹层 / toast / 确认框 / 外链白名单。
++     模块求值不注册监听、不开定时器、不读 AttentionLib 的任何导出（`document` 与 `URL`
++     都在调用时取），所以**没有加载期依赖**；实例由 app-core 顶部统一创建。
++     排在这里只是与其它展示层相邻，便于审阅 —— 不是顺序约束。 -->
++<script src="lib/app-ui.js"></script>
+ <script src="lib/parse-cn.js"></script>
+ <script src="lib/repeat.js"></script>
+ <script src="lib/reminder.js"></script>
+diff --git a/lib/native-reminders.js b/lib/native-reminders.js
+index 9252f13..5d24dff 100644
+--- a/lib/native-reminders.js
++++ b/lib/native-reminders.js
+@@ -44,8 +44,14 @@
+   }
+ 
+   /**
+-   * 截止保护的阶段与身份：单一实现在 lib/reminder.js。
+-   * 浏览器里由 AttentionLib 提供；Node 下（含测试）直接 require 同一个文件。
++   * 截止保护与勿扰规则的阶段、常量与身份：**单一实现在 `lib/reminder.js`**。
++   *
++   * 这里不再自带任何算法副本，也不再写「拿不到就退化成简化版」的兜底 ——
++   * 兜底曾让「只排 p24、丢掉 p2」这种情况在**界面与日志都正常**的前提下静默发生
++   * （见 production-scripts.js 的 LOAD_TIME_DEPENDENCIES 注释）。
++   * 拿不到规则模块属于**装配错误**，必须当场说清，而不是换一套规则继续跑。
++   *
++   * 浏览器里由 `AttentionLib` 提供；Node 下（含测试）require 同一个文件。
+    */
+   const Lib = (function () {
+     if (root && root.AttentionLib && root.AttentionLib.deadlineStageKey) return root.AttentionLib;
+@@ -54,19 +60,25 @@
+     } catch (error) {}
+     return null;
+   })();
+-  const DEADLINE_LEAD_MS = (Lib && Lib.DEADLINE_LEAD_MS) || 24 * 60 * 60 * 1000;
+-  const DEADLINE_GRACE_MS = (Lib && Lib.DEADLINE_GRACE_MS) || 24 * 60 * 60 * 1000;
++
++  if (!Lib || !Lib.deadlineStageKey || !Lib.deadlineStagePoints ||
++    !Lib.inQuietHours || !Lib.quietEnd || !Lib.parseHHMM) {
++    throw new Error(
++      "native-reminders.js: 缺少规则模块 lib/reminder.js（截止阶段 + 勿扰规则的唯一来源）。" +
++      "请检查 index.html 的脚本顺序：reminder.js 必须排在 native-reminders.js 之前。"
++    );
++  }
++
++  /** 宽限期（哪些「已经错过的触发点」还值得补投）—— 常量本身也只在 reminder.js 定义一处 */
++  const DEADLINE_GRACE_MS = Lib.DEADLINE_GRACE_MS;
+ 
+   function deadlineStageKey(deadlineAt, now) {
+-    if (Lib && Lib.deadlineStageKey) return Lib.deadlineStageKey(deadlineAt, now);
+-    return null;
++    return Lib.deadlineStageKey(deadlineAt, now);
+   }
+ 
+   /** V03：每个保护阶段各自预排，而不是只排 deadline-24h 一个点 */
+   function deadlineStagePoints(deadlineAt) {
+-    if (Lib && Lib.deadlineStagePoints) return Lib.deadlineStagePoints(deadlineAt);
+-    const dl = Number(deadlineAt) || 0;
+-    return dl ? [{ id: "p24", at: dl - DEADLINE_LEAD_MS }] : [];
++    return Lib.deadlineStagePoints(deadlineAt);
+   }
+ 
+   /**
+@@ -220,34 +232,24 @@
+     return changed;
+   }
+ 
++  /**
++   * 勿扰规则**唯一实现在 `lib/reminder.js`**。
++   *
++   * `parseHHMM` 这里只是**形状适配器**（无算法）：`reminder.js` 返回 `{h, m}`，
++   * 本模块历史调用点用的是 `{hour, minute}`。适配器只做字段改名，
++   * 不允许再长出第二份正则/第二套跨午夜判断。
++   */
+   function parseHHMM(value, fallbackHour, fallbackMinute) {
+-    const m = String(value || "").match(/^(\d{1,2}):(\d{2})$/);
+-    if (!m) return { hour: fallbackHour, minute: fallbackMinute };
+-    return { hour: Number(m[1]), minute: Number(m[2]) };
++    const r = Lib.parseHHMM(value, fallbackHour, fallbackMinute);
++    return { hour: r.h, minute: r.m };
+   }
+ 
+   function inQuietHours(date, settings) {
+-    if (!settings || !settings.dnd) return false;
+-    const start = parseHHMM(settings.quietStart, 23, 0);
+-    const end = parseHHMM(settings.quietEnd, 7, 30);
+-    const current = date.getHours() * 60 + date.getMinutes();
+-    const startMinutes = start.hour * 60 + start.minute;
+-    const endMinutes = end.hour * 60 + end.minute;
+-    if (startMinutes === endMinutes) return false;
+-    if (startMinutes < endMinutes) return current >= startMinutes && current < endMinutes;
+-    return current >= startMinutes || current < endMinutes;
++    return Lib.inQuietHours(date, settings);
+   }
+ 
+   function quietEnd(date, settings) {
+-    const end = parseHHMM(settings && settings.quietEnd, 7, 30);
+-    const start = parseHHMM(settings && settings.quietStart, 23, 0);
+-    const current = date.getHours() * 60 + date.getMinutes();
+-    const startMinutes = start.hour * 60 + start.minute;
+-    const endMinutes = end.hour * 60 + end.minute;
+-    const result = new Date(date);
+-    if (startMinutes >= endMinutes && current >= startMinutes) result.setDate(result.getDate() + 1);
+-    result.setHours(end.hour, end.minute, 0, 0);
+-    return result.getTime();
++    return Lib.quietEnd(date, settings);
+   }
+ 
+   function effectiveTriggerAt(item, settings) {
+diff --git a/lib/parse-cn.js b/lib/parse-cn.js
+index 061e450..40e0eb3 100644
+--- a/lib/parse-cn.js
++++ b/lib/parse-cn.js
+@@ -1,89 +1,56 @@
+ /* Chinese NL time parser — UMD */
+ (function (root, factory) {
+-  if (typeof module === "object" && module.exports) module.exports = factory();
++  if (typeof module === "object" && module.exports) module.exports = factory(root);
+   else {
+     root.AttentionLib = root.AttentionLib || {};
+-    Object.assign(root.AttentionLib, factory());
++    const api = factory(root);
++    Object.keys(api).forEach(function (k) {
++      // `nthWeekdayOfNextMonth` 不在扁平命名空间里合并：它与 lib/repeat.js 的同名导出
++      // **语义故意不同**（按具体时刻 vs 按日）。扁平 `Object.assign` 会变成「谁后加载谁生效」，
++      // 而顺序错了不抛错。同一来源的其余别名合并无妨，这两个改为显式命名。
++      if (k === "nthWeekdayOfNextMonth") return;
++      root.AttentionLib[k] = api[k];
++    });
++    root.AttentionLib.nthWeekdayOfNextMonthByInstant = api.nthWeekdayOfNextMonth;
+   }
+-})(typeof self !== "undefined" ? self : this, function () {
++})(typeof self !== "undefined" ? self : this, function (root) {
+   "use strict";
+ 
+-  function startOfDay(d) { const x = new Date(d); x.setHours(0, 0, 0, 0); return x; }
+-  function endOfDay(d) { const x = new Date(d); x.setHours(23, 59, 59, 999); return x; }
+-  function addDays(d, n) { const x = new Date(d); x.setDate(x.getDate() + n); return x; }
+-  function nextWeekend(from) {
+-    const d = startOfDay(from || new Date());
+-    const day = d.getDay();
+-    let add = (6 - day + 7) % 7;
+-    if (day === 0) add = 6;
+-    const sat = addDays(d, add);
+-    sat.setHours(10, 0, 0, 0);
+-    return sat.getTime();
+-  }
+-
+-  function lastDayOfMonth(d) {
+-    return new Date(d.getFullYear(), d.getMonth() + 1, 0);
+-  }
+-  function nthWeekdayInMonth(year, month, nth, dow) {
+-    if (nth === -1) {
+-      const last = new Date(year, month + 1, 0);
+-      const delta = (last.getDay() - dow + 7) % 7;
+-      last.setDate(last.getDate() - delta);
+-      return last;
+-    }
+-    const first = new Date(year, month, 1);
+-    let delta = (dow - first.getDay() + 7) % 7;
+-    const d = new Date(year, month, 1 + delta + (nth - 1) * 7);
+-    if (d.getMonth() !== month) return new Date(year, month + 1, 0);
+-    return d;
+-  }
+-  function nthWeekdayOfNextMonth(from, nth, dow, hour, minute) {
+-    const base = from instanceof Date ? new Date(from.getTime()) : new Date(from);
+-    let y = base.getFullYear(), m = base.getMonth();
+-    let d = nthWeekdayInMonth(y, m, nth, dow);
+-    d.setHours(10, 0, 0, 0);
+-    if (d.getTime() <= base.getTime()) {
+-      m += 1;
+-      if (m > 11) { m = 0; y += 1; }
+-      d = nthWeekdayInMonth(y, m, nth, dow);
+-      d.setHours(10, 0, 0, 0);
+-    }
+-    if (hour != null) d.setHours(hour, minute || 0, 0, 0);
+-    return d.getTime();
+-  }
+-
+   /**
+-   * H-01：「下周X」「下下周X」= 下一个 / 下下个**日历周**（以周一为首日）里的那个星期几。
++   * 日历原语来自 `lib/date-utils.js` 的**命名空间**导出。
+    *
+-   * 原实现先算「最近的那个星期 X」，再无条件 `delta += 7`，等于整体推后一周：
+-   * 「下周三」（基准周五）算成 09-30 而不是 09-23。同文件的「下周日」分支只加一次 7 天，
+-   * 两者语义相同却实现不一致 —— 以本函数为准，两个分支合并。
++   * 刻意不从这个模块的扁平导出里取（`AttentionLib.startOfDay` 等）—— 那是
++   * `Object.assign` 合并出来的，谁后加载谁生效；正是拆分前「同名导出互相覆盖」的成因。
++   * 命名空间是显式依赖：拿不到就是装配错误，不是「换了个实现」。
+    */
+-  function weekdayOfNextWeek(from, weekOffset, target) {
+-    const d = startOfDay(from);
+-    const day = d.getDay();                       // 0=周日 … 6=周六
+-    const toMonday = ((8 - day) % 7) || 7;        // 到下一个周一的天数，恒 > 0
+-    const monday = addDays(d, toMonday + (weekOffset - 1) * 7);
+-    return addDays(monday, (target + 6) % 7);     // 周一=1→0 … 周日=0→6
++  const P = (function () {
++    if (root && root.AttentionLib && root.AttentionLib.DatePrimitives) return root.AttentionLib.DatePrimitives;
++    try {
++      if (typeof require === "function") return require("./date-utils.js");
++    } catch (error) {}
++    return null;
++  })();
++
++  if (!P) {
++    throw new Error("parse-cn.js: 缺少 lib/date-utils.js（日历原语唯一来源）。请检查 index.html 的脚本顺序。");
+   }
+ 
++  // 兼容导出：同名，但**只是同一来源的别名**，不另存算法体。
++  const startOfDay = P.startOfDay;
++  const endOfDay = P.endOfDay;
++  const addDays = P.addDays;
++  const nextWeekend = P.nextWeekend;
++  const lastDayOfMonth = P.lastDayOfMonth;
++  const nthWeekdayInMonth = P.nthWeekdayInMonth;
++  const weekdayOfNextWeek = P.weekdayOfNextWeek;
++  const dayOfMonthIn = P.dayOfMonthIn;
++  const nextDayOfMonth = P.nextDayOfMonth;
+   /**
+-   * 「N 号」在指定月份的那一天；该月没有这一天时收敛到月末（与 repeat.js 的 month 推进口径一致）。
+-   * 不收敛会让 9/31 溢出成 10/01（JS Date 的自然行为），标题与月份都对不上。
++   * 解析器的「首期候选」语义：按**具体时刻**比较（原口径，不得改成按日）。
++   * 周期推进用的是另一个函数（`repeat.js` → `nthWeekdayOfNextMonthByDay`），
++   * 两者故意不同，见 lib/date-utils.js 的注释。
+    */
+-  function dayOfMonthIn(year, month, day) {
+-    const last = new Date(year, month + 1, 0).getDate();
+-    return new Date(year, month, Math.min(day, last), 10, 0, 0, 0);
+-  }
+-
+-  /** H-02：「每月 N 号」的下一次出现（跨月，含年界）。锚在 10:00，与其它无时刻分支一致。 */
+-  function nextDayOfMonth(from, day) {
+-    const base = startOfDay(from);
+-    const today = dayOfMonthIn(base.getFullYear(), base.getMonth(), day);
+-    if (today.getTime() > new Date(from).getTime()) return today.getTime();
+-    const y = base.getMonth() === 11 ? base.getFullYear() + 1 : base.getFullYear();
+-    return dayOfMonthIn(y, (base.getMonth() + 1) % 12, day).getTime();
+-  }
++  const nthWeekdayOfNextMonth = P.nthWeekdayOfNextMonthByInstant;
+ 
+   const CN_NUM = {
+     "零": 0, "〇": 0, "一": 1, "二": 2, "两": 2, "三": 3, "四": 4, "五": 5, "六": 6,
+diff --git a/lib/repeat.js b/lib/repeat.js
+index 3125a39..bc19312 100644
+--- a/lib/repeat.js
++++ b/lib/repeat.js
+@@ -1,55 +1,48 @@
+ /* Repeat rules — UMD */
+ (function (root, factory) {
+-  if (typeof module === "object" && module.exports) module.exports = factory();
++  if (typeof module === "object" && module.exports) module.exports = factory(root);
+   else {
+     root.AttentionLib = root.AttentionLib || {};
+-    Object.assign(root.AttentionLib, factory());
++    const api = factory(root);
++    Object.keys(api).forEach(function (k) {
++      // 与 lib/parse-cn.js 同理：`nthWeekdayOfNextMonth` 语义故意不同（这里是按「日」比较），
++      // 不并入扁平命名空间，避免「谁后加载谁生效」。
++      if (k === "nthWeekdayOfNextMonth") return;
++      root.AttentionLib[k] = api[k];
++    });
++    root.AttentionLib.nthWeekdayOfNextMonthByDay = api.nthWeekdayOfNextMonth;
+   }
+-})(typeof self !== "undefined" ? self : this, function () {
++})(typeof self !== "undefined" ? self : this, function (root) {
+   "use strict";
+ 
+-  function addDays(d, n) { const x = new Date(d); x.setDate(x.getDate() + n); return x; }
+-  function applyClock(day, likeTs) {
+-    const d = new Date(day);
+-    if (likeTs) {
+-      const s = new Date(likeTs);
+-      d.setHours(s.getHours(), s.getMinutes(), 0, 0);
+-    } else d.setHours(10, 0, 0, 0);
+-    return d.getTime();
+-  }
+-  function lastDayOfMonth(d) {
+-    return new Date(d.getFullYear(), d.getMonth() + 1, 0);
+-  }
+-  function nthWeekdayInMonth(year, month, nth, dow) {
+-    if (nth === -1) {
+-      const last = new Date(year, month + 1, 0);
+-      const delta = (last.getDay() - dow + 7) % 7;
+-      last.setDate(last.getDate() - delta);
+-      return last;
+-    }
+-    const first = new Date(year, month, 1);
+-    let delta = (dow - first.getDay() + 7) % 7;
+-    const d = new Date(year, month, 1 + delta + (nth - 1) * 7);
+-    if (d.getMonth() !== month) return new Date(year, month + 1, 0);
+-    return d;
+-  }
+-  function nthWeekdayOfNextMonth(from, nth, dow, hour, minute) {
+-    const base = from instanceof Date ? new Date(from.getTime()) : new Date(from);
+-    // V04：同 monthEnd —— 按「日」比较，否则锚点正好落在该周几、且早于 10:00 时会原地打转
+-    const baseDay = new Date(base.getFullYear(), base.getMonth(), base.getDate()).getTime();
+-    let y = base.getFullYear(), m = base.getMonth();
+-    let d = nthWeekdayInMonth(y, m, nth, dow);
+-    d.setHours(10, 0, 0, 0);
+-    if (new Date(d.getFullYear(), d.getMonth(), d.getDate()).getTime() <= baseDay) {
+-      m += 1;
+-      if (m > 11) { m = 0; y += 1; }
+-      d = nthWeekdayInMonth(y, m, nth, dow);
+-      d.setHours(10, 0, 0, 0);
+-    }
+-    if (hour != null) d.setHours(hour, minute || 0, 0, 0);
+-    return d.getTime();
++  /**
++   * 日历原语来自 `lib/date-utils.js` 的**命名空间**导出（显式依赖，不靠加载顺序覆盖）。
++   * 拿不到就是装配错误 —— 不再自带一份同算法副本兜底。
++   */
++  const P = (function () {
++    if (root && root.AttentionLib && root.AttentionLib.DatePrimitives) return root.AttentionLib.DatePrimitives;
++    try {
++      if (typeof require === "function") return require("./date-utils.js");
++    } catch (error) {}
++    return null;
++  })();
++
++  if (!P) {
++    throw new Error("repeat.js: 缺少 lib/date-utils.js（日历原语唯一来源）。请检查 index.html 的脚本顺序。");
+   }
+ 
++  const addDays = P.addDays;
++  const applyClock = P.applyClock;
++  const lastDayOfMonth = P.lastDayOfMonth;
++  const nthWeekdayInMonth = P.nthWeekdayInMonth;
++  /**
++   * 周期推进语义（V04）：按**日**比较，不能拿拼好的 10:00 时间戳去比锚点。
++   * 原期是 1/31 09:00 时，1/31 10:00 > 1/31 09:00 会被判定为「仍是未来」，
++   * 最后 `applyClock` 又换回 09:00 → 返回与原期完全相同的时间（死循环）。
++   * 解析器的「首期候选」用的是另一个函数（`parse-cn.js` → `ByInstant`），两者故意不同。
++   */
++  const nthWeekdayOfNextMonth = P.nthWeekdayOfNextMonthByDay;
++
+   /**
+    * 下一周期时刻（L03）。
+    *
+diff --git a/package.json b/package.json
+index 6ac700c..82b1360 100644
+--- a/package.json
++++ b/package.json
+@@ -7,7 +7,7 @@
+     "sync:www": "node scripts/sync-www.js",
+     "cap:sync": "npm run sync:www && npx cap sync android",
+     "cap:open": "npx cap open android",
+-    "test": "node test-unit.js && node test-native-reminders.js && node test-boot-combination.js && node test-smoke.js && node test-regressions.js"
++    "test": "node test-unit.js && node test-native-reminders.js && node test-boot-combination.js && node test-smoke.js && node test-regressions.js && node scripts/verification/parse-single-source.js"
+   },
+   "devDependencies": {
+     "@capacitor/android": "^6.0.0",
+diff --git a/scripts/verification/parse-parity.js b/scripts/verification/parse-parity.js
+deleted file mode 100644
+index 7693243..0000000
+--- a/scripts/verification/parse-parity.js
++++ /dev/null
+@@ -1,150 +0,0 @@
+-#!/usr/bin/env node
+-/*
+- * 解析器双副本一致性核对（M-10 的守护）。
+- *
+- * 背景：`lib/parse-cn.js` 与 `app-core.js` 里各有一份 parseChineseTime。
+- * app-core 的副本只在 `lib/*.js` 未加载时兜底，平时由 `Lib.parseChineseTime` 覆盖
+- * （app-core.js 的覆盖块）。两份副本已经分叉过一次（内置 cnInt 不认「四十」），
+- * 而且分叉是**静默**的 —— 线上跑 lib、兜底跑另一套规则。
+- *
+- * 本脚本把 app-core 的副本从源码里切出来（该区段是纯函数，无 DOM 依赖），
+- * 与 lib 跑同一组用例并逐项比对。任何差异都必须是有意为之，否则视为回归。
+- *
+- * 用法：/usr/local/bin/node scripts/verification/parse-parity.js
+- * 退出码：0 = 一致（或差异全部已被 allowedDiffs 显式登记）；1 = 存在未登记差异。
+- */
+-"use strict";
+-
+-const fs = require("fs");
+-const path = require("path");
+-
+-const ROOT = path.resolve(__dirname, "../..");
+-const lib = require(path.join(ROOT, "lib/parse-cn.js"));
+-const coreSrc = fs.readFileSync(path.join(ROOT, "app-core.js"), "utf8");
+-
+-/** 从源码里按花括号配平切出 `function name(` 的完整定义。 */
+-function sliceFunction(src, header) {
+-  const start = src.indexOf(header);
+-  if (start < 0) throw new Error("找不到函数定义：" + header);
+-  let i = src.indexOf("{", start);
+-  if (i < 0) throw new Error("找不到函数体：" + header);
+-  let depth = 0;
+-  for (let j = i; j < src.length; j++) {
+-    const c = src[j];
+-    if (c === "{") depth++;
+-    else if (c === "}") {
+-      depth--;
+-      if (depth === 0) return src.slice(start, j + 1);
+-    } else if (c === '"' || c === "'" || c === "`") {
+-      // 跳过字符串/模板字面量，避免其中的花括号影响配平
+-      for (j++; j < src.length; j++) {
+-        if (src[j] === "\\") { j++; continue; }
+-        if (src[j] === c) break;
+-      }
+-    }
+-  }
+-  throw new Error("函数体未闭合：" + header);
+-}
+-
+-/** 组装 app-core 兜底副本：解析器只依赖这几个纯函数。 */
+-function loadCoreFallback() {
+-  const pieces = [
+-    sliceFunction(coreSrc, "function startOfDay(d)"),
+-    sliceFunction(coreSrc, "function endOfDay(d)"),
+-    sliceFunction(coreSrc, "function addDays(d, n)"),
+-    sliceFunction(coreSrc, "function nextWeekend(from)"),
+-    sliceFunction(coreSrc, "function lastDayOfMonth(d)"),
+-    sliceFunction(coreSrc, "function nthWeekdayInMonth(year, month, nth, dow)"),
+-    sliceFunction(coreSrc, "function nthWeekdayOfNextMonth(from, nth, dow, hour, minute)"),
+-    sliceFunction(coreSrc, "function weekdayOfNextWeek(from, weekOffset, target)"),
+-    sliceFunction(coreSrc, "function dayOfMonthIn(year, month, day)"),
+-    sliceFunction(coreSrc, "function nextDayOfMonth(from, day)"),
+-    sliceFunction(coreSrc, "const CN_NUM"),
+-    sliceFunction(coreSrc, "function cnInt(str)"),
+-    sliceFunction(coreSrc, "function parseChineseTime(input, now)")
+-  ];
+-  // const CN_NUM 是对象字面量赋值，配平的是 `=` 右侧的花括号，同样适用
+-  const body = pieces.join("\n") + "\nreturn { parseChineseTime, cnInt };\n";
+-  return new Function(body)();
+-}
+-
+-/**
+- * 已知且有意为之的能力差：兜底副本没有 extractDuration / normalizeTimeText，
+- * 因此**时长类**表达（「两小时后」「3天后」）它认不出来 —— lib 会走时长路径
+- * （保留当前时刻、high），兜底只能落到日期分支（10:00、mid）。
+- * 显式列出，避免把「已知能力差」误报成「新分叉」。
+- */
+-const KNOWN_CAPABILITY_GAPS = [
+-  { text: "3天后还信用卡", reason: "时长路径：兜底无 extractDuration" },
+-  { text: "过两天再说", reason: "时长路径：兜底无 extractDuration" }
+-].map(g => g.text);
+-
+-// 基准时刻：2026-09-18 周五 14:00
+-const NOW = new Date(2026, 8, 18, 14, 0, 0);
+-const CORPUS = [
+-  "提醒我下周三交房租", "下周三下午3点开会", "下周日交房租", "下下周一开会", "下星期三开会",
+-  "本周五前提交报告", "截止到本周五", "周五开会", "周一会", "每周一早上9点站会", "每周复盘",
+-  "每月15号提醒我", "每个月5号交电费", "每月底提醒我交房租", "每月最后一天交房租",
+-  "每月第一个周一开会", "每月第2个周二开例会", "每月31号交房租",
+-  "下个月5号交电费", "下个月交电费", "下个月底结算", "月底结算", "下月1号交房租",
+-  "明天上午9点前提交", "明天上午10点半面试", "12月31日之前提交年报", "3月15日报名截止",
+-  "9月30日截止，提前五天交材料", "3天后还信用卡", "大后天上午9点体检", "过两天再说",
+-  "今天晚上8点看直播", "周末看那个纪录片", "过阵子再看看这个", "记得买牛奶"
+-];
+-
+-const core = loadCoreFallback();
+-
+-function shape(p) {
+-  return {
+-    confidence: p.confidence,
+-    trigger: p.trigger,
+-    deadline: p.deadline || null,
+-    repeat: p.repeat ? JSON.stringify(p.repeat) : null,
+-    title: p.title
+-  };
+-}
+-
+-function fmt(ts) {
+-  return ts ? new Date(ts).toLocaleString("zh-CN", { hour12: false }) : String(ts);
+-}
+-
+-let checked = 0, diffs = [], gaps = 0;
+-for (const text of CORPUS) {
+-  const a = shape(lib.parseChineseTime(text, NOW));
+-  const b = shape(core.parseChineseTime(text, NOW));
+-  if (KNOWN_CAPABILITY_GAPS.indexOf(text) >= 0) { gaps++; continue; }
+-  checked++;
+-  if (JSON.stringify(a) !== JSON.stringify(b)) {
+-    diffs.push({ text, lib: a, core: b });
+-  }
+-}
+-
+-console.log("语料 " + CORPUS.length + " 条：已比对 " + checked + " 条，跳过已知能力差 " + gaps + " 条");
+-console.log("");
+-if (!diffs.length) {
+-  console.log("两份副本在上述语料上表现一致。");
+-} else {
+-  console.log("发现 " + diffs.length + " 处未登记的差异：");
+-  for (const d of diffs) {
+-    console.log("\n  「" + d.text + "」");
+-    for (const k of Object.keys(d.lib)) {
+-      const same = d.lib[k] === d.core[k];
+-      const shown = k === "trigger" || k === "deadline" ? fmt : (v => v);
+-      console.log("    " + (same ? " " : "!") + " " + k.padEnd(11) +
+-        " lib=" + (shown === fmt ? fmt(d.lib[k]) : d.lib[k]) +
+-        (same ? "" : "   兜底=" + (shown === fmt ? fmt(d.core[k]) : d.core[k])));
+-    }
+-  }
+-}
+-
+-// 额外断言：lib 不该退化成兜底的那套能力（例如 cnInt 不认「四十」）
+-const cnNumCases = [["四十", 40], ["九十", 90], ["一百", 100], ["三十五", 35], ["二十三", 23]];
+-console.log("");
+-for (const [s, want] of cnNumCases) {
+-  const got = lib.cnInt(s);
+-  if (got !== want) { diffs.push({ text: "cnInt(" + s + ")", lib: want, core: got }); console.log("  ✗ cnInt(" + s + ") = " + got + "，应为 " + want); }
+-  else console.log("  ✓ cnInt(" + s + ") = " + got);
+-}
+-
+-process.exitCode = diffs.length ? 1 : 0;
+-console.log("\n" + (process.exitCode ? "结果：不一致（FAIL）" : "结果：一致（PASS）"));
+diff --git a/scripts/verification/production-scripts.js b/scripts/verification/production-scripts.js
+index 22bb3b5..5fc4318 100644
+--- a/scripts/verification/production-scripts.js
++++ b/scripts/verification/production-scripts.js
+@@ -32,14 +32,119 @@ const SCRIPT_SHAPE = /^(app-core\.js|lib\/[A-Za-z0-9._-]+\.js)$/;
+  * 界面与日志都正常，只是**少了一段时间的保护提醒**。
+  */
+ const LOAD_TIME_DEPENDENCIES = [
++  {
++    script: "lib/parse-cn.js",
++    requires: ["lib/date-utils.js"],
++    why: "它在求值时就把 AttentionLib.DatePrimitives 抓进闭包常量 P（拿不到直接抛「缺日历原语」）"
++  },
++  {
++    script: "lib/repeat.js",
++    requires: ["lib/date-utils.js"],
++    why: "同上：求值时抓 AttentionLib.DatePrimitives，拿不到直接抛错而不是退回另一套日历算法"
++  },
++  {
++    script: "lib/ui-format.js",
++    requires: ["lib/date-utils.js"],
++    why: "同上：求值时抓 AttentionLib.DatePrimitives（sameDay / addDays）做「今天/明天/昨天」判定"
++  },
+   {
+     script: "lib/native-reminders.js",
+     requires: ["lib/reminder.js"],
+-    why: "它在求值时就把 AttentionLib.deadlineStageKey/deadlineStagePoints 抓进闭包常量 Lib，" +
+-      "而那三个标识符定义在 lib/reminder.js"
++    why: "它在求值时就把 AttentionLib.deadlineStageKey/deadlineStagePoints/inQuietHours/quietEnd " +
++      "抓进闭包常量 Lib，而那些标识符定义在 lib/reminder.js"
+   }
+ ];
+ 
++/**
++ * `app-core.js` 里代表「模块命名空间」的局部常量。
++ *
++ * 覆盖判定要按 `<命名空间>.<成员>` 逐符号对齐，所以必须知道有哪些命名空间。
++ * 新增一个命名空间模块（如 `AttentionLib.UiFormat`）时**在这里加一行** ——
++ * 忘了加的后果是这个模块的引用完全不被闭合判定覆盖，与「忘了进声明表」是同一种漏洞。
++ */
++const NAMESPACE_LOCALS = ["Lib", "DatePrimitives", "UiFormat", "AppUi"];
++
++/**
++ * 去掉注释，但保留换行与列位置（等长空白替换）。
++ *
++ * 为什么需要：`app-core.js` 里有大量**注释中的** `Lib.parseChineseTime` 这类引用示例。
++ * 不剥掉就会把「文档里提到的符号」误当成「代码依赖的符号」，于是覆盖判定被注释养肥、
++ * 真的漏声明反而看不出来。
++ */
++function stripComments(src) {
++  return src
++    .replace(/\/\*[\s\S]*?\*\//g, m => m.replace(/[^\n]/g, " "))
++    .replace(/(^|[^:])\/\/[^\n]*/g, (m, p1) => p1 + " ".repeat(m.length - p1.length));
++}
++
++/**
++ * **运行时依赖矩阵闭合检查**（P1）。
++ *
++ * 三个集合必须对得上：
++ *   · `refs`     —— `app-core.js` 里**真实引用**的 `Lib.x` / `DatePrimitives.x`（剥掉注释）；
++ *   · `declared` —— 启动闸门的声明表 `REQUIRED_RUNTIME_EXPORTS` 里的路径；
++ *   · `undeclared` —— refs 里有、声明表里没有的（**必须为空**）。
++ *
++ * 为什么这条比「启动正常」更有价值：闸门只保护它**列出来**的东西。有人新写一行
++ * `Lib.somethingNew(...)` 却忘了进表，闸门就看不见它 —— 运行到那一行才 TypeError，
++ * 或者更糟：写成 `Lib.x ? … : 兜底` 于是静默降级。闭包由这条检查守住。
++ *
++ * 反向对照必须有牙齿：往 app-core 里塞一个未声明的 `Lib.newThing`，`undeclared` 必须变红。
++ * 为此 `options.source` 允许传入**替换用的 app-core 源码** —— 否则反向对照只能靠改仓库文件，
++ * 那既脏又不可重放。
++ */
++function runtimeDependencyCoverage(root, options) {
++  const raw = (options && typeof options.source === "string")
++    ? options.source
++    : fs.readFileSync(path.join(root, "app-core.js"), "utf8");
++  const code = stripComments(raw);
++
++  const refs = new Map();
++  const nsAlternation = NAMESPACE_LOCALS
++    .map(function (n) { return n.replace(/\$/g, "\\$"); })
++    .sort(function (a, b) { return b.length - a.length; })   // 长的先匹配，避免 DatePrimitives 被 Date 之类截断
++    .join("|");
++  code.split("\n").forEach((line, i) => {
++    const re = new RegExp("\\b(" + nsAlternation + ")\\.([A-Za-z_$][\\w$]*)", "g");
++    let m;
++    while ((m = re.exec(line)) !== null) {
++      const ns = m[1];
++      const member = m[2];
++      // `Lib` 本身是模块注册表，不是「一个模块」，要求它进声明表没有意义 —— 跳过。
++      // 其余命名空间（`DatePrimitives` / `UiFormat`）**自身**也算一条：闸门要检查它存在。
++      if (ns !== "Lib") {
++        if (!refs.has(ns)) refs.set(ns, []);
++        refs.get(ns).push(i + 1);
++      }
++      const key = ns === "Lib" ? member : ns + "." + member;
++      if (!refs.has(key)) refs.set(key, []);
++      refs.get(key).push(i + 1);
++    }
++  });
++
++  // 声明表按源码形状读取：["<path>", "<type>", ...]
++  const declared = new Map();
++  const reTable = /\[\s*"([A-Za-z_$][\w$]*(?:\.[A-Za-z_$][\w$]*)*)"\s*,\s*"(function|object)"/g;
++  let t;
++  while ((t = reTable.exec(raw)) !== null) {
++    if (!declared.has(t[1])) declared.set(t[1], t[2]);
++  }
++
++  const undeclared = [];
++  refs.forEach((lines, key) => {
++    if (!declared.has(key)) undeclared.push({ path: key, lines: lines });
++  });
++  undeclared.sort((a, b) => (a.path < b.path ? -1 : 1));
++
++  return {
++    refs: Array.from(refs.keys()).sort(),
++    declared: Array.from(declared.keys()).sort(),
++    undeclared: undeclared,
++    /** 声明了但谁也没引用 —— 不算错，只是冗余，单独报出来供人工过目。 */
++    unusedDeclarations: Array.from(declared.keys()).filter(k => !refs.has(k)).sort()
++  };
++}
++
+ function readIndexScripts(root) {
+   const html = fs.readFileSync(path.join(root, "index.html"), "utf8");
+   const out = [];
+@@ -239,6 +344,8 @@ function readHarnessLoadSets(root) {
+ module.exports = {
+   SCRIPT_SHAPE: SCRIPT_SHAPE,
+   LOAD_TIME_DEPENDENCIES: LOAD_TIME_DEPENDENCIES,
++  runtimeDependencyCoverage: runtimeDependencyCoverage,
++  stripComments: stripComments,
+   readIndexScripts: readIndexScripts,
+   readSwAssets: readSwAssets,
+   inspectList: inspectList,
+diff --git a/sw.js b/sw.js
+index 4cf3b4f..007b753 100644
+--- a/sw.js
++++ b/sw.js
+@@ -1,5 +1,5 @@
+ /* 安心收件箱 Service Worker — network-first for app shell, offline fallback */
+-const CACHE = "attention-inbox-v5";
++const CACHE = "attention-inbox-v8";
+ /**
+  * 预缓存清单必须**逐条等于** `index.html` 里真正加载的运行时脚本。
+  *
+@@ -16,6 +16,9 @@ const ASSETS = [
+   "./",
+   "./index.html",
+   "./app-core.js",
++  "./lib/date-utils.js",
++  "./lib/ui-format.js",
++  "./lib/app-ui.js",
+   "./lib/parse-cn.js",
+   "./lib/repeat.js",
+   "./lib/reminder.js",
+diff --git a/test-boot-combination.js b/test-boot-combination.js
+index 7a8d786..03776e5 100644
+--- a/test-boot-combination.js
++++ b/test-boot-combination.js
+@@ -5,7 +5,7 @@
+  *   · `test-native-reminders.js` —— 直接驱动 `lib/native-reminders.js` 的平台行为；
+  *   · `test-smoke.js` / `test-regressions.js` —— app-core 在**受控外设**下的业务行为
+  *     （它们按需注入模块，平台 mock 全在沙箱内）；
+- *   · **本文件** —— 「`index.html` 里那 8 支脚本、按那个顺序、真的能起来吗」。
++ *   · **本文件** —— 「`index.html` 里那批脚本（当前 9 支）、按那个顺序、真的能起来吗」。
+  *
+  * 为什么这一条必须单独存在：app-core 取模块用的是 `AttentionXxx || {}`。于是
+  * 「脚本没加载」和「加载了但顺序错了」在这一层**都不报错**，只是所有原生能力
+@@ -30,6 +30,27 @@ const vm = require("vm");
+ const ROOT = __dirname;
+ const prod = require(path.join(ROOT, "scripts/verification/production-scripts.js"));
+ 
++/**
++ * 生产组合的**有序契约**（P1 起 9 支 → P2 起 11 支；新增/改名 `lib/*.js` 必须在这里显式过目）。
++ *
++ * 这里刻意**不**写成「从 index.html 推出来再和自己比」—— 那是恒真断言，拔掉生产链
++ * 也不会变红。契约要独立写死，让「有人往 index.html 加了一支脚本却忘了改契约」
++ * 变成一次可见失败。数量由本数组长度派生出，不再散落 8/9 这种魔术数字。
++ */
++const EXPECTED_INDEX_SCRIPTS = [
++  "lib/date-utils.js",        // 日历原语唯一来源，必须最先
++  "lib/ui-format.js",         // UI 纯格式化（依赖 date-utils，紧随其后）
++  "lib/app-ui.js",            // 共用展示能力（无加载期依赖，见 index.html 注释）
++  "lib/parse-cn.js",
++  "lib/repeat.js",
++  "lib/reminder.js",
++  "lib/storage.js",
++  "lib/feedback.js",
++  "lib/delivery-evidence.js",
++  "lib/native-reminders.js",
++  "app-core.js"               // 装配入口，永远最后
++];
++
+ let passed = 0;
+ let failed = 0;
+ const failures = [];
+@@ -88,7 +109,10 @@ function makeNode(id) {
+     setAttribute() {}, getAttribute() { return null; },
+     querySelector() { return null; }, querySelectorAll() { return []; },
+     closest() { return null; }, focus() {}, click() {},
+-    appendChild() {}, remove() {}, insertBefore() {}, scrollIntoView() {}
++    appendChild(child) { INSERTIONS.push(id); if (child) child.parentNode = node; return child; },
++    remove() { if (node.parentNode) node.parentNode = null; },
++    insertBefore(child) { INSERTIONS.push(id); if (child) child.parentNode = node; return child; },
++    scrollIntoView() {}
+   };
+   Object.defineProperty(node, "innerHTML", {
+     get() { return html; },
+@@ -104,9 +128,23 @@ function makeNode(id) {
+ }
+ 
+ const WRITES = { total: 0, byId: {} };
++/**
++ * 节点**插入**次数（`appendChild` / `insertBefore` 落在哪个容器上）。
++ *
++ * 「启动失败面板真的被插进首页容器了」这句话不能只看 `innerHTML` 计数 ——
++ * 面板走的是 `createElement` + `insertBefore`，全程不碰 `innerHTML`。
++ */
++const INSERTIONS = [];
++/** `document.createElement(tag)` 建过哪些标签（失败面板的「无控件」判据要用）。 */
++const CREATED = [];
++/** 写进 `createElement` 出来的节点的 `textContent`（失败面板的文案判据）。 */
++const CREATED_TEXT = [];
+ function resetWrites() {
+   WRITES.total = 0;
+   WRITES.byId = {};
++  INSERTIONS.length = 0;
++  CREATED.length = 0;
++  CREATED_TEXT.length = 0;
+ }
+ 
+ /**
+@@ -293,9 +331,26 @@ function loadCombination(options) {
+     visibilityState: "visible",
+     addEventListener(name, fn) { (docListeners[name] = docListeners[name] || []).push(fn); },
+     removeEventListener() {},
++    // `getElementById("main")` 与 `querySelector("#main")` 必须落在**同一个**节点对象上，
++    // 否则「面板插进了哪个容器」会被一个假的差异骗过去。
++    getElementById(sel) { return getNode("#" + sel); },
+     querySelector(sel) { return getNode(sel); },
+     querySelectorAll() { return []; },
+-    createElement() { return makeNode("tmp"); },
++    createElement(tag) {
++      // 「失败面板里没有可编辑控件」「面板上真的写了哪一支没起来」只能靠**建了哪些标签 +
++      // 写了哪些文字**来证 —— 面板走 createElement + textContent，全程不碰 innerHTML，
++      // 所以 innerHTML 计数看不到它。
++      CREATED.push(String(tag == null ? "" : tag).toLowerCase());
++      const node = makeNode("tmp");
++      let text = "";
++      Object.defineProperty(node, "textContent", {
++        get() { return text; },
++        set(v) { text = String(v == null ? "" : v); CREATED_TEXT.push(text); },
++        enumerable: true,
++        configurable: true
++      });
++      return node;
++    },
+     body: { appendChild() {} }
+   };
+ 
+@@ -307,8 +362,20 @@ function loadCombination(options) {
+   JSONWrap.stringify = function () { JSONCount.stringify++; return JSON.stringify.apply(JSON, arguments); };
+   const docListeners = {};
+ 
++  // 收集沙箱内的 `console.error`：启动闸门失败时会打日志，那本身是**要断言的事实**
++  // （「不是只 console.error」不等于「连 console.error 都没有」），但不该刷屏。
++  const consoleErrors = [];
++  const sandboxConsole = {
++    log: (...a) => console.log(...a),
++    warn: (...a) => console.warn(...a),
++    info: (...a) => console.log(...a),
++    debug: () => {},
++    error: (...a) => { consoleErrors.push(a.map(x => (x && x.message) || String(x)).join(" ")); },
++    trace: () => {}, table: () => {}, dir: () => {}
++  };
++
+   const sandbox = {
+-    console, Date, Math, JSON: JSONWrap, Object, Array, String, Number, Boolean, Set, Map,
++    console: sandboxConsole, Date, Math, JSON: JSONWrap, Object, Array, String, Number, Boolean, Set, Map,
+     WeakMap, Promise, Error, RegExp, Symbol,
+     parseInt, parseFloat, isNaN, encodeURIComponent, decodeURIComponent, URLSearchParams,
+     Blob: function () {}, File: function () {}, FileReader: function () {},
+@@ -422,6 +489,10 @@ function loadCombination(options) {
+     loaded: loaded,
+     loadErrors: loadErrors,
+     intervals: intervals,
++    insertions: INSERTIONS,
++    created: CREATED,
++    createdText: CREATED_TEXT,
++    consoleErrors: consoleErrors,
+     jsonCount: JSONCount,
+     /** O4：`Array.prototype.find` 的谓词比较计数（`big*` = 长度 ≥64 的数组）。 */
+     findMeter: findMeter,
+@@ -464,29 +535,53 @@ async function run() {
+   /* ---------- A. 生产组合清单本身：从 index.html 推导并逐条判定 ---------- */
+   section("A. 生产组合清单从 index.html 推导（未知脚本 / 缺文件 / 顺序 / 加载期依赖）");
+   {
+-    ok("index.html 里解析出 8 支外部脚本", indexScripts.length === 8, JSON.stringify(indexScripts));
++    ok("index.html 的脚本集合与顺序与契约逐项相符（" + EXPECTED_INDEX_SCRIPTS.length + " 支）",
++      JSON.stringify(indexScripts) === JSON.stringify(EXPECTED_INDEX_SCRIPTS),
++      JSON.stringify(indexScripts));
+     ok("全部脚本形状合法且文件存在", prod.inspectList(ROOT, indexScripts).length === 0,
+       JSON.stringify(prod.inspectList(ROOT, indexScripts)));
+     ok("app-core.js 是最后一支（它在 IIFE 开头就取全局模块）",
+       indexScripts[indexScripts.length - 1] === "app-core.js");
+-    // 加载期依赖：native-reminders 在求值时就把 AttentionLib.deadlineStageKey/Points
+-    // 抓进闭包常量；那三个标识符在 lib/reminder.js 里定义。
+-    const dep = prod.LOAD_TIME_DEPENDENCIES[0];
+-    ok("加载期依赖成立：lib/native-reminders.js 在 lib/reminder.js 之后",
+-      indexScripts.indexOf(dep.script) > indexScripts.indexOf(dep.requires[0]));
++    // 加载期依赖：每一条声明都必须在**真实生产顺序**里成立 —— 不是只看第 [0] 条。
++    // 例：lib/parse-cn.js / lib/repeat.js 求值时就把 AttentionLib.DatePrimitives 抓进
++    // 闭包常量（拿不到直接抛错，不再退回另一套日历算法）；lib/native-reminders.js 同理
++    // 抓 lib/reminder.js 的 deadlineStageKey/Points。
++    {
++      const violations = (prod.LOAD_TIME_DEPENDENCIES || []).filter(dep =>
++        indexScripts.indexOf(dep.script) < 0 ||
++        dep.requires.some(req => indexScripts.indexOf(req) < 0 ||
++          indexScripts.indexOf(req) > indexScripts.indexOf(dep.script)));
++      ok("全部 " + (prod.LOAD_TIME_DEPENDENCIES || []).length +
++        " 条加载期依赖在真实生产顺序里都成立（不只是第一条）",
++        violations.length === 0, JSON.stringify(violations.map(v => v.script)));
++    }
+ 
+     section("A2. 反向对照：坏清单必须被明确判错（不是「长度对不上」）");
+     const negSwap = prod.inspectList(ROOT, ["lib/native-reminders.js", "lib/reminder.js", "app-core.js"]);
+     ok("顺序倒置 ⇒ 报 load-order（真实后果：截止保护只剩 p24 一个阶段）",
+       negSwap.length === 1 && /^load-order:lib\/native-reminders\.js/.test(negSwap[0]),
+       JSON.stringify(negSwap));
+-    const negUnknown = prod.inspectList(ROOT, ["lib/parse-cn.js", "scripts/verification/parse-parity.js", "app-core.js"]);
++    // 负向夹具必须把**其它**依赖一并带上，否则报出来的是「夹具自己缺件」而不是被考察的那条。
++    // 「未知脚本」用 `scripts/` 下的真实文件：它存在、但不是运行时脚本（形状不合法）。
++    const negUnknown = prod.inspectList(ROOT,
++      ["lib/date-utils.js", "lib/parse-cn.js", "scripts/verification/parse-single-source.js", "app-core.js"]);
+     ok("未知脚本 ⇒ 报 unknown-script",
+       negUnknown.length === 1 && /^unknown-script:/.test(negUnknown[0]), JSON.stringify(negUnknown));
+-    const negMissing = prod.inspectList(ROOT, ["lib/parse-cn.js", "lib/does-not-exist.js", "app-core.js"]);
++    const negMissing = prod.inspectList(ROOT,
++      ["lib/date-utils.js", "lib/parse-cn.js", "lib/does-not-exist.js", "app-core.js"]);
+     ok("缺失文件 ⇒ 报 missing-file",
+       negMissing.length === 1 && /^missing-file:lib\/does-not-exist\.js$/.test(negMissing[0]),
+       JSON.stringify(negMissing));
++    // P1 新增的加载期依赖也得**拔得掉、变得红** —— 光加声明不算数。
++    const negPrimitiveLate = prod.inspectList(ROOT,
++      ["lib/parse-cn.js", "lib/date-utils.js", "app-core.js"]);
++    ok("日历原语被排到解析器之后 ⇒ 报 load-order:lib/parse-cn.js（新声明有牙齿）",
++      negPrimitiveLate.length === 1 && /^load-order:lib\/parse-cn\.js/.test(negPrimitiveLate[0]),
++      JSON.stringify(negPrimitiveLate));
++    const negPrimitiveGone = prod.inspectList(ROOT, ["lib/parse-cn.js", "app-core.js"]);
++    ok("日历原语整支缺席 ⇒ 报 missing-load-time-dependency:lib/parse-cn.js",
++      negPrimitiveGone.some(p => /^missing-load-time-dependency:lib\/parse-cn\.js -> lib\/date-utils\.js$/.test(p)),
++      JSON.stringify(negPrimitiveGone));
+     const negFirst = prod.inspectList(ROOT, ["app-core.js", "lib/parse-cn.js"]);
+     ok("app-core 不在最后 ⇒ 同时报 app-core-not-last 与 lib-after-app-core",
+       negFirst.some(p => /^app-core-not-last:/.test(p)) && negFirst.some(p => /^lib-after-app-core:/.test(p)),
+@@ -542,10 +637,10 @@ async function run() {
+     // 这个缺口的**补位**就在本文件：B 段用真实组合加载了 lib/native-reminders.js，
+     // 并用「删掉它」的反向对照证明缺口是静默的。这一条把两件事绑在一起，
+     // 免得有人看到上面「有缺口」就以为没人管。
+-    ok("缺口有明确补位：本 harness 加载了 lib/native-reminders.js（B 段）",
++    ok("缺口有明确补位：本 harness（B 段）加载完整生产清单，含 lib/native-reminders.js",
+       prod.readIndexScripts(ROOT).indexOf("lib/native-reminders.js") >= 0 &&
+-      indexScripts.length === 8);
+-    // 反向对照：假如某套 harness 只声明加载了 7 支却不说明理由，覆盖判定必须报错 ——
++      prod.readIndexScripts(ROOT).length === EXPECTED_INDEX_SCRIPTS.length);
++    // 反向对照：假如某套 harness 少声明加载一支却不说明理由，覆盖判定必须报错 ——
+     // 「声明了」不等于「声明有效」。这里用一个**没有 why** 的注入声明来证明。
+     const bogus = prod.coverageProblems({
+       root: ROOT,
+@@ -563,7 +658,8 @@ async function run() {
+   let boot = null;
+   {
+     boot = await bootCombination();
+-    ok("8 支脚本全部加载成功", boot.loaded.length === 8 && boot.loadErrors.length === 0,
++    ok("生产清单的 " + EXPECTED_INDEX_SCRIPTS.length + " 支脚本全部加载成功",
++      boot.loaded.length === EXPECTED_INDEX_SCRIPTS.length && boot.loadErrors.length === 0,
+       JSON.stringify(boot.loadErrors));
+     ok("应用 ready() === true（启动链跑到底）", boot.ready === true);
+     ok("测试钩子导出存在", !!(boot.app && boot.app.state && boot.app.renderHome));
+@@ -578,6 +674,36 @@ async function run() {
+     ok("AttentionLib 带 Feedback 与 DeliveryEvidence 两套纯逻辑（app-core 的 FeedbackLib/EvidenceLib 来源）",
+       !!lib && !!lib.Feedback && !!lib.DeliveryEvidence &&
+       typeof lib.createStorage === "function" && typeof lib.deadlineStagePoints === "function");
++
++    // P1 唯一来源：生产入口（app-core 的测试钩子）必须**就是** lib 里那一个函数对象。
++    // 只断言「行为一致」不够 —— 两份副本各改一版也可能一致；这里断言同一性，
++    // 谁在 app-core 里再抄一份规则，这条立刻变红。
++    ok("解析器唯一来源：app-core.parseChineseTime === AttentionLib.parseChineseTime（同一函数对象，不是同名副本）",
++      boot.app.parseChineseTime === lib.parseChineseTime);
++    ok("周期推进唯一来源：app-core.nextRepeatTrigger === AttentionLib.nextRepeatTrigger",
++      boot.app.nextRepeatTrigger === lib.nextRepeatTrigger);
++    ok("周期标签唯一来源：app-core.repeatLabel === AttentionLib.repeatLabel",
++      boot.app.repeatLabel === lib.repeatLabel);
++    // 日历原语同理：lib/parse-cn.js 与 lib/repeat.js 在求值时就抓 AttentionLib.DatePrimitives，
++    // 两处必须拿到**同一个**命名空间对象，否则又是「顺序决定跑哪套算法」的静默换规则。
++    ok("日历原语唯一来源：AttentionLib.DatePrimitives 存在且带两种 nthWeekdayOfNextMonth 语义",
++      !!lib.DatePrimitives &&
++      typeof lib.DatePrimitives.nthWeekdayOfNextMonthByInstant === "function" &&
++      typeof lib.DatePrimitives.nthWeekdayOfNextMonthByDay === "function");
++    ok("app-core 暴露的两种 nthWeekdayOfNextMonth 直接来自该命名空间（没有中间副本）",
++      boot.app.nthWeekdayOfNextMonthByInstant === lib.DatePrimitives.nthWeekdayOfNextMonthByInstant &&
++      boot.app.nthWeekdayOfNextMonthByDay === lib.DatePrimitives.nthWeekdayOfNextMonthByDay);
++    // 反向对照：把日期原语整支拿掉，`parse-cn` / `repeat` 求值时抓不到就必须**当场抛错**，
++    // 而不是悄悄退回另一套日历算法。这是「静默替代已清除」的活证据。
++    {
++      const noPrimitives = indexScripts.filter(s => s !== "lib/date-utils.js");
++      const bootNoPrim = await bootCombination({ scripts: noPrimitives });
++      ok("反向对照：抽掉 lib/date-utils.js 后 parse-cn/repeat 求值即失败（不再静默换一套日历算法）",
++        bootNoPrim.loadErrors.length >= 1 &&
++        bootNoPrim.loadErrors.some(e => /date-utils|DatePrimitives|日历原语/.test(String(e))),
++        JSON.stringify(bootNoPrim.loadErrors));
++    }
++
+     ok("隔离上下文里 window 就是全局对象本身（平台 mock 与模块看到同一个 Capacitor）",
+       boot.sandbox.window === boot.sandbox && boot.sandbox.Capacitor === boot.env.capacitor);
+     ok("IDB 后端真的被用上了（证明 app-core 抓到的 Lib 是加载进沙箱的那一份）",
+@@ -609,6 +735,175 @@ async function run() {
+       prod.inspectList(ROOT, appFirst).some(p => /^app-core-not-last:/.test(p)));
+   }
+ 
++  /* ---------- B2. P1：装配依赖矩阵闭合 + 启动闸门（缺模块必须可见地失败） ---------- */
++  section("B2. P1 装配闸门：唯一来源矩阵闭合，缺模块时明确失败且不进入业务启动");
++  {
++    // ① 矩阵闭合：app-core 里**每一个** Lib.* / DatePrimitives.* 引用都必须在声明表里。
++    //    这条比「启动正常」强 —— 闸门只保护它列出来的东西，漏声明的引用它根本看不见。
++    const cov = prod.runtimeDependencyCoverage(ROOT);
++    ok("app-core 引用的每个 Lib/DatePrimitives 符号都在必需导出声明表里（矩阵闭合）",
++      cov.undeclared.length === 0, JSON.stringify(cov.undeclared));
++    ok("声明表本身非空且至少覆盖日期原语与解析器（防止「把表删空」也能过）",
++      cov.declared.length >= 25 &&
++      cov.declared.indexOf("parseChineseTime") >= 0 &&
++      cov.declared.indexOf("DatePrimitives.startOfDay") >= 0,
++      "declared=" + cov.declared.length);
++
++    // ② 反向对照：塞一个**未声明**的引用，闭合判定必须变红（否则①是恒真断言）。
++    const baseSource = fs.readFileSync(path.join(ROOT, "app-core.js"), "utf8");
++    const injected = prod.runtimeDependencyCoverage(ROOT, {
++      source: baseSource.replace("  function uid() {",
++        "  function uid() {\n    if (Lib.brandNewThing) return Lib.brandNewThing();")
++    });
++    ok("反向对照：新增一个未声明的 Lib.brandNewThing 引用 ⇒ 闭合判定报出来",
++      injected.undeclared.length === 1 && injected.undeclared[0].path === "brandNewThing",
++      JSON.stringify(injected.undeclared));
++    // ③ 反向对照二：注释里提到未声明符号**不该**误报（否则开发者会被逼着给注释里的例子进表）。
++    const commented = prod.runtimeDependencyCoverage(ROOT, {
++      source: baseSource.replace("  function uid() {",
++        "  function uid() {\n    // 举例：Lib.commentOnlyThing 只是文档里的例子\n")
++    });
++    ok("反向对照：注释里的 Lib.commentOnlyThing 不被误报（剥注释真的生效）",
++      commented.undeclared.length === 0, JSON.stringify(commented.undeclared));
++
++    // ④ 正向：干净的生产组合下，闸门判定为「无问题」，ready 为 true。
++    const clean = await bootCombination();
++    ok("正向：完整生产组合下启动闸门无问题（startupFailure() === null）",
++      clean.app.startupFailure() === null, JSON.stringify(clean.app.startupFailure()));
++    ok("正向：完整生产组合下 ready() === true", clean.ready === true);
++    ok("正向：闸门声明表通过测试钩子可读、且条目数与源码一致",
++      Array.isArray(clean.app.REQUIRED_RUNTIME_EXPORTS) &&
++      clean.app.REQUIRED_RUNTIME_EXPORTS.length >= 25,
++      "n=" + (clean.app.REQUIRED_RUNTIME_EXPORTS || []).length);
++
++    // ⑤ 关键反例：抽掉解析器。**不能只是「不 ready」** ——
++    //    必须同时证明「没读库、没迁移、没排钟、没起业务定时器」，否则用户会看到
++    //    一个能点、能输入、却永不落库的界面（这正是本项要消灭的形态）。
++    const noParser = indexScripts.filter(s => s !== "lib/parse-cn.js");
++    const bootNoParser = await bootCombination({ scripts: noParser });
++    ok("反例：抽掉 lib/parse-cn.js ⇒ ready() 明确失败（false），不是挂起也不是假装成功",
++      bootNoParser.ready === false);
++    ok("反例：startupFailure() 点名是 parseChineseTime 缺失（且说明后果）",
++      Array.isArray(bootNoParser.app.startupFailure()) &&
++      bootNoParser.app.startupFailure().some(p => p.path === "parseChineseTime") &&
++      /中文时间解析唯一来源/.test(bootNoParser.app.startupFailure().find(p => p.path === "parseChineseTime").why),
++      JSON.stringify(bootNoParser.app.startupFailure() && bootNoParser.app.startupFailure().map(p => p.path)));
++    ok("反例：未读库/未迁移 ⇒ IDB 一次都没写（不会出现「以为保存了」的界面）",
++      bootNoParser.disk.puts === 0, "idb puts=" + bootNoParser.disk.puts);
++    ok("反例：未启动业务定时器 ⇒ 既没有 15 秒心跳、也没有 2 秒闹钟轮询",
++      bootNoParser.intervals.indexOf(15000) < 0 && bootNoParser.intervals.indexOf(2000) < 0,
++      JSON.stringify(bootNoParser.intervals));
++    ok("反例：失败面板真的被插进了首页容器（不是只 console.error）",
++      bootNoParser.insertions.indexOf("#homeEmpty") >= 0 || bootNoParser.insertions.indexOf("#main") >= 0,
++      JSON.stringify(bootNoParser.insertions));
++    ok("反例：日志侧也有记录（「有可见面板」与「有可查日志」两件事都成立）",
++      bootNoParser.consoleErrors.some(m => /Startup dependency check failed/.test(m)),
++      JSON.stringify(bootNoParser.consoleErrors.slice(0, 2)));
++    ok("反例：未做持久化状态恢复 ⇒ state.items 仍为空（没有半套数据被用起来）",
++      Array.isArray(bootNoParser.app.state.items) && bootNoParser.app.state.items.length === 0,
++      "items=" + (bootNoParser.app.state.items || []).length);
++
++    // ⑥ 另一支依赖：反馈模块。证明闸门不是只对解析器特判。
++    const noFeedback = indexScripts.filter(s => s !== "lib/feedback.js");
++    const bootNoFeedback = await bootCombination({ scripts: noFeedback });
++    ok("反例：抽掉 lib/feedback.js ⇒ ready 失败且点名 Feedback",
++      bootNoFeedback.ready === false &&
++      bootNoFeedback.app.startupFailure().some(p => p.path === "Feedback"),
++      JSON.stringify(bootNoFeedback.app.startupFailure() && bootNoFeedback.app.startupFailure().map(p => p.path)));
++
++    // ⑦ 存储模块：抽掉它必须同样被拦下（否则是「内存里跑得好好的、重启全丢」）。
++    const noStorage = indexScripts.filter(s => s !== "lib/storage.js");
++    const bootNoStorage = await bootCombination({ scripts: noStorage });
++    ok("反例：抽掉 lib/storage.js ⇒ ready 失败且点名 createStorage",
++      bootNoStorage.ready === false &&
++      bootNoStorage.app.startupFailure().some(p => p.path === "createStorage"),
++      JSON.stringify(bootNoStorage.app.startupFailure() && bootNoStorage.app.startupFailure().map(p => p.path)));
++
++    // ⑦·2 **错误顺序**：把 lib/date-utils.js 挪到解析器之后。这不是「缺件」而是「顺序错」，
++    //      真实后果是 parse-cn/repeat 求值即抛错。闸门必须同样给出可见失败，
++    //      而不是让应用带着半套规则起来（脚本顺序错了在浏览器里**不会**有任何提示）。
++    const latePrimitives = indexScripts.filter(s => s !== "lib/date-utils.js").concat(["lib/date-utils.js"]);
++    const bootLatePrim = await bootCombination({ scripts: latePrimitives });
++    ok("反例：日历原语被排到解析器之后 ⇒ 求值即报 eval-failed（顺序错的后果可见）",
++      bootLatePrim.loadErrors.some(e => /^eval-failed:lib\/parse-cn\.js:/.test(String(e))),
++      JSON.stringify(bootLatePrim.loadErrors));
++    ok("反例：顺序错时闸门同样拦住启动（ready=false，且点名 DatePrimitives 缺失）",
++      bootLatePrim.ready === false &&
++      bootLatePrim.app.startupFailure().some(p => p.path === "DatePrimitives"),
++      JSON.stringify(bootLatePrim.app.startupFailure() && bootLatePrim.app.startupFailure().map(p => p.path)));
++    ok("反例：顺序错时不读库、不起业务定时器",
++      bootLatePrim.disk.puts === 0 && bootLatePrim.intervals.indexOf(15000) < 0,
++      "puts=" + bootLatePrim.disk.puts + " intervals=" + JSON.stringify(bootLatePrim.intervals));
++
++    // ⑧ 边界：闸门**不得**越界去要求原生桥。纯 Web 环境没有 Capacitor 是正常状态，
++    //    把它当装配错误会让整套 Web 版直接起不来（见前面的反向对照：去掉 native 仍 ready）。
++    const noNative = await bootCombination({
++      scripts: indexScripts.filter(s => s !== "lib/native-reminders.js")
++    });
++    ok("边界：没有原生桥时闸门**不**报错（纯 Web 是正常状态，不是缺 JS 模块）",
++      noNative.app.startupFailure() === null && noNative.ready === true,
++      JSON.stringify(noNative.app.startupFailure()));
++
++    // ⑨ P2 新增模块 lib/ui-format.js：同样要有「缺件」与「顺序错」两条反例，
++    //    否则新加的加载期依赖声明是句空话。
++    const noUiFormat = indexScripts.filter(s => s !== "lib/ui-format.js");
++    const bootNoUiFormat = await bootCombination({ scripts: noUiFormat });
++    ok("反例：抽掉 lib/ui-format.js ⇒ ready 失败且点名 UiFormat",
++      bootNoUiFormat.ready === false &&
++      bootNoUiFormat.app.startupFailure().some(p => p.path === "UiFormat"),
++      JSON.stringify(bootNoUiFormat.app.startupFailure() && bootNoUiFormat.app.startupFailure().map(p => p.path)));
++    ok("反例：抽掉 lib/ui-format.js 后不读库、不起业务定时器",
++      bootNoUiFormat.disk.puts === 0 && bootNoUiFormat.intervals.indexOf(15000) < 0,
++      "puts=" + bootNoUiFormat.disk.puts + " intervals=" + JSON.stringify(bootNoUiFormat.intervals));
++
++    const uiBeforePrimitives = ["lib/ui-format.js"]
++      .concat(indexScripts.filter(s => s !== "lib/ui-format.js"));
++    const bootUiEarly = await bootCombination({ scripts: uiBeforePrimitives });
++    ok("反例：lib/ui-format.js 排到 lib/date-utils.js 之前 ⇒ 求值即报 eval-failed",
++      bootUiEarly.loadErrors.some(e => /^eval-failed:lib\/ui-format\.js:/.test(String(e))),
++      JSON.stringify(bootUiEarly.loadErrors));
++    ok("反例：顺序错时闸门拦住启动并点名 UiFormat",
++      bootUiEarly.ready === false &&
++      bootUiEarly.app.startupFailure().some(p => p.path === "UiFormat"),
++      JSON.stringify(bootUiEarly.app.startupFailure() && bootUiEarly.app.startupFailure().map(p => p.path)));
++
++    // ⑩ P2-b 新增模块 lib/app-ui.js：展示能力是**界面能不能用**的前提，缺件必须被点名。
++    //    这条比 ⑨ 更要紧 —— 缺 ui-format 只是文字显示退化，缺 app-ui 是「点不动、没反馈」。
++    const noAppUi = indexScripts.filter(s => s !== "lib/app-ui.js");
++    const bootNoAppUi = await bootCombination({ scripts: noAppUi });
++    ok("反例：抽掉 lib/app-ui.js ⇒ ready 失败且点名 AppUi / AppUi.createUi",
++      bootNoAppUi.ready === false &&
++      bootNoAppUi.app.startupFailure().some(p => p.path === "AppUi") &&
++      bootNoAppUi.app.startupFailure().some(p => p.path === "AppUi.createUi"),
++      JSON.stringify(bootNoAppUi.app.startupFailure() && bootNoAppUi.app.startupFailure().map(p => p.path)));
++    ok("反例：抽掉 lib/app-ui.js 后不读库、不起业务定时器、不落库",
++      bootNoAppUi.disk.puts === 0 && bootNoAppUi.intervals.indexOf(15000) < 0,
++      "puts=" + bootNoAppUi.disk.puts + " intervals=" + JSON.stringify(bootNoAppUi.intervals));
++    ok("反例：抽掉 lib/app-ui.js 后仍然渲染出可见失败面板（缺的正是 DOM 能力，不能因此静默）",
++      bootNoAppUi.insertions.length >= 1,
++      JSON.stringify(bootNoAppUi.insertions));
++    ok("反例：抽掉 lib/app-ui.js 后失败面板里没有可编辑控件",
++      bootNoAppUi.created.indexOf("section") >= 0 &&
++      bootNoAppUi.created.indexOf("button") >= 0 &&
++      bootNoAppUi.created.every(t => ["section", "p", "div", "button"].indexOf(t) >= 0),
++      JSON.stringify(bootNoAppUi.created));
++    ok("反例：面板上真的写出了「哪一支没起来」（点名 AppUi），不是只 console.error",
++      bootNoAppUi.createdText.some(t => /应用没能启动/.test(t)) &&
++      bootNoAppUi.createdText.some(t => /AppUi/.test(t)),
++      JSON.stringify(bootNoAppUi.createdText.map(t => t.slice(0, 60))));
++
++    // 正常组合下 app-ui 必须真的接上生产链：这条防「契约里写了、index.html 里其实没有」。
++    const uiOk = boot.app && typeof boot.app.uiSurface === "function" ? boot.app.uiSurface() : null;
++    ok("正向：正常组合下展示能力实例真的可用（不是「绑定存在」而是「能调用」）",
++      boot.loadErrors.length === 0 && !!uiOk &&
++      uiOk.hasQuery === true && uiOk.hasQueryAll === true && uiOk.hasToast === true &&
++      uiOk.hasConfirm === true && uiOk.hasSheet === true && uiOk.hasCloseAllSheets === true &&
++      uiOk.hasSafeHref === true &&
++      uiOk.hrefHttps === "https://example.com/x" && uiOk.hrefJs === null &&
++      uiOk.hrefTab === null,
++      JSON.stringify(uiOk));
++  }
++
+   /* ---------- C. 可控 Android 桥：监听注册 / 一次排程 / 相同计划不重排 + O2 计数 ---------- */
+   section("C. 可控 Android 桥：真实初始化与生命周期入口");
+   {
+diff --git a/test-regressions.js b/test-regressions.js
+index 169b5c9..0be8193 100644
+--- a/test-regressions.js
++++ b/test-regressions.js
+@@ -20,6 +20,10 @@ const ROOT = __dirname;
+ const native = require(path.join(ROOT, "lib/native-reminders.js"));
+ 
+ const LIB_SOURCES = [
++  // 日历原语必须最先：parse-cn / repeat 在求值时就把 DatePrimitives 抓进闭包常量
++  "lib/date-utils.js",
++  "lib/ui-format.js",
++  "lib/app-ui.js",
+   "lib/parse-cn.js",
+   "lib/repeat.js",
+   "lib/reminder.js",
+diff --git a/test-smoke.js b/test-smoke.js
+index 28df1bd..b8caaf2 100644
+--- a/test-smoke.js
++++ b/test-smoke.js
+@@ -6,6 +6,9 @@ const path = require("path");
+ const vm = require("vm");
+ 
+ const ROOT = path.join(__dirname);
++const libDateUtils = fs.readFileSync(path.join(ROOT, "lib/date-utils.js"), "utf8");
++const libUiFormat = fs.readFileSync(path.join(ROOT, "lib/ui-format.js"), "utf8");
++const libAppUi = fs.readFileSync(path.join(ROOT, "lib/app-ui.js"), "utf8");
+ const libParse = fs.readFileSync(path.join(ROOT, "lib/parse-cn.js"), "utf8");
+ const libRepeat = fs.readFileSync(path.join(ROOT, "lib/repeat.js"), "utf8");
+ const libReminder = fs.readFileSync(path.join(ROOT, "lib/reminder.js"), "utf8");
+@@ -160,6 +163,9 @@ sandbox.globalThis = sandbox;
+ sandbox.window = Object.assign(sandbox.window, sandbox);
+ 
+ vm.createContext(sandbox);
++vm.runInContext(libDateUtils, sandbox, { filename: "lib/date-utils.js" });
++  vm.runInContext(libUiFormat, sandbox, { filename: "lib/ui-format.js" });
++  vm.runInContext(libAppUi, sandbox, { filename: "lib/app-ui.js" });
+ vm.runInContext(libParse, sandbox, { filename: "lib/parse-cn.js" });
+ vm.runInContext(libRepeat, sandbox, { filename: "lib/repeat.js" });
+ vm.runInContext(libReminder, sandbox, { filename: "lib/reminder.js" });
+diff --git a/test-unit.js b/test-unit.js
+index bcd2fd8..8d98bc8 100644
+--- a/test-unit.js
++++ b/test-unit.js
+@@ -11,6 +11,13 @@ const evidenceMod = require(path.join(__dirname, "lib/delivery-evidence.js"));
+ 
+ let passed = 0, failed = 0;
+ const failures = [];
++/**
++ * 异步段的**收尾门**计数（声明必须在这里，不能放到文件尾部跟 `finish()` 一起 ——
++ * 段首登记发生在文件中部，`let` 在那时还处于 TDZ）。用法见文件末尾的
++ * `beginAsyncSection()`：段首 `const done = beginAsyncSection();`，段尾 `done()`。
++ * 每段自己销账，账平了才真正打印结果。
++ */
++let asyncSectionsPending = 0;
+ function ok(name, cond, extra) {
+   if (cond) { passed++; console.log("  ✓ " + name); }
+   else {
+@@ -548,9 +555,306 @@ section("import-map");
+   ok("未注入兜底函数时明确告警", r4.warnings.some(w => w.indexOf("fallbackTriggerAt") >= 0));
+ }
+ 
++/* ui-format（P2 首批搬移：从 app-core 抽出的纯格式化工具） */
++section("ui-format");
++{
++  const uf = require(path.join(__dirname, "lib/ui-format.js"));
++  const prim = require(path.join(__dirname, "lib/date-utils.js"));
++
++  // 别名同一性：格式化里用到的日历判定必须来自 lib/date-utils.js 同一份，
++  // 不是「行为相同的另一份 sameDay」。
++  ok("ui-format 挂在命名空间 AttentionLib.UiFormat 上（不是扁平合并）",
++    (function () {
++      // Node 下走 module.exports，浏览器下走 root.AttentionLib.UiFormat —— 这里验形状与自洽。
++      return typeof uf.fmtTime === "function" && typeof uf.renderMarkdown === "function" &&
++        typeof uf.escapeHtml === "function" && typeof uf.escapeAttr === "function";
++    })());
++
++  // 固定时钟：「今天 / 明天 / 昨天 / 带日期 / 跨年带年份」
++  const ref = new Date(2026, 8, 18, 14, 0, 0).getTime();   // 2026-09-18 周五 14:00
++  ok("fmtTime 今天", uf.fmtTime(new Date(2026, 8, 18, 9, 5, 0).getTime(), ref) === "今天 09:05",
++    uf.fmtTime(new Date(2026, 8, 18, 9, 5, 0).getTime(), ref));
++  ok("fmtTime 明天", uf.fmtTime(new Date(2026, 8, 19, 23, 59, 0).getTime(), ref) === "明天 23:59",
++    uf.fmtTime(new Date(2026, 8, 19, 23, 59, 0).getTime(), ref));
++  ok("fmtTime 昨天", uf.fmtTime(new Date(2026, 8, 17, 0, 0, 0).getTime(), ref) === "昨天 00:00",
++    uf.fmtTime(new Date(2026, 8, 17, 0, 0, 0).getTime(), ref));
++  ok("fmtTime 同年带月日", uf.fmtTime(new Date(2026, 8, 23, 10, 0, 0).getTime(), ref) === "9月23日 10:00",
++    uf.fmtTime(new Date(2026, 8, 23, 10, 0, 0).getTime(), ref));
++  ok("fmtTime 跨年带年份", uf.fmtTime(new Date(2027, 0, 3, 8, 0, 0).getTime(), ref) === "2027年1月3日 08:00",
++    uf.fmtTime(new Date(2027, 0, 3, 8, 0, 0).getTime(), ref));
++  ok("fmtTime 空值返回空串", uf.fmtTime(0, ref) === "" && uf.fmtTime(null, ref) === "");
++
++  ok("fmtDate 不带钟点", uf.fmtDate(new Date(2026, 8, 19, 5, 0, 0).getTime(), ref) === "明天",
++    uf.fmtDate(new Date(2026, 8, 19, 5, 0, 0).getTime(), ref));
++
++  // 相对到期：边界分钟 / 小时 / 天
++  ok("relDue 未来不足 1 分钟 = 现在", uf.relDue(ref + 30000, ref) === "现在");
++  ok("relDue 未来 5 分钟", uf.relDue(ref + 300000, ref) === "5 分钟后");
++  ok("relDue 未来 3 小时", uf.relDue(ref + 3 * 3600000, ref) === "3 小时后");
++  ok("relDue 未来 2 天", uf.relDue(ref + 2 * 86400000, ref) === "2 天后");
++  ok("relDue 已过不足 1 小时至少报 1 分钟", uf.relDue(ref - 30000, ref) === "已过 1 分钟");
++  ok("relDue 已过 2 小时", uf.relDue(ref - 2 * 3600000, ref) === "已过 2 小时");
++  ok("relDue 已过 3 天", uf.relDue(ref - 3 * 86400000, ref) === "已过 3 天");
++
++  // 转义：文本侧与属性侧字符集一致、命名分开
++  const evil = '<img src=x onerror="alert(1)">';
++  ok("escapeHtml 转义尖引号", uf.escapeHtml(evil).indexOf("<") < 0 && uf.escapeHtml(evil).indexOf('"') < 0,
++    uf.escapeHtml(evil));
++  ok("escapeAttr 与 escapeHtml 字符集一致（同样的输入同样输出）",
++    uf.escapeAttr(evil) === uf.escapeHtml(evil));
++  ok("escapeHtml 空值安全", uf.escapeHtml(null) === "" && uf.escapeHtml(undefined) === "");
++
++  // Markdown：必须先转义再插标签，用户内容里的标签不能活着出去
++  const md = uf.renderMarkdown('# 标题\n\n**粗** 与 `代码`\n\n- 甲\n- 乙');
++  ok("renderMarkdown 生成 h1", md.indexOf("<h1>标题</h1>") >= 0, md);
++  ok("renderMarkdown 生成 strong 与 code", md.indexOf("<strong>粗</strong>") >= 0 && md.indexOf("<code>代码</code>") >= 0, md);
++  ok("renderMarkdown 生成 ul/li", md.indexOf("<ul>") >= 0 && md.indexOf("<li>甲</li>") >= 0, md);
++  ok("renderMarkdown 先转义：用户写 <script> 不会变成真标签",
++    uf.renderMarkdown("<script>alert(1)</script>").indexOf("<script>") < 0,
++    uf.renderMarkdown("<script>alert(1)</script>"));
++  ok("renderMarkdown 只放行 http(s) 链接",
++    uf.renderMarkdown("[a](javascript:alert(1))").indexOf("<a ") < 0,
++    uf.renderMarkdown("[a](javascript:alert(1))"));
++  ok("renderMarkdown 放行 https 链接",
++    uf.renderMarkdown("[a](https://example.com)").indexOf('href="https://example.com"') >= 0);
++
++  // pad / uid 形状
++  ok("pad 补零", uf.pad(3) === "03" && uf.pad(12) === "12");
++  const id1 = uf.uid();
++  ok("uid 形状为 i_ 前缀的字符串", typeof id1 === "string" && id1.indexOf("i_") === 0, id1);
++
++  // P2-b 追加：归档日标签与时间输入框双向转换（固定时钟，不依赖运行时「今天」）
++  ok("dayLabel 空值 = 「更早」（与 fmtDate 的 \"\" 不同，刻意不合并）",
++    uf.dayLabel(null) === "更早" && uf.dayLabel(0) === "更早" && uf.fmtDate(null) === "");
++  ok("dayLabel 今天", uf.dayLabel(new Date(2026, 8, 18, 1, 0, 0).getTime(), ref) === "今天");
++  ok("dayLabel 昨天", uf.dayLabel(new Date(2026, 8, 17, 23, 0, 0).getTime(), ref) === "昨天");
++  ok("dayLabel 没有「明天」分支（回月日，而 fmtDate 回「明天」）",
++    uf.dayLabel(new Date(2026, 8, 19, 9, 0, 0).getTime(), ref) === "9月19日" &&
++    uf.fmtDate(new Date(2026, 8, 19, 9, 0, 0).getTime(), ref) === "明天");
++  ok("dayLabel 跨年回完整年月日（fmtDate 不回）",
++    uf.dayLabel(new Date(2025, 11, 31, 9, 0, 0).getTime(), ref) === "2025年12月31日" &&
++    uf.fmtDate(new Date(2025, 11, 31, 9, 0, 0).getTime(), ref) === "12月31日");
++  ok("toLocalInput 形状 YYYY-MM-DDTHH:mm（补零到分、不含秒）",
++    uf.toLocalInput(new Date(2026, 0, 5, 9, 7, 42).getTime()) === "2026-01-05T09:07",
++    uf.toLocalInput(new Date(2026, 0, 5, 9, 7, 42).getTime()));
++  ok("toLocalInput 空值 = 空串", uf.toLocalInput(null) === "" && uf.toLocalInput(0) === "");
++  ok("parseLocalInput 与 toLocalInput 回环（同一分钟进出不变）",
++    uf.parseLocalInput(uf.toLocalInput(new Date(2026, 0, 5, 9, 7, 0).getTime())) ===
++    new Date(2026, 0, 5, 9, 7, 0).getTime());
++  ok("parseLocalInput 解析不出时返回 null（**不**兜底成「现在」）",
++    uf.parseLocalInput("") === null && uf.parseLocalInput(null) === null &&
++    uf.parseLocalInput("不是时间") === null);
++
++  // 依赖同一来源：ui-format 的「今天/明天」判定与 date-utils 的 sameDay 一致
++  ok("ui-format 的日判定与 date-utils.sameDay 一致（不是另一套实现）",
++    prim.sameDay(new Date(2026, 8, 18, 1, 0, 0), new Date(2026, 8, 18, 23, 0, 0)) === true &&
++    uf.fmtDate(new Date(2026, 8, 18, 1, 0, 0).getTime(), ref) === "今天");
++}
++
++/* ---------- P2-b：DOM 共用展示能力（lib/app-ui.js） ---------- */
++section("app-ui — 弹层 / toast / 确认框 / 外链白名单");
++const appUiDone = beginAsyncSection();
++(async function () {
++  const appUiMod = require(path.join(__dirname, "lib/app-ui.js"));
++  const hadDoc = Object.prototype.hasOwnProperty.call(global, "document");
++  const savedDoc = global.document;
++  const savedSetTimeout = global.setTimeout;
++  const savedClearTimeout = global.clearTimeout;
++
++  /* 假 DOM：只实现被测代码真正用到的选择器与属性（多一个都算我没核对过）。 */
++  function makeFakeDocument(extraSheetIds) {
++    const byId = Object.create(null);
++    const sheets = [];
++    function node(id, isSheet) {
++      const cls = new Set();
++      const n = {
++        id: id, textContent: "", hidden: false, onclick: null, _cls: cls,
++        classList: {
++          add(c) { cls.add(c); },
++          remove(c) { cls.delete(c); },
++          contains(c) { return cls.has(c); }
++        }
++      };
++      byId[id] = n;
++      if (isSheet) sheets.push(n);
++      return n;
++    }
++    node("backdrop");
++    node("toast"); node("toastText"); node("toastAction"); node("toastAction2");
++    node("sheetConfirm", true);
++    (extraSheetIds || []).forEach(function (id) { node(id, true); });
++    node("confirmBody"); node("confirmTitle");
++    node("confirmOk"); node("confirmCancel"); node("confirmClose");
++    return {
++      byId: byId,
++      document: {
++        querySelector(s) { return s.charAt(0) === "#" ? (byId[s.slice(1)] || null) : null; },
++        querySelectorAll(s) {
++          if (s === ".sheet") return sheets.slice();
++          if (s === ".sheet.open") return sheets.filter(x => x._cls.has("open"));
++          return [];
++        }
++      }
++    };
++  }
++
++  /* 假定时器：否则「时长」这条只能等真实 2.4 秒才验得了。 */
++  const scheduled = [];
++  let seq = 0;
++  global.setTimeout = function (fn, delay) { seq += 1; scheduled.push({ id: seq, fn: fn, delay: delay }); return seq; };
++  global.clearTimeout = function (id) {
++    const i = scheduled.findIndex(s => s.id === id);
++    if (i >= 0) scheduled.splice(i, 1);
++  };
++
++  const dom = makeFakeDocument(["sheetCapture", "sheetDetail"]);
++  global.document = dom.document;
++  const box = { suppressed: false };
++  const ui = appUiMod.createUi({ isFeedbackSuppressed: function () { return box.suppressed; } });
++
++  try {
++    /* 形状与「模块求值无副作用」 */
++    ok("createUi 交出 8 支展示能力（$ / $$ / 弹层三支 / 确认框 / toast / hideToast）",
++      typeof ui.$ === "function" && typeof ui.$$ === "function" &&
++      typeof ui.openSheet === "function" && typeof ui.closeSheet === "function" &&
++      typeof ui.closeAllSheets === "function" && typeof ui.confirmDialog === "function" &&
++      typeof ui.toast === "function" && typeof ui.hideToast === "function");
++    ok("safeExternalHref 是模块级纯函数（不需要实例）",
++      typeof appUiMod.safeExternalHref === "function");
++    ok("模块求值 + 实例化都不建定时器、不动 DOM（求值无副作用）",
++      scheduled.length === 0 && !dom.byId.toast._cls.has("show") && dom.byId.toastText.textContent === "");
++
++    /* 弹层：backdrop 的撤销口径是「还有没有开着的层」，不是「关了一次就撤」 */
++    ui.openSheet("sheetCapture");
++    ok("openSheet 打开目标层并亮出 backdrop",
++      dom.byId.sheetCapture._cls.has("open") && dom.byId.backdrop._cls.has("show"));
++    ui.openSheet("sheetDetail");
++    ui.closeSheet("sheetCapture");
++    ok("还有一层开着时关一层：backdrop 必须留着",
++      !dom.byId.sheetCapture._cls.has("open") && dom.byId.sheetDetail._cls.has("open") &&
++      dom.byId.backdrop._cls.has("show"));
++    ui.closeSheet("sheetDetail");
++    ok("关掉最后一层：backdrop 撤掉", !dom.byId.backdrop._cls.has("show"));
++    ui.openSheet("sheetCapture"); ui.openSheet("sheetDetail");
++    ui.closeAllSheets();
++    ok("closeAllSheets 关掉全部层并撤遮罩",
++      !dom.byId.sheetCapture._cls.has("open") && !dom.byId.sheetDetail._cls.has("open") &&
++      !dom.byId.backdrop._cls.has("show"));
++
++    /* toast：文案 / 按钮 / 时长 / 覆盖 / 抑制 */
++    let acted = 0;
++    ui.toast("已删除", "撤销", function () { acted += 1; });
++    ok("toast 写入文案并亮出提示条",
++      dom.byId.toastText.textContent === "已删除" && dom.byId.toast._cls.has("show"));
++    ok("toast 亮出动作按钮并挂上回调",
++      dom.byId.toastAction.hidden === false && dom.byId.toastAction.textContent === "撤销" &&
++      typeof dom.byId.toastAction.onclick === "function");
++    ok("未给第二个动作时该槽位置隐藏并清空 onclick",
++      dom.byId.toastAction2.hidden === true && dom.byId.toastAction2.onclick === null);
++    ok("带动作的提示时长 = 5000ms",
++      scheduled.length === 1 && scheduled[0].delay === 5000, JSON.stringify(scheduled.map(s => s.delay)));
++    dom.byId.toastAction.onclick();
++    ok("点动作：先收起提示再执行回调",
++      acted === 1 && !dom.byId.toast._cls.has("show"));
++
++    scheduled.length = 0;
++    ui.toast("普通提示");
++    ok("无动作的提示时长 = 2400ms，且动作槽被收起",
++      scheduled.length === 1 && scheduled[0].delay === 2400 &&
++      dom.byId.toastAction.hidden === true && dom.byId.toastAction.onclick === null);
++
++    scheduled.length = 0;
++    ui.toast("第一条"); ui.toast("第二条");
++    ok("连续两次 toast：前一个定时器必须被撤掉（挂起只剩 1 个）",
++      scheduled.length === 1 && dom.byId.toastText.textContent === "第二条");
++
++    ui.hideToast();
++    scheduled.length = 0;
++    box.suppressed = true;
++    ui.toast("重放期不该弹出来", "撤销", function () {});
++    ok("抑制反馈时 toast 完全不动 DOM、也不建定时器（M1 的判据）",
++      scheduled.length === 0 && !dom.byId.toast._cls.has("show") &&
++      // 文案停在进入抑制前那一次（"第二条"），既没被覆盖、也没重新亮起
++      dom.byId.toastText.textContent === "第二条" && dom.byId.toastAction.hidden === true);
++    box.suppressed = false;
++    ui.toast("恢复正常");
++    ok("解除抑制后 toast 恢复（文案更新、定时器重建、提示条亮出）",
++      scheduled.length === 1 && dom.byId.toastText.textContent === "恢复正常" &&
++      dom.byId.toast._cls.has("show"));
++    ui.hideToast();
++    ok("hideToast 收起提示条", !dom.byId.toast._cls.has("show"));
++
++    /* 确认框：DOM 效果（同步）与返回值（需要 await） */
++    const p1 = ui.confirmDialog("确定删除？", "删除");
++    ok("确认框弹出：标题/正文回填、层打开、backdrop 亮出",
++      dom.byId.confirmTitle.textContent === "删除" && dom.byId.confirmBody.textContent === "确定删除？" &&
++      dom.byId.sheetConfirm._cls.has("open") && dom.byId.backdrop._cls.has("show"));
++    ok("确认框三个出口都挂上了 onclick",
++      typeof dom.byId.confirmOk.onclick === "function" &&
++      typeof dom.byId.confirmCancel.onclick === "function" &&
++      typeof dom.byId.confirmClose.onclick === "function");
++    dom.byId.confirmOk.onclick();
++    ok("点确定：层关闭、backdrop 撤掉、三个 onclick 全部清干净",
++      !dom.byId.sheetConfirm._cls.has("open") && !dom.byId.backdrop._cls.has("show") &&
++      dom.byId.confirmOk.onclick === null && dom.byId.confirmCancel.onclick === null &&
++      dom.byId.confirmClose.onclick === null);
++    ok("点确定 ⇒ 解析为 true", (await p1) === true);
++
++    const p2 = ui.confirmDialog("确定删除？");
++    ok("省略标题时用默认「确认」，正文原样回填",
++      dom.byId.confirmTitle.textContent === "确认" && dom.byId.confirmBody.textContent === "确定删除？");
++    dom.byId.confirmCancel.onclick();
++    ok("点取消 ⇒ 解析为 false", (await p2) === false);
++
++    const p3 = ui.confirmDialog();
++    ok("省略正文时用默认「确定继续？」", dom.byId.confirmBody.textContent === "确定继续？");
++    dom.byId.confirmClose.onclick();
++    ok("点关闭 ⇒ 解析为 false", (await p3) === false);
++
++    /* 兜底路径：没有 #sheetConfirm 时落到 window.confirm */
++    const domNoSheet = makeFakeDocument([]);
++    delete domNoSheet.byId.sheetConfirm;
++    const savedQuery = domNoSheet.document.querySelector;
++    domNoSheet.document.querySelector = function (s) {
++      return s === "#sheetConfirm" ? null : savedQuery(s);
++    };
++    global.document = domNoSheet.document;
++    const hadWindow = Object.prototype.hasOwnProperty.call(global, "window");
++    const savedWindow = global.window;
++    global.window = { confirm: function () { return false; } };
++    ok("没有 #sheetConfirm 时落到 window.confirm，返回 false",
++      (await ui.confirmDialog("危险操作")) === false);
++    global.window = { confirm: function () { throw new Error("blocked"); } };
++    ok("兜底路径里 window.confirm 抛错 ⇒ 保守取 true（不静默当作取消）",
++      (await ui.confirmDialog("危险操作")) === true);
++    if (hadWindow) global.window = savedWindow; else delete global.window;
++  } finally {
++    if (hadDoc) global.document = savedDoc; else delete global.document;
++    global.setTimeout = savedSetTimeout;
++    global.clearTimeout = savedClearTimeout;
++  }
++
++  /* 外链白名单：模块级，不需要 DOM */
++  const safe = appUiMod.safeExternalHref;
++  ok("https 放行", safe("https://example.com/x") === "https://example.com/x");
++  ok("http 放行", safe("http://example.com") === "http://example.com");
++  ok("javascript: 拒绝", safe("javascript:alert(1)") === null);
++  ok("大小写混杂的 JaVaScRiPt: 拒绝（按解析后的协议判定，不看字形）", safe("jAvAsCrIpT:alert(1)") === null);
++  ok("带换行的 java\\nscript: 拒绝（解析器会剔除控制字符后再判定）", safe("java\nscript:alert(1)") === null);
++  ok("带 TAB 的 ja\\tvascript: 拒绝", safe("ja\tvascript:alert(1)") === null);
++  ok("data: 拒绝", safe("data:text/html;base64,PHNjcmlwdD4=") === null);
++  ok("空值 / 空串 / 纯空白一律拒绝", safe(null) === null && safe("") === null && safe("   ") === null);
++  ok("前后空白被裁掉", safe("  https://example.com/x  ") === "https://example.com/x");
++  ok("相对路径拒绝（不是绝对 URL）", safe("example.com/x") === null && safe("//example.com/x") === null);
++  ok("解析不出授权段拒绝", safe("https://") === null && safe("https://a b") === null);
++
++  appUiDone();
++})();
++
+ /* storage memory backend */
+ section("storage");
+ {
++  const storageDone = beginAsyncSection();
+   // force memory by temporarily removing indexedDB
+   const store = storageMod.createStorage({ lsKey: "attention-inbox-v2" });
+   store._useMemory();
+@@ -560,10 +864,10 @@ section("storage");
+     return store.save({ items: [{ id: "a" }], notes: [] });
+   }).then(() => store.load()).then(v => {
+     ok("memory save/load", v && v.items && v.items[0].id === "a");
+-    finish();
++    storageDone();
+   }).catch(e => {
+     ok("storage async", false, e && e.message);
+-    finish();
++    storageDone();
+   });
+ }
+ 
+@@ -929,7 +1233,30 @@ section("delivery-evidence — 证据合并与事后核查");
+     ev.evidenceStatusFor(item4[0], { now: now }).at === now - 1800000);
+ }
+ 
++/**
++ * 异步段的**收尾门**（计数变量的声明在文件顶部，见 `asyncSectionsPending`）。
++ *
++ * 本文件此前只有 storage 一段是异步的，`finish()` 就直接写在它的链尾 —— 那等于隐含
++ * 假定「异步只有一段」。P2-b 起 app-ui 的确认框也必须被 `await`（它的返回值就是
++ * 「确定 / 取消」这个契约本身），再加一段之后，**先到达的那一段不能提前出结果**，
++ * 否则后一段的断言会在 `process.exit` 之前被丢掉、结果却看起来是「全过」。
++ *
++ * 用法：段首 `const done = beginAsyncSection();`，段尾（异步链的最后）`done()`。
++ */
++function beginAsyncSection() {
++  asyncSectionsPending += 1;
++  let settled = false;
++  return function () {
++    if (settled) return;
++    settled = true;
++    asyncSectionsPending -= 1;
++    finish();
++  };
++}
++
+ function finish() {
++  // 还有异步段没回话 —— 先不出结果。
++  if (asyncSectionsPending > 0) return;
+   console.log("\n========== unit results ==========");
+   console.log("通过: " + passed + "  失败: " + failed);
+   if (failed) {

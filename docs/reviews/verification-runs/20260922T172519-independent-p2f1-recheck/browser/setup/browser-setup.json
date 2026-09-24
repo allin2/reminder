@@ -1,0 +1,33 @@
+{
+  "cases": [
+    {
+      "name": "pure-web",
+      "value": {
+        "ready": true,
+        "hidden": true
+      }
+    },
+    {
+      "name": "fake-android-full-setup",
+      "value": {
+        "entryAfterRealSave": true,
+        "entryNoDuplicate": true,
+        "opened": true,
+        "staticBind": true,
+        "stepMoved": true,
+        "started": true,
+        "schedule60": true,
+        "failedRecovered": true,
+        "oldIgnored": true,
+        "wrongIgnored": true,
+        "currentSeen": true,
+        "feedbackIsolated": true,
+        "readFailed": true,
+        "emptyConfirmed": true,
+        "trulyStopped": true,
+        "saves": 7
+      }
+    }
+  ],
+  "failures": []
+}

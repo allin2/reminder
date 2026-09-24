@@ -1,0 +1,51 @@
+Startup dependency check failed: [
+  {
+    path: 'AppUi',
+    expected: 'object',
+    actual: 'undefined',
+    why: 'lib/app-ui.js 未加载 —— DOM 查询/弹层/toast/确认框全部失效：界面看似能渲染，但点不动、也没有任何反馈'
+  },
+  {
+    path: 'AppUi.createUi',
+    expected: 'function',
+    actual: 'undefined',
+    why: 'lib/app-ui.js 导出被破坏（展示能力装配入口）'
+  },
+  {
+    path: 'AppUi.safeExternalHref',
+    expected: 'function',
+    actual: 'undefined',
+    why: 'lib/app-ui.js 导出被破坏 —— 外链协议白名单失效：`javascript:` / `data:` 这类用户数据可能被渲染成可点 href'
+  }
+]
+Failed to render startup failure: host.insertBefore is not a function
+  ✗ Q1 启动链完整跑完（ready() === true） — false 表示 init() 中途抛错：seed / render / 15 秒心跳都不会执行
+
+== 1. 自然语言时间解析 ==
+  ✓ 周五解析出 trigger
+  ✓ 周五标题含 Horolog
+  ✓ 周五 confidence high/mid
+  ✓ 低置信度
+  ✓ 低置信度仍给出时间（供上层按 D17 覆盖）
+  ✓ D17 兜底落在下一个整理窗口起点
+  ✓ D17 兜底不再是一周后
+  ✓ 截止时间
+  ✓ 提前五天 trigger
+  ✓ deadline 在 9/30
+  ✓ 每两周 ACK 模式
+  ✓ 每月底 monthEnd
+  ✓ 每月第N个星期X
+  ✓ 明天下午3点
+
+== 2. Attention Lifecycle（ACK ≠ Complete） ==
+  ✓ 到期 promote 到 due
+  ✓ due 时 isDue=true
+TypeError: $$ is not a function
+    at render (app-core.js:2931:5)
+    at ackItem (app-core.js:1910:5)
+    at runUserOp (app-core.js:745:45)
+    at Object.ackItem (app-core.js:802:14)
+    at run (/Users/qlyf/Developer/reminder/docs/reviews/verification-runs/20260921T033332-independent-modularization/mutation-copy/test-smoke.js:278:7)
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+
+EXIT_CODE=1

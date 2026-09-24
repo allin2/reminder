@@ -1,0 +1,17 @@
+{
+  "appId": "space.alliswell.inbox",
+  "appName": "安心收件箱",
+  "webDir": "www",
+  "server": {
+    "androidScheme": "https"
+  },
+  "android": {
+    "allowMixedContent": false
+  },
+  "plugins": {
+    "LocalNotifications": {
+      "smallIcon": "ic_stat_attention",
+      "iconColor": "#1b6b4a"
+    }
+  }
+}

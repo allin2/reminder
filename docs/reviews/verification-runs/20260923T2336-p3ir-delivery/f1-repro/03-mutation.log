@@ -1,0 +1,4 @@
+== P3-I-R / F1 变异对照：摘掉 rollbackListeners() 必须变红 ==
+  修复在   {"threw":true,"netAfterFail":0,"netAfterRetry":53,"N":53}
+  修复被摘 {"threw":true,"netAfterFail":53,"netAfterRetry":104,"N":53}
+  ✓ 摘掉 rollbackListeners() 后：失败残留 53 个监听器、重试后 104 个（N=53）—— 对照组变红，断言有牙齿

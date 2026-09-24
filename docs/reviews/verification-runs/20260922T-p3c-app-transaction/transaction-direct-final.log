@@ -1,0 +1,11 @@
+healthy direct behavior: PASS
+draft reducer operating on live state: mutation detected
+writeSnapshot no longer awaited: mutation detected
+draft published before authoritative success: mutation detected
+same-event in-flight Promise reuse removed: mutation detected
+item/series conflict check removed: mutation detected
+unrelated command replay removed or performed on the wrong state: mutation detected
+stable created-ID consumption/fail-closed remainder removed: mutation detected
+inner-save suppression removed: mutation detected
+replay-failure compensation write removed: mutation detected
+lib/app-transaction.js before/after SHA-256 match: e6df807a8330c618ce5d9e4b7a4087bfe7f07fbab1b32a8693a49908b71dea48

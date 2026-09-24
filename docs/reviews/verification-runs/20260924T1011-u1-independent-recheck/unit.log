@@ -1,0 +1,22 @@
+== U1 反例：稍后面板入口（单元层）==
+  被测: /Users/qlyf/Developer/reminder/lib/app-events.js  [原版]
+  ✓ T1 点「稍后提醒」按钮打开面板
+  ✓ T1 打开前先关详情弹层
+  ✓ T1 state.ui.snoozeId 指向目标事项
+  ✓ T1 无 ReferenceError（旧缺陷：snoozePick is not defined）
+  ✓ T2 闸门拒绝：openSnoozeSheet 返回 false
+  ✓ T2 rejectPendingItemCommand 被调用一次
+  ✓ T2 面板未打开
+  ✓ T2 snoozeId 未被改写
+  ✓ T3 前置：chip 选中确实写入过自定义输入
+  ✓ T3 重开时 chip 高亮被清
+  ✓ T3 重开不沿用旧值（未重选即确认 → 请选择时间，snoozeItem 零调用）
+  ✓ T4 确认调用 snoozeItem 恰好一次且参数正确
+  ✓ T4 确认后关闭稍后面板并隐藏弹条
+  ✓ T4 第二次确认不再触发（确认后选择已清空）
+  ✓ T5 前置：变异真的删到了「打开时重置」两行
+  ✓ T5 变异对照：删掉重置后反例变红（MUTANT_RED=1）
+
+通过: 16  失败: 0
+全部通过。
+EXIT=0

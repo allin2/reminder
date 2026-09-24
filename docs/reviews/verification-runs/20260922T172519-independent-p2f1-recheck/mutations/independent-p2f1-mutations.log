@@ -1,0 +1,35 @@
+{
+  "cases": [
+    {
+      "id": "duplicate-bind-real-click",
+      "anchorFound": true,
+      "healthy": true,
+      "mutant": false,
+      "red": true
+    },
+    {
+      "id": "note-id-attribute-escape",
+      "anchorFound": true,
+      "healthy": true,
+      "mutant": false,
+      "red": true
+    },
+    {
+      "id": "delete-active-item-conflict",
+      "anchorFound": true,
+      "healthy": true,
+      "mutant": false,
+      "red": true
+    },
+    {
+      "id": "production-script-omission",
+      "anchorFound": true,
+      "healthy": true,
+      "mutant": false,
+      "red": true
+    }
+  ],
+  "productHashBefore": "82be748ea5719244cb725602a78599c1daff9a7fc349128d3e64eb7d76ab4289",
+  "productHashAfter": "82be748ea5719244cb725602a78599c1daff9a7fc349128d3e64eb7d76ab4289",
+  "productUnchanged": true
+}

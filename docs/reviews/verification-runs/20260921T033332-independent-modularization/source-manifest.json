@@ -1,0 +1,222 @@
+[
+  {
+    "path": "app-core.js",
+    "sha256": "1803deaaaca8ce586a5d899efe514ce3ccc94a656d33273b299e3836c860d722",
+    "bytes": 380808
+  },
+  {
+    "path": "app.js",
+    "sha256": "771f5582a1548def7bbbbfc00b5715dd6f0f4810812d341351df951d04871fcb",
+    "bytes": 4971
+  },
+  {
+    "path": "capacitor.config.json",
+    "sha256": "405d767ff54451448f1cedf337179523a7c9dd67e260bf068b373b9dfec8e93f",
+    "bytes": 312
+  },
+  {
+    "path": "icon-192.png",
+    "sha256": "48e5078385c990aa02f164874609dccb1108a54cdb8fb8882bdbfb3caaf38411",
+    "bytes": 1028
+  },
+  {
+    "path": "icon-512.png",
+    "sha256": "a558b0502031e078b7a3087779f2777dffe5f5f7f8ccb3869783cc28f776f3af",
+    "bytes": 3690
+  },
+  {
+    "path": "icon.svg",
+    "sha256": "fb09a46eae6dcd7c165811710d8fb91ae47f4273bb7228711076ea016ce8ddbb",
+    "bytes": 297
+  },
+  {
+    "path": "index.html",
+    "sha256": "ad706717c2accb966aaac2cc4db49d2be68fa3f202b38f63449fc7ecc06b9653",
+    "bytes": 79352
+  },
+  {
+    "path": "lib/app-ui.js",
+    "sha256": "84e3e97663c2a7525ff25432f335a5a422791c83e26f81014b34443d63b632e4",
+    "bytes": 8394
+  },
+  {
+    "path": "lib/date-utils.js",
+    "sha256": "7328f1e6ec1634a523deb21ba96ff9f9bf50f6b2ebe827b3a1e7765394cdb46c",
+    "bytes": 7506
+  },
+  {
+    "path": "lib/delivery-evidence.js",
+    "sha256": "7ee77186881d8462450c8fe8a550840647ec9d7626c259fb9e29768290062d03",
+    "bytes": 15664
+  },
+  {
+    "path": "lib/export-format.js",
+    "sha256": "37e60a07624c2dda1f1afadec8c1b2d61fe5b4a5a34b4c9c82f2c10ed0270423",
+    "bytes": 20728
+  },
+  {
+    "path": "lib/feedback.js",
+    "sha256": "bfe41dd392d5ff27d8c92b41154fc7e4e5a125eaaa1c8fae6ae3298186669eb3",
+    "bytes": 16445
+  },
+  {
+    "path": "lib/import-extract.js",
+    "sha256": "edd959660e9fb9525ba7c290cde3019a81d53f1873c0ce31af24da30e1714bfa",
+    "bytes": 25093
+  },
+  {
+    "path": "lib/import-map.js",
+    "sha256": "51fe5528bb7189400946685ab0b9e9819f71eae8096166920deb048a4a0529d9",
+    "bytes": 10218
+  },
+  {
+    "path": "lib/native-reminders.js",
+    "sha256": "22d183c857ce060047054b524d3f2cae0c37d54e30553134091c26884ff3d6bb",
+    "bytes": 60999
+  },
+  {
+    "path": "lib/parse-cn.js",
+    "sha256": "80c6e4db43ebe018c2fc90fbe1e8b1cc126be801aec5ae790490cb5fe53a9f9d",
+    "bytes": 22716
+  },
+  {
+    "path": "lib/reminder.js",
+    "sha256": "886ab9eb1a438b34122b71a461ed89a4a5b37fa85dedf8ee7afa558ee58f62fd",
+    "bytes": 5598
+  },
+  {
+    "path": "lib/repeat.js",
+    "sha256": "d48b8d67336976c4d514101b9990c904d8a00a9aa1ecabf3fe6abace86afd83a",
+    "bytes": 5918
+  },
+  {
+    "path": "lib/storage.js",
+    "sha256": "d7f5ca0d766f796cdeea6f4ce0b73875dc5778ed4eefdb8c939cae6b5b27d2d1",
+    "bytes": 5006
+  },
+  {
+    "path": "lib/ui-format.js",
+    "sha256": "3dcccc41863aef136abe513527d79955c5b80be9d997f5ff90d68f0fd5850c9f",
+    "bytes": 9232
+  },
+  {
+    "path": "manifest.json",
+    "sha256": "660c2314cc921232ed9f9c3f7271839f57109e6640e1a9b0cf2a7259ca42e2f1",
+    "bytes": 1232
+  },
+  {
+    "path": "package-lock.json",
+    "sha256": "517d0146cc6bebe46802c46bcdc93160ee8a358cb0668ec6f6c3d5c289e4b5fa",
+    "bytes": 42280
+  },
+  {
+    "path": "package.json",
+    "sha256": "4aca70559832b381825e2fe218f1b2d976c8eec541976c64e034c461d64e533a",
+    "bytes": 729
+  },
+  {
+    "path": "prd.html",
+    "sha256": "999a0f80eedcce30ad5921faf908fcf76c17a522d80d42f5f13602a336828d09",
+    "bytes": 58102
+  },
+  {
+    "path": "scripts/sync-www.js",
+    "sha256": "06752fc717113f3903ba32a3a5167d7fcde585af702e18bfac2b681b87bf0f15",
+    "bytes": 2409
+  },
+  {
+    "path": "scripts/verification/alarm-token-device.js",
+    "sha256": "2aeecb1ffaac2885d3d247ca5c87eaa55addfc8e82d9ae56be27ea472d6ba912",
+    "bytes": 1851
+  },
+  {
+    "path": "scripts/verification/core-inventory.js",
+    "sha256": "121ec7bde4abfffd43d6514357ddffd6661e69434c98c7792a69f4eba00f9cac",
+    "bytes": 3733
+  },
+  {
+    "path": "scripts/verification/deadline-quiet-probe.js",
+    "sha256": "0f7d813e98c038adc47226be7fc412a7fc7015901c9c0c272fbadbcf439572a0",
+    "bytes": 4163
+  },
+  {
+    "path": "scripts/verification/module-map-gen.js",
+    "sha256": "3de81c9c3e4f81a6ee360d292358fa9ccd899d989b8d21b368abc3f1fa6b507c",
+    "bytes": 6588
+  },
+  {
+    "path": "scripts/verification/parse-probe.js",
+    "sha256": "71afa7ec1e16d9bef16fcf4c2d00644a60cc64dfed64e77285f21e33472288c8",
+    "bytes": 2893
+  },
+  {
+    "path": "scripts/verification/parse-single-source.js",
+    "sha256": "41c99f0f64c50ed699bcbd33fae8d1ddf03344e76874d05b58c4724f3eaa405c",
+    "bytes": 36696
+  },
+  {
+    "path": "scripts/verification/perf-counts.js",
+    "sha256": "3a607a4200ef6e467a714aebdafc94a42ec583b58df0b3d3c829315aa3f67602",
+    "bytes": 18208
+  },
+  {
+    "path": "scripts/verification/production-scripts.js",
+    "sha256": "14047d918e167897a8527ef2c1723fef39921378f5db91f4967dd1ad5a87746c",
+    "bytes": 15726
+  },
+  {
+    "path": "scripts/verification/reverse-check-d59.js",
+    "sha256": "40f61399136e8219743ecfc79fc97e0d127e6463613cf042e431bebb45610356",
+    "bytes": 18785
+  },
+  {
+    "path": "scripts/verification/review-window-device.js",
+    "sha256": "a813416e86c73c97ae97ec996cac65c13911c08592be3b726bdbb374e7b9e556",
+    "bytes": 2247
+  },
+  {
+    "path": "scripts/verification/storage-degrade-probe.js",
+    "sha256": "236e6743f8fe247415297b592f766355b913671d42cbb0dac2b129e1438fd0ba",
+    "bytes": 9417
+  },
+  {
+    "path": "scripts/verification/ui-dom-parity.js",
+    "sha256": "d2fe2962006ad314780ebf195bcaca95b0c3323f1f14fcecd9995172239a28e7",
+    "bytes": 24946
+  },
+  {
+    "path": "scripts/verification/ui-format-parity.js",
+    "sha256": "964e079ffab84a8fa17b62c0b599b70846dba1a436858578386b9111c3b4abae",
+    "bytes": 8451
+  },
+  {
+    "path": "sw.js",
+    "sha256": "18de5f2f541e76eb23d381d72513a4303c2c6a6b9d1b2f6f036ce3f1354d8a08",
+    "bytes": 4228
+  },
+  {
+    "path": "test-boot-combination.js",
+    "sha256": "124eb0e267d293425220d276af87c21b47e80bab350145534ccb75c8da5fa7fd",
+    "bytes": 97622
+  },
+  {
+    "path": "test-native-reminders.js",
+    "sha256": "a0008176e878766a56e58846e4e5f0452e6d88a966d260b5670081a442369330",
+    "bytes": 133988
+  },
+  {
+    "path": "test-regressions.js",
+    "sha256": "62eaded41aa6f07abc238f6ad23eabeca8c2fa4768af289306b6bf43a31038e0",
+    "bytes": 177854
+  },
+  {
+    "path": "test-smoke.js",
+    "sha256": "af0edf2c660a006bc1d0bfeb7439b54ec9119d493c328841b8889cfed2422df7",
+    "bytes": 81471
+  },
+  {
+    "path": "test-unit.js",
+    "sha256": "ca3b9f905c171a334540bb54934638a59b37e30b4c01d0274aa35f8ab0fd6f51",
+    "bytes": 75329
+  }
+]

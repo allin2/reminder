@@ -1,0 +1,70 @@
+{
+  "ready": {
+    "hook": true,
+    "ready": true,
+    "failure": null,
+    "panel": false,
+    "panelText": "",
+    "bindings": {
+      "parseChineseTime": "current",
+      "nextRepeatTrigger": "current",
+      "cnInt": "current",
+      "hasQuery": true,
+      "feedback": true,
+      "feedbackIsCurrent": true,
+      "evidence": true,
+      "evidenceIsCurrent": true,
+      "native": true,
+      "nativeIsCurrent": true
+    }
+  },
+  "dispatch": {
+    "files": 0,
+    "valueCleared": true
+  },
+  "confirmation": {
+    "open": true,
+    "title": "导入数据",
+    "body": "导入将覆盖当前数据，继续？"
+  },
+  "confirmClick": true,
+  "afterImport": {
+    "items": [
+      {
+        "id": "import-live-1",
+        "title": "浏览器真实导入"
+      }
+    ],
+    "notes": 1,
+    "projects": 1,
+    "notify": false,
+    "toast": "导入成功 · 1 条事项",
+    "meter": {
+      "opens": 1,
+      "puts": 1,
+      "names": [
+        "attention-inbox"
+      ],
+      "error": null
+    }
+  },
+  "afterReload": {
+    "items": [
+      {
+        "id": "import-live-1",
+        "title": "浏览器真实导入"
+      }
+    ]
+  },
+  "checks": {
+    "ready": true,
+    "file-dispatched": true,
+    "confirmation-visible": true,
+    "imported-one-item": true,
+    "correct-title": true,
+    "saved-to-idb": true,
+    "success-feedback": true,
+    "survives-reload": true
+  },
+  "failed": []
+}

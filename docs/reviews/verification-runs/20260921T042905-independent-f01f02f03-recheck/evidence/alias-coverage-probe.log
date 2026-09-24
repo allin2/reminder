@@ -1,0 +1,34 @@
+{
+  "baseline": {
+    "undeclared": [],
+    "ambiguousAliases": [
+      "f"
+    ],
+    "ambiguousRefs": [
+      "f.TEST_FEEDBACK",
+      "f.actionLabel",
+      "f.captureSummary",
+      "f.reminderFeedback",
+      "f.setupSteps",
+      "f.text"
+    ],
+    "aliases": {}
+  },
+  "ambiguousFMutation": {
+    "undeclared": [],
+    "ambiguousRefs": [
+      "f.independentUndeclaredMember"
+    ]
+  },
+  "directAliasControl": {
+    "undeclared": [
+      {
+        "path": "Feedback.independentUndeclaredMember",
+        "lines": [
+          3661
+        ]
+      }
+    ]
+  },
+  "blindSpotReproduced": true
+}

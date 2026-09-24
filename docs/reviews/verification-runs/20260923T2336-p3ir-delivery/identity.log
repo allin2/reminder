@@ -1,0 +1,19 @@
+== P3-I-R 交付身份（五层）==  候选重建于时钟缺陷修复之后
+候选 APK: /Users/qlyf/Developer/reminder/releases/candidates/20260923T2336-p3ir-candidate/app-debug.apk
+文件总数: 39  不一致: 0
+
+文件                                  行数      字节  五层       source sha256
+--------------------------------------------------------------------------------------------------------
+lib/app-notices.js                 201    9300  MATCH    2befd9c599ed14cca6b668ccefba51f5c9817624bbd4d6eb54e600c5fc89bca3
+lib/app-action-feedback.js         276   10819  MATCH    2018a80513db674417d2fe37163d30fa22ed572dd491daf6c699a34eaf9f642a
+lib/app-events.js                  937   35747  MATCH    8f4da3c2e1aff1266e83b3a2adc69e5383b5a6d28e327d2ce96c9808562f6d86
+lib/app-test-api.js                407   25590  MATCH    68ea2ecb13f88b78f27d26b01ce4b978acbade3a69168aa0c7038bcea1870bec
+app-core.js                       3922  193538  MATCH    bc689c765e37623f9636ab072472307986a8ff56956e6a6c5977ad47b71de4fe
+index.html                        2048   82936  MATCH    7f4f3db226bfe74af38744ea6b76140a9607c6e45e8674afe6e911253db1ba42
+sw.js                              178    9255  MATCH    f04085da011cf19e74728d30740725845702d8014386da965aa696466e3dcafe
+lib/app-model.js                    93    5927  MATCH    c96e2e8eef2d844a61e0790f831e87e5d5c5107067d9fcaf748098cb80b244b6
+lib/app-platform.js                395   13965  MATCH    97ed1941dcfc264f20435ebe19c959e73f7559634fc71bb275dcb4180017b247
+
+== 加载链核对 ==
+sw 缓存版本: attention-inbox-v39   script 数: 30   ASSETS 数: 34
+未被预缓存的 script: 无

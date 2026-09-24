@@ -1,0 +1,2 @@
+CONTROL: first bind registers 1 document listeners
+{"case":"retry after transient bind failure","bound":true,"setupCalls":2,"listeners":1}

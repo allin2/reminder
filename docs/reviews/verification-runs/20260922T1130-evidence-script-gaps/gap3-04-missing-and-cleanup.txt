@@ -1,0 +1,31 @@
+=== ⑤ 缺失方向：清单里加一条设备上不存在的文件 —— 期望 FAIL ===
+  文件集合：备份清单 6 个 / 设备当前 6 个
+  ✗ 设备目录存在**备份清单之外**的文件（残留，未还原干净）：
+      + CURRENT.bak-20260922
+  ✗ 备份清单里的文件在设备上**缺失**：
+      - MANIFEST-000777
+  ✓ 000003.log 逐字节一致
+  ✓ CURRENT 逐字节一致
+  ✓ LOG 逐字节一致
+  ✓ LOG.old 逐字节一致
+  ✓ MANIFEST-000001 逐字节一致
+  ✗ MANIFEST-000777 不一致：备份 deadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeef 设备 14a1a2b550dbbcb6ec13db31cc2666adf0d7dfc282e8c289760e5194b518087d
+VERIFY=FAIL
+EXIT=1
+
+=== ⑥ 清掉残留文件后 verify —— 期望 PASS ===
+    000003.log
+    CURRENT
+    LOCK
+    LOG
+    LOG.old
+    MANIFEST-000001
+  文件集合：备份清单 5 个 / 设备当前 5 个
+  ✓ 无多余文件（设备普通文件集合 ⊆ 备份清单）
+  ✓ 000003.log 逐字节一致
+  ✓ CURRENT 逐字节一致
+  ✓ LOG 逐字节一致
+  ✓ LOG.old 逐字节一致
+  ✓ MANIFEST-000001 逐字节一致
+VERIFY=PASS
+EXIT=0

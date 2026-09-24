@@ -1,0 +1,79 @@
+{
+  "allDetected": true,
+  "results": [
+    {
+      "name": "carrier-precedence",
+      "anchorHit": true,
+      "baselinePass": true,
+      "mutantPass": false,
+      "detected": true,
+      "observed": {
+        "baseline": {
+          "text": "投递时系统通知是关闭的 · 全屏闹钟没有载体（系统不会展示界面）· 铃声与振动已由前台服务接管 · ",
+          "label": "已响未亮",
+          "ok": false,
+          "warn": true
+        },
+        "mutant": {
+          "text": "投递时系统通知是关闭的 · 全屏闹钟没有载体（系统不会展示界面）· 铃声与振动已由前台服务接管 · ",
+          "label": "无通知权限",
+          "ok": false,
+          "warn": true
+        }
+      }
+    },
+    {
+      "name": "delivery-snapshot-precedence",
+      "anchorHit": true,
+      "baselinePass": true,
+      "mutantPass": false,
+      "detected": true,
+      "observed": {
+        "baseline": "未确认显示全屏 ·  · 缺「显示在其他应用上层」· 解锁亮屏下后台启动界面被系统拦下 · 未确认系统通知已经投递",
+        "mutant": "未确认显示全屏 ·  · 权限齐备，但界面没有被系统展示 · 请检查后台运行及界面显示限制 · 未确认系统通知已经投递"
+      }
+    },
+    {
+      "name": "bind-idempotence",
+      "anchorHit": true,
+      "baselinePass": true,
+      "mutantPass": false,
+      "detected": true,
+      "observed": {
+        "baseline": [
+          17,
+          17
+        ],
+        "mutant": [
+          17,
+          34
+        ]
+      }
+    },
+    {
+      "name": "production-load-closure",
+      "anchorHit": true,
+      "baselinePass": true,
+      "mutantPass": false,
+      "detected": true,
+      "observed": {
+        "omittedProblems": [
+          "unaccounted-production-script:lib/app-diagnostics.js（本 harness 既没加载它，也没声明替代注入或有意的缺席；app-core 的 `|| {}` 兜底会让这个缺口静默通过）"
+        ]
+      }
+    },
+    {
+      "name": "instance-contract-member",
+      "anchorHit": true,
+      "baselinePass": true,
+      "mutantPass": false,
+      "detected": true,
+      "observed": {
+        "baseline": [],
+        "mutant": [
+          "labLog"
+        ]
+      }
+    }
+  ]
+}

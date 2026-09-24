@@ -1,0 +1,6 @@
+Traceback (most recent call last):
+  File "/Users/qlyf/Developer/reminder/docs/reviews/verification-runs/20260922T1130-evidence-script-gaps/fixtures/make-and-test.py", line 223, in <module>
+    sys.exit(main())
+  File "/Users/qlyf/Developer/reminder/docs/reviews/verification-runs/20260922T1130-evidence-script-gaps/fixtures/make-and-test.py", line 77, in main
+    tool, fixdir, realdir = sys.argv[1], sys.argv[2], sys.argv[3]
+IndexError: list index out of range

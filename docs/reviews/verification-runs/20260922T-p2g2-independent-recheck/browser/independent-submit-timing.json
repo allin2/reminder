@@ -1,0 +1,29 @@
+{
+  "pendingLate": {
+    "pending": {
+      "buttonDisabled": true,
+      "buttonText": "保存中…",
+      "sheetOpen": true,
+      "itemInMemory": true
+    },
+    "lateProtected": true
+  },
+  "reject": {
+    "rolledBack": true,
+    "sheetOpen": true,
+    "draftKept": true,
+    "buttonRestored": true,
+    "failureToast": true
+  },
+  "success": {
+    "saved": true,
+    "closed": true,
+    "buttonRestored": true,
+    "feedback": "已收下 · 待整理"
+  },
+  "reload": {
+    "ready": true,
+    "persisted": true
+  },
+  "pass": true
+}

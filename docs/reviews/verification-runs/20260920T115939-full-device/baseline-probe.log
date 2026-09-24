@@ -1,0 +1,55 @@
+设备验证开始 → /Users/qlyf/Developer/reminder/docs/reviews/verification-runs/20260920T115939-full-device/baseline-probe
+
+=== A 连接建立 ===
+A-01   [PASS] adb 可用
+A-02   [PASS] 设备发现
+A-03   [PASS] 调试授权
+A-04   [PASS] 连接稳定性（连续 3 次取样）
+A-05   [PASS] 设备身份与传输通道
+
+=== B 基础通信 ===
+B-01   [PASS] 命令通道往返
+B-02   [PASS] 设备时钟一致性
+B-03   [PASS] 文件通道一致性（64KB 往返）
+B-04   [PASS] 二进制通道（exec-out 截屏）
+B-05   [PASS] 端口转发通道
+B-06   [PASS] 日志通道（logcat 回读）
+B-07   [PASS] 包管理通道（pm path）
+
+=== C 核心功能模块 ===
+F-01   [PASS] 设备能力（屏幕/电量/存储）
+F-02   [PASS] 应用安装与版本
+F-03   [FAIL] 关键权限授予状态
+              明确未授予：POST_NOTIFICATIONS —— 会直接阻断送达
+F-04   [PASS] 后台策略（appops / 电池白名单）
+              未加电池优化白名单 —— 按已知结论它挡不住冻结，仅作记录
+F-05   [WARN] 通知渠道（0/3）
+              渠道未全部建立（首次启动后才会创建）
+F-06   [PASS] 闹钟排程（dumpsys alarm）
+              检测到 3 处 frozen 标记 —— 按已知结论：进程被冻结时任何投递都进不去
+F-07   [PASS] 进程与冻结态
+F-08   [WARN] 原生排程台账（shared_prefs）
+              读不到（release 包 run-as 不可用属正常），以 dumpsys alarm 为准
+F-09   [PASS] Web 运行时 ready()
+F-10   [PASS] 业务逻辑真机回归
+F-11   [SKIP] 通知排程往返（写入类）
+              需 --live 才执行
+F-12   [SKIP] 存储持久化往返（写入类）
+              需 --live 才执行
+
+=== D 收尾复核 ===
+D-01   [PASS] 结束时链路仍在线
+D-02   [PASS] 全程链路掉线次数
+
+=== 汇总 ===
+PASS 21 / FAIL 1 / WARN 2 / SKIP 2
+  F-03  FAIL   关键权限授予状态
+         明确未授予：POST_NOTIFICATIONS —— 会直接阻断送达
+  F-05  WARN   通知渠道（0/3）
+         渠道未全部建立（首次启动后才会创建）
+  F-08  WARN   原生排程台账（shared_prefs）
+         读不到（release 包 run-as 不可用属正常），以 dumpsys alarm 为准
+
+结论：FAIL
+报告：/Users/qlyf/Developer/reminder/docs/reviews/verification-runs/20260920T115939-full-device/baseline-probe/report.md
+机器可读：/Users/qlyf/Developer/reminder/docs/reviews/verification-runs/20260920T115939-full-device/baseline-probe/report.json

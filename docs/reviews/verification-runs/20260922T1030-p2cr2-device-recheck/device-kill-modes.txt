@@ -1,0 +1,47 @@
+PKG=space.alliswell.inbox.exportrecheck  run-start=2026-09-22T10:45:26+0800
+
+════ 终止方式：SIGKILL(run-as kill -9) ════
+## [SIGKILL(run-as kill -9)] 活着时：A 时点
+IDB_STATE_SHA256=0625aacabcd5068a
+BYTES=2443
+file: IDB_FILES=5 IDB_BYTES=138603 IDB_SHA256=009709f2b4c36a3f3c057a484224c6252e1d1c2044ddb598c30910376d3332dc
+PAGE={"items":2,"projects":1,"title":"P2C 复验事项","status":"loaded","reason":"authoritative","backend":"idb","writesAllowed":true,"blockedWriteCount":0,"nativeBlocked":0,"panel":false}
+
+## [SIGKILL(run-as kill -9)] 终止
+  pid-after-kill=[]
+  B1: IDB_FILES=5 IDB_BYTES=138603 IDB_SHA256=009709f2b4c36a3f3c057a484224c6252e1d1c2044ddb598c30910376d3332dc
+  B2: IDB_FILES=5 IDB_BYTES=138603 IDB_SHA256=009709f2b4c36a3f3c057a484224c6252e1d1c2044ddb598c30910376d3332dc
+  ✓ 死亡窗口静止
+
+## [SIGKILL(run-as kill -9)] 冷启动后：C 时点
+IDB_STATE_SHA256=0625aacabcd5068a
+BYTES=2443
+file: IDB_FILES=5 IDB_BYTES=138622 IDB_SHA256=63e6a2bbc158c0b68ce985f585f4972c50809a3b8d1b8263d1cbf94fc881d64c
+PAGE={"items":2,"projects":1,"title":"P2C 复验事项","status":"loaded","reason":"authoritative","backend":"idb","writesAllowed":true,"blockedWriteCount":0,"nativeBlocked":0,"panel":false}
+
+  ✓ 记录级哈希 A==C（0625aacabcd5068a）：内容零变化
+
+════ 终止方式：后台回收(HOME + am kill) ════
+## [后台回收(HOME + am kill)] 活着时：A 时点
+IDB_STATE_SHA256=0625aacabcd5068a
+BYTES=2443
+file: IDB_FILES=5 IDB_BYTES=138622 IDB_SHA256=63e6a2bbc158c0b68ce985f585f4972c50809a3b8d1b8263d1cbf94fc881d64c
+PAGE={"items":2,"projects":1,"title":"P2C 复验事项","status":"loaded","reason":"authoritative","backend":"idb","writesAllowed":true,"blockedWriteCount":0,"nativeBlocked":0,"panel":false}
+
+## [后台回收(HOME + am kill)] 终止
+  pid-after-kill=[6641]
+  MODE=NOT_PERFORMED（终止未生效：AMS 拒绝杀持有 WebView 绑定的进程；见 dumpsys 取证）
+
+结束 2026-09-22T10:46:16+0800
+
+=== AMS 绑定取证（后台回收为何杀不掉；与上面的 pid-after-kill 一起看）===
+  * ServiceRecord{e8149f u0 space.alliswell.inbox.exportrecheck/org.chromium.content.app.SandboxedProcessService0:0 c:space.alliswell.inbox.exportrecheck}
+          ConnectionRecord{61ef9f1 u0 CR IMP space.alliswell.inbox.exportrecheck/org.chromium.content.app.SandboxedProcessService0:0:@3497d98 flags=0x80000041}
+          ConnectionRecord{7c338d8 u0 CR WPRI space.alliswell.inbox.exportrecheck/org.chromium.content.app.SandboxedProcessService0:0:@5c35bbb flags=0x80000021}
+      ConnectionRecord{61ef9f1 u0 CR IMP space.alliswell.inbox.exportrecheck/org.chromium.content.app.SandboxedProcessService0:0:@3497d98 flags=0x80000041}
+      ConnectionRecord{7c338d8 u0 CR WPRI space.alliswell.inbox.exportrecheck/org.chromium.content.app.SandboxedProcessService0:0:@5c35bbb flags=0x80000021}
+  * ConnectionRecord{61ef9f1 u0 CR IMP space.alliswell.inbox.exportrecheck/org.chromium.content.app.SandboxedProcessService0:0:@3497d98 flags=0x80000041}
+  * ConnectionRecord{7c338d8 u0 CR WPRI space.alliswell.inbox.exportrecheck/org.chromium.content.app.SandboxedProcessService0:0:@5c35bbb flags=0x80000021}
+
+EXECUTED=2 NOT_PERFORMED=1
+OVERALL=PASS（已执行的终止方式全部通过；NOT_PERFORMED 见上）

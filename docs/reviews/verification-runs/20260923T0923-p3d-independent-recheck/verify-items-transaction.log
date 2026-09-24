@@ -1,0 +1,20 @@
+{
+  "verdict": "PASS",
+  "reusedItemsInstance": true,
+  "reboundTransaction": true,
+  "rejected": {
+    "ack": false,
+    "complete": false,
+    "snooze": false,
+    "delete": false,
+    "reopen": false,
+    "restore": false,
+    "resumeDeadlineProtection": false,
+    "stopRepeat": false
+  },
+  "peerResult": true,
+  "finalTarget": "acknowledged",
+  "finalPeer": "snoozed",
+  "rebootTarget": "acknowledged",
+  "rebootPeer": "snoozed"
+}

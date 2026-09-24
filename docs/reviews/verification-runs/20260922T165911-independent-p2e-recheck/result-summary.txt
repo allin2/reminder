@@ -1,0 +1,11 @@
+P2-E independent acceptance: PASS
+source app-core.js: fe5e9c233aceba2ebedcff64326d4cf33f2351cdab982d78cfd6899d01062ac0
+source lib/app-setup.js: e7b000620da77777f0bd1cc5537d1f4a87aee0efc7aed6566d9248077a8ce112
+npm test: 2538 passed, 0 failed, exit 0
+browser setup: PASS, exit 0
+browser diagnostics: 4/4, exit 0
+browser import: 11/11, exit 0
+independent mutations: 4/4 detected, exit 0
+APK: 652ccd44240b4db6584cc3d14b9e88248ddce8fba653e484550d23bde0c2e158
+APK web assets: 24/24 byte-identical
+device side effects: NOT_PERFORMED

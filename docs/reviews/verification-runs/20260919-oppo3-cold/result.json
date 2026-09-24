@@ -1,0 +1,212 @@
+{
+  "scenario": "cold",
+  "itemId": "oppo3_cold_1789825585",
+  "triggerAt": 1789825642000,
+  "observeSec": 60,
+  "envNote": "HOME→kill -9 pid=28302 out='' err='' after=''",
+  "screenAtTrigger": "Dozing",
+  "keyguardAtTrigger": "true",
+  "screenSamples": [
+    [
+      1789825596995,
+      "Dozing",
+      "true"
+    ],
+    [
+      1789825600284,
+      "Dozing",
+      "true"
+    ],
+    [
+      1789825603565,
+      "Dozing",
+      "true"
+    ],
+    [
+      1789825606873,
+      "Dozing",
+      "true"
+    ],
+    [
+      1789825610162,
+      "Dozing",
+      "true"
+    ],
+    [
+      1789825613478,
+      "Dozing",
+      "true"
+    ],
+    [
+      1789825616811,
+      "Dozing",
+      "true"
+    ],
+    [
+      1789825620106,
+      "Dozing",
+      "true"
+    ],
+    [
+      1789825623414,
+      "Dozing",
+      "true"
+    ],
+    [
+      1789825626696,
+      "Dozing",
+      "true"
+    ],
+    [
+      1789825629952,
+      "Dozing",
+      "true"
+    ],
+    [
+      1789825633224,
+      "Dozing",
+      "true"
+    ],
+    [
+      1789825636482,
+      "Dozing",
+      "true"
+    ],
+    [
+      1789825641479,
+      "Dozing",
+      "true"
+    ],
+    [
+      1789825644752,
+      "Dozing",
+      "true"
+    ],
+    [
+      1789825648468,
+      "Dozing",
+      "true"
+    ],
+    [
+      1789825652161,
+      "Dozing",
+      "true"
+    ],
+    [
+      1789825655471,
+      "Dozing",
+      "true"
+    ],
+    [
+      1789825658766,
+      "Dozing",
+      "true"
+    ],
+    [
+      1789825662054,
+      "Dozing",
+      "true"
+    ],
+    [
+      1789825665347,
+      "Dozing",
+      "true"
+    ],
+    [
+      1789825668630,
+      "Dozing",
+      "true"
+    ],
+    [
+      1789825671916,
+      "Dozing",
+      "true"
+    ],
+    [
+      1789825675184,
+      "Dozing",
+      "true"
+    ],
+    [
+      1789825678464,
+      "Dozing",
+      "true"
+    ],
+    [
+      1789825681750,
+      "Dozing",
+      "true"
+    ],
+    [
+      1789825685073,
+      "Dozing",
+      "true"
+    ],
+    [
+      1789825688385,
+      "Dozing",
+      "true"
+    ],
+    [
+      1789825691673,
+      "Awake",
+      "true"
+    ],
+    [
+      1789825694948,
+      "Awake",
+      "true"
+    ],
+    [
+      1789825698227,
+      "Awake",
+      "true"
+    ],
+    [
+      1789825701554,
+      "Dozing",
+      "true"
+    ]
+  ],
+  "screenshots": [
+    "/Users/qlyf/Developer/reminder/docs/reviews/verification-runs/20260919-oppo3-cold/shot_cold_+3s.png",
+    "/Users/qlyf/Developer/reminder/docs/reviews/verification-runs/20260919-oppo3-cold/shot_cold_+8s.png"
+  ],
+  "notifLines": "10",
+  "received": false,
+  "windowVisible": false,
+  "lagMs": null,
+  "environment": null,
+  "stages": [
+    "requested",
+    "item",
+    "unfreezerScheduled",
+    "scheduled"
+  ],
+  "traceRows": [
+    {
+      "token": "36251934:e1610f31-3865-4901-b5bc-7d4777f407c9",
+      "stage": "requested",
+      "at": 1789825588135,
+      "detail": "delayMs=53880"
+    },
+    {
+      "token": "36251934:e1610f31-3865-4901-b5bc-7d4777f407c9",
+      "stage": "item",
+      "at": 1789825588142,
+      "detail": "oppo3_cold_1789825585"
+    },
+    {
+      "token": "36251934:e1610f31-3865-4901-b5bc-7d4777f407c9",
+      "stage": "unfreezerScheduled",
+      "at": 1789825588175,
+      "detail": "triggerAt=1789825642026;mode=alarmClock"
+    },
+    {
+      "token": "36251934:e1610f31-3865-4901-b5bc-7d4777f407c9",
+      "stage": "scheduled",
+      "at": 1789825588182,
+      "detail": "triggerAt=1789825642026;mode=alarmClock"
+    }
+  ]
+}

@@ -1,0 +1,2 @@
+{"ready": true, "views": {"hasHome": true, "hasCard": true, "hasDetail": true, "hasFuture": true, "hasMe": true}, "home": true, "future": true, "archive": true, "notes": true, "me": true, "stats": true}
+views EXIT=0

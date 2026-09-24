@@ -1,0 +1,89 @@
+== product definitions ==
+lib/app-model.js:15:    function createInitialState() {
+lib/app-model.js:34:    function normalizeItem(it) {
+lib/app-model.js:62:    function resolveDeliveryMode(priority) {
+lib/app-model.js:66:    function makeItem(o) {
+lib/app-model.js:70:    function bumpRev(it) { if (it) it.rev = (Number(it.rev) || 0) + 1; }
+lib/app-model.js:71:    function isTerminal(it) { return !!it && (it.status === "archived" || it.status === "completed"); }
+lib/app-model.js:72:    function hasKnownRev(rev) { if (rev == null || rev === "") return false; const n = Number(rev); return Number.isFinite(n) && n > 0; }
+app-core.js:2212:  function normalizeItem(it) {
+app-core.js:2217:  function resolveDeliveryMode(priority) {
+app-core.js:2221:  function makeItem(o) {
+app-core.js:2232:  function bumpRev(it) {
+app-core.js:2248:  function isTerminal(it) {
+app-core.js:2257:  function hasKnownRev(rev) {
+== schema/color/default literals ==
+lib/app-model.js:13:    const SCHEMA = 5;
+lib/app-model.js:14:    const PROJECT_COLORS = ["#1b6b4a", "#3d5a80", "#9a6b12", "#8f3a3a", "#5b4b8a", "#2f6f7a"];
+lib/app-model.js:22:          defaultDeliveryMode: "notification",
+lib/app-model.js:24:            followupMs: 60 * 60 * 1000, maxFollowups: 2, lastNotifiedAt: 0,
+app-core.js:2293:        followupMs: 60 * 60 * 1000,
+== core wrappers ==
+    }
+  }
+
+  function load() {
+    return loadSync();
+  }
+
+  function normalizeItem(it) {
+    return appModel.normalizeItem(it);
+  }
+
+  /** D25 赋值快照：有标记→alarm；未标记→当前全局默认 */
+  function resolveDeliveryMode(priority) {
+    return appModel.resolveDeliveryMode(priority);
+  }
+
+  function makeItem(o) {
+    return appModel.makeItem(o);
+  }
+
+
+
+  /**
+   * L04：任何会改变「时间 / 状态」的写入都推进版本号。
+   * 通知事件携带投递时的版本，回来时对不上就说明它是「已经过期的旧通知」，
+   * 不得再覆盖新状态、也不得再推进一次周期。
+   */
+  function bumpRev(it) {
+    return appModel.bumpRev(it);
+  }
+
+  /**
+   * 截止保护的阶段身份（L02 / INV-05）。
+   *
+   * **唯一实现在 `lib/reminder.js`**。这里不再保留「Lib 缺失时按 24h/2h 自己算一份」的兜底 ——
+   * 那份兜底与规范实现是**两套边界常量**，一旦生效，界面上看不出任何差异，只是阶段判定
+   * 悄悄换了标准（与 native-reminders 里「只排 p24、丢掉 p2」是同一类静默降级）。
+   */
+  function deadlineStageKeyOf(deadlineAt, now) {
+    return Lib.deadlineStageKey(deadlineAt, now);
+  }
+
+  /** 已完成 / 已归档是终态：只允许通过明确的恢复动作重开（L04） */
+  function isTerminal(it) {
+    return appModel.isTerminal(it);
+  }
+
+  /**
+   * L04：事件里的数据版本是否「可知」。
+   * 缺失 / 0 / 非数字都当作未知 —— 这时不做版本校验，
+   * 避免整条原生链路丢版本后所有通知按钮集体失效（V02）。
+   */
+  function hasKnownRev(rev) {
+    return appModel.hasKnownRev(rev);
+  }
+
+  /**
+   * L01 / R5 / D17：只有「系统兜底时间」的记录不发事项提醒。
+   *  · 用户手选或解析出的真实时间照常生效（Review 只管内容质量）；
+   *  · Review 关闭后一律按普通事项正常提醒（V0.2 §9.2）。
+   */
+== index order ==
+2014:<script src="lib/app-model.js"></script>
+2024:<script src="app-core.js"></script>
+== sw cache and model ==
+2:// v24：P3-A 把事项模型与默认状态迁出为 `lib/app-model.js`。
+24:const CACHE = "attention-inbox-v24";
+51:  "./lib/app-model.js",

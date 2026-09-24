@@ -1,0 +1,248 @@
+Activity Resolver Table:
+  Non-Data Actions:
+      android.intent.action.MAIN:
+        adb8f5c space.alliswell.inbox/.MainActivity filter 2524265
+          Action: "android.intent.action.MAIN"
+          Category: "android.intent.category.LAUNCHER"
+
+Receiver Resolver Table:
+  Non-Data Actions:
+      android.app.action.SCHEDULE_EXACT_ALARM_PERMISSION_STATE_CHANGED:
+        dbf591d space.alliswell.inbox/.ExactAlarmPermissionReceiver filter 10df792
+          Action: "android.app.action.SCHEDULE_EXACT_ALARM_PERMISSION_STATE_CHANGED"
+      android.intent.action.QUICKBOOT_POWERON:
+        c5f3b3a space.alliswell.inbox/com.capacitorjs.plugins.localnotifications.LocalNotificationRestoreReceiver filter f404548
+          Action: "android.intent.action.QUICKBOOT_POWERON"
+          Action: "android.intent.action.LOCKED_BOOT_COMPLETED"
+          Action: "android.intent.action.BOOT_COMPLETED"
+      space.alliswell.inbox.ACTION_TEST_ALARM:
+        1299fe1 space.alliswell.inbox/.AlarmTestReceiver filter 675d106
+          Action: "space.alliswell.inbox.ACTION_TEST_ALARM"
+      androidx.profileinstaller.action.SAVE_PROFILE:
+        14d1563 space.alliswell.inbox/androidx.profileinstaller.ProfileInstallReceiver filter f8ffade
+          Action: "androidx.profileinstaller.action.SAVE_PROFILE"
+      android.intent.action.LOCKED_BOOT_COMPLETED:
+        c5f3b3a space.alliswell.inbox/com.capacitorjs.plugins.localnotifications.LocalNotificationRestoreReceiver filter f404548
+          Action: "android.intent.action.QUICKBOOT_POWERON"
+          Action: "android.intent.action.LOCKED_BOOT_COMPLETED"
+          Action: "android.intent.action.BOOT_COMPLETED"
+        67e03c7 space.alliswell.inbox/.BootRestoreReceiver filter bb86df4
+          Action: "android.intent.action.LOCKED_BOOT_COMPLETED"
+          Action: "android.intent.action.TIMEZONE_CHANGED"
+          Action: "android.intent.action.TIME_SET"
+          Action: "android.intent.action.BOOT_COMPLETED"
+          Action: "android.intent.action.USER_UNLOCKED"
+          Action: "android.intent.action.MY_PACKAGE_REPLACED"
+      androidx.profileinstaller.action.INSTALL_PROFILE:
+        14d1563 space.alliswell.inbox/androidx.profileinstaller.ProfileInstallReceiver filter 7e87560
+          Action: "androidx.profileinstaller.action.INSTALL_PROFILE"
+      android.intent.action.TIMEZONE_CHANGED:
+        67e03c7 space.alliswell.inbox/.BootRestoreReceiver filter bb86df4
+          Action: "android.intent.action.LOCKED_BOOT_COMPLETED"
+          Action: "android.intent.action.TIMEZONE_CHANGED"
+          Action: "android.intent.action.TIME_SET"
+          Action: "android.intent.action.BOOT_COMPLETED"
+          Action: "android.intent.action.USER_UNLOCKED"
+          Action: "android.intent.action.MY_PACKAGE_REPLACED"
+      android.intent.action.TIME_SET:
+        67e03c7 space.alliswell.inbox/.BootRestoreReceiver filter bb86df4
+          Action: "android.intent.action.LOCKED_BOOT_COMPLETED"
+          Action: "android.intent.action.TIMEZONE_CHANGED"
+          Action: "android.intent.action.TIME_SET"
+          Action: "android.intent.action.BOOT_COMPLETED"
+          Action: "android.intent.action.USER_UNLOCKED"
+          Action: "android.intent.action.MY_PACKAGE_REPLACED"
+      androidx.profileinstaller.action.SKIP_FILE:
+        14d1563 space.alliswell.inbox/androidx.profileinstaller.ProfileInstallReceiver filter 9fd6a19
+          Action: "androidx.profileinstaller.action.SKIP_FILE"
+      androidx.profileinstaller.action.BENCHMARK_OPERATION:
+        14d1563 space.alliswell.inbox/androidx.profileinstaller.ProfileInstallReceiver filter 471a4bf
+          Action: "androidx.profileinstaller.action.BENCHMARK_OPERATION"
+      android.intent.action.BOOT_COMPLETED:
+        c5f3b3a space.alliswell.inbox/com.capacitorjs.plugins.localnotifications.LocalNotificationRestoreReceiver filter f404548
+          Action: "android.intent.action.QUICKBOOT_POWERON"
+          Action: "android.intent.action.LOCKED_BOOT_COMPLETED"
+          Action: "android.intent.action.BOOT_COMPLETED"
+        67e03c7 space.alliswell.inbox/.BootRestoreReceiver filter bb86df4
+          Action: "android.intent.action.LOCKED_BOOT_COMPLETED"
+          Action: "android.intent.action.TIMEZONE_CHANGED"
+          Action: "android.intent.action.TIME_SET"
+          Action: "android.intent.action.BOOT_COMPLETED"
+          Action: "android.intent.action.USER_UNLOCKED"
+          Action: "android.intent.action.MY_PACKAGE_REPLACED"
+      android.intent.action.USER_UNLOCKED:
+        67e03c7 space.alliswell.inbox/.BootRestoreReceiver filter bb86df4
+          Action: "android.intent.action.LOCKED_BOOT_COMPLETED"
+          Action: "android.intent.action.TIMEZONE_CHANGED"
+          Action: "android.intent.action.TIME_SET"
+          Action: "android.intent.action.BOOT_COMPLETED"
+          Action: "android.intent.action.USER_UNLOCKED"
+          Action: "android.intent.action.MY_PACKAGE_REPLACED"
+      android.intent.action.MY_PACKAGE_REPLACED:
+        c5f3b3a space.alliswell.inbox/com.capacitorjs.plugins.localnotifications.LocalNotificationRestoreReceiver filter 17413eb
+          Action: "android.intent.action.MY_PACKAGE_REPLACED"
+        67e03c7 space.alliswell.inbox/.BootRestoreReceiver filter bb86df4
+          Action: "android.intent.action.LOCKED_BOOT_COMPLETED"
+          Action: "android.intent.action.TIMEZONE_CHANGED"
+          Action: "android.intent.action.TIME_SET"
+          Action: "android.intent.action.BOOT_COMPLETED"
+          Action: "android.intent.action.USER_UNLOCKED"
+          Action: "android.intent.action.MY_PACKAGE_REPLACED"
+
+Domain verification status:
+
+Permissions:
+  Permission [space.alliswell.inbox.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION] (862d101):
+    sourcePackage=space.alliswell.inbox
+    uid=10190 gids=[] type=0 prot=signature
+    perm=PermissionInfo{5877ba6 space.alliswell.inbox.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION}
+    flags=0x0
+
+Registered ContentProviders:
+  space.alliswell.inbox/androidx.core.content.FileProvider:
+    Provider{ac069e7 space.alliswell.inbox/androidx.core.content.FileProvider}
+  space.alliswell.inbox/androidx.startup.InitializationProvider:
+    Provider{3dba994 space.alliswell.inbox/androidx.startup.InitializationProvider}
+
+ContentProvider Authorities:
+  [space.alliswell.inbox.fileprovider]:
+    Provider{ac069e7 space.alliswell.inbox/androidx.core.content.FileProvider}
+      applicationInfo=ApplicationInfo{49fac32 space.alliswell.inbox}
+  [space.alliswell.inbox.androidx-startup]:
+    Provider{3dba994 space.alliswell.inbox/androidx.startup.InitializationProvider}
+      applicationInfo=ApplicationInfo{f1fbd83 space.alliswell.inbox}
+
+Key Set Manager:
+  [space.alliswell.inbox]
+      Signing KeySets: 50
+
+Packages:
+  Package [space.alliswell.inbox] (3d61fc3):
+    appId=10190
+    pkg=Package{52f942f space.alliswell.inbox}
+    codePath=/data/app/~~v_EJ-Suy9-d4xry0NrAuMQ==/space.alliswell.inbox-Zi5cojGTRdDDhSO7BrgdNQ==
+    resourcePath=/data/app/~~v_EJ-Suy9-d4xry0NrAuMQ==/space.alliswell.inbox-Zi5cojGTRdDDhSO7BrgdNQ==
+    legacyNativeLibraryDir=/data/app/~~v_EJ-Suy9-d4xry0NrAuMQ==/space.alliswell.inbox-Zi5cojGTRdDDhSO7BrgdNQ==/lib
+    extractNativeLibs=true
+    primaryCpuAbi=null
+    secondaryCpuAbi=null
+    cpuAbiOverride=null
+    versionCode=1 minSdk=22 targetSdk=34
+    minExtensionVersions=[]
+    versionName=1.0
+    hiddenApiEnforcementPolicy=2
+    usesNonSdkApi=false
+    splits=[base]
+    apkSigningVersion=2
+    flags=[ DEBUGGABLE HAS_CODE ALLOW_CLEAR_USER_DATA ALLOW_BACKUP ]
+    privateFlags=[ PRIVATE_FLAG_ACTIVITIES_RESIZE_MODE_RESIZEABLE_VIA_SDK_VERSION ALLOW_AUDIO_PLAYBACK_CAPTURE PARTIALLY_DIRECT_BOOT_AWARE PRIVATE_FLAG_ALLOW_NATIVE_HEAP_POINTER_TAGGING ]
+    forceQueryable=false
+    pageSizeCompat=0
+    scannedAsStoppedSystemApp=false
+    supportsScreens=[small, medium, large, xlarge, resizeable, anyDensity]
+    timeStamp=2026-09-19 13:08:44
+    lastUpdateTime=2026-09-19 13:09:31
+    installerPackageName=null
+    installerPackageUid=-1
+    initiatingPackageName=com.android.shell
+    originatingPackageName=null
+    packageSource=1
+    appMetadataFilePath=null
+    appMetadataSource=0
+    signatures=PackageSignatures{4e3d947 version:2, signatures:[d7697636], past signatures:[]}
+    installPermissionsFixed=false
+    pkgFlags=[ DEBUGGABLE HAS_CODE ALLOW_CLEAR_USER_DATA ALLOW_BACKUP ]
+    privatePkgFlags=[ PRIVATE_FLAG_ACTIVITIES_RESIZE_MODE_RESIZEABLE_VIA_SDK_VERSION ALLOW_AUDIO_PLAYBACK_CAPTURE PARTIALLY_DIRECT_BOOT_AWARE PRIVATE_FLAG_ALLOW_NATIVE_HEAP_POINTER_TAGGING ]
+    apexModuleName=null
+    declared permissions:
+      space.alliswell.inbox.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION: prot=signature
+    requested permissions:
+      android.permission.POST_NOTIFICATIONS
+      android.permission.SYSTEM_ALERT_WINDOW
+      android.permission.FOREGROUND_SERVICE
+      android.permission.RECEIVE_BOOT_COMPLETED
+      android.permission.INTERNET
+      android.permission.USE_FULL_SCREEN_INTENT
+      space.alliswell.inbox.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION
+      android.permission.DISABLE_KEYGUARD
+      android.permission.SCHEDULE_EXACT_ALARM
+      android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK
+      android.permission.VIBRATE
+      android.permission.WAKE_LOCK
+    install permissions:
+      android.permission.FOREGROUND_SERVICE: granted=true
+      android.permission.RECEIVE_BOOT_COMPLETED: granted=true
+      android.permission.INTERNET: granted=true
+      android.permission.USE_FULL_SCREEN_INTENT: granted=true
+      space.alliswell.inbox.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION: granted=true
+      android.permission.DISABLE_KEYGUARD: granted=true
+      android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK: granted=true
+      android.permission.VIBRATE: granted=true
+      android.permission.WAKE_LOCK: granted=true
+    User 0: ceDataInode=263265 deDataInode=204514 installed=true hidden=false vHidden=1 suspended=false distractionFlags=0 stopped=false vStopped=false notLaunched=false enabled=0 instant=false virtual=false quarantined=false
+      installReason=0
+      dataDir=/data/user/0/space.alliswell.inbox
+      firstInstallTime=2026-09-17 20:51:07
+      uninstallReason=0
+      overlay paths:
+        /data/resource-cache/com.android.systemui-neutral-okCN.frro
+        /data/resource-cache/com.android.systemui-accent-LKUL.frro
+        /data/resource-cache/com.android.systemui-dynamic-NKet.frro
+      gids=[3003]
+      runtime permissions:
+        android.permission.POST_NOTIFICATIONS: granted=true, flags=[ USER_SENSITIVE_WHEN_GRANTED|USER_SENSITIVE_WHEN_DENIED]
+    User 666: ceDataInode=0 deDataInode=0 installed=false hidden=false vHidden=1 suspended=false distractionFlags=0 stopped=true vStopped=false notLaunched=true enabled=0 instant=false virtual=false quarantined=false
+      installReason=0
+      dataDir=null
+      firstInstallTime=2026-09-17 20:51:07
+      uninstallReason=0
+      overlay paths:
+        /data/resource-cache/com.android.systemui-accent-LKUL.frro
+        /data/resource-cache/com.android.systemui-neutral-okCN.frro
+        /data/resource-cache/com.android.systemui-dynamic-NKet.frro
+      gids=[3003]
+      runtime permissions:
+
+Queries:
+  system apps queryable: false
+  queries via forceQueryable:
+  queries via package name:
+  queries via component:
+    [com.vivo.pem,com.vivo.vms,com.vivo.fingerprintui,com.vivo.smartunlock,com.mediatek.atci.service,com.vivo.minscreen,com.vivo.abe,com.mediatek.location.lppe.main,com.vivo.globalanimation,com.android.localtransport,com.vivo.upslide,com.vivo.accessibilityenhance,com.vivo.smartmultiwindow,com.vivo.appfilter,com.vivo.healthservice,com.mobile.cos.iroaming,com.vos.as.vit,com.vivo.permissionmanager,com.android.server.telecom,com.android.dynsystem,com.vivo.doubleinstance,com.vivo.daemonService,com.vivo.faceui,com.android.DeviceAsWebcam,com.bbk.SuperPowerSave,com.vivo.networkstate,com.vivo.multinlp,com.vivo.floatingball,com.bbk.facewake,android,com.vivo.epm,com.vivo.aiengine,com.vivo.fuelsummary,com.android.inputdevices,com.vivo.assistant,com.android.providers.settings,com.android.keychain,com.vivo.gamecube,com.android.settings,com.vivo.audiofx,com.android.bbklog,com.vivo.ai.gptagent,com.vivo.voicewakeup,com.vivo.fingerprintvit,com.vivo.vivokaraoke,com.vivo.gamewatch,com.vivo.sps,com.vivo.nightpearl,com.vivo.faceunlock,com.vivo.vtouch,com.iqoo.powersaving,com.vivo.credentialmanager,com.vivo.voicerecognition,com.android.location.fused,com.wapi.wapicertmanager,com.mediatek,com.android.BBKCrontab,com.vivo.car.networking,com.vivo.vibrator4d,com.vivo.fingerprint,com.vivo.vdfs,com.vivo.dr,com.vivo.setupwizard]:
+      space.alliswell.inbox
+    com.ct.client:
+      space.alliswell.inbox
+    com.baidu.input_vivo:
+      space.alliswell.inbox
+    com.vivo.browser:
+      space.alliswell.inbox
+    com.vivo.hiboard:
+      space.alliswell.inbox
+    com.vivo.hybrid:
+      space.alliswell.inbox
+    com.vivo.upnpserver:
+      space.alliswell.inbox
+    com.android.VideoPlayer:
+      space.alliswell.inbox
+    com.vivo.effectengine:
+      space.alliswell.inbox
+    com.chaozh.iReader:
+      space.alliswell.inbox
+    com.kaixinkan.ugc.video:
+      space.alliswell.inbox
+  queryable via interaction:
+    User 0:
+      [com.vivo.pem,com.vivo.vms,com.vivo.fingerprintui,com.vivo.smartunlock,com.mediatek.atci.service,com.vivo.minscreen,com.vivo.abe,com.mediatek.location.lppe.main,com.vivo.globalanimation,com.android.localtransport,com.vivo.upslide,com.vivo.accessibilityenhance,com.vivo.smartmultiwindow,com.vivo.appfilter,com.vivo.healthservice,com.mobile.cos.iroaming,com.vos.as.vit,com.vivo.permissionmanager,com.android.server.telecom,com.android.dynsystem,com.vivo.doubleinstance,com.vivo.daemonService,com.vivo.faceui,com.android.DeviceAsWebcam,com.bbk.SuperPowerSave,com.vivo.networkstate,com.vivo.multinlp,com.vivo.floatingball,com.bbk.facewake,android,com.vivo.epm,com.vivo.aiengine,com.vivo.fuelsummary,com.android.inputdevices,com.vivo.assistant,com.android.providers.settings,com.android.keychain,com.vivo.gamecube,com.android.settings,com.vivo.audiofx,com.android.bbklog,com.vivo.ai.gptagent,com.vivo.voicewakeup,com.vivo.fingerprintvit,com.vivo.vivokaraoke,com.vivo.gamewatch,com.vivo.sps,com.vivo.nightpearl,com.vivo.faceunlock,com.vivo.vtouch,com.iqoo.powersaving,com.vivo.credentialmanager,com.vivo.voicerecognition,com.android.location.fused,com.wapi.wapicertmanager,com.mediatek,com.android.BBKCrontab,com.vivo.car.networking,com.vivo.vibrator4d,com.vivo.fingerprint,com.vivo.vdfs,com.vivo.dr,com.vivo.setupwizard]:
+        space.alliswell.inbox
+    User 666:
+  queryable via uses-library:
+
+Dexopt state:
+  [space.alliswell.inbox]
+    path: /data/app/~~v_EJ-Suy9-d4xry0NrAuMQ==/space.alliswell.inbox-Zi5cojGTRdDDhSO7BrgdNQ==/base.apk
+      arm64: [status=run-from-apk] [reason=unknown] [primary-abi]
+        [location is error]
+
+Compiler stats:
+  [space.alliswell.inbox]
+    (No recorded stats)

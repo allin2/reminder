@@ -1,0 +1,65 @@
+{
+  "runId": "20260920-independent-code-optimization",
+  "browser": {
+    "kind": "Codex in-app Chromium browser",
+    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/153.0.0.0 Safari/537.36",
+    "origin": "http://127.0.0.1:18763",
+    "source": "isolated byte snapshot from snapshot-manifest.json",
+    "data": "synthetic audit records only"
+  },
+  "results": [
+    {
+      "name": "collapsed 1000 acknowledged items",
+      "status": "PASS",
+      "observed": { "articleCount": 0, "visibleCount": 1000 }
+    },
+    {
+      "name": "expand, stable refresh, collapse",
+      "status": "PASS",
+      "observed": {
+        "expandedArticleCount": 1000,
+        "stableRefreshKeptFirstCardNode": true,
+        "stableRefreshKeptFocusedEditButton": true,
+        "collapsedArticleCount": 0
+      }
+    },
+    {
+      "name": "tag edit invalidates home signature",
+      "status": "FAIL",
+      "input": { "before": ["work,home"], "after": ["work", "home"] },
+      "observedBeforeSave": ["#work,home"],
+      "observedImmediatelyAfterSave": ["#work,home"],
+      "persistedDataAfterSave": ["work", "home"],
+      "observedAfterReload": ["#work", "#home"],
+      "reason": "homeCardSignature joins tags with comma, so the distinct arrays collide"
+    },
+    {
+      "name": "URL and item-id rendering matrix",
+      "status": "FAIL",
+      "passed": [
+        "javascript/data/file/mailto/protocol-relative/control-character URLs are not anchors",
+        "normal http/https URLs remain anchors",
+        "quoted item id remains one data-id attribute"
+      ],
+      "failed": [
+        { "input": "https://[", "href": "https://[" },
+        { "input": "http://%zz", "href": "http://%zz" },
+        { "input": "https://example.com:99999", "href": "https://example.com:99999" }
+      ],
+      "reason": "parse exceptions fall through to the regex intended only for environments without URL"
+    },
+    {
+      "name": "relative time and midnight invalidation",
+      "status": "PASS",
+      "before": {
+        "localClock": "2026-09-20 23:59:00",
+        "labels": ["已过 5 分钟", "截止 明天"]
+      },
+      "after90Seconds": {
+        "localClock": "2026-09-21 00:00:30",
+        "labels": ["已过 7 分钟", "截止 今天"]
+      }
+    }
+  ],
+  "boundary": "No Android device was visible to adb during this run; browser results do not prove APK or device behavior."
+}

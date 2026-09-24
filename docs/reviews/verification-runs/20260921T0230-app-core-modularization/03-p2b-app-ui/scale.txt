@@ -1,0 +1,11 @@
+规模对比（P2-b）
+
+app-core.js 行数: HEAD 8559 → 现在 8320
+app-core.js 字节: HEAD 387384 → 现在 380808
+app-core.js 顶层函数数: HEAD 291 → 现在 268
+
+lib/app-ui.js 行数: 193
+lib/ui-format.js 行数: 217
+
+⚠️ 行数只掉了约 240 行（2.8%），因为被删掉的算法体位置换成了说明注释。
+   真正的判据是「谁持有行为」，不是行数 —— 见 P2b-report.md。

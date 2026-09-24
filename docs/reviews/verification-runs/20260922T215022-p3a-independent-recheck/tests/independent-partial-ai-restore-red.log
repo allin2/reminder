@@ -1,0 +1,14 @@
+{
+  "pass": false,
+  "ready": true,
+  "got": {
+    "enabled": true
+  },
+  "want": {
+    "enabled": true,
+    "baseUrl": "https://api.openai.com/v1",
+    "apiKey": "",
+    "model": "gpt-4o-mini",
+    "autoOnSave": false
+  }
+}

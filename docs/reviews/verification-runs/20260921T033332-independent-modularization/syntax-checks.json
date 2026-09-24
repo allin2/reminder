@@ -1,0 +1,172 @@
+[
+  {
+    "path": "app-core.js",
+    "exit": 0,
+    "stderr": ""
+  },
+  {
+    "path": "app.js",
+    "exit": 0,
+    "stderr": ""
+  },
+  {
+    "path": "sw.js",
+    "exit": 0,
+    "stderr": ""
+  },
+  {
+    "path": "test-boot-combination.js",
+    "exit": 0,
+    "stderr": ""
+  },
+  {
+    "path": "test-native-reminders.js",
+    "exit": 0,
+    "stderr": ""
+  },
+  {
+    "path": "test-regressions.js",
+    "exit": 0,
+    "stderr": ""
+  },
+  {
+    "path": "test-smoke.js",
+    "exit": 0,
+    "stderr": ""
+  },
+  {
+    "path": "test-unit.js",
+    "exit": 0,
+    "stderr": ""
+  },
+  {
+    "path": "lib/app-ui.js",
+    "exit": 0,
+    "stderr": ""
+  },
+  {
+    "path": "lib/date-utils.js",
+    "exit": 0,
+    "stderr": ""
+  },
+  {
+    "path": "lib/delivery-evidence.js",
+    "exit": 0,
+    "stderr": ""
+  },
+  {
+    "path": "lib/export-format.js",
+    "exit": 0,
+    "stderr": ""
+  },
+  {
+    "path": "lib/feedback.js",
+    "exit": 0,
+    "stderr": ""
+  },
+  {
+    "path": "lib/import-extract.js",
+    "exit": 0,
+    "stderr": ""
+  },
+  {
+    "path": "lib/import-map.js",
+    "exit": 0,
+    "stderr": ""
+  },
+  {
+    "path": "lib/native-reminders.js",
+    "exit": 0,
+    "stderr": ""
+  },
+  {
+    "path": "lib/parse-cn.js",
+    "exit": 0,
+    "stderr": ""
+  },
+  {
+    "path": "lib/reminder.js",
+    "exit": 0,
+    "stderr": ""
+  },
+  {
+    "path": "lib/repeat.js",
+    "exit": 0,
+    "stderr": ""
+  },
+  {
+    "path": "lib/storage.js",
+    "exit": 0,
+    "stderr": ""
+  },
+  {
+    "path": "lib/ui-format.js",
+    "exit": 0,
+    "stderr": ""
+  },
+  {
+    "path": "scripts/verification/alarm-token-device.js",
+    "exit": 0,
+    "stderr": ""
+  },
+  {
+    "path": "scripts/verification/core-inventory.js",
+    "exit": 0,
+    "stderr": ""
+  },
+  {
+    "path": "scripts/verification/deadline-quiet-probe.js",
+    "exit": 0,
+    "stderr": ""
+  },
+  {
+    "path": "scripts/verification/module-map-gen.js",
+    "exit": 0,
+    "stderr": ""
+  },
+  {
+    "path": "scripts/verification/parse-probe.js",
+    "exit": 0,
+    "stderr": ""
+  },
+  {
+    "path": "scripts/verification/parse-single-source.js",
+    "exit": 0,
+    "stderr": ""
+  },
+  {
+    "path": "scripts/verification/perf-counts.js",
+    "exit": 0,
+    "stderr": ""
+  },
+  {
+    "path": "scripts/verification/production-scripts.js",
+    "exit": 0,
+    "stderr": ""
+  },
+  {
+    "path": "scripts/verification/reverse-check-d59.js",
+    "exit": 0,
+    "stderr": ""
+  },
+  {
+    "path": "scripts/verification/review-window-device.js",
+    "exit": 0,
+    "stderr": ""
+  },
+  {
+    "path": "scripts/verification/storage-degrade-probe.js",
+    "exit": 0,
+    "stderr": ""
+  },
+  {
+    "path": "scripts/verification/ui-dom-parity.js",
+    "exit": 0,
+    "stderr": ""
+  },
+  {
+    "path": "scripts/verification/ui-format-parity.js",
+    "exit": 0,
+    "stderr": ""
+  }
+]

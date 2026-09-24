@@ -1,0 +1,510 @@
+
+== parse-cn ==
+  ✓ 周五 trigger
+  ✓ 周五 confidence
+  ✓ 低置信度
+  ✓ 截止
+  ✓ 提前 trigger
+  ✓ biweek ack
+  ✓ monthEnd
+  ✓ nthWeekday
+
+== relative Chinese time ==
+  ✓ 三分钟以后提醒我 精确时长
+  ✓ 三分钟以后提醒我 具体时间判定
+  ✓ 三分钟以后提醒我 保留原文及标题
+  ✓ 三分钟后提醒我喝水 精确时长
+  ✓ 三分钟后提醒我喝水 具体时间判定
+  ✓ 三分钟后提醒我喝水 保留原文及标题
+  ✓ 3分钟之后提醒我喝水 精确时长
+  ✓ 3分钟之后提醒我喝水 具体时间判定
+  ✓ 3分钟之后提醒我喝水 保留原文及标题
+  ✓ ３ 分钟以后提醒我喝水 精确时长
+  ✓ ３ 分钟以后提醒我喝水 具体时间判定
+  ✓ ３ 分钟以后提醒我喝水 保留原文及标题
+  ✓ 过三分钟提醒我喝水 精确时长
+  ✓ 过三分钟提醒我喝水 具体时间判定
+  ✓ 过三分钟提醒我喝水 保留原文及标题
+  ✓ 再过 3 分钟提醒我喝水 精确时长
+  ✓ 再过 3 分钟提醒我喝水 具体时间判定
+  ✓ 再过 3 分钟提醒我喝水 保留原文及标题
+  ✓ 提醒我三分钟后喝水 精确时长
+  ✓ 提醒我三分钟后喝水 具体时间判定
+  ✓ 提醒我三分钟后喝水 保留原文及标题
+  ✓ 半小时后提醒我喝水 精确时长
+  ✓ 半小时后提醒我喝水 具体时间判定
+  ✓ 半小时后提醒我喝水 保留原文及标题
+  ✓ 半个小时以后提醒我喝水 精确时长
+  ✓ 半个小时以后提醒我喝水 具体时间判定
+  ✓ 半个小时以后提醒我喝水 保留原文及标题
+  ✓ 一个半小时之后提醒我喝水 精确时长
+  ✓ 一个半小时之后提醒我喝水 具体时间判定
+  ✓ 一个半小时之后提醒我喝水 保留原文及标题
+  ✓ 一个小时半后提醒我喝水 精确时长
+  ✓ 一个小时半后提醒我喝水 具体时间判定
+  ✓ 一个小时半后提醒我喝水 保留原文及标题
+  ✓ 一小时三十分钟后提醒我喝水 精确时长
+  ✓ 一小时三十分钟后提醒我喝水 具体时间判定
+  ✓ 一小时三十分钟后提醒我喝水 保留原文及标题
+  ✓ 一小时零五分钟后提醒我喝水 精确时长
+  ✓ 一小时零五分钟后提醒我喝水 具体时间判定
+  ✓ 一小时零五分钟后提醒我喝水 保留原文及标题
+  ✓ 四十五分钟后提醒我喝水 精确时长
+  ✓ 四十五分钟后提醒我喝水 具体时间判定
+  ✓ 四十五分钟后提醒我喝水 保留原文及标题
+  ✓ 一百二十分钟后提醒我喝水 精确时长
+  ✓ 一百二十分钟后提醒我喝水 具体时间判定
+  ✓ 一百二十分钟后提醒我喝水 保留原文及标题
+  ✓ 1.5小时后提醒我喝水 精确时长
+  ✓ 1.5小时后提醒我喝水 具体时间判定
+  ✓ 1.5小时后提醒我喝水 保留原文及标题
+  ✓ 三十秒后提醒我喝水 精确时长
+  ✓ 三十秒后提醒我喝水 具体时间判定
+  ✓ 三十秒后提醒我喝水 保留原文及标题
+  ✓ 两分钟三十秒后提醒我喝水 精确时长
+  ✓ 两分钟三十秒后提醒我喝水 具体时间判定
+  ✓ 两分钟三十秒后提醒我喝水 保留原文及标题
+  ✓ 半分钟后提醒我喝水 精确时长
+  ✓ 半分钟后提醒我喝水 具体时间判定
+  ✓ 半分钟后提醒我喝水 保留原文及标题
+  ✓ 两个钟头后提醒我喝水 精确时长
+  ✓ 两个钟头后提醒我喝水 具体时间判定
+  ✓ 两个钟头后提醒我喝水 保留原文及标题
+  ✓ 零分钟后提醒我 不冒充精确识别
+  ✓ 负三分钟后提醒我 不冒充精确识别
+  ✓ -3分钟后提醒我 不冒充精确识别
+  ✓ 几分钟后提醒我 不冒充精确识别
+  ✓ 三分钟后五分钟后提醒我 不冒充精确识别
+  ✓ 三分钟后明天提醒我 不冒充精确识别
+  ✓ 过三分钟前提醒我 不冒充精确识别
+  ✓ 一小时半半后提醒我 不冒充精确识别
+  ✓ 三分钟后9点提醒我 不冒充精确识别
+  ✓ 以后提醒我喝水 不冒充精确识别
+  ✓ 看三分钟视频 不冒充精确识别
+  ✓ 每三分钟后提醒我 不冒充精确识别
+  ✓ 三天以后按日历天且保留时刻
+  ✓ 天数可组合明确钟点
+  ✓ 清除时间但保留事项和标签
+  ✓ 正文含月报不误判为日期冲突
+
+== calendar anchors: 下周 / 下下周 / 每月N号 / 下个月N号 / X前 ==
+  ✓ H-01 下周三 = 09-23（不是 09-30）
+  ✓ H-01 下周日 = 09-27
+  ✓ H-01 两个分支统一为同一日历周
+  ✓ H-01 下下周一 = 09-28
+  ✓ H-02 每月15号 = 10-15（不是 10-18）
+  ✓ H-02 每月15号 周期为 monthly
+  ✓ H-02 次期仍锚 15 号（不再漂到 18）
+  ✓ H-02 每月N号 判为具体时间（不再进延后澄清）
+  ✓ H-03 下个月5号 = 10-05（不是 10-01）
+  ✓ H-03 号数不留在标题里
+  ✓ H-03 未给号数时仍为次月 1 号
+  ✓ H-03 下个月底 = 10-31（不是本月底 09-30）
+  ✓ H-03 月底 仍为当月末
+  ✓ N-04 每周X 不留孤立星期字
+  ✓ N-04 每周一 落在周一 09:00
+  ✓ N-04 下下周X 不留孤立「下」
+  ✓ N-04 本周X 不留孤立「本」
+  ✓ N-04 「半」= 30 分
+  ✓ N-04 「半」不留在标题
+  ✓ N-04 「9点前」产出截止（精确到那一刻）
+  ✓ N-04 「9点前」标题干净
+  ✓ N-04 「之前」产出截止（当天末尾）
+  ✓ N-04 「之前」标题干净
+  ✓ 既有：截止 + 提前五天 仍按原口径
+  ✓ 周期事项不因「最后一天」被加上截止
+  ✓ 周期事项仍是 monthEnd
+  ✓ 无截止语义时不产出截止
+
+== repeat ==
+  ✓ day +1
+  ✓ monthEnd last day
+  ✓ monthEnd is Jan 31 2026
+  ✓ nth weekday Tue
+  ✓ nth in 8-14
+  ✓ preview 5
+  ✓ preview ascending
+
+== reminder ==
+  ✓ 23:30 quiet
+  ✓ 08:00 not quiet
+  ✓ quiet end next 07:30
+  ✓ important realert after 30m
+  ✓ important no realert if disabled
+  ✓ important blocked by dismiss
+  ✓ critical realert after 15m
+  ✓ important max 4
+  ✓ normal no auto realert
+  ✓ acked no realert
+  ✓ window pick 10:00
+  ✓ markReminded +1
+
+== export-format ==
+  ✓ iso 带偏移
+  ✓ iso 往返仍是同一时刻
+  ✓ iso null 安全
+  ✓ utcStamp 以 Z 结尾
+  ✓ DEADLINE_LEAD_MS 与 reminder 一致
+  ✓ ack 周期一律不产出 rrule（硬红线）
+  ✓ day → FREQ=DAILY
+  ✓ monthEnd → BYMONTHDAY=-1
+  ✓ month → 锚在当日
+  ✓ nthWeekday → BYDAY=2TU
+  ✓ nthWeekday 最后 → BYDAY=-1MO
+  ✓ biweek 带 INTERVAL=2
+  ✓ week 带 BYDAY
+  ✓ 无截止 → NONE
+  ✓ 远期 → PENDING
+  ✓ 24h 内 → PROTECTED
+  ✓ 已过 → PASSED
+  ✓ 暂停 → PENDING
+  ✓ 已完成且曾 ACK → ACKNOWLEDGED
+  ✓ 已完成但无 ACK 记录 → 不假装 ACKNOWLEDGED
+  ✓ due → DELIVERED
+  ✓ time_source 只产出 PARSED / FALLBACK（D54）
+  ✓ 无触发时刻 → FALLBACK
+  ✓ 默认范围排除已归档
+  ✓ 默认范围包含待整理
+  ✓ counts 与条目数一致
+  ✓ 绝不导出密钥
+  ✓ 设置子集保留非密钥项
+  ✓ original_capture 如实为 null（不臆造）
+  ✓ derived 标注派生字段
+  ✓ importance 不算派生（它就是存储的 priority）
+  ✓ repeat.rrule 计入 derived
+  ✓ ack 周期条目的 rrule 为 null
+  ✓ ack 周期也不进 derived
+  ✓ ACK 未完成 → ACKNOWLEDGED + ACTIVE
+  ✓ 时间双写指向同一时刻
+  ✓ 条目字段与 schema 完全一致（不多不少）
+  ✓ schema 必填字段齐备
+  ✓ 顶层字段都在 schema 内
+  ✓ scope.mode 是合法枚举
+  ✓ 导出范围过滤可关闭 NEEDS_REVIEW
+  ✓ ICS 用 CRLF 断行
+  ✓ 兜底且无截止的条目不进日历
+  ✓ 兜底但有真实截止的条目降级为 VTODO
+  ✓ 被丢弃的条目确实不在文件里
+  ✓ 普通的条目是 VEVENT
+  ✓ 所有 DT 行都是 UTC（D53）
+  ✓ 写入对外语义契约（ACK != Complete）
+  ✓ 写入 X-ATTENTION 语义标注
+  ✓ ICS 每行不超过 75 字节
+  ✓ ICS 折行真的发生过（存在续行）
+  ✓ ack 周期在 ICS 里没有 RRULE 行
+  ✓ 日历周期有 RRULE 行
+
+== import-extract ==
+  ✓ 按扩展名识别类型
+  ✓ 按 MIME 识别类型
+  ✓ 不认识的后缀 → null
+  ✓ hash32 稳定且能区分
+  ✓ txt 解析成功
+  ✓ txt 跳过分隔线与空行
+  ✓ txt 剥掉列表符
+  ✓ txt 带行定位
+  ✓ md 只抽列表项
+  ✓ md 标题成为标签
+  ✓ md 复选框标记被剥离
+  ✓ md 段落不混入列表结果
+  ✓ md 跳过 front matter
+  ✓ md 无列表时按段落兜底
+  ✓ csv 表头映射出两条
+  ✓ csv 取到标题
+  ✓ csv 取到时间串
+  ✓ csv 取到截止串
+  ✓ csv 引号内的逗号不被拆列
+  ✓ csv 标签按顿号/逗号拆开
+  ✓ csv 表头行本身不成为条目
+  ✓ csv 无表头时回退并告警
+  ✓ ics 抽出两条
+  ✓ ics 是结构化来源
+  ✓ ics 的 UTC 时刻换算正确
+  ✓ ics 周期映射为 week
+  ✓ ics 全天截止落到当天 23:59
+  ✓ ics 不带 when_text（不该绕自然语言解析）
+  ✓ 自家导出件可被识别
+  ✓ 回环携带内部字段
+  ✓ 回环走结构化通道
+  ✓ 回环保留原状态（不被打回 waiting）
+  ✓ 回环保留周期
+  ✓ 通用 JSON 抽出两条
+  ✓ ISO 时间走结构化通道
+  ✓ 自然语言时间走文本通道
+  ✓ 坏 JSON 是真失败（不伪装成 0 条）
+  ✓ 不支持的类型被拒
+  ✓ 超过大小上限被拒
+  ✓ 空文件被拒
+  ✓ 超量截断且如实标记
+  ✓ 正好 200 条不算截断
+
+== import-map ==
+  ✓ 映射出三条
+  ✓ 一律 waiting（绝不直接落 due）
+  ✓ 一律 NEEDS_REVIEW
+  ✓ 一律 priority=normal（AI 不判优先级）
+  ✓ 保留来源引用
+  ✓ 保留来源标题
+  ✓ 打上批次号
+  ✓ 原生投递方式取全局默认快照
+  ✓ 自然语言时间由注入的解析器换算
+  ✓ 无法识别时间 → 兜底时刻 + isFallbackTrigger
+  ✓ 结构化来源直接采信时间戳
+  ✓ 结构化来源忽略 when_text（两条通道不互相污染）
+  ✓ 预览带置信度与时间来源说明
+  ✓ 摘要统计可用
+  ✓ 白名单拒绝非法状态
+  ✓ 白名单不引入未知字段
+  ✓ 白名单恢复合法字段
+  ✓ 白名单允许合法状态回环
+  ✓ 疑似重复只标记、绝不自动合并
+  ✓ 摘要统计疑似重复
+  ✓ 未注入解析器时明确告警
+  ✓ 未注入兜底函数时明确告警
+
+== ui-format ==
+  ✓ ui-format 挂在命名空间 AttentionLib.UiFormat 上（不是扁平合并）
+  ✓ fmtTime 今天
+  ✓ fmtTime 明天
+  ✓ fmtTime 昨天
+  ✓ fmtTime 同年带月日
+  ✓ fmtTime 跨年带年份
+  ✓ fmtTime 空值返回空串
+  ✓ fmtDate 不带钟点
+  ✓ relDue 未来不足 1 分钟 = 现在
+  ✓ relDue 未来 5 分钟
+  ✓ relDue 未来 3 小时
+  ✓ relDue 未来 2 天
+  ✓ relDue 已过不足 1 小时至少报 1 分钟
+  ✓ relDue 已过 2 小时
+  ✓ relDue 已过 3 天
+  ✓ escapeHtml 转义尖引号
+  ✓ escapeAttr 与 escapeHtml 字符集一致（同样的输入同样输出）
+  ✓ escapeHtml 空值安全
+  ✓ renderMarkdown 生成 h1
+  ✓ renderMarkdown 生成 strong 与 code
+  ✓ renderMarkdown 生成 ul/li
+  ✓ renderMarkdown 先转义：用户写 <script> 不会变成真标签
+  ✓ renderMarkdown 只放行 http(s) 链接
+  ✓ renderMarkdown 放行 https 链接
+  ✓ pad 补零
+  ✓ uid 形状为 i_ 前缀的字符串
+  ✓ dayLabel 空值 = 「更早」（与 fmtDate 的 "" 不同，刻意不合并）
+  ✓ dayLabel 今天
+  ✓ dayLabel 昨天
+  ✓ dayLabel 没有「明天」分支（回月日，而 fmtDate 回「明天」）
+  ✓ dayLabel 跨年回完整年月日（fmtDate 不回）
+  ✓ toLocalInput 形状 YYYY-MM-DDTHH:mm（补零到分、不含秒）
+  ✓ toLocalInput 空值 = 空串
+  ✓ parseLocalInput 与 toLocalInput 回环（同一分钟进出不变）
+  ✓ parseLocalInput 解析不出时返回 null（**不**兜底成「现在」）
+  ✓ ui-format 的日判定与 date-utils.sameDay 一致（不是另一套实现）
+
+== app-ui — 弹层 / toast / 确认框 / 外链白名单 ==
+  ✓ createUi 交出 8 支展示能力（$ / $$ / 弹层三支 / 确认框 / toast / hideToast）
+  ✓ safeExternalHref 是模块级纯函数（不需要实例）
+  ✓ 模块求值 + 实例化都不建定时器、不动 DOM（求值无副作用）
+  ✓ openSheet 打开目标层并亮出 backdrop
+  ✓ 还有一层开着时关一层：backdrop 必须留着
+  ✓ 关掉最后一层：backdrop 撤掉
+  ✓ closeAllSheets 关掉全部层并撤遮罩
+  ✓ toast 写入文案并亮出提示条
+  ✓ toast 亮出动作按钮并挂上回调
+  ✓ 未给第二个动作时该槽位置隐藏并清空 onclick
+  ✓ 带动作的提示时长 = 5000ms
+  ✓ 点动作：先收起提示再执行回调
+  ✓ 无动作的提示时长 = 2400ms，且动作槽被收起
+  ✓ 连续两次 toast：前一个定时器必须被撤掉（挂起只剩 1 个）
+  ✓ 抑制反馈时 toast 完全不动 DOM、也不建定时器（M1 的判据）
+  ✓ 解除抑制后 toast 恢复（文案更新、定时器重建、提示条亮出）
+  ✓ hideToast 收起提示条
+  ✓ 确认框弹出：标题/正文回填、层打开、backdrop 亮出
+  ✓ 确认框三个出口都挂上了 onclick
+  ✓ 点确定：层关闭、backdrop 撤掉、三个 onclick 全部清干净
+
+== app-ai — 请求 / 归一 / 设置 / 表单合并 ==
+  ✓ createAppAi 是模块级导出（实例由入口统一装配）
+  ✓ 归一 / 提取 / 本地 ISO 都是模块级纯函数（不需要实例）
+  ✓ 围栏剥离：```json 代码块 + 前后客套话都能剥出 JSON
+  ✓ 围栏剥离：只截第一个 { 到最后一个 }
+  ✓ 围栏剥离：没有 JSON 时**抛出**（不静默返回空对象）
+  ✓ 归一：模型自创的优先级被收窄成 normal（越权值不得绕过重要档的渠道规则）
+  ✓ 归一：白名单外的周期被整体丢弃（不能造一个算不出下一轮的事项）
+  ✓ 归一：标题空时回落用户原话
+  ✓ 归一：标签去空、trim、截到 8 个
+  ✓ 归一：解析不出的时间是 null（**不兜底成现在**），能解析的保留
+  ✓ 归一：confidence 由**提醒时间**推导，不由模型自评 —— 只有 deadline 不算「解析出了时间」（否则低置信度确认面板会整体消失）
+  ✓ 归一：nthWeekday 的 nth / dow 被转成数字（-1 保留）
+  ✓ 归一：mode 不在 calendar/ack 里一律回落 calendar
+  ✓ 缺依赖时 createAppAi **抛错并点名缺哪几项**（不装半残实例）
+  ✓ 实例交出 15 支 AI API
+  ✓ 模块求值不开定时器、不发请求、不读 DOM（装配前 isBusy 为 false、无记录）
+  ✓ 未开启 ⇒ 小字说「未开启」
+  ✓ 已开启且配全 ⇒ 小字带上模型名与「仅手动」
+  ✓ 已开启但没配全 ⇒ 小字提醒「请完善 API 配置」（不是报成可用）
+  ✓ ready() 四样齐全才算能用（enabled / baseUrl / apiKey / model 缺一即 false）
+  ✓ 保存：整段写回（不是逐字段 patch），斜杠去掉、空白 trim
+  ✓ 保存：落库 / 关弹层 / 重渲染「我的」/ 提示，四件事按序发生且各一次
+  ✓ 打开设置弹层：每次都从**当前配置**重画（不留弹层里的旧值）
+  ✓ applyToForm：标题 / 时间 / 截止都写进表单
+  ✓ applyToForm：备注**只在用户没写时**才填（不覆盖人写的上下文）
+  ✓ applyToForm：标签是**并集**（用户手打的一个都不丢）
+  ✓ applyToForm：优先级点亮对应 chip
+  ✓ applyToForm：周期写进 select 并**刷新预览**
+  ✓ applyToForm：提示行以「 · 可修改」收尾（结果不是判决）
+  ✓ mergedDraft：合出了 AI 结果（标题 / 时间 / 截止 / 优先级 / 周期）
+  ✓ mergedDraft：**纯的** —— 提交时冻结的那份草稿一个字都没被改
+  ✓ mergedDraft：标签并集（work + home）
+  ✓ mergedDraft：备注**只在原快照为空时**填（空白串算空）
+
+== app-backup — 导入的读取失败反馈与「成功 = 提交已兑现」 ==
+
+== storage ==
+
+== feedback — 保存结果与排程结果分开 ==
+  ✓ 保存中不得出现「已保存」
+  ✓ 保存失败不伪装成功
+  ✓ 降级保存按实际保障程度提示
+  ✓ 本条已获真实确认 → scheduled
+  ✓ 已确认的文案给出具体时间
+  ✓ 全局正常不能证明刚保存的这一条已排成功
+  ✓ 没有明确时间 → 待补提醒时间
+  ✓ 待整理文案不得暴露兜底时间为事项承诺
+  ✓ 兜底时间不冒充已定的提醒时间
+  ✓ 总开关关闭 → 提醒已关闭
+  ✓ 不擅自替用户宣布已开启
+  ✓ 通知权限被拒 → permission-denied
+  ✓ 权限被拒文案不得说「完全不响」
+  ✓ 闹钟可排但通知受限 → alarm-limited
+  ✓ 受限文案明确「已安排闹钟」而不是「没安排」
+  ✓ 受限文案不误称完全不响
+  ✓ 只能非精确 → 提醒可能延迟
+  ✓ 对账失败 → 排程失败 + 重试
+  ✓ Web/PWA 不显示 Android 就绪结论
+  ✓ 穷举 126 种组合：不产出「漏提醒」结论
+
+== feedback — 动作语义与术语 ==
+  ✓ ACK 语义：停止本轮、仍未完成
+  ✓ ACK 文案不承诺「以后不再提醒」
+  ✓ ACK 首次反馈提供「稍后提醒」入口
+  ✓ 稍后提醒展示具体时间
+  ✓ 原生快捷稍后明确标注 2 小时
+  ✓ 完成：结束当前实例并归档
+  ✓ 完成后撤销窗口为 8 秒
+  ✓ 周期完成的反馈说明是否存在下一周期
+  ✓ 关闭声振不冒充 ACK/完成/稍后
+  ✓ 术语替换 ACK
+  ✓ 术语替换 NEEDS_REVIEW
+  ✓ 术语替换 Capture
+  ✓ 无时间摘要明确说明会被先记下
+  ✓ 摘要展示有效提醒时间
+  ✓ 摘要不隐藏已识别的周期
+  ✓ 摘要展示截止
+  ✓ 已满足的能力不重复申请
+  ✓ 每个步骤都解释「为何需要」与「拒绝后的影响」
+  ✓ 测试步骤仍可达（未测试前不算全通过）
+  ✓ 未打开后台设置且系统未确认时不算完成
+  ✓ 后台说明不再声称所有国产系统锁屏 20 秒必然冻结
+  ✓ 打开过后台设置只推进向导，不冒充系统能力已验证
+  ✓ 打开过悬浮窗设置只推进向导，不承诺一定只显示横幅
+  ✓ 系统可回读的后台与全屏能力仍可标记为已验证
+  ✓ 60 秒测试有结果不等于验证通过
+  ✓ 本次测试明确听到后才可标记为验证通过
+  ✓ 未回答测试反馈不等于失败或成功
+  ✓ 不确定既不算失败也不算成功
+  ✓ 区分「没收到」与「不确定」
+
+== delivery-evidence — 证据合并与事后核查 ==
+  ✓ 展示状态里没有 missed 这一档
+  ✓ 没有代表「漏提醒」的状态值
+  ✓ 身份完整的事件被接受
+  ✓ 最小身份含事项 ID + 提醒键 + 计划时刻 + 载体
+  ✓ 只声明「系统已接收」，不写成用户看到
+  ✓ 首次合并写入 delivered
+  ✓ 送达证据落在三态台账上
+  ✓ 重复回执幂等：第二次不产生变化
+  ✓ 对照组：换一个提醒键会正常写入（上面的幂等不是空转）
+  ✓ 旧轮次回执不写入（不污染新轮次）
+  ✓ 旧轮次回执的判据是 stale-round，不是被身份检查顺带挡掉
+  ✓ 成对差分：仅把原定时刻挪进本轮就必须写入
+  ✓ R4 未登记的轮次不写入（宁可尚未确认，不谎报已接收）
+  ✓ R-F06 条目自带轮次身份时以它为准
+  ✓ Y2 旧版写入的条目没有轮次身份时保持不可验证（不冒充当前轮）
+  ✓ Y2 对照：旧版 0@triggerAt 首期键可证明属于当前轮
+  ✓ Y2 旧版追提醒即使落在当前范围也不可从时刻猜成当前轮
+  ✓ R-F06 登记过但属于上一轮的键不写入（判据 superseded-round，不是被范围判据顺带挡掉）
+  ✓ R-F06 旧轮的键保留为历史（cancelled 不被改写成 delivered）
+  ✓ R-F06 对照组：属于当前轮的回执照常写入（上面的拒绝不是通路故障）
+  ✓ R-F06 旧轮的 delivered 不抬高当前轮的状态（旧实现：直接显示「系统已接收」）
+  ✓ R-F06 对照组：属于当前轮的 delivered 仍然算数
+  ✓ 迟到回执不复活已完成事项
+  ✓ 缺身份的证据计入 unknown
+  ✓ unknown 不等于失败（不产生任何失败标记）
+  ✓ 事项已不存在 → unknown 而不是指控
+  ✓ 没有登记过排程 → 无法核查（不是漏）
+  ✓ 无法核查/未知的文案都不含「漏」
+  ✓ 未到点 → pending
+  ✓ 到点但缺证据 → unknown
+  ✓ 缺证据的文案只说「尚未确认」
+  ✓ 缺证据绝不判成失败
+  ✓ 刚到点 → processing（不立刻断言结果）
+  ✓ 证据通道读不到 → unknown（不指控）
+  ✓ 回读进行中 → processing
+  ✓ 有证据 → delivered
+  ✓ 有证据也只说「系统已接收」
+  ✓ 乱序到达的两轮证据都能各自关联
+  ✓ 乱序下展示取最新已送达轮次
+  ✓ 点确定 ⇒ 解析为 true
+  ✓ 省略标题时用默认「确认」，正文原样回填
+  ✓ 点取消 ⇒ 解析为 false
+  ✓ 省略正文时用默认「确定继续？」
+  ✓ memory empty load
+  ✓ 点关闭 ⇒ 解析为 false
+  ✗ 导入：提交在途时不出现「导入成功」，也不提前渲染 — {"toasts":["导入成功 · 1 条事项"],"render":1}
+  ✓ 没有 #sheetConfirm 时落到 window.confirm，返回 false
+  ✓ 请求：baseUrl 的尾斜杠被去掉后再拼 /chat/completions
+  ✓ 请求：Authorization 头是 Bearer + key，Content-Type 是 JSON
+  ✓ 请求：system prompt 带本地时钟，并在 systemExtra 里写明任务类型
+  ✓ 请求：temperature 0.1 与 model 都来自配置
+  ✓ 解析结果走同一套归一（标题来自模型）
+  ✓ 兜底路径里 window.confirm 抛错 ⇒ 保守取 true（不静默当作取消）
+  ✓ https 放行
+  ✓ http 放行
+  ✓ javascript: 拒绝
+  ✓ 大小写混杂的 JaVaScRiPt: 拒绝（按解析后的协议判定，不看字形）
+  ✓ 带换行的 java\nscript: 拒绝（解析器会剔除控制字符后再判定）
+  ✓ 带 TAB 的 ja\tvascript: 拒绝
+  ✓ data: 拒绝
+  ✓ 空值 / 空串 / 纯空白一律拒绝
+  ✓ 前后空白被裁掉
+  ✓ 相对路径拒绝（不是绝对 URL）
+  ✓ 解析不出授权段拒绝
+  ✓ 润色用的是另一段 systemExtra（polish）
+  ✓ memory save/load
+  ✓ 连通性测试：只求能通（max_tokens 8 + ping），端点同样是 /chat/completions
+  ✓ HTTP 错误**原样冒上去**（带状态码与响应片段），不吞成一句「AI 不可用」
+  ✓ 空返回抛「AI 返回为空」（不静默当成解析成功）
+  ✓ runOnCapture：请求在途时 isBusy() 为 true（这是**唯一**的在途闸门）
+  ✓ runOnCapture：按钮被置成「思考中」并 disabled
+  ✓ runOnCapture：**先落本地解析**（等待期间界面不是空的）
+  ✓ runOnCapture：在途期间的第二次调用**立刻返回**且 busy 仍为真（闸门没被绕过）
+  ✓ runOnCapture：在途期间的第二次调用**没有再发请求**（连点不会叠加两次结果）
+  ✓ runOnCapture：整个连点过程只填了一次表单（没有第二次结果覆盖第一次）
+  ✓ runOnCapture：完成后 busy 复位、按钮文案与 disabled 还原
+  ✓ runOnCapture：AI 结果真的填进了表单
+  ✓ runOnCapture：失败时按钮**仍然**还原（finally 无条件复位，失败也能再按一次）
+  ✓ runOnCapture：失败提示写明「已用本地解析」并带上原因
+  ✓ runOnCapture：空输入不发请求（提示「先写一句话吧」）
+  ✓ runOnCapture：没配置时不发请求，提示去配置并跳过去（跳转由入口编排，模块只回调）
+  ✓ 导入：提交兑现**之后**才渲染并报成功（条数来自归一后的清单）
+/Users/qlyf/Developer/reminder/test-unit.js:1215
+    saveImpl = async () => { throw new Error("idb write failed"); };
+                                   ^
+
+Error: idb write failed
+    at saveImpl (/Users/qlyf/Developer/reminder/test-unit.js:1215:36)
+    at Object.save (/Users/qlyf/Developer/reminder/test-unit.js:1178:17)
+    at reader.onload (/Users/qlyf/Developer/reminder/lib/app-backup.js:339:16)
+
+Node.js v22.22.2
+MUTATED_EXIT=1

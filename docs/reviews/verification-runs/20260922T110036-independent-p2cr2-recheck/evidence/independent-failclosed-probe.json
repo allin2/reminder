@@ -1,0 +1,171 @@
+{
+  "verdict": "PASS",
+  "cases": [
+    {
+      "name": "idb-get-failure",
+      "checks": {
+        "failedClosed": true,
+        "noBusinessStartup": true,
+        "explicitSaveBlocked": true,
+        "noPendingReplay": true,
+        "mirrorOnlyReadOnly": true,
+        "nextBootPreservedAuthority": true
+      },
+      "pass": true,
+      "saveError": "state-authority-blocked",
+      "first": {
+        "authority": {
+          "status": "failed",
+          "report": {
+            "status": "failed",
+            "reason": "mirror-recovered-unconfirmed-authority",
+            "detail": "idb-read-failed",
+            "attempt": 1,
+            "at": 1790046181221,
+            "backend": "idb",
+            "mirrorBytes": 164,
+            "writesAllowed": false
+          },
+          "attempts": 1,
+          "blockedWriteCount": 1,
+          "nativeBlocked": 0,
+          "writesAllowed": false,
+          "mirrorBytes": 164,
+          "recoveryPanel": true
+        },
+        "memoryIds": [
+          "mirror-old"
+        ],
+        "idbIds": [
+          "mirror-old",
+          "idb-new"
+        ],
+        "puts": 0,
+        "intervals": [],
+        "localKeys": {
+          "attention-inbox-v2": 164
+        }
+      },
+      "second": {
+        "authority": {
+          "status": "loaded",
+          "report": {
+            "status": "loaded",
+            "reason": "authoritative",
+            "detail": null,
+            "attempt": 1,
+            "at": 1790046181282,
+            "backend": "idb",
+            "mirrorBytes": 164,
+            "writesAllowed": true
+          },
+          "attempts": 1,
+          "blockedWriteCount": 0,
+          "nativeBlocked": 0,
+          "writesAllowed": true,
+          "mirrorBytes": 2259,
+          "recoveryPanel": false
+        },
+        "memoryIds": [
+          "mirror-old",
+          "idb-new"
+        ],
+        "idbIds": [
+          "mirror-old",
+          "idb-new"
+        ],
+        "puts": 2,
+        "intervals": [
+          2000,
+          15000
+        ],
+        "localKeys": {
+          "attention-inbox-v2": 2259
+        }
+      }
+    },
+    {
+      "name": "idb-open-failure",
+      "checks": {
+        "failedClosed": true,
+        "noBusinessStartup": true,
+        "explicitSaveBlocked": true,
+        "noPendingReplay": true,
+        "mirrorOnlyReadOnly": true,
+        "nextBootPreservedAuthority": true
+      },
+      "pass": true,
+      "saveError": "state-authority-blocked",
+      "first": {
+        "authority": {
+          "status": "failed",
+          "report": {
+            "status": "failed",
+            "reason": "degraded-mirror-unconfirmed-authority",
+            "detail": null,
+            "attempt": 1,
+            "at": 1790046181342,
+            "backend": "local",
+            "mirrorBytes": 164,
+            "writesAllowed": false
+          },
+          "attempts": 1,
+          "blockedWriteCount": 1,
+          "nativeBlocked": 0,
+          "writesAllowed": false,
+          "mirrorBytes": 164,
+          "recoveryPanel": true
+        },
+        "memoryIds": [
+          "mirror-old"
+        ],
+        "idbIds": [
+          "mirror-old",
+          "idb-new"
+        ],
+        "puts": 0,
+        "intervals": [],
+        "localKeys": {
+          "attention-inbox-v2": 164
+        }
+      },
+      "second": {
+        "authority": {
+          "status": "loaded",
+          "report": {
+            "status": "loaded",
+            "reason": "authoritative",
+            "detail": null,
+            "attempt": 1,
+            "at": 1790046181401,
+            "backend": "idb",
+            "mirrorBytes": 164,
+            "writesAllowed": true
+          },
+          "attempts": 1,
+          "blockedWriteCount": 0,
+          "nativeBlocked": 0,
+          "writesAllowed": true,
+          "mirrorBytes": 2259,
+          "recoveryPanel": false
+        },
+        "memoryIds": [
+          "mirror-old",
+          "idb-new"
+        ],
+        "idbIds": [
+          "mirror-old",
+          "idb-new"
+        ],
+        "puts": 2,
+        "intervals": [
+          2000,
+          15000
+        ],
+        "localKeys": {
+          "attention-inbox-v2": 2259
+        }
+      }
+    }
+  ]
+}

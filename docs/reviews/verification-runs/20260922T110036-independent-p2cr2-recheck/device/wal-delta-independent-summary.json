@@ -1,0 +1,44 @@
+{
+  "verdict": "PASS",
+  "rounds": [
+    {
+      "delta_bytes": 19,
+      "record_kind": "FULL",
+      "payload_bytes": 12,
+      "ops": 0,
+      "seq": 560,
+      "entries": [],
+      "records_appended": 1,
+      "record_kind_label": "EMPTY_MARKER",
+      "verdict": "NO_OPERATIONS",
+      "round": 1,
+      "single_record_by_length": true
+    },
+    {
+      "delta_bytes": 19,
+      "record_kind": "FULL",
+      "payload_bytes": 12,
+      "ops": 0,
+      "seq": 560,
+      "entries": [],
+      "records_appended": 1,
+      "record_kind_label": "EMPTY_MARKER",
+      "verdict": "NO_OPERATIONS",
+      "round": 2,
+      "single_record_by_length": true
+    },
+    {
+      "delta_bytes": 19,
+      "record_kind": "FULL",
+      "payload_bytes": 12,
+      "ops": 0,
+      "seq": 560,
+      "entries": [],
+      "records_appended": 1,
+      "record_kind_label": "EMPTY_MARKER",
+      "verdict": "NO_OPERATIONS",
+      "round": 3,
+      "single_record_by_length": true
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+# P3-D `app-items.js` independent acceptance: PASS for source, browser and debug APK
+
+This run independently rechecks the current uncommitted workspace. It does not adopt the implementer's self-test as acceptance. Repository: `/Users/qlyf/Developer/reminder`, branch `main`, HEAD and `origin/main` `3574824357dc7beb04cbd3e32aa413cd508e8484`. Product source and APK were not edited or rebuilt by this run. See `source-hashes.txt` for exact identities; the current APK is `23742f54b680724fbc14326f2fdac8db847e564f466f1cae5e2411a24bc8307f`.
+
+## Findings
+
+- `lib/app-items.js` owns the 22 listed item/series/undo API members. The corresponding `app-core.js` functions are thin forwards. The startup gate checks `AppItems.createAppItems`, then each instance member, before business startup; the static bidirectional closure reports 22 used / 22 declared. `index.html` loads the module after `lib/app-transaction.js`, and `sw.js` v28 precaches it.
+- Rebinding a transaction instance does not leave item wrappers on the old coordinator: the core wrapper caches by the *current transaction instance*. Independent `verify-items-transaction.js` loads the real production combination, replaces the live items array through `bindRuntime()` + `loadAsync()`, and holds an authoritative native ACK write. All eight item commands against the same item return `false` without visible mutation; an unrelated snooze succeeds, survives replay, and both results survive cold boot from IndexedDB. Exit 0; raw result in `verify-items-transaction.log`.
+- The earlier independent P3-C-R rebind A/B probe was rerun against the P3-D bytes. No-rebind and rebind branches both reject a same-item completion, preserve an unrelated command, and settle the native ACK. Exit 0; `verify-rebind.log`.
+- Fresh `npm test` exits 0: unit 642, native 324, boot 708, smoke 266, regressions 730, parse 160, with seven item mutations and pre-existing model/persistence/transaction mutants detected. Logs and exit are `npm-test.log` and `npm-test.exit`. UI parity independently rerun: DOM 590/590 and format 567/567, each exit 0.
+- Fresh isolated Chrome recovery run: 12/12 scenarios satisfy their assertions; control opens IndexedDB once and puts once, injected startup failures perform zero opens/puts. See `browser-recovery-run.log`, `browser-recovery/browser-recovery.json`, and exit file. This validates browser startup and fail-closed behavior; it does not constitute physical Android testing.
+- `verify-resources.py` independently checks all 31 current Web resources byte-for-byte across source, `www`, Android public assets, **debug intermediate assets**, and the actual Debug APK. Mismatch count 0; APK SHA-256 matches the implementer identity. See `resource-hashes.tsv` and `verify-resources.log`. The prior P3-C-R APK remains at its frozen path and unchanged hash `c3a5cc52891400cad35210d7211ea5703fd5225f5c7ca2ddd28272126886a785`.
+- `node --check` on the changed JS and `git diff --check` pass. All verification exit files are `0`.
+
+## Boundary
+
+Physical Android install, native alarm/notification behavior, and physical offline Service Worker v27→v28 upgrade are **NOT_PERFORMED**. This PASS covers the reviewed source, production-combination semantics, real Chrome startup checks, and packaged Web resource identity. It does not close later P3 native coordination/core cleanup or P4 delivery. No checkout/reset/stash/clean, commit, or push was performed; all previous dirty entries and evidence are preserved.

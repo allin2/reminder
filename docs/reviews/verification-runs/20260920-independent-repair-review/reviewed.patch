@@ -1,0 +1,346 @@
+diff --git a/app-core.js b/app-core.js
+index 3271482..6aef89a 100644
+--- a/app-core.js
++++ b/app-core.js
+@@ -3346,12 +3346,19 @@
+   function snapshotItemForm() {
+     const val = (sel) => ($(sel) ? $(sel).value : "");
+     const on = $$("#capPriority .chip.on")[0];
++    const picked = !!(triggerUserPicked || lowConfUserPicked);
++    const triggerVal = val("#capTrigger");
++    let triggerAction = "untouched";
++    if (picked) {
++      triggerAction = triggerVal ? "changed" : "cleared";
++    }
+     return {
+       text: val("#capText"),
+       note: val("#capNote"),
+       tags: val("#capTags"),
+       url: val("#capUrl"),
+-      trigger: val("#capTrigger"),
++      trigger: triggerVal,
++      triggerAction: triggerAction,
+       deadline: val("#capDeadline"),
+       project: val("#capProject"),
+       repeat: val("#capRepeat"),
+@@ -3374,16 +3381,19 @@
+    *
+    * 时间框只在**用户自己选过**时才算数：解析器与兜底会自己往它里面写值，
+    * 把它无条件算进来，会让「解析器刚补完时间」被误判成「用户改了草稿」，
+-   * 于是面板不再关闭、草稿不再复位。
++   * 于是面板不再关闭、草稿不再复位。编辑时若显式清空或改期，也以 triggerAction 区分。
+    */
+   function formDraftSignature(snap) {
+     if (!snap) return "";
+-    const picked = snap.triggerPicked || snap.lowConfPicked;
++    const picked = !!(snap.triggerPicked || snap.lowConfPicked);
++    const triggerPart = picked
++      ? (snap.triggerAction ? snap.triggerAction + ":" : "") + (snap.trigger || "")
++      : (snap.editItemId ? "untouched" : "");
+     return [
+       snap.editItemId || "new",
+       snap.text, snap.note, snap.tags, snap.url, snap.deadline, snap.project,
+       snap.repeat, snap.repeatMode, snap.nth, snap.weekday, snap.priority,
+-      picked ? snap.trigger : ""
++      triggerPart
+     ].join("\u0001");
+   }
+ 
+@@ -4027,19 +4037,23 @@
+     it.triggerAt = values.triggerAt;
+     it.scheduleBasis = values.scheduleBasis === "elapsed" ? "elapsed" : "wall-clock";
+     it.localTrigger = it.scheduleBasis === "wall-clock" ? toLocalInput(values.triggerAt) : null;
+-    it.snoozedAt = null;
+-    it.snoozeDelayMs = null;
+-    it.dismissedUntil = null;
+     it.deadlineAt = values.deadlineAt;
+     it.repeat = values.repeat;
+-    if (values.triggerAt && values.triggerAt !== prevTrigger) {
++    if (values.triggerAt !== prevTrigger) {
+       // L08：改期等于开启新一轮 —— 轮次与预算一并重置（与 snoozeItem 同一语义）
+       it.remindCount = 0;
+       it.lastRemindAt = null;
+       it.lastAlertShownAt = null;
+       it.deliveredAt = null;
++      it.snoozedAt = null;
++      it.snoozeDelayMs = null;
++      it.dismissedUntil = null;
++    } else {
++      it.snoozedAt = values.snoozedAt !== undefined ? values.snoozedAt : it.snoozedAt;
++      it.snoozeDelayMs = values.snoozeDelayMs !== undefined ? values.snoozeDelayMs : it.snoozeDelayMs;
++      it.dismissedUntil = values.dismissedUntil !== undefined ? values.dismissedUntil : it.dismissedUntil;
+     }
+-    if (values.triggerAt && values.triggerAt > Date.now() && (it.status === "due" || it.status === "acknowledged")) {
++    if (values.triggerAt && values.triggerAt !== prevTrigger && values.triggerAt > Date.now() && (it.status === "due" || it.status === "acknowledged")) {
+       it.status = "waiting";
+     }
+     // V05：编辑保存必须推进版本，否则旧通知的事件版本与当前一致，仍会覆盖新安排
+@@ -4127,30 +4141,67 @@
+         const local = parseChineseTime(raw);
+         parsed = local;
+         title = local.title || raw;
+-      } else if (raw !== editing.title) {
+-        const local = parseChineseTime(raw);
+-        parsed = local;
+-        title = local.title || raw;
++      } else {
++        title = raw || (editing ? editing.title : "未命名事项");
+       }
+ 
+       const extraTags = String(src.tags == null ? "" : src.tags).trim().split(/\s+/).filter(Boolean);
+-      const parsedTags = parsed ? (parsed.tags || []) : [];
++      const parsedTags = (!editing && parsed) ? (parsed.tags || []) : [];
+       const tags = Array.from(new Set(parsedTags.concat(extraTags)));
+       const priority = src.priority || "normal";
+-      // L01：时间来源优先级固定为「用户明确选择 > 有效解析 > 兜底」
+-      //  · explicitTime  = 用户手选（时间输入框 / 低置信度极简选择）
+-      //  · parsedTrigger = 解析器给出的真实时间（低置信度时不算「真实时间」）
+-      //  · formTrigger   = 表单当前值，可能是解析器写进去的，因此排在解析结果之后
++
+       const formTrigger = parseLocalInput(src.trigger);
+-      const parsedTrigger = parsed ? (parsed.trigger || parsed.triggerAt) : null;
+-      const userPicked = !!(src.triggerPicked || src.lowConfPicked);
+-      const explicitTime = userPicked ? formTrigger : null;
+-      const parsedLow = !!(parsed && (parsed.confidence === "low" || parsed.confidence === "none"));
+-      const triggerAt = explicitTime || (parsedLow ? null : (parsedTrigger || formTrigger)) || null;
+-      const scheduleBasis = !userPicked && !parsedLow && parsed && parsed.scheduleBasis === "elapsed"
+-        ? "elapsed" : "wall-clock";
+-      const deadlineAt = parseLocalInput(src.deadline) || (parsed ? parsed.deadline || parsed.deadlineAt : null);
+-      const repeat = formRepeat(src) || (parsed && parsed.repeat
++      let triggerAt;
++      let scheduleBasis;
++      let snoozedAt = editing ? editing.snoozedAt : null;
++      let snoozeDelayMs = editing ? editing.snoozeDelayMs : null;
++
++      if (editing) {
++        const triggerAction = src.triggerAction || (src.triggerPicked ? (src.trigger ? "changed" : "cleared") : "untouched");
++        const initialFormTrigger = toLocalInput(editing.triggerAt);
++        const formTriggerMatchesInitial = (src.trigger || "") === initialFormTrigger;
++
++        if (triggerAction === "cleared" || (!src.trigger && editing.triggerAt != null && src.triggerPicked)) {
++          // 显式清空时间
++          triggerAt = null;
++          scheduleBasis = "wall-clock";
++          snoozedAt = null;
++          snoozeDelayMs = null;
++        } else if (triggerAction === "changed" || (!formTriggerMatchesInitial && src.trigger)) {
++          // 显式选择新时间 / 改期
++          triggerAt = formTrigger;
++          scheduleBasis = "wall-clock";
++          snoozedAt = null;
++          snoozeDelayMs = null;
++        } else if (!src.trigger && editing.triggerAt == null) {
++          // 本身无时间且保持为空
++          triggerAt = null;
++          scheduleBasis = "wall-clock";
++          snoozedAt = null;
++          snoozeDelayMs = null;
++        } else {
++          // 未动：保留原提醒时间与时间基准（包括稍后产生的 elapsed 提醒元数据）
++          triggerAt = editing.triggerAt;
++          scheduleBasis = editing.scheduleBasis || "wall-clock";
++          snoozedAt = editing.snoozedAt;
++          snoozeDelayMs = editing.snoozeDelayMs;
++        }
++      } else {
++        // L01：时间来源优先级固定为「用户明确选择 > 有效解析 > 兜底」
++        //  · explicitTime  = 用户手选（时间输入框 / 低置信度极简选择）
++        //  · parsedTrigger = 解析器给出的真实时间（低置信度时不算「真实时间」）
++        //  · formTrigger   = 表单当前值，可能是解析器写进去的，因此排在解析结果之后
++        const parsedTrigger = parsed ? (parsed.trigger || parsed.triggerAt) : null;
++        const userPicked = !!(src.triggerPicked || src.lowConfPicked);
++        const explicitTime = userPicked ? formTrigger : null;
++        const parsedLow = !!(parsed && (parsed.confidence === "low" || parsed.confidence === "none"));
++        triggerAt = explicitTime || (parsedLow ? null : (parsedTrigger || formTrigger)) || null;
++        scheduleBasis = !userPicked && !parsedLow && parsed && parsed.scheduleBasis === "elapsed"
++          ? "elapsed" : "wall-clock";
++      }
++
++      const deadlineAt = parseLocalInput(src.deadline) || (!editing && parsed ? parsed.deadline || parsed.deadlineAt : null);
++      const repeat = formRepeat(src) || (!editing && parsed && parsed.repeat
+         ? (parsed.repeat.every === "nthWeekday"
+             ? { every: "nthWeekday", mode: parsed.repeat.mode || "calendar", nth: parsed.repeat.nth || 1, dow: parsed.repeat.dow != null ? parsed.repeat.dow : 1 }
+             : parsed.repeat)
+@@ -4170,6 +4221,8 @@
+           priority: priority,
+           triggerAt: triggerAt,
+           scheduleBasis: scheduleBasis,
++          snoozedAt: snoozedAt,
++          snoozeDelayMs: snoozeDelayMs,
+           deadlineAt: deadlineAt,
+           repeat: repeat
+         }], { userFacing: true, itemArg: 0, name: "editItem" });
+@@ -7189,7 +7242,10 @@
+       renderCaptureSummary();
+     });
+     // UX-C02：清除手选时间后摘要必须同步更新（否则摘要会一直显示一个已经作废的时间）
+-    $("#capTrigger").addEventListener("input", renderCaptureSummary);
++    $("#capTrigger").addEventListener("input", () => {
++      triggerUserPicked = true;
++      renderCaptureSummary();
++    });
+     $("#capDeadline").addEventListener("change", renderCaptureSummary);
+     $("#capDeadline").addEventListener("input", renderCaptureSummary);
+     // UX-C02：「更多选项」默认收起，编辑复杂事项时才自动展开
+diff --git a/test-regressions.js b/test-regressions.js
+index 0ef1a79..169b5c9 100644
+--- a/test-regressions.js
++++ b/test-regressions.js
+@@ -3517,6 +3517,157 @@ section("返工2 SW：预缓存必须覆盖 index.html 真正加载的每个脚
+   ok("SW 对照组：离线导航仍然回落 index.html",
+     (await nav) === htmlSource);
+ }
++
++section("返工4：编辑表单保留未修改时间、区分改期/清空/稍后、验证重载持久化（修复方案 第一阶段）");
++{
++  const h = createApp();
++  const app = await h.boot();
++  app.state.settings.dnd = false;
++  const now = Date.now();
++  const origTrigger = Math.floor((now + 24 * 3600000) / 60000) * 60000;
++
++  // ① DV-03 真实编辑入口修改标题不丢失原提醒时间
++  const it1 = app.makeItem({
++    title: "明天15点实机验证编辑反例",
++    status: "waiting",
++    priority: "normal",
++    triggerAt: origTrigger,
++    scheduleBasis: "wall-clock",
++    localTrigger: localInputOf(origTrigger)
++  });
++  app.state.items = [it1];
++  await app.saveAsync();
++  await flush(10);
++
++  // 模拟真实界面操作：打开编辑页，仅修改标题为不带时间词的文本，未碰时间框
++  app.openEditItem(it1.id);
++  h.setField("#capText", "实机验证改标题反例");
++  app.saveItemFromForm();
++  await flush(10);
++  await app.saveAsync();
++
++  const it1After = app.state.items.find(x => x.id === it1.id);
++  ok("P1-01 编辑标题不丢失原时间：triggerAt 保持原值",
++    it1After.triggerAt === origTrigger,
++    String(it1After.triggerAt) + " vs " + origTrigger);
++  ok("P1-01 编辑标题不丢失原时间：localTrigger 保持原值",
++    it1After.localTrigger === localInputOf(origTrigger),
++    String(it1After.localTrigger));
++  ok("P1-01 编辑标题成功更新标题文本",
++    it1After.title === "实机验证改标题反例",
++    it1After.title);
++
++  // 重启验证：持久化在重启后保持
++  const restarted1 = await restartApp(h.disk);
++  const restored1 = restarted1.app.state.items.find(x => x.id === it1.id);
++  ok("P1-01 重启后验证：triggerAt 与 localTrigger 完整保持",
++    restored1 && restored1.triggerAt === origTrigger && restored1.localTrigger === localInputOf(origTrigger),
++    restored1 ? JSON.stringify({ triggerAt: restored1.triggerAt, localTrigger: restored1.localTrigger }) : "missing");
++
++  // ② 编辑标题含新时间词：默认保留编辑页已有时间，不被重新解析覆盖
++  app.openEditItem(it1.id);
++  h.setField("#capText", "明天下午3点改标题带时间词");
++  app.saveItemFromForm();
++  await flush(10);
++  await app.saveAsync();
++  const it1WithTimeWords = app.state.items.find(x => x.id === it1.id);
++  ok("P1-02 编辑标题含时间词不覆盖表单已有时间",
++    it1WithTimeWords.triggerAt === origTrigger && it1WithTimeWords.title === "明天下午3点改标题带时间词",
++    String(it1WithTimeWords.triggerAt));
++
++  // ③ 仅编辑非时间字段（备注、标签、优先级、项目）
++  app.openEditItem(it1.id);
++  h.setField("#capNote", "新增备注内容");
++  h.setField("#capTags", "工作 紧急");
++  app.saveItemFromForm();
++  await flush(10);
++  await app.saveAsync();
++  const it1Fields = app.state.items.find(x => x.id === it1.id);
++  ok("P1-03 编辑非时间字段保持原提醒时间与基准",
++    it1Fields.triggerAt === origTrigger && it1Fields.note === "新增备注内容" && it1Fields.tags.includes("工作"),
++    JSON.stringify({ triggerAt: it1Fields.triggerAt, note: it1Fields.note, tags: it1Fields.tags }));
++
++  // ④ 显式手动改期：采用用户选择，重置轮次并建立新调度
++  const newTrigger = origTrigger + 3 * 3600000;
++  app.openEditItem(it1.id);
++  h.setField("#capTrigger", localInputOf(newTrigger));
++  app.markTriggerPicked(true);
++  it1.remindCount = 2; // 模拟已有催促计数
++  app.saveItemFromForm();
++  await flush(10);
++  await app.saveAsync();
++  const it1Rescheduled = app.state.items.find(x => x.id === it1.id);
++  ok("P1-04 手动选择新时间：triggerAt 更新为新时间",
++    it1Rescheduled.triggerAt === newTrigger,
++    String(it1Rescheduled.triggerAt));
++  ok("P1-04 手动选择新时间：轮次重置 remindCount=0",
++    it1Rescheduled.remindCount === 0,
++    String(it1Rescheduled.remindCount));
++
++  // ⑤ 显式清空时间：保存为无提醒，不得用兜底时间补回
++  app.openEditItem(it1.id);
++  h.setField("#capTrigger", "");
++  app.markTriggerPicked(true);
++  app.saveItemFromForm();
++  await flush(10);
++  await app.saveAsync();
++  const it1Cleared = app.state.items.find(x => x.id === it1.id);
++  ok("P1-05 显式清空时间：triggerAt 为 null",
++    it1Cleared.triggerAt === null,
++    String(it1Cleared.triggerAt));
++  ok("P1-05 显式清空时间：localTrigger 为 null 或空",
++    !it1Cleared.localTrigger,
++    String(it1Cleared.localTrigger));
++
++  // ⑥ 稍后提醒（elapsed）事项仅修改标题：保留 scheduleBasis、snoozedAt、snoozeDelayMs 等语义
++  const snoozedItem = app.makeItem({
++    title: "稍后提醒事项",
++    status: "waiting",
++    priority: "normal",
++    triggerAt: now + 3600000
++  });
++  app.state.items.push(snoozedItem);
++  await app.saveAsync();
++  const snoozeWhen = now + 7200000;
++  app.snoozeItem(snoozedItem.id, snoozeWhen, "elapsed");
++  await app.saveAsync();
++  await flush(10);
++
++  const snoozedBefore = app.state.items.find(x => x.id === snoozedItem.id);
++  const snoozedAtBefore = snoozedBefore.snoozedAt;
++  const snoozeDelayBefore = snoozedBefore.snoozeDelayMs;
++  const statusBefore = snoozedBefore.status;
++
++  // 打开编辑表单，仅改标题
++  app.openEditItem(snoozedItem.id);
++  h.setField("#capText", "稍后事项改标题");
++  app.saveItemFromForm();
++  await flush(10);
++  await app.saveAsync();
++
++  const snoozedAfter = app.state.items.find(x => x.id === snoozedItem.id);
++  ok("P1-06 稍后事项改标题：scheduleBasis 保持 elapsed",
++    snoozedAfter.scheduleBasis === "elapsed",
++    snoozedAfter.scheduleBasis);
++  ok("P1-06 稍后事项改标题：snoozedAt 保持不变",
++    snoozedAfter.snoozedAt === snoozedAtBefore,
++    String(snoozedAfter.snoozedAt));
++  ok("P1-06 稍后事项改标题：snoozeDelayMs 保持不变",
++    snoozedAfter.snoozeDelayMs === snoozeDelayBefore,
++    String(snoozedAfter.snoozeDelayMs));
++  ok("P1-06 稍后事项改标题：status 保持 snoozed",
++    snoozedAfter.status === statusBefore,
++    snoozedAfter.status);
++
++  // ⑦ 重启验证稍后事项持久化
++  const restarted2 = await restartApp(h.disk);
++  const snoozedRestored = restarted2.app.state.items.find(x => x.id === snoozedItem.id);
++  ok("P1-07 重启后稍后事项元数据完整恢复",
++    snoozedRestored && snoozedRestored.scheduleBasis === "elapsed" &&
++    snoozedRestored.snoozedAt === snoozedAtBefore &&
++    snoozedRestored.snoozeDelayMs === snoozeDelayBefore,
++    snoozedRestored ? JSON.stringify({ basis: snoozedRestored.scheduleBasis, snoozedAt: snoozedRestored.snoozedAt }) : "missing");
++}
+ }
+ 
+ run().then(() => {

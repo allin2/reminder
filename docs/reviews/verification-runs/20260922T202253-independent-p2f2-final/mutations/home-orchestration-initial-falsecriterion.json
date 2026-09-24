@@ -1,0 +1,8 @@
+{
+  "initialExit": 1,
+  "initialObservation": {
+    "healthy": { "status": "due", "dueInDom": true, "puts": 1 },
+    "mutant": { "status": "waiting", "dueInDom": true, "puts": 1 }
+  },
+  "reason": "The view may display an overdue waiting item from isAttentionDue even when promoteDue was removed. DOM visibility is not proof of business-state promotion. The final probe compares the item status instead."
+}

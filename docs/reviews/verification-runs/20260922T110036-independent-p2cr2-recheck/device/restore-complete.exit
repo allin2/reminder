@@ -1,0 +1,6 @@
+restore_idb=0
+restore_mirror=0
+verify_idb=0
+verify_mirror=0
+file_set_idb=0
+file_set_mirror=0

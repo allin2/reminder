@@ -1,0 +1,56 @@
+{
+  "purpose": "P2-F1 in-memory mutation proof",
+  "results": [
+    {
+      "id": "M1-bind-idempotency",
+      "anchor": {
+        "text": "if (bound) return;",
+        "found": true
+      },
+      "healthy": true,
+      "mutant": false,
+      "red": true
+    },
+    {
+      "id": "M2-search-output-escape",
+      "anchor": {
+        "text": "escapeHtml(note.body)",
+        "found": true
+      },
+      "healthy": true,
+      "mutant": false,
+      "red": true
+    },
+    {
+      "id": "M3-project-removal-transaction",
+      "anchor": {
+        "text": "deps.removeProjectFromItems(id);",
+        "found": true
+      },
+      "healthy": true,
+      "mutant": false,
+      "red": true
+    },
+    {
+      "id": "M4-instance-contract",
+      "anchor": {
+        "text": "instance: [\"bind\", \"openNote\", \"saveNote\", \"doSearch\", \"renderProjectsSheet\", \"addProject\", \"deleteProject\"],",
+        "found": true
+      },
+      "healthy": true,
+      "mutant": false,
+      "red": true
+    }
+  ],
+  "workspaceRestore": {
+    "before": {
+      "content": "82be748ea5719244cb725602a78599c1daff9a7fc349128d3e64eb7d76ab4289",
+      "core": "61f24626c2d7332f19da652644d77e351392c325412d7efdcf379b23497e5a5f"
+    },
+    "after": {
+      "content": "82be748ea5719244cb725602a78599c1daff9a7fc349128d3e64eb7d76ab4289",
+      "core": "61f24626c2d7332f19da652644d77e351392c325412d7efdcf379b23497e5a5f"
+    },
+    "restored": true
+  }
+}

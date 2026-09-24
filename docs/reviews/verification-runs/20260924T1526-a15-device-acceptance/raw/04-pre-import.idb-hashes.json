@@ -1,0 +1,69 @@
+{
+ "dbVersion": 1,
+ "localStorage": {
+  "attention-inbox-v2": {
+   "bytes": 9096,
+   "sha256": "dd803898cc552ade8fd35b4fd1974b043cdf5ed7f0c13d45f4c20e39759aef6b"
+  }
+ },
+ "stores": {
+  "kv": {
+   "state": {
+    "bytes": 9096,
+    "itemCount": 7,
+    "items": {
+     "i_49kecme9muf7quxh": {
+      "rev": 1,
+      "sha256": "dfa531480cc08945169e637574b980dc791ece267089ce633eab6b70b21b9eb0",
+      "status": "waiting",
+      "triggerAt": 1790328660000
+     },
+     "i_4nuqrlp1muf81wwp": {
+      "rev": 2,
+      "sha256": "f2bc3ceb333b889a7d31f6184da243dc0c376df8e6b029d8fd4c39554cb94cf7",
+      "status": "acknowledged",
+      "triggerAt": 1790235660000
+     },
+     "i_706wk32imuf89ik8": {
+      "rev": 1,
+      "sha256": "f3603d4e26a9945c89dcd8c60a0e1c7ec88ed2c690c02c46f72170867e33ff08",
+      "status": "due",
+      "triggerAt": 1790236020000
+     },
+     "i_jsq61wufmuf81xvo": {
+      "rev": 2,
+      "sha256": "94b1c443c894be9133b6b75a0918eeff045900407bde59b4278e080c3aab2123",
+      "status": "archived",
+      "triggerAt": 1790235900000
+     },
+     "i_lxf81le3muf7u535": {
+      "rev": 2,
+      "sha256": "242d9b964cd709b816340f9c78011e8c000d8a5027de4ac05e1ee55af6c07c25",
+      "status": "archived",
+      "triggerAt": 1790235300000
+     },
+     "i_mbz3c2fimuf7u72w": {
+      "rev": 2,
+      "sha256": "8b5520c01c66a033e79967c1eca3127e2411ef3406f500d2d130e1ce6084ee87",
+      "status": "acknowledged",
+      "triggerAt": 1790235300000
+     },
+     "i_p8c2shvomuf7u639": {
+      "rev": 2,
+      "sha256": "88d89410a6d5ab176758f49d828f6b4f16e6d4295a9f8da73738abad4ccdfb70",
+      "status": "snoozed",
+      "triggerAt": 1790242685743
+     }
+    },
+    "sha256": "390470edc72161927089cbc8fbc4d7549aefade579eb76b8603dc528c0d89026",
+    "topKeys": {
+     "items": "370e754c53596658eca08f96724ac6ec391957da6eaa35469acb8a20d6ab6b09",
+     "notes": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+     "projects": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+     "schema": "ef2d127de37b942baad06145e54b0c619a1f22327b2ebbcfbec78f5564afe39d",
+     "settings": "9720a7e84de7d694aadccd769ee03a6d68fb3db70db216bdcfd8369e1313832c"
+    }
+   }
+  }
+ }
+}

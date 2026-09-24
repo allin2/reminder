@@ -1,0 +1,6 @@
+healthy direct behavior: PASS
+events fallback sharing: mutation detected
+live default delivery: mutation detected
+empty default fallback: mutation detected
+repeat series identity: mutation detected
+rev zero terminal gate: mutation detected

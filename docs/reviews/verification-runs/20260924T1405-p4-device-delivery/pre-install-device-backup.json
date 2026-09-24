@@ -1,0 +1,50 @@
+{
+  "mirror": "{\"schema\":5,\"items\":[],\"notes\":[],\"projects\":[],\"settings\":{\"notify\":true,\"notifyPrompted\":false,\"userMode\":\"beginner\",\"onboardDone\":false,\"dnd\":true,\"importantRepeat\":true,\"quietStart\":\"23:00\",\"quietEnd\":\"07:30\",\"dailySummary\":false,\"privacyNotify\":false,\"lastSummaryAt\":0,\"defaultDeliveryMode\":\"notification\",\"review\":{\"enabled\":true,\"hour\":21,\"minute\":30,\"windowEndHour\":23,\"windowEndMinute\":0,\"followupMs\":3600000,\"maxFollowups\":2,\"lastNotifiedAt\":0,\"followupCount\":0,\"snoozedUntil\":0,\"skippedUntil\":0,\"sessionStatus\":\"idle\",\"lastSessionKey\":\"\"},\"ai\":{\"enabled\":false,\"baseUrl\":\"https://api.openai.com/v1\",\"apiKey\":\"\",\"model\":\"gpt-4o-mini\",\"autoOnSave\":false},\"setupDismissed\":false,\"setupPromptStarted\":false,\"scheduledAlarmIds\":[],\"scheduledAlarmSignatures\":{},\"alarmEventLog\":{\"active:133024820:a1d9b2df-3bbf-40c1-91bc-0fb8456c958a:done\":1790149531941,\"active:2038356701:fa6c31c2-53a3-4f44-9319-c2edd41df695:done\":1790151285882,\"active:1354945827:53f1fa3a-9ffe-4b09-895d-7e4c6dff06d5:done\":1790152767495}}}",
+  "items": [],
+  "projects": [],
+  "settings": {
+    "notify": true,
+    "notifyPrompted": false,
+    "userMode": "beginner",
+    "onboardDone": false,
+    "dnd": true,
+    "importantRepeat": true,
+    "quietStart": "23:00",
+    "quietEnd": "07:30",
+    "dailySummary": false,
+    "privacyNotify": false,
+    "lastSummaryAt": 0,
+    "defaultDeliveryMode": "notification",
+    "review": {
+      "enabled": true,
+      "hour": 21,
+      "minute": 30,
+      "windowEndHour": 23,
+      "windowEndMinute": 0,
+      "followupMs": 3600000,
+      "maxFollowups": 2,
+      "lastNotifiedAt": 0,
+      "followupCount": 0,
+      "snoozedUntil": 0,
+      "skippedUntil": 0,
+      "sessionStatus": "idle",
+      "lastSessionKey": ""
+    },
+    "ai": {
+      "enabled": false,
+      "baseUrl": "https://api.openai.com/v1",
+      "apiKey": "",
+      "model": "gpt-4o-mini",
+      "autoOnSave": false
+    },
+    "setupDismissed": false,
+    "setupPromptStarted": false,
+    "scheduledAlarmIds": [],
+    "scheduledAlarmSignatures": {},
+    "alarmEventLog": {
+      "active:133024820:a1d9b2df-3bbf-40c1-91bc-0fb8456c958a:done": 1790149531941,
+      "active:2038356701:fa6c31c2-53a3-4f44-9319-c2edd41df695:done": 1790151285882,
+      "active:1354945827:53f1fa3a-9ffe-4b09-895d-7e4c6dff06d5:done": 1790152767495
+    }
+  }
+}

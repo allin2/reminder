@@ -1,0 +1,130 @@
+    99	  function createAppBackup(deps) {
+   100	    deps = deps || {};
+   101	
+   102	    const REQUIRED_DEPS = [
+   103	      "getSchema", "getState", "normalizeItem",
+   104	      "save", "render", "toast", "confirmDialog", "query",
+   105	      "isNativeAndroidRuntime", "systemBridge", "getInflightActionDepth"
+   106	    ];
+   107	    const missing = REQUIRED_DEPS.filter(function (k) { return typeof deps[k] !== "function"; });
+   108	    if (missing.length) {
+   109	      throw new Error("createAppBackup 缺少依赖：" + missing.join(" / "));
+   110	    }
+   111	
+   112	    const $ = deps.query;
+   113	
+   114	    /* ---------- 实例内在途状态（唯一写入者：本实例） ---------- */
+   115	    let exportInProgress = false;
+   116	    let exportOperationId = 0;
+   117	    let pendingNativeExport = null;
+   118	
+   119	    /**
+   120	     * 旧版备份快照（v0.2 兼容格式）。
+   121	     *
+   122	     * ⚠️ **密钥排除在这里**：`settings.ai` 只带 `enabled` / `model` / `autoOnSave`，
+   123	     * `baseUrl` / `apiKey` 恒为空串 —— 备份文件会离开设备（分享/云盘），
+   124	     * 把 BYOK 密钥写进去等于把钥匙贴在包裹上。将来改导出格式时这条不能松。
+   125	     *
+   126	     * 只在 `exportData()` 的点击时刻拍一次：系统对话框停留再久，写入的仍是
+   127	     * 点击时的数据（操作身份 `operationId` 保证迟到结果不会写进新一轮）。
+   128	     */
+   129	    function buildLegacyBackupPayload() {
+   130	      const state = deps.getState();
+   131	      const settings = state.settings || {};
+   132	      return {
+   133	        app: "attention-inbox",
+   134	        schema: deps.getSchema(),
+   135	        exportedAt: new Date().toISOString(),
+   136	        items: state.items,
+   137	        notes: state.notes,
+   138	        projects: state.projects,
+   139	        settings: {
+   140	          notify: settings.notify,
+   141	          dnd: settings.dnd,
+   142	          importantRepeat: settings.importantRepeat,
+   143	          quietStart: settings.quietStart,
+   144	          quietEnd: settings.quietEnd,
+   145	          dailySummary: settings.dailySummary,
+   146	          privacyNotify: settings.privacyNotify,
+   147	          defaultDeliveryMode: settings.defaultDeliveryMode || "notification",
+   148	          userMode: settings.userMode || "beginner",
+   149	          // do not export AI secrets
+   150	          ai: {
+   151	            enabled: !!(settings.ai && settings.ai.enabled),
+   152	            baseUrl: "",
+   153	            apiKey: "",
+   154	            model: settings.ai && settings.ai.model ? settings.ai.model : "",
+   155	            autoOnSave: !!(settings.ai && settings.ai.autoOnSave)
+   156	          }
+   157	        }
+   158	      };
+   159	    }
+   160	
+   303	    /**
+   304	     * 导入：读文件 → 解析校验 → 用户确认 → 覆盖 → 保存渲染。
+   305	     *
+   306	     * 覆盖面与搬移前一致：items 逐条过 `normalizeItem`（导入文件是外部输入，
+   307	     * 不能信），notes/projects 只认数组，settings 增量合并（缺键不删）。
+   308	     * `inflightActionDepth > 0` 时拒绝 —— 提醒操作正写到一半，此时整体换血
+   309	     * 会造成「半新半旧」的台账。
+   310	     *
+   311	     * 两个「成功提示 = 证据」的时点（独立复验 `20260921T134843` 的 G01/G02，
+   312	     * 均为搬移前就有的继承缺陷，此处一并修）：
+   313	     *   · **读取失败不再静默** —— `onerror` / `onabort` 都要给反馈，
+   314	     *     「点了没反应」比失败提示更伤信任；
+   315	     *   · **「导入成功」在提交兑现之后才说** —— 注入的 `save()` 返回权威提交
+   316	     *     Promise（app-core `saveAsync` 的 `runCommit` 链），不 await 就报成功，
+   317	     *     用户拿着提示关掉应用，数据可能只存在内存里。
+   318	     *     提交失败时内存状态保留（与 app-core 保存失败路径同一语义），但不报成功。
+   319	     */
+   320	    function importDataFile(file) {
+   321	      const reader = new FileReader();
+   322	      reader.onload = async () => {
+   323	        try {
+   324	          const data = JSON.parse(String(reader.result || ""));
+   325	          if (!data || !Array.isArray(data.items)) throw new Error("bad format");
+   326	          const okImp = await deps.confirmDialog("导入将覆盖当前数据，继续？", "导入数据");
+   327	          if (!okImp) return;
+   328	          if (deps.getInflightActionDepth() > 0) {
+   329	            deps.toast("提醒操作正在保存 · 请稍后重新导入");
+   330	            return;
+   331	          }
+   332	          const state = deps.getState();
+   333	          state.items = data.items.map(deps.normalizeItem);
+   334	          state.notes = Array.isArray(data.notes) ? data.notes : [];
+   335	          state.projects = Array.isArray(data.projects) ? data.projects : [];
+   336	          state.settings = Object.assign(state.settings, data.settings || {});
+   337	          // G02：内层 try 只为把「提交失败」和「文件格式错」分开 —— 后者的
+   338	          // 兜底文案对前者是误导（文件明明读对了）。
+   339	          try {
+   340	            await deps.save();
+   341	          } catch (saveError) {
+   342	            deps.toast("导入失败 · 数据未能保存，请重新导入");
+   343	            return;
+   344	          }
+   345	          deps.render();
+   346	          deps.toast("导入成功 · " + state.items.length + " 条事项");
+   347	        } catch (e) {
+   348	          deps.toast("导入失败：文件格式不正确");
+   349	        }
+   350	      };
+   351	      // G01：读取失败/中止必须给反馈。
+   352	      reader.onerror = () => deps.toast("导入失败：文件读取失败，请重试");
+   353	      reader.onabort = () => deps.toast("导入失败 · 文件读取已取消");
+   354	      reader.readAsText(file);
+   355	    }
+   356	
+   357	    return {
+   358	      buildLegacyBackupPayload: buildLegacyBackupPayload,
+   359	      exportData: exportData,
+   360	      importDataFile: importDataFile,
+   361	      noteExportAppVisibility: noteExportAppVisibility
+   362	    };
+   363	  }
+   364	
+   365	  return {
+   366	    createAppBackup: createAppBackup,
+   367	    EXPORT_RESULT_GRACE_MS: EXPORT_RESULT_GRACE_MS,
+   368	    isShareCancellation: isShareCancellation
+   369	  };
+   370	});

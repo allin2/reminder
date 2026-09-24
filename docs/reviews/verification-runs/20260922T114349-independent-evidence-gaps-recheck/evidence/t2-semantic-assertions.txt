@@ -1,0 +1,6 @@
+two-record-real-op: PASS verdict=HAS_OPERATIONS ops=1 records=2
+marker-only: PASS verdict=NO_OPERATIONS ops=0 records=1
+truncated: PASS verdict=INCONCLUSIVE ops=None records=0
+rotated-prefix: PASS verdict=INCONCLUSIVE ops=None records=0
+no-baseline: PASS verdict=INCONCLUSIVE ops=None records=0
+semantic_assertions=PASS

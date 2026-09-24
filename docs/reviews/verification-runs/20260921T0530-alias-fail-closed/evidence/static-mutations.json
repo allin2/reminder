@@ -1,0 +1,75 @@
+{
+  "MUT-A-unique-alias": {
+    "injected": "const feedbackApi = FeedbackLib;\nfeedbackApi.independentUndeclaredMember();",
+    "fixtureApplied": true,
+    "pass": true,
+    "result": {
+      "undeclared": [
+        {
+          "path": "Feedback.independentUndeclaredMember",
+          "lines": [
+            583
+          ]
+        }
+      ],
+      "ambiguousAliases": [],
+      "ambiguousRefs": [],
+      "problems": [
+        "undeclared-dependency:Feedback.independentUndeclaredMember（app-core.js:583）"
+      ],
+      "aliases": {
+        "feedbackApi": "FeedbackLib"
+      },
+      "declaredCount": 71,
+      "refsCount": 62
+    }
+  },
+  "MUT-B-direct-namespace": {
+    "injected": "FeedbackLib.independentUndeclaredMember();",
+    "fixtureApplied": true,
+    "pass": true,
+    "result": {
+      "undeclared": [
+        {
+          "path": "Feedback.independentUndeclaredMember",
+          "lines": [
+            582
+          ]
+        }
+      ],
+      "ambiguousAliases": [],
+      "ambiguousRefs": [],
+      "problems": [
+        "undeclared-dependency:Feedback.independentUndeclaredMember（app-core.js:582）"
+      ],
+      "aliases": {
+        "feedbackApi": "FeedbackLib"
+      },
+      "declaredCount": 71,
+      "refsCount": 62
+    }
+  },
+  "MUT-C-same-name-ambiguity": {
+    "injected": "const auditAlias = FeedbackLib; auditAlias.auditMember(); + 另一处 const auditAlias = nativeReminderStatus;",
+    "fixtureApplied": true,
+    "pass": true,
+    "result": {
+      "undeclared": [],
+      "ambiguousAliases": [
+        "auditAlias"
+      ],
+      "ambiguousRefs": [
+        "auditAlias.auditMember"
+      ],
+      "problems": [
+        "ambiguous-alias:auditAlias（同一名字既被赋成已知命名空间、又被赋成别的东西）",
+        "ambiguous-ref:auditAlias.auditMember（归属不可证明）"
+      ],
+      "aliases": {
+        "feedbackApi": "FeedbackLib"
+      },
+      "declaredCount": 71,
+      "refsCount": 61
+    }
+  }
+}

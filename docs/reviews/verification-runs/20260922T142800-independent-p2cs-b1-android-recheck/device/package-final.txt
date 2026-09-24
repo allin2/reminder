@@ -1,0 +1,8 @@
+123:    codePath=/data/app/~~9MbsDtLBK6KE58oEwMz18w==/space.alliswell.inbox.exportrecheck-D4S2ufdTS_FycIuTPXUDpg==
+130:    versionCode=2 minSdk=22 targetSdk=34
+132:    versionName=1.1
+144:    lastUpdateTime=2026-09-22 14:30:02
+184:      dataDir=/data/user/0/space.alliswell.inbox.exportrecheck
+185:      firstInstallTime=2026-09-21 16:10:02
+199:      dataDir=null
+200:      firstInstallTime=2026-09-21 16:10:02

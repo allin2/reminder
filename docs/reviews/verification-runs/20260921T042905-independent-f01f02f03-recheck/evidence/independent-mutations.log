@@ -1,0 +1,71 @@
+{
+  "checks": {
+    "baseline_null_names_root": true,
+    "m1_removes_root_diagnostic": true,
+    "baseline_missing_native_names_root": true,
+    "m2_removes_native_diagnostics": true,
+    "baseline_missing_reconcile_names_member": true,
+    "m3_removes_reconcile_diagnostic": true
+  },
+  "observations": {
+    "baselineNull": {
+      "ready": false,
+      "paths": [
+        "Feedback",
+        "Feedback.actionSpec",
+        "Feedback.setupSteps",
+        "Feedback.testFeedbackVerdict",
+        "Feedback.saveFeedback"
+      ]
+    },
+    "m1": {
+      "ready": false,
+      "paths": [
+        "Feedback.actionSpec",
+        "Feedback.setupSteps",
+        "Feedback.testFeedbackVerdict",
+        "Feedback.saveFeedback"
+      ]
+    },
+    "baselineNative": {
+      "ready": false,
+      "puts": 0,
+      "paths": [
+        "AttentionNativeReminders",
+        "NativeReminders.isNativeAndroid",
+        "NativeReminders.initialize",
+        "NativeReminders.reconcile",
+        "NativeReminders.buildDesired",
+        "NativeReminders.migrateItem",
+        "NativeReminders.onAlarmAction",
+        "NativeReminders.drainAlarmActions",
+        "NativeReminders.getPermissionState",
+        "NativeReminders.requestNotificationPermission",
+        "NativeReminders.openExactAlarmSettings",
+        "NativeReminders.getDeliveryEvidence",
+        "NativeReminders.systemBridge",
+        "NativeReminders.suppressPastReminderReplay"
+      ]
+    },
+    "m2": {
+      "ready": false,
+      "puts": 0,
+      "paths": [],
+      "errors": [
+        "App init failed: Cannot read properties of null (reading 'onAlarmAction')",
+        "Native reminders init failed: Cannot read properties of null (reading 'isNativeAndroid')"
+      ]
+    },
+    "baselineReconcile": {
+      "ready": false,
+      "paths": [
+        "NativeReminders.reconcile"
+      ]
+    },
+    "m3": {
+      "ready": true,
+      "paths": [],
+      "errors": []
+    }
+  }
+}

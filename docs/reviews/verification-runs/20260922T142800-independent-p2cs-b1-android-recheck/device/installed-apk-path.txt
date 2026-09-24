@@ -1,0 +1,1 @@
+BASE_APK=/data/app/~~9MbsDtLBK6KE58oEwMz18w==/space.alliswell.inbox.exportrecheck-D4S2ufdTS_FycIuTPXUDpg==/base.apk

@@ -1,0 +1,61 @@
+{
+  "purpose": "P2-E in-memory mutation proof",
+  "results": [
+    {
+      "id": "M1-delivery-attribution",
+      "anchor": {
+        "text": "if (!(at > 0) || at < Number(run.startedAt || 0)) return false;",
+        "ok": true
+      },
+      "anchorFound": true,
+      "healthy": true,
+      "mutant": false,
+      "red": true
+    },
+    {
+      "id": "M2-read-failure-is-empty",
+      "anchor": {
+        "text": "const confirmedGone = readOk && seen === 0;",
+        "ok": true
+      },
+      "anchorFound": true,
+      "healthy": true,
+      "mutant": false,
+      "red": true
+    },
+    {
+      "id": "M3-bind-idempotency",
+      "anchor": {
+        "text": "function bind() { if (bound) return; bound = true;",
+        "ok": true
+      },
+      "anchorFound": true,
+      "healthy": true,
+      "mutant": false,
+      "red": true
+    },
+    {
+      "id": "M4-instance-contract",
+      "anchor": {
+        "text": "instance: [\"bind\", \"maybePromptAndroidNotify\", \"noteFirstRemindSaved\", \"renderSetupEntry\",\n      \"updateSetupEntry\", \"openSetupSheet\", \"startSetupTestRun\", \"stopSetupTestRun\",\n      \"setupEvidenceHtml\", \"setupStepsContext\", \"renderSetupSheetBody\", \"runSetupStep\"],",
+        "ok": true
+      },
+      "anchorFound": true,
+      "healthy": true,
+      "mutant": false,
+      "red": true
+    }
+  ],
+  "workspaceRestore": {
+    "method": "all mutations are strings evaluated in isolated VM/static source input",
+    "before": {
+      "lib/app-setup.js": "e7b000620da77777f0bd1cc5537d1f4a87aee0efc7aed6566d9248077a8ce112",
+      "app-core.js": "fe5e9c233aceba2ebedcff64326d4cf33f2351cdab982d78cfd6899d01062ac0"
+    },
+    "after": {
+      "lib/app-setup.js": "e7b000620da77777f0bd1cc5537d1f4a87aee0efc7aed6566d9248077a8ce112",
+      "app-core.js": "fe5e9c233aceba2ebedcff64326d4cf33f2351cdab982d78cfd6899d01062ac0"
+    },
+    "restored": true
+  }
+}

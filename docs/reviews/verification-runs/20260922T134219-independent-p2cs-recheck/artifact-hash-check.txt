@@ -1,0 +1,431 @@
+./README.md: OK
+./browser/browser-import-format.json: OK
+./browser/browser-import-format.log: OK
+./browser/browser-profile/ChromeFeatureState: OK
+./browser/browser-profile/Consent To Send Stats: OK
+./browser/browser-profile/Default/Account Web Data: OK
+./browser/browser-profile/Default/Account Web Data-journal: OK
+./browser/browser-profile/Default/Affiliation Database: OK
+./browser/browser-profile/Default/Affiliation Database-journal: OK
+./browser/browser-profile/Default/AutofillAiModelCache/LOCK: OK
+./browser/browser-profile/Default/AutofillAiModelCache/LOG: OK
+./browser/browser-profile/Default/AutofillStrikeDatabase/LOCK: OK
+./browser/browser-profile/Default/AutofillStrikeDatabase/LOG: OK
+./browser/browser-profile/Default/BookmarkMergedSurfaceOrdering: OK
+./browser/browser-profile/Default/BudgetDatabase/LOCK: OK
+./browser/browser-profile/Default/BudgetDatabase/LOG: OK
+./browser/browser-profile/Default/Cache/Cache_Data/9aff0e1ff1742ee0_0: OK
+./browser/browser-profile/Default/Cache/Cache_Data/index: OK
+./browser/browser-profile/Default/Cache/Cache_Data/index-dir/the-real-index: OK
+./browser/browser-profile/Default/Cache/No_Vary_Search/journal.baj: OK
+./browser/browser-profile/Default/Cache/No_Vary_Search/snapshot.baf: OK
+./browser/browser-profile/Default/ClientCertificates/LOCK: OK
+./browser/browser-profile/Default/ClientCertificates/LOG: OK
+./browser/browser-profile/Default/Code Cache/js/ba678a2fbd8c358c_0: OK
+./browser/browser-profile/Default/Code Cache/js/index: OK
+./browser/browser-profile/Default/Code Cache/js/index-dir/the-real-index: OK
+./browser/browser-profile/Default/Code Cache/wasm/index: OK
+./browser/browser-profile/Default/Code Cache/wasm/index-dir/the-real-index: OK
+./browser/browser-profile/Default/Cookies: OK
+./browser/browser-profile/Default/Cookies-journal: OK
+./browser/browser-profile/Default/DIPS: OK
+./browser/browser-profile/Default/DawnGraphiteCache/data_0: OK
+./browser/browser-profile/Default/DawnGraphiteCache/data_1: OK
+./browser/browser-profile/Default/DawnGraphiteCache/data_2: OK
+./browser/browser-profile/Default/DawnGraphiteCache/data_3: OK
+./browser/browser-profile/Default/DawnGraphiteCache/index: OK
+./browser/browser-profile/Default/DawnWebGPUCache/data_0: OK
+./browser/browser-profile/Default/DawnWebGPUCache/data_1: OK
+./browser/browser-profile/Default/DawnWebGPUCache/data_2: OK
+./browser/browser-profile/Default/DawnWebGPUCache/data_3: OK
+./browser/browser-profile/Default/DawnWebGPUCache/index: OK
+./browser/browser-profile/Default/Download Service/EntryDB/LOCK: OK
+./browser/browser-profile/Default/Download Service/EntryDB/LOG: OK
+./browser/browser-profile/Default/Extension Rules/000003.log: OK
+./browser/browser-profile/Default/Extension Rules/CURRENT: OK
+./browser/browser-profile/Default/Extension Rules/LOCK: OK
+./browser/browser-profile/Default/Extension Rules/LOG: OK
+./browser/browser-profile/Default/Extension Rules/MANIFEST-000001: OK
+./browser/browser-profile/Default/Extension Scripts/000003.log: OK
+./browser/browser-profile/Default/Extension Scripts/CURRENT: OK
+./browser/browser-profile/Default/Extension Scripts/LOCK: OK
+./browser/browser-profile/Default/Extension Scripts/LOG: OK
+./browser/browser-profile/Default/Extension Scripts/MANIFEST-000001: OK
+./browser/browser-profile/Default/Extension State/000003.log: OK
+./browser/browser-profile/Default/Extension State/CURRENT: OK
+./browser/browser-profile/Default/Extension State/LOCK: OK
+./browser/browser-profile/Default/Extension State/LOG: OK
+./browser/browser-profile/Default/Extension State/MANIFEST-000001: OK
+./browser/browser-profile/Default/Extensions/nmmhkkegccagdldgiimedpiccmgmieda/1.0.0.6_0/_locales/bg/messages.json: OK
+./browser/browser-profile/Default/Extensions/nmmhkkegccagdldgiimedpiccmgmieda/1.0.0.6_0/_locales/ca/messages.json: OK
+./browser/browser-profile/Default/Extensions/nmmhkkegccagdldgiimedpiccmgmieda/1.0.0.6_0/_locales/cs/messages.json: OK
+./browser/browser-profile/Default/Extensions/nmmhkkegccagdldgiimedpiccmgmieda/1.0.0.6_0/_locales/da/messages.json: OK
+./browser/browser-profile/Default/Extensions/nmmhkkegccagdldgiimedpiccmgmieda/1.0.0.6_0/_locales/de/messages.json: OK
+./browser/browser-profile/Default/Extensions/nmmhkkegccagdldgiimedpiccmgmieda/1.0.0.6_0/_locales/el/messages.json: OK
+./browser/browser-profile/Default/Extensions/nmmhkkegccagdldgiimedpiccmgmieda/1.0.0.6_0/_locales/en/messages.json: OK
+./browser/browser-profile/Default/Extensions/nmmhkkegccagdldgiimedpiccmgmieda/1.0.0.6_0/_locales/en_GB/messages.json: OK
+./browser/browser-profile/Default/Extensions/nmmhkkegccagdldgiimedpiccmgmieda/1.0.0.6_0/_locales/es/messages.json: OK
+./browser/browser-profile/Default/Extensions/nmmhkkegccagdldgiimedpiccmgmieda/1.0.0.6_0/_locales/es_419/messages.json: OK
+./browser/browser-profile/Default/Extensions/nmmhkkegccagdldgiimedpiccmgmieda/1.0.0.6_0/_locales/et/messages.json: OK
+./browser/browser-profile/Default/Extensions/nmmhkkegccagdldgiimedpiccmgmieda/1.0.0.6_0/_locales/fi/messages.json: OK
+./browser/browser-profile/Default/Extensions/nmmhkkegccagdldgiimedpiccmgmieda/1.0.0.6_0/_locales/fil/messages.json: OK
+./browser/browser-profile/Default/Extensions/nmmhkkegccagdldgiimedpiccmgmieda/1.0.0.6_0/_locales/fr/messages.json: OK
+./browser/browser-profile/Default/Extensions/nmmhkkegccagdldgiimedpiccmgmieda/1.0.0.6_0/_locales/hi/messages.json: OK
+./browser/browser-profile/Default/Extensions/nmmhkkegccagdldgiimedpiccmgmieda/1.0.0.6_0/_locales/hr/messages.json: OK
+./browser/browser-profile/Default/Extensions/nmmhkkegccagdldgiimedpiccmgmieda/1.0.0.6_0/_locales/hu/messages.json: OK
+./browser/browser-profile/Default/Extensions/nmmhkkegccagdldgiimedpiccmgmieda/1.0.0.6_0/_locales/id/messages.json: OK
+./browser/browser-profile/Default/Extensions/nmmhkkegccagdldgiimedpiccmgmieda/1.0.0.6_0/_locales/it/messages.json: OK
+./browser/browser-profile/Default/Extensions/nmmhkkegccagdldgiimedpiccmgmieda/1.0.0.6_0/_locales/ja/messages.json: OK
+./browser/browser-profile/Default/Extensions/nmmhkkegccagdldgiimedpiccmgmieda/1.0.0.6_0/_locales/ko/messages.json: OK
+./browser/browser-profile/Default/Extensions/nmmhkkegccagdldgiimedpiccmgmieda/1.0.0.6_0/_locales/lt/messages.json: OK
+./browser/browser-profile/Default/Extensions/nmmhkkegccagdldgiimedpiccmgmieda/1.0.0.6_0/_locales/lv/messages.json: OK
+./browser/browser-profile/Default/Extensions/nmmhkkegccagdldgiimedpiccmgmieda/1.0.0.6_0/_locales/nb/messages.json: OK
+./browser/browser-profile/Default/Extensions/nmmhkkegccagdldgiimedpiccmgmieda/1.0.0.6_0/_locales/nl/messages.json: OK
+./browser/browser-profile/Default/Extensions/nmmhkkegccagdldgiimedpiccmgmieda/1.0.0.6_0/_locales/pl/messages.json: OK
+./browser/browser-profile/Default/Extensions/nmmhkkegccagdldgiimedpiccmgmieda/1.0.0.6_0/_locales/pt_BR/messages.json: OK
+./browser/browser-profile/Default/Extensions/nmmhkkegccagdldgiimedpiccmgmieda/1.0.0.6_0/_locales/pt_PT/messages.json: OK
+./browser/browser-profile/Default/Extensions/nmmhkkegccagdldgiimedpiccmgmieda/1.0.0.6_0/_locales/ro/messages.json: OK
+./browser/browser-profile/Default/Extensions/nmmhkkegccagdldgiimedpiccmgmieda/1.0.0.6_0/_locales/ru/messages.json: OK
+./browser/browser-profile/Default/Extensions/nmmhkkegccagdldgiimedpiccmgmieda/1.0.0.6_0/_locales/sk/messages.json: OK
+./browser/browser-profile/Default/Extensions/nmmhkkegccagdldgiimedpiccmgmieda/1.0.0.6_0/_locales/sl/messages.json: OK
+./browser/browser-profile/Default/Extensions/nmmhkkegccagdldgiimedpiccmgmieda/1.0.0.6_0/_locales/sr/messages.json: OK
+./browser/browser-profile/Default/Extensions/nmmhkkegccagdldgiimedpiccmgmieda/1.0.0.6_0/_locales/sv/messages.json: OK
+./browser/browser-profile/Default/Extensions/nmmhkkegccagdldgiimedpiccmgmieda/1.0.0.6_0/_locales/th/messages.json: OK
+./browser/browser-profile/Default/Extensions/nmmhkkegccagdldgiimedpiccmgmieda/1.0.0.6_0/_locales/tr/messages.json: OK
+./browser/browser-profile/Default/Extensions/nmmhkkegccagdldgiimedpiccmgmieda/1.0.0.6_0/_locales/uk/messages.json: OK
+./browser/browser-profile/Default/Extensions/nmmhkkegccagdldgiimedpiccmgmieda/1.0.0.6_0/_locales/vi/messages.json: OK
+./browser/browser-profile/Default/Extensions/nmmhkkegccagdldgiimedpiccmgmieda/1.0.0.6_0/_locales/zh_CN/messages.json: OK
+./browser/browser-profile/Default/Extensions/nmmhkkegccagdldgiimedpiccmgmieda/1.0.0.6_0/_locales/zh_TW/messages.json: OK
+./browser/browser-profile/Default/Extensions/nmmhkkegccagdldgiimedpiccmgmieda/1.0.0.6_0/_metadata/computed_hashes.json: OK
+./browser/browser-profile/Default/Extensions/nmmhkkegccagdldgiimedpiccmgmieda/1.0.0.6_0/_metadata/verified_contents.json: OK
+./browser/browser-profile/Default/Extensions/nmmhkkegccagdldgiimedpiccmgmieda/1.0.0.6_0/craw_background.js: OK
+./browser/browser-profile/Default/Extensions/nmmhkkegccagdldgiimedpiccmgmieda/1.0.0.6_0/craw_window.js: OK
+./browser/browser-profile/Default/Extensions/nmmhkkegccagdldgiimedpiccmgmieda/1.0.0.6_0/css/craw_window.css: OK
+./browser/browser-profile/Default/Extensions/nmmhkkegccagdldgiimedpiccmgmieda/1.0.0.6_0/html/craw_window.html: OK
+./browser/browser-profile/Default/Extensions/nmmhkkegccagdldgiimedpiccmgmieda/1.0.0.6_0/images/flapper.gif: OK
+./browser/browser-profile/Default/Extensions/nmmhkkegccagdldgiimedpiccmgmieda/1.0.0.6_0/images/icon_128.png: OK
+./browser/browser-profile/Default/Extensions/nmmhkkegccagdldgiimedpiccmgmieda/1.0.0.6_0/images/icon_16.png: OK
+./browser/browser-profile/Default/Extensions/nmmhkkegccagdldgiimedpiccmgmieda/1.0.0.6_0/images/topbar_floating_button.png: OK
+./browser/browser-profile/Default/Extensions/nmmhkkegccagdldgiimedpiccmgmieda/1.0.0.6_0/images/topbar_floating_button_close.png: OK
+./browser/browser-profile/Default/Extensions/nmmhkkegccagdldgiimedpiccmgmieda/1.0.0.6_0/images/topbar_floating_button_hover.png: OK
+./browser/browser-profile/Default/Extensions/nmmhkkegccagdldgiimedpiccmgmieda/1.0.0.6_0/images/topbar_floating_button_maximize.png: OK
+./browser/browser-profile/Default/Extensions/nmmhkkegccagdldgiimedpiccmgmieda/1.0.0.6_0/images/topbar_floating_button_pressed.png: OK
+./browser/browser-profile/Default/Extensions/nmmhkkegccagdldgiimedpiccmgmieda/1.0.0.6_0/manifest.json: OK
+./browser/browser-profile/Default/Favicons: OK
+./browser/browser-profile/Default/Favicons-journal: OK
+./browser/browser-profile/Default/GCM Store/000003.log: OK
+./browser/browser-profile/Default/GCM Store/CURRENT: OK
+./browser/browser-profile/Default/GCM Store/Encryption/000003.log: OK
+./browser/browser-profile/Default/GCM Store/Encryption/CURRENT: OK
+./browser/browser-profile/Default/GCM Store/Encryption/LOCK: OK
+./browser/browser-profile/Default/GCM Store/Encryption/LOG: OK
+./browser/browser-profile/Default/GCM Store/Encryption/MANIFEST-000001: OK
+./browser/browser-profile/Default/GCM Store/LOCK: OK
+./browser/browser-profile/Default/GCM Store/LOG: OK
+./browser/browser-profile/Default/GCM Store/MANIFEST-000001: OK
+./browser/browser-profile/Default/GPUCache/data_0: OK
+./browser/browser-profile/Default/GPUCache/data_1: OK
+./browser/browser-profile/Default/GPUCache/data_2: OK
+./browser/browser-profile/Default/GPUCache/data_3: OK
+./browser/browser-profile/Default/GPUCache/index: OK
+./browser/browser-profile/Default/History: OK
+./browser/browser-profile/Default/History-journal: OK
+./browser/browser-profile/Default/LOCK: OK
+./browser/browser-profile/Default/LOG: OK
+./browser/browser-profile/Default/Local Storage/leveldb/000003.log: OK
+./browser/browser-profile/Default/Local Storage/leveldb/CURRENT: OK
+./browser/browser-profile/Default/Local Storage/leveldb/LOCK: OK
+./browser/browser-profile/Default/Local Storage/leveldb/LOG: OK
+./browser/browser-profile/Default/Local Storage/leveldb/MANIFEST-000001: OK
+./browser/browser-profile/Default/Login Data: OK
+./browser/browser-profile/Default/Login Data For Account: OK
+./browser/browser-profile/Default/Login Data For Account-journal: OK
+./browser/browser-profile/Default/Login Data-journal: OK
+./browser/browser-profile/Default/Network Action Predictor: OK
+./browser/browser-profile/Default/Network Action Predictor-journal: OK
+./browser/browser-profile/Default/Network Persistent State: OK
+./browser/browser-profile/Default/PersistentOriginTrials/LOCK: OK
+./browser/browser-profile/Default/PersistentOriginTrials/LOG: OK
+./browser/browser-profile/Default/Preferences: OK
+./browser/browser-profile/Default/PreferredApps: OK
+./browser/browser-profile/Default/README: OK
+./browser/browser-profile/Default/Reporting and NEL: OK
+./browser/browser-profile/Default/Reporting and NEL-journal: OK
+./browser/browser-profile/Default/Secure Preferences: OK
+./browser/browser-profile/Default/Segmentation Platform/SegmentInfoDB/LOCK: OK
+./browser/browser-profile/Default/Segmentation Platform/SegmentInfoDB/LOG: OK
+./browser/browser-profile/Default/Segmentation Platform/SignalDB/LOCK: OK
+./browser/browser-profile/Default/Segmentation Platform/SignalDB/LOG: OK
+./browser/browser-profile/Default/Segmentation Platform/SignalStorageConfigDB/LOCK: OK
+./browser/browser-profile/Default/Segmentation Platform/SignalStorageConfigDB/LOG: OK
+./browser/browser-profile/Default/ServerCertificate: OK
+./browser/browser-profile/Default/ServerCertificate-journal: OK
+./browser/browser-profile/Default/Service Worker/Database/000003.log: OK
+./browser/browser-profile/Default/Service Worker/Database/CURRENT: OK
+./browser/browser-profile/Default/Service Worker/Database/LOCK: OK
+./browser/browser-profile/Default/Service Worker/Database/LOG: OK
+./browser/browser-profile/Default/Service Worker/Database/MANIFEST-000001: OK
+./browser/browser-profile/Default/Service Worker/ScriptCache/2cc80dabc69f58b6_0: OK
+./browser/browser-profile/Default/Service Worker/ScriptCache/4cb013792b196a35_0: OK
+./browser/browser-profile/Default/Service Worker/ScriptCache/4cb013792b196a35_1: OK
+./browser/browser-profile/Default/Service Worker/ScriptCache/index: OK
+./browser/browser-profile/Default/Service Worker/ScriptCache/index-dir/the-real-index: OK
+./browser/browser-profile/Default/Session Storage/000003.log: OK
+./browser/browser-profile/Default/Session Storage/CURRENT: OK
+./browser/browser-profile/Default/Session Storage/LOCK: OK
+./browser/browser-profile/Default/Session Storage/LOG: OK
+./browser/browser-profile/Default/Session Storage/MANIFEST-000001: OK
+./browser/browser-profile/Default/Sessions/Session_13434529470672165: OK
+./browser/browser-profile/Default/Sessions/Tabs_13434529500261948: OK
+./browser/browser-profile/Default/Shared Dictionary/cache/index: OK
+./browser/browser-profile/Default/Shared Dictionary/cache/index-dir/the-real-index: OK
+./browser/browser-profile/Default/Shared Dictionary/db: OK
+./browser/browser-profile/Default/Shared Dictionary/db-journal: OK
+./browser/browser-profile/Default/Shortcuts: OK
+./browser/browser-profile/Default/Shortcuts-journal: OK
+./browser/browser-profile/Default/Site Characteristics Database/000003.log: OK
+./browser/browser-profile/Default/Site Characteristics Database/CURRENT: OK
+./browser/browser-profile/Default/Site Characteristics Database/LOCK: OK
+./browser/browser-profile/Default/Site Characteristics Database/LOG: OK
+./browser/browser-profile/Default/Site Characteristics Database/MANIFEST-000001: OK
+./browser/browser-profile/Default/Storage/ext/nmmhkkegccagdldgiimedpiccmgmieda/def/Code Cache/js/5dea14b9816ec6d9_0: OK
+./browser/browser-profile/Default/Storage/ext/nmmhkkegccagdldgiimedpiccmgmieda/def/Code Cache/js/index: OK
+./browser/browser-profile/Default/Storage/ext/nmmhkkegccagdldgiimedpiccmgmieda/def/Code Cache/js/index-dir/the-real-index: OK
+./browser/browser-profile/Default/Storage/ext/nmmhkkegccagdldgiimedpiccmgmieda/def/Code Cache/wasm/index: OK
+./browser/browser-profile/Default/Storage/ext/nmmhkkegccagdldgiimedpiccmgmieda/def/Code Cache/wasm/index-dir/the-real-index: OK
+./browser/browser-profile/Default/Storage/ext/nmmhkkegccagdldgiimedpiccmgmieda/def/DawnGraphiteCache/data_0: OK
+./browser/browser-profile/Default/Storage/ext/nmmhkkegccagdldgiimedpiccmgmieda/def/DawnGraphiteCache/data_1: OK
+./browser/browser-profile/Default/Storage/ext/nmmhkkegccagdldgiimedpiccmgmieda/def/DawnGraphiteCache/data_2: OK
+./browser/browser-profile/Default/Storage/ext/nmmhkkegccagdldgiimedpiccmgmieda/def/DawnGraphiteCache/data_3: OK
+./browser/browser-profile/Default/Storage/ext/nmmhkkegccagdldgiimedpiccmgmieda/def/DawnGraphiteCache/index: OK
+./browser/browser-profile/Default/Storage/ext/nmmhkkegccagdldgiimedpiccmgmieda/def/DawnWebGPUCache/data_0: OK
+./browser/browser-profile/Default/Storage/ext/nmmhkkegccagdldgiimedpiccmgmieda/def/DawnWebGPUCache/data_1: OK
+./browser/browser-profile/Default/Storage/ext/nmmhkkegccagdldgiimedpiccmgmieda/def/DawnWebGPUCache/data_2: OK
+./browser/browser-profile/Default/Storage/ext/nmmhkkegccagdldgiimedpiccmgmieda/def/DawnWebGPUCache/data_3: OK
+./browser/browser-profile/Default/Storage/ext/nmmhkkegccagdldgiimedpiccmgmieda/def/DawnWebGPUCache/index: OK
+./browser/browser-profile/Default/Storage/ext/nmmhkkegccagdldgiimedpiccmgmieda/def/GPUCache/data_0: OK
+./browser/browser-profile/Default/Storage/ext/nmmhkkegccagdldgiimedpiccmgmieda/def/GPUCache/data_1: OK
+./browser/browser-profile/Default/Storage/ext/nmmhkkegccagdldgiimedpiccmgmieda/def/GPUCache/data_2: OK
+./browser/browser-profile/Default/Storage/ext/nmmhkkegccagdldgiimedpiccmgmieda/def/GPUCache/data_3: OK
+./browser/browser-profile/Default/Storage/ext/nmmhkkegccagdldgiimedpiccmgmieda/def/GPUCache/index: OK
+./browser/browser-profile/Default/Storage/ext/nmmhkkegccagdldgiimedpiccmgmieda/def/Local Storage/leveldb/000003.log: OK
+./browser/browser-profile/Default/Storage/ext/nmmhkkegccagdldgiimedpiccmgmieda/def/Local Storage/leveldb/CURRENT: OK
+./browser/browser-profile/Default/Storage/ext/nmmhkkegccagdldgiimedpiccmgmieda/def/Local Storage/leveldb/LOCK: OK
+./browser/browser-profile/Default/Storage/ext/nmmhkkegccagdldgiimedpiccmgmieda/def/Local Storage/leveldb/LOG: OK
+./browser/browser-profile/Default/Storage/ext/nmmhkkegccagdldgiimedpiccmgmieda/def/Local Storage/leveldb/MANIFEST-000001: OK
+./browser/browser-profile/Default/Storage/ext/nmmhkkegccagdldgiimedpiccmgmieda/def/Network Persistent State: OK
+./browser/browser-profile/Default/Storage/ext/nmmhkkegccagdldgiimedpiccmgmieda/def/Session Storage/000003.log: OK
+./browser/browser-profile/Default/Storage/ext/nmmhkkegccagdldgiimedpiccmgmieda/def/Session Storage/CURRENT: OK
+./browser/browser-profile/Default/Storage/ext/nmmhkkegccagdldgiimedpiccmgmieda/def/Session Storage/LOCK: OK
+./browser/browser-profile/Default/Storage/ext/nmmhkkegccagdldgiimedpiccmgmieda/def/Session Storage/LOG: OK
+./browser/browser-profile/Default/Storage/ext/nmmhkkegccagdldgiimedpiccmgmieda/def/Session Storage/MANIFEST-000001: OK
+./browser/browser-profile/Default/Storage/ext/nmmhkkegccagdldgiimedpiccmgmieda/def/Shared Dictionary/cache/index: OK
+./browser/browser-profile/Default/Storage/ext/nmmhkkegccagdldgiimedpiccmgmieda/def/Shared Dictionary/cache/index-dir/the-real-index: OK
+./browser/browser-profile/Default/Storage/ext/nmmhkkegccagdldgiimedpiccmgmieda/def/Shared Dictionary/db: OK
+./browser/browser-profile/Default/Storage/ext/nmmhkkegccagdldgiimedpiccmgmieda/def/Shared Dictionary/db-journal: OK
+./browser/browser-profile/Default/Storage/ext/nmmhkkegccagdldgiimedpiccmgmieda/def/Trust Tokens: OK
+./browser/browser-profile/Default/Storage/ext/nmmhkkegccagdldgiimedpiccmgmieda/def/Trust Tokens-journal: OK
+./browser/browser-profile/Default/Storage/ext/nmmhkkegccagdldgiimedpiccmgmieda/def/declarative_performance_observer.db: OK
+./browser/browser-profile/Default/Storage/ext/nmmhkkegccagdldgiimedpiccmgmieda/def/declarative_performance_observer.db-journal: OK
+./browser/browser-profile/Default/Sync Data/LevelDB/000003.log: OK
+./browser/browser-profile/Default/Sync Data/LevelDB/CURRENT: OK
+./browser/browser-profile/Default/Sync Data/LevelDB/LOCK: OK
+./browser/browser-profile/Default/Sync Data/LevelDB/LOG: OK
+./browser/browser-profile/Default/Sync Data/LevelDB/MANIFEST-000001: OK
+./browser/browser-profile/Default/Top Sites: OK
+./browser/browser-profile/Default/Top Sites-journal: OK
+./browser/browser-profile/Default/TransportSecurity: OK
+./browser/browser-profile/Default/Trust Tokens: OK
+./browser/browser-profile/Default/Trust Tokens-journal: OK
+./browser/browser-profile/Default/Web Applications/Manifest Resources/aghbiahbpaijignceidepookljebhfak/Icons/128.png: OK
+./browser/browser-profile/Default/Web Applications/Manifest Resources/aghbiahbpaijignceidepookljebhfak/Icons/192.png: OK
+./browser/browser-profile/Default/Web Applications/Manifest Resources/aghbiahbpaijignceidepookljebhfak/Icons/256.png: OK
+./browser/browser-profile/Default/Web Applications/Manifest Resources/aghbiahbpaijignceidepookljebhfak/Icons/32.png: OK
+./browser/browser-profile/Default/Web Applications/Manifest Resources/aghbiahbpaijignceidepookljebhfak/Icons/48.png: OK
+./browser/browser-profile/Default/Web Applications/Manifest Resources/aghbiahbpaijignceidepookljebhfak/Icons/64.png: OK
+./browser/browser-profile/Default/Web Applications/Manifest Resources/aghbiahbpaijignceidepookljebhfak/Icons/96.png: OK
+./browser/browser-profile/Default/Web Applications/Manifest Resources/aghbiahbpaijignceidepookljebhfak/Trusted Icons/Icons/128.png: OK
+./browser/browser-profile/Default/Web Applications/Manifest Resources/aghbiahbpaijignceidepookljebhfak/Trusted Icons/Icons/192.png: OK
+./browser/browser-profile/Default/Web Applications/Manifest Resources/aghbiahbpaijignceidepookljebhfak/Trusted Icons/Icons/256.png: OK
+./browser/browser-profile/Default/Web Applications/Manifest Resources/aghbiahbpaijignceidepookljebhfak/Trusted Icons/Icons/32.png: OK
+./browser/browser-profile/Default/Web Applications/Manifest Resources/aghbiahbpaijignceidepookljebhfak/Trusted Icons/Icons/48.png: OK
+./browser/browser-profile/Default/Web Applications/Manifest Resources/aghbiahbpaijignceidepookljebhfak/Trusted Icons/Icons/64.png: OK
+./browser/browser-profile/Default/Web Applications/Manifest Resources/aghbiahbpaijignceidepookljebhfak/Trusted Icons/Icons/96.png: OK
+./browser/browser-profile/Default/Web Applications/Manifest Resources/agimnkijcaahngcdmfeangaknmldooml/Icons/128.png: OK
+./browser/browser-profile/Default/Web Applications/Manifest Resources/agimnkijcaahngcdmfeangaknmldooml/Icons/192.png: OK
+./browser/browser-profile/Default/Web Applications/Manifest Resources/agimnkijcaahngcdmfeangaknmldooml/Icons/256.png: OK
+./browser/browser-profile/Default/Web Applications/Manifest Resources/agimnkijcaahngcdmfeangaknmldooml/Icons/32.png: OK
+./browser/browser-profile/Default/Web Applications/Manifest Resources/agimnkijcaahngcdmfeangaknmldooml/Icons/48.png: OK
+./browser/browser-profile/Default/Web Applications/Manifest Resources/agimnkijcaahngcdmfeangaknmldooml/Icons/64.png: OK
+./browser/browser-profile/Default/Web Applications/Manifest Resources/agimnkijcaahngcdmfeangaknmldooml/Icons/96.png: OK
+./browser/browser-profile/Default/Web Applications/Manifest Resources/agimnkijcaahngcdmfeangaknmldooml/Trusted Icons/Icons/128.png: OK
+./browser/browser-profile/Default/Web Applications/Manifest Resources/agimnkijcaahngcdmfeangaknmldooml/Trusted Icons/Icons/192.png: OK
+./browser/browser-profile/Default/Web Applications/Manifest Resources/agimnkijcaahngcdmfeangaknmldooml/Trusted Icons/Icons/256.png: OK
+./browser/browser-profile/Default/Web Applications/Manifest Resources/agimnkijcaahngcdmfeangaknmldooml/Trusted Icons/Icons/32.png: OK
+./browser/browser-profile/Default/Web Applications/Manifest Resources/agimnkijcaahngcdmfeangaknmldooml/Trusted Icons/Icons/48.png: OK
+./browser/browser-profile/Default/Web Applications/Manifest Resources/agimnkijcaahngcdmfeangaknmldooml/Trusted Icons/Icons/64.png: OK
+./browser/browser-profile/Default/Web Applications/Manifest Resources/agimnkijcaahngcdmfeangaknmldooml/Trusted Icons/Icons/96.png: OK
+./browser/browser-profile/Default/Web Applications/Manifest Resources/fhihpiojkbmbpdjeoajapmgkhlnakfjf/Icons/128.png: OK
+./browser/browser-profile/Default/Web Applications/Manifest Resources/fhihpiojkbmbpdjeoajapmgkhlnakfjf/Icons/192.png: OK
+./browser/browser-profile/Default/Web Applications/Manifest Resources/fhihpiojkbmbpdjeoajapmgkhlnakfjf/Icons/256.png: OK
+./browser/browser-profile/Default/Web Applications/Manifest Resources/fhihpiojkbmbpdjeoajapmgkhlnakfjf/Icons/32.png: OK
+./browser/browser-profile/Default/Web Applications/Manifest Resources/fhihpiojkbmbpdjeoajapmgkhlnakfjf/Icons/48.png: OK
+./browser/browser-profile/Default/Web Applications/Manifest Resources/fhihpiojkbmbpdjeoajapmgkhlnakfjf/Icons/64.png: OK
+./browser/browser-profile/Default/Web Applications/Manifest Resources/fhihpiojkbmbpdjeoajapmgkhlnakfjf/Icons/96.png: OK
+./browser/browser-profile/Default/Web Applications/Manifest Resources/fhihpiojkbmbpdjeoajapmgkhlnakfjf/Trusted Icons/Icons/128.png: OK
+./browser/browser-profile/Default/Web Applications/Manifest Resources/fhihpiojkbmbpdjeoajapmgkhlnakfjf/Trusted Icons/Icons/192.png: OK
+./browser/browser-profile/Default/Web Applications/Manifest Resources/fhihpiojkbmbpdjeoajapmgkhlnakfjf/Trusted Icons/Icons/256.png: OK
+./browser/browser-profile/Default/Web Applications/Manifest Resources/fhihpiojkbmbpdjeoajapmgkhlnakfjf/Trusted Icons/Icons/32.png: OK
+./browser/browser-profile/Default/Web Applications/Manifest Resources/fhihpiojkbmbpdjeoajapmgkhlnakfjf/Trusted Icons/Icons/48.png: OK
+./browser/browser-profile/Default/Web Applications/Manifest Resources/fhihpiojkbmbpdjeoajapmgkhlnakfjf/Trusted Icons/Icons/64.png: OK
+./browser/browser-profile/Default/Web Applications/Manifest Resources/fhihpiojkbmbpdjeoajapmgkhlnakfjf/Trusted Icons/Icons/96.png: OK
+./browser/browser-profile/Default/Web Applications/Manifest Resources/fmgjjmmmlfnkbppncabfkddbjimcfncm/Icons/128.png: OK
+./browser/browser-profile/Default/Web Applications/Manifest Resources/fmgjjmmmlfnkbppncabfkddbjimcfncm/Icons/192.png: OK
+./browser/browser-profile/Default/Web Applications/Manifest Resources/fmgjjmmmlfnkbppncabfkddbjimcfncm/Icons/256.png: OK
+./browser/browser-profile/Default/Web Applications/Manifest Resources/fmgjjmmmlfnkbppncabfkddbjimcfncm/Icons/32.png: OK
+./browser/browser-profile/Default/Web Applications/Manifest Resources/fmgjjmmmlfnkbppncabfkddbjimcfncm/Icons/48.png: OK
+./browser/browser-profile/Default/Web Applications/Manifest Resources/fmgjjmmmlfnkbppncabfkddbjimcfncm/Icons/64.png: OK
+./browser/browser-profile/Default/Web Applications/Manifest Resources/fmgjjmmmlfnkbppncabfkddbjimcfncm/Icons/96.png: OK
+./browser/browser-profile/Default/Web Applications/Manifest Resources/fmgjjmmmlfnkbppncabfkddbjimcfncm/Trusted Icons/Icons/128.png: OK
+./browser/browser-profile/Default/Web Applications/Manifest Resources/fmgjjmmmlfnkbppncabfkddbjimcfncm/Trusted Icons/Icons/192.png: OK
+./browser/browser-profile/Default/Web Applications/Manifest Resources/fmgjjmmmlfnkbppncabfkddbjimcfncm/Trusted Icons/Icons/256.png: OK
+./browser/browser-profile/Default/Web Applications/Manifest Resources/fmgjjmmmlfnkbppncabfkddbjimcfncm/Trusted Icons/Icons/32.png: OK
+./browser/browser-profile/Default/Web Applications/Manifest Resources/fmgjjmmmlfnkbppncabfkddbjimcfncm/Trusted Icons/Icons/48.png: OK
+./browser/browser-profile/Default/Web Applications/Manifest Resources/fmgjjmmmlfnkbppncabfkddbjimcfncm/Trusted Icons/Icons/64.png: OK
+./browser/browser-profile/Default/Web Applications/Manifest Resources/fmgjjmmmlfnkbppncabfkddbjimcfncm/Trusted Icons/Icons/96.png: OK
+./browser/browser-profile/Default/Web Applications/Manifest Resources/kefjledonklijopmnomlcbpllchaibag/Icons/128.png: OK
+./browser/browser-profile/Default/Web Applications/Manifest Resources/kefjledonklijopmnomlcbpllchaibag/Icons/192.png: OK
+./browser/browser-profile/Default/Web Applications/Manifest Resources/kefjledonklijopmnomlcbpllchaibag/Icons/256.png: OK
+./browser/browser-profile/Default/Web Applications/Manifest Resources/kefjledonklijopmnomlcbpllchaibag/Icons/32.png: OK
+./browser/browser-profile/Default/Web Applications/Manifest Resources/kefjledonklijopmnomlcbpllchaibag/Icons/48.png: OK
+./browser/browser-profile/Default/Web Applications/Manifest Resources/kefjledonklijopmnomlcbpllchaibag/Icons/64.png: OK
+./browser/browser-profile/Default/Web Applications/Manifest Resources/kefjledonklijopmnomlcbpllchaibag/Icons/96.png: OK
+./browser/browser-profile/Default/Web Applications/Manifest Resources/kefjledonklijopmnomlcbpllchaibag/Trusted Icons/Icons/128.png: OK
+./browser/browser-profile/Default/Web Applications/Manifest Resources/kefjledonklijopmnomlcbpllchaibag/Trusted Icons/Icons/192.png: OK
+./browser/browser-profile/Default/Web Applications/Manifest Resources/kefjledonklijopmnomlcbpllchaibag/Trusted Icons/Icons/256.png: OK
+./browser/browser-profile/Default/Web Applications/Manifest Resources/kefjledonklijopmnomlcbpllchaibag/Trusted Icons/Icons/32.png: OK
+./browser/browser-profile/Default/Web Applications/Manifest Resources/kefjledonklijopmnomlcbpllchaibag/Trusted Icons/Icons/48.png: OK
+./browser/browser-profile/Default/Web Applications/Manifest Resources/kefjledonklijopmnomlcbpllchaibag/Trusted Icons/Icons/64.png: OK
+./browser/browser-profile/Default/Web Applications/Manifest Resources/kefjledonklijopmnomlcbpllchaibag/Trusted Icons/Icons/96.png: OK
+./browser/browser-profile/Default/Web Applications/Manifest Resources/mpnpojknpmmopombnjdcgaaiekajbnjb/Icons/128.png: OK
+./browser/browser-profile/Default/Web Applications/Manifest Resources/mpnpojknpmmopombnjdcgaaiekajbnjb/Icons/192.png: OK
+./browser/browser-profile/Default/Web Applications/Manifest Resources/mpnpojknpmmopombnjdcgaaiekajbnjb/Icons/256.png: OK
+./browser/browser-profile/Default/Web Applications/Manifest Resources/mpnpojknpmmopombnjdcgaaiekajbnjb/Icons/32.png: OK
+./browser/browser-profile/Default/Web Applications/Manifest Resources/mpnpojknpmmopombnjdcgaaiekajbnjb/Icons/48.png: OK
+./browser/browser-profile/Default/Web Applications/Manifest Resources/mpnpojknpmmopombnjdcgaaiekajbnjb/Icons/64.png: OK
+./browser/browser-profile/Default/Web Applications/Manifest Resources/mpnpojknpmmopombnjdcgaaiekajbnjb/Icons/96.png: OK
+./browser/browser-profile/Default/Web Applications/Manifest Resources/mpnpojknpmmopombnjdcgaaiekajbnjb/Trusted Icons/Icons/128.png: OK
+./browser/browser-profile/Default/Web Applications/Manifest Resources/mpnpojknpmmopombnjdcgaaiekajbnjb/Trusted Icons/Icons/192.png: OK
+./browser/browser-profile/Default/Web Applications/Manifest Resources/mpnpojknpmmopombnjdcgaaiekajbnjb/Trusted Icons/Icons/256.png: OK
+./browser/browser-profile/Default/Web Applications/Manifest Resources/mpnpojknpmmopombnjdcgaaiekajbnjb/Trusted Icons/Icons/32.png: OK
+./browser/browser-profile/Default/Web Applications/Manifest Resources/mpnpojknpmmopombnjdcgaaiekajbnjb/Trusted Icons/Icons/48.png: OK
+./browser/browser-profile/Default/Web Applications/Manifest Resources/mpnpojknpmmopombnjdcgaaiekajbnjb/Trusted Icons/Icons/64.png: OK
+./browser/browser-profile/Default/Web Applications/Manifest Resources/mpnpojknpmmopombnjdcgaaiekajbnjb/Trusted Icons/Icons/96.png: OK
+./browser/browser-profile/Default/Web Applications/Manifest Resources/pommaclcbfghclhalboakcipcmmndhcj/Icons/128.png: OK
+./browser/browser-profile/Default/Web Applications/Manifest Resources/pommaclcbfghclhalboakcipcmmndhcj/Icons/192.png: OK
+./browser/browser-profile/Default/Web Applications/Manifest Resources/pommaclcbfghclhalboakcipcmmndhcj/Icons/256.png: OK
+./browser/browser-profile/Default/Web Applications/Manifest Resources/pommaclcbfghclhalboakcipcmmndhcj/Icons/32.png: OK
+./browser/browser-profile/Default/Web Applications/Manifest Resources/pommaclcbfghclhalboakcipcmmndhcj/Icons/48.png: OK
+./browser/browser-profile/Default/Web Applications/Manifest Resources/pommaclcbfghclhalboakcipcmmndhcj/Icons/64.png: OK
+./browser/browser-profile/Default/Web Applications/Manifest Resources/pommaclcbfghclhalboakcipcmmndhcj/Icons/96.png: OK
+./browser/browser-profile/Default/Web Applications/Manifest Resources/pommaclcbfghclhalboakcipcmmndhcj/Trusted Icons/Icons/128.png: OK
+./browser/browser-profile/Default/Web Applications/Manifest Resources/pommaclcbfghclhalboakcipcmmndhcj/Trusted Icons/Icons/192.png: OK
+./browser/browser-profile/Default/Web Applications/Manifest Resources/pommaclcbfghclhalboakcipcmmndhcj/Trusted Icons/Icons/256.png: OK
+./browser/browser-profile/Default/Web Applications/Manifest Resources/pommaclcbfghclhalboakcipcmmndhcj/Trusted Icons/Icons/32.png: OK
+./browser/browser-profile/Default/Web Applications/Manifest Resources/pommaclcbfghclhalboakcipcmmndhcj/Trusted Icons/Icons/48.png: OK
+./browser/browser-profile/Default/Web Applications/Manifest Resources/pommaclcbfghclhalboakcipcmmndhcj/Trusted Icons/Icons/64.png: OK
+./browser/browser-profile/Default/Web Applications/Manifest Resources/pommaclcbfghclhalboakcipcmmndhcj/Trusted Icons/Icons/96.png: OK
+./browser/browser-profile/Default/Web Data: OK
+./browser/browser-profile/Default/Web Data-journal: OK
+./browser/browser-profile/Default/WebStorage/QuotaManager: OK
+./browser/browser-profile/Default/WebStorage/QuotaManager-journal: OK
+./browser/browser-profile/Default/chrome_cart_db/LOCK: OK
+./browser/browser-profile/Default/chrome_cart_db/LOG: OK
+./browser/browser-profile/Default/commerce_subscription_db/LOCK: OK
+./browser/browser-profile/Default/commerce_subscription_db/LOG: OK
+./browser/browser-profile/Default/declarative_performance_observer.db: OK
+./browser/browser-profile/Default/declarative_performance_observer.db-journal: OK
+./browser/browser-profile/Default/discount_infos_db/LOCK: OK
+./browser/browser-profile/Default/discount_infos_db/LOG: OK
+./browser/browser-profile/Default/discounts_db/LOCK: OK
+./browser/browser-profile/Default/discounts_db/LOG: OK
+./browser/browser-profile/Default/engine_allowlist.bf: OK
+./browser/browser-profile/Default/heavy_ad_intervention_opt_out.db: OK
+./browser/browser-profile/Default/heavy_ad_intervention_opt_out.db-journal: OK
+./browser/browser-profile/Default/optimization_guide_hint_cache_store/LOCK: OK
+./browser/browser-profile/Default/optimization_guide_hint_cache_store/LOG: OK
+./browser/browser-profile/Default/parcel_tracking_db/LOCK: OK
+./browser/browser-profile/Default/parcel_tracking_db/LOG: OK
+./browser/browser-profile/Default/shared_proto_db/000003.log: OK
+./browser/browser-profile/Default/shared_proto_db/CURRENT: OK
+./browser/browser-profile/Default/shared_proto_db/LOCK: OK
+./browser/browser-profile/Default/shared_proto_db/LOG: OK
+./browser/browser-profile/Default/shared_proto_db/MANIFEST-000001: OK
+./browser/browser-profile/Default/shared_proto_db/metadata/000003.log: OK
+./browser/browser-profile/Default/shared_proto_db/metadata/CURRENT: OK
+./browser/browser-profile/Default/shared_proto_db/metadata/LOCK: OK
+./browser/browser-profile/Default/shared_proto_db/metadata/LOG: OK
+./browser/browser-profile/Default/shared_proto_db/metadata/MANIFEST-000001: OK
+./browser/browser-profile/GPUPersistentCache/GPUCache/5CJTJE65OWN53WLR42AKNL2DGIBVD5IA/cache.db: OK
+./browser/browser-profile/GPUPersistentCache/GPUCache/5CJTJE65OWN53WLR42AKNL2DGIBVD5IA/cache.db-wal: OK
+./browser/browser-profile/GPUPersistentCache/GPUCache/5CJTJE65OWN53WLR42AKNL2DGIBVD5IA/cache.journal: OK
+./browser/browser-profile/Last Version: OK
+./browser/browser-profile/Local State: OK
+./browser/browser-profile/OptimizationGuideModelsManifest/1.20260913.2/_metadata/verified_contents.json: OK
+./browser/browser-profile/OptimizationGuideModelsManifest/1.20260913.2/manifest.binarypb: OK
+./browser/browser-profile/OptimizationGuideModelsManifest/1.20260913.2/manifest.json: OK
+./browser/browser-profile/OptimizationGuideModelsManifest/1.20260913.2/prompt_gemma4_12b_solution_config.binarypb: OK
+./browser/browser-profile/OptimizationGuideModelsManifest/1.20260913.2/prompt_gemma4_4b_solution_config.binarypb: OK
+./browser/browser-profile/OptimizationGuideModelsManifest/1.20260913.2/prompt_gemma4_solution_config.binarypb: OK
+./browser/browser-profile/OptimizationGuideModelsManifest/1.20260913.2/prompt_solution_config.binarypb: OK
+./browser/browser-profile/OptimizationGuideModelsManifest/1.20260913.2/proofreader_small_expert_model_solution_config.binarypb: OK
+./browser/browser-profile/OptimizationGuideModelsManifest/1.20260913.2/scam_detection_solution_config.binarypb: OK
+./browser/browser-profile/OptimizationGuideModelsManifest/1.20260913.2/speech_recognition_small_expert_model_solution_config.binarypb: OK
+./browser/browser-profile/OptimizationGuideModelsManifest/1.20260913.2/summarizer_gemma4_12b_solution_config.binarypb: OK
+./browser/browser-profile/OptimizationGuideModelsManifest/1.20260913.2/summarizer_gemma4_4b_solution_config.binarypb: OK
+./browser/browser-profile/OptimizationGuideModelsManifest/1.20260913.2/summarizer_gemma4_solution_config.binarypb: OK
+./browser/browser-profile/OptimizationGuideModelsManifest/1.20260913.2/summarizer_nano_v3_solution_config.binarypb: OK
+./browser/browser-profile/OptimizationGuideModelsManifest/1.20260913.2/summarizer_small_expert_model_solution_config.binarypb: OK
+./browser/browser-profile/OptimizationGuideModelsManifest/1.20260913.2/writing_assistance_gemma4_12b_solution_config.binarypb: OK
+./browser/browser-profile/OptimizationGuideModelsManifest/1.20260913.2/writing_assistance_gemma4_4b_solution_config.binarypb: OK
+./browser/browser-profile/OptimizationGuideModelsManifest/1.20260913.2/writing_assistance_gemma4_solution_config.binarypb: OK
+./browser/browser-profile/OptimizationGuideModelsManifest/1.20260913.2/writing_assistance_solution_config.binarypb: OK
+./browser/browser-profile/Variations: OK
+./browser/browser-profile/VariationsSafeSeedV2: OK
+./browser/browser-profile/VariationsSeedV2: OK
+./browser/browser-profile/component_crx_cache/metadata.json: OK
+./browser/browser-profile/extensions_crx_cache/metadata.json: OK
+./browser/browser-profile/first_party_sets.db: OK
+./browser/browser-profile/first_party_sets.db-journal: OK
+./browser/browser-profile/optimization_guide_model_store/2/63922A0C010C80A5/8CD199057F00CF45/model-info.pb: OK
+./browser/browser-profile/optimization_guide_model_store/2/63922A0C010C80A5/8CD199057F00CF45/model.tflite: OK
+./browser/browser-profile/optimization_guide_model_store/20/63922A0C010C80A5/013B200F3CD33067/model-info.pb: OK
+./browser/browser-profile/optimization_guide_model_store/20/63922A0C010C80A5/013B200F3CD33067/model.tflite: OK
+./browser/browser-profile/optimization_guide_model_store/25/63922A0C010C80A5/BA3A402BC4615159/model-info.pb: OK
+./browser/browser-profile/optimization_guide_model_store/25/63922A0C010C80A5/BA3A402BC4615159/model.tflite: OK
+./browser/browser-profile/optimization_guide_model_store/25/63922A0C010C80A5/BA3A402BC4615159/visual_model_desktop.tflite: OK
+./browser/browser-profile/optimization_guide_model_store/26/63922A0C010C80A5/D54DE76A8727F41C/model-info.pb: OK
+./browser/browser-profile/optimization_guide_model_store/26/63922A0C010C80A5/D54DE76A8727F41C/model.tflite: OK
+./browser/browser-profile/optimization_guide_model_store/45/63922A0C010C80A5/BD24821E030C3830/model-info.pb: OK
+./browser/browser-profile/optimization_guide_model_store/45/63922A0C010C80A5/BD24821E030C3830/model.tflite: OK
+./browser/browser-profile/optimization_guide_model_store/9/63922A0C010C80A5/28F86B82973F04EA/model-info.pb: OK
+./browser/browser-profile/optimization_guide_model_store/9/63922A0C010C80A5/28F86B82973F04EA/model.tflite: OK
+./browser/browser-profile/segmentation_platform/ukm_db: OK
+./browser/chrome.log: OK
+./evidence/compatibility-probes.json: OK
+./evidence/current-source-self-roundtrip.json: OK
+./evidence/device-preexisting-backup-validation.json: OK
+./evidence/device-preexisting-backup.json: OK
+./evidence/device-preexisting-field-types.txt: OK
+./evidence/git-status-after.txt: OK
+./evidence/git-status-before.txt: OK
+./evidence/head.txt: OK
+./evidence/npm-waterlines.txt: OK
+./evidence/source-hash-diff.txt: OK
+./evidence/source-hashes-after.txt: OK
+./evidence/source-hashes.txt: OK
+./logs/browser-import-format.exit: OK
+./logs/browser-import-format.stderr.log: OK
+./logs/browser-import-format.stdout.log: OK
+./logs/npm-test.exit: OK
+./logs/npm-test.log: OK

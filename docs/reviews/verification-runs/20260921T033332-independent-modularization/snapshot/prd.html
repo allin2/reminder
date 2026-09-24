@@ -1,0 +1,1236 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Attention Inbox 产品需求文档 · V0.1</title>
+  <meta name="description" content="Attention Inbox 是注意力唤醒与未来事项托管系统。少记挂，不错过。" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <a class="skip-link" href="#main">跳到正文</a>
+  <div class="progress" id="progress" aria-hidden="true"></div>
+
+  <header class="topbar">
+    <div class="topbar-inner">
+      <a class="brand" href="#top">
+        <span class="brand-mark">Attention Inbox</span>
+        <span class="brand-sub">产品需求文档 · V0.1</span>
+      </a>
+      <div class="topbar-meta">
+        <span class="chip hide-sm"><span class="chip-dot" aria-hidden="true"></span>MVP</span>
+        <span class="chip hide-sm">iOS / Android</span>
+        <button class="toc-toggle" id="tocToggle" type="button" aria-expanded="false" aria-controls="toc">目录</button>
+      </div>
+    </div>
+  </header>
+
+  <div class="toc-backdrop" id="tocBackdrop" hidden></div>
+
+  <div class="shell">
+    <aside class="toc" id="toc" aria-label="文档目录">
+      <p class="toc-label">目录</p>
+      <nav id="tocNav">
+        <a href="#s1"><span class="n">01</span><span>产品背景</span></a>
+        <a href="#s2"><span class="n">02</span><span>产品愿景</span></a>
+        <a href="#s3"><span class="n">03</span><span>产品核心理念</span></a>
+        <a href="#s4"><span class="n">04</span><span>产品目标</span></a>
+        <a href="#s5"><span class="n">05</span><span>非目标</span></a>
+        <a href="#s6"><span class="n">06</span><span>核心用户场景</span></a>
+        <a href="#s7"><span class="n">07</span><span>核心信息模型</span></a>
+        <a href="#s8"><span class="n">08</span><span>Attention Lifecycle</span></a>
+        <a href="#s9"><span class="n">09</span><span>核心交互</span></a>
+        <a href="#s10"><span class="n">10</span><span>自然语言时间解析</span></a>
+        <a href="#s11"><span class="n">11</span><span>柔性时间窗口</span></a>
+        <a href="#s12"><span class="n">12</span><span>Context 自动保存</span></a>
+        <a href="#s13"><span class="n">13</span><span>提醒机制</span></a>
+        <a href="#s14"><span class="n">14</span><span>通知操作</span></a>
+        <a href="#s15"><span class="n">15</span><span>Deadline Protection</span></a>
+        <a href="#s16"><span class="n">16</span><span>周期提醒</span></a>
+        <a href="#s17"><span class="n">17</span><span>首页</span></a>
+        <a href="#s18"><span class="n">18</span><span>Future 页面</span></a>
+        <a href="#s19"><span class="n">19</span><span>搜索</span></a>
+        <a href="#s20"><span class="n">20</span><span>系统分享入口</span></a>
+        <a href="#s21"><span class="n">21</span><span>快速入口</span></a>
+        <a href="#s22"><span class="n">22</span><span>场景过滤</span></a>
+        <a href="#s23"><span class="n">23</span><span>重复事项</span></a>
+        <a href="#s24"><span class="n">24</span><span>离线能力</span></a>
+        <a href="#s25"><span class="n">25</span><span>账号体系</span></a>
+        <a href="#s26"><span class="n">26</span><span>数据可靠性</span></a>
+        <a href="#s27"><span class="n">27</span><span>平台可靠性要求</span></a>
+        <a href="#s28"><span class="n">28</span><span>摘要机制</span></a>
+        <a href="#s29"><span class="n">29</span><span>Badge 规则</span></a>
+        <a href="#s30"><span class="n">30</span><span>AI 的角色</span></a>
+        <a href="#s31"><span class="n">31</span><span>产品成功指标</span></a>
+        <a href="#s32"><span class="n">32</span><span>MVP 功能范围</span></a>
+        <a href="#s33"><span class="n">33</span><span>MVP 暂不包含</span></a>
+        <a href="#s34"><span class="n">34</span><span>MVP 验收标准</span></a>
+        <a href="#s35"><span class="n">35</span><span>产品判断标准</span></a>
+        <a href="#s36"><span class="n">36</span><span>一句话产品定义</span></a>
+        <a href="#s37"><span class="n">37</span><span>产品口号</span></a>
+      </nav>
+    </aside>
+
+    <main class="main" id="main">
+      <header class="hero" id="top">
+        <div class="hero-kicker">
+          <span>文档版本 V0.1</span>
+          <span>·</span>
+          <span>已被 V0.2 基线取代</span>
+          <span>·</span>
+          <span>产品阶段 MVP</span>
+          <span>·</span>
+          <span>手机 App（iOS / Android）</span>
+        </div>
+        <h1>Attention Inbox</h1>
+        <p class="hero-tagline">注意力唤醒与未来事项托管系统。核心不是帮你管理更多事情，而是<strong>让你少记挂，但不错过</strong>。</p>
+        <blockquote class="hero-quote">
+          只要一件未来需要关注的事情已经交给系统，我现在就可以放心忘记它。
+          <small>产品愿景 · 心理预期</small>
+        </blockquote>
+        <dl class="hero-facts">
+          <div class="fact">
+            <dt>核心定位</dt>
+            <dd>管理未来注意力，而非管理任务</dd>
+          </div>
+          <div class="fact">
+            <dt>关键分离</dt>
+            <dd>Acknowledged ≠ Completed</dd>
+          </div>
+          <div class="fact">
+            <dt>可靠优先级</dt>
+            <dd>Delivery &gt; Persistence &gt; Context</dd>
+          </div>
+        </dl>
+      </header>
+
+      <div class="callout warn" style="margin-top:1.5rem">
+        <span class="callout-label">基线变更 · 2026-09-16</span>
+        <p><strong>本文是 V0.1，已被 V0.2 冻结基线取代</strong>：docs/baseline/Attention_Inbox_V0.2_产品需求与业务规格基线.md。</p>
+        <p>V0.2 声明自己为唯一业务基线，两者冲突时以 V0.2 为准。本文保留作为 V0.1 的历史详述——部分章节仍比 V0.2 更细（如状态机节点定义、交互示例、指标口径）。</p>
+        <p>逐条对齐分析、6 项待裁决冲突与全新需求清单见 docs/baseline/v0.2-alignment.md。</p>
+      </div>
+
+      <!-- 01 -->
+      <section class="section" id="s1">
+        <div class="section-head">
+          <span class="section-num">01</span>
+          <h2>产品背景</h2>
+        </div>
+        <p class="lead">在信息密度持续提升的环境下，用户面临的问题并不只是「事情太多」，而是需要持续在大脑中维护大量未来事项。</p>
+        <ul class="plain">
+          <li>某件事下周需要重新关注；</li>
+          <li>某个活动月底截止；</li>
+          <li>某个项目现在不值得研究，但之后值得再看；</li>
+          <li>某篇文章、视频或 GitHub 项目暂时没有时间处理；</li>
+          <li>某件重要事情必须确保自己真正注意到；</li>
+          <li>某个长期方向需要周期性重新进入注意力。</li>
+        </ul>
+        <p>传统 Todo、日历和 Reminder 产品主要围绕「任务管理」展开，强调任务列表、优先级、完成状态、项目、截止日期等。</p>
+        <p>但很多场景中，用户真正想表达的是：</p>
+        <div class="callout quote">
+          <p>「这件事现在不要占用我的注意力，请在合适的时候重新把它交给我。」</p>
+        </div>
+        <p>因此，本产品不以「管理任务」为核心，而以<strong>管理未来注意力</strong>为核心。</p>
+      </section>
+
+      <!-- 02 -->
+      <section class="section" id="s2">
+        <div class="section-head">
+          <span class="section-num">02</span>
+          <h2>产品愿景</h2>
+        </div>
+        <p>产品希望给用户建立一种可靠的心理预期：</p>
+        <div class="callout quote">
+          <p>只要一件未来需要关注的事情已经交给系统，我现在就可以放心忘记它。</p>
+        </div>
+        <h3>系统负责</h3>
+        <ul class="check">
+          <li>记住未来需要重新关注的事项；</li>
+          <li>在正确时间主动重新唤醒；</li>
+          <li>确认用户是否真正注意到；</li>
+          <li>在必要时持续或增强提醒；</li>
+          <li>保存当时上下文，帮助用户恢复记忆；</li>
+          <li>避免未来事项提前占据当前注意力。</li>
+        </ul>
+        <h3>产品不负责替用户判断</h3>
+        <ul class="dash">
+          <li>什么事情更重要；</li>
+          <li>当前最应该做什么；</li>
+          <li>用户应该如何安排完整日程；</li>
+          <li>用户是否足够高效。</li>
+        </ul>
+      </section>
+
+      <!-- 03 -->
+      <section class="section" id="s3">
+        <div class="section-head">
+          <span class="section-num">03</span>
+          <h2>产品核心理念</h2>
+        </div>
+        <h3>3.1 核心价值</h3>
+        <div class="callout quote">
+          <p>放心忘记，而不是帮助记住更多事情。</p>
+        </div>
+        <p>产品的核心价值不是 Reminder 本身，而是建立对未来事项托管机制的信任。</p>
+
+        <h3>3.2 核心产品原则</h3>
+        <p>五条原则分两级。<strong>红线</strong>不可让渡——任何实现与红线冲突，都必须回退实现；<strong>默认值</strong>是默认行为，允许有意识的例外，但例外必须显式论证并记录下来。</p>
+        <div class="callout warn">
+          <p><strong>例外的唯一论证标准</strong>：这个例外会让 <a href="#s31">§31.4</a> 的「用户主动查看 Future 的频率」<strong>上升还是下降</strong>？</p>
+          <p>PRD 自己把这个指标定义为<strong>不信任信号</strong>，理想方向是下降。任何让该指标上升的例外，无论多方便，都不成立。</p>
+        </div>
+        <div class="principles">
+          <article class="principle is-redline">
+            <div class="principle-top">
+              <span class="n">原则一</span>
+              <h3>Attention ≠ Task</h3>
+              <span class="tier">红线</span>
+            </div>
+            <p>系统管理的是「什么时候一件事情应该重新进入用户注意力」，而不是「用户应该如何执行、拆解和管理任务」。</p>
+          </article>
+          <article class="principle is-redline">
+            <div class="principle-top">
+              <span class="n">原则二</span>
+              <h3>Acknowledged ≠ Completed</h3>
+              <span class="tier">红线</span>
+            </div>
+            <p>「我知道了」和「我完成了」必须严格分离。用户点击<strong>我知道了</strong>，表示「我已经真正注意到这件事情」，但不代表「我已经完成了这件事情」。</p>
+            <p class="rule">只有用户主动执行「完成」，事项才进入归档。</p>
+          </article>
+          <article class="principle">
+            <div class="principle-top">
+              <span class="n">原则三</span>
+              <h3>Future 默认不可见</h3>
+              <span class="tier">默认值</span>
+            </div>
+            <p>未来事项虽然已经存在，但不应该因为存在就提前消耗用户注意力。</p>
+            <p class="rule">未来事项默认不展示在首页。用户需要时可以主动查看或搜索。</p>
+            <p>这符合它自身的定义——「默认不展示」，而不是「不许展示」。但它同时也是产品承诺的核心，所以<strong>任何把它搬上首页的例外都必须按 §3.2 的论证标准显式论证</strong>，并且默认答案是拒绝。</p>
+          </article>
+          <article class="principle is-redline">
+            <div class="principle-top">
+              <span class="n">原则四</span>
+              <h3>通知送达 ≠ 用户看到</h3>
+              <span class="tier">红线</span>
+            </div>
+            <p>系统不得推测用户已经看到。以下行为均不能自动等同于 Acknowledged：</p>
+            <ul class="dash">
+              <li>Notification 已发送；</li>
+              <li>Notification 已显示；</li>
+              <li>用户解锁手机；</li>
+              <li>用户点击通知；</li>
+              <li>用户打开 App。</li>
+            </ul>
+            <p class="rule">只有用户主动执行「我知道了」，才能认为 Attention Delivery 成功。</p>
+            <p>推论：<strong>关闭提醒 ≠ 我已经看到</strong>。任何"止响"动作（关闭弹条、关闭全屏闹钟）都不得写入 ACK，也不得停掉后续补充提醒。</p>
+          </article>
+          <article class="principle">
+            <div class="principle-top">
+              <span class="n">原则五</span>
+              <h3>低交互优先</h3>
+              <span class="tier">默认值</span>
+            </div>
+            <p>管理注意力的工具本身不能成为新的注意力负担。每个功能都必须经过判断：这个功能是在帮用户减少注意力管理成本，还是要求用户花更多注意力管理这个 App？</p>
+            <p class="rule">若属于后者，默认不加入产品。</p>
+            <p>与原则三冲突时的处理：优先保住用户的<strong>注意力预算</strong>，而不是保住产品的<strong>功能完整度</strong>。让用户少做一次判断，通常比多给一个入口更有价值。</p>
+          </article>
+        </div>
+      </section>
+
+      <!-- 04 -->
+      <section class="section" id="s4">
+        <div class="section-head">
+          <span class="section-num">04</span>
+          <h2>产品目标</h2>
+        </div>
+        <p>MVP 的目标不是构建一个完整效率工具，而是验证以下核心假设：</p>
+        <div class="callout quote">
+          <p>用户是否愿意因为信任系统能够在未来可靠地重新唤醒自己，而真正停止惦记已经交给系统的事情。</p>
+        </div>
+        <p>MVP 重点验证四件事：</p>
+        <ol class="plain">
+          <li>用户是否愿意以极低成本将未来事项交给系统；</li>
+          <li>用户是否信任提醒机制；</li>
+          <li>「我知道了」和「完成」分离是否符合真实使用习惯；</li>
+          <li>Future 默认隐藏是否能够减少心理负担。</li>
+        </ol>
+      </section>
+
+      <!-- 05 -->
+      <section class="section" id="s5">
+        <div class="section-head">
+          <span class="section-num">05</span>
+          <h2>非目标</h2>
+        </div>
+        <p>MVP 明确不做以下功能：</p>
+        <div class="split">
+          <div class="panel">
+            <h3>任务管理形态</h3>
+            <ul>
+              <li>Project 管理</li>
+              <li>子任务</li>
+              <li>Kanban</li>
+              <li>甘特图</li>
+              <li>四象限</li>
+              <li>自动任务优先级</li>
+              <li>完整日历规划</li>
+            </ul>
+          </div>
+          <div class="panel">
+            <h3>效率与 AI 越界</h3>
+            <ul>
+              <li>AI 判断「现在最应该做什么」</li>
+              <li>时间管理 / 番茄钟 / 工时统计</li>
+              <li>效率评分 / 连续打卡 / 习惯养成</li>
+              <li>自动 AI 调度任务</li>
+              <li>AI 主动推荐应关注什么</li>
+              <li>自动识别用户是否「有空」</li>
+              <li>自动合并相似事项</li>
+              <li>完整桌面任务管理客户端</li>
+            </ul>
+          </div>
+        </div>
+        <div class="callout warn">
+          <span class="callout-label">边界</span>
+          <p>产品必须避免逐步演变成 Todoist、TickTick、Things 或 Motion 类型的任务管理系统。</p>
+        </div>
+      </section>
+
+      <!-- 06 -->
+      <section class="section" id="s6">
+        <div class="section-head">
+          <span class="section-num">06</span>
+          <h2>核心用户场景</h2>
+        </div>
+
+        <h3>6.1 未来再研究</h3>
+        <p>用户正在浏览网页、视频或 GitHub 项目，认为这个内容值得研究，但现在不应该占用时间。</p>
+        <p>操作：分享 → Attention Inbox → 输入「周末」。系统保存内容、来源、URL、提醒窗口。随后用户立即回到原任务。</p>
+
+        <h3>6.2 存在硬截止日期</h3>
+        <p>用户输入「9 月 30 日报名截止，提前 5 天提醒我。」</p>
+        <ul class="plain">
+          <li>Attention Time：9 月 25 日；</li>
+          <li>Deadline：9 月 30 日。</li>
+        </ul>
+        <p>9 月 25 日提醒用户。即使用户点击「我知道了」，若事项尚未完成，则在临近 9 月 30 日时仍可触发 Deadline Protection。</p>
+
+        <h3>6.3 当前不适合处理</h3>
+        <p>用户收到提醒「看一下 Horolog 的调度设计」时正在工作，点击<strong>稍后提醒 → 今晚</strong>。系统重新安排 Attention Time，用户重新释放注意力。</p>
+
+        <h3>6.4 重要事项</h3>
+        <p>用户标记「☆ 重要」。如果用户没有 ACK：</p>
+        <ul class="plain">
+          <li>系统再次提醒；</li>
+          <li>后续提醒显著性提高；</li>
+          <li>直到达到有限追踪上限或得到确认。</li>
+        </ul>
+
+        <h3>6.5 关键事项</h3>
+        <p>某事项属于「绝不能错过」。用户主动打开「🚨 关键事项」。系统可以使用更高级别的通知和闹钟式机制。该模式必须显式开启，不作为默认录入字段。</p>
+
+        <h3>6.6 周期性重新关注</h3>
+        <p>用户输入「每两周提醒我重新看看这个方向。」支持两种周期：</p>
+        <div class="split">
+          <div class="panel">
+            <h3>固定周期</h3>
+            <p style="margin:0">例如：每月 1 日。</p>
+          </div>
+          <div class="panel">
+            <h3>ACK 后重新计时</h3>
+            <p style="margin:0">例如：每隔 14 天重新关注一次。若用户实际于 9 月 15 日 ACK，则下一次从 9 月 15 日重新计算 14 天。</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 07 -->
+      <section class="section" id="s7">
+        <div class="section-head">
+          <span class="section-num">07</span>
+          <h2>核心信息模型</h2>
+        </div>
+        <p>每个 Attention Item 最低包含：</p>
+        <pre class="code"><code>id
+content
+created_at
+trigger_time / trigger_window
+importance
+status</code></pre>
+        <p>可选字段：</p>
+        <pre class="code"><code>deadline
+repeat_rule
+repeat_mode
+source_title
+source_url
+source_app
+source_context
+reason
+acknowledged_at
+completed_at
+archived_at</code></pre>
+      </section>
+
+      <!-- 08 -->
+      <section class="section" id="s8">
+        <div class="section-head">
+          <span class="section-num">08</span>
+          <h2>Attention Lifecycle</h2>
+        </div>
+        <p>核心状态机如下。点击节点可查看状态定义。</p>
+
+        <div class="lifecycle" id="lifecycle">
+          <div class="lifecycle-head">
+            <h3>状态机</h3>
+            <span class="lifecycle-hint">点击节点查看详情</span>
+          </div>
+          <div class="lifecycle-svg-wrap">
+            <svg viewBox="0 0 800 310" role="img" aria-label="Attention Lifecycle 状态机图">
+              <defs>
+                <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                  <path d="M 0 1 L 8 5 L 0 9" fill="none" stroke="#b8c4bc" stroke-width="1.2" />
+                </marker>
+                <marker id="arrow-signal" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                  <path d="M 0 1 L 8 5 L 0 9" fill="none" stroke="#1b6b4a" stroke-width="1.2" />
+                </marker>
+              </defs>
+
+              <!-- main: captured → waiting → delivered → ack -->
+              <path class="lc-edge" d="M 134 148 L 166 148" />
+              <path class="lc-edge" d="M 286 148 L 318 148" />
+              <path class="lc-edge emphasis" d="M 438 148 L 490 148" style="marker-end:url(#arrow-signal)" />
+
+              <!-- delivered → opened (optional) → ack -->
+              <path class="lc-edge" d="M 378 124 C 378 78, 430 62, 490 62" />
+              <path class="lc-edge" d="M 610 62 C 660 62, 680 90, 680 124" />
+
+              <!-- ack → active / completed -->
+              <path class="lc-edge" d="M 630 124 C 660 100, 680 88, 700 88" />
+              <path class="lc-edge emphasis" d="M 630 148 L 690 148" style="marker-end:url(#arrow-signal)" />
+
+              <!-- ack → snoozed → waiting -->
+              <path class="lc-edge" d="M 560 172 L 560 220" />
+              <path class="lc-edge" d="M 490 244 C 400 244, 300 210, 246 172" />
+
+              <!-- completed → archived -->
+              <path class="lc-edge" d="M 750 172 L 750 220" />
+
+              <!-- nodes -->
+              <g class="lc-node" data-state="captured" tabindex="0" role="button" aria-label="CAPTURED">
+                <rect x="20" y="124" width="114" height="48" rx="8" />
+                <text x="77" y="146" text-anchor="middle">CAPTURED</text>
+                <text class="sub" x="77" y="160" text-anchor="middle">已保存</text>
+              </g>
+              <g class="lc-node" data-state="waiting" tabindex="0" role="button" aria-label="WAITING">
+                <rect x="166" y="124" width="120" height="48" rx="8" />
+                <text x="226" y="146" text-anchor="middle">WAITING</text>
+                <text class="sub" x="226" y="160" text-anchor="middle">等待唤醒</text>
+              </g>
+              <g class="lc-node" data-state="delivered" tabindex="0" role="button" aria-label="DELIVERED">
+                <rect x="318" y="124" width="120" height="48" rx="8" />
+                <text x="378" y="146" text-anchor="middle">DELIVERED</text>
+                <text class="sub" x="378" y="160" text-anchor="middle">已发送</text>
+              </g>
+              <g class="lc-node" data-state="opened" tabindex="0" role="button" aria-label="OPENED">
+                <rect x="490" y="38" width="120" height="48" rx="8" />
+                <text x="550" y="60" text-anchor="middle">OPENED</text>
+                <text class="sub" x="550" y="74" text-anchor="middle">可选 · 行为记录</text>
+              </g>
+              <g class="lc-node" data-state="acknowledged" tabindex="0" role="button" aria-label="ACKNOWLEDGED">
+                <rect x="490" y="124" width="140" height="48" rx="8" />
+                <text x="560" y="146" text-anchor="middle">ACKNOWLEDGED</text>
+                <text class="sub" x="560" y="160" text-anchor="middle">我知道了</text>
+              </g>
+              <g class="lc-node" data-state="snoozed" tabindex="0" role="button" aria-label="SNOOZED">
+                <rect x="500" y="220" width="120" height="48" rx="8" />
+                <text x="560" y="242" text-anchor="middle">SNOOZED</text>
+                <text class="sub" x="560" y="256" text-anchor="middle">稍后提醒</text>
+              </g>
+              <g class="lc-node" data-state="active" tabindex="0" role="button" aria-label="ACTIVE">
+                <rect x="700" y="64" width="90" height="48" rx="8" />
+                <text x="745" y="86" text-anchor="middle">ACTIVE</text>
+                <text class="sub" x="745" y="100" text-anchor="middle">未完成</text>
+              </g>
+              <g class="lc-node" data-state="completed" tabindex="0" role="button" aria-label="COMPLETED">
+                <rect x="690" y="124" width="120" height="48" rx="8" />
+                <text x="750" y="146" text-anchor="middle">COMPLETED</text>
+                <text class="sub" x="750" y="160" text-anchor="middle">完成</text>
+              </g>
+              <g class="lc-node" data-state="archived" tabindex="0" role="button" aria-label="ARCHIVED">
+                <rect x="690" y="220" width="120" height="48" rx="8" />
+                <text x="750" y="242" text-anchor="middle">ARCHIVED</text>
+                <text class="sub" x="750" y="256" text-anchor="middle">归档</text>
+              </g>
+            </svg>
+          </div>
+          <div class="lifecycle-detail" id="lifecycleDetail" aria-live="polite">
+            <p class="label">状态定义</p>
+            <h4>CAPTURED → ARCHIVED</h4>
+            <p>选择任意状态节点，查看其在 Attention Lifecycle 中的准确含义与边界。</p>
+          </div>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>状态</th>
+                <th>定义</th>
+                <th>关键约束</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><span class="pill pill-muted">CAPTURED</span></td>
+                <td>事项已成功保存。</td>
+                <td>—</td>
+              </tr>
+              <tr>
+                <td><span class="pill pill-blue">WAITING</span></td>
+                <td>尚未到达重新唤醒时间。</td>
+                <td>默认不出现在首页。</td>
+              </tr>
+              <tr>
+                <td><span class="pill pill-amber">DELIVERED</span></td>
+                <td>系统已经发送提醒。</td>
+                <td>不代表用户看到。</td>
+              </tr>
+              <tr>
+                <td><span class="pill pill-muted">OPENED</span></td>
+                <td>用户点击了通知或打开了事项。</td>
+                <td>只作为行为记录，不得自动转为 ACK。</td>
+              </tr>
+              <tr>
+                <td><span class="pill pill-green">ACKNOWLEDGED</span></td>
+                <td>用户明确点击「我知道了」。</td>
+                <td>确认一次 Attention Delivery 成功；保持已看到但未完成。</td>
+              </tr>
+              <tr>
+                <td><span class="pill pill-amber">SNOOZED</span></td>
+                <td>用户明确要求稍后再提醒。</td>
+                <td>系统重新建立下一次 WAITING。</td>
+              </tr>
+              <tr>
+                <td><span class="pill pill-green">COMPLETED</span></td>
+                <td>用户明确点击「完成」。</td>
+                <td>—</td>
+              </tr>
+              <tr>
+                <td><span class="pill pill-muted">ARCHIVED</span></td>
+                <td>完成事项自动进入历史归档。</td>
+                <td>历史默认不主动重新浮现。</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- 09 -->
+      <section class="section" id="s9">
+        <div class="section-head">
+          <span class="section-num">09</span>
+          <h2>核心交互</h2>
+        </div>
+        <h3>9.1 新建事项</h3>
+        <p>默认交互目标：<strong>一次唤起 + 一句话 + 自动保存</strong>。</p>
+        <p>示例：「周五提醒我再看看这个项目。」</p>
+        <ol class="plain">
+          <li>解析自然语言；</li>
+          <li>自动生成提醒时间；</li>
+          <li>保存；</li>
+          <li>页面底部轻量提示：「已设置：9 月 18 日 周五 10:00 · 修改」。</li>
+        </ol>
+        <p>默认无需再次点击「确认」或「保存」。</p>
+        <div class="callout">
+          <span class="callout-label">目标</span>
+          <p>Capture 时间 ≤ 5 秒。</p>
+        </div>
+      </section>
+
+      <!-- 10 -->
+      <section class="section" id="s10">
+        <div class="section-head">
+          <span class="section-num">10</span>
+          <h2>自然语言时间解析</h2>
+        </div>
+        <p>支持用户使用自然语言描述时间，例如：明天、明天下午、周末、下周五、月底、下个月、过两天、每两周、每个月月底、提前五天、9 月 30 日截止。</p>
+        <p>系统采用<strong>自动解析 + 轻量展示结果</strong>，而不是每次强制用户确认。</p>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>置信度</th>
+                <th>行为</th>
+                <th>示例</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><span class="pill pill-green">高</span></td>
+                <td>直接保存。</td>
+                <td>明天晚上 8 点。</td>
+              </tr>
+              <tr>
+                <td><span class="pill pill-amber">中</span></td>
+                <td>自动保存，并明显展示解析结果。</td>
+                <td>「周末」→ 本周末 · 修改</td>
+              </tr>
+              <tr>
+                <td><span class="pill pill-red">低</span></td>
+                <td>直接保存，标记为<strong>待整理</strong>，当晚集中澄清。</td>
+                <td>「过阵子再看看」→ 先收下，21:30 一起处理</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>10.1 延后澄清（Deferred Clarification）</h3>
+        <p>低置信度的确认<strong>不在捕获现场做</strong>。用户在刚说完一句话的那一刻最不想被打断做判断，因此系统一律先收下，把澄清推迟到<strong>每日整理窗口</strong>（默认 21:30–23:00）批量进行。</p>
+        <ul class="dash">
+          <li><strong>捕获永不失败</strong>：解析不出时间也照样保存，不弹确认框；</li>
+          <li>被标记为待整理的记录，默认兜底到 <strong>7 天后</strong>，但<strong>不进入首页「需要注意」</strong>，兜底时间也不发提醒——到点只再推一次整理；</li>
+          <li>整理卡片<strong>必须显式展示</strong>「系统解析：未设定时间」，不得让兜底时间成为隐性决定；</li>
+          <li>整理时逐条给出：原始记录、系统解析结果、来源（标题 / URL / 来源 App / 记录时间），可确认、保存修改或删除；</li>
+          <li>「稍后」允许跨出整理窗口；窗口外的那段时间入口仍然可见，且通知点击直达整理会话。</li>
+        </ul>
+        <p>完整契约见 <strong>docs/compose/spec/deferred-clarification.md</strong>。</p>
+      </section>
+
+      <!-- 11 -->
+      <section class="section" id="s11">
+        <div class="section-head">
+          <span class="section-num">11</span>
+          <h2>柔性时间窗口</h2>
+        </div>
+        <p>系统必须支持 <code>Trigger Window</code>，而不仅仅是 <code>Trigger Timestamp</code>。</p>
+        <p>例如「周末提醒我」可以理解为：</p>
+        <pre class="code"><code>Start: Saturday
+End:   Sunday</code></pre>
+        <p>系统在该窗口内选择合适时机。第一版采用简单确定性规则，不使用复杂 AI 推测用户状态。</p>
+      </section>
+
+      <!-- 12 -->
+      <section class="section" id="s12">
+        <div class="section-head">
+          <span class="section-num">12</span>
+          <h2>Context 自动保存</h2>
+        </div>
+        <p>当事项来自系统分享入口时，自动保存上下文。例如网页：</p>
+        <ul class="plain">
+          <li>页面标题；</li>
+          <li>URL；</li>
+          <li>来源 App；</li>
+          <li>保存时间。</li>
+        </ul>
+        <p>用户可以额外输入「为什么值得关注」，但该字段永远不是必填项。</p>
+        <p>目标是让未来重新唤醒时用户不需要重新回忆：「我当初为什么存这个？」</p>
+      </section>
+
+      <!-- 13 -->
+      <section class="section" id="s13">
+        <div class="section-head">
+          <span class="section-num">13</span>
+          <h2>提醒机制</h2>
+        </div>
+        <h3>13.1 普通事项</h3>
+        <ol class="plain">
+          <li>到期后主动通知；</li>
+          <li>未 ACK 时补充有限次数提醒；</li>
+          <li>达到限制后进入「未确认」状态；</li>
+          <li>不无限骚扰。</li>
+        </ol>
+        <h3>13.2 重要事项</h3>
+        <p>用户主动标记「☆ 重要」。未 ACK 时：</p>
+        <ul class="plain">
+          <li>重复提醒；</li>
+          <li>提高通知显著性；</li>
+          <li>持续追踪强于普通事项。</li>
+        </ul>
+        <p>但仍应避免无限高频打扰。</p>
+        <h3>13.3 关键事项</h3>
+        <p>用户在录入时显式选择「🚨 关键 / 绝不能错过」（默认档位是「普通」，所以选择关键本身就是一次主动开启），允许：</p>
+        <ul class="plain">
+          <li>更强声音；</li>
+          <li>更强震动；</li>
+          <li>锁屏高显著性；</li>
+          <li>系统允许情况下的闹钟级提醒。</li>
+        </ul>
+        <p><strong>闹钟级提醒的落地</strong>：关键档的<strong>首次</strong>提醒使用全屏闹钟（系统闹钟通道 + 亮屏 + 循环响铃 + 波形震动 + 锁屏直达）；后续最多 7 次补充提醒仍走通知渠道。全屏界面提供「我知道了 / 稍后 2 小时 / 完成」，外加一个<strong>「关闭」</strong>——关闭只止响，不表态、不写 ACK、不停掉后续提醒（遵循原则四）。</p>
+        <p>关键档是<strong>唯一</strong>使用全屏闹钟的档位。其他任何功能——包括待整理——都不得使用它。</p>
+        <div class="callout critical">
+          <span class="callout-label">范围约束</span>
+          <p>该功能属于增强能力，不得成为 MVP 发布的硬性依赖。</p>
+        </div>
+      </section>
+
+      <!-- 14 -->
+      <section class="section" id="s14">
+        <div class="section-head">
+          <span class="section-num">14</span>
+          <h2>通知操作</h2>
+        </div>
+        <p>不同入口给不同的<strong>动作深度</strong>：快捷入口只给固定动作，主动入口才给完整选项。要求用户在通知栏里先做选择，只会让「推迟一件事」变得更费劲。</p>
+
+        <h3>14.1 快捷动作（通知栏、全屏闹钟）</h3>
+        <div class="split">
+          <div class="panel">
+            <h3>我知道了</h3>
+            <p>含义：Attention Delivery 已完成。</p>
+            <p>行为：停止当前追踪；事项保持未完成。</p>
+          </div>
+          <div class="panel">
+            <h3>稍后 2 小时</h3>
+            <p>含义：我已经知道这件事，但现在不适合继续关注。</p>
+            <p>行为：按<strong>相对时长</strong>重新排程。</p>
+          </div>
+        </div>
+        <div class="split">
+          <div class="panel">
+            <h3>完成</h3>
+            <p>含义：事项已经结束。行为：自动进入 Archive。</p>
+          </div>
+          <div class="panel">
+            <h3>关闭（仅全屏闹钟）</h3>
+            <p>含义：让它停下来，但我还没表态。</p>
+            <p>行为：停止响铃与震动；<strong>不写 ACK</strong>、不计入关闭抑制、后续补充提醒照常。</p>
+          </div>
+        </div>
+
+        <h3>14.2 完整选项（应用内弹条与事项表单）</h3>
+        <p>用户愿意停下来做选择时，给出完整集合：<strong>30 分钟后 / 2 小时后 / 今晚 20:00 / 明天 09:00 / 本周末 / 自定义</strong>。</p>
+        <p>前两项按<strong>相对时长</strong>排程——「30 分钟后」就该是 30 分钟后，不随系统时间调整而漂移；其余按<strong>本地墙钟</strong>排程——「明天 09:00」永远是本地 9 点。</p>
+        <div class="callout warn">
+          <p>任何入口都<strong>不得</strong>给出上表之外的时长。同一件事在三处出现三种推迟时长（曾同时存在 10 分钟 / 2 小时 / 六个选项），属于实现漂移，不是设计。</p>
+        </div>
+      </section>
+
+      <!-- 15 -->
+      <section class="section" id="s15">
+        <div class="section-head">
+          <span class="section-num">15</span>
+          <h2>Deadline Protection</h2>
+        </div>
+        <p>Deadline 不是必填字段。仅当用户语义明确包含截止、到期、最后一天、报名结束、提交截止等表达时，系统自动提取。</p>
+        <p>例如「9 月 30 日截止，提前五天提醒我。」系统保存：</p>
+        <pre class="code"><code>trigger_at = 9 月 25 日
+deadline   = 9 月 30 日</code></pre>
+        <h3>15.1 已 ACK 但未完成</h3>
+        <p>如果 Deadline 临近，系统允许再次唤醒。此行为不违反「ACK 后停止提醒」，因为 Deadline Protection 属于新的风险事件。</p>
+        <h3>15.2 Deadline 无明确提醒时间</h3>
+        <p>例如「9 月 30 日报名截止。」系统自动根据简单规则生成首次提醒时间。第一版不尝试使用 AI 判断「完成任务大概需要几天」。</p>
+      </section>
+
+      <!-- 16 -->
+      <section class="section" id="s16">
+        <div class="section-head">
+          <span class="section-num">16</span>
+          <h2>周期提醒</h2>
+        </div>
+        <p>系统支持自然语言重复规则，例如：每周五提醒我 / 每两周看看一次 / 每月底提醒我。</p>
+        <div class="split">
+          <div class="panel">
+            <h3>Calendar-based</h3>
+            <p style="margin:0">按固定日期重复。</p>
+          </div>
+          <div class="panel">
+            <h3>ACK-based</h3>
+            <p style="margin:0">以上一次 Acknowledged 时间重新计算周期。</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 17 -->
+      <section class="section" id="s17">
+        <div class="section-head">
+          <span class="section-num">17</span>
+          <h2>首页</h2>
+        </div>
+        <p>首页必须避免制造任务焦虑。它的信息量要能被一屏看完，且默认状态下<strong>越短越好</strong>。</p>
+        <div class="split">
+          <div class="panel">
+            <h3>第一视觉</h3>
+            <p>展示<strong>现在需要注意</strong>：只显示当前真正应该进入用户注意力的事项。</p>
+          </div>
+          <div class="panel">
+            <h3>第二视觉</h3>
+            <p>弱化显示<strong>已看到未完成 · N</strong>：<strong>永远折叠成一行</strong>，只展示数量，用户主动点击后才展开详细列表。</p>
+          </div>
+        </div>
+        <p>此外还有两个<strong>条件区块</strong>，它们的出现都由状态决定，不常驻：</p>
+        <ul class="dash">
+          <li><strong>待整理 · N</strong> —— 只在每日整理窗口（默认 21:30–23:00）内出现，窗口外不占首页。它的语义是「一笔还没结清的账」，不是逾期任务，也不是未来事项；</li>
+          <li><strong>今天已完成</strong> —— 不单独成块。当首页既没有需要注意、也没有待确认的事项时，在空态里补一句「今天已完成 N 件」。</li>
+        </ul>
+        <h3>首页不显示</h3>
+        <ul class="dash">
+          <li>所有未来事项，<strong>包括"即将到来""未来 7 天"这类未来列表</strong>；</li>
+          <li>所有历史；</li>
+          <li>全部未完成数量；</li>
+          <li>总任务数；</li>
+          <li>逾期焦虑红点；</li>
+          <li>任何形式的"还有多少天""下一个是几点"前瞻提示。</li>
+        </ul>
+        <div class="callout warn">
+          <p>把未来拉上首页，会直接推高 §31.4 定义的<strong>不信任信号</strong>（用户主动查看 Future 的频率）。若确有必要，必须先按 §3.2 的论证标准显式论证——默认答案是拒绝。</p>
+        </div>
+      </section>
+
+      <!-- 18 -->
+      <section class="section" id="s18">
+        <div class="section-head">
+          <span class="section-num">18</span>
+          <h2>Future 页面</h2>
+        </div>
+        <p>Future 默认不占据首页。用户可以主动进入查看：</p>
+        <ul class="plain">
+          <li>已保存未来事项；</li>
+          <li>下次提醒时间；</li>
+          <li>Deadline；</li>
+          <li>是否重要。</li>
+        </ul>
+        <p>用户可以搜索、修改、删除、调整时间。</p>
+        <div class="callout quote">
+          <p>默认隐藏 ≠ 不允许查看。</p>
+        </div>
+      </section>
+
+      <!-- 19 -->
+      <section class="section" id="s19">
+        <div class="section-head">
+          <span class="section-num">19</span>
+          <h2>搜索</h2>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>范围</th>
+                <th>用途</th>
+                <th>示例</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Future</td>
+                <td>确认是否已记录未来事项</td>
+                <td>搜「Horolog」→ 已记录，周六提醒。</td>
+              </tr>
+              <tr>
+                <td>已看到未完成</td>
+                <td>找回当前活跃事项</td>
+                <td>—</td>
+              </tr>
+              <tr>
+                <td>Archive</td>
+                <td>查询历史曾关注内容</td>
+                <td>Archive 默认不会主动重新浮现。</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- 20 -->
+      <section class="section" id="s20">
+        <div class="section-head">
+          <span class="section-num">20</span>
+          <h2>系统分享入口</h2>
+        </div>
+        <p>产品必须支持移动系统 Share Sheet。典型路径：</p>
+        <pre class="code"><code>浏览网页
+→ 分享
+→ Attention Inbox
+→ 输入「周末」
+→ 自动保存
+→ 返回原 App</code></pre>
+        <p>系统自动使用来源内容作为默认事项标题。用户可修改标题，但不是必需步骤。</p>
+      </section>
+
+      <!-- 21 -->
+      <section class="section" id="s21">
+        <div class="section-head">
+          <span class="section-num">21</span>
+          <h2>快速入口</h2>
+        </div>
+        <p>移动端支持：</p>
+        <ul class="plain">
+          <li>App 内快速新增；</li>
+          <li>系统分享菜单；</li>
+          <li>Home Screen 快捷入口；</li>
+          <li>Widget；</li>
+          <li>锁屏快捷入口（系统支持时）。</li>
+        </ul>
+        <p>语音输入不自行开发专用语音系统，直接使用系统输入法 / 第三方语音输入法。</p>
+      </section>
+
+      <!-- 22 -->
+      <section class="section" id="s22">
+        <div class="section-head">
+          <span class="section-num">22</span>
+          <h2>场景过滤</h2>
+        </div>
+        <p>提醒默认按设定时间触发。系统允许用户配置少量规则，例如：</p>
+        <ul class="plain">
+          <li>睡眠时普通事项延后；</li>
+          <li>会议时普通事项延后；</li>
+          <li>勿扰时间段；</li>
+          <li>重要事项仍提醒；</li>
+          <li>关键事项不受普通过滤影响。</li>
+        </ul>
+        <p>第一版不自动推断：用户现在是不是有空。</p>
+      </section>
+
+      <!-- 23 -->
+      <section class="section" id="s23">
+        <div class="section-head">
+          <span class="section-num">23</span>
+          <h2>重复事项</h2>
+        </div>
+        <p>若系统发现用户可能已经存在相似事项，只提示「可能已有类似提醒」。</p>
+        <p>不得自动合并、自动删除、自动覆盖。</p>
+        <div class="callout warn">
+          <span class="callout-label">原因</span>
+          <p>错误去重导致漏提醒的风险高于重复提醒。</p>
+        </div>
+      </section>
+
+      <!-- 24 -->
+      <section class="section" id="s24">
+        <div class="section-head">
+          <span class="section-num">24</span>
+          <h2>离线能力</h2>
+        </div>
+        <p>产品采用 <strong>Local-first</strong>。无网络状态下必须支持：</p>
+        <ul class="check">
+          <li>新建事项；</li>
+          <li>编辑；</li>
+          <li>删除；</li>
+          <li>时间解析基础能力；</li>
+          <li>本地提醒；</li>
+          <li>ACK；</li>
+          <li>Snooze；</li>
+          <li>完成；</li>
+          <li>Archive。</li>
+        </ul>
+        <p>提醒核心链路不得依赖服务器在线。</p>
+      </section>
+
+      <!-- 25 -->
+      <section class="section" id="s25">
+        <div class="section-head">
+          <span class="section-num">25</span>
+          <h2>账号体系</h2>
+        </div>
+        <p>MVP 不强制注册账号。用户首次下载安装后即可使用。</p>
+        <p>只有用户需要云端备份、多设备同步、换机恢复时，再引导登录或创建账号。</p>
+      </section>
+
+      <!-- 26 -->
+      <section class="section" id="s26">
+        <div class="section-head">
+          <span class="section-num">26</span>
+          <h2>数据可靠性</h2>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>优先级</th>
+                <th>目标</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><span class="pill pill-red">P0</span></td>
+                <td>确保用户真正看到。</td>
+              </tr>
+              <tr>
+                <td><span class="pill pill-amber">P1</span></td>
+                <td>确保事项真正保存。</td>
+              </tr>
+              <tr>
+                <td><span class="pill pill-blue">P2</span></td>
+                <td>未来重新出现时恢复上下文。</td>
+              </tr>
+              <tr>
+                <td><span class="pill pill-muted">P3</span></td>
+                <td>提醒时间做到更智能、更精确。</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p>即：<strong>Attention Delivery &gt; Persistence &gt; Context &gt; Scheduling Intelligence</strong></p>
+      </section>
+
+      <!-- 27 -->
+      <section class="section" id="s27">
+        <div class="section-head">
+          <span class="section-num">27</span>
+          <h2>平台可靠性要求</h2>
+        </div>
+        <p>提醒系统必须处理：</p>
+        <ul class="plain">
+          <li>App 被系统杀死；</li>
+          <li>手机重启；</li>
+          <li>App 更新；</li>
+          <li>时区变化；</li>
+          <li>系统时间变化；</li>
+          <li>通知权限被撤销；</li>
+          <li>Snooze 后重新调度；</li>
+          <li>重复规则；</li>
+          <li>Deadline；</li>
+          <li>本地数据库异常恢复。</li>
+        </ul>
+        <div class="callout">
+          <span class="callout-label">硬约束</span>
+          <p>核心提醒不得因 App 未运行而失效。</p>
+        </div>
+      </section>
+
+      <!-- 28 -->
+      <section class="section" id="s28">
+        <div class="section-head">
+          <span class="section-num">28</span>
+          <h2>摘要机制</h2>
+        </div>
+        <p>默认<strong>不发送每日总结</strong>。以下情况可生成轻量摘要：</p>
+        <ul class="plain">
+          <li>当天新增事项较多；</li>
+          <li>当天新增重要事项；</li>
+          <li>存在需要用户特别确认的信息。</li>
+        </ul>
+        <p>例如：「今天新增 8 条未来关注，其中 2 条重要。」</p>
+        <p>摘要目的仅用于增强系统可信感，而不是制造新的每日阅读任务。</p>
+      </section>
+
+      <!-- 29 -->
+      <section class="section" id="s29">
+        <div class="section-head">
+          <span class="section-num">29</span>
+          <h2>Badge 规则</h2>
+        </div>
+        <p>App Badge 只代表：<strong>当前需要用户确认的 Attention 数量</strong>。</p>
+        <p>不得代表所有未完成事项、所有 Future、Archive 或全部任务总数。</p>
+        <div class="callout">
+          <span class="callout-label">示例</span>
+          <p>已看到未完成 17 条，但当前需要 Attention 2 条 → Badge = 2，而不是 19。</p>
+        </div>
+      </section>
+
+      <!-- 30 -->
+      <section class="section" id="s30">
+        <div class="section-head">
+          <span class="section-num">30</span>
+          <h2>AI 的角色</h2>
+        </div>
+        <p>AI 作为隐形基础设施，主要用于：</p>
+        <ul class="plain">
+          <li>自然语言理解；</li>
+          <li>时间提取；</li>
+          <li>Deadline 提取；</li>
+          <li>柔性时间理解；</li>
+          <li>必要的上下文摘要。</li>
+        </ul>
+        <p>AI 不应：</p>
+        <ul class="dash">
+          <li>主动与用户展开多轮对话；</li>
+          <li>判断什么更重要；</li>
+          <li>自动安排一天；</li>
+          <li>主动推荐用户应该关注什么；</li>
+          <li>对用户制造更多 Attention。</li>
+        </ul>
+        <div class="callout quote">
+          <p>用户感受到产品聪明，但感觉不到自己在「使用 AI」。</p>
+        </div>
+      </section>
+
+      <!-- 31 -->
+      <section class="section" id="s31">
+        <div class="section-head">
+          <span class="section-num">31</span>
+          <h2>产品成功指标</h2>
+        </div>
+        <h3>31.1 北极星指标 · Attention Delivery Rate</h3>
+        <div class="metric">
+          <p class="formula">ADR = 成功得到用户明确 ACK 的到期事项 ÷ 需要 Attention Delivery 的到期事项</p>
+          <p style="margin:0">重点观察：普通事项 ADR、重要事项 ADR、关键事项 ADR。</p>
+        </div>
+        <h3>31.2 Capture 指标</h3>
+        <ul class="plain">
+          <li>平均 Capture 时间；</li>
+          <li>Capture 成功率；</li>
+          <li>Capture 放弃率；</li>
+          <li>时间解析修改率；</li>
+          <li>Share Sheet Capture 使用比例。</li>
+        </ul>
+        <p>目标：Capture 尽可能 ≤ 5 秒。</p>
+        <h3>31.3 可靠性指标</h3>
+        <ul class="plain">
+          <li>本地通知成功率；</li>
+          <li>重要提醒漏失率；</li>
+          <li>Deadline 漏失率；</li>
+          <li>Snooze 二次触发成功率；</li>
+          <li>重启后提醒恢复率。</li>
+        </ul>
+        <h3>31.4 信任指标</h3>
+        <p>观察：用户主动进入 Future 页面检查的频率。</p>
+        <p>若用户频繁检查「我之前是不是已经记了？」，说明用户尚未完全信任系统。理想情况下，随着使用时间增加，该指标应该下降。</p>
+        <div class="callout warn">
+          <span class="callout-label">双重身份</span>
+          <p>这个指标不只是"观察对象"，它同时是 <strong>§3.2 里判断原则三 / 原则五例外是否成立的唯一标准</strong>。任何声称"为了用户方便"而把未来信息搬进首页的改动，都必须先回答：它会让这个频率下降吗？</p>
+          <p>如果答案是不会，那么无论体验多顺滑，它都是在把「不信任」制度化。</p>
+        </div>
+      </section>
+
+      <!-- 32 -->
+      <section class="section" id="s32">
+        <div class="section-head">
+          <span class="section-num">32</span>
+          <h2>MVP 功能范围</h2>
+        </div>
+        <p>MVP 必须包含：</p>
+        <ul class="check">
+          <li>手机 App；</li>
+          <li>Local-first SQLite 数据；</li>
+          <li>极速自然语言 Capture；</li>
+          <li>时间解析；</li>
+          <li>Future；</li>
+          <li>Now；</li>
+          <li>已看到未完成；</li>
+          <li>Archive；</li>
+          <li>普通提醒；</li>
+          <li>重要提醒；</li>
+          <li>ACK；</li>
+          <li>Snooze；</li>
+          <li>Complete；</li>
+          <li>Deadline Protection；</li>
+          <li>周期提醒；</li>
+          <li>Share Sheet；</li>
+          <li>上下文保存；</li>
+          <li>搜索；</li>
+          <li>基础勿扰规则；</li>
+          <li>App Badge；</li>
+          <li>重启后提醒恢复；</li>
+          <li>基础真机可靠性测试。</li>
+        </ul>
+      </section>
+
+      <!-- 33 -->
+      <section class="section" id="s33">
+        <div class="section-head">
+          <span class="section-num">33</span>
+          <h2>MVP 暂不包含</h2>
+        </div>
+        <h3>Phase 2</h3>
+        <ul class="dash">
+          <li>云同步；</li>
+          <li>账号；</li>
+          <li>多设备；</li>
+          <li>桌面 Capture；</li>
+          <li>浏览器扩展；</li>
+          <li>macOS 菜单栏；</li>
+          <li>Windows 托盘。</li>
+        </ul>
+        <h3>Phase 3 · Event Trigger</h3>
+        <p>支持事件触发，例如：某 GitHub 项目发布新版时提醒、某商品降价时提醒、某报名开放时提醒。即从 Time Trigger 扩展为 Event Trigger。</p>
+      </section>
+
+      <!-- 34 -->
+      <section class="section" id="s34">
+        <div class="section-head">
+          <span class="section-num">34</span>
+          <h2>MVP 验收标准</h2>
+        </div>
+        <p>一个事项从创建到结束必须完整通过以下流程：</p>
+        <div class="flow" aria-label="验收主流程">
+          <div class="flow-step"><span class="dot">1</span><p>用户输入：<strong>「周五提醒我看看 Horolog」</strong></p></div>
+          <div class="flow-step"><span class="dot">2</span><p>系统解析时间</p></div>
+          <div class="flow-step"><span class="dot">3</span><p>自动保存</p></div>
+          <div class="flow-step"><span class="dot">4</span><p>进入 Future</p></div>
+          <div class="flow-step"><span class="dot">5</span><p>周五主动通知</p></div>
+          <div class="flow-step is-signal"><span class="dot">6</span><p>用户选择：<strong>我知道了</strong></p></div>
+          <div class="flow-step"><span class="dot">7</span><p>进入「已看到未完成」</p></div>
+          <div class="flow-step"><span class="dot">8</span><p>用户选择：<strong>稍后提醒</strong></p></div>
+          <div class="flow-step"><span class="dot">9</span><p>重新进入 Future</p></div>
+          <div class="flow-step"><span class="dot">10</span><p>再次通知</p></div>
+          <div class="flow-step is-signal"><span class="dot">11</span><p>用户点击<strong>完成</strong></p></div>
+          <div class="flow-step"><span class="dot">12</span><p>进入 Archive</p></div>
+        </div>
+        <h3>同时必须满足</h3>
+        <ul class="check">
+          <li>App 重启后提醒仍然存在；</li>
+          <li>手机重启后提醒能够恢复；</li>
+          <li>未 ACK 不得被系统视为已看到；</li>
+          <li>ACK 不得自动变成完成；</li>
+          <li>Future 默认不占据首页；</li>
+          <li>Archive 不主动重新浮现；</li>
+          <li>网络断开仍能正常完成核心流程。</li>
+        </ul>
+      </section>
+
+      <!-- 35 -->
+      <section class="section" id="s35">
+        <div class="section-head">
+          <span class="section-num">35</span>
+          <h2>产品判断标准</h2>
+        </div>
+        <p>后续任何新增需求，必须回答三个问题：</p>
+        <div class="principles">
+          <article class="principle">
+            <div class="principle-top">
+              <span class="n">问题一</span>
+              <h3>它是否帮助用户更放心地忘记未来？</h3>
+            </div>
+            <p>如果不是，价值有限。</p>
+          </article>
+          <article class="principle">
+            <div class="principle-top">
+              <span class="n">问题二</span>
+              <h3>它是否降低 Attention Management 的操作成本？</h3>
+            </div>
+            <p>如果提高操作成本，应谨慎。</p>
+          </article>
+          <article class="principle">
+            <div class="principle-top">
+              <span class="n">问题三</span>
+              <h3>它是否让产品更像 Todo App？</h3>
+            </div>
+            <p>如果答案是「是」，默认拒绝。</p>
+          </article>
+        </div>
+      </section>
+
+      <!-- 36 -->
+      <section class="section" id="s36">
+        <div class="section-head">
+          <span class="section-num">36</span>
+          <h2>一句话产品定义</h2>
+        </div>
+        <div class="callout quote">
+          <p>Attention Inbox 是一个让用户安全地把未来需要关注的事情交出去，并在合适的时候可靠地重新获得这部分注意力的系统。</p>
+        </div>
+        <p>它不是帮你管理更多事情，而是<strong>让你少记挂，但不错过</strong>。</p>
+      </section>
+
+      <!-- 37 -->
+      <section class="section" id="s37">
+        <div class="section-head">
+          <span class="section-num">37</span>
+          <h2>产品口号</h2>
+        </div>
+        <div class="callout quote">
+          <p>Remember less. Miss nothing.</p>
+        </div>
+        <p style="font-family:var(--font-display);font-size:1.35rem;margin:0.5rem 0 0">少记挂，不错过。</p>
+      </section>
+
+      <footer class="doc-footer">
+        <p>Attention Inbox · 产品需求文档 V0.1 · MVP</p>
+        <p>核心原则：Attention ≠ Task · Acknowledged ≠ Completed · Future 默认不可见 · 通知送达 ≠ 用户看到 · 低交互优先</p>
+      </footer>
+    </main>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

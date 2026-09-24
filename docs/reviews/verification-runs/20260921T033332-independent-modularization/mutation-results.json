@@ -1,0 +1,264 @@
+[
+  {
+    "name": "copy-ui-algorithm",
+    "detected": true,
+    "restored": true,
+    "bad": {
+      "exit": 1,
+      "failures": [
+        "  ✗ app-core 不再含「弹层开启算法体」",
+        "  ✗ app-core 不再含「弹层开启算法体」"
+      ],
+      "tail": [
+        "通过 136 项，失败 1 项",
+        "  ✗ app-core 不再含「弹层开启算法体」",
+        "",
+        "结果：单一来源未闭合（FAIL）"
+      ]
+    },
+    "good": {
+      "exit": 0,
+      "failures": [],
+      "tail": [
+        "  ✓ 语料 35 条全部返回合法形状（trigger / confidence / title）",
+        "",
+        "通过 137 项，失败 0 项",
+        "结果：单一来源已闭合（PASS）"
+      ]
+    }
+  },
+  {
+    "name": "feedback-value-binding",
+    "detected": true,
+    "restored": true,
+    "bad": {
+      "exit": 1,
+      "failures": [
+        "  ✗ 抑制反馈按取值函数注入（按值传会让 M1 静默失效）",
+        "  ✗ 没有把抑制反馈按值传进去",
+        "  ✗ 抑制反馈按取值函数注入（按值传会让 M1 静默失效）",
+        "  ✗ 没有把抑制反馈按值传进去"
+      ],
+      "tail": [
+        "  ✗ 抑制反馈按取值函数注入（按值传会让 M1 静默失效）",
+        "  ✗ 没有把抑制反馈按值传进去",
+        "",
+        "结果：单一来源未闭合（FAIL）"
+      ]
+    },
+    "good": {
+      "exit": 0,
+      "failures": [],
+      "tail": [
+        "  ✓ 语料 35 条全部返回合法形状（trigger / confidence / title）",
+        "",
+        "通过 137 项，失败 0 项",
+        "结果：单一来源已闭合（PASS）"
+      ]
+    }
+  },
+  {
+    "name": "toast-duration",
+    "detected": true,
+    "restored": true,
+    "bad": {
+      "exit": 1,
+      "failures": [
+        "  ✗ toast：无动作 / 步骤 0「toast 无动作」 挂起定时器",
+        "  ✗ toast：无动作 / 步骤 1「手动 hideToast」 挂起定时器",
+        "  ✗ toast：second 形状不合法（无 label） / 步骤 0「second 无 label」 挂起定时器",
+        "  ✗ toast：second 形状不合法（无 label） / 步骤 1「second 为 null」 挂起定时器",
+        "  ✗ toast：连续两次（前一个定时器必须被撤） / 步骤 0「第一次（挂起 [2400]）」 步骤标签",
+        "  ✗ toast：连续两次（前一个定时器必须被撤） / 步骤 0「第一次（挂起 [2400]）」 挂起定时器",
+        "  ✗ toast：连续两次（前一个定时器必须被撤） / 步骤 1「第二次（挂起 [2400]）」 步骤标签",
+        "  ✗ toast：连续两次（前一个定时器必须被撤） / 步骤 1「第二次（挂起 [2400]）」 挂起定时器",
+        "  ✗ toast：时长口径（默认 / 有动作 / 显式指定） / 步骤 0「无动作 ⇒ [2400]」 步骤标签",
+        "  ✗ toast：时长口径（默认 / 有动作 / 显式指定） / 步骤 0「无动作 ⇒ [2400]」 挂起定时器"
+      ],
+      "tail": [
+        "      oracle = [2400]",
+        "      next   = [2500]",
+        "",
+        "结果：搬移改变了行为（FAIL）"
+      ]
+    },
+    "good": {
+      "exit": 0,
+      "failures": [],
+      "tail": [
+        "自检：轨迹里出现过非空 DOM 状态 = true，出现过挂起定时器 = true",
+        "",
+        "场景数：16，比对字段项：590",
+        "结果：DOM 层搬移前后逐步逐字段一致（PASS）"
+      ]
+    }
+  },
+  {
+    "name": "close-sheet-backdrop",
+    "detected": true,
+    "restored": true,
+    "bad": {
+      "exit": 1,
+      "failures": [
+        "  ✗ 弹层：逐层开关与 backdrop 的撤销口径 / 步骤 2「关 capture（detail 还开着 ⇒ backdrop 该留）」 #backdrop"
+      ],
+      "tail": [
+        "      oracle = {\"text\":\"\",\"hidden\":false,\"onclick\":\"null\",\"classes\":[\"show\"]}",
+        "      next   = {\"text\":\"\",\"hidden\":false,\"onclick\":\"null\",\"classes\":[]}",
+        "",
+        "结果：搬移改变了行为（FAIL）"
+      ]
+    },
+    "good": {
+      "exit": 0,
+      "failures": [],
+      "tail": [
+        "自检：轨迹里出现过非空 DOM 状态 = true，出现过挂起定时器 = true",
+        "",
+        "场景数：16，比对字段项：590",
+        "结果：DOM 层搬移前后逐步逐字段一致（PASS）"
+      ]
+    }
+  },
+  {
+    "name": "missing-gate-declaration",
+    "detected": true,
+    "restored": true,
+    "bad": {
+      "exit": 1,
+      "failures": [
+        "  ✗ app-core 引用的每个 Lib/DatePrimitives 符号都在必需导出声明表里（矩阵闭合） — [{\"path\":\"AppUi.createUi\",\"lines\":[30,31]}]",
+        "  ✗ 反向对照：新增一个未声明的 Lib.brandNewThing 引用 ⇒ 闭合判定报出来 — [{\"path\":\"AppUi.createUi\",\"lines\":[30,31]},{\"path\":\"brandNewThing\",\"lines\":[309,309]}]",
+        "  ✗ 反向对照：注释里的 Lib.commentOnlyThing 不被误报（剥注释真的生效） — [{\"path\":\"AppUi.createUi\",\"lines\":[30,31]}]",
+        "  ✗ 反例：抽掉 lib/app-ui.js ⇒ ready 失败且点名 AppUi / AppUi.createUi — [\"AppUi\",\"AppUi.safeExternalHref\"]"
+      ],
+      "tail": [
+        "  - app-core 引用的每个 Lib/DatePrimitives 符号都在必需导出声明表里（矩阵闭合） — [{\"path\":\"AppUi.createUi\",\"lines\":[30,31]}]",
+        "  - 反向对照：新增一个未声明的 Lib.brandNewThing 引用 ⇒ 闭合判定报出来 — [{\"path\":\"AppUi.createUi\",\"lines\":[30,31]},{\"path\":\"brandNewThing\",\"lines\":[309,309]}]",
+        "  - 反向对照：注释里的 Lib.commentOnlyThing 不被误报（剥注释真的生效） — [{\"path\":\"AppUi.createUi\",\"lines\":[30,31]}]",
+        "  - 反例：抽掉 lib/app-ui.js ⇒ ready 失败且点名 AppUi / AppUi.createUi — [\"AppUi\",\"AppUi.safeExternalHref\"]"
+      ]
+    },
+    "good": {
+      "exit": 0,
+      "failures": [],
+      "tail": [
+        "",
+        "========== 生产组合启动测试结果 ==========",
+        "通过: 208  失败: 0",
+        "全部通过。"
+      ]
+    }
+  },
+  {
+    "name": "missing-index-ui",
+    "detected": true,
+    "restored": true,
+    "bad": {
+      "exit": 1,
+      "failures": [
+        "  ✗ index.html 的脚本集合与顺序与契约逐项相符（11 支） — [\"lib/date-utils.js\",\"lib/ui-format.js\",\"lib/parse-cn.js\",\"lib/repeat.js\",\"lib/reminder.js\",\"lib/storage.js\",\"lib/feedback.js\",\"lib/delivery-evidence.js\",\"lib/native-reminders.js\",\"app-core.js\"]",
+        "  ✗ test-smoke.js 加载的脚本都在生产清单里（没有自创/拼错的脚本名） — [\"lib/app-ui.js\"]",
+        "  ✗ test-regressions.js 加载的脚本都在生产清单里（没有自创/拼错的脚本名） — [\"lib/app-ui.js\"]",
+        "  ✗ 缺口有明确补位：本 harness（B 段）加载完整生产清单，含 lib/native-reminders.js",
+        "  ✗ 生产清单的 11 支脚本全部加载成功 — []",
+        "  ✗ 应用 ready() === true（启动链跑到底）",
+        "  ✗ IDB 后端真的被用上了（证明 app-core 抓到的 Lib 是加载进沙箱的那一份） — idb puts=0",
+        "  ✗ 反向对照：去掉 lib/native-reminders.js 后应用仍然 ready（缺口是静默的，必须靠清单判定拦住）",
+        "  ✗ 正向：完整生产组合下启动闸门无问题（startupFailure() === null） — [{\"path\":\"AppUi\",\"expected\":\"object\",\"actual\":\"undefined\",\"why\":\"lib/app-ui.js 未加载 —— DOM 查询/弹层/toast/确认框全部失效：界面看似能渲染，但点不动、也没有任何反馈\"},{\"path\":\"AppUi.createUi\",\"expected\":\"function\",\"actual\":\"undefined\",\"why\":\"lib/app-ui.js 导出被破坏（展示能力装配入口）\"},{\"path\":\"AppUi.safeExternalHref\",\"expected\":\"function\",\"actual\":\"undefined\",\"why\":\"lib/app-ui.js 导出被破坏 —— 外链协议白名单失效：`javascript:` / `data:` 这类用户数据可能被渲染成可点 href\"}]",
+        "  ✗ 正向：完整生产组合下 ready() === true",
+        "  ✗ 边界：没有原生桥时闸门**不**报错（纯 Web 是正常状态，不是缺 JS 模块） — [{\"path\":\"AppUi\",\"expected\":\"object\",\"actual\":\"undefined\",\"why\":\"lib/app-ui.js 未加载 —— DOM 查询/弹层/toast/确认框全部失效：界面看似能渲染，但点不动、也没有任何反馈\"},{\"path\":\"AppUi.createUi\",\"expected\":\"function\",\"actual\":\"undefined\",\"why\":\"lib/app-ui.js 导出被破坏（展示能力装配入口）\"},{\"path\":\"AppUi.safeExternalHref\",\"expected\":\"function\",\"actual\":\"undefined\",\"why\":\"lib/app-ui.js 导出被破坏 —— 外链协议白名单失效：`javascript:` / `data:` 这类用户数据可能被渲染成可点 href\"}]",
+        "  ✗ 正向：正常组合下展示能力实例真的可用（不是「绑定存在」而是「能调用」） — {\"hasQuery\":false,\"hasQueryAll\":false,\"hasSheet\":false,\"hasCloseSheet\":false,\"hasCloseAllSheets\":false,\"hasConfirm\":false,\"hasToast\":false,\"hasHideToast\":false,\"hasSafeHref\":false,\"hrefHttps\":\"MISSING\",\"hrefJs\":\"MISSING\",\"hrefTab\":\"MISSING\"}"
+      ],
+      "tail": [
+        "    at setNativeReminderStatus (app-core.js:4561:5)",
+        "    at syncNativeRemindersNow (app-core.js:4915:7)",
+        "",
+        "Node.js v22.22.2"
+      ]
+    },
+    "good": {
+      "exit": 0,
+      "failures": [],
+      "tail": [
+        "",
+        "========== 生产组合启动测试结果 ==========",
+        "通过: 208  失败: 0",
+        "全部通过。"
+      ]
+    }
+  },
+  {
+    "name": "missing-precache-ui",
+    "detected": true,
+    "restored": true,
+    "bad": {
+      "exit": 1,
+      "failures": [],
+      "tail": [
+        "[",
+        "  'not-precached:lib/app-ui.js（全新安装 + 第一次就没网 ⇒ caches.match 未命中，脚本回落成 HTML，桥静默缺失）'",
+        "]"
+      ]
+    },
+    "good": {
+      "exit": 0,
+      "failures": [],
+      "tail": [
+        "[]"
+      ]
+    }
+  },
+  {
+    "name": "missing-smoke-ui",
+    "detected": true,
+    "restored": true,
+    "bad": {
+      "exit": 1,
+      "failures": [
+        "  ✗ Q1 启动链完整跑完（ready() === true） — false 表示 init() 中途抛错：seed / render / 15 秒心跳都不会执行"
+      ],
+      "tail": [
+        "    at runUserOp (app-core.js:745:45)",
+        "    at Object.ackItem (app-core.js:802:14)",
+        "    at run (/Users/qlyf/Developer/reminder/docs/reviews/verification-runs/20260921T033332-independent-modularization/mutation-copy/test-smoke.js:278:7)",
+        "    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)"
+      ]
+    },
+    "good": {
+      "exit": 0,
+      "failures": [],
+      "tail": [
+        "",
+        "========== 结果 ==========",
+        "通过: 256  失败: 0",
+        "全部通过。"
+      ]
+    }
+  },
+  {
+    "name": "missing-regression-ui",
+    "detected": true,
+    "restored": true,
+    "bad": {
+      "exit": 1,
+      "failures": [],
+      "tail": [
+        "Failed to render startup failure: host.insertBefore is not a function",
+        "TypeError: openSheet is not a function",
+        "    at Object.openReviewSession (app-core.js:1329:5)",
+        "    at run (/Users/qlyf/Developer/reminder/docs/reviews/verification-runs/20260921T033332-independent-modularization/mutation-copy/test-regressions.js:451:9)"
+      ]
+    },
+    "good": {
+      "exit": 0,
+      "failures": [],
+      "tail": [
+        "",
+        "========== 回归结果 ==========",
+        "通过: 730  失败: 0",
+        "全部通过。"
+      ]
+    }
+  }
+]

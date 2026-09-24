@@ -1,0 +1,174 @@
+✓ 合成纯转发 → C
+✓ 合成实现体 → E
+✓ A 名单全部存在
+✓ B 名单全部存在
+✓ D 名单全部存在
+✓ 三类名单互不重叠
+
+== 上一轮报告口径（naive 边界）==
+类   个数      行数      报告个数      报告行数      对账
+A   22      1390    22        1390      MATCH
+B   9       295     9         295       MATCH
+C   176     432     176       432       MATCH
+D   11      33      11        33        MATCH
+E   36      220     36        220       MATCH
+合计  254     2370    254       2370      MATCH
+
+== 花括号收口口径（precise 边界，本脚本主张的真实体量）==
+类   个数      行数      naive 行数    差
+A   22      1339    1390        51
+B   9       265     295         30
+C   176     429     432         3
+D   11      31      33          2
+E   36      220     220         0
+合计  254     2284    2370        86
+
+== 边界假象：被 naive 口径误并进上一个函数体内的顶层语句（9 处，共 86 行）==
+   这 86 行不是任何函数的代码，却被算进了上一行函数的体量。
+  runtimeRoots（L655，被并进 5 行）
+      L668  const RUNTIME_ROOT_PREFIX = {
+      L669  AttentionLib: "AttentionLib",
+      L670  AttentionNativeReminders: "AttentionNativeReminders",
+      L671  NativeReminders: "AttentionNativeReminders"
+      L672  };
+  describeGot（L688，被并进 46 行）
+      L701  const RUNTIME_BINDING_PATHS = [
+      L702  ["AttentionNativeReminders", "NativeReminders"],
+      L703  ["AppUi", "AppUi"],
+      L704  ["AppAi", "AppAi"],
+      L705  ["AppBackup", "AppBackup"],
+      L706  ["AppDiagnostics", "AppDiagnostics"],
+      L707  ["AppSetup", "AppSetup"],
+      L708  ["AppContent", "AppContent"],
+      L709  ["AppCapture", "AppCapture"],
+      L710  ["AppViews", "AppViews"],
+      L711  ["AppModel", "AppModel"],
+      L712  ["AppPersistence", "AppPersistence"],
+      L713  ["AppTransaction", "AppTransaction"],
+      L714  ["AppItems", "AppItems"],
+      L715  ["AppNativeCoordinator", "AppNativeCoordinator"],
+      L716  ["AppReview", "AppReview"],
+      L717  ["AppAlerts", "AppAlerts"],
+      L718  ["AppPlatform", "AppPlatform"],
+      L719  ["AppNotices", "AppNotices"],
+      L720  ["AppActionFeedback", "AppActionFeedback"],
+      L721  ["AppEvents", "AppEvents"],
+      L722  ["AppTestApi", "AppTestApi"],
+      L723  ["Feedback", "FeedbackLib"],
+      L724  ["DeliveryEvidence", "EvidenceLib"],
+      L725  ["DatePrimitives", "DatePrimitives"],
+      L726  ["UiFormat", "UiFormat"],
+      L727  ["createStorage", "createStorageFactory"],
+      L728  ["AppUi.safeExternalHref", "safeExternalHref"],
+      L729  ["DatePrimitives.startOfDay", "startOfDay"],
+      L730  ["DatePrimitives.endOfDay", "endOfDay"],
+      L731  ["DatePrimitives.addDays", "addDays"],
+      L732  ["DatePrimitives.sameDay", "sameDay"],
+      L733  ["DatePrimitives.nextWeekend", "nextWeekend"],
+      L734  ["DatePrimitives.applyClock", "applyClock"],
+      L735  ["DatePrimitives.lastDayOfMonth", "lastDayOfMonth"],
+      L736  ["DatePrimitives.nthWeekdayInMonth", "nthWeekdayInMonth"],
+      L737  ["DatePrimitives.weekdayOfNextWeek", "weekdayOfNextWeek"],
+      L738  ["DatePrimitives.dayOfMonthIn", "dayOfMonthIn"],
+      L739  ["DatePrimitives.nextDayOfMonth", "nextDayOfMonth"],
+      L740  ["nextRepeatTrigger", "nextRepeatTrigger"],
+      L741  ["repeatLabel", "repeatLabel"],
+      L742  ["nextRepeatPreview", "nextRepeatPreview"],
+      L743  ["parseChineseTime", "parseChineseTime"],
+      L744  ["cnInt", "cnInt"],
+      L745  ["hasSpecificTimeWord", "hasSpecificTimeWord"]
+      L746  ];
+  renderStartupFailure（L2236，被并进 2 行）
+      L2315  let restoreRetryInFlight = false;
+      L2322  let stateRecoveryPanelShown = false;
+  renderMarkdown（L2560，被并进 2 行）
+      L2580  let PROJECT_COLORS = null;
+      L2581  let state = null;
+  homeNoticeVerdict（L2872，被并进 1 行）
+      L2892  const lastWrittenHtml = new WeakMap();
+  lastCompleteUndo（L2989，被并进 1 行）
+      L2992  let undoNativeCheckPending = false;
+  handleQueryActions（L3673，被并进 1 行）
+      L3678  let globalErrorHandlerInstalled = false;
+  startBusinessStartup（L3734，被并进 3 行）
+      L3806  let readyPromise = null;
+      L3815  let lastStartupFailure = null;
+      L3824  let initStarted = false;
+  startApp（L3826，被并进 25 行）
+      L3890  const itemCommand = { userFacing: true, itemArg: 0 };
+      L3891  applyDeadlineEvents = wrapUserOp(applyDeadlineEvents);
+      L3892  markDeadlineDelivered = wrapUserOp(markDeadlineDelivered);
+      L3893  refreshNativeScheduleBasis = wrapUserOp(refreshNativeScheduleBasis);
+      L3895  if (document.readyState === "loading") {
+      L3896  document.addEventListener("DOMContentLoaded", function () { startApp(); });
+      L3897  } else {
+      L3898  startApp();
+      L3899  }
+      L3902  const testApiLib = (AppTestApi && typeof AppTestApi.createAppTestApi === "function")
+      L3903  ? AppTestApi
+      L3904  : ((typeof AttentionLib !== "undefined" && AttentionLib && AttentionLib.AppTestApi) || null);
+      L3905  if (!appTestApi && testApiLib && typeof testApiLib.createAppTestApi === "function") {
+      L3906  try {
+      L3907  appTestApi = testApiLib.createAppTestApi(testApiRuntimeDeps());
+      L3908  } catch (_) {}
+      L3909  }
+      L3910  if (appTestApi && typeof appTestApi.assembleTestApi === "function") {
+      L3911  appTestApi.assembleTestApi();
+      L3912  } else if (typeof globalThis !== "undefined" && !globalThis.__ATTENTION_INBOX__) {
+      L3913  const fallbackDeps = testApiRuntimeDeps();
+      L3914  globalThis.__ATTENTION_INBOX__ = fallbackDeps;
+      L3915  globalThis.seedAttentionInbox = fallbackDeps.seed;
+      L3916  }
+      L3917  })();
+
+== E 类逐项（precise 边界，共 36 个 / 220 行）==
+  4   行  L1107   feedbackActionSpec
+  12  行  L2630   wrapUserOp
+  18  行  L2660   applyParsedState
+  3   行  L2726   deadlineStageKeyOf
+  5   行  L2760   isAttentionDue
+  7   行  L2893   writeIfChanged
+  3   行  L2936   inQuietHours
+  3   行  L2940   quietEnd
+  6   行  L3059   renderHome
+  10  行  L3078   setUserMode
+  6   行  L3111   renderPwaStatus
+  5   行  L3117   render
+  3   行  L3145   runAiOnCapture
+  3   行  L3149   saveAiSettings
+  3   行  L3153   testAiConnection
+  8   行  L3265   setNativeReminderStatus
+  47  行  L3314   handleNativeNotificationAction
+  5   行  L3387   isNativeAndroidRuntime
+  3   行  L3416   refreshNotifyLab
+  3   行  L3420   labLog
+  4   行  L3424   labCancelAlarms
+  4   行  L3429   describeAlarmDelivery
+  4   行  L3434   openSystemSetting
+  4   行  L3439   openBackgroundGuide
+  3   行  L3444   bindDiagnostics
+  4   行  L3459   bindSetupReviewControls
+  3   行  L3465   pad2
+  11  行  L3501   detailReminderStatusRow
+  3   行  L3563   stopPolling
+  3   行  L3575   exportData
+  3   行  L3579   importDataFile
+  3   行  L3583   buildLegacyBackupPayload
+  5   行  L3635   bind
+  3   行  L3646   registerPwa
+  3   行  L3650   bindInstall
+  3   行  L3669   bindNetwork
+
+== E 类中「长实现体」（≥7 行，共 7 个）—— §4 必须逐项给出所有权理由 ==
+  12  行  wrapUserOp
+  18  行  applyParsedState
+  7   行  writeIfChanged
+  10  行  setUserMode
+  8   行  setNativeReminderStatus
+  47  行  handleNativeNotificationAction
+  11  行  detailReminderStatusRow
+
+落盘：/Users/qlyf/Developer/reminder/docs/reviews/verification-runs/20260924T1011-u1-independent-recheck/compose-partition.json
+复算完成：自检全绿。
+EXIT=0
+PARTITION_CMP_EXIT=0

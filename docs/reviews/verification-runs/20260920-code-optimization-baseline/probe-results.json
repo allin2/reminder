@@ -1,0 +1,86 @@
+{
+  "node": "v20.17.0",
+  "remarks": "Mock DOM/IDB, live product source plus in-memory observation hooks; no product edits or device execution.",
+  "boot": {
+    "home": 3,
+    "promote": 4,
+    "nativeInjected": "function",
+    "isNativeAndroid": false
+  },
+  "deferOption": {
+    "passed": true,
+    "extraSyncRequests": 1
+  },
+  "collapsedActive": {
+    "items": 1000,
+    "hiddenMarkup": true,
+    "articleCount": 1000,
+    "htmlUtf8Bytes": 667617
+  },
+  "ledger": [
+    {
+      "items": 100,
+      "emptyDeadlineLedger": true,
+      "findPredicateVisits": 5050,
+      "changed": false,
+      "elapsedMs": 0.758
+    },
+    {
+      "items": 500,
+      "emptyDeadlineLedger": true,
+      "findPredicateVisits": 125250,
+      "changed": false,
+      "elapsedMs": 1.473
+    },
+    {
+      "items": 2000,
+      "emptyDeadlineLedger": true,
+      "findPredicateVisits": 2001000,
+      "changed": false,
+      "elapsedMs": 19.289
+    }
+  ],
+  "unsafeUrl": {
+    "preservedInAnchor": true
+  },
+  "importedId": {
+    "survivesNormalization": "x\" data-audit=\"yes",
+    "attributeBreakout": true
+  },
+  "storage": [
+    {
+      "mode": "idb",
+      "keys": [
+        "attention-inbox-v2"
+      ],
+      "idbPuts": 1
+    },
+    {
+      "mode": "no-idb",
+      "keys": [
+        "attention-inbox-v2"
+      ],
+      "idbPuts": 0
+    },
+    {
+      "mode": "idb-open-fails",
+      "keys": [
+        "attention-inbox-v2",
+        "attention-inbox-v2-pending-replay"
+      ],
+      "idbPuts": 0
+    }
+  ],
+  "nativeDiff": {
+    "firstRoundScheduleCalls": 1,
+    "secondUnchangedRoundExtraCalls": 0
+  },
+  "sourceSha256": {
+    "app-core.js": "e5129a546836a19694bddc84ee3d9134e171f2d12c56f1dcb08e6e1b625d0c28",
+    "lib/storage.js": "d7f5ca0d766f796cdeea6f4ce0b73875dc5778ed4eefdb8c939cae6b5b27d2d1",
+    "lib/native-reminders.js": "7c09fa1c53e21f5be997a59261ec8005f38a4f58c81fb8f068ee42022e5b06af",
+    "index.html": "f13eca9a0479a59d19e2c03f7d3152406fe7d378ff62e33a0627f4ed2171c0b5",
+    "test-smoke.js": "291ab8d1116c27d2894c2a1c257ebe5e0e5e429a2bdef47c8c0da0a3983fea29",
+    "test-regressions.js": "588a8e4f39c1ac5028399a8ad49096274c3279c7e1555b822189330f3310ac46"
+  }
+}

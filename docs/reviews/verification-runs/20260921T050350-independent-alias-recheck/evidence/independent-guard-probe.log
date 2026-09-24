@@ -1,0 +1,105 @@
+{
+  "checks": {
+    "baseline_closed": true,
+    "unique_alias_detected": true,
+    "direct_namespace_detected": true,
+    "ambiguity_fails_closed": true,
+    "guarded_alias_blind_spot_reproduced": true,
+    "guarded_namespace_blind_spot_reproduced": true,
+    "capture_summary_runtime_gate": true,
+    "reminder_feedback_runtime_gate": true
+  },
+  "baseline": {
+    "aliases": {
+      "feedbackApi": "FeedbackLib"
+    },
+    "undeclared": [],
+    "ambiguousAliases": [],
+    "ambiguousRefs": [],
+    "problems": []
+  },
+  "controls": {
+    "uniqueAlias": {
+      "undeclared": [
+        {
+          "path": "Feedback.independentDirectMember",
+          "lines": [
+            583
+          ]
+        }
+      ],
+      "guardedRefs": [],
+      "ambiguousAliases": [],
+      "ambiguousRefs": [],
+      "problems": [
+        "undeclared-dependency:Feedback.independentDirectMember（app-core.js:583）"
+      ]
+    },
+    "directNamespace": {
+      "undeclared": [
+        {
+          "path": "Feedback.independentDirectMember",
+          "lines": [
+            582
+          ]
+        }
+      ],
+      "guardedRefs": [],
+      "ambiguousAliases": [],
+      "ambiguousRefs": [],
+      "problems": [
+        "undeclared-dependency:Feedback.independentDirectMember（app-core.js:582）"
+      ]
+    },
+    "ambiguous": {
+      "undeclared": [],
+      "guardedRefs": [],
+      "ambiguousAliases": [
+        "independentCollision"
+      ],
+      "ambiguousRefs": [
+        "independentCollision.independentMember"
+      ],
+      "problems": [
+        "ambiguous-alias:independentCollision（同一名字既被赋成已知命名空间、又被赋成别的东西）",
+        "ambiguous-ref:independentCollision.independentMember（归属不可证明）"
+      ]
+    }
+  },
+  "counterexamples": {
+    "guardedAlias": {
+      "undeclared": [],
+      "guardedRefs": [
+        "Feedback.independentGuardedMember"
+      ],
+      "ambiguousAliases": [],
+      "ambiguousRefs": [],
+      "problems": []
+    },
+    "guardedNamespace": {
+      "undeclared": [],
+      "guardedRefs": [
+        "Feedback.independentGuardedMember"
+      ],
+      "ambiguousAliases": [],
+      "ambiguousRefs": [],
+      "problems": []
+    }
+  },
+  "runtimeMembers": {
+    "captureSummary": {
+      "ready": false,
+      "puts": 0,
+      "paths": [
+        "Feedback.captureSummary"
+      ]
+    },
+    "reminderFeedback": {
+      "ready": false,
+      "puts": 0,
+      "paths": [
+        "Feedback.reminderFeedback"
+      ]
+    }
+  }
+}

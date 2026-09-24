@@ -1,0 +1,10 @@
+{
+  "serial": "10ACBF2D3D000RS",
+  "unlock": "KEYCODE_WAKEUP followed by upward swipe; no password",
+  "confirmation": "Normal package installer non-store-source acknowledgement and Continue Install",
+  "result": "Success",
+  "candidate": "releases/candidates/20260919-n4-window/app-debug-final.apk",
+  "sha256": "c56218247b6720f113292644acea7a29ba5eaa25f9d516b186cbdfccd3d1330d",
+  "verification": "Device base.apk SHA independently captured in other/off/cold metadata.json",
+  "securitySettingsChanged": false
+}

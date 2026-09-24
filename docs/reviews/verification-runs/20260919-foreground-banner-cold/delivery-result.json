@@ -1,0 +1,140 @@
+{
+  "itemId": "matrix_cold_1789819271",
+  "received": true,
+  "visible": true,
+  "lagMs": 842,
+  "rows": [
+    {
+      "token": "1233861316:9fdaa7ba-1c84-4520-9ea9-3fd92b877499",
+      "stage": "requested",
+      "at": 1789819270255,
+      "detail": "delayMs=44764"
+    },
+    {
+      "token": "1233861316:9fdaa7ba-1c84-4520-9ea9-3fd92b877499",
+      "stage": "item",
+      "at": 1789819270260,
+      "detail": "matrix_cold_1789819271"
+    },
+    {
+      "token": "1233861316:9fdaa7ba-1c84-4520-9ea9-3fd92b877499",
+      "stage": "unfreezerScheduled",
+      "at": 1789819270272,
+      "detail": "triggerAt=1789819315026;mode=alarmClock"
+    },
+    {
+      "token": "1233861316:9fdaa7ba-1c84-4520-9ea9-3fd92b877499",
+      "stage": "scheduled",
+      "at": 1789819270275,
+      "detail": "triggerAt=1789819315026;mode=alarmClock"
+    },
+    {
+      "token": "1233861316:9fdaa7ba-1c84-4520-9ea9-3fd92b877499",
+      "stage": "received",
+      "at": 1789819315842,
+      "detail": ""
+    },
+    {
+      "token": "1233861316:9fdaa7ba-1c84-4520-9ea9-3fd92b877499",
+      "stage": "environment",
+      "at": 1789819316099,
+      "detail": "screenOn=false;locked=true;inCall=false;path=fsi+direct"
+    },
+    {
+      "token": "1233861316:9fdaa7ba-1c84-4520-9ea9-3fd92b877499",
+      "stage": "ringServiceRequested",
+      "at": 1789819316372,
+      "detail": "foreground service asked to hold sound+vibration"
+    },
+    {
+      "token": "1233861316:9fdaa7ba-1c84-4520-9ea9-3fd92b877499",
+      "stage": "launchLikelyBlocked",
+      "at": 1789819316425,
+      "detail": "no SYSTEM_ALERT_WINDOW"
+    },
+    {
+      "token": "1233861316:9fdaa7ba-1c84-4520-9ea9-3fd92b877499",
+      "stage": "launchRequested",
+      "at": 1789819316516,
+      "detail": "direct launch alongside full-screen intent"
+    },
+    {
+      "token": "1233861316:9fdaa7ba-1c84-4520-9ea9-3fd92b877499",
+      "stage": "systemNotificationPosted",
+      "at": 1789819316609,
+      "detail": "NotificationManager accepted active delivery"
+    },
+    {
+      "token": "1233861316:9fdaa7ba-1c84-4520-9ea9-3fd92b877499",
+      "stage": "notifyReturned",
+      "at": 1789819316663,
+      "detail": "system notification posted; fullScreenIntent=true; sound+vibration carried by AlarmRingService; banner visibility is OEM-controlled"
+    },
+    {
+      "token": "1233861316:9fdaa7ba-1c84-4520-9ea9-3fd92b877499",
+      "stage": "carrierRecorded",
+      "at": 1789819317091,
+      "detail": "sound=native;vibrate=native;foreground=true"
+    },
+    {
+      "token": "1233861316:9fdaa7ba-1c84-4520-9ea9-3fd92b877499",
+      "stage": "ringStarted",
+      "at": 1789819317115,
+      "detail": "carrier=native;foreground=true;sound=true;vibrate=true"
+    },
+    {
+      "token": "1233861316:9fdaa7ba-1c84-4520-9ea9-3fd92b877499",
+      "stage": "created",
+      "at": 1789819317187,
+      "detail": "test=false"
+    },
+    {
+      "token": "1233861316:9fdaa7ba-1c84-4520-9ea9-3fd92b877499",
+      "stage": "localFallbackStopped",
+      "at": 1789819317309,
+      "detail": "service-owned sound is stopped separately"
+    },
+    {
+      "token": "1233861316:9fdaa7ba-1c84-4520-9ea9-3fd92b877499",
+      "stage": "resumed",
+      "at": 1789819317351,
+      "detail": "lifecycle only"
+    },
+    {
+      "token": "1233861316:9fdaa7ba-1c84-4520-9ea9-3fd92b877499",
+      "stage": "localFallbackStopped",
+      "at": 1789819317374,
+      "detail": "service-owned sound is stopped separately"
+    },
+    {
+      "token": "1233861316:9fdaa7ba-1c84-4520-9ea9-3fd92b877499",
+      "stage": "focus",
+      "at": 1789819317562,
+      "detail": "true"
+    },
+    {
+      "token": "1233861316:9fdaa7ba-1c84-4520-9ea9-3fd92b877499",
+      "stage": "windowVisible",
+      "at": 1789819317583,
+      "detail": "via=focus;focused=true;shown=true"
+    },
+    {
+      "token": "1233861316:9fdaa7ba-1c84-4520-9ea9-3fd92b877499",
+      "stage": "windowSample",
+      "at": 1789819317697,
+      "detail": "after=300ms;focus=true;shown=true;visibility=0;playing=false"
+    },
+    {
+      "token": "1233861316:9fdaa7ba-1c84-4520-9ea9-3fd92b877499",
+      "stage": "windowSample",
+      "at": 1789819318196,
+      "detail": "after=800ms;focus=true;shown=true;visibility=0;playing=false"
+    },
+    {
+      "token": "1233861316:9fdaa7ba-1c84-4520-9ea9-3fd92b877499",
+      "stage": "windowSample",
+      "at": 1789819318898,
+      "detail": "after=1500ms;focus=true;shown=true;visibility=0;playing=false"
+    }
+  ]
+}

@@ -1,0 +1,963 @@
+[
+  {
+    "name": "valid-schema5",
+    "accepted": true,
+    "stateChanged": true,
+    "calls": {
+      "confirm": 1,
+      "save": 1,
+      "render": 1,
+      "toast": [
+        "导入成功 · 1 条事项"
+      ]
+    },
+    "final": {
+      "items": [
+        {
+          "id": "new-item",
+          "title": "新事项",
+          "status": "waiting"
+        }
+      ],
+      "notes": [
+        {
+          "id": "new-note",
+          "text": "新备注",
+          "createdAt": 2
+        }
+      ],
+      "projects": [
+        {
+          "id": "new-project",
+          "name": "新项目",
+          "color": "#fff"
+        }
+      ],
+      "settings": {
+        "notify": false,
+        "dnd": true,
+        "importantRepeat": false,
+        "quietStart": "23:00",
+        "quietEnd": "06:00",
+        "dailySummary": true,
+        "privacyNotify": false,
+        "defaultDeliveryMode": "alarm",
+        "userMode": "normal",
+        "ai": {
+          "enabled": false,
+          "baseUrl": "",
+          "apiKey": "",
+          "model": "m",
+          "autoOnSave": false
+        }
+      }
+    }
+  },
+  {
+    "name": "valid-schema2",
+    "accepted": true,
+    "stateChanged": true,
+    "calls": {
+      "confirm": 1,
+      "save": 1,
+      "render": 1,
+      "toast": [
+        "导入成功 · 1 条事项"
+      ]
+    },
+    "final": {
+      "items": [
+        {
+          "id": "new-item",
+          "title": "新事项",
+          "status": "waiting"
+        }
+      ],
+      "notes": [
+        {
+          "id": "new-note",
+          "text": "新备注",
+          "createdAt": 2
+        }
+      ],
+      "projects": [
+        {
+          "id": "new-project",
+          "name": "新项目",
+          "color": "#fff"
+        }
+      ],
+      "settings": {
+        "notify": false,
+        "dnd": true,
+        "importantRepeat": false,
+        "quietStart": "23:00",
+        "quietEnd": "06:00",
+        "dailySummary": true,
+        "privacyNotify": false,
+        "defaultDeliveryMode": "alarm",
+        "userMode": "normal",
+        "ai": {
+          "enabled": false,
+          "baseUrl": "",
+          "apiKey": "",
+          "model": "m",
+          "autoOnSave": false
+        }
+      }
+    }
+  },
+  {
+    "name": "foreign-app",
+    "accepted": true,
+    "stateChanged": true,
+    "calls": {
+      "confirm": 1,
+      "save": 1,
+      "render": 1,
+      "toast": [
+        "导入成功 · 1 条事项"
+      ]
+    },
+    "final": {
+      "items": [
+        {
+          "id": "new-item",
+          "title": "新事项",
+          "status": "waiting"
+        }
+      ],
+      "notes": [
+        {
+          "id": "new-note",
+          "text": "新备注",
+          "createdAt": 2
+        }
+      ],
+      "projects": [
+        {
+          "id": "new-project",
+          "name": "新项目",
+          "color": "#fff"
+        }
+      ],
+      "settings": {
+        "notify": false,
+        "dnd": true,
+        "importantRepeat": false,
+        "quietStart": "23:00",
+        "quietEnd": "06:00",
+        "dailySummary": true,
+        "privacyNotify": false,
+        "defaultDeliveryMode": "alarm",
+        "userMode": "normal",
+        "ai": {
+          "enabled": false,
+          "baseUrl": "",
+          "apiKey": "",
+          "model": "m",
+          "autoOnSave": false
+        }
+      }
+    }
+  },
+  {
+    "name": "missing-app",
+    "accepted": true,
+    "stateChanged": true,
+    "calls": {
+      "confirm": 1,
+      "save": 1,
+      "render": 1,
+      "toast": [
+        "导入成功 · 1 条事项"
+      ]
+    },
+    "final": {
+      "items": [
+        {
+          "id": "new-item",
+          "title": "新事项",
+          "status": "waiting"
+        }
+      ],
+      "notes": [
+        {
+          "id": "new-note",
+          "text": "新备注",
+          "createdAt": 2
+        }
+      ],
+      "projects": [
+        {
+          "id": "new-project",
+          "name": "新项目",
+          "color": "#fff"
+        }
+      ],
+      "settings": {
+        "notify": false,
+        "dnd": true,
+        "importantRepeat": false,
+        "quietStart": "23:00",
+        "quietEnd": "06:00",
+        "dailySummary": true,
+        "privacyNotify": false,
+        "defaultDeliveryMode": "alarm",
+        "userMode": "normal",
+        "ai": {
+          "enabled": false,
+          "baseUrl": "",
+          "apiKey": "",
+          "model": "m",
+          "autoOnSave": false
+        }
+      }
+    }
+  },
+  {
+    "name": "future-schema",
+    "accepted": true,
+    "stateChanged": true,
+    "calls": {
+      "confirm": 1,
+      "save": 1,
+      "render": 1,
+      "toast": [
+        "导入成功 · 1 条事项"
+      ]
+    },
+    "final": {
+      "items": [
+        {
+          "id": "new-item",
+          "title": "新事项",
+          "status": "waiting"
+        }
+      ],
+      "notes": [
+        {
+          "id": "new-note",
+          "text": "新备注",
+          "createdAt": 2
+        }
+      ],
+      "projects": [
+        {
+          "id": "new-project",
+          "name": "新项目",
+          "color": "#fff"
+        }
+      ],
+      "settings": {
+        "notify": false,
+        "dnd": true,
+        "importantRepeat": false,
+        "quietStart": "23:00",
+        "quietEnd": "06:00",
+        "dailySummary": true,
+        "privacyNotify": false,
+        "defaultDeliveryMode": "alarm",
+        "userMode": "normal",
+        "ai": {
+          "enabled": false,
+          "baseUrl": "",
+          "apiKey": "",
+          "model": "m",
+          "autoOnSave": false
+        }
+      }
+    }
+  },
+  {
+    "name": "schema-string",
+    "accepted": true,
+    "stateChanged": true,
+    "calls": {
+      "confirm": 1,
+      "save": 1,
+      "render": 1,
+      "toast": [
+        "导入成功 · 1 条事项"
+      ]
+    },
+    "final": {
+      "items": [
+        {
+          "id": "new-item",
+          "title": "新事项",
+          "status": "waiting"
+        }
+      ],
+      "notes": [
+        {
+          "id": "new-note",
+          "text": "新备注",
+          "createdAt": 2
+        }
+      ],
+      "projects": [
+        {
+          "id": "new-project",
+          "name": "新项目",
+          "color": "#fff"
+        }
+      ],
+      "settings": {
+        "notify": false,
+        "dnd": true,
+        "importantRepeat": false,
+        "quietStart": "23:00",
+        "quietEnd": "06:00",
+        "dailySummary": true,
+        "privacyNotify": false,
+        "defaultDeliveryMode": "alarm",
+        "userMode": "normal",
+        "ai": {
+          "enabled": false,
+          "baseUrl": "",
+          "apiKey": "",
+          "model": "m",
+          "autoOnSave": false
+        }
+      }
+    }
+  },
+  {
+    "name": "too-old-schema",
+    "accepted": true,
+    "stateChanged": true,
+    "calls": {
+      "confirm": 1,
+      "save": 1,
+      "render": 1,
+      "toast": [
+        "导入成功 · 1 条事项"
+      ]
+    },
+    "final": {
+      "items": [
+        {
+          "id": "new-item",
+          "title": "新事项",
+          "status": "waiting"
+        }
+      ],
+      "notes": [
+        {
+          "id": "new-note",
+          "text": "新备注",
+          "createdAt": 2
+        }
+      ],
+      "projects": [
+        {
+          "id": "new-project",
+          "name": "新项目",
+          "color": "#fff"
+        }
+      ],
+      "settings": {
+        "notify": false,
+        "dnd": true,
+        "importantRepeat": false,
+        "quietStart": "23:00",
+        "quietEnd": "06:00",
+        "dailySummary": true,
+        "privacyNotify": false,
+        "defaultDeliveryMode": "alarm",
+        "userMode": "normal",
+        "ai": {
+          "enabled": false,
+          "baseUrl": "",
+          "apiKey": "",
+          "model": "m",
+          "autoOnSave": false
+        }
+      }
+    }
+  },
+  {
+    "name": "missing-notes",
+    "accepted": true,
+    "stateChanged": true,
+    "calls": {
+      "confirm": 1,
+      "save": 1,
+      "render": 1,
+      "toast": [
+        "导入成功 · 1 条事项"
+      ]
+    },
+    "final": {
+      "items": [
+        {
+          "id": "new-item",
+          "title": "新事项",
+          "status": "waiting"
+        }
+      ],
+      "notes": [],
+      "projects": [
+        {
+          "id": "new-project",
+          "name": "新项目",
+          "color": "#fff"
+        }
+      ],
+      "settings": {
+        "notify": false,
+        "dnd": true,
+        "importantRepeat": false,
+        "quietStart": "23:00",
+        "quietEnd": "06:00",
+        "dailySummary": true,
+        "privacyNotify": false,
+        "defaultDeliveryMode": "alarm",
+        "userMode": "normal",
+        "ai": {
+          "enabled": false,
+          "baseUrl": "",
+          "apiKey": "",
+          "model": "m",
+          "autoOnSave": false
+        }
+      }
+    }
+  },
+  {
+    "name": "notes-object",
+    "accepted": true,
+    "stateChanged": true,
+    "calls": {
+      "confirm": 1,
+      "save": 1,
+      "render": 1,
+      "toast": [
+        "导入成功 · 1 条事项"
+      ]
+    },
+    "final": {
+      "items": [
+        {
+          "id": "new-item",
+          "title": "新事项",
+          "status": "waiting"
+        }
+      ],
+      "notes": [],
+      "projects": [
+        {
+          "id": "new-project",
+          "name": "新项目",
+          "color": "#fff"
+        }
+      ],
+      "settings": {
+        "notify": false,
+        "dnd": true,
+        "importantRepeat": false,
+        "quietStart": "23:00",
+        "quietEnd": "06:00",
+        "dailySummary": true,
+        "privacyNotify": false,
+        "defaultDeliveryMode": "alarm",
+        "userMode": "normal",
+        "ai": {
+          "enabled": false,
+          "baseUrl": "",
+          "apiKey": "",
+          "model": "m",
+          "autoOnSave": false
+        }
+      }
+    }
+  },
+  {
+    "name": "projects-object",
+    "accepted": true,
+    "stateChanged": true,
+    "calls": {
+      "confirm": 1,
+      "save": 1,
+      "render": 1,
+      "toast": [
+        "导入成功 · 1 条事项"
+      ]
+    },
+    "final": {
+      "items": [
+        {
+          "id": "new-item",
+          "title": "新事项",
+          "status": "waiting"
+        }
+      ],
+      "notes": [
+        {
+          "id": "new-note",
+          "text": "新备注",
+          "createdAt": 2
+        }
+      ],
+      "projects": [],
+      "settings": {
+        "notify": false,
+        "dnd": true,
+        "importantRepeat": false,
+        "quietStart": "23:00",
+        "quietEnd": "06:00",
+        "dailySummary": true,
+        "privacyNotify": false,
+        "defaultDeliveryMode": "alarm",
+        "userMode": "normal",
+        "ai": {
+          "enabled": false,
+          "baseUrl": "",
+          "apiKey": "",
+          "model": "m",
+          "autoOnSave": false
+        }
+      }
+    }
+  },
+  {
+    "name": "settings-array",
+    "accepted": true,
+    "stateChanged": true,
+    "calls": {
+      "confirm": 1,
+      "save": 1,
+      "render": 1,
+      "toast": [
+        "导入成功 · 1 条事项"
+      ]
+    },
+    "final": {
+      "items": [
+        {
+          "id": "new-item",
+          "title": "新事项",
+          "status": "waiting"
+        }
+      ],
+      "notes": [
+        {
+          "id": "new-note",
+          "text": "新备注",
+          "createdAt": 2
+        }
+      ],
+      "projects": [
+        {
+          "id": "new-project",
+          "name": "新项目",
+          "color": "#fff"
+        }
+      ],
+      "settings": {
+        "0": "x",
+        "notify": true,
+        "dnd": false,
+        "importantRepeat": true,
+        "quietStart": "22:00",
+        "quietEnd": "07:00",
+        "dailySummary": false,
+        "privacyNotify": true,
+        "defaultDeliveryMode": "notification",
+        "userMode": "beginner",
+        "ai": {
+          "enabled": false,
+          "baseUrl": "",
+          "apiKey": "",
+          "model": "",
+          "autoOnSave": false
+        }
+      }
+    }
+  },
+  {
+    "name": "settings-unknown",
+    "accepted": true,
+    "stateChanged": true,
+    "calls": {
+      "confirm": 1,
+      "save": 1,
+      "render": 1,
+      "toast": [
+        "导入成功 · 1 条事项"
+      ]
+    },
+    "final": {
+      "items": [
+        {
+          "id": "new-item",
+          "title": "新事项",
+          "status": "waiting"
+        }
+      ],
+      "notes": [
+        {
+          "id": "new-note",
+          "text": "新备注",
+          "createdAt": 2
+        }
+      ],
+      "projects": [
+        {
+          "id": "new-project",
+          "name": "新项目",
+          "color": "#fff"
+        }
+      ],
+      "settings": {
+        "notify": false,
+        "dnd": true,
+        "importantRepeat": false,
+        "quietStart": "23:00",
+        "quietEnd": "06:00",
+        "dailySummary": true,
+        "privacyNotify": false,
+        "defaultDeliveryMode": "alarm",
+        "userMode": "normal",
+        "ai": {
+          "enabled": false,
+          "baseUrl": "",
+          "apiKey": "",
+          "model": "m",
+          "autoOnSave": false
+        },
+        "injected": "persist-me"
+      }
+    }
+  },
+  {
+    "name": "top-level-unknown",
+    "accepted": true,
+    "stateChanged": true,
+    "calls": {
+      "confirm": 1,
+      "save": 1,
+      "render": 1,
+      "toast": [
+        "导入成功 · 1 条事项"
+      ]
+    },
+    "final": {
+      "items": [
+        {
+          "id": "new-item",
+          "title": "新事项",
+          "status": "waiting"
+        }
+      ],
+      "notes": [
+        {
+          "id": "new-note",
+          "text": "新备注",
+          "createdAt": 2
+        }
+      ],
+      "projects": [
+        {
+          "id": "new-project",
+          "name": "新项目",
+          "color": "#fff"
+        }
+      ],
+      "settings": {
+        "notify": false,
+        "dnd": true,
+        "importantRepeat": false,
+        "quietStart": "23:00",
+        "quietEnd": "06:00",
+        "dailySummary": true,
+        "privacyNotify": false,
+        "defaultDeliveryMode": "alarm",
+        "userMode": "normal",
+        "ai": {
+          "enabled": false,
+          "baseUrl": "",
+          "apiKey": "",
+          "model": "m",
+          "autoOnSave": false
+        }
+      }
+    }
+  },
+  {
+    "name": "empty-item",
+    "accepted": true,
+    "stateChanged": true,
+    "calls": {
+      "confirm": 1,
+      "save": 1,
+      "render": 1,
+      "toast": [
+        "导入成功 · 1 条事项"
+      ]
+    },
+    "final": {
+      "items": [
+        {
+          "id": "generated-id",
+          "title": "未命名",
+          "status": "waiting"
+        }
+      ],
+      "notes": [
+        {
+          "id": "new-note",
+          "text": "新备注",
+          "createdAt": 2
+        }
+      ],
+      "projects": [
+        {
+          "id": "new-project",
+          "name": "新项目",
+          "color": "#fff"
+        }
+      ],
+      "settings": {
+        "notify": false,
+        "dnd": true,
+        "importantRepeat": false,
+        "quietStart": "23:00",
+        "quietEnd": "06:00",
+        "dailySummary": true,
+        "privacyNotify": false,
+        "defaultDeliveryMode": "alarm",
+        "userMode": "normal",
+        "ai": {
+          "enabled": false,
+          "baseUrl": "",
+          "apiKey": "",
+          "model": "m",
+          "autoOnSave": false
+        }
+      }
+    }
+  },
+  {
+    "name": "number-item",
+    "accepted": true,
+    "stateChanged": true,
+    "calls": {
+      "confirm": 1,
+      "save": 1,
+      "render": 1,
+      "toast": [
+        "导入成功 · 1 条事项"
+      ]
+    },
+    "final": {
+      "items": [
+        {
+          "id": "generated-id",
+          "title": "未命名",
+          "status": "waiting"
+        }
+      ],
+      "notes": [
+        {
+          "id": "new-note",
+          "text": "新备注",
+          "createdAt": 2
+        }
+      ],
+      "projects": [
+        {
+          "id": "new-project",
+          "name": "新项目",
+          "color": "#fff"
+        }
+      ],
+      "settings": {
+        "notify": false,
+        "dnd": true,
+        "importantRepeat": false,
+        "quietStart": "23:00",
+        "quietEnd": "06:00",
+        "dailySummary": true,
+        "privacyNotify": false,
+        "defaultDeliveryMode": "alarm",
+        "userMode": "normal",
+        "ai": {
+          "enabled": false,
+          "baseUrl": "",
+          "apiKey": "",
+          "model": "m",
+          "autoOnSave": false
+        }
+      }
+    }
+  },
+  {
+    "name": "null-item",
+    "accepted": false,
+    "stateChanged": false,
+    "calls": {
+      "confirm": 1,
+      "save": 0,
+      "render": 0,
+      "toast": [
+        "导入失败：文件格式不正确"
+      ]
+    },
+    "final": {
+      "items": [
+        {
+          "id": "old-item",
+          "title": "保留事项",
+          "status": "waiting"
+        }
+      ],
+      "notes": [
+        {
+          "id": "old-note",
+          "text": "保留备注",
+          "createdAt": 1
+        }
+      ],
+      "projects": [
+        {
+          "id": "old-project",
+          "name": "保留项目",
+          "color": "#000"
+        }
+      ],
+      "settings": {
+        "notify": true,
+        "dnd": false,
+        "importantRepeat": true,
+        "quietStart": "22:00",
+        "quietEnd": "07:00",
+        "dailySummary": false,
+        "privacyNotify": true,
+        "defaultDeliveryMode": "notification",
+        "userMode": "beginner",
+        "ai": {
+          "enabled": false,
+          "baseUrl": "",
+          "apiKey": "",
+          "model": "",
+          "autoOnSave": false
+        }
+      }
+    }
+  },
+  {
+    "name": "duplicate-item-id",
+    "accepted": true,
+    "stateChanged": true,
+    "calls": {
+      "confirm": 1,
+      "save": 1,
+      "render": 1,
+      "toast": [
+        "导入成功 · 2 条事项"
+      ]
+    },
+    "final": {
+      "items": [
+        {
+          "id": "dup",
+          "title": "A",
+          "status": "waiting"
+        },
+        {
+          "id": "dup",
+          "title": "B",
+          "status": "waiting"
+        }
+      ],
+      "notes": [
+        {
+          "id": "new-note",
+          "text": "新备注",
+          "createdAt": 2
+        }
+      ],
+      "projects": [
+        {
+          "id": "new-project",
+          "name": "新项目",
+          "color": "#fff"
+        }
+      ],
+      "settings": {
+        "notify": false,
+        "dnd": true,
+        "importantRepeat": false,
+        "quietStart": "23:00",
+        "quietEnd": "06:00",
+        "dailySummary": true,
+        "privacyNotify": false,
+        "defaultDeliveryMode": "alarm",
+        "userMode": "normal",
+        "ai": {
+          "enabled": false,
+          "baseUrl": "",
+          "apiKey": "",
+          "model": "m",
+          "autoOnSave": false
+        }
+      }
+    }
+  },
+  {
+    "name": "ai-secret-and-endpoint",
+    "accepted": true,
+    "stateChanged": true,
+    "calls": {
+      "confirm": 1,
+      "save": 1,
+      "render": 1,
+      "toast": [
+        "导入成功 · 1 条事项"
+      ]
+    },
+    "final": {
+      "items": [
+        {
+          "id": "new-item",
+          "title": "新事项",
+          "status": "waiting"
+        }
+      ],
+      "notes": [
+        {
+          "id": "new-note",
+          "text": "新备注",
+          "createdAt": 2
+        }
+      ],
+      "projects": [
+        {
+          "id": "new-project",
+          "name": "新项目",
+          "color": "#fff"
+        }
+      ],
+      "settings": {
+        "notify": false,
+        "dnd": true,
+        "importantRepeat": false,
+        "quietStart": "23:00",
+        "quietEnd": "06:00",
+        "dailySummary": true,
+        "privacyNotify": false,
+        "defaultDeliveryMode": "alarm",
+        "userMode": "normal",
+        "ai": {
+          "enabled": false,
+          "baseUrl": "http://evil.invalid",
+          "apiKey": "secret",
+          "model": "m",
+          "autoOnSave": false
+        }
+      }
+    }
+  }
+]

@@ -1,0 +1,165 @@
+{
+  "mode": "other",
+  "runId": "20260920T124045-bg-diag",
+  "apkHash": "de9e63771d3caca0a454562dfd608b44a3d75743a45bff89c4c9ab3b3c19231c",
+  "itemId": "diag-other-1789880987750",
+  "targetAt": 1789881017750,
+  "initialPid": "12693",
+  "coldMeta": null,
+  "observedDelay": 3,
+  "unopenedReceived": true,
+  "unopenedVisible": true,
+  "receivedAfterOpen": true,
+  "matchedEvents": [
+    {
+      "token": "80702703:f7c45b1b-d61b-470e-b1f1-dfe8cf29d03f",
+      "stage": "item",
+      "at": 1789880988435,
+      "detail": "diag-other-1789880987750"
+    },
+    {
+      "token": "80702703:f7c45b1b-d61b-470e-b1f1-dfe8cf29d03f",
+      "stage": "unfreezerScheduled",
+      "at": 1789880988456,
+      "detail": "triggerAt=1789881017019;mode=alarmClock"
+    },
+    {
+      "token": "80702703:f7c45b1b-d61b-470e-b1f1-dfe8cf29d03f",
+      "stage": "scheduled",
+      "at": 1789880988461,
+      "detail": "triggerAt=1789881017019;mode=alarmClock"
+    },
+    {
+      "token": "80702703:f7c45b1b-d61b-470e-b1f1-dfe8cf29d03f",
+      "stage": "received",
+      "at": 1789881017038,
+      "detail": ""
+    },
+    {
+      "token": "80702703:f7c45b1b-d61b-470e-b1f1-dfe8cf29d03f",
+      "stage": "environment",
+      "at": 1789881017060,
+      "detail": "screenOn=true;locked=false;inCall=false;path=direct+banner"
+    },
+    {
+      "token": "80702703:f7c45b1b-d61b-470e-b1f1-dfe8cf29d03f",
+      "stage": "ringServiceRequested",
+      "at": 1789881017076,
+      "detail": "foreground service asked to hold sound+vibration"
+    },
+    {
+      "token": "80702703:f7c45b1b-d61b-470e-b1f1-dfe8cf29d03f",
+      "stage": "launchRequested",
+      "at": 1789881017095,
+      "detail": "direct launch alongside full-screen intent"
+    },
+    {
+      "token": "80702703:f7c45b1b-d61b-470e-b1f1-dfe8cf29d03f",
+      "stage": "systemNotificationPosted",
+      "at": 1789881017101,
+      "detail": "NotificationManager accepted active delivery"
+    },
+    {
+      "token": "80702703:f7c45b1b-d61b-470e-b1f1-dfe8cf29d03f",
+      "stage": "notifyReturned",
+      "at": 1789881017102,
+      "detail": "system notification posted; fullScreenIntent=true; sound+vibration carried by AlarmRingService; banner visibility is OEM-controlled"
+    },
+    {
+      "token": "80702703:f7c45b1b-d61b-470e-b1f1-dfe8cf29d03f",
+      "stage": "carrierRecorded",
+      "at": 1789881017128,
+      "detail": "sound=native;vibrate=native;foreground=true"
+    },
+    {
+      "token": "80702703:f7c45b1b-d61b-470e-b1f1-dfe8cf29d03f",
+      "stage": "ringStarted",
+      "at": 1789881017129,
+      "detail": "carrier=native;foreground=true;sound=true;vibrate=true"
+    },
+    {
+      "token": "80702703:f7c45b1b-d61b-470e-b1f1-dfe8cf29d03f",
+      "stage": "ringDuplicateStart",
+      "at": 1789881017132,
+      "detail": "same delivery already ringing; kept as-is"
+    },
+    {
+      "token": "80702703:f7c45b1b-d61b-470e-b1f1-dfe8cf29d03f",
+      "stage": "created",
+      "at": 1789881017137,
+      "detail": "test=false"
+    },
+    {
+      "token": "80702703:f7c45b1b-d61b-470e-b1f1-dfe8cf29d03f",
+      "stage": "localFallbackStopped",
+      "at": 1789881017148,
+      "detail": "service-owned sound is stopped separately"
+    },
+    {
+      "token": "80702703:f7c45b1b-d61b-470e-b1f1-dfe8cf29d03f",
+      "stage": "resumed",
+      "at": 1789881017150,
+      "detail": "lifecycle only"
+    },
+    {
+      "token": "80702703:f7c45b1b-d61b-470e-b1f1-dfe8cf29d03f",
+      "stage": "localFallbackStopped",
+      "at": 1789881017151,
+      "detail": "service-owned sound is stopped separately"
+    },
+    {
+      "token": "80702703:f7c45b1b-d61b-470e-b1f1-dfe8cf29d03f",
+      "stage": "focus",
+      "at": 1789881017204,
+      "detail": "true"
+    },
+    {
+      "token": "80702703:f7c45b1b-d61b-470e-b1f1-dfe8cf29d03f",
+      "stage": "windowVisible",
+      "at": 1789881017205,
+      "detail": "via=focus;focused=true;shown=true"
+    },
+    {
+      "token": "80702703:f7c45b1b-d61b-470e-b1f1-dfe8cf29d03f",
+      "stage": "windowSample",
+      "at": 1789881017453,
+      "detail": "after=300ms;focus=true;shown=true;visibility=0;playing=false"
+    },
+    {
+      "token": "80702703:f7c45b1b-d61b-470e-b1f1-dfe8cf29d03f",
+      "stage": "windowSample",
+      "at": 1789881017954,
+      "detail": "after=800ms;focus=true;shown=true;visibility=0;playing=false"
+    },
+    {
+      "token": "80702703:f7c45b1b-d61b-470e-b1f1-dfe8cf29d03f",
+      "stage": "cancelled",
+      "at": 1789881018351,
+      "detail": "cancel API succeeded"
+    },
+    {
+      "token": "80702703:f7c45b1b-d61b-470e-b1f1-dfe8cf29d03f",
+      "stage": "windowSample",
+      "at": 1789881018658,
+      "detail": "after=1500ms;focus=true;shown=true;visibility=0;playing=false"
+    },
+    {
+      "token": "80702703:f7c45b1b-d61b-470e-b1f1-dfe8cf29d03f",
+      "stage": "paused",
+      "at": 1789881022361,
+      "detail": "finishing=false"
+    },
+    {
+      "token": "80702703:f7c45b1b-d61b-470e-b1f1-dfe8cf29d03f",
+      "stage": "focus",
+      "at": 1789881022400,
+      "detail": "false"
+    },
+    {
+      "token": "80702703:f7c45b1b-d61b-470e-b1f1-dfe8cf29d03f",
+      "stage": "stopped",
+      "at": 1789881023036,
+      "detail": "finishing=false"
+    }
+  ]
+}

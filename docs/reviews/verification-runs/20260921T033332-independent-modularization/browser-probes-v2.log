@@ -1,0 +1,307 @@
+[
+  {
+    "case": "control",
+    "initial": {
+      "ready": true,
+      "failure": null,
+      "panel": false,
+      "visibleInputs": [
+        "capText",
+        "capTrigger",
+        "snoozeCustom",
+        "noteTitle",
+        "noteBody",
+        "searchInput",
+        "projName",
+        "quietStart",
+        "quietEnd",
+        "aiBaseUrl",
+        "aiApiKey",
+        "aiModel",
+        "lowConfCustom",
+        "reviewStart",
+        "reviewEnd"
+      ],
+      "audit": {
+        "errors": [],
+        "opens": 1,
+        "puts": 0,
+        "intervals": [
+          2000,
+          15000
+        ]
+      }
+    },
+    "capture": {
+      "open": true,
+      "value": "三分钟后提醒我独立验收"
+    },
+    "saveClick": true,
+    "saved": {
+      "items": [
+        {
+          "id": "i_in9di6frmua80gfm",
+          "title": "独立验收",
+          "status": "waiting",
+          "scheduleBasis": "elapsed"
+        }
+      ],
+      "audit": {
+        "errors": [],
+        "opens": 1,
+        "puts": 2,
+        "intervals": [
+          2000,
+          15000
+        ]
+      }
+    },
+    "reloaded": {
+      "items": [
+        {
+          "id": "i_in9di6frmua80gfm",
+          "title": "独立验收",
+          "status": "waiting",
+          "scheduleBasis": "elapsed"
+        }
+      ],
+      "audit": {
+        "errors": [],
+        "opens": 1,
+        "puts": 0,
+        "intervals": [
+          2000,
+          15000
+        ]
+      }
+    }
+  },
+  {
+    "case": "missing-parser",
+    "initial": {
+      "ready": false,
+      "failure": [
+        {
+          "path": "parseChineseTime",
+          "expected": "function",
+          "actual": "undefined",
+          "why": "lib/parse-cn.js 未加载 —— 中文时间解析唯一来源，缺了「明天 9 点」这类输入将全部解析不出时间"
+        },
+        {
+          "path": "cnInt",
+          "expected": "function",
+          "actual": "undefined",
+          "why": "lib/parse-cn.js 导出被破坏（中文数字）"
+        },
+        {
+          "path": "hasSpecificTimeWord",
+          "expected": "function",
+          "actual": "undefined",
+          "why": "lib/parse-cn.js 导出被破坏（是否含明确时间词）"
+        }
+      ],
+      "panel": true,
+      "panelText": "应用没能启动：依赖的脚本没有就位（3 项）\n\n首要原因：parseChineseTime 期望是 function，实际是 undefined。\n\nlib/parse-cn.js 未加载 —— 中文时间解析唯一来源，缺了「明天 9 点」这类输入将全部解析不出时间\n\n为免出现「能输入但存不下来」的界面，本次未加载数据、未做迁移、未安排提醒、未启动后台心跳。\n\n重试\n重新加载",
+      "visibleInputs": [
+        "capText",
+        "capTrigger",
+        "snoozeCustom",
+        "noteTitle",
+        "noteBody",
+        "searchInput",
+        "projName",
+        "quietStart",
+        "quietEnd",
+        "aiBaseUrl",
+        "aiApiKey",
+        "aiModel",
+        "lowConfCustom",
+        "reviewStart",
+        "reviewEnd"
+      ],
+      "audit": {
+        "errors": [
+          "Startup dependency check failed: [object Object],[object Object],[object Object]"
+        ],
+        "opens": 0,
+        "puts": 0,
+        "intervals": []
+      }
+    },
+    "loadReplacement": true,
+    "retryClick": true,
+    "afterRetry": {
+      "ready": true,
+      "failure": null,
+      "panel": false,
+      "visibleInputs": [
+        "capText",
+        "capTrigger",
+        "snoozeCustom",
+        "noteTitle",
+        "noteBody",
+        "searchInput",
+        "projName",
+        "quietStart",
+        "quietEnd",
+        "aiBaseUrl",
+        "aiApiKey",
+        "aiModel",
+        "lowConfCustom",
+        "reviewStart",
+        "reviewEnd"
+      ],
+      "audit": {
+        "errors": [
+          "Startup dependency check failed: [object Object],[object Object],[object Object]"
+        ],
+        "opens": 1,
+        "puts": 0,
+        "intervals": [
+          2000,
+          15000
+        ]
+      }
+    },
+    "captureAfterRetry": {
+      "parseType": "undefined",
+      "liveLibParseType": "function"
+    },
+    "afterInput": {
+      "ready": true,
+      "failure": null,
+      "panel": false,
+      "visibleInputs": [
+        "capText",
+        "capTrigger",
+        "snoozeCustom",
+        "noteTitle",
+        "noteBody",
+        "searchInput",
+        "projName",
+        "quietStart",
+        "quietEnd",
+        "aiBaseUrl",
+        "aiApiKey",
+        "aiModel",
+        "lowConfCustom",
+        "reviewStart",
+        "reviewEnd"
+      ],
+      "audit": {
+        "errors": [
+          "Startup dependency check failed: [object Object],[object Object],[object Object]",
+          "Uncaught TypeError: parseChineseTime is not a function",
+          "App error: Uncaught TypeError: parseChineseTime is not a function TypeError: parseChineseTime is not a function"
+        ],
+        "opens": 1,
+        "puts": 0,
+        "intervals": [
+          2000,
+          15000
+        ]
+      }
+    }
+  },
+  {
+    "case": "feedback-member",
+    "initial": {
+      "ready": true,
+      "failure": null,
+      "panel": false,
+      "visibleInputs": [
+        "capText",
+        "capTrigger",
+        "snoozeCustom",
+        "noteTitle",
+        "noteBody",
+        "searchInput",
+        "projName",
+        "quietStart",
+        "quietEnd",
+        "aiBaseUrl",
+        "aiApiKey",
+        "aiModel",
+        "lowConfCustom",
+        "reviewStart",
+        "reviewEnd"
+      ],
+      "audit": {
+        "errors": [],
+        "opens": 1,
+        "puts": 0,
+        "intervals": [
+          2000,
+          15000
+        ]
+      }
+    }
+  },
+  {
+    "case": "feedback-null",
+    "initial": {
+      "ready": true,
+      "failure": null,
+      "panel": false,
+      "visibleInputs": [
+        "capText",
+        "capTrigger",
+        "snoozeCustom",
+        "noteTitle",
+        "noteBody",
+        "searchInput",
+        "projName",
+        "quietStart",
+        "quietEnd",
+        "aiBaseUrl",
+        "aiApiKey",
+        "aiModel",
+        "lowConfCustom",
+        "reviewStart",
+        "reviewEnd"
+      ],
+      "audit": {
+        "errors": [],
+        "opens": 1,
+        "puts": 0,
+        "intervals": [
+          2000,
+          15000
+        ]
+      }
+    }
+  },
+  {
+    "case": "incomplete-ui",
+    "initial": {
+      "ready": false,
+      "failure": null,
+      "panel": false,
+      "visibleInputs": [
+        "capText",
+        "capTrigger",
+        "snoozeCustom",
+        "noteTitle",
+        "noteBody",
+        "searchInput",
+        "projName",
+        "quietStart",
+        "quietEnd",
+        "aiBaseUrl",
+        "aiApiKey",
+        "aiModel",
+        "lowConfCustom",
+        "reviewStart",
+        "reviewEnd"
+      ],
+      "audit": {
+        "errors": [
+          "App init failed: $ is not a function"
+        ],
+        "opens": 1,
+        "puts": 0,
+        "intervals": []
+      }
+    }
+  }
+]

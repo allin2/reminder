@@ -1,0 +1,31 @@
+=== 修复后（工作区）===
+{
+  "undeclared": [],
+  "ambiguousAliases": [],
+  "ambiguousRefs": [],
+  "problems": [],
+  "aliases": {
+    "feedbackApi": "FeedbackLib"
+  }
+}
+=== 修复前 (b) 旧形态源码 × 当前扫描器 ===
+{
+  "undeclared": [],
+  "ambiguousAliases": [
+    "f"
+  ],
+  "ambiguousRefs": [
+    "f.TEST_FEEDBACK",
+    "f.actionLabel",
+    "f.captureSummary",
+    "f.reminderFeedback",
+    "f.setupSteps",
+    "f.text"
+  ],
+  "problemsCount": 7
+}
+=== 三组静态变异 ===
+  MUT-A-unique-alias pass=true undeclared=["Feedback.independentUndeclaredMember"] ambiguousAliases=[] ambiguousRefs=[] problems=1
+  MUT-B-direct-namespace pass=true undeclared=["Feedback.independentUndeclaredMember"] ambiguousAliases=[] ambiguousRefs=[] problems=1
+  MUT-C-same-name-ambiguity pass=true undeclared=[] ambiguousAliases=["auditAlias"] ambiguousRefs=["auditAlias.auditMember"] problems=2
+全部满足（修复后闭合 + 三组变异都报出来）

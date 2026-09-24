@@ -1,0 +1,28 @@
+{
+  "cases": [
+    {
+      "name": "pure-web-ready",
+      "ready": true,
+      "startupFailure": null
+    },
+    {
+      "name": "web-diagnostics-open",
+      "opened": true,
+      "system": "平台 unknown · LocalNotifications 无 · SystemBridge 无"
+    },
+    {
+      "name": "bind-idempotent",
+      "refreshes-after-double-bind": 0
+    },
+    {
+      "name": "fake-bridge-diagnostics",
+      "value": {
+        "verdict": "⚠️ 系统里已挂 1 条提醒（全屏闹钟 1 条）· 排程已登记，仍需确认后台耗电、自启动和锁屏显示，并完成息屏测试。",
+        "scheduled": "1 条待发 · 本轮计划 1 条",
+        "feedback": "未能打开设置。请手动进入手机设置 → 应用 → 安心收件箱，检查后台耗电、自启动、锁屏显示。",
+        "restored": true
+      }
+    }
+  ],
+  "failures": []
+}
