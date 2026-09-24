@@ -42,6 +42,8 @@
       --font-display: "Iowan Old Style", "Palatino Linotype", Georgia, "Songti SC", serif;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+    /* 作者样式里的 display（如 .nav-badge 的 grid）会盖过浏览器默认的 [hidden]，这里统一让 hidden 属性生效 */
+    [hidden] { display: none !important; }
     html, body { height: 100%; }
     body {
       font-family: var(--font);
@@ -360,12 +362,19 @@
       border-radius: 22px 22px 0 0;
       box-shadow: var(--shadow);
       transform: translateY(110%);
-      transition: transform 0.28s cubic-bezier(0.2, 0.9, 0.25, 1);
+      /* 收起时隐藏：容器比视口矮时，仅靠位移会让收起的面板露出一截标题；
+         visibility 延迟到收起动画结束才生效，展开时立即可见。 */
+      visibility: hidden;
+      transition: transform 0.28s cubic-bezier(0.2, 0.9, 0.25, 1), visibility 0s linear 0.28s;
       max-height: min(90vh, 760px);
       display: flex; flex-direction: column;
       padding-bottom: var(--safe-b);
     }
-    .sheet.open { transform: translateY(0); }
+    .sheet.open {
+      transform: translateY(0);
+      visibility: visible;
+      transition: transform 0.28s cubic-bezier(0.2, 0.9, 0.25, 1), visibility 0s;
+    }
     .sheet-grip {
       width: 36px; height: 4px;
       background: var(--line-strong);

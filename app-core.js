@@ -1843,6 +1843,8 @@
             nativeReady = appNativeCoordinator ? appNativeCoordinator.isNativeReady() : (status && status.native !== undefined ? status.native : false);
             if (state && state.ui && state.ui.tab === "me") renderPwaStatus();
             renderHomeNotice();
+            // 设置入口依赖原生能力状态：状态读回或变化后重绘（未读回前入口不渲染）
+            if (state && state.ui && state.ui.tab === "home") renderSetupEntry();
             if (origin === "reconcile") {
               if (undoNativeCheckPending) {
                 undoNativeCheckPending = false;

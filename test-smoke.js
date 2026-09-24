@@ -1830,6 +1830,21 @@ section("13. 初学者模式与正常模式（双模式）");
   ok("还原后 userMode 为 beginner", app.state.settings.userMode === "beginner");
   ok("还原后 body 带有 mode-beginner", document.body.classList.contains("mode-beginner"));
 }
+
+section("UI 缺陷回归：收起面板与 hidden 属性（真机截图发现）");
+{
+  const css = indexHtml;
+  const sheetRule = (css.match(/\n\s*\.sheet\s*\{([^}]*)\}/) || [])[1] || "";
+  const openRule = (css.match(/\n\s*\.sheet\.open\s*\{([^}]*)\}/) || [])[1] || "";
+  ok("收起的面板 visibility: hidden（仅靠位移会在底部露出一截「演示（只读）」等标题）",
+    /visibility\s*:\s*hidden/.test(sheetRule), sheetRule.trim());
+  ok("收起时 visibility 延迟到位移动画结束才生效",
+    /visibility\s+0s\s+linear\s+0\.28s/.test(sheetRule), sheetRule.trim());
+  ok("展开的面板 visibility: visible 且立即可见",
+    /visibility\s*:\s*visible/.test(openRule) && /visibility\s+0s(?!\s+linear)/.test(openRule), openRule.trim());
+  ok("[hidden] 统一 display:none，作者样式（如 .nav-badge 的 grid）不能盖过它",
+    /\[hidden\]\s*\{\s*display\s*:\s*none\s*!important\s*;?\s*\}/.test(css));
+}
 }
 
 run().then(() => {

@@ -2553,6 +2553,26 @@ section("feedback — 动作语义与术语");
   ok("系统可回读的后台与全屏能力仍可标记为已验证",
     verified.steps.find(s => s.id === "background").verified === true &&
     verified.steps.find(s => s.id === "overlay").verified === true);
+  // 真机原生状态的实际形态：这三项能力只在 diag 下（vivo V2238A / Android 16 实测）。
+  const deviceShape = fb.setupSteps({
+    notifications: "granted", exactAlarm: "granted",
+    diag: { canDrawOverlays: true, canUseFullScreenIntent: true, ignoringBatteryOptimizations: false }
+  });
+  const devOverlay = deviceShape.steps.find(s => s.id === "overlay");
+  const devBackground = deviceShape.steps.find(s => s.id === "background");
+  ok("真机形态：diag 回读悬浮窗与全屏通知均已允许 ⇒ 该步已验证且完成，不再要求去开启",
+    devOverlay.verified === true && devOverlay.done === true);
+  ok("真机形态：diag 回读未忽略电池优化 ⇒ 后台一步仍未验证、未完成",
+    devBackground.verified === false && devBackground.done === false);
+  ok("真机形态：下一步是后台运行，而不是已开启的悬浮窗",
+    deviceShape.next && deviceShape.next.id === "background", deviceShape.next && deviceShape.next.id);
+  const devPartial = fb.setupSteps({
+    notifications: "granted", exactAlarm: "granted",
+    diag: { canDrawOverlays: true, canUseFullScreenIntent: false, ignoringBatteryOptimizations: true }
+  });
+  ok("真机形态：全屏通知未允许时悬浮窗一步不算验证；电池优化已忽略时后台一步已验证",
+    devPartial.steps.find(s => s.id === "overlay").verified === false &&
+    devPartial.steps.find(s => s.id === "background").verified === true);
   const missedRun = fb.setupSteps({}, {
     testRun: { startedAt: 1000, feedbackAt: 1100 },
     testFeedback: { value: "missed", at: 1100 }
@@ -2844,6 +2864,19 @@ section("P2-E AppSetup — 求值、live 注入、60 秒测试与停铃边界");
   live.app.bind(); live.app.bind();
   ok("P2-E 静态 #btnSetup bind 实例内幂等", live.nodes["#btnSetup"].listeners.length === 1,
     String(live.nodes["#btnSetup"].listeners.length));
+
+  // 冷启动：原生状态还是初始占位 "unknown" 时，不得先闪「还差 N 步：允许发通知」
+  const cold = setupFixture({
+    native: { isNativeAndroid: () => true }, settings: { setupPromptStarted: true },
+    status: { native: false, notifications: "unknown", exactAlarm: "unknown", reliability: "web" }
+  });
+  cold.app.renderSetupEntry();
+  ok("设置入口：原生状态未读回（unknown）时首页不渲染卡片",
+    cold.nodes["#homeSetup"].innerHTML === "", cold.nodes["#homeSetup"].innerHTML);
+  cold.setStatus({ notifications: "granted", exactAlarm: "granted", scheduledAlarmIds: [] });
+  cold.app.renderSetupEntry();
+  ok("设置入口：状态读回后重绘才出现卡片",
+    /setupEntry/.test(cold.nodes["#homeSetup"].innerHTML), cold.nodes["#homeSetup"].innerHTML);
 
   const doneSetup = beginAsyncSection();
   (async () => {
