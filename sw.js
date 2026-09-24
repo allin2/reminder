@@ -38,11 +38,12 @@
 // v36：P3-H-R 收口 Service Worker 重复注册与 updatefound 监听器幂等缺口。
 // v35：P3-H 把平台适配与 PWA 生命周期迁出为 `lib/app-platform.js`；新增运行时脚本换缓存名。
 // v34：P3-G-R 交付收口，推进至 v34。覆盖 lib/app-alerts.js 绑定幂等性与保存失败回执裁决等内容变更，建立新版本预缓存边界。
+// v44：原生对账撤掉陈旧的已送达事项通知（事项已删除 / 终态 / 送达后已变化）；更新运行时缓存。
 // v43：设置引导从 diag 回读悬浮窗/全屏/电池优化能力、原生状态未读回前不出设置卡片；收起面板不再露出标题、hidden 属性统一生效；更新运行时缓存。
 // v42：P4 修复 SW install 链吞掉 cache.addAll 失败后跳过等待激活残缺版本的缺陷；预缓存失败时回滚删除残缺缓存并中止安装，保留旧版 SW 与完整旧缓存。
 // v41：P3-I-Q2 把 detailReminderStatusRow(it) 实现迁入 lib/app-views.js；更新运行时脚本缓存。
 // v40：U1 修复稍后面板入口 ReferenceError 与选时状态上收。
-const CACHE = "attention-inbox-v43";
+const CACHE = "attention-inbox-v44";
 /**
  * 预缓存清单必须**逐条等于** `index.html` 里真正加载的运行时脚本。
  *
