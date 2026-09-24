@@ -1,0 +1,11 @@
+PID_BEFORE=22061
+PID_AFTER=22061
+  * ServiceRecord{663d9ec u0 space.alliswell.inbox.exportrecheck/org.chromium.content.app.SandboxedProcessService0:0 c:space.alliswell.inbox.exportrecheck}
+          ConnectionRecord{27af9d6 u0 CR IMP space.alliswell.inbox.exportrecheck/org.chromium.content.app.SandboxedProcessService0:0:@9f9a9f1 flags=0x80000041}
+          ConnectionRecord{a2be431 u0 CR WPRI space.alliswell.inbox.exportrecheck/org.chromium.content.app.SandboxedProcessService0:0:@faaa8d8 flags=0x80000021}
+      ConnectionRecord{27af9d6 u0 CR IMP space.alliswell.inbox.exportrecheck/org.chromium.content.app.SandboxedProcessService0:0:@9f9a9f1 flags=0x80000041}
+      ConnectionRecord{a2be431 u0 CR WPRI space.alliswell.inbox.exportrecheck/org.chromium.content.app.SandboxedProcessService0:0:@faaa8d8 flags=0x80000021}
+  * ConnectionRecord{27af9d6 u0 CR IMP space.alliswell.inbox.exportrecheck/org.chromium.content.app.SandboxedProcessService0:0:@9f9a9f1 flags=0x80000041}
+  * ConnectionRecord{a2be431 u0 CR WPRI space.alliswell.inbox.exportrecheck/org.chromium.content.app.SandboxedProcessService0:0:@faaa8d8 flags=0x80000021}
+Starting: Intent { cmp=space.alliswell.inbox.exportrecheck/space.alliswell.inbox.MainActivity }
+Warning: Activity not started, its current task has been brought to the front

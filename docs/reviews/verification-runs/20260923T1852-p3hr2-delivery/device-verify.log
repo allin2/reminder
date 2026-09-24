@@ -1,0 +1,32 @@
+=== Starting P3-H Real Device Verification ===
+Serial: 10ACBF2D3D000RS
+Run dir: /Users/qlyf/Developer/reminder/docs/reviews/verification-runs/20260923T1852-p3hr2-delivery
+
+--- 1. 安装候选 APK 与校验指纹 ---
+Candidate APK SHA: a0e192968a4e4c01ffbf959eb29fe81b39805a512acf4e6883af0a23be0c4a99
+Device already has matching APK: a0e192968a4e4c01ffbf959eb29fe81b39805a512acf4e6883af0a23be0c4a99
+Device APK SHA:    a0e192968a4e4c01ffbf959eb29fe81b39805a512acf4e6883af0a23be0c4a99
+✓ APK 指纹匹配 PASS
+
+--- 2. 平台适配模块 CDP 实机断言 ---
+CDP Platform Evaluation Result:
+{
+  "ready": true,
+  "hasPlatform": true,
+  "hasAllContract": true,
+  "contractLength": 9,
+  "isNative": true,
+  "hasSysBridge": true,
+  "sysBridgeType": "object",
+  "hasAppSettings": true,
+  "appSettingsType": "object",
+  "waitResult": true,
+  "deferredPromptIsNull": true,
+  "btnInstallHidden": true
+}
+✓ 平台适配与 PWA 契约实机检查 PASS
+
+--- 3. 截屏与系统快照 ---
+✓ 快照已保存
+
+✓ 实机验证完成，结果已落盘：/Users/qlyf/Developer/reminder/docs/reviews/verification-runs/20260923T1852-p3hr2-delivery/device-verify-summary.json

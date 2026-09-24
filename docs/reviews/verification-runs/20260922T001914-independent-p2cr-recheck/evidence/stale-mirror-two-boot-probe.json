@@ -1,0 +1,176 @@
+{
+  "verdict": "BLOCKER_REPRODUCED",
+  "claim": "一次权威读取故障会把旧镜像提升为可写 loaded；启动期提交留下待回放快照，下一次健康启动会用它覆盖更新的 IndexedDB。",
+  "cases": [
+    {
+      "name": "idb-get-failure",
+      "expectedReason": "mirror-recovered",
+      "checks": {
+        "firstStartedFromStaleMirror": true,
+        "firstLeftPendingReplay": true,
+        "secondOverwroteAuthoritativeIdb": true
+      },
+      "reproduced": true,
+      "explicitSaveError": null,
+      "first": {
+        "ready": true,
+        "authority": {
+          "status": "loaded",
+          "report": {
+            "status": "loaded",
+            "reason": "mirror-recovered",
+            "detail": "idb-read-failed",
+            "attempt": 1,
+            "at": 1790007864040,
+            "backend": "idb",
+            "mirrorBytes": 164,
+            "writesAllowed": true
+          },
+          "attempts": 1,
+          "blockedWriteCount": 0,
+          "nativeBlocked": 0,
+          "writesAllowed": true,
+          "mirrorBytes": 1500,
+          "recoveryPanel": false
+        },
+        "memoryIds": [
+          "mirror-old"
+        ],
+        "idbIds": [
+          "mirror-old",
+          "idb-new"
+        ],
+        "puts": 0,
+        "intervals": [
+          2000,
+          15000
+        ],
+        "localKeys": {
+          "attention-inbox-v2": 1500,
+          "attention-inbox-v2-pending-replay": 1732
+        }
+      },
+      "second": {
+        "ready": true,
+        "authority": {
+          "status": "loaded",
+          "report": {
+            "status": "loaded",
+            "reason": "pending-replay",
+            "detail": null,
+            "attempt": 1,
+            "at": 1790007864120,
+            "backend": "idb",
+            "mirrorBytes": 1500,
+            "writesAllowed": true
+          },
+          "attempts": 1,
+          "blockedWriteCount": 0,
+          "nativeBlocked": 0,
+          "writesAllowed": true,
+          "mirrorBytes": 1500,
+          "recoveryPanel": false
+        },
+        "memoryIds": [
+          "mirror-old"
+        ],
+        "idbIds": [
+          "mirror-old"
+        ],
+        "puts": 2,
+        "intervals": [
+          2000,
+          15000
+        ],
+        "localKeys": {
+          "attention-inbox-v2": 1500
+        }
+      }
+    },
+    {
+      "name": "idb-open-failure",
+      "expectedReason": "degraded-mirror",
+      "checks": {
+        "firstStartedFromStaleMirror": true,
+        "firstLeftPendingReplay": true,
+        "secondOverwroteAuthoritativeIdb": true
+      },
+      "reproduced": true,
+      "explicitSaveError": null,
+      "first": {
+        "ready": true,
+        "authority": {
+          "status": "loaded",
+          "report": {
+            "status": "loaded",
+            "reason": "degraded-mirror",
+            "detail": null,
+            "attempt": 1,
+            "at": 1790007864190,
+            "backend": "local",
+            "mirrorBytes": 164,
+            "writesAllowed": true
+          },
+          "attempts": 1,
+          "blockedWriteCount": 0,
+          "nativeBlocked": 0,
+          "writesAllowed": true,
+          "mirrorBytes": 1500,
+          "recoveryPanel": false
+        },
+        "memoryIds": [
+          "mirror-old"
+        ],
+        "idbIds": [
+          "mirror-old",
+          "idb-new"
+        ],
+        "puts": 0,
+        "intervals": [
+          2000,
+          15000
+        ],
+        "localKeys": {
+          "attention-inbox-v2": 1500,
+          "attention-inbox-v2-pending-replay": 1732
+        }
+      },
+      "second": {
+        "ready": true,
+        "authority": {
+          "status": "loaded",
+          "report": {
+            "status": "loaded",
+            "reason": "pending-replay",
+            "detail": null,
+            "attempt": 1,
+            "at": 1790007864270,
+            "backend": "idb",
+            "mirrorBytes": 1500,
+            "writesAllowed": true
+          },
+          "attempts": 1,
+          "blockedWriteCount": 0,
+          "nativeBlocked": 0,
+          "writesAllowed": true,
+          "mirrorBytes": 1500,
+          "recoveryPanel": false
+        },
+        "memoryIds": [
+          "mirror-old"
+        ],
+        "idbIds": [
+          "mirror-old"
+        ],
+        "puts": 2,
+        "intervals": [
+          2000,
+          15000
+        ],
+        "localKeys": {
+          "attention-inbox-v2": 1500
+        }
+      }
+    }
+  ]
+}

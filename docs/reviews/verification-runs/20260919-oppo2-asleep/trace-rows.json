@@ -1,0 +1,26 @@
+[
+  {
+    "token": "1913761450:7c48b580-d76e-45e5-b917-e3f88fb25623",
+    "stage": "requested",
+    "at": 1789825204615,
+    "detail": "delayMs=74395"
+  },
+  {
+    "token": "1913761450:7c48b580-d76e-45e5-b917-e3f88fb25623",
+    "stage": "item",
+    "at": 1789825204619,
+    "detail": "oppo2_asleep_1789825202"
+  },
+  {
+    "token": "1913761450:7c48b580-d76e-45e5-b917-e3f88fb25623",
+    "stage": "unfreezerScheduled",
+    "at": 1789825204633,
+    "detail": "triggerAt=1789825279017;mode=alarmClock"
+  },
+  {
+    "token": "1913761450:7c48b580-d76e-45e5-b917-e3f88fb25623",
+    "stage": "scheduled",
+    "at": 1789825204635,
+    "detail": "triggerAt=1789825279017;mode=alarmClock"
+  }
+]

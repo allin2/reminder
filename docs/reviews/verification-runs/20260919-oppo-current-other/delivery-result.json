@@ -1,0 +1,32 @@
+{
+  "itemId": "matrix_other_1789825044",
+  "received": false,
+  "visible": false,
+  "lagMs": null,
+  "rows": [
+    {
+      "token": "1695730375:dbfa025b-f1a2-4b4c-9402-e6c4b83d8afe",
+      "stage": "requested",
+      "at": 1789825043806,
+      "detail": "delayMs=59204"
+    },
+    {
+      "token": "1695730375:dbfa025b-f1a2-4b4c-9402-e6c4b83d8afe",
+      "stage": "item",
+      "at": 1789825043810,
+      "detail": "matrix_other_1789825044"
+    },
+    {
+      "token": "1695730375:dbfa025b-f1a2-4b4c-9402-e6c4b83d8afe",
+      "stage": "unfreezerScheduled",
+      "at": 1789825043830,
+      "detail": "triggerAt=1789825103016;mode=alarmClock"
+    },
+    {
+      "token": "1695730375:dbfa025b-f1a2-4b4c-9402-e6c4b83d8afe",
+      "stage": "scheduled",
+      "at": 1789825043835,
+      "detail": "triggerAt=1789825103016;mode=alarmClock"
+    }
+  ]
+}

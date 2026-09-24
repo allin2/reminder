@@ -1,0 +1,45 @@
+{
+  "before": "a2336044fb2fda30248a7ae4fb373eb87c37406e1d0962d43317fe4a99483fb1",
+  "after": "a2336044fb2fda30248a7ae4fb373eb87c37406e1d0962d43317fe4a99483fb1",
+  "healthy": {
+    "sessionAdvanced": true,
+    "signatureDiff": true,
+    "bindCounts": {
+      "text": 3,
+      "trigger": 2,
+      "doc": 1
+    },
+    "bindIdempotent": true
+  },
+  "noSession": {
+    "sessionAdvanced": false,
+    "signatureDiff": true,
+    "bindCounts": {
+      "text": 3,
+      "trigger": 2,
+      "doc": 1
+    },
+    "bindIdempotent": true
+  },
+  "noPickedSignature": {
+    "sessionAdvanced": true,
+    "signatureDiff": false,
+    "bindCounts": {
+      "text": 3,
+      "trigger": 2,
+      "doc": 1
+    },
+    "bindIdempotent": true
+  },
+  "duplicateBind": {
+    "sessionAdvanced": true,
+    "signatureDiff": true,
+    "bindCounts": {
+      "text": 6,
+      "trigger": 4,
+      "doc": 2
+    },
+    "bindIdempotent": false
+  },
+  "red": true
+}

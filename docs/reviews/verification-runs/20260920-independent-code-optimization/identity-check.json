@@ -1,0 +1,164 @@
+[
+  {
+    "path": "app-core.js",
+    "expected": "3055d7a166040bf11c645a8ddcd383ae74d85ae2029d1f12e1997992aa2a8515",
+    "actual": "3055d7a166040bf11c645a8ddcd383ae74d85ae2029d1f12e1997992aa2a8515",
+    "match": true
+  },
+  {
+    "path": "lib/native-reminders.js",
+    "expected": "718cc42589df3f6a85a28d97520d5cd898ea837240dfdc939f355f6a908e0679",
+    "actual": "718cc42589df3f6a85a28d97520d5cd898ea837240dfdc939f355f6a908e0679",
+    "match": true
+  },
+  {
+    "path": "package.json",
+    "expected": "dbbe3d768001a916aad4f9f3cda2b91f263a01074cfb15e5738a978820dfe476",
+    "actual": "dbbe3d768001a916aad4f9f3cda2b91f263a01074cfb15e5738a978820dfe476",
+    "match": true
+  },
+  {
+    "path": "test-boot-combination.js",
+    "expected": "eb53e77019ce29a61287d9c0f0d85c2b7d7b29e41339b5015e3f247607fae7ef",
+    "actual": "eb53e77019ce29a61287d9c0f0d85c2b7d7b29e41339b5015e3f247607fae7ef",
+    "match": true
+  },
+  {
+    "path": "scripts/verification/production-scripts.js",
+    "expected": "d84eaa3fa740d12a2aee0811f085be79177cc6f08e2a14e70dbba99e7cdf7d51",
+    "actual": "d84eaa3fa740d12a2aee0811f085be79177cc6f08e2a14e70dbba99e7cdf7d51",
+    "match": true
+  },
+  {
+    "path": "scripts/verification/perf-counts.js",
+    "expected": "3a607a4200ef6e467a714aebdafc94a42ec583b58df0b3d3c829315aa3f67602",
+    "actual": "3a607a4200ef6e467a714aebdafc94a42ec583b58df0b3d3c829315aa3f67602",
+    "match": true
+  },
+  {
+    "path": "index.html",
+    "expected": "f13eca9a0479a59d19e2c03f7d3152406fe7d378ff62e33a0627f4ed2171c0b5",
+    "actual": "f13eca9a0479a59d19e2c03f7d3152406fe7d378ff62e33a0627f4ed2171c0b5",
+    "match": true
+  },
+  {
+    "path": "sw.js",
+    "expected": "aa077b2eaad0f49aa4e8ea7e27eab39a101d1086e03dcaccdc7a083f4cb784a3",
+    "actual": "aa077b2eaad0f49aa4e8ea7e27eab39a101d1086e03dcaccdc7a083f4cb784a3",
+    "match": true
+  },
+  {
+    "path": "lib/parse-cn.js",
+    "expected": "79b12b5ba0621a11a80ab53213d84e723bf428290d91940cdf0a6b12eb71faab",
+    "actual": "79b12b5ba0621a11a80ab53213d84e723bf428290d91940cdf0a6b12eb71faab",
+    "match": true
+  },
+  {
+    "path": "lib/repeat.js",
+    "expected": "8b01c7e3b1f926bc53edff43808331839c01e2e3c540b898f1b24314467a4bde",
+    "actual": "8b01c7e3b1f926bc53edff43808331839c01e2e3c540b898f1b24314467a4bde",
+    "match": true
+  },
+  {
+    "path": "lib/reminder.js",
+    "expected": "886ab9eb1a438b34122b71a461ed89a4a5b37fa85dedf8ee7afa558ee58f62fd",
+    "actual": "886ab9eb1a438b34122b71a461ed89a4a5b37fa85dedf8ee7afa558ee58f62fd",
+    "match": true
+  },
+  {
+    "path": "lib/storage.js",
+    "expected": "d7f5ca0d766f796cdeea6f4ce0b73875dc5778ed4eefdb8c939cae6b5b27d2d1",
+    "actual": "d7f5ca0d766f796cdeea6f4ce0b73875dc5778ed4eefdb8c939cae6b5b27d2d1",
+    "match": true
+  },
+  {
+    "path": "lib/feedback.js",
+    "expected": "94d7133657bcf5b0122d095925143c29b79237d8fa6648e41262f09299f405f9",
+    "actual": "94d7133657bcf5b0122d095925143c29b79237d8fa6648e41262f09299f405f9",
+    "match": true
+  },
+  {
+    "path": "lib/delivery-evidence.js",
+    "expected": "7ee77186881d8462450c8fe8a550840647ec9d7626c259fb9e29768290062d03",
+    "actual": "7ee77186881d8462450c8fe8a550840647ec9d7626c259fb9e29768290062d03",
+    "match": true
+  },
+  {
+    "path": "test-unit.js",
+    "expected": "e1ad9965185edd789cb2fe9ec3e2cdb2c24ce438723506be8f164cf70a0709dd",
+    "actual": "e1ad9965185edd789cb2fe9ec3e2cdb2c24ce438723506be8f164cf70a0709dd",
+    "match": true
+  },
+  {
+    "path": "test-native-reminders.js",
+    "expected": "ad893825e5ccb88fdcda8ce7d9c01cc82cdf701a29896c3842fc2fe1b9da9bd9",
+    "actual": "ad893825e5ccb88fdcda8ce7d9c01cc82cdf701a29896c3842fc2fe1b9da9bd9",
+    "match": true
+  },
+  {
+    "path": "test-smoke.js",
+    "expected": "266ebac5d22165154fec15c77444c82f733b6bbb24f24b37c8ad83ebb4930bac",
+    "actual": "266ebac5d22165154fec15c77444c82f733b6bbb24f24b37c8ad83ebb4930bac",
+    "match": true
+  },
+  {
+    "path": "test-regressions.js",
+    "expected": "588a8e4f39c1ac5028399a8ad49096274c3279c7e1555b822189330f3310ac46",
+    "actual": "588a8e4f39c1ac5028399a8ad49096274c3279c7e1555b822189330f3310ac46",
+    "match": true
+  },
+  {
+    "path": "docs/reviews/code-optimization-implementation-20260920T1706-code-optimization.md",
+    "expected": "80a055be520c8db3b12813a936078759887f5b3eae65d8b8fc5dae1fa2475f8c",
+    "actual": "80a055be520c8db3b12813a936078759887f5b3eae65d8b8fc5dae1fa2475f8c",
+    "match": true
+  },
+  {
+    "path": "baseline-npm-test.log",
+    "expected": "997a0bf782218165f72d3dd999cf9dd594f5fc8f3f91effac1cc25cd640d4b39",
+    "actual": "997a0bf782218165f72d3dd999cf9dd594f5fc8f3f91effac1cc25cd640d4b39",
+    "match": true
+  },
+  {
+    "path": "final-npm-test.log",
+    "expected": "e81b7c0a95ada05a2c3648cee8cd99e01b6c5a42fd3ba855625fe6e6ea3b9f9d",
+    "actual": "e81b7c0a95ada05a2c3648cee8cd99e01b6c5a42fd3ba855625fe6e6ea3b9f9d",
+    "match": true
+  },
+  {
+    "path": "perf-counts.json",
+    "expected": "a0d1ac606006c4b6e4bc460ddf1a60bf13b9f74fc7caba8aedf70f4363ad4c2c",
+    "actual": "a0d1ac606006c4b6e4bc460ddf1a60bf13b9f74fc7caba8aedf70f4363ad4c2c",
+    "match": true
+  },
+  {
+    "path": "perf-counts.log",
+    "expected": "51412be4d70217f6b2cd701765773edae135d93764ac0581a95a62a84d241a5d",
+    "actual": "51412be4d70217f6b2cd701765773edae135d93764ac0581a95a62a84d241a5d",
+    "match": true
+  },
+  {
+    "path": "script-combination-check.txt",
+    "expected": "0879369810fbdc95aa5382e6e3ab02ec8bbec731687fc3a71b7e7959a410ae25",
+    "actual": "0879369810fbdc95aa5382e6e3ab02ec8bbec731687fc3a71b7e7959a410ae25",
+    "match": true
+  },
+  {
+    "path": "repo-state-end.txt",
+    "expected": "811665df161af1042df448a811d7a4fd73d0740f9b990fd8c60ec38e74ff656c",
+    "actual": "811665df161af1042df448a811d7a4fd73d0740f9b990fd8c60ec38e74ff656c",
+    "match": true
+  },
+  {
+    "path": "diff-app-core.js.patch",
+    "expected": "0b5f65ddc6b4b55bf23215f3b200bd8eef2796c28d603f87ca801cb15e6c271e",
+    "actual": "0b5f65ddc6b4b55bf23215f3b200bd8eef2796c28d603f87ca801cb15e6c271e",
+    "match": true
+  },
+  {
+    "path": "diff-native-reminders.js.patch",
+    "expected": "5148062253464db8bf76a80f9f588d9904cf5f31c26d51f75da0a9ebf7e886a7",
+    "actual": "5148062253464db8bf76a80f9f588d9904cf5f31c26d51f75da0a9ebf7e886a7",
+    "match": true
+  }
+]

@@ -1,0 +1,59 @@
+ROUNDS=3 PKG=space.alliswell.inbox.exportrecheck
+run-start=2026-09-22T00:00:34+0800
+
+## timepoint A (启动前 · 进程活着)
+IDB_STATE_SHA256=a22c3748c400e643
+BYTES=1638
+IDB_FILES=5 IDB_BYTES=52425 IDB_SHA256=0336f0142a3b26bc80b4258128e7b38491a6e6ab56e030b73f3373907c8427d0
+PAGE={"items":1,"projects":1,"title":"P2C 复验事项","status":"loaded","reason":"authoritative","backend":"idb","writesAllowed":true,"blockedWriteCount":0,"nativeBlocked":0,"mirrorLen":1638,"panel":false}
+
+════ round 1 / 3 ════
+## [1] timepoint B (进程死亡后且尚未启动)
+B1: IDB_FILES=5 IDB_BYTES=52425 IDB_SHA256=0336f0142a3b26bc80b4258128e7b38491a6e6ab56e030b73f3373907c8427d0
+pid-after-kill=[]
+B2: IDB_FILES=5 IDB_BYTES=52425 IDB_SHA256=0336f0142a3b26bc80b4258128e7b38491a6e6ab56e030b73f3373907c8427d0
+  ✓ 死亡窗口静止（3 秒间隔两次文件哈希相同；此期间没有任何写入者）
+
+## [1] timepoint C (启动恢复完成后)
+IDB_STATE_SHA256=a22c3748c400e643
+BYTES=1638
+file: IDB_FILES=5 IDB_BYTES=55701 IDB_SHA256=f837efc2530396f8978f48ca8127a8bfaf146cfc9045366be4d0ca6ac6db4597
+PAGE={"items":1,"projects":1,"title":"P2C 复验事项","status":"loaded","reason":"authoritative","backend":"idb","writesAllowed":true,"blockedWriteCount":0,"nativeBlocked":0,"mirrorLen":1638,"panel":false}
+
+## [1] 判定
+  ✓ 记录级哈希 A==C（a22c3748c400e643）：冷启动后权威记录与启动前逐字节一致 ⇒ 未被空快照覆盖
+
+════ round 2 / 3 ════
+## [2] timepoint B (进程死亡后且尚未启动)
+B1: IDB_FILES=5 IDB_BYTES=55701 IDB_SHA256=f837efc2530396f8978f48ca8127a8bfaf146cfc9045366be4d0ca6ac6db4597
+pid-after-kill=[]
+B2: IDB_FILES=5 IDB_BYTES=55701 IDB_SHA256=f837efc2530396f8978f48ca8127a8bfaf146cfc9045366be4d0ca6ac6db4597
+  ✓ 死亡窗口静止（3 秒间隔两次文件哈希相同；此期间没有任何写入者）
+
+## [2] timepoint C (启动恢复完成后)
+IDB_STATE_SHA256=a22c3748c400e643
+BYTES=1638
+file: IDB_FILES=5 IDB_BYTES=58977 IDB_SHA256=77f9cbd44d12814c39496618d113ceadf2900262631b2e464abd35074368f5a3
+PAGE={"items":1,"projects":1,"title":"P2C 复验事项","status":"loaded","reason":"authoritative","backend":"idb","writesAllowed":true,"blockedWriteCount":0,"nativeBlocked":0,"mirrorLen":1638,"panel":false}
+
+## [2] 判定
+  ✓ 记录级哈希 A==C（a22c3748c400e643）：冷启动后权威记录与启动前逐字节一致 ⇒ 未被空快照覆盖
+
+════ round 3 / 3 ════
+## [3] timepoint B (进程死亡后且尚未启动)
+B1: IDB_FILES=5 IDB_BYTES=58977 IDB_SHA256=77f9cbd44d12814c39496618d113ceadf2900262631b2e464abd35074368f5a3
+pid-after-kill=[]
+B2: IDB_FILES=5 IDB_BYTES=58977 IDB_SHA256=77f9cbd44d12814c39496618d113ceadf2900262631b2e464abd35074368f5a3
+  ✓ 死亡窗口静止（3 秒间隔两次文件哈希相同；此期间没有任何写入者）
+
+## [3] timepoint C (启动恢复完成后)
+IDB_STATE_SHA256=a22c3748c400e643
+BYTES=1638
+file: IDB_FILES=5 IDB_BYTES=62253 IDB_SHA256=cfc219c5fd90aa2d41d18b17e2f41dd3e8b0c4c209eedfe1fd49cd30bf3bc22d
+PAGE={"items":1,"projects":1,"title":"P2C 复验事项","status":"loaded","reason":"authoritative","backend":"idb","writesAllowed":true,"blockedWriteCount":0,"nativeBlocked":0,"mirrorLen":1638,"panel":false}
+
+## [3] 判定
+  ✓ 记录级哈希 A==C（a22c3748c400e643）：冷启动后权威记录与启动前逐字节一致 ⇒ 未被空快照覆盖
+
+## 复验结束 2026-09-22T00:01:34+0800
+OVERALL=PASS

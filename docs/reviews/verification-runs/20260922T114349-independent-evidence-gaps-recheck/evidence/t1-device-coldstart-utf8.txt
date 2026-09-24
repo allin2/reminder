@@ -1,0 +1,35 @@
+ROUNDS=1 PKG=space.alliswell.inbox.exportrecheck
+run-start=2026-09-22T12:23:48+0800
+
+## timepoint A (启动前 · 进程活着)
+IDB_STATE_SHA256=0625aacabcd5068a
+BYTES=2443
+IDB_FILES=5 IDB_BYTES=148175 IDB_SHA256=1b74488cd2ec851bfa3598dc6e10707bd0ae43c1ddae70ad6b215381c357601c
+MIRROR_FILES=5 MIRROR_BYTES=16868 MIRROR_SHA256=c85b1c78fd3c8f292ade05104c78c837ceebbb2532f718acb9d0aae2a6a86bb1
+IDB_WAL_BYTES=147350
+MIRROR_WAL_BYTES=16121
+PAGE={"items":2,"projects":1,"title":"P2C 复验事项","status":"loaded","reason":"authoritative","backend":"idb","writesAllowed":true,"blockedWriteCount":0,"nativeBlocked":0,"mirrorLen":2443,"mirrorSha16":"0625aacabcd5068a","panel":false}
+BASE_WAL=147350（冷启动前 WAL 字节数；下面每轮与它比，看有没有新增提交）
+WAL_LOGSET_A=[000003.log ]（权威 WAL 文件名集合；每轮复查，变了即判轮转⇒fail closed）
+WAL_A_LOCAL=/Users/qlyf/Developer/reminder/docs/reviews/verification-runs/20260922T114349-independent-evidence-gaps-recheck/tmp-wal/wal-A.bin BYTES=147350
+
+════ round 1 / 1 ════
+## [1] timepoint B (进程死亡后且尚未启动)
+B1: IDB_FILES=5 IDB_BYTES=148175 IDB_SHA256=1b74488cd2ec851bfa3598dc6e10707bd0ae43c1ddae70ad6b215381c357601c MIRROR_FILES=5 MIRROR_BYTES=16868 MIRROR_SHA256=c85b1c78fd3c8f292ade05104c78c837ceebbb2532f718acb9d0aae2a6a86bb1 IDB_WAL_BYTES=147350 MIRROR_WAL_BYTES=16121
+pid-after-kill=[]
+B2: IDB_FILES=5 IDB_BYTES=148175 IDB_SHA256=1b74488cd2ec851bfa3598dc6e10707bd0ae43c1ddae70ad6b215381c357601c MIRROR_FILES=5 MIRROR_BYTES=16868 MIRROR_SHA256=c85b1c78fd3c8f292ade05104c78c837ceebbb2532f718acb9d0aae2a6a86bb1 IDB_WAL_BYTES=147350 MIRROR_WAL_BYTES=16121
+  ✓ 死亡窗口静止（3 秒间隔两次文件哈希相同；此期间没有任何写入者）
+
+## [1] timepoint C (启动恢复完成后)
+IDB_STATE_SHA256=0625aacabcd5068a
+BYTES=2443
+file: IDB_FILES=5 IDB_BYTES=148197 IDB_SHA256=61499514020b4c341461be1e693e747c18455596a283848f1e68d7f1d62fcf5e MIRROR_FILES=5 MIRROR_BYTES=16871 MIRROR_SHA256=0920039278c93d784cd0c6940bfccda274ba04d0ec47a5bcec333e0610b6cb2d IDB_WAL_BYTES=147369 MIRROR_WAL_BYTES=16121
+PAGE={"items":2,"projects":1,"title":"P2C 复验事项","status":"loaded","reason":"authoritative","backend":"idb","writesAllowed":true,"blockedWriteCount":0,"nativeBlocked":0,"mirrorLen":2443,"mirrorSha16":"0625aacabcd5068a","panel":false}
+
+## [1] 判定
+  ✓ 记录级哈希 A==C（0625aacabcd5068a）：冷启动后权威记录与启动前逐字节一致 ⇒ 未被空快照覆盖
+  WAL 字节：147350 -> 147369（相对 A 时点累计 +19 B；逐轮明细见 wal-delta-round-1.txt）
+  ✓ 新增记录零键操作（OPS=0，RECORD_KIND=EMPTY_MARKER）⇒ 本轮冷启动没有产生任何提交
+
+## 复验结束 2026-09-22T12:24:14+0800
+OVERALL=PASS

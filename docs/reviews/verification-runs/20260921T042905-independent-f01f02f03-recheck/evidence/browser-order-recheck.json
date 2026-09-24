@@ -1,0 +1,63 @@
+{
+  "browser": "Chrome/153.0.8010.48",
+  "initial": {
+    "ready": true,
+    "failure": null,
+    "bindings": {
+      "parseChineseTime": "current",
+      "nextRepeatTrigger": "current",
+      "cnInt": "current",
+      "hasQuery": true,
+      "feedback": true,
+      "feedbackIsCurrent": true,
+      "evidence": true,
+      "evidenceIsCurrent": true,
+      "native": true,
+      "nativeIsCurrent": true
+    },
+    "intervals": [
+      2000,
+      15000
+    ],
+    "errors": []
+  },
+  "saved": {
+    "items": [
+      {
+        "id": "i_fotlncotmua9wz6m",
+        "title": "顺序复验"
+      }
+    ],
+    "errors": []
+  },
+  "reloaded": {
+    "items": [
+      {
+        "id": "i_fotlncotmua9wz6m",
+        "title": "顺序复验"
+      }
+    ],
+    "bindings": {
+      "parseChineseTime": "current",
+      "nextRepeatTrigger": "current",
+      "cnInt": "current",
+      "hasQuery": true,
+      "feedback": true,
+      "feedbackIsCurrent": true,
+      "evidence": true,
+      "evidenceIsCurrent": true,
+      "native": true,
+      "nativeIsCurrent": true
+    },
+    "errors": []
+  },
+  "checks": {
+    "ready": true,
+    "no_startup_failure": true,
+    "binding_current": true,
+    "single_heartbeat": true,
+    "saved": true,
+    "reloaded": true,
+    "no_errors": true
+  }
+}

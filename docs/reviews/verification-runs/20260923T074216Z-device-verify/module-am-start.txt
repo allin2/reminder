@@ -1,0 +1,8 @@
+Starting: Intent { cmp=space.alliswell.inbox/.MainActivity }
+Warning: Activity not started, intent has been delivered to currently running top-most instance.
+Status: ok
+LaunchState: UNKNOWN (0)
+Activity: space.alliswell.inbox/.MainActivity
+TotalTime: 0
+WaitTime: 25
+Complete

@@ -1,0 +1,3 @@
+Performing Streamed Install
+adb: failed to install releases/candidates/20260919-n4-window/app-debug-final.apk: Failure [INSTALL_FAILED_ABORTED: User rejected permissions]
+

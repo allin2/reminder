@@ -1,0 +1,48 @@
+
+== 1. 生产详情入口（openDetail）验证五种状态可见文案及文字安全纪律 ==
+  ✓ views 实例公开 detailReminderStatusRow 方法
+  ✓ 状态 1 未到点：可见文案为「还没到提醒时间」
+  ✓ 状态 1 未到点：绝不写「漏提醒」
+  ✓ 状态 1 未到点：绝不写「用户已看到/已读」
+  ✓ 状态 2 处理中：可见文案为「正在处理 · 稍后会自动更新」
+  ✓ 状态 2 处理中：绝不写「漏提醒」
+  ✓ 状态 2 处理中：绝不写「用户已看到/已读」
+  ✓ 状态 3 缺证据：可见文案为「本次提醒结果尚未确认」
+  ✓ 状态 3 缺证据：绝不说「确定漏提醒」或「漏提醒」
+  ✓ 状态 3 缺证据：绝不写「用户已看到/已读」
+  ✓ 状态 4 无法核查：可见文案为「这条记录的提醒无法核查」
+  ✓ 状态 4 无法核查：绝不写「漏提醒」
+  ✓ 状态 4 无法核查：绝不写「用户已看到/已读」
+  ✓ 状态 5 有回执：文案含「系统已接收这次提醒」
+  ✓ 状态 5 有回执：后缀语义为「（只代表系统收到了这次提醒）」
+  ✓ 状态 5 有回执：绝不写「用户已看到」或「已读」
+
+== 2. HTML 转义与直接调用 vs 详情 DOM 一致性核对 ==
+  ✓ 直接调用 views.detailReminderStatusRow(it) 返回 HTML 片段
+  ✓ 详情 DOM 中的内容与 views.detailReminderStatusRow(it) 逐字节一致
+  ✓ 状态文本中的特殊字符被正确 HTML 转义（无未转义脚本标签）
+
+== 3. 启动闸门与契约反例：缺具名依赖、缺实例方法、工厂抛错点名失败且零副作用 ==
+  ✓ 缺 evidenceStatusFor 时工厂抛错且具名点名
+  ✓ 缺 deliveryEvidenceReadable 时工厂抛错且具名点名
+  ✓ 缺 itemScheduleEvidence 时工厂抛错且具名点名
+  ✓ app-core.js 中 APP_VIEWS_INSTANCE_CONTRACT 存在
+  ✓ APP_VIEWS_INSTANCE_CONTRACT.instance 明确声明 detailReminderStatusRow
+  ✓ 正常工厂实例持有全部契约方法（含 detailReminderStatusRow）
+  ✓ 实例缺 detailReminderStatusRow 时能被点名发现
+  ✓ app-core.js 仍公开同名函数 detailReminderStatusRow(it)
+  ✓ app-core.js 同名函数为薄转发（调用 appViews.detailReminderStatusRow）
+  ✓ app-core.js 入口中已无 EvidenceLib.evidenceStatusFor 状态判定实现体
+  ✓ app-core.js 入口中已无 '<div class="detail-row"><dt>提醒结果</dt>' HTML 拼接实现体
+
+== 4. 变异测试（牙齿证明）：证据依赖、实例方法或转义缺失时正式反例必变红 ==
+  ✓ 变异 1 前置：补丁成功移除了 detailReminderStatusRow 实例公开
+  ✓ 变异 1 变红（MUTANT_RED=1）：缺少实例公开方法反例变红
+  ✓ 变异 2 前置：补丁成功移除了 evidenceStatusFor 依赖门禁
+  ✓ 变异 2 变红（MUTANT_RED=1）：若不检查 evidenceStatusFor 会静默放行坏依赖
+  ✓ 变异 3 前置：补丁成功注入了违规文案「确定漏提醒」
+  ✓ 变异 3 变红（MUTANT_RED=1）：注入违规文案「漏提醒」被反例检出
+
+========== P3-I-Q2 详细状态测试结果 ==========
+通过: 36  失败: 0
+Exit: 0

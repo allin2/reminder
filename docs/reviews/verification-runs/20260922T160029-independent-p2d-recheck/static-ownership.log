@@ -1,0 +1,55 @@
+## old implementation symbols
+lib/app-diagnostics.js:76:    let autoStartLanding = null;
+lib/app-diagnostics.js:81:    function setPill(el, text, ok, warn) {
+lib/app-diagnostics.js:93:    async function diagnoseSystemBridge() {
+lib/app-diagnostics.js:171:    async function renderBackgroundVerdict(diag, delivery) {
+lib/app-diagnostics.js:338:    async function refreshAlarmTrace() {
+lib/app-diagnostics.js:410:    async function labTraceTest() {
+lib/app-diagnostics.js:425:    async function labShowNow() {
+lib/app-diagnostics.js:447:    async function labScheduleAlarm(delayMs, label) {
+lib/app-diagnostics.js:500:    async function labRequestNotify() {
+lib/app-diagnostics.js:566:    async function openAutoStartHonest() {
+## thin core forwarders
+6121:  function refreshNotifyLab() {
+6122:    return diagnostics ? diagnostics.refreshNotifyLab() : Promise.resolve(null);
+6125:  function labLog(msg) {
+6126:    if (diagnostics) diagnostics.labLog(msg);
+6129:  function labCancelAlarms(opts) {
+6131:    return diagnostics.labCancelAlarms(opts);
+6134:  function describeAlarmDelivery(d) {
+6136:    return diagnostics.describeAlarmDelivery(d);
+6139:  function openSystemSetting(kind) {
+6141:    return diagnostics.openSystemSetting(kind);
+6144:  function openBackgroundGuide(kind) {
+6146:    return diagnostics.openBackgroundGuide(kind);
+8360:          hasRefresh: typeof diagnostics.refreshNotifyLab === "function",
+8361:          hasLabLog: typeof diagnostics.labLog === "function",
+8362:          hasCancel: typeof diagnostics.labCancelAlarms === "function",
+8363:          hasDescribe: typeof diagnostics.describeAlarmDelivery === "function",
+8364:          hasOpenSystem: typeof diagnostics.openSystemSetting === "function",
+8365:          hasOpenGuide: typeof diagnostics.openBackgroundGuide === "function"
+## reverse imports
+3: * 为什么单独成文件：这一段原先挤在 `app-core.js`（约 6006–6697 行），但它是
+27: * 依赖方向：本模块不反向导入 `app-core`，也不读 `AttentionLib`。
+32:    root.AttentionLib = root.AttentionLib || {};
+33:    root.AttentionLib.AppDiagnostics = factory(root);
+## production lists
+sw.js:2:// v18：P2-D 把诊断能力迁出为 `lib/app-diagnostics.js`（新增运行时脚本）。**新增脚本
+sw.js:44:  "./lib/app-diagnostics.js",
+test-smoke.js:20:const libAppDiagnostics = fs.readFileSync(path.join(ROOT, "lib/app-diagnostics.js"), "utf8");
+test-smoke.js:195:vm.runInContext(libAppDiagnostics, sandbox, { filename: "lib/app-diagnostics.js" });
+test-smoke.js:1296:    vm2.runInNewContext(libAppDiagnostics, probeCtx, { filename: "lib/app-diagnostics.js" });
+test-smoke.js:1342:    ok("P2-D：投递快照优先级逻辑在 lib/app-diagnostics.js",
+test-smoke.js:1350:      vm2.runInNewContext(source, ctx, { filename: "app-diagnostics-mutation.js" });
+test-regressions.js:35:  "lib/app-diagnostics.js",
+index.html:2004:<script src="lib/app-diagnostics.js"></script>
+test-boot-combination.js:47:  "lib/app-diagnostics.js",   // P2-D：诊断能力（工厂实例，无加载期依赖）
+test-boot-combination.js:752:      loaded: indexScripts.filter(s => s !== "lib/app-diagnostics.js")
+test-boot-combination.js:754:    ok("MUT-LOAD-DIAG 变异必红：生产 harness 漏载 app-diagnostics.js 时闭合检查点名缺口",
+test-boot-combination.js:755:      omittedDiagnostics.problems.some(p => p.indexOf("unaccounted-production-script:lib/app-diagnostics.js") >= 0),
+test-boot-combination.js:1313:    // ⑬ P2-D 新增模块 lib/app-diagnostics.js：诊断缺件时 setup 的取消/日志与
+test-boot-combination.js:1315:    const noAppDiagnostics = indexScripts.filter(s => s !== "lib/app-diagnostics.js");
+test-boot-combination.js:1317:    ok("P2-D 反例：抽掉 lib/app-diagnostics.js ⇒ ready 失败且点名 AppDiagnostics / AppDiagnostics.createAppDiagnostics",
+test-boot-combination.js:1322:    ok("P2-D 反例：抽掉 lib/app-diagnostics.js 后不读库、不起业务定时器、不落库",
+test-boot-combination.js:1325:    ok("P2-D 反例：抽掉 lib/app-diagnostics.js 后仍然渲染出可见失败面板",
+test-boot-combination.js:1331:    ok("P2-D 反例：抽掉 lib/app-diagnostics.js 的失败清单**只**点名 AppDiagnostics 系（无连带误报）",

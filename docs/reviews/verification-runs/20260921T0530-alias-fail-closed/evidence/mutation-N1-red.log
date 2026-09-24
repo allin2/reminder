@@ -1,0 +1,8 @@
+--- node test-boot-combination.js ---
+  ✗ MUT-C 同名歧义：`ambiguousAliases` 点名 auditAlias，且 `problems` 非空（既有 ambiguous-alias，也有落在它上面的 ambiguous-ref）——「只报告歧义但仍视为闭合」被明确禁止 — {"ambiguousAliases":["auditAlias"],"ambiguousRefs":["auditAlias.auditMember"],"problems":[]}
+通过: 260  失败: 1
+  - MUT-C 同名歧义：`ambiguousAliases` 点名 auditAlias，且 `problems` 非空（既有 ambiguous-alias，也有落在它上面的 ambiguous-ref）——「只报告歧义但仍视为闭合」被明确禁止 — {"ambiguousAliases":["auditAlias"],"ambiguousRefs":["auditAlias.auditMember"],"problems":[]}
+--- node scripts/verification/parse-single-source.js ---
+  ✗ 反向对照（同名歧义）：证不了归属 ⇒ `problems` 必须非空，而不是「只报告歧义但仍视为闭合」 — {"ambiguousAliases":["auditAlias"],"ambiguousRefs":["auditAlias.auditMember"],"problems":[]}
+通过 148 项，失败 1 项
+  ✗ 反向对照（同名歧义）：证不了归属 ⇒ `problems` 必须非空，而不是「只报告歧义但仍视为闭合」 — {"ambiguousAliases":["auditAlias"],"ambiguousRefs":["auditAlias.auditMember"],"problems":[]}

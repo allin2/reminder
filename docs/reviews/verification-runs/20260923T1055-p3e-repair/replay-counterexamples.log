@@ -1,0 +1,18 @@
+=== Replaying Independent Review Counterexamples ===
+Counterexample 1 (Coordinator Routing & Drift Compensation): {
+  "threwMissingDep": true,
+  "directRoutePass": true,
+  "driftCompensationPass": true,
+  "driftRuns": 2,
+  "stableRuns": 1,
+  "directCount": 2,
+  "notifCount": 0
+}
+Counterexample 2 (Production Close Route & Drain Isolation): {
+  "directDetail": null,
+  "drainDetail": null,
+  "drainedCount": 1,
+  "directClosesWithoutDetail": true,
+  "drainClosesWithoutDetail": true
+}
+PASS: Both counterexamples replayed to green successfully!

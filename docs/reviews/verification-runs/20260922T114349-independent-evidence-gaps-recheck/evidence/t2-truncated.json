@@ -1,0 +1,1 @@
+{"delta_bytes": 10, "record_kind": "PARTIAL", "ops": null, "seq": null, "entries": [], "records_appended": 0, "note": "追加区解析不完整：偏移 0 处声明 47 字节，但只剩 3 字节（写入中断）", "verdict": "INCONCLUSIVE"}

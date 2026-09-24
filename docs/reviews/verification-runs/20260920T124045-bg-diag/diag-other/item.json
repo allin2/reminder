@@ -1,0 +1,30 @@
+{
+  "id": "diag-other-1789880987750",
+  "rev": 1,
+  "triggerAt": 1789881017000,
+  "localTrigger": "2026-09-20T13:10:17",
+  "priority": "important",
+  "delivery_mode": "alarm",
+  "reminderEvents": {
+    "0@1789881017000": {
+      "at": 1789881017000,
+      "state": "scheduled",
+      "roundBase": 1789881017000
+    },
+    "1@1789882817000": {
+      "at": 1789882817000,
+      "state": "scheduled",
+      "roundBase": 1789881017000
+    },
+    "2@1789884617000": {
+      "at": 1789884617000,
+      "state": "scheduled",
+      "roundBase": 1789881017000
+    },
+    "3@1789886417000": {
+      "at": 1789886417000,
+      "state": "scheduled",
+      "roundBase": 1789881017000
+    }
+  }
+}

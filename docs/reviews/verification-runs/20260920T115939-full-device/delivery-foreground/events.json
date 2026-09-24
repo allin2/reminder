@@ -1,0 +1,140 @@
+[
+  {
+    "token": "1076984634:e42be4ac-2b4e-415d-8069-c65c17cb280b",
+    "stage": "requested",
+    "at": 1789877577623,
+    "detail": "delayMs=24382"
+  },
+  {
+    "token": "1076984634:e42be4ac-2b4e-415d-8069-c65c17cb280b",
+    "stage": "item",
+    "at": 1789877577624,
+    "detail": "verify-foreground-1789877577520"
+  },
+  {
+    "token": "1076984634:e42be4ac-2b4e-415d-8069-c65c17cb280b",
+    "stage": "unfreezerScheduled",
+    "at": 1789877577640,
+    "detail": "triggerAt=1789877602006;mode=alarmClock"
+  },
+  {
+    "token": "1076984634:e42be4ac-2b4e-415d-8069-c65c17cb280b",
+    "stage": "scheduled",
+    "at": 1789877577641,
+    "detail": "triggerAt=1789877602006;mode=alarmClock"
+  },
+  {
+    "token": "1076984634:e42be4ac-2b4e-415d-8069-c65c17cb280b",
+    "stage": "carrierRecorded",
+    "at": 1789877602134,
+    "detail": "sound=native;vibrate=native;foreground=true"
+  },
+  {
+    "token": "1076984634:e42be4ac-2b4e-415d-8069-c65c17cb280b",
+    "stage": "ringStarted",
+    "at": 1789877602135,
+    "detail": "carrier=native;foreground=true;sound=true;vibrate=true"
+  },
+  {
+    "token": "1076984634:e42be4ac-2b4e-415d-8069-c65c17cb280b",
+    "stage": "received",
+    "at": 1789877602138,
+    "detail": ""
+  },
+  {
+    "token": "1076984634:e42be4ac-2b4e-415d-8069-c65c17cb280b",
+    "stage": "environment",
+    "at": 1789877602141,
+    "detail": "screenOn=true;locked=false;inCall=false;path=direct+banner"
+  },
+  {
+    "token": "1076984634:e42be4ac-2b4e-415d-8069-c65c17cb280b",
+    "stage": "ringServiceRequested",
+    "at": 1789877602145,
+    "detail": "foreground service asked to hold sound+vibration"
+  },
+  {
+    "token": "1076984634:e42be4ac-2b4e-415d-8069-c65c17cb280b",
+    "stage": "launchLikelyBlocked",
+    "at": 1789877602146,
+    "detail": "no SYSTEM_ALERT_WINDOW"
+  },
+  {
+    "token": "1076984634:e42be4ac-2b4e-415d-8069-c65c17cb280b",
+    "stage": "launchRequested",
+    "at": 1789877602160,
+    "detail": "direct launch alongside full-screen intent"
+  },
+  {
+    "token": "1076984634:e42be4ac-2b4e-415d-8069-c65c17cb280b",
+    "stage": "systemNotificationPosted",
+    "at": 1789877602163,
+    "detail": "NotificationManager accepted active delivery"
+  },
+  {
+    "token": "1076984634:e42be4ac-2b4e-415d-8069-c65c17cb280b",
+    "stage": "notifyReturned",
+    "at": 1789877602164,
+    "detail": "system notification posted; fullScreenIntent=true; sound+vibration carried by AlarmRingService; banner visibility is OEM-controlled"
+  },
+  {
+    "token": "1076984634:e42be4ac-2b4e-415d-8069-c65c17cb280b",
+    "stage": "ringDuplicateStart",
+    "at": 1789877602165,
+    "detail": "same delivery already ringing; kept as-is"
+  },
+  {
+    "token": "1076984634:e42be4ac-2b4e-415d-8069-c65c17cb280b",
+    "stage": "created",
+    "at": 1789877602180,
+    "detail": "test=false"
+  },
+  {
+    "token": "1076984634:e42be4ac-2b4e-415d-8069-c65c17cb280b",
+    "stage": "localFallbackStopped",
+    "at": 1789877602188,
+    "detail": "service-owned sound is stopped separately"
+  },
+  {
+    "token": "1076984634:e42be4ac-2b4e-415d-8069-c65c17cb280b",
+    "stage": "resumed",
+    "at": 1789877602190,
+    "detail": "lifecycle only"
+  },
+  {
+    "token": "1076984634:e42be4ac-2b4e-415d-8069-c65c17cb280b",
+    "stage": "localFallbackStopped",
+    "at": 1789877602190,
+    "detail": "service-owned sound is stopped separately"
+  },
+  {
+    "token": "1076984634:e42be4ac-2b4e-415d-8069-c65c17cb280b",
+    "stage": "focus",
+    "at": 1789877602243,
+    "detail": "true"
+  },
+  {
+    "token": "1076984634:e42be4ac-2b4e-415d-8069-c65c17cb280b",
+    "stage": "windowVisible",
+    "at": 1789877602243,
+    "detail": "via=focus;focused=true;shown=true"
+  },
+  {
+    "token": "1076984634:e42be4ac-2b4e-415d-8069-c65c17cb280b",
+    "stage": "windowSample",
+    "at": 1789877602490,
+    "detail": "after=300ms;focus=true;shown=true;visibility=0;playing=false"
+  },
+  {
+    "token": "1076984634:e42be4ac-2b4e-415d-8069-c65c17cb280b",
+    "stage": "windowSample",
+    "at": 1789877602991,
+    "detail": "after=800ms;focus=true;shown=true;visibility=0;playing=false"
+  },
+  {
+    "token": "1076984634:e42be4ac-2b4e-415d-8069-c65c17cb280b",
+    "stage": "windowSample",
+    "at": 1789877603691,
+    "detail": "after=1500ms;focus=true;shown=true;visibility=0;playing=false"
+  }
+]

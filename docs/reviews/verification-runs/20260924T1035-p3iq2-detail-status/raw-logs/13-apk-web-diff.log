@@ -1,0 +1,20 @@
+U1 APK: releases/candidates/20260924T0950-u1-snooze-entry-fix-candidate/app-debug.apk
+U1 SHA-256: 340975ff957d8ee45d5da844450fd24e97bac431ba9d94bb59af1ff78f2c922e
+Q2 APK: releases/candidates/20260924T1035-p3iq2-detail-status-candidate/app-debug.apk
+Q2 SHA-256: 9643ea2f938393897b0252025e9b5301a46093f40d553646a7e0248aaa042f9e
+Names added: []
+Names removed: []
+Total web assets checked: 41
+Unchanged web assets count: 38
+Changed web assets count: 3
+  CHANGED: assets/public/app-core.js
+    U1: 90d49cd22e7c8e35f9934f813e4fb6fdd659fa8b4fc1b4e0cf80c3e713b1832b
+    Q2: 51d0517c000faec9697744399710604fcdd5318d1e6bbcbb79232972efd30ece
+  CHANGED: assets/public/lib/app-views.js
+    U1: 2ef2c72b6319feb3414fd07914804296d4f9fa7888a834b3d95f1a98b2fafa37
+    Q2: c3dcaaf7e8ce790d40c427a1ce9d5a6ca48b771e416f60f216636b8a980c9ad4
+  CHANGED: assets/public/sw.js
+    U1: 7287ed883d37fef8cb13c2c0865cb0fee2184837d39ee805d787fac8d722292d
+    Q2: 3d4a03abaea02d4656d88c305627a3a90ea8e3115a5c5777f56c69079db7120a
+All changed entries across APK: ['META-INF/CERT.RSA', 'META-INF/CERT.SF', 'META-INF/MANIFEST.MF', 'assets/public/app-core.js', 'assets/public/lib/app-views.js', 'assets/public/sw.js']
+Exit: 0

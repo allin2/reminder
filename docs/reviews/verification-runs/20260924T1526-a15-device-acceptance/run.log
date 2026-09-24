@@ -1,0 +1,244 @@
+15:27:19 == STEP0 identity
+15:27:19 candidate sha e14438de38b3ee05d678e15025d09c1adceebb51f67f3f8d954fb26488fe20c1
+15:27:19 device base.apk e14438de38b3ee05d678e15025d09c1adceebb51f67f3f8d954fb26488fe20c1  /data/app/~~f6u-dbaWJ0-chbS4N2KmXw==/space.alliswell.inbox-f2INISivuYX593d4PpjJDQ==/base.apk
+15:27:19 pkg info versionCode=2 minSdk=22 targetSdk=34
+    versionName=1.1
+    lastUpdateTime=2026-09-24 14:56:01
+      firstInstallTime=2026-09-23 15:38:35
+      firstInstallTime=2026-09-23 15:38:35
+15:27:20 pid 23761 focus Window{d053943 u0 com.bbk.launcher2/com.bbk.launcher2.Launcher type=1 }
+15:27:20 ready {'ready': True, 'status': 'loaded', 'writesAllowed': True, 'native': True}
+15:27:20 app info {"items": 0, "defaultDeliveryMode": "notification", "quiet": ["23:00", "07:30", null], "native": {"native": true, "notifications": "granted", "exactAlarm": "granted", "reliability": "exact", "source": "SystemBridge", "diag": {"sdkInt": 36, "packageName": "space.alliswell.inbox", "notificationsEnabled": true, "postNotificationsGranted": true, "canExactAlarm": true, "ignoringBatteryOptimizations": false, "alarmManagerAvailable": true, "notificationManagerAvailable": true, "canDrawOverlays": true, "canUseFullScreenIntent": true, "alarmChannelImportance": 4, "alarmChannelId": "attention-alarm-v4"}, "enabled": true, "notifySwitchOn": true, "notificationsGranted": true, "capabilities": {"sound": true, "notifications": true, "screen": true, "exact": true}, "desired": 0, "scheduled": 0, "cancelled": 0, "alarmCount": 0, "alarmScheduled": 0, "alarmCancelled": 0, "scheduledAlarmIds": [], "scheduledAlarmSignatures": {}, "deadlineEvents": [], "cancelledDeadlineEvents": [], "reminderEvents": [], "cancelledReminderEvents": [], "errors": []}, "syncVer": 2}
+15:30:05 focus Window{6e45a u0 space.alliswell.inbox/space.alliswell.inbox.MainActivity type=1 }
+15:30:12 focus Window{6e45a u0 space.alliswell.inbox/space.alliswell.inbox.MainActivity type=1 }
+15:30:12 pre snapshot {"kv": {"state": {"sha256": "41dd04eb735718f76940e24e724a912dd025d1aa18cc25b722aa138e54b963ab", "bytes": 1013, "itemCount": 0}}} ls {"attention-inbox-v2": {"sha256": "f8454b24c5b6e191f8fb525bcf08fcb66f61b6a3d50f9a45ee272dc26fdc0f65", "bytes": 1013}}
+15:31:20 == STEP1 seed isolated item before install
+15:31:23 ready {'ready': True, 'status': 'loaded', 'writesAllowed': True, 'native': True}
+15:31:24 seed {"ok": true, "before": 0, "after": 1, "item": {"id": "i_49kecme9muf7quxh", "title": "A15P1-153123 安装比对隔离事项", "status": "waiting", "rev": 1, "triggerAt": 1790328660000, "priority": "important", "delivery_mode": "alarm", "scheduleBasis": "wall-clock", "reminderKey": null}}
+15:31:27 idb seed {'found': True, 'id': 'i_49kecme9muf7quxh', 'title': 'A15P1-153123 安装比对隔离事项', 'status': 'waiting', 'rev': 1, 'triggerAt': 1790328660000, 'snoozedAt': None, 'snoozeCount': 0, 'acknowledgedAt': None, 'completedAt': None, 'archivedAt': None}
+15:31:27 alarm dump pre whenElapsed=+5h53m12s757ms maxWhenElapsed=+11h53m12s757ms
+      operation=PendingIntent{e6d1c80: PendingIntentRecord{e2452b9 com.vivo.aiengine broadcastIntent}}
+    RTC_WAKEUP #63: Alarm{4e94c2d type 0 origWhen 1790256600000 flags 5 windowLength 0 whenElapsed 478656166 maxWhenElapsed 478656166 repeatInterval 0 tag=*walarm*:space.alliswell.inbox/com.capacitorjs.plugins.localnotifications.TimedNotificationPublisher originWhenElapsed 478656166 originWindowLength 0 setAtTime=2026-09-24 07:31:23 policyWhenElapsed:[478656166, 457139914, 0, 457139914, 0] procName=space.alliswell.inbox space.alliswell.inbox}
+      tag=*walarm*:space.alliswell.inbox/com.capacitorjs.plugins.localnotifications.TimedNotificationPublisher
+      type=RTC_WAKEUP origWhen=2026-09-24 21:30:00.000 window=0 exactAllowReason=permission repeatInterval=0 count=0 flags=0x5
+      policyWhenElapsed: requester=+5h58m32s637ms app_standby=-3s615ms device_idle=-- battery_saver=-3s615ms --unknown(4)--=--
+      whenElapsed=+5h58m32s637ms maxWhenElapsed=+5h58m32s637ms
+      operation=PendingIntent{b2ceccb: PendingIntentRecord{248dca8 space.alliswell.inbox broadcastIntent}}
+      idle-options=Bundle[{android.pendingIntent.backgroundActivityAllowed=2, android:broadcast.temporaryAppAllowlistReasonCode=302, android:broadcast.temporaryAppAllowlistDuration=10000, android:broadcast.temporaryAppAllowlistReason=, android:broadcast.temporaryAppAllowlistType=0, android:broadcast.flags=8}]
+    RTC_WAKEUP #64: Alarm{c5b28b2 type 0 origWhen 1790256966370 flags 9 windowLength 0 whenElapsed 479022537 maxWhenElapsed 479022537 repeatInterval 0 tag=*walarm*:com.vivo.assistant/.services.scene.sport.weeklysport.WeekSummaryPushService originWhenElapsed 479022537 originWindowLength 0 setAtTime=2026-09-23 18:16:19 policyWhenElapsed:[479022537, 409435539, 0, 0, 0] procName=com.vivo.assistant com.vivo.assistant}
+      tag=*walarm*:com.vivo.assistant/.services.scene.sport.weeklysport.WeekSummaryPushService
+      type=RTC_WAKEUP origWhen=2026-09-24 21:36:06.370 window=0 exactAllowReason=policy_permission repeatInterval=0 count=0 flags=0x9
+      policyWhenElapsed: requester=+6h4m39s8ms app_standby=-13h15m7s990ms device_idle=-- battery_saver=-- --unknown(4)--=--
+      whenElapsed=+6h4m39s8ms maxWhenElapsed=+6h4m39s8ms
+--
+      whenElapsed=+6h43m40s887ms maxWhenElapsed=+12h43m40s887ms
+      operation=PendingIntent{a2e6175: PendingIntentRecord{cef550a com.vivo.aiengine broadcastIntent}}
+    RTC_WAKEUP #69: Alarm{f997f4f type 0 origWhen 1790260200000 flags 5 windowLength 0 whenElapsed 482256167 maxWhenElapsed 482256167 repeatInterval 0 tag=*walarm*:space.alliswell.inbox/com.capacitorjs.plugins.localnotifications.TimedNotificationPublisher originWhenElapsed 482256167 originWindowLength 0 setAtTime=2026-09-24 07:31:23 policyWhenElapsed:[482256167, 457139922, 0, 457139922, 0] procName=space.alliswell.inbox space.alliswell.inbox}
+      tag=*walarm*:space.alliswell.inbox/com.capacitorjs.plugins.localnotifications.TimedNotificationP
+15:31:27 pre {"state": {"sha256": "0562f4bb515e77b2ecf5d244dabb75c1863765d764d655ecfed0db723bef2fb4", "itemCount": 1}}
+15:31:27 == install -r same frozen candidate
+15:31:28 before base.apk e14438de38b3ee05d678e15025d09c1adceebb51f67f3f8d954fb26488fe20c1  /data/app/~~f6u-dbaWJ0-chbS4N2KmXw==/space.alliswell.inbox-f2INISivuYX593d4PpjJDQ==/base.apk lastUpdate lastUpdateTime=2026-09-24 14:56:01
+15:31:42 tap installer 继续安装 Window{9ba7ea1 u0 com.android.packageinstaller/com.android.packageinstaller.PackageInterceptActivity type=1 }
+15:31:47 tap installer 继续安装 Window{9ba7ea1 u0 com.android.packageinstaller/com.android.packageinstaller.PackageInterceptActivity type=1 }
+15:31:52 tap installer 继续安装 Window{9ba7ea1 u0 com.android.packageinstaller/com.android.packageinstaller.PackageInterceptActivity type=1 }
+15:31:57 tap installer 继续安装 Window{9ba7ea1 u0 com.android.packageinstaller/com.android.packageinstaller.PackageInterceptActivity type=1 }
+15:32:01 tap installer 继续安装 Window{9ba7ea1 u0 com.android.packageinstaller/com.android.packageinstaller.PackageInterceptActivity type=1 }
+15:32:06 tap installer 继续安装 Window{9ba7ea1 u0 com.android.packageinstaller/com.android.packageinstaller.PackageInterceptActivity type=1 }
+15:32:11 tap installer 继续安装 Window{9ba7ea1 u0 com.android.packageinstaller/com.android.packageinstaller.PackageInterceptActivity type=1 }
+15:32:16 tap installer 继续安装 Window{9ba7ea1 u0 com.android.packageinstaller/com.android.packageinstaller.PackageInterceptActivity type=1 }
+15:32:21 tap installer 继续安装 Window{9ba7ea1 u0 com.android.packageinstaller/com.android.packageinstaller.PackageInterceptActivity type=1 }
+15:32:26 tap installer 继续安装 Window{9ba7ea1 u0 com.android.packageinstaller/com.android.packageinstaller.PackageInterceptActivity type=1 }
+15:32:30 tap installer 继续安装 Window{9ba7ea1 u0 com.android.packageinstaller/com.android.packageinstaller.PackageInterceptActivity type=1 }
+15:32:35 tap installer 继续安装 Window{9ba7ea1 u0 com.android.packageinstaller/com.android.packageinstaller.PackageInterceptActivity type=1 }
+15:32:40 tap installer 继续安装 Window{9ba7ea1 u0 com.android.packageinstaller/com.android.packageinstaller.PackageInterceptActivity type=1 }
+15:32:45 tap installer 继续安装 Window{9ba7ea1 u0 com.android.packageinstaller/com.android.packageinstaller.PackageInterceptActivity type=1 }
+15:32:50 tap installer 继续安装 Window{9ba7ea1 u0 com.android.packageinstaller/com.android.packageinstaller.PackageInterceptActivity type=1 }
+15:32:55 tap installer 继续安装 Window{9ba7ea1 u0 com.android.packageinstaller/com.android.packageinstaller.PackageInterceptActivity type=1 }
+15:32:59 tap installer 继续安装 Window{9ba7ea1 u0 com.android.packageinstaller/com.android.packageinstaller.PackageInterceptActivity type=1 }
+15:33:01 install rc 0 Performing Streamed Install
+Success
+  clicked ['继续安装', '继续安装', '继续安装', '继续安装', '继续安装', '继续安装', '继续安装', '继续安装', '继续安装', '继续安装', '继续安装', '继续安装', '继续安装', '继续安装', '继续安装', '继续安装', '继续安装'] 92.7s
+15:33:02 after base.apk e14438de38b3ee05d678e15025d09c1adceebb51f67f3f8d954fb26488fe20c1 /data/app/~~cxSXE0oLqLgQifxVxHun9w==/space.alliswell.inbox-xRdyC9TwSbAj7QnFWn59_Q==/base.apk lastUpdate lastUpdateTime=2026-09-24 15:33:00
+15:33:07 alarm dump after install (before app start) whenElapsed=+5h51m33s74ms maxWhenElapsed=+11h51m33s74ms
+      operation=PendingIntent{e6d1c80: PendingIntentRecord{e2452b9 com.vivo.aiengine broadcastIntent}}
+    RTC_WAKEUP #62: Alarm{4e94c2d type 0 origWhen 1790256600000 flags 5 windowLength 0 whenElapsed 478656166 maxWhenElapsed 478656166 repeatInterval 0 tag=*walarm*:space.alliswell.inbox/com.capacitorjs.plugins.localnotifications.TimedNotificationPublisher originWhenElapsed 478656166 originWindowLength 0 setAtTime=2026-09-24 07:31:23 policyWhenElapsed:[478656166, 457139914, 0, 457205386, 0] procName=space.alliswell.inbox space.alliswell.inbox}
+      tag=*walarm*:space.alliswell.inbox/com.capacitorjs.plugins.localnotifications.TimedNotificationPublisher
+      type=RTC_WAKEUP origWhen=2026-09-24 21:30:00.000 window=0 exactAllowReason=permission repeatInterval=0 count=0 flags=0x5
+      policyWhenElapsed: requester=+5h56m52s954ms app_standby=-1m43s298ms device_idle=-- battery_saver=-37s826ms --unknown(4)--=--
+      whenElapsed=+5h56m52s954ms maxWhenElapsed=+5h56m52s954ms
+      operation=PendingIntent{b2ceccb: PendingIntentRecord{248dca8 space.alliswell.inbox broadcastIntent}}
+      idle-options=Bundle[{android.pendingIntent.backgroundActivityAllowed=2, android:broadcast.temporaryAppAllowlistReasonCode=302, android:broadcast.temporaryAppAllowlistDuration=10000, android:broadcast.temporaryAppAllowlistReason=, android:broadcast.temporaryAppAllowlistType=0, android:broadcast.flags=8}]
+    RTC_WAKEUP #63: Alarm{c5b28b2 type 0 origWhen 1790256966370 flags 9 windowLength 0 whenElapsed 479022537 maxWhenElapsed 479022537 repeatInterval 0 tag=*walarm*:com.vivo.assistant/.services.scene.sport.weeklysport.WeekSummaryPushService originWhenElapsed 479022537 originWindowLength 0 setAtTime=2026-09-23 18:16:19 policyWhenElapsed:[479022537, 409435539, 0, 0, 0] procName=com.vivo.assistant com.vivo.assistant}
+      tag=*walarm*:com.vivo.assistant/.services.scene.sport.weeklysport.WeekSummaryPushService
+      type=RTC_WAKEUP origWhen=2026-09-24 21:36:06.370 window=0 exactAllowReason=policy_permission repeatInterval=0 count=0 flags=0x9
+      policyWhenElapsed: requester=+6h2m59s325ms app_standby=-13h16m47s673ms device_idle=-- battery_saver=-- --unknown(4)--=--
+      whenElapsed=+6h2m59s325ms maxWhenElapsed=+6h2m59s325ms
+--
+      whenElapsed=+6h42m1s204ms maxWhenElapsed=+12h42m1s204ms
+      operation=PendingIntent{a2e6175: PendingIntentRecord{cef550a com.vivo.aiengine broadcastIntent}}
+    RTC_WAKEUP #68: Alarm{f997f4f type 0 origWhen 1790260200000 flags 5 windowLength 0 whenElapsed 482256167 maxWhenElapsed 482256167 repeatInterval 0 tag=*walarm*:space.alliswell.inbox/com.capacitorjs.plugins.localnotifications.TimedNotificationPublisher originWhenElapsed 482256167 originWindowLength 0 setAtTime=2026-09-24 07:31:23 policyWhenElapsed:[482256167, 457139922, 0, 457205386, 0] procName=space.alliswell.inbox space.alliswell.inbox}
+      tag=*walarm*:space.alliswell.inbox/com.capacitorjs.plugins.localnotifications.TimedNotifi
+15:33:07 == cold start after install
+15:33:12 ready {'ready': True, 'status': 'loaded', 'writesAllowed': True, 'native': True}
+15:33:15 diff {"storesAdded": [], "storesRemoved": [], "records": {"kv/state": "identical"}, "localStorage": {"attention-inbox-v2": "identical"}}
+15:33:16 idb seed after {'found': True, 'id': 'i_49kecme9muf7quxh', 'title': 'A15P1-153123 安装比对隔离事项', 'status': 'waiting', 'rev': 1, 'triggerAt': 1790328660000, 'snoozedAt': None, 'snoozeCount': 0, 'acknowledgedAt': None, 'completedAt': None, 'archivedAt': None}
+15:33:27 alarms for pkg after install+start: 26
+15:33:27    RTC_WAKEUP #64: Alarm{780eee5 type 0 origWhen 1790256600000 flags 5 windowLength 0 whenElapsed 478656167 maxWhenElapsed 478656167 repeatInterval 0 tag=*walarm*:space.alliswell.inbox/com.capacitorjs.plugins.localnotifications.TimedNotificationPublisher originWh
+15:33:27    tag=*walarm*:space.alliswell.inbox/com.capacitorjs.plugins.localnotifications.TimedNotificationPublisher
+15:33:27    RTC_WAKEUP #70: Alarm{ce48dd3 type 0 origWhen 1790260200000 flags 5 windowLength 0 whenElapsed 482256167 maxWhenElapsed 482256167 repeatInterval 0 tag=*walarm*:space.alliswell.inbox/com.capacitorjs.plugins.localnotifications.TimedNotificationPublisher originWh
+15:33:27    tag=*walarm*:space.alliswell.inbox/com.capacitorjs.plugins.localnotifications.TimedNotificationPublisher
+15:33:27    RTC_WAKEUP #170: Alarm{2f0f512 type 0 origWhen 1790328660095 flags 3 windowLength 0 whenElapsed 550716261 maxWhenElapsed 550716261 repeatInterval 0 tag=*walarm*:space.alliswell.inbox/.AlarmRingService originWhenElapsed 550716261 originWindowLength 0 setAtTime=
+15:33:27    tag=*walarm*:space.alliswell.inbox/.AlarmRingService
+15:33:27    RTC_WAKEUP #171: Alarm{2e2eb61 type 0 origWhen 1790328660095 flags 3 windowLength 0 whenElapsed 550716262 maxWhenElapsed 550716262 repeatInterval 0 tag=*walarm*:space.alliswell.inbox.ACTION_TEST_ALARM originWhenElapsed 550716262 originWindowLength 0 setAtTime=
+15:33:27    tag=*walarm*:space.alliswell.inbox.ACTION_TEST_ALARM
+15:33:27    RTC_WAKEUP #172: Alarm{8dc57d1 type 0 origWhen 1790330460000 flags 5 windowLength 0 whenElapsed 552516166 maxWhenElapsed 552516166 repeatInterval 0 tag=*walarm*:space.alliswell.inbox/com.capacitorjs.plugins.localnotifications.TimedNotificationPublisher originW
+15:33:27    tag=*walarm*:space.alliswell.inbox/com.capacitorjs.plugins.localnotifications.TimedNotificationPublisher
+15:33:27    RTC_WAKEUP #173: Alarm{ac77d3f type 0 origWhen 1790332260000 flags 5 windowLength 0 whenElapsed 554316167 maxWhenElapsed 554316167 repeatInterval 0 tag=*walarm*:space.alliswell.inbox/com.capacitorjs.plugins.localnotifications.TimedNotificationPublisher originW
+15:33:27    tag=*walarm*:space.alliswell.inbox/com.capacitorjs.plugins.localnotifications.TimedNotificationPublisher
+15:33:27    RTC_WAKEUP #174: Alarm{e0f4c74 type 0 origWhen 1790334060000 flags 5 windowLength 0 whenElapsed 556116167 maxWhenElapsed 556116167 repeatInterval 0 tag=*walarm*:space.alliswell.inbox/com.capacitorjs.plugins.localnotifications.TimedNotificationPublisher originW
+15:33:27    tag=*walarm*:space.alliswell.inbox/com.capacitorjs.plugins.localnotifications.TimedNotificationPublisher
+15:33:27    Next wake from idle: Alarm{2f0f512 type 0 origWhen 1790328660095 flags 3 windowLength 0 whenElapsed 550716261 maxWhenElapsed 550716261 repeatInterval 0 tag=*walarm*:space.alliswell.inbox/.AlarmRingService originWhenElapsed 550716261 originWindowLength 0 setAtT
+15:33:27    tag=*walarm*:space.alliswell.inbox/.AlarmRingService
+15:33:27    type=RTC_WAKEUP tag=*walarm*:space.alliswell.inbox/com.capacitorjs.plugins.localnotifications.TimedNotificationPublisher
+15:33:27    type=RTC_WAKEUP tag=*walarm*:space.alliswell.inbox/com.capacitorjs.plugins.localnotifications.TimedNotificationPublisher
+15:33:27    type=RTC_WAKEUP tag=*walarm*:space.alliswell.inbox/com.capacitorjs.plugins.localnotifications.TimedNotificationPublisher
+15:33:27    type=RTC_WAKEUP tag=*walarm*:space.alliswell.inbox/com.capacitorjs.plugins.localnotifications.TimedNotificationPublisher
+15:33:27    type=RTC_WAKEUP tag=*walarm*:space.alliswell.inbox/com.capacitorjs.plugins.localnotifications.TimedNotificationPublisher
+15:33:27    type=RTC_WAKEUP tag=*walarm*:space.alliswell.inbox/com.capacitorjs.plugins.localnotifications.TimedNotificationPublisher
+15:33:27    type=RTC_WAKEUP tag=*walarm*:space.alliswell.inbox/com.capacitorjs.plugins.localnotifications.TimedNotificationPublisher
+15:33:27    type=RTC_WAKEUP tag=*walarm*:space.alliswell.inbox/com.capacitorjs.plugins.localnotifications.TimedNotificationPublisher
+15:33:27    type=RTC_WAKEUP tag=*walarm*:space.alliswell.inbox/.AlarmRingService
+15:33:27    type=RTC_WAKEUP tag=*walarm*:space.alliswell.inbox/com.capacitorjs.plugins.localnotifications.TimedNotificationPublisher
+15:33:56 == STEP2 ready {'ready': True, 'status': 'loaded', 'writesAllowed': True, 'native': True}
+15:33:57 create N1 {"id": "i_lxf81le3muf7u535", "title": "A15N1-153356 通知按钮", "status": "waiting", "rev": 1, "triggerAt": 1790235300000, "priority": "normal", "delivery_mode": "notification", "scheduleBasis": "wall-clock", "reminderKey": null}
+15:33:58 create N2 {"id": "i_p8c2shvomuf7u639", "title": "A15N2-153356 通知按钮", "status": "waiting", "rev": 1, "triggerAt": 1790235300000, "priority": "normal", "delivery_mode": "notification", "scheduleBasis": "wall-clock", "reminderKey": null}
+15:34:00 create N3 {"id": "i_mbz3c2fimuf7u72w", "title": "A15N3-153356 通知按钮", "status": "waiting", "rev": 1, "triggerAt": 1790235300000, "priority": "normal", "delivery_mode": "notification", "scheduleBasis": "wall-clock", "reminderKey": null}
+15:34:02 native status {"desired": 9, "scheduled": 3, "alarmScheduled": 0, "errors": []}
+15:34:03 app backgrounded; focus Window{d053943 u0 com.bbk.launcher2/com.bbk.launcher2.Launcher type=1 } wait until 1790235300000
+15:35:13 posted N1 True
+15:35:13 posted N2 True
+15:35:13 posted N3 True
+15:35:35 N1 action button not found; texts: [REDACTED: shade texts included unrelated personal notifications]
+15:35:40 N2 title not visible in shade
+15:35:45 N3 title not visible in shade
+15:35:52 N1 mem {"id": "i_lxf81le3muf7u535", "title": "A15N1-153356 通知按钮", "status": "due", "rev": 1, "triggerAt": 1790235300000, "snoozedAt": null, "snoozeCount": 0, "acknowledgedAt": null, "completedAt": null, "archivedAt": null, "priority": "normal", "delivery_mode": "notification", "reminderKey": null, "lastDeliveredAt": null, "deliveredAt": 1790235348707, "seriesId": null}
+15:35:52 N1 idb {"found": true, "id": "i_lxf81le3muf7u535", "title": "A15N1-153356 通知按钮", "status": "due", "rev": 1, "triggerAt": 1790235300000, "snoozedAt": null, "snoozeCount": 0, "acknowledgedAt": null, "completedAt": null, "archivedAt": null}
+15:35:52 N2 mem {"id": "i_p8c2shvomuf7u639", "title": "A15N2-153356 通知按钮", "status": "due", "rev": 1, "triggerAt": 1790235300000, "snoozedAt": null, "snoozeCount": 0, "acknowledgedAt": null, "completedAt": null, "archivedAt": null, "priority": "normal", "delivery_mode": "notification", "reminderKey": null, "lastDeliveredAt": null, "deliveredAt": 1790235348707, "seriesId": null}
+15:35:52 N2 idb {"found": true, "id": "i_p8c2shvomuf7u639", "title": "A15N2-153356 通知按钮", "status": "due", "rev": 1, "triggerAt": 1790235300000, "snoozedAt": null, "snoozeCount": 0, "acknowledgedAt": null, "completedAt": null, "archivedAt": null}
+15:35:52 N3 mem {"id": "i_mbz3c2fimuf7u72w", "title": "A15N3-153356 通知按钮", "status": "due", "rev": 1, "triggerAt": 1790235300000, "snoozedAt": null, "snoozeCount": 0, "acknowledgedAt": null, "completedAt": null, "archivedAt": null, "priority": "normal", "delivery_mode": "notification", "reminderKey": null, "lastDeliveredAt": null, "deliveredAt": 1790235348707, "seriesId": null}
+15:35:52 N3 idb {"found": true, "id": "i_mbz3c2fimuf7u72w", "title": "A15N3-153356 通知按钮", "status": "due", "rev": 1, "triggerAt": 1790235300000, "snoozedAt": null, "snoozeCount": 0, "acknowledgedAt": null, "completedAt": null, "archivedAt": null}
+15:37:44 N1 完成 False no expand button for row
+15:37:50 N1 notification still present: True focus Window{d053943 u0 com.bbk.launcher2/com.bbk.launcher2.Launcher type=1 }
+15:38:05 N2 稍后 2 小时 True tapped 稍后 2 小时 at (426, 1600, 671, 1657)
+15:38:11 N2 notification still present: False focus Window{9697740 u0 space.alliswell.inbox/space.alliswell.inbox.MainActivity type=1 }
+15:38:26 N3 我知道了 True tapped 我知道了 at (228, 1600, 426, 1657)
+15:38:32 N3 notification still present: False focus Window{9697740 u0 space.alliswell.inbox/space.alliswell.inbox.MainActivity type=1 }
+15:38:37 N1 mem {"id": "i_lxf81le3muf7u535", "title": "A15N1-153356 通知按钮", "status": "due", "rev": 1, "triggerAt": 1790235300000, "snoozedAt": null, "snoozeCount": 0, "acknowledgedAt": null, "completedAt": null, "archivedAt": null, "priority": "normal", "delivery_mode": "notification", "reminderKey": null, "lastDeliveredAt": null, "deliveredAt": 1790235348707, "seriesId": null}
+15:38:37 N1 idb {"found": true, "id": "i_lxf81le3muf7u535", "title": "A15N1-153356 通知按钮", "status": "due", "rev": 1, "triggerAt": 1790235300000, "snoozedAt": null, "snoozeCount": 0, "acknowledgedAt": null, "completedAt": null, "archivedAt": null}
+15:38:37 N2 mem {"id": "i_p8c2shvomuf7u639", "title": "A15N2-153356 通知按钮", "status": "snoozed", "rev": 2, "triggerAt": 1790242685743, "snoozedAt": 1790235485743, "snoozeCount": 1, "acknowledgedAt": null, "completedAt": null, "archivedAt": null, "priority": "normal", "delivery_mode": "notification", "reminderKey": null, "lastDeliveredAt": null, "deliveredAt": null, "seriesId": null}
+15:38:37 N2 idb {"found": true, "id": "i_p8c2shvomuf7u639", "title": "A15N2-153356 通知按钮", "status": "snoozed", "rev": 2, "triggerAt": 1790242685743, "snoozedAt": 1790235485743, "snoozeCount": 1, "acknowledgedAt": null, "completedAt": null, "archivedAt": null}
+15:38:38 N3 mem {"id": "i_mbz3c2fimuf7u72w", "title": "A15N3-153356 通知按钮", "status": "acknowledged", "rev": 2, "triggerAt": 1790235300000, "snoozedAt": null, "snoozeCount": 0, "acknowledgedAt": 1790235506734, "completedAt": null, "archivedAt": null, "priority": "normal", "delivery_mode": "notification", "reminderKey": null, "lastDeliveredAt": null, "deliveredAt": 1790235348707, "seriesId": null}
+15:38:38 N3 idb {"found": true, "id": "i_mbz3c2fimuf7u72w", "title": "A15N3-153356 通知按钮", "status": "acknowledged", "rev": 2, "triggerAt": 1790235300000, "snoozedAt": null, "snoozeCount": 0, "acknowledgedAt": 1790235506734, "completedAt": null, "archivedAt": null}
+15:39:15 N1 retry 完成 True tapped 完成 at (671, 1245, 785, 1302)
+15:39:20 N1 notification still present: False focus Window{9697740 u0 space.alliswell.inbox/space.alliswell.inbox.MainActivity type=1 }
+15:39:22 N1 mem {"id": "i_lxf81le3muf7u535", "title": "A15N1-153356 通知按钮", "status": "archived", "rev": 2, "triggerAt": 1790235300000, "snoozedAt": null, "snoozeCount": 0, "acknowledgedAt": null, "completedAt": 1790235554843, "archivedAt": null, "priority": "normal", "delivery_mode": "notification", "reminderKey": null, "lastDeliveredAt": null, "deliveredAt": 1790235348707, "seriesId": null}
+15:39:22 N1 idb {"found": true, "id": "i_lxf81le3muf7u535", "title": "A15N1-153356 通知按钮", "status": "archived", "rev": 2, "triggerAt": 1790235300000, "snoozedAt": null, "snoozeCount": 0, "acknowledgedAt": null, "completedAt": 1790235554843, "archivedAt": null}
+15:39:58 == STEP3 ready {'ready': True, 'status': 'loaded', 'writesAllowed': True, 'native': True}
+15:40:00 create A1 {"id": "i_4nuqrlp1muf81wwp", "title": "A15A1-153958 全屏闹钟", "status": "waiting", "rev": 1, "triggerAt": 1790235660000, "priority": "important", "delivery_mode": "alarm", "scheduleBasis": "wall-clock", "reminderKey": null}
+15:40:01 create A2 {"id": "i_jsq61wufmuf81xvo", "title": "A15A2-153958 全屏闹钟", "status": "waiting", "rev": 1, "triggerAt": 1790235900000, "priority": "important", "delivery_mode": "alarm", "scheduleBasis": "wall-clock", "reminderKey": null}
+15:40:04 A1 system alarm with origWhen≈trig registered: True
+15:40:04 A2 system alarm with origWhen≈trig registered: True
+15:40:05 A1 waiting for AlarmActivity until 1790235660000
+15:41:02 A1 focus Window{9388c1f u0 space.alliswell.inbox/space.alliswell.inbox.AlarmActivity type=1 } pid 6788
+15:41:08 A1 panel texts ['⏰', '☆ 重要', '☆ 重要事项', 'A15A1-153958 全屏闹钟', '15:41', '我知道了', '稍后 2 小时', '完成', '关闭（只止响，不表态）', '「关闭」不会记作「我知道了」，后续提醒仍会继续']
+15:41:08 A1 tapped 我知道了 (84, 1388, 996, 1550)
+15:41:12 A1 after tap focus Window{9697740 u0 space.alliswell.inbox/space.alliswell.inbox.MainActivity type=1 } pid 6788 notif False ringService False
+15:41:12 A1 IDB before foreground {"found": true, "id": "i_4nuqrlp1muf81wwp", "title": "A15A1-153958 全屏闹钟", "status": "acknowledged", "rev": 2, "triggerAt": 1790235660000, "snoozedAt": null, "snoozeCount": 0, "acknowledgedAt": 1790235668694, "completedAt": null, "archivedAt": null}
+15:41:17 A1 foreground ready {'ready': True, 'status': 'loaded', 'writesAllowed': True, 'native': True}
+15:41:22 A1 mem after fg {"id": "i_4nuqrlp1muf81wwp", "title": "A15A1-153958 全屏闹钟", "status": "acknowledged", "rev": 2, "triggerAt": 1790235660000, "snoozedAt": null, "snoozeCount": 0, "acknowledgedAt": 1790235668694, "completedAt": null, "archivedAt": null, "priority": "important", "delivery_mode": "alarm", "reminderKey": null, "lastDeliveredAt": null, "deliveredAt": 1790235668675, "seriesId": null}
+15:41:22 A1 IDB after fg {"found": true, "id": "i_4nuqrlp1muf81wwp", "title": "A15A1-153958 全屏闹钟", "status": "acknowledged", "rev": 2, "triggerAt": 1790235660000, "snoozedAt": null, "snoozeCount": 0, "acknowledgedAt": 1790235668694, "completedAt": null, "archivedAt": null}
+15:41:23 A1 notif after fg False
+15:41:26 A2 after am kill pid= 6788
+15:41:26 A2 waiting for AlarmActivity until 1790235900000
+15:45:03 A2 focus Window{85707a2 u0 space.alliswell.inbox/space.alliswell.inbox.AlarmActivity type=1 } pid 6788
+15:45:09 A2 panel texts ['⏰', '☆ 重要', '☆ 重要事项', 'A15A2-153958 全屏闹钟', '15:45', '我知道了', '稍后 2 小时', '完成', '关闭（只止响，不表态）', '「关闭」不会记作「我知道了」，后续提醒仍会继续']
+15:45:09 A2 tapped 完成 (564, 1580, 996, 1742)
+15:45:13 A2 after tap focus Window{9697740 u0 space.alliswell.inbox/space.alliswell.inbox.MainActivity type=1 } pid 6788 notif False ringService False
+15:45:13 A2 IDB before foreground {"found": true, "id": "i_jsq61wufmuf81xvo", "title": "A15A2-153958 全屏闹钟", "status": "archived", "rev": 2, "triggerAt": 1790235900000, "snoozedAt": null, "snoozeCount": 0, "acknowledgedAt": null, "completedAt": 1790235909753, "archivedAt": null}
+15:45:19 A2 foreground ready {'ready': True, 'status': 'loaded', 'writesAllowed': True, 'native': True}
+15:45:23 A2 mem after fg {"id": "i_jsq61wufmuf81xvo", "title": "A15A2-153958 全屏闹钟", "status": "archived", "rev": 2, "triggerAt": 1790235900000, "snoozedAt": null, "snoozeCount": 0, "acknowledgedAt": null, "completedAt": 1790235909753, "archivedAt": null, "priority": "important", "delivery_mode": "alarm", "reminderKey": null, "lastDeliveredAt": null, "deliveredAt": 1790235909729, "seriesId": null}
+15:45:23 A2 IDB after fg {"found": true, "id": "i_jsq61wufmuf81xvo", "title": "A15A2-153958 全屏闹钟", "status": "archived", "rev": 2, "triggerAt": 1790235900000, "snoozedAt": null, "snoozeCount": 0, "acknowledgedAt": null, "completedAt": 1790235909753, "archivedAt": null}
+15:45:24 A2 notif after fg False
+15:45:53 == STEP3b ready {'ready': True, 'status': 'loaded', 'writesAllowed': True, 'native': True}
+15:45:54 create A3 {"id": "i_706wk32imuf89ik8", "title": "A15A3-154553 冷进程闹钟", "status": "waiting", "rev": 1, "triggerAt": 1790236020000, "priority": "important", "delivery_mode": "alarm", "scheduleBasis": "wall-clock", "reminderKey": null}
+15:46:04 A3 killed pid 6788 (0, '', '') pid now: (none)
+15:46:04 A3 system alarm still registered after kill: True
+15:48:31 A3 focus Window{d053943 u0 com.bbk.launcher2/com.bbk.launcher2.Launcher type=1 } pid at alarm 
+15:48:49 A3 alarm still pending (origWhen prefix): False
+15:48:49 pkg alarm lines: 8
+15:48:49    RTC_WAKEUP #172: Alarm{2f0f512 type 0 origWhen 1790328660095 flags 3 windowLength 0 whenElapsed 550716261 maxWhenElapsed 550716261 repeatInterval 0 tag=*walarm*:space.alliswell.inbox/.AlarmRingService originWhenElapsed 5
+15:48:49    tag=*walarm*:space.alliswell.inbox/.AlarmRingService
+15:48:49    RTC_WAKEUP #173: Alarm{2e2eb61 type 0 origWhen 1790328660095 flags 3 windowLength 0 whenElapsed 550716262 maxWhenElapsed 550716262 repeatInterval 0 tag=*walarm*:space.alliswell.inbox.ACTION_TEST_ALARM originWhenElapsed 5
+15:48:49    tag=*walarm*:space.alliswell.inbox.ACTION_TEST_ALARM
+15:48:49    Next wake from idle: Alarm{2f0f512 type 0 origWhen 1790328660095 flags 3 windowLength 0 whenElapsed 550716261 maxWhenElapsed 550716261 repeatInterval 0 tag=*walarm*:space.alliswell.inbox/.AlarmRingService originWhenElaps
+15:48:49    tag=*walarm*:space.alliswell.inbox/.AlarmRingService
+15:48:49    *walarm*:space.alliswell.inbox.ACTION_TEST_ALARM
+15:48:49    *walarm*:space.alliswell.inbox/.AlarmRingService
+15:48:50 A3 own notif records: 0
+15:48:54 logcat filtered lines: 0
+15:50:08 A3 manual launch ready {'ready': True, 'status': 'loaded', 'writesAllowed': True, 'native': True}
+15:50:12 A3 mem {"id": "i_706wk32imuf89ik8", "title": "A15A3-154553 冷进程闹钟", "status": "due", "rev": 1, "triggerAt": 1790236020000, "snoozedAt": null, "snoozeCount": 0, "acknowledgedAt": null, "completedAt": null, "archivedAt": null, "priority": "important", "delivery_mode": "alarm", "reminderKey": null, "lastDeliveredAt": null, "deliveredAt": 1790236205896, "seriesId": null}
+15:50:12 A3 idb {"found": true, "id": "i_706wk32imuf89ik8", "title": "A15A3-154553 冷进程闹钟", "status": "due", "rev": 1, "triggerAt": 1790236020000, "snoozedAt": null, "snoozeCount": 0, "acknowledgedAt": null, "completedAt": null, "archivedAt": null}
+15:50:12 focus Window{4b5cd08 u0 space.alliswell.inbox/space.alliswell.inbox.MainActivity type=1 }
+15:50:13 A3 notif after launch False
+15:50:25 A3 detail row {"row": "提醒结果本次提醒结果尚未确认", "alertVisible": false}
+15:51:05 == STEP4a ready {'ready': True, 'status': 'loaded', 'writesAllowed': True, 'native': True}
+15:51:06 picker focus Window{25f49ce u0 com.android.documentsui/com.android.documentsui.picker.PickActivity type=1 }
+15:51:09 picker own nodes [('', 'com.android.documentsui:id/collapsing_toolbar', (0, 120, 1080, 588)), ('下载', 'com.android.documentsui:id/breadcrumb_text', (0, 264, 204, 408)), ('', 'com.android.documentsui:id/toolbar', (0, 120, 1080, 264)), ('下载', '', (216, 152, 336, 232)), ('安心收件箱备份-2026-09-24.json', 'android:id/title', (216, 2260, 762, 2395)), ('保存', 'android:id/button1', (774, 2256, 1038, 2400))]
+15:51:09 filename field 安心收件箱备份-2026-09-24.json save btn (774, 2256, 1038, 2400)
+15:51:15 focus after save Window{4b5cd08 u0 space.alliswell.inbox/space.alliswell.inbox.MainActivity type=1 }
+15:51:17 app toasts [[1790236265089, "请选择保存位置和文件名\n    修改\n    撤销"], [1790236269784, "已保存「安心收件箱备份-2026-09-24.json」 · 位置：下载文件\n    修改\n    撤销"]]
+15:51:17 Download listing 
+15:51:41 pull 0  /sdcard/Download/安心收件箱备份-2026-09-24.json: 1 file pulled, 0 skipped. 2.7 MB/s (11968 bytes in 0.004s)
+15:51:41 export verify {"fileSha256": "c1f10bd625ad5d609cd26a74fcc99b6d4132ebadcc9b1d994608638890065a52", "bytes": 11968, "topKeys": ["app", "exportedAt", "items", "notes", "projects", "schema", "settings"], "schema": 5, "exportedAt": "2026-09-24T07:51:05.084Z", "exportItemCount": 7, "idbItemCount": 7, "idsEqual": true, "itemsByteEqual": 7, "itemsDiffer": [], "notesEqual": true, "projectsEqual": true, "a15TokensInFile": ["A15A1-153958", "A15A2-153958", "A15A3-154553", "A15N1-153356", "A15N2-153356", "A15N3-153356", "A15P1-153123"]}
+15:52:13 == STEP4b ready {'ready': True, 'status': 'loaded', 'writesAllowed': True, 'native': True}
+15:52:15 picker focus Window{e3917db u0 com.android.documentsui/com.android.documentsui.picker.PickActivity type=1 }
+15:52:17 file node (222, 1392, 492, 1449)
+15:52:21 focus after pick Window{4b5cd08 u0 space.alliswell.inbox/space.alliswell.inbox.MainActivity type=1 }
+15:52:21 confirm dialog {"open": true, "body": "导入将覆盖当前数据，继续？", "ok": "确定"}
+15:52:24 confirm ok node (558, 2139, 1026, 2298)
+15:52:29 toasts [[1790236344441, "导入成功 · 7 条事项\n    修改\n    撤销"]]
+15:52:29 import diff {"storesAdded": [], "storesRemoved": [], "records": {"kv/state": "identical"}, "localStorage": {"attention-inbox-v2": "identical"}}
+15:53:23 == STEP5 ready {'ready': True, 'status': 'loaded', 'writesAllowed': True, 'native': True}
+15:53:23 A15 items to delete [{"id": "i_49kecme9muf7quxh", "token": "A15P1-153123", "status": "waiting", "triggerAt": 1790328660000}, {"id": "i_lxf81le3muf7u535", "token": "A15N1-153356", "status": "archived", "triggerAt": 1790235300000}, {"id": "i_p8c2shvomuf7u639", "token": "A15N2-153356", "status": "snoozed", "triggerAt": 1790242685743}, {"id": "i_mbz3c2fimuf7u72w", "token": "A15N3-153356", "status": "acknowledged", "triggerAt": 1790235300000}, {"id": "i_4nuqrlp1muf81wwp", "token": "A15A1-153958", "status": "acknowledged", "triggerAt": 1790235660000}, {"id": "i_jsq61wufmuf81xvo", "token": "A15A2-153958", "status": "archived", "triggerAt": 1790235900000}, {"id": "i_706wk32imuf89ik8", "token": "A15A3-154553", "status": "due", "triggerAt": 1790236020000}] non-A15 items 0
+15:53:23 pkg alarms before cleanup 11 [(1790237820000, '*walarm*:space.alliswell.inbox/com.capacitorjs.plugins.localnotifications.TimedNotificationPublisher'), (1790239620000, '*walarm*:space.alliswell.inbox/com.capacitorjs.plugins.localnotifications.TimedNotificationPublisher'), (1790241420000, '*walarm*:space.alliswell.inbox/com.capacitorjs.plugins.localnotifications.TimedNotificationPublisher'), (1790242685743, '*walarm*:space.alliswell.inbox/com.capacitorjs.plugins.localnotifications.TimedNotificationPublisher'), (1790256600000, '*walarm*:space.alliswell.inbox/com.capacitorjs.plugins.localnotifications.TimedNotificationPublisher'), (1790260200000, '*walarm*:space.alliswell.inbox/com.capacitorjs.plugins.localnotifications.TimedNotificationPublisher'), (1790328660110, '*walarm*:space.alliswell.inbox.ACTION_TEST_ALARM'), (1790328660110, '*walarm*:space.alliswell.inbox/.AlarmRingService'), (1790330460000, '*walarm*:space.alliswell.inbox/com.capacitorjs.plugins.localnotifications.TimedNotificationPublisher'), (1790332260000, '*walarm*:space.alliswell.inbox/com.capacitorjs.plugins.localnotifications.TimedNotificationPublisher'), (1790334060000, '*walarm*:space.alliswell.inbox/com.capacitorjs.plugins.localnotifications.TimedNotificationPublisher')]
+15:53:24 deleteItem A15P1-153123 {'ok': True, 'remaining': 6}
+15:53:24 deleteItem A15N1-153356 {'ok': True, 'remaining': 5}
+15:53:24 deleteItem A15N2-153356 {'ok': True, 'remaining': 4}
+15:53:24 deleteItem A15N3-153356 {'ok': True, 'remaining': 3}
+15:53:24 deleteItem A15A1-153958 {'ok': True, 'remaining': 2}
+15:53:25 deleteItem A15A2-153958 {'ok': True, 'remaining': 1}
+15:53:25 deleteItem A15A3-154553 {'ok': True, 'remaining': 0}
+15:53:31 native status after delete {"desired": 0, "scheduled": 0, "alarmScheduled": 0, "alarmCount": 0, "scheduledAlarmIds": [], "errors": []}
+15:53:31 pkg alarms after cleanup 0 []
+15:53:31 alarms still referencing A15 trigger times []
+15:53:31 alarms other than pre-test baseline (21:30/22:30 review reminders) []
+15:53:32 A15 notifications remaining []
+15:53:32 app services * ServiceRecord{f07f3c6 u0 space.alliswell.inbox/org.chromium.content.app.SandboxedProcessService0:0 c:space.alliswell.inbox}
+15:53:32 -- cold restart (kill -9, not force-stop) and re-read authoritative IDB
+15:53:38 killed 11518 pid now (none)
+15:53:41 ready {'ready': True, 'status': 'loaded', 'writesAllowed': True, 'native': True}
+15:53:45 final vs pre-test baseline {"storesAdded": [], "storesRemoved": [], "records": {"kv/state": {"change": "modified", "itemsAdded": [], "itemsRemoved": [], "itemsModified": {}, "itemsIdentical": 0, "topKeysChanged": ["settings"]}}, "localStorage": {"attention-inbox-v2": "modified"}}
+15:53:45 changed top keys ['settings']
+15:53:45 changed settings {"alarmEventLog": {"before": {"active:133024820:a1d9b2df-3bbf-40c1-91bc-0fb8456c958a:done": 1790149531941, "active:2038356701:fa6c31c2-53a3-4f44-9319-c2edd41df695:done": 1790151285882, "active:1354945827:53f1fa3a-9ffe-4b09-895d-7e4c6dff06d5:done": 1790152767495}, "after": {"active:133024820:a1d9b2df-3bbf-40c1-91bc-0fb8456c958a:done": 1790149531941, "active:2038356701:fa6c31c2-53a3-4f44-9319-c2edd41df695:done": 1790151285882, "active:1354945827:53f1fa3a-9ffe-4b09-895d-7e4c6dff06d5:done": 1790152767495, "notification:154182028:snooze:1": 1790235485743, "notification:1757707794:ack:1": 1790235506729, "notification:264460990:done:1": 1790235554841, "a1790235668526_0_85811": 1790235668694, "a1790235909612_0_80353": 1790235909753}}, "setupPromptStarted": {"before": false, "after": true}}
+15:53:45 pkg alarms after restart []
+15:53:47 A15 notifications after restart []
+15:56:01 == STEP6 user-requested rollback
+15:56:04 ready {'ready': True, 'status': 'loaded', 'writesAllowed': True, 'native': True}
+15:56:05 rollback setupPromptStarted {"before": true, "after": false, "homeSetupText": "提醒还没准备好还差 3 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录›"}
+15:56:12 ready after cold restart {'ready': True, 'status': 'loaded', 'writesAllowed': True, 'native': True}
+15:56:15 vs baseline: settings keys changed ['alarmEventLog'] other top keys changed [] items 0
+15:56:15 homeSetup after restart 
+15:56:16 rm /sdcard/Download/安心收件箱备份-2026-09-24.json (0, '', '')
+15:56:16 rm /sdcard/a15-ui.xml (0, '', '')
+15:56:17 remaining backups: No result found. | ls: ls: /sdcard/a15-ui.xml: No such file or directory

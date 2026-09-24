@@ -1,0 +1,2 @@
+{"case":"repeat-bind","listenerCount":2,"toastCount":2,"expected":1,"duplicateBinding":true}
+{"case":"save-rejected","result":true,"toasts":["已关闭提醒 · 事项仍在首页"],"falseSuccess":true}

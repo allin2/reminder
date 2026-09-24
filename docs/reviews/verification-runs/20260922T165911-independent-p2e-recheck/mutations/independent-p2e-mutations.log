@@ -1,0 +1,46 @@
+{
+  "results": [
+    {
+      "id": "I1-title-membership",
+      "anchorFound": true,
+      "healthy": true,
+      "mutant": false,
+      "red": true
+    },
+    {
+      "id": "I2-read-failure-not-empty",
+      "anchorFound": true,
+      "healthy": true,
+      "mutant": false,
+      "red": true
+    },
+    {
+      "id": "I3-dynamic-entry-idempotency",
+      "anchorFound": true,
+      "healthy": true,
+      "mutant": false,
+      "red": true
+    },
+    {
+      "id": "I4-production-load-omission",
+      "anchorFound": true,
+      "healthy": true,
+      "mutant": false,
+      "mutantProblems": [
+        "unaccounted-production-script:lib/app-setup.js（本 harness 既没加载它，也没声明替代注入或有意的缺席；app-core 的 `|| {}` 兜底会让这个缺口静默通过）"
+      ],
+      "red": true
+    }
+  ],
+  "sourceIdentity": {
+    "before": {
+      "setup": "e7b000620da77777f0bd1cc5537d1f4a87aee0efc7aed6566d9248077a8ce112",
+      "core": "fe5e9c233aceba2ebedcff64326d4cf33f2351cdab982d78cfd6899d01062ac0"
+    },
+    "after": {
+      "setup": "e7b000620da77777f0bd1cc5537d1f4a87aee0efc7aed6566d9248077a8ce112",
+      "core": "fe5e9c233aceba2ebedcff64326d4cf33f2351cdab982d78cfd6899d01062ac0"
+    },
+    "unchanged": true
+  }
+}

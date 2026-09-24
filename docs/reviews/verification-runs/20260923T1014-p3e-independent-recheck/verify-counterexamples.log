@@ -1,0 +1,16 @@
+{
+  "action": {
+    "direct": 0,
+    "notification": 1,
+    "forwardedId": "evt-123"
+  },
+  "actionControl": {
+    "direct": 1,
+    "notification": 0,
+    "forwardedId": "evt-123"
+  },
+  "driftRuns": 1,
+  "oldBranchRuns": 2,
+  "directRoutePass": false,
+  "driftCompensationPass": false
+}

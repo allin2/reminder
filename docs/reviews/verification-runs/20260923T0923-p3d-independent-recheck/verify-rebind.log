@@ -1,0 +1,31 @@
+{
+  "verdict": "P3-C-R rebind invariants passed",
+  "control": {
+    "rebind": false,
+    "instanceChanged": false,
+    "depthOldAfterRebind": 0,
+    "conflictResult": false,
+    "before": "waiting",
+    "during": "waiting",
+    "unrelatedResult": true,
+    "unrelatedBefore": true,
+    "held": 1,
+    "actionResult": true,
+    "finalTarget": "acknowledged",
+    "unrelatedAfter": true
+  },
+  "rebound": {
+    "rebind": true,
+    "instanceChanged": true,
+    "depthOldAfterRebind": 0,
+    "conflictResult": false,
+    "before": "waiting",
+    "during": "waiting",
+    "unrelatedResult": true,
+    "unrelatedBefore": true,
+    "held": 1,
+    "actionResult": true,
+    "finalTarget": "acknowledged",
+    "unrelatedAfter": true
+  }
+}

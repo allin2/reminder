@@ -1,0 +1,25 @@
+--- docs/reviews/verification-runs/20260922T225137-p3b-independent-recheck/preflight/p3a-sw.js	2026-09-22 22:52:02
++++ sw.js	2026-09-22 22:34:47
+@@ -1,4 +1,5 @@
+ /* 安心收件箱 Service Worker — network-first for app shell, offline fallback */
++// v25：P3-B 把权威恢复、提交 FIFO、镜像回放与已提交基线迁出为 `lib/app-persistence.js`。
+ // v24：P3-A 把事项模型与默认状态迁出为 `lib/app-model.js`。
+ // v23：P2-G2 把 capture 提交编排、低置信度与失败草稿迁出为 `lib/app-capture.js`。
+ // v18：P2-D 把诊断能力迁出为 `lib/app-diagnostics.js`（新增运行时脚本）。**新增脚本
+@@ -21,7 +22,7 @@
+ // 第一次就没网」那条路上 `caches.match` 未命中、回落成 `./index.html`，
+ // 浏览器拿到一段 HTML 当 JS 执行 ⇒ `AttentionLib.AppBackup` 静默缺失，
+ // 而 `AppBackup` 是必需声明，结果就是**启动失败面板**。不换名等于给用户送一个坏版本。
+-const CACHE = "attention-inbox-v24";
++const CACHE = "attention-inbox-v25";
+ /**
+  * 预缓存清单必须**逐条等于** `index.html` 里真正加载的运行时脚本。
+  *
+@@ -49,6 +50,7 @@
+   "./lib/app-capture.js",
+   "./lib/app-views.js",
+   "./lib/app-model.js",
++  "./lib/app-persistence.js",
+   "./lib/parse-cn.js",
+   "./lib/repeat.js",
+   "./lib/reminder.js",

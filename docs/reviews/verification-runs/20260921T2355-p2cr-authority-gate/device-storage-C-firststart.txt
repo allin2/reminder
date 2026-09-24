@@ -1,0 +1,7 @@
+=== C-first：安装后首次冷启动，恢复完成时 ===
+LABEL=C-first(安装后首次冷启动,恢复完成)
+PKG=space.alliswell.inbox.exportrecheck
+IDB_FILES=5 IDB_BYTES=52425 IDB_SHA256=0336f0142a3b26bc80b4258128e7b38491a6e6ab56e030b73f3373907c8427d0
+MIRROR_FILES=5 MIRROR_BYTES=11659 MIRROR_SHA256=07235407be432b474d0f62b4bcb639cfacc22ef80a2d0a62ee8b88e2ba715b30
+--- 页面判定 ---
+{"items":1,"projects":1,"title":"P2C 复验事项","status":"loaded","reason":"authoritative","backend":"idb","writesAllowed":true,"blockedWriteCount":0,"nativeBlocked":0,"mirrorLen":1638,"panel":false}

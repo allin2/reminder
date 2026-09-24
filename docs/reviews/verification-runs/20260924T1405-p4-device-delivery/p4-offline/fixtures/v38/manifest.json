@@ -1,0 +1,55 @@
+{
+  "name": "安心收件箱",
+  "short_name": "安心收件箱",
+  "description": "少记挂，不错过 —— 注意力唤醒与未来事项托管",
+  "lang": "zh-CN",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#f3f4f1",
+  "theme_color": "#1b6b4a",
+  "categories": ["productivity", "utilities"],
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "share_target": {
+    "action": "./index.html",
+    "method": "GET",
+    "enctype": "application/x-www-form-urlencoded",
+    "params": {
+      "title": "text",
+      "text": "text",
+      "url": "url"
+    }
+  },
+  "shortcuts": [
+    {
+      "name": "快速记录",
+      "short_name": "记录",
+      "url": "./index.html?action=capture"
+    },
+    {
+      "name": "未来事项",
+      "short_name": "未来",
+      "url": "./index.html?tab=future"
+    }
+  ]
+}

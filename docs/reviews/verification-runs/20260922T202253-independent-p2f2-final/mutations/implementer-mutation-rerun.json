@@ -1,0 +1,28 @@
+{
+  "purpose": "P2-F2 in-memory mutation proof",
+  "results": [
+    {
+      "id": "M1-instance-surface",
+      "healthy": true,
+      "mutant": false,
+      "red": true
+    },
+    {
+      "id": "M2-factory-missing-member-fail-closed",
+      "healthy": true,
+      "mutant": false,
+      "red": true
+    }
+  ],
+  "workspaceRestore": {
+    "before": {
+      "views": "2ef2c72b6319feb3414fd07914804296d4f9fa7888a834b3d95f1a98b2fafa37",
+      "core": "3eff2c1107c1f6d1f577a0dd2ea37480364495c284c9480e4aeb62cdc0241125"
+    },
+    "after": {
+      "views": "2ef2c72b6319feb3414fd07914804296d4f9fa7888a834b3d95f1a98b2fafa37",
+      "core": "3eff2c1107c1f6d1f577a0dd2ea37480364495c284c9480e4aeb62cdc0241125"
+    },
+    "restored": true
+  }
+}

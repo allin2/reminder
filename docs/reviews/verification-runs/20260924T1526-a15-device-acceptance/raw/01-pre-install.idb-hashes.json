@@ -1,0 +1,26 @@
+{
+ "dbVersion": 1,
+ "localStorage": {
+  "attention-inbox-v2": {
+   "bytes": 1013,
+   "sha256": "f8454b24c5b6e191f8fb525bcf08fcb66f61b6a3d50f9a45ee272dc26fdc0f65"
+  }
+ },
+ "stores": {
+  "kv": {
+   "state": {
+    "bytes": 1013,
+    "itemCount": 0,
+    "items": {},
+    "sha256": "41dd04eb735718f76940e24e724a912dd025d1aa18cc25b722aa138e54b963ab",
+    "topKeys": {
+     "items": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+     "notes": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+     "projects": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+     "schema": "ef2d127de37b942baad06145e54b0c619a1f22327b2ebbcfbec78f5564afe39d",
+     "settings": "0c729a45a372b060037fdba6066b803cfcb8d9860524846cb3550ebb87e75bd5"
+    }
+   }
+  }
+ }
+}

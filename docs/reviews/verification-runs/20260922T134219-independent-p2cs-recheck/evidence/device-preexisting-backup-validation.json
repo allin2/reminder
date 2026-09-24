@@ -1,0 +1,6 @@
+{
+  "ok": false,
+  "code": "field-type",
+  "path": "items[0].createdAt",
+  "message": "时间戳必须是有限数字（毫秒）或 null"
+}

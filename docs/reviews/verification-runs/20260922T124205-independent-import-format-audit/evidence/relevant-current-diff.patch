@@ -1,0 +1,4376 @@
+diff --git a/app-core.js b/app-core.js
+index 6b2f1b2..94d10e5 100644
+--- a/app-core.js
++++ b/app-core.js
+@@ -8,18 +8,104 @@
+   // D43：schema 5 = 事项新增 `reminderEvents`（单次提醒台账，与 deadlineEvents 同构）。
+   // 旧记录缺这个字段时由 normalizeItem 补 `{}`；`schemaMigrationNeeded` 触发一次重写落库。
+   const SCHEMA = 5;
+-  const $ = (s, r) => (r || document).querySelector(s);
+-  const $$ = (s, r) => Array.from((r || document).querySelectorAll(s));
+   const Lib = (typeof AttentionLib !== "undefined" && AttentionLib) || {};
+-  const NativeReminders = (typeof AttentionNativeReminders !== "undefined" && AttentionNativeReminders) || {};
++
++  /* ---------- 运行时依赖：**唯一装配入口**（P1 / 独立复验 F01–F03） ---------- */
++
++  /**
++   * 这一段只做一件事：**在业务启动之前，把「模块在不在」变成一次可枚举的检查，
++   * 并且把检查通过的那批值当场绑到下面的局部名上。**
++   *
++   * 为什么检查与绑定必须在同一处（F03）：从前这些名字是在 IIFE 顶部用 `const`
++   * 从 `AttentionLib` 抓一次就固定下来的，而闸门读的是**实时** `Lib` —— 两者可以
++   * 不是同一个函数，于是出现「启动成功、能输入、保存报错」：
++   *   · 首次缺 `lib/parse-cn.js` ⇒ 闸门失败；用户补上脚本后点「重试」⇒ 闸门这次看到
++   *     完整的 `Lib` 于是放行，而 `parseChineseTime` 仍是 `undefined`；
++   *   · `index.html` 把 `parse-cn.js` 排在 `app-core.js` 之后 ⇒ 本文件求值时抓不到，
++   *     闸门却在 `DOMContentLoaded` 之后才跑、那时 `Lib` 已完整 ⇒ 同样放行、同样不可用。
++   * 现在**校验与装配共用同一批依赖**：`bindRuntime()` 检查的就是它即将绑定的那个值。
++   *
++   * 绑定一律用 `let`（不是 `const`）—— 这正是为了让「重试」能**重建**它们。
++   * 失败时**不覆盖**既有绑定：应用要么带着一套完好的依赖跑，要么停在失败面板上。
++   *
++   * `isFeedbackSuppressed` 必须按**取值函数**注入：装配发生在业务启动之前，那一刻
++   * `suppressUserFeedback` 必然是 `false`；按值传会把整段重放期的抑制逻辑钉死成
++   * 「永不抑制」，等于把 M1 的重复提示问题放回来。
++   */
++  let AppUi = null;
++  let appUi = {};
++  // P2-A：AI 能力（`lib/app-ai.js`）。命名空间与实例**分开**绑定，理由同 `AppUi`：
++  // 重试时必须整套换新，而 `ai == null` 时「AI 理解」按钮会静默没反应 —— 那是本轮
++  // 反例要拦的第二种形态，所以实例也要进装配契约（见 `APP_AI_INSTANCE_CONTRACT`）。
++  let AppAi = {};
++  let ai = null;
++  // P2-C：数据备份（`lib/app-backup.js`）。同一条规矩：命名空间与实例分开绑定，
++  // 实例进装配契约（见 `APP_BACKUP_INSTANCE_CONTRACT`）—— 备份按钮绑到 `undefined`
++  // 上是「点了没反应」的静默形态，必须由闸门在开门前拦下。
++  let AppBackup = {};
++  let backup = null;
++  let $ = null;
++  let $$ = null;
++  let openSheet = null;
++  let closeSheet = null;
++  let closeAllSheets = null;
++  let confirmDialog = null;
++  let toast = null;
++  let hideToast = null;
+   // UX-T01/T02/A01/A03：反馈与动作语义的纯逻辑层（判定全在 lib，编排只在这里）
+-  const FeedbackLib = Lib.Feedback || null;
++  let FeedbackLib = null;
+   // UX-T03：原生送达证据的合并与事后核查判定
+-  const EvidenceLib = Lib.DeliveryEvidence || null;
+-  const storage = Lib.createStorage
+-    ? Lib.createStorage({ lsKey: KEY })
+-    : null;
++  let EvidenceLib = null;
++  let storage = null;
++  // 命名空间（lib/date-utils.js / lib/ui-format.js）
++  let DatePrimitives = {};
++  let UiFormat = {};
++  // 扁平导出（lib/repeat.js / lib/parse-cn.js / lib/reminder.js 的命名空间成员）
++  let NativeReminders = {};
++  let safeExternalHref = null;
++  let startOfDay = null;
++  let endOfDay = null;
++  let addDays = null;
++  let sameDay = null;
++  let nextWeekend = null;
++  let applyClock = null;
++  let lastDayOfMonth = null;
++  let nthWeekdayInMonth = null;
++  let weekdayOfNextWeek = null;
++  let dayOfMonthIn = null;
++  let nextDayOfMonth = null;
++  let nextRepeatTrigger = null;
++  let repeatLabel = null;
++  let nextRepeatPreview = null;
++  let parseChineseTime = null;
++  let cnInt = null;
++  let hasSpecificTimeWord = null;
+   let storageReady = false;
++  /**
++   * **权威状态三态**（P2-C-R）。
++   *
++   * 旧实现把「权威后端读到空」「打开/读取/解析/回放失败后镜像也拿不到」**折叠成同一个
++   * `false`**，而 `init()` 又不看这个返回值照样往下走 —— 于是「没有确认恢复成功」
++   * 和「确认从未有数据」在下游完全无法区分，两者都会开放保存、原生对账与业务心跳。
++   * 真机上的表现就是：界面照常可用、内存里是一份空收件箱、而它随时可能被写成新的权威快照。
++   *
++   * 现在把这件事显式命名，`loaded` / `empty` 才代表「权威状态已确认」：
++   *   · `loaded` —— 读到并**应用**了权威状态（IDB，或权威读失败后由镜像恢复）；
++   *   · `empty`  —— 权威后端**成功读取**且确认从未存在状态（镜像也确认为空）；
++   *   · `failed` —— 打开 / 读取 / 解析 / 回放 / 镜像恢复失败 ⇒ **写闸门关闭**，
++   *     不写权威存储、不排通知、不启业务心跳，显示可见的恢复面板等重试。
++   */
++  const LOAD_LOADED = "loaded";
++  const LOAD_EMPTY = "empty";
++  const LOAD_FAILED = "failed";
++  /** 恢复之前一律视为**未确认**（不等于 failed：加载进行中不该被当成故障）。 */
++  const LOAD_UNCONFIRMED = "unconfirmed";
++  let stateAuthority = LOAD_UNCONFIRMED;
++  /** 最近一次恢复尝试的判定（`init()` / 恢复面板 / 测试与真机探针读它）。 */
++  let lastLoadReport = null;
++  let loadAttempts = 0;
++  /** 被写闸门拦下的提交次数（`failed` 期间必须恒为 0 次真实落库 + 可见的拦截计数）。 */
++  let blockedWriteCount = 0;
+   let schemaMigrationNeeded = false;
+   let nativeReady = false;
+   let nativeSyncTimer = null;
+@@ -45,550 +131,1016 @@
+     reliability: "web"
+   };
+ 
+-  /* ---------- utils ---------- */
+-  function uid() {
+-    return "i_" + Math.random().toString(36).slice(2, 10) + Date.now().toString(36);
+-  }
+-  function pad(n) { return String(n).padStart(2, "0"); }
+-  function startOfDay(d) { const x = new Date(d); x.setHours(0, 0, 0, 0); return x; }
+-  function endOfDay(d) { const x = new Date(d); x.setHours(23, 59, 59, 999); return x; }
+-  function addDays(d, n) { const x = new Date(d); x.setDate(x.getDate() + n); return x; }
+-  function sameDay(a, b) {
+-    return a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate();
+-  }
+-  function fmtTime(ts) {
+-    if (!ts) return "";
+-    const d = new Date(ts), now = new Date();
+-    const t = pad(d.getHours()) + ":" + pad(d.getMinutes());
+-    if (sameDay(d, now)) return "今天 " + t;
+-    if (sameDay(d, addDays(now, 1))) return "明天 " + t;
+-    if (sameDay(d, addDays(now, -1))) return "昨天 " + t;
+-    const md = (d.getMonth() + 1) + "月" + d.getDate() + "日";
+-    if (d.getFullYear() !== now.getFullYear()) return d.getFullYear() + "年" + md + " " + t;
+-    return md + " " + t;
+-  }
+-  function fmtDate(ts) {
+-    if (!ts) return "";
+-    const d = new Date(ts), now = new Date();
+-    if (sameDay(d, now)) return "今天";
+-    if (sameDay(d, addDays(now, 1))) return "明天";
+-    if (sameDay(d, addDays(now, -1))) return "昨天";
+-    return (d.getMonth() + 1) + "月" + d.getDate() + "日";
+-  }
+-  function relDue(ts) {
+-    const diff = ts - Date.now();
+-    const abs = Math.abs(diff);
+-    const h = Math.round(abs / 3600000);
+-    if (diff < 0) {
+-      if (abs < 3600000) return "已过 " + Math.max(1, Math.round(abs / 60000)) + " 分钟";
+-      if (h < 24) return "已过 " + h + " 小时";
+-      return "已过 " + Math.round(abs / 86400000) + " 天";
+-    }
+-    if (abs < 60000) return "现在";
+-    if (abs < 3600000) return Math.round(abs / 60000) + " 分钟后";
+-    if (abs < 86400000) return h + " 小时后";
+-    return Math.round(abs / 86400000) + " 天后";
+-  }
+-  function nextWeekend(from) {
+-    const d = startOfDay(from || new Date());
+-    const day = d.getDay();
+-    let add = (6 - day + 7) % 7;
+-    if (day === 0) add = 6;
+-    const sat = addDays(d, add);
+-    sat.setHours(10, 0, 0, 0);
+-    return sat.getTime();
+-  }
+-  function escapeHtml(s) {
+-    return String(s == null ? "" : s).replace(/[&<>"']/g, c => ({
+-      "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+-    }[c]));
+-  }
++  /* ---------- 装配依赖闸门（P1：启动前唯一收口） ---------- */
+ 
+   /**
+-   * O3：**属性上下文**转义。
++   * **必需的运行时导出**（声明表）。
+    *
+-   * 字符集与 `escapeHtml` 相同（`& < > " '` 已覆盖能在属性里闭合引号的每一个字符），
+-   * 但语义不同、也必须分开命名：`escapeHtml` 是给**文本节点**用的，这里是给
+-   * `attr="…"` 用的。事项 id 未必由内部 `uid()` 生成 —— 导入数据里可以带任意字符串，
+-   * 直接拼进 `data-id="…"` 就能闭合引号、往标签里塞新属性。
+-   * 分开命名是为了让「改转义字符集」的人一眼看到属性侧也是消费者，不会只改一边。
++   * 为什么必须有这张表：拆分之后，「某个 `lib/*.js` 没加载 / 顺序错 / 文件损坏」的后果
++   * 只是 `AttentionLib` 上少几个键。而 app-core 里到处是 `Lib.xxx`、`FeedbackLib ? … : null`
++   * 这类写法 —— 缺件**不抛错**，只会静默换一套规则继续跑：界面照常可点、数据永不落库。
++   * 四套业务 harness 也照绿，因为它们在沙箱里注入的是自己那份模块。
++   *
++   * 所以唯一能拦住它的位置是「业务启动之前」：把必需项写成可枚举的声明，
++   * 逐项检查存在性与类型，缺任何一项就**明确失败**并停在原地。
++   *
++   * 刻意**只排除** `Capacitor`：那是原生 WebView 注入的平台桥，纯 Web 里本来就不存在，
++   * 缺席是**正常状态**而不是装配错误。`AttentionNativeReminders` **不在**排除之列 ——
++   * 它是我们自己发的 JS 模块（见下面 F01 那一段）。
++   *
++   * 每项格式：`[路径, 期望类型, 缺了会怎样]`（第 4 列可选，见下）。第三项会原样出现在
++   * 失败面板上，让用户看到的不是「undefined is not a function」而是「哪一支脚本没起来、后果是什么」。
++   *
++   * **期望类型**分两类：
++   *   · `typeof` 的名字 —— `function` / `object` / `number` / `string` / `boolean`；
++   *   · `array` —— 由 `Array.isArray` 判定。**不能**用 `object` 顶替：`typeof [] === "object"`，
++   *     而真实消费者常常直接 `.map(...)`。只按 `object` 校验时，导出变成 `{}` 的应用会
++   *     宣告就绪，进到那一屏才抛 `list.map is not a function` —— 第四次独立复验 F02-R3
++   *     的阻断形态（run `20260921T052806`）。
++   *
++   * **第 4 列（可选）元素形状**：数组每个元素必须具备的属性名清单。容器对不等于元素对 ——
++   * 元素是 `{}` 时照样界面少一排按钮，仍然是静默降级。声明了元素形状的数组还不允许为空。
+    */
+-  function escapeAttr(v) {
+-    return String(v == null ? "" : v).replace(/[&<>"']/g, c => ({
+-      "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+-    }[c]));
+-  }
++  const REQUIRED_RUNTIME_EXPORTS = [
++    ["DatePrimitives", "object",
++      "lib/date-utils.js 未加载（或不在其它 lib 之前）——日历原语唯一来源，解析与周期推进都靠它"],
++    ["DatePrimitives.startOfDay", "function", "lib/date-utils.js 导出被破坏"],
++    ["DatePrimitives.endOfDay", "function", "lib/date-utils.js 导出被破坏"],
++    ["DatePrimitives.addDays", "function", "lib/date-utils.js 导出被破坏"],
++    ["DatePrimitives.sameDay", "function", "lib/date-utils.js 导出被破坏"],
++    ["DatePrimitives.nextWeekend", "function", "lib/date-utils.js 导出被破坏"],
++    ["DatePrimitives.applyClock", "function", "lib/date-utils.js 导出被破坏"],
++    ["DatePrimitives.lastDayOfMonth", "function", "lib/date-utils.js 导出被破坏"],
++    ["DatePrimitives.nthWeekdayInMonth", "function", "lib/date-utils.js 导出被破坏"],
++    ["DatePrimitives.weekdayOfNextWeek", "function", "lib/date-utils.js 导出被破坏"],
++    ["DatePrimitives.dayOfMonthIn", "function", "lib/date-utils.js 导出被破坏"],
++    ["DatePrimitives.nextDayOfMonth", "function", "lib/date-utils.js 导出被破坏"],
++    ["DatePrimitives.nthWeekdayOfNextMonthByInstant", "function",
++      "首期候选语义（按具体时刻比较）缺失 —— 与周期推进的「按日比较」不能混用"],
++    ["DatePrimitives.nthWeekdayOfNextMonthByDay", "function",
++      "周期推进语义（按日比较）缺失 —— 拿首期候选那支顶上会让周期原地打转"],
++    ["UiFormat", "object",
++      "lib/ui-format.js 未加载（或在 lib/date-utils.js 之前）—— 所有时间/转义/Markdown 显示都会退化"],
++    ["UiFormat.pad", "function", "lib/ui-format.js 导出被破坏（补零）"],
++    ["UiFormat.uid", "function", "lib/ui-format.js 导出被破坏（事项 id 生成）"],
++    ["UiFormat.escapeHtml", "function", "lib/ui-format.js 导出被破坏（文本转义）"],
++    ["UiFormat.escapeAttr", "function", "lib/ui-format.js 导出被破坏（属性转义）"],
++    ["UiFormat.fmtTime", "function", "lib/ui-format.js 导出被破坏（时间显示）"],
++    ["UiFormat.fmtDate", "function", "lib/ui-format.js 导出被破坏（日期显示）"],
++    ["UiFormat.relDue", "function", "lib/ui-format.js 导出被破坏（相对到期显示）"],
++    ["UiFormat.dayLabel", "function", "lib/ui-format.js 导出被破坏（归档日标签）"],
++    ["UiFormat.toLocalInput", "function", "lib/ui-format.js 导出被破坏（时间输入框回填）"],
++    ["UiFormat.parseLocalInput", "function", "lib/ui-format.js 导出被破坏（时间输入框取值）"],
++    ["UiFormat.renderMarkdown", "function", "lib/ui-format.js 导出被破坏（Markdown 渲染）"],
++    ["AppUi", "object",
++      "lib/app-ui.js 未加载 —— DOM 查询/弹层/toast/确认框全部失效：界面看似能渲染，但点不动、也没有任何反馈"],
++    ["AppUi.createUi", "function", "lib/app-ui.js 导出被破坏（展示能力装配入口）"],
++    ["AppUi.safeExternalHref", "function",
++      "lib/app-ui.js 导出被破坏 —— 外链协议白名单失效：`javascript:` / `data:` 这类用户数据可能被渲染成可点 href"],
++    /* --- P2-A：`lib/app-ai.js` 是 AI 能力的唯一实现 ---
++     *
++     * 缺它的后果不是「AI 不可用」这么笼统，而是三处具体的静默：
++     *   · 「AI 理解 / 润色」按钮点了**没反应**（`runOnCapture` 不存在，监听器绑不上）；
++     *   · 「我的 → AI 智能理解」那一行小字永远是「未开启」，而用户其实配过；
++     *   · 保存时的自动增强整段跳过 —— 事项照常存，只是不再有 AI 补的时间。**不报错**。
++     * 所以和 `AppUi` 一样，命名空间 + 工厂 + **实例契约**三层都要在开门前核对。
++     */
++    ["AppAi", "object",
++      "lib/app-ai.js 未加载 —— AI 理解/润色与 AI 设置页整体失效：" +
++      "按钮点了没反应、「我的」页那行小字恒为「未开启」、保存时不再自动补时间，且不报错"],
++    ["AppAi.createAppAi", "function", "lib/app-ai.js 导出被破坏（AI 能力装配入口）"],
++    ["AppAi.normalizeAiResult", "function",
++      "lib/app-ai.js 导出被破坏 —— AI 结果归一失效：" +
++      "模型返回的周期与优先级会**原样**进事务（越权优先级会绕过重要档的渠道规则）"],
++    ["AppAi.extractJsonObject", "function",
++      "lib/app-ai.js 导出被破坏 —— 模型回复里的 JSON 剥不出来，AI 结果整体被当成失败回退本地解析"],
++    ["AppBackup", "object",
++      "lib/app-backup.js 未加载 —— 数据备份整体失效：「导出」与「导入」按钮点了没反应，" +
++      "且没有任何报错 —— 用户会以为备份好了，其实什么都没发生"],
++    ["AppBackup.createAppBackup", "function", "lib/app-backup.js 导出被破坏（备份能力装配入口）"],
++    ["parseChineseTime", "function",
++      "lib/parse-cn.js 未加载 —— 中文时间解析唯一来源，缺了「明天 9 点」这类输入将全部解析不出时间"],
++    ["cnInt", "function", "lib/parse-cn.js 导出被破坏（中文数字）"],
++    ["hasSpecificTimeWord", "function", "lib/parse-cn.js 导出被破坏（是否含明确时间词）"],
++    ["nextRepeatTrigger", "function",
++      "lib/repeat.js 未加载 —— 周期推进唯一来源，缺了所有重复事项的下一轮都将算不出来"],
++    ["repeatLabel", "function", "lib/repeat.js 导出被破坏（周期文案）"],
++    ["nextRepeatPreview", "function", "lib/repeat.js 导出被破坏（预演时刻）"],
++    ["createStorage", "function",
++      "lib/storage.js 未加载 —— 持久化后端建不起来，读写的都是内存副本，重启即丢"],
++    ["hasIdb", "function",
++      "lib/storage.js 导出被破坏 —— 无法判断当前是否跑在降级后端上，降级期保护会静默失效"],
++    ["deadlineStageKey", "function",
++      "lib/reminder.js 未加载 —— 截止保护阶段身份丢失（p24 / p2 判定会静默换标准）"],
++    ["deadlineStagePoints", "function",
++      "lib/reminder.js 未加载 —— 截止保护只排得出一个点（丢掉 p2 档）"],
++    // ↑ `deadlineStagePoints` 的直接消费者是 `lib/native-reminders.js`（且被它当作
++    //   「AttentionLib 是不是真货」的判据之一），app-core 自己不调它。
++    //   仍在这里声明，是因为它和 `deadlineStageKey` 同属 `lib/reminder.js`：
++    //   该模块缺席时两者一起没，分列两条只是把「后果」写到最贴切的位置。
++    //   `runtimeDependencyCoverage()` 会把它报成 unusedDeclarations —— 那是**已知的**
++    //   冗余，不是漏洞（闭合判定只看 `problems`，冗余不进 problems）。
++    ["inQuietHours", "function", "lib/reminder.js 导出被破坏（免打扰时段判定）"],
++    ["quietEnd", "function", "lib/reminder.js 导出被破坏（免打扰结束时刻）"],
++    ["applyWindowTrigger", "function",
++      "lib/reminder.js 导出被破坏 —— 柔性窗口不再生效：带 windowStart/End 的事项会按硬时刻触发"],
++    ["shouldRealert", "function",
++      "lib/reminder.js 导出被破坏 —— 重要事项的重复提醒会**整体不再触发**（判定被静默转成 false）"],
++    ["markReminded", "function",
++      "lib/reminder.js 导出被破坏 —— 重复提醒台账不落，下一拍会把同一事项再当「未提醒」重新弹"],
++    ["Feedback", "object",
++      "lib/feedback.js 未加载（或整个模块是 null）—— 动作语义与撤销窗口缺失，撤销会退化成兜底时长"],
++    ["Feedback.actionSpec", "function", "lib/feedback.js 导出被破坏（动作语义）"],
++    ["Feedback.setupSteps", "function",
++      "lib/feedback.js 导出被破坏 —— 「提醒还没准备好」的设置向导会整块消失（不报错，只是少几步）"],
++    ["Feedback.testFeedbackVerdict", "function", "lib/feedback.js 导出被破坏（测试反馈判定）"],
++    ["Feedback.saveFeedback", "function", "lib/feedback.js 导出被破坏（反馈落库）"],
++    /* --- 下面两条是**别名改制后才浮出来**的真实依赖（2026-09-21 第三轮）---
++     *
++     * 它们一直是必需的：`keepDraftForRetry` 要 `saveFeedback`、`feedbackVerdictFor`
++     * 与 `finishFeedbackWait` 要 `reminderFeedback`、`renderCaptureSummary` 要
++     * `captureSummary`。但在 `const f = FeedbackLib` 的时代，扫描器因为 `f` 另有含义
++     * 把**全部** `f.*` 丢进「只报告、不判错」的桶里，于是这两条既没进 refs、也没进声明表 ——
++     * 矩阵看起来是闭合的，实际漏了两条真依赖。
++     * 消除短别名 + 扫描器遇到歧义即失败之后，它们立刻以 `undeclared` 现形。
++     */
++    ["Feedback.captureSummary", "function",
++      "lib/feedback.js 导出被破坏 —— 新建页的「这一条会怎么提醒你」摘要会消失（不报错，只是不显示）"],
++    ["Feedback.reminderFeedback", "function",
++      "lib/feedback.js 导出被破坏 —— 保存后的结论行整块失效：只剩兜底的「尚未确认」"],
++    /* --- 下面两条是**根对象守卫改制后才浮出来**的真实依赖（2026-09-21 第四轮）---
++     *
++     * `FeedbackLib ? FeedbackLib.TEST_FEEDBACK : [...]` 与
++     * `(FeedbackLib && FeedbackLib.UNDO_WINDOW_MS) || 8000` 里的 `?` / `&&`
++     * 只证明**模块对象**在，不证明成员在 —— 而 `Feedback` 根本身就是上面的必需声明，
++     * 闸门已经保证它存在，所以那两个短路永远走真分支，成员缺失时静默走兜底
++     * （撤销窗口退回 8000、测试反馈清单退回硬编码数组），界面上看不出来。
++     *
++     * 扫描器曾把「根对象守卫」当成「成员守卫」豁免，于是只换成员名就能绕过矩阵
++     * —— 独立复验 F02-R2 的反例正是这么穿过去的（`undeclared=[] problems=[]`）。
++     * 现在只有**检查成员本身**的形态才算守卫，这两条随之以 `undeclared` 现形。
++     */
++    /* 这两个成员是**清单常量**，`typeof` 分辨不了形状：
++     * `TEST_FEEDBACK` 的真实消费者 `testFeedbackButtonsHtml()` 直接
++     * `list.map(x => … x.value … x.label …)`，所以契约写的是「每项带 value/label 的非空数组」；
++     * 只写 `object` 时，`{}` 会让应用宣告就绪、进到向导那一屏才崩。`UNDO_WINDOW_MS`
++     * 同理 —— 写成字符串时 `(FeedbackLib && x) || 8000` 会把一串字符赋给减数补间。 */
++    ["Feedback.TEST_FEEDBACK", "array",
++      "lib/feedback.js 导出被破坏 —— 测试反馈清单静默退回硬编码数组，与真实动作语义脱节；" +
++      "形状不对（缺 value/label 或不是数组）时该界面直接崩",
++      ["value", "label"]],
++    ["Feedback.UNDO_WINDOW_MS", "number",
++      "lib/feedback.js 导出被破坏 —— 完成态撤销窗口静默退回 8000，与库里配置的时长不一致"],
++    ["DeliveryEvidence", "object",
++      "lib/delivery-evidence.js 未加载（或整个模块是 null）—— 送达证据无法合并，「提醒结果」这一行会消失"],
++    ["DeliveryEvidence.mergeEvidence", "function", "lib/delivery-evidence.js 导出被破坏（证据合并）"],
++    ["DeliveryEvidence.normalizeEvidence", "function",
++      "lib/delivery-evidence.js 导出被破坏 —— 原生回读的证据一行都归一不了（调用点才发现 TypeError）"],
++    ["DeliveryEvidence.evidenceStatusFor", "function", "lib/delivery-evidence.js 导出被破坏（证据状态判定）"],
++    ["DeliveryEvidence.entryRoundBase", "function",
++      "lib/delivery-evidence.js 导出被破坏 —— 轮次身份会静默退回「本条自己的时刻」，三态台账就对不上轮了"],
++
++    /* --- F01：`lib/native-reminders.js` 是**必需的 JS 模块**，不是可选的平台桥 ---
++     *
++     * 从前它与 `Capacitor` 一起被排除在闸门之外，理由是「原生桥是旁路能力，纯 Web
++     * 里本来就不存在」。这条理由只对 `Capacitor`（由原生 WebView 注入）成立：
++     * `lib/native-reminders.js` 是**我们自己发的**一支脚本，`index.html` 里始终加载，
++     * 而且在任何平台都会往全局写上 `AttentionNativeReminders`（UMD 无条件导出）。
++     * 于是「Android 上它没起来」不会被任何东西拦住 —— 事项照存照改、一条提醒都不排，
++     * 而失败面板也不出现（独立复验 F01 的实测形态）。
++     */
++    ["AttentionNativeReminders", "object",
++      "lib/native-reminders.js 未加载 —— Android 上通知与闹钟排程整体失效：" +
++      "事项能存能改，但一条提醒都不会响（这不是「纯 Web 的正常降级」）"],
++    ["NativeReminders.isNativeAndroid", "function",
++      "lib/native-reminders.js 导出被破坏 —— 平台判定没了，原生初始化会**静默**跳过（整场会话一次对账都不跑）"],
++    ["NativeReminders.initialize", "function", "lib/native-reminders.js 导出被破坏（原生初始化入口）"],
++    ["NativeReminders.reconcile", "function", "lib/native-reminders.js 导出被破坏（对账入口）"],
++    ["NativeReminders.buildDesired", "function", "lib/native-reminders.js 导出被破坏（期望计划构建）"],
++    ["NativeReminders.migrateItem", "function", "lib/native-reminders.js 导出被破坏（原生时间字段迁移）"],
++    ["NativeReminders.onAlarmAction", "function", "lib/native-reminders.js 导出被破坏（全屏闹钟动作监听）"],
++    ["NativeReminders.drainAlarmActions", "function", "lib/native-reminders.js 导出被破坏（动作排空）"],
++    ["NativeReminders.getPermissionState", "function", "lib/native-reminders.js 导出被破坏（权限状态）"],
++    ["NativeReminders.requestNotificationPermission", "function", "lib/native-reminders.js 导出被破坏（通知权限申请）"],
++    ["NativeReminders.openExactAlarmSettings", "function", "lib/native-reminders.js 导出被破坏（精确闹钟设置入口）"],
++    ["NativeReminders.getDeliveryEvidence", "function", "lib/native-reminders.js 导出被破坏（送达证据回读）"],
++    ["NativeReminders.systemBridge", "function", "lib/native-reminders.js 导出被破坏（系统桥入口）"],
++    ["NativeReminders.suppressPastReminderReplay", "function",
++      "lib/native-reminders.js 导出被破坏 —— 过去的提醒会被当成新触发重放一遍"],
++
++    /* --- F02：`AttentionLib` 本身也必须存在 ---
++     * 逐成员检查在「整个 AttentionLib 缺席」时当然也会报，但那条报错长在某个具体成员上，
++     * 读起来像「某一支坏了」。这一条把它说清楚：是**一支都没起来**。
++     */
++    ["AttentionLib", "object",
++      "lib/*.js 一支都没加载（或 `index.html` 的脚本清单被破坏）—— 解析/周期/存储全部缺失"]
++  ];
+ 
+   /**
+-   * O3：可点击外部链接的**协议白名单**。
++   * `AppUi` 的**工厂实例契约**（F02 的第 4 项）。
+    *
+-   * 只放行「解析后协议是 `http:` / `https:`」的串，其余一律返回 `null`，
+-   * 由调用方降级成转义后的**纯文本**（原始数据照旧保留在 `it.url` 里，不静默删除）。
++   * 「`createUi` 是函数」不足以说明展示能力装好了：`createUi: () => ({})` 同样通过，
++   * 而后果是 `$` / `toast` 全是 `undefined` —— 界面渲染得出来、点下去什么都不发生，
++   * 且**旧实现照样放行**（独立复验实测：ready=false、无失败面板、页面主体空白）。
++   * 所以这里连「工厂返回的实例上有没有那几个 API」一起检查。
++   *
++   * 探测用的实例是**真的那个**（同一个 deps、同一个对象），不另造一个再丢掉 ——
++   * 否则「检查过的」与「用的」又不是同一份了。
++   */
++  const APP_UI_INSTANCE_CONTRACT = {
++    factory: "AppUi.createUi",
++    instance: ["$", "$$", "openSheet", "closeSheet", "closeAllSheets",
++      "confirmDialog", "toast", "hideToast"],
++    instanceWhy: "lib/app-ui.js 的 createUi 返回的实例缺少展示 API —— " +
++      "界面看似能渲染，但点不动、也没有任何反馈",
++    factoryThrowWhy: "lib/app-ui.js 的 createUi 抛了异常 —— 展示能力装不上，" +
++      "界面点不动、也没有反馈"
++  };
++
++  /**
++   * `AppAi` 的**工厂实例契约**（P2-A，同 `APP_UI_INSTANCE_CONTRACT` 的写法）。
+    *
+-   * 为什么不能用 `startsWith("http")` 或 `escapeHtml` 代替：
+-   *  · URL 解析器会先剔除 TAB / LF / CR —— `"java\nscript:alert(1)"` 的协议其实是
+-   *    `javascript:`，只看字面前缀根本拦不到；`" javascript:…"` 同理；
+-   *  · `escapeHtml` 只处理引号，对协议完全无能为力，`href` 里照样是可执行的
+-   *    `javascript:` / `data:`。
+-   * 因此判定必须落在**解析结果**上，而不是字形上。
++   * `createAppAi: () => ({})` 同样能通过「工厂是函数」这一条，而后果是所有 AI 入口
++   * 变成**绑不上的监听器**：`$("#btnAiParse").addEventListener(..., () => ai.runOnCapture("parse"))`
++   * 里 `ai.runOnCapture` 是 `undefined`，点击时才报 TypeError —— 静态闭合、`typeof`
++   * 检查、甚至启动本身全都看不出来。所以实例上的每个 API 都在这里点名。
+    *
+-   * 解析器不可用（老环境 / 提供不了构造函数的测试替身）时退到**保守**字形判定：
+-   * 仍然不是前缀检查，而是要求完整的绝对 URL 结构（协议 + 非空格授权段 + 无空白），
+-   * 宁可把形态不明的串降级成纯文本，也不放它进 `href`。
++   * `isBusy` 也在契约里：它是「在途请求闸门」唯一的可观测出口，测试要能断言
++   * 「第二次点击被挡住」，而这条断言在空壳实例上会变成假绿（busy 永远是假）。
+    */
+-  function safeExternalHref(raw) {
+-    if (raw == null) return null;
+-    const trimmed = String(raw).trim();
+-    if (!trimmed) return null;
+-    // 含控制字符（含 TAB/LF/CR）一律拒绝：解析器会「剔除后再解析」，
+-    // 于是 `java\nscript:…` 会变成「看着不像 javascript:、实际就是 javascript:」。
+-    if (/[\u0000-\u001f\u007f]/.test(trimmed)) return null;
+-
+-    if (typeof URL === "function") {
+-      let parsed;
+-      try {
+-        parsed = new URL(trimmed);
+-      } catch (error) {
+-        // 浏览器提供了解析器却判定输入无效时，不能再用较宽松的字形规则把它放行。
+-        return null;
+-      }
+-      const protocol = String(parsed.protocol || "").toLowerCase();
+-      return protocol === "http:" || protocol === "https:" ? trimmed : null;
+-    }
++  const APP_AI_INSTANCE_CONTRACT = {
++    factory: "AppAi.createAppAi",
++    instance: ["config", "ready", "nowIso", "systemPrompt", "chat",
++      "parseCapture", "polishCapture", "testConnection",
++      "applyToForm", "mergedDraft", "isBusy", "runOnCapture",
++      "openAiSheet", "saveAiSettings", "renderAiSub"],
++    /**
++     * 只被**模块内部**消费的成员（`chat` → `parseCapture` / `polishCapture`、
++     * `systemPrompt` → `chat`、`nowIso` → `systemPrompt`）。
++     *
++     * 它们不在本文件里出现，但空壳实例少了它们一样会坏：点「AI 理解」要到
++     * `runOnCapture → polishCapture → chat` 才 TypeError —— 启动与静态检查都看不见。
++     * 所以留在 `instance` 里，同时单独登记为「内部消费」，
++     * 免得把 `unusedInContract`（契约里每一项都得真被用到）这条反向判据逼成空话。
++     */
++    internalOnly: ["chat", "nowIso", "polishCapture", "systemPrompt"],
++    instanceWhy: "lib/app-ai.js 的 createAppAi 返回的实例缺少 AI API —— " +
++      "「AI 理解」按钮点了没反应、保存时不再自动补时间，且不报错",
++    factoryThrowWhy: "lib/app-ai.js 的 createAppAi 抛了异常 —— AI 能力装不上，" +
++      "相关按钮点了没反应，也不会提示去配置"
++  };
+ 
+-    // 仅在运行环境确实没有 URL 构造器时使用保守兼容分支。
+-    if (!/^https?:\/\//i.test(trimmed)) return null;
+-    if (/\s/.test(trimmed)) return null;
+-    const authority = trimmed.replace(/^https?:\/\//i, "").split(/[/?#]/)[0];
+-    if (!authority) return null;
+-    if (!/^[A-Za-z0-9._~%!$&'()*+,;=:@\[\]-]+$/.test(authority)) return null;
+-    return trimmed;
+-  }
+-  function toLocalInput(ts) {
+-    if (!ts) return "";
+-    const d = new Date(ts);
+-    return d.getFullYear() + "-" + pad(d.getMonth() + 1) + "-" + pad(d.getDate()) +
+-      "T" + pad(d.getHours()) + ":" + pad(d.getMinutes());
++  /**
++   * 备份实例契约（P2-C）。四个成员全是**用户可直接触发的入口**：
++   *   · `exportData` —— `#btnExport` 的监听目标；
++   *   · `importDataFile` —— `#importFile` change 的处理者；
++   *   · `noteExportAppVisibility` —— blur/focus/visibilitychange 驱动的宽限闸门；
++   *   · `buildLegacyBackupPayload` —— 测试 hook 取真实快照的入口。
++   * 空壳实例上四个都是 `undefined`：监听器绑到 `undefined` 上点击才 TypeError，
++   * 而备份是「低频但要命」的操作 —— 用户以为备份好了，其实什么都没发生。
++   * 所以和 AI 一样，实例的每个 API 都要在开门前点名。
++   */
++  const APP_BACKUP_INSTANCE_CONTRACT = {
++    factory: "AppBackup.createAppBackup",
++    instance: ["exportData", "importDataFile", "noteExportAppVisibility",
++      "buildLegacyBackupPayload"],
++    instanceWhy: "lib/app-backup.js 的 createAppBackup 返回的实例缺少备份 API —— " +
++      "「导出 / 导入」按钮点了没反应，且不报错",
++    factoryThrowWhy: "lib/app-backup.js 的 createAppBackup 抛了异常 —— 备份能力装不上，" +
++      "导出与导入都不会有任何反馈"
++  };
++
++  /** 按 `a.b.c` 取路径；任一段缺失返回 undefined。 */
++  function readPath(obj, dotted) {
++    return String(dotted).split(".").reduce(function (o, k) {
++      return (o == null ? undefined : o[k]);
++    }, obj);
+   }
+-  function parseLocalInput(v) {
+-    if (!v) return null;
+-    const t = new Date(v).getTime();
+-    return Number.isFinite(t) ? t : null;
++
++  /** 运行时依赖根：**每次读取都取当前值** —— 脚本可能正是上次失败之后才补上的。 */
++  function runtimeRoots() {
++    return {
++      AttentionLib: (typeof AttentionLib !== "undefined" && AttentionLib) || null,
++      AttentionNativeReminders:
++        (typeof AttentionNativeReminders !== "undefined" && AttentionNativeReminders) || null
++    };
+   }
+-  function dayLabel(ts) {
+-    if (!ts) return "更早";
+-    const d = new Date(ts), now = new Date();
+-    if (sameDay(d, now)) return "今天";
+-    if (sameDay(d, addDays(now, -1))) return "昨天";
+-    if (d.getFullYear() !== now.getFullYear()) {
+-      return d.getFullYear() + "年" + (d.getMonth() + 1) + "月" + d.getDate() + "日";
+-    }
+-    return (d.getMonth() + 1) + "月" + d.getDate() + "日";
+-  }
+-  function applyClock(day, likeTs) {
+-    const d = new Date(day);
+-    if (likeTs) {
+-      const s = new Date(likeTs);
+-      d.setHours(s.getHours(), s.getMinutes(), 0, 0);
+-    } else d.setHours(10, 0, 0, 0);
+-    return d.getTime();
++
++  /**
++   * 路径首段的**根前缀**表：前两行是模块全局名，第三行是 app-core 里给
++   * `AttentionNativeReminders` 用的局部名（声明表与绑定表都按局部名书写，
++   * 因为它们读起来才是「哪一支模块」）。
++   */
++  const RUNTIME_ROOT_PREFIX = {
++    AttentionLib: "AttentionLib",
++    AttentionNativeReminders: "AttentionNativeReminders",
++    NativeReminders: "AttentionNativeReminders"
++  };
++
++  function readRuntimePath(roots, dotted) {
++    const parts = String(dotted).split(".");
++    const rootName = RUNTIME_ROOT_PREFIX[parts[0]];
++    let base = roots.AttentionLib;
++    if (rootName) {
++      base = roots[rootName];
++      parts.shift();
++    }
++    return parts.reduce(function (o, k) {
++      return o == null ? undefined : o[k];
++    }, base);
+   }
+ 
+-  function lastDayOfMonth(d) {
+-    return new Date(d.getFullYear(), d.getMonth() + 1, 0);
++  /** `null` 与 `undefined` 必须分开报：前者是「取到了但不可用」，后者是「压根没有」。 */
++  function describeGot(got) {
++    if (got === null) return "null";
++    if (got === undefined) return "undefined";
++    return typeof got;
+   }
+ 
+-  /** nth weekday of month. nth=-1 means last. */
+-  function nthWeekdayInMonth(year, month, nth, dow) {
+-    if (nth === -1) {
+-      const last = new Date(year, month + 1, 0);
+-      const delta = (last.getDay() - dow + 7) % 7;
+-      last.setDate(last.getDate() - delta);
+-      return last;
++  /**
++   * 「声明表里的路径」→「局部绑定名」的对照。
++   *
++   * 绑定**只能**取这张表里的路径，而这张表的每个路径都必须在 `REQUIRED_RUNTIME_EXPORTS`
++   * 里声明过（`test-boot-combination.js` 对此有断言）—— 于是「闸门检查过的」与
++   * 「业务真正用的」是同一批值，不可能出现「绑了一个从没检查过的导出」。
++   */
++  const RUNTIME_BINDING_PATHS = [
++    ["AttentionNativeReminders", "NativeReminders"],
++    ["AppUi", "AppUi"],
++    ["AppAi", "AppAi"],
++    ["AppBackup", "AppBackup"],
++    ["Feedback", "FeedbackLib"],
++    ["DeliveryEvidence", "EvidenceLib"],
++    ["DatePrimitives", "DatePrimitives"],
++    ["UiFormat", "UiFormat"],
++    ["createStorage", "createStorageFactory"],
++    ["AppUi.safeExternalHref", "safeExternalHref"],
++    ["DatePrimitives.startOfDay", "startOfDay"],
++    ["DatePrimitives.endOfDay", "endOfDay"],
++    ["DatePrimitives.addDays", "addDays"],
++    ["DatePrimitives.sameDay", "sameDay"],
++    ["DatePrimitives.nextWeekend", "nextWeekend"],
++    ["DatePrimitives.applyClock", "applyClock"],
++    ["DatePrimitives.lastDayOfMonth", "lastDayOfMonth"],
++    ["DatePrimitives.nthWeekdayInMonth", "nthWeekdayInMonth"],
++    ["DatePrimitives.weekdayOfNextWeek", "weekdayOfNextWeek"],
++    ["DatePrimitives.dayOfMonthIn", "dayOfMonthIn"],
++    ["DatePrimitives.nextDayOfMonth", "nextDayOfMonth"],
++    ["nextRepeatTrigger", "nextRepeatTrigger"],
++    ["repeatLabel", "repeatLabel"],
++    ["nextRepeatPreview", "nextRepeatPreview"],
++    ["parseChineseTime", "parseChineseTime"],
++    ["cnInt", "cnInt"],
++    ["hasSpecificTimeWord", "hasSpecificTimeWord"]
++  ];
++
++  /**
++   * **类型契约判定**：通过返回 `null`，不满足返回 `{ expected, actual }`。
++   *
++   * `null` 必须**单独**判：`typeof null === "object"`，否则「模块成了 null」会被当成
++   * 一个合格的 object 放行（F02 原缺陷）。`undefined` 同样单独判，因为报出来的
++   * 「压根没这一项」比「类型不对」让人一眼看懂。
++   *
++   * `array` 用 `Array.isArray` —— 见声明表头那段说明：`typeof [] === "object"`，
++   * `typeof` 分辨不出数组与对象。
++   */
++  function describeTypeMismatch(got, want, itemShape) {
++    const expected = want + (itemShape ? "<" + itemShape.join(",") + ">" : "");
++    if (got === null) return { expected: expected, actual: "null" };
++    if (got === undefined) return { expected: expected, actual: "undefined" };
++    if (want === "array") {
++      if (!Array.isArray(got)) return { expected: expected, actual: describeGot(got) + "（不是数组）" };
++      if (itemShape) {
++        // 空清单也是一种坏形状：消费者拿到 `[]` 会**什么都不渲染**且不报错 ——
++        // 同属「界面看着正常、功能已经没了」那一类缺陷，所以不能只对非空数组查元素。
++        if (got.length === 0) return { expected: expected, actual: "空数组（清单至少要有一项）" };
++        for (let i = 0; i < got.length; i++) {
++          const missing = missingItemShape(got[i], itemShape);
++          if (missing) return { expected: expected, actual: "array[" + i + "] " + missing };
++        }
++      }
++      return null;
+     }
+-    const first = new Date(year, month, 1);
+-    let delta = (dow - first.getDay() + 7) % 7;
+-    const d = new Date(year, month, 1 + delta + (nth - 1) * 7);
+-    if (d.getMonth() !== month) return new Date(year, month + 1, 0);
+-    return d;
++    if (typeof got !== want) return { expected: expected, actual: typeof got };
++    return null;
+   }
+ 
+-  function nthWeekdayOfNextMonth(from, nth, dow, hour, minute) {
+-    const base = from instanceof Date ? new Date(from.getTime()) : new Date(from);
+-    // V04：按「日」比较（与 lib/repeat.js 同一实现）
+-    const baseDay = new Date(base.getFullYear(), base.getMonth(), base.getDate()).getTime();
+-    let y = base.getFullYear(), m = base.getMonth();
+-    let d = nthWeekdayInMonth(y, m, nth, dow);
+-    d.setHours(10, 0, 0, 0);
+-    if (new Date(d.getFullYear(), d.getMonth(), d.getDate()).getTime() <= baseDay) {
+-      m += 1;
+-      if (m > 11) { m = 0; y += 1; }
+-      d = nthWeekdayInMonth(y, m, nth, dow);
+-      d.setHours(10, 0, 0, 0);
++  /** 元素形状核对：缺什么就**逐个点出来**（不是笼统报个类型），没问题返回 `null`。 */
++  function missingItemShape(item, itemShape) {
++    if (item === null || item === undefined || typeof item !== "object") {
++      return "元素不是对象（" + describeGot(item) + "）";
+     }
+-    if (hour != null) d.setHours(hour, minute || 0, 0, 0);
+-    return d.getTime();
++    const missing = itemShape.filter(function (k) { return item[k] === undefined; });
++    return missing.length ? "缺少 " + missing.join(" / ") : null;
+   }
+ 
+   /**
+-   * 与 lib/parse-cn.js 同名函数保持一致（H-01）。
++   * `createAppAi(deps)` 的依赖表（P2-A）。
++   *
++   * **每一项都是函数，没有一个是值** —— 理由与 `AppUi` 那条 `isFeedbackSuppressed`
++   * 相同，但覆盖面更大：`parseChineseTime` / `repeatLabel` / `pad` / `toLocalInput` /
++   * `fmtTime` / `fmtDate` 全部是「重试时可重建」的 `let` 绑定（F03），`$` / `$$` /
++   * `openSheet` / `closeSheet` / `toast` 来自 `createUi()` 的实例。按值传进去，
++   * 就等于在 AI 这条链上把「补载脚本后点重试」再堵死一次：闸门放行了，而 AI 仍跑在
++   * 上一份（可能是 `null`）的绑定上。
+    *
+-   * 本文件自带一份解析器副本，只在 lib/*.js 未加载时兜底；`Lib.parseChineseTime`
+-   * 一旦可用就会覆盖本副本（见文件末尾的覆盖块）。两副本必须同步，否则线上跑的是
+-   * lib、兜底跑的是另一套规则。M-10 记录了「整份重复已分叉」这件事。
++   * 刻意**不给**的东西：
++   *   · `state` 本身 —— 只给 `getSettings()` / `setAiConfig()`。模块不需要知道事项、
++   *     事务或持久化长什么样；
++   *   · `itemFormSession` / `formUntouched()` —— 表单会话身份属于捕获表单，
++   *     模块只提供纯快照合并 `mergedDraft()`，往哪儿合由入口按身份决定（R-F03）；
++   *   · `submitToken` / `beginSaveSubmit()` —— 提交身份属于事务层，
++   *     AI 只是「占用同一个身份」，不能再发明第二个。
+    */
+-  function weekdayOfNextWeek(from, weekOffset, target) {
+-    const d = startOfDay(from);
+-    const day = d.getDay();
+-    const toMonday = ((8 - day) % 7) || 7;
+-    const monday = addDays(d, toMonday + (weekOffset - 1) * 7);
+-    return addDays(monday, (target + 6) % 7);
+-  }
+-
+-  function dayOfMonthIn(year, month, day) {
+-    const last = new Date(year, month + 1, 0).getDate();
+-    return new Date(year, month, Math.min(day, last), 10, 0, 0, 0);
+-  }
+-
+-  function nextDayOfMonth(from, day) {
+-    const base = startOfDay(from);
+-    const today = dayOfMonthIn(base.getFullYear(), base.getMonth(), day);
+-    if (today.getTime() > new Date(from).getTime()) return today.getTime();
+-    const y = base.getMonth() === 11 ? base.getFullYear() + 1 : base.getFullYear();
+-    return dayOfMonthIn(y, (base.getMonth() + 1) % 12, day).getTime();
+-  }
+-
+-  function repeatLabel(rep) {
+-    if (!rep || !rep.every) return "";
+-    const map = {
+-      day: "每天", week: "每周", biweek: "每两周",
+-      month: "每月", monthEnd: "每月最后一天",
+-      nthWeekday: "每月第 " + (rep.nth === -1 ? "最后" : (rep.nth || 1)) + " 个周" +
+-        ["日", "一", "二", "三", "四", "五", "六"][rep.dow != null ? rep.dow : 1]
++  function aiRuntimeDeps() {
++    return {
++      getSettings: () => state.settings,
++      setAiConfig: (next) => { state.settings.ai = next; },
++      query: (sel, scope) => $(sel, scope),
++      queryAll: (sel, scope) => $$(sel, scope),
++      pad: (n) => pad(n),
++      toLocalInput: (ts) => toLocalInput(ts),
++      fmtTime: (ts) => fmtTime(ts),
++      fmtDate: (ts) => fmtDate(ts),
++      repeatLabel: (r) => repeatLabel(r),
++      parseChineseTime: (text) => parseChineseTime(text),
++      updateRepeatPreview: () => updateRepeatPreview(),
++      toast: (msg, label, onAction, second, opts) => toast(msg, label, onAction, second, opts),
++      openSheet: (id) => openSheet(id),
++      closeSheet: (id) => closeSheet(id),
++      renderMe: () => renderMe(),
++      save: () => save(),
++      /**
++       * 「没配置就带用户去配置」里的 `state.ui.tab = "me"` 是**视图所有权**，
++       * 不能搬进模块 —— 模块不该知道「我的」这个 tab 叫什么。
++       * 这里只把「跳过去 + 打开设置弹层」这一件事交给入口编排。
++       */
++      onMissingConfig: () => {
++        state.ui.tab = "me";
++        renderMe();
++        ai.openAiSheet();
++      }
+     };
+-    return map[rep.every] || rep.every;
+   }
+ 
+-  function nextRepeatPreview(rep, from, count) {
+-    count = count || 5;
+-    const out = [];
+-    let cursor = from ? new Date(from) : new Date();
+-    for (let i = 0; i < count; i++) {
+-      const ts = nextRepeatTrigger({ repeat: rep, triggerAt: cursor.getTime() }, cursor.getTime());
+-      if (!ts) break;
+-      out.push(ts);
+-      cursor = new Date(ts + 60000);
+-    }
+-    return out;
++  /**
++   * `createAppBackup(deps)` 的依赖表（P2-C）。同一条铁律：**每一项都是函数**。
++   *
++   * 刻意**不给**的东西：
++   *   · `state` 的写权 —— 模块只经 `getState()` 拿活引用做「导入覆盖」这一件事，
++   *     覆盖的形状校验（`normalizeItem`）由注入方提供，模块不能自造第二条解析规则；
++   *   · 持久化的第二条路 —— 导入覆盖后走**注入的 `save()`**，与表单/撤销同一条
++   *     持久化命令。为导入另起 `saveAsync` 直写等于造出两个提交所有者；
++   *   · `inflightActionDepth` 的写权 —— 只给只读取值器；那是事务层的所有权。
++   */
++  function backupRuntimeDeps() {
++    return {
++      getSchema: () => SCHEMA,
++      getState: () => state,
++      normalizeItem: (item) => normalizeItem(item),
++      save: () => save(),
++      render: () => render(),
++      toast: (msg) => toast(msg),
++      confirmDialog: (msg, title) => confirmDialog(msg, title),
++      query: (sel) => $(sel),
++      isNativeAndroidRuntime: () => isNativeAndroidRuntime(),
++      systemBridge: () => systemBridge(),
++      getInflightActionDepth: () => inflightActionDepth
++    };
+   }
+-  function downloadFile(name, content, type) {
+-    let url = null;
++
++  /**
++   * **检查 + 取值**（同一次操作）。
++   *
++   * 返回 `{ problems, bindings }`：`problems` 非空时 `bindings` 为 `null`，
++   * 且此时**什么实例都没建**（不调 `createUi` / `createAppAi`、不建 storage）——
++   * 失败路径必须停在「什么都没发生」，否则会出现「半套依赖已经生效」的界面。
++   */
++  function collectRuntimeBindings() {
++    const problems = [];
++    const roots = runtimeRoots();
++
++    for (let i = 0; i < REQUIRED_RUNTIME_EXPORTS.length; i++) {
++      const path0 = REQUIRED_RUNTIME_EXPORTS[i][0];
++      const want = REQUIRED_RUNTIME_EXPORTS[i][1];
++      const why = REQUIRED_RUNTIME_EXPORTS[i][2];
++      const itemShape = REQUIRED_RUNTIME_EXPORTS[i][3] || null;
++      const got = readRuntimePath(roots, path0);
++      const mismatch = describeTypeMismatch(got, want, itemShape);
++      if (mismatch) {
++        problems.push({ path: path0, expected: mismatch.expected, actual: mismatch.actual, why: why });
++      }
++    }
++    if (problems.length) return { problems: problems, bindings: null };
++
++    // 工厂实例契约（F02）：工厂是函数还不够 —— 它得真的装出那几个 API，
++    // 而且这里装出来的实例就是业务要用的**同一个**（不另造一个丢掉）。
++    let instance = null;
++    const factory = readRuntimePath(roots, APP_UI_INSTANCE_CONTRACT.factory);
+     try {
+-      const blob = new Blob([content], { type: type || "application/json" });
+-      url = URL.createObjectURL(blob);
+-      const a = document.createElement("a");
+-      a.href = url;
+-      a.download = name;
+-      document.body.appendChild(a);
+-      a.click();
+-      a.remove();
+-      return true;
+-    } finally {
+-      if (url) setTimeout(() => URL.revokeObjectURL(url), 1000);
++      instance = factory({ isFeedbackSuppressed: () => suppressUserFeedback });
++    } catch (error) {
++      problems.push({
++        path: APP_UI_INSTANCE_CONTRACT.factory + "()",
++        expected: "instance",
++        actual: "threw:" + (error && error.message ? error.message : String(error)),
++        why: APP_UI_INSTANCE_CONTRACT.factoryThrowWhy
++      });
++      return { problems: problems, bindings: null };
++    }
++    APP_UI_INSTANCE_CONTRACT.instance.forEach(function (name) {
++      if (instance == null || typeof instance[name] !== "function") {
++        problems.push({
++          path: "AppUi." + name,
++          expected: "function",
++          actual: instance == null ? describeGot(instance) : describeGot(instance[name]),
++          why: APP_UI_INSTANCE_CONTRACT.instanceWhy
++        });
++      }
++    });
++    if (problems.length) return { problems: problems, bindings: null };
++
++    // AI 能力（P2-A）：与上面同一条规矩 —— 工厂是函数还不够，装出来的实例就是业务要用的
++    // 同一个（不另造一个丢掉）。缺 `runOnCapture` 这类成员时，按钮监听器会绑到
++    // `undefined` 上，点击才 TypeError，而启动与静态闭合都看不出来。
++    let aiInstance = null;
++    const aiFactory = readRuntimePath(roots, APP_AI_INSTANCE_CONTRACT.factory);
++    try {
++      aiInstance = aiFactory(aiRuntimeDeps());
++    } catch (error) {
++      problems.push({
++        path: APP_AI_INSTANCE_CONTRACT.factory + "()",
++        expected: "instance",
++        actual: "threw:" + (error && error.message ? error.message : String(error)),
++        why: APP_AI_INSTANCE_CONTRACT.factoryThrowWhy
++      });
++      return { problems: problems, bindings: null };
++    }
++    APP_AI_INSTANCE_CONTRACT.instance.forEach(function (name) {
++      if (aiInstance == null || typeof aiInstance[name] !== "function") {
++        problems.push({
++          path: "AppAi." + name,
++          expected: "function",
++          actual: aiInstance == null ? describeGot(aiInstance) : describeGot(aiInstance[name]),
++          why: APP_AI_INSTANCE_CONTRACT.instanceWhy
++        });
++      }
++    });
++    if (problems.length) return { problems: problems, bindings: null };
++
++    // 备份能力（P2-C）：同一套「工厂存在 ≠ 装上了」的实例核对。备份是低频但要命的
++    // 操作 —— 实例空壳时「导出」按钮点了没反应，用户会以为备份好了而实际上
++    // 什么都没发生；这种静默只有装配闸门能拦。
++    let backupInstance = null;
++    const backupFactory = readRuntimePath(roots, APP_BACKUP_INSTANCE_CONTRACT.factory);
++    try {
++      backupInstance = backupFactory(backupRuntimeDeps());
++    } catch (error) {
++      problems.push({
++        path: APP_BACKUP_INSTANCE_CONTRACT.factory + "()",
++        expected: "instance",
++        actual: "threw:" + (error && error.message ? error.message : String(error)),
++        why: APP_BACKUP_INSTANCE_CONTRACT.factoryThrowWhy
++      });
++      return { problems: problems, bindings: null };
++    }
++    APP_BACKUP_INSTANCE_CONTRACT.instance.forEach(function (name) {
++      if (backupInstance == null || typeof backupInstance[name] !== "function") {
++        problems.push({
++          path: "AppBackup." + name,
++          expected: "function",
++          actual: backupInstance == null ? describeGot(backupInstance) : describeGot(backupInstance[name]),
++          why: APP_BACKUP_INSTANCE_CONTRACT.instanceWhy
++        });
++      }
++    });
++    if (problems.length) return { problems: problems, bindings: null };
++
++    // 走到这里说明每一项都核对过了 —— 下面绑的就是刚才核对过的那批值。
++    const bindings = { appUi: instance, ai: aiInstance, backup: backupInstance };
++    for (let i = 0; i < RUNTIME_BINDING_PATHS.length; i++) {
++      bindings[RUNTIME_BINDING_PATHS[i][1]] = readRuntimePath(roots, RUNTIME_BINDING_PATHS[i][0]);
+     }
++    return { problems: [], bindings: bindings };
+   }
+ 
+-  /* Minimal markdown renderer */
+-  function renderMarkdown(src) {
+-    let text = escapeHtml(src || "");
+-    // fenced code
+-    text = text.replace(/```([\s\S]*?)```/g, (_, code) => "<pre><code>" + code.trim() + "</code></pre>");
+-    // headings
+-    text = text.replace(/^### (.+)$/gm, "<h3>$1</h3>");
+-    text = text.replace(/^## (.+)$/gm, "<h2>$1</h2>");
+-    text = text.replace(/^# (.+)$/gm, "<h1>$1</h1>");
+-    // blockquote
+-    text = text.replace(/^&gt; (.+)$/gm, "<blockquote><p>$1</p></blockquote>");
+-    // bold / italic / code
+-    text = text.replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>");
+-    text = text.replace(/\*([^*]+)\*/g, "<em>$1</em>");
+-    text = text.replace(/`([^`]+)`/g, "<code>$1</code>");
+-    // links
+-    text = text.replace(/\[([^\]]+)\]\((https?:[^)\s]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>');
+-    // lists
+-    text = text.replace(/(?:^|\n)((?:- .+(?:\n|$))+)/g, (m, block) => {
+-      const items = block.trim().split(/\n/).map(l => "<li>" + l.replace(/^- /, "") + "</li>").join("");
+-      return "\n<ul>" + items + "</ul>";
++  /**
++   * 逐项核对必需导出，返回**问题清单**（空数组 = 装配完好）。
++   *
++   * 与 `bindRuntime()` **共用同一套检查**（同一个 `collectRuntimeBindings`）——
++   * 「闸门说没问题」与「业务真的能用」因此是同一件事。只读：不提交任何绑定。
++   */
++  function assertRuntimeDependencies() {
++    return collectRuntimeBindings().problems;
++  }
++
++  /**
++   * **装配**：检查通过之后，把这些绑定一次性写上。
++   *
++   * 返回问题清单。失败时**不动**既有绑定 —— 重试要么整套换新，要么维持原样，
++   * 不会把正在跑的那套依赖换成半份。
++   */
++  function bindRuntime() {
++    const result = collectRuntimeBindings();
++    if (result.problems.length) return result.problems;
++    const b = result.bindings;
++    NativeReminders = b.NativeReminders;
++    AppUi = b.AppUi;
++    appUi = b.appUi;
++    AppAi = b.AppAi;
++    ai = b.ai;
++    AppBackup = b.AppBackup;
++    backup = b.backup;
++    $ = appUi.$;
++    $$ = appUi.$$;
++    openSheet = appUi.openSheet;
++    closeSheet = appUi.closeSheet;
++    closeAllSheets = appUi.closeAllSheets;
++    confirmDialog = appUi.confirmDialog;
++    toast = appUi.toast;
++    hideToast = appUi.hideToast;
++    FeedbackLib = b.FeedbackLib;
++    EvidenceLib = b.EvidenceLib;
++    DatePrimitives = b.DatePrimitives;
++    UiFormat = b.UiFormat;
++    safeExternalHref = b.safeExternalHref;
++    startOfDay = b.startOfDay;
++    endOfDay = b.endOfDay;
++    addDays = b.addDays;
++    sameDay = b.sameDay;
++    nextWeekend = b.nextWeekend;
++    applyClock = b.applyClock;
++    lastDayOfMonth = b.lastDayOfMonth;
++    nthWeekdayInMonth = b.nthWeekdayInMonth;
++    weekdayOfNextWeek = b.weekdayOfNextWeek;
++    dayOfMonthIn = b.dayOfMonthIn;
++    nextDayOfMonth = b.nextDayOfMonth;
++    nextRepeatTrigger = b.nextRepeatTrigger;
++    repeatLabel = b.repeatLabel;
++    nextRepeatPreview = b.nextRepeatPreview;
++    parseChineseTime = b.parseChineseTime;
++    cnInt = b.cnInt;
++    hasSpecificTimeWord = b.hasSpecificTimeWord;
++    // storage 放在最后：它会开 IndexedDB（有副作用），必须在所有检查都过之后才建 ——
++    // 「装配失败但库已经开了一半」比干脆不开更麻烦。
++    storage = typeof b.createStorageFactory === "function"
++      ? b.createStorageFactory({ lsKey: KEY })
++      : null;
++    return [];
++  }
++
++  /**
++   * 可见的启动失败面板。
++   *
++   * 契约：**不能只 console.error 之后留下一个可编辑但不落库的界面** —— 那个界面最坏：
++   * 用户照常输入、照常点保存，而写入永远不会到磁盘。所以这里必须
++   *   · 抢占首页容器，让「能点但没用」的界面不被呈现；
++   *   · 用**纯文本 + 两个按钮**（重试 / 重新加载），不放任何可编辑控件；
++   *   · 写明「哪一支没起来」与「后果」，而不是抛一个 TypeError 给用户。
++   */
++  function renderStartupFailure(problems) {
++    const marker = "startup-dependency-failure";
++    // 宿主选取：真实浏览器里 `getElementById` 恒在，但测试沙箱可能只提供 `querySelector`。
++    // 这里按可用性逐个退，而不是假定某一个存在 —— 否则「渲染失败面板」本身会抛错，
++    // 于是失败面板什么都不显示，又退回「安静地留下一个能点但没用」的界面。
++    let host = null;
++    if (typeof document.getElementById === "function") {
++      host = document.getElementById("main") || document.getElementById("homeEmpty");
++    }
++    if (!host && typeof document.querySelector === "function") {
++      host = document.querySelector("#main") || document.querySelector("#homeEmpty");
++    }
++    if (!host) host = document.body;
++    if (!host) return;
++    if (typeof document.getElementById === "function") {
++      const existing = document.getElementById(marker);
++      if (existing && existing.parentNode && typeof existing.parentNode.removeChild === "function") {
++        existing.parentNode.removeChild(existing);
++      }
++    }
++
++    const box = document.createElement("section");
++    box.id = marker;
++    box.setAttribute("data-startup-failure", "1");
++    box.style.cssText = "margin:16px;padding:14px 16px;border:1px solid #d9b8b8;" +
++      "border-radius:10px;background:#fdf4f4;color:#5b2b2b;font-size:14px;line-height:1.6;";
++    // 只有「关键档」才渲染：一条标题、一条原因、两条去路。不铺问题清单的全部细节，
++    // 但保留第一条与条数，让用户至少能说清「哪一支没起来」。
++    const head = document.createElement("p");
++    head.style.cssText = "margin:0 0 8px;font-weight:600;";
++    head.textContent = "应用没能启动：依赖的脚本没有就位（" + problems.length + " 项）";
++    box.appendChild(head);
++
++    const cause = document.createElement("p");
++    cause.style.cssText = "margin:0 0 6px;";
++    cause.textContent = "首要原因：" + problems[0].path + " 期望是 " + problems[0].expected +
++      "，实际是 " + problems[0].actual + "。";
++    box.appendChild(cause);
++
++    const detail = document.createElement("p");
++    detail.style.cssText = "margin:0 0 10px;color:#7a4a4a;";
++    detail.textContent = problems[0].why;
++    box.appendChild(detail);
++
++    const hint = document.createElement("p");
++    hint.style.cssText = "margin:0 0 10px;color:#7a4a4a;";
++    // 关键安全性说明：停在原地是为了**不让你以为已经保存了**。
++    hint.textContent = "为免出现「能输入但存不下来」的界面，本次未加载数据、未做迁移、未安排提醒、未启动后台心跳。";
++    box.appendChild(hint);
++
++    const row = document.createElement("div");
++    row.style.cssText = "display:flex;gap:8px;flex-wrap:wrap;";
++    const retry = document.createElement("button");
++    retry.type = "button";
++    retry.id = "startupRetry";
++    retry.textContent = "重试";
++    retry.style.cssText = "padding:6px 14px;border:1px solid #a87676;border-radius:8px;" +
++      "background:#fff;color:#5b2b2b;cursor:pointer;";
++    retry.addEventListener("click", function () {
++      if (box.parentNode) box.parentNode.removeChild(box);
++      startApp();
+     });
+-    text = text.replace(/(?:^|\n)((?:\d+\. .+(?:\n|$))+)/g, (m, block) => {
+-      const items = block.trim().split(/\n/).map(l => "<li>" + l.replace(/^\d+\. /, "") + "</li>").join("");
+-      return "\n<ol>" + items + "</ol>";
++    const reload = document.createElement("button");
++    reload.type = "button";
++    reload.id = "startupReload";
++    reload.textContent = "重新加载";
++    reload.style.cssText = "padding:6px 14px;border:1px solid #a87676;border-radius:8px;" +
++      "background:#fff;color:#5b2b2b;cursor:pointer;";
++    reload.addEventListener("click", function () {
++      try { location.reload(); } catch (error) {}
+     });
+-    // paragraphs
+-    text = text.split(/\n{2,}/).map(chunk => {
+-      const t = chunk.trim();
+-      if (!t) return "";
+-      if (/^<(h\d|ul|ol|pre|blockquote)/.test(t)) return t;
+-      return "<p>" + t.replace(/\n/g, "<br/>") + "</p>";
+-    }).join("\n");
+-    return text;
+-  }
+-
+-  /* ---------- Chinese NL parser ---------- */
+-  const CN_NUM = {
+-    "零": 0, "〇": 0, "一": 1, "二": 2, "两": 2, "三": 3, "四": 4, "五": 5, "六": 6,
+-    "七": 7, "八": 8, "九": 9, "十": 10, "十一": 11, "十二": 12, "十三": 13, "十四": 14,
+-    "十五": 15, "十六": 16, "十七": 17, "十八": 18, "十九": 19, "二十": 20, "二十一": 21,
+-    "二十二": 22, "二十三": 23, "三十": 30, "三十一": 31
+-  };
+-  function cnInt(str) {
+-    if (str == null || str === "") return null;
+-    if (/^\d+$/.test(str)) return parseInt(str, 10);
+-    if (CN_NUM[str] != null) return CN_NUM[str];
+-    if (str.startsWith("三十")) return 30 + (str.length > 2 ? (CN_NUM[str.slice(2)] || 0) : 0);
+-    if (str.startsWith("二十")) return 20 + (str.length > 2 ? (CN_NUM[str.slice(2)] || 0) : 0);
+-    if (str.startsWith("十")) return 10 + (str.length > 1 ? (CN_NUM[str.slice(1)] || 0) : 0);
+-    return null;
++    row.appendChild(retry);
++    row.appendChild(reload);
++    box.appendChild(row);
++
++    host.insertBefore(box, host.firstChild);
+   }
+ 
+-  function parseChineseTime(input, now) {
+-    now = now || new Date();
+-    let text = String(input || "").trim();
+-    let confidence = "none";
+-    let trigger = null;
+-    let deadline = null;
+-    let win = null;
+-    let repeat = null;
+-    /** H-02：「每月 N 号」里的 N；为 null 表示只说「每月」没说号数 */
+-    let monthDay = null;
+-    let cleaned = text;
+-    const base = startOfDay(now);
+-
+-    if (/每两周|隔周|每两星期/.test(text)) {
+-      repeat = { mode: "ack", every: "biweek" };
+-      cleaned = cleaned.replace(/每两周|隔周|每两星期/g, "");
+-    } else if (/每月.{0,4}(最后一天|月底|月末)|每月底|每月末/.test(text)) {
+-      repeat = { mode: "calendar", every: "monthEnd" };
+-      cleaned = cleaned.replace(/每月.{0,4}(最后一天|月底|月末)|每月底|每月末/g, "");
+-    } else if (/每月第\s*([一二三四五六日天]|\d)\s*个\s*(星期|周)?\s*([一二三四五六日天])/.test(text)) {
+-      const m = text.match(/每月第\s*([一二三四五六日天]|\d)\s*个\s*(?:星期|周)?\s*([一二三四五六日天])/);
+-      const nthMap = { "一": 1, "二": 2, "三": 3, "四": 4, "1": 1, "2": 2, "3": 3, "4": 4 };
+-      const dowMap = { "一": 1, "二": 2, "三": 3, "四": 4, "五": 5, "六": 6, "日": 0, "天": 0 };
+-      const nth = nthMap[m[1]] || 1;
+-      const dow = dowMap[m[2]];
+-      repeat = { mode: "calendar", every: "nthWeekday", nth, dow };
+-      cleaned = cleaned.replace(m[0], "");
+-    } else if (/每周|每星期/.test(text)) {
+-      repeat = { mode: "calendar", every: "week" };
+-      // N-04：星期几必须跟着「每周」一起剥掉，否则标题会留下孤立的「一」（「一站会」）。
+-      const wm = text.match(/每(?:周|星期)\s*[一二三四五六日天]?/);
+-      cleaned = cleaned.replace(wm ? wm[0] : /每周|每星期/g, "");
+-    } else if (/每天|每日/.test(text)) {
+-      repeat = { mode: "calendar", every: "day" };
+-      cleaned = cleaned.replace(/每天|每日/g, "");
+-    } else if (/每月|每个月/.test(text)) {
+-      repeat = { mode: "calendar", every: "month" };
+-      // H-02：「每月15号」必须留下 15，否则落「+30 天」兜底并永久漂移到 18 号。
+-      const md = text.match(/每(?:个)?月\s*(\d{1,2}|[一二三四五六七八九十]+)\s*[日号]/);
+-      if (md) monthDay = cnInt(md[1]);
+-      cleaned = cleaned.replace(md ? md[0] : /每月|每个月/g, "");
++  /** 恢复面板重试的在途守卫（同一时刻只允许一次重试）。 */
++  let restoreRetryInFlight = false;
++  /**
++   * 恢复面板当前是否**挂在页面上**。
++   *
++   * 刻意用标志而不是「DOM 里查得到那个 id 吗」：`getElementById` 在某些宿主/测试替身里
++   * 永远返回节点（按需创建），于是「面板还在不在」会变成一个恒真读数。
++   */
++  let stateRecoveryPanelShown = false;
++
++  /** 给用户看的失败归类（技术原因仍原样留在 `lastLoadReport.reason`）。 */
++  function describeLoadFailure(report) {
++    const reason = report && report.reason ? String(report.reason) : "";
++    if (reason.indexOf("mirror") === 0 || reason.indexOf("authoritative-read-failed") === 0) {
++      return "本机数据库这次读不出来";
++    }
++    if (reason === "authoritative-value-not-object") return "本机数据库里的内容不是一份可用的数据";
++    if (reason === "pending-replay-failed") return "上一次没写完的改动没能接回来";
++    if (reason === "authoritative-empty-with-residual-evidence") {
++      return "数据库读到的内容与镜像对不上";
+     }
++    return "本机数据的权威状态没能确认";
++  }
+ 
+-    /**
+-     * N-04 / M-03：截止语义不能只认「截止/到期」等硬词，否则「9点前」「之前」既丢截止又污染标题。
+-     * 刻意不用 lookbehind —— 老 Android WebView 会直接抛语法错误，让整个文件加载失败。
+-     */
+-    const beforeAlt = text.match(/之前|以前/);
+-    let beforeToken = null;
+-    if (beforeAlt) beforeToken = beforeAlt[0];
+-    else if (/[点時时]\s*\d*\s*分?\s*前|半\s*前|[:：]\s*\d{2}\s*前|\d{1,2}\s*[日号]\s*前|(?:周|星期)[一二三四五六日天末]\s*前|(?:今天|明天|后天|大后天|今晚|今早|月底|月末|下个月|下月)\s*前/.test(text)) beforeToken = "前";
+-
+-    const hasDeadlineKw = /截止|最后一天|到期|报名结束|提交截止|deadline/i.test(text) || beforeToken != null;
+-    if (beforeToken) cleaned = cleaned.replace(beforeToken, "");
+-    let advanceDays = null;
+-    const adv = text.match(/提前\s*([0-9一二两三四五六七八九十]+)\s*天/);
+-    if (adv) {
+-      advanceDays = cnInt(adv[1]);
+-      cleaned = cleaned.replace(adv[0], "");
+-    }
+-
+-    let deadlineAnchor = null;
+-    const absDate = text.match(/(\d{1,2}|[一二三四五六七八九十]+)\s*月\s*(\d{1,2}|[一二三四五六七八九十]+)\s*[日号]/);
+-    if (absDate) {
+-      const m = cnInt(absDate[1]);
+-      const d = cnInt(absDate[2]);
+-      if (m && d) {
+-        const y = now.getFullYear();
+-        let dt = new Date(y, m - 1, d, 10, 0, 0, 0);
+-        if (dt < startOfDay(now)) dt = new Date(y + 1, m - 1, d, 10, 0, 0, 0);
+-        deadlineAnchor = dt.getTime();
+-        cleaned = cleaned.replace(absDate[0], "");
+-        if (hasDeadlineKw) deadline = endOfDay(dt).getTime();
+-      }
++  /**
++   * P2-C-R：**可见的恢复面板**（`failed` 时的唯一界面）。
++   *
++   * 契约与装配失败面板（`renderStartupFailure`）一致，理由也一样：
++   * **不能只 console.error 之后留下一个可编辑但不落库的界面** —— 那个界面最坏：
++   * 用户照常输入、照常点保存，而写入已经被写闸门拦下。
++   * 所以这里同样抢占容器、只用纯文本 + 两个按钮（不放任何可编辑控件）。
++   *
++   * 额外一条：面板必须**说清没有写任何东西**。用户此刻最该知道的是
++   * 「你的旧数据没有被这次启动覆盖」。
++   */
++  function renderStateRecovery(report) {
++    const marker = "state-authority-recovery";
++    let host = null;
++    if (typeof document.getElementById === "function") {
++      host = document.getElementById("main") || document.getElementById("homeEmpty");
++    }
++    if (!host && typeof document.querySelector === "function") {
++      host = document.querySelector("#main") || document.querySelector("#homeEmpty");
+     }
++    if (!host) host = document.body;
++    if (!host) return;
++    removeStateRecoveryPanel();
++
++    const box = document.createElement("section");
++    box.id = marker;
++    box.setAttribute("data-state-authority-failure", "1");
++    box.style.cssText = "margin:16px;padding:14px 16px;border:1px solid #d9b8b8;" +
++      "border-radius:10px;background:#fdf4f4;color:#5b2b2b;font-size:14px;line-height:1.6;";
++
++    const head = document.createElement("p");
++    head.style.cssText = "margin:0 0 8px;font-weight:600;";
++    head.textContent = "数据没有恢复成功，应用暂未启动";
++    box.appendChild(head);
++
++    const cause = document.createElement("p");
++    cause.style.cssText = "margin:0 0 6px;";
++    cause.textContent = describeLoadFailure(report) + "（第 " + report.attempt + " 次尝试）。";
++    box.appendChild(cause);
++
++    const detail = document.createElement("p");
++    detail.style.cssText = "margin:0 0 10px;color:#7a4a4a;";
++    detail.textContent = "原因：" + (report.reason || "unknown") +
++      (report.detail ? " · " + report.detail : "");
++    box.appendChild(detail);
++
++    const hint = document.createElement("p");
++    hint.style.cssText = "margin:0 0 10px;color:#7a4a4a;";
++    hint.textContent = "为免覆盖本机已有数据，这次没有写入任何内容，也没有安排提醒或启动后台心跳。" +
++      "本机旧数据仍在原处，重试成功后照常进入应用。";
++    box.appendChild(hint);
++
++    const row = document.createElement("div");
++    row.style.cssText = "display:flex;gap:8px;flex-wrap:wrap;";
++    const retry = document.createElement("button");
++    retry.type = "button";
++    retry.id = "stateRecoveryRetry";
++    retry.textContent = "重试恢复";
++    retry.style.cssText = "padding:6px 14px;border:1px solid #a87676;border-radius:8px;" +
++      "background:#fff;color:#5b2b2b;cursor:pointer;";
++    retry.addEventListener("click", function () { retryRestore(); });
++    const reload = document.createElement("button");
++    reload.type = "button";
++    reload.id = "stateRecoveryReload";
++    reload.textContent = "重新加载";
++    reload.style.cssText = "padding:6px 14px;border:1px solid #a87676;border-radius:8px;" +
++      "background:#fff;color:#5b2b2b;cursor:pointer;";
++    reload.addEventListener("click", function () {
++      try { location.reload(); } catch (error) {}
++    });
++    row.appendChild(retry);
++    row.appendChild(reload);
++    box.appendChild(row);
+ 
+-    let hour = null, minute = 0;
+-    const clock = text.match(/(上午|中午|下午|晚上|早上)?\s*(\d{1,2})[:：](\d{2})/);
+-    if (clock) {
+-      hour = parseInt(clock[2], 10);
+-      minute = parseInt(clock[3], 10);
+-      const mer = clock[1];
+-      if ((mer === "下午" || mer === "晚上") && hour < 12) hour += 12;
+-      if (mer === "中午") hour = 12;
+-      cleaned = cleaned.replace(clock[0], "");
+-    } else {
+-      const clock2 = text.match(/(上午|中午|下午|晚上|早上)?\s*([0-9一二两三四五六七八九十]+)\s*[点時时](\s*(半|[0-9一二三四五六七八九十]+)\s*分?)?/);
+-      if (clock2) {
+-        hour = cnInt(clock2[2]);
+-        minute = clock2[4] === "半" ? 30 : (clock2[4] ? (cnInt(clock2[4]) || 0) : 0);
+-        const mer = clock2[1];
+-        if ((mer === "下午" || mer === "晚上") && hour != null && hour < 12) hour += 12;
+-        if (mer === "中午" && hour != null) hour = 12;
+-        cleaned = cleaned.replace(clock2[0], "");
++    host.insertBefore(box, host.firstChild);
++    stateRecoveryPanelShown = true;
++  }
++
++  function removeStateRecoveryPanel() {
++    stateRecoveryPanelShown = false;
++    try {
++      if (typeof document.getElementById !== "function") return;
++      const existing = document.getElementById("state-authority-recovery");
++      if (existing && existing.parentNode && typeof existing.parentNode.removeChild === "function") {
++        existing.parentNode.removeChild(existing);
+       }
++    } catch (error) {}
++  }
++
++  /**
++   * 「重试恢复」：**先让权威后端重新可试**，再重跑一次恢复 + 启动。
++   *
++   * 为什么必须 `storage.reopen()`：`lib/storage.js` 的 `ensure()` 一旦选定 backend
++   * 就不再回头，所以「打开 IndexedDB 失败」之后的重试只会再读一次 localStorage ——
++   * 权威后端永远不会被重新尝试，面板就成了一个点不动的按钮。
++   *
++   * 重跑走 `startApp()`（它会重新过装配闸门并把 `initStarted` 放回可重入状态），
++   * 因此**不**需要另起一套启动路径；`initStarted` 的双重启动保护由 `startApp()` 自己维持。
++   */
++  function retryRestore() {
++    if (restoreRetryInFlight) return;
++    restoreRetryInFlight = true;
++    let running = null;
++    try {
++      if (storage && typeof storage.reopen === "function") storage.reopen();
++      running = startApp();
++    } catch (error) {
++      console.error("State recovery retry failed:", error && error.message ? error.message : error);
++      running = null;
+     }
++    Promise.resolve(running).then(
++      function () { restoreRetryInFlight = false; },
++      function () { restoreRetryInFlight = false; }
++    );
++  }
+ 
+-    function applyTime(ts, h, m) {
+-      const d = new Date(ts);
+-      if (h != null) d.setHours(h, m || 0, 0, 0);
+-      else d.setHours(10, 0, 0, 0);
+-      return d.getTime();
+-    }
+-
+-    if (/大后天/.test(text)) {
+-      trigger = applyTime(addDays(base, 3).getTime(), hour, minute);
+-      confidence = "high";
+-      cleaned = cleaned.replace(/大后天/g, "");
+-    } else if (/后天/.test(text)) {
+-      trigger = applyTime(addDays(base, 2).getTime(), hour, minute);
+-      confidence = "high";
+-      cleaned = cleaned.replace(/后天/g, "");
+-    } else if (/明天/.test(text)) {
+-      trigger = applyTime(addDays(base, 1).getTime(), hour, minute);
+-      confidence = "high";
+-      cleaned = cleaned.replace(/明天/g, "");
+-    } else if (/今天|今晚|今早/.test(text)) {
+-      let h = hour;
+-      if (h == null) h = /今晚/.test(text) ? 20 : (/今早/.test(text) ? 9 : now.getHours() + 1);
+-      trigger = applyTime(base.getTime(), h, minute);
+-      if (trigger < now.getTime() && !/今晚|今早/.test(text)) trigger = now.getTime() + 5 * 60000;
+-      confidence = "high";
+-      cleaned = cleaned.replace(/今天|今晚|今早/g, "");
+-    } else if (/周末/.test(text)) {
+-      const t = nextWeekend(now);
+-      trigger = hour != null ? applyTime(t, hour, minute) : t;
+-      win = { start: t, end: endOfDay(addDays(t, 1)).getTime() };
+-      confidence = "mid";
+-      cleaned = cleaned.replace(/周末/g, "");
+-    } else if (/(下+)周([一二三四五六日天])|(下+)星期([一二三四五六日天])/.test(text)) {
+-      // H-01：合并原「下周日」「下周X」两分支（语义相同、实现不一致 → 「下周三」晚一周）。
+-      // 「下+」同时覆盖「下下周X」，不再留下孤立的「下」（「下开会」）。
+-      const m = text.match(/(下+)周([一二三四五六日天])|(下+)星期([一二三四五六日天])/);
+-      const weekOffset = (m[1] || m[3] || "下").length;
+-      const ch = m[2] || m[4];
+-      const map = { "一": 1, "二": 2, "三": 3, "四": 4, "五": 5, "六": 6, "日": 0, "天": 0 };
+-      trigger = applyTime(weekdayOfNextWeek(now, weekOffset, map[ch]).getTime(), hour, minute);
+-      confidence = "high";
+-      cleaned = cleaned.replace(m[0], "");
+-    } else if (/(这|本)?周([一二三四五六日天])|(这|本)?星期([一二三四五六日天])/.test(text)) {
+-      // N-04：「本周五」的「本」要一起剥掉，否则标题留下孤立的「本」
+-      const m = text.match(/(这|本)?周([一二三四五六日天])|(这|本)?星期([一二三四五六日天])/);
+-      const ch = m[2] || m[4];
+-      const map = { "一": 1, "二": 2, "三": 3, "四": 4, "五": 5, "六": 6, "日": 0, "天": 0 };
+-      const target = map[ch];
+-      const d = startOfDay(now);
+-      const day = d.getDay();
+-      const delta = (target - day + 7) % 7;
+-      let ts = applyTime(addDays(d, delta).getTime(), hour, minute);
+-      if (ts <= now.getTime() && hour == null) ts = now.getTime() + 60 * 60000;
+-      trigger = ts;
+-      confidence = "high";
+-      cleaned = cleaned.replace(m[0], "");
+-    } else if (/月底|月末/.test(text)) {
+-      // 「下个月底」此前落到「本月底」（先匹配到「月底」），日期整整早一个月
+-      const nextMonth = /下个月|下月/.test(text);
+-      const y = nextMonth && now.getMonth() === 11 ? now.getFullYear() + 1 : now.getFullYear();
+-      const m2 = nextMonth ? (now.getMonth() + 1) % 12 : now.getMonth();
+-      trigger = new Date(y, m2 + 1, 0, 10, 0, 0, 0).getTime();
+-      confidence = "mid";
+-      cleaned = cleaned.replace(nextMonth ? /下个月底|下个月末|下月底|下月末/g : /月底|月末/g, "");
+-    } else if (/下个月|下月/.test(text)) {
+-      // H-03：号数此前被丢掉、硬编码成 1 号（「下个月5号」→ 10-01，应 10-05）
+-      const nm = text.match(/(?:下个月|下月)\s*(\d{1,2}|[一二三四五六七八九十]+)\s*[日号]/);
+-      const day = nm ? cnInt(nm[1]) : 1;
+-      const y = now.getMonth() === 11 ? now.getFullYear() + 1 : now.getFullYear();
+-      const d = dayOfMonthIn(y, (now.getMonth() + 1) % 12, day);
+-      trigger = hour != null ? applyTime(d.getTime(), hour, minute) : d.getTime();
+-      confidence = "mid";
+-      cleaned = cleaned.replace(nm ? nm[0] : /下个月|下月/g, "");
+-    } else if (/过两天/.test(text)) {
+-      trigger = applyTime(addDays(base, 2).getTime(), hour, minute);
+-      confidence = "mid";
+-      cleaned = cleaned.replace(/过两天/g, "");
+-    } else if (/过阵子|以后|回头|改天|之后/.test(text)) {
+-      trigger = applyTime(addDays(base, 7).getTime(), hour, minute);
+-      confidence = "low";
+-      cleaned = cleaned.replace(/过阵子|以后|回头|改天|之后/g, "");
+-    } else if (/([0-9一二两三四五六七八九十]+)\s*[天日]\s*后/.test(text)) {
+-      const m = text.match(/([0-9一二两三四五六七八九十]+)\s*[天日]\s*后/);
+-      const n = cnInt(m[1]) || 1;
+-      trigger = applyTime(addDays(base, n).getTime(), hour, minute);
+-      confidence = "high";
+-      cleaned = cleaned.replace(m[0], "");
+-    } else if (absDate && deadlineAnchor) {
+-      if (hasDeadlineKw) {
+-        const off = advanceDays != null ? advanceDays : 3;
+-        trigger = applyTime(addDays(new Date(deadlineAnchor), -off).getTime(), hour, minute);
+-        deadline = endOfDay(new Date(deadlineAnchor)).getTime();
+-        confidence = "high";
+-      } else {
+-        trigger = deadlineAnchor;
+-        confidence = "mid";
+-      }
+-    } else if (hour != null) {
+-      let ts = applyTime(base.getTime(), hour, minute);
+-      if (ts <= now.getTime()) ts = applyTime(addDays(base, 1).getTime(), hour, minute);
+-      trigger = ts;
+-      confidence = "mid";
+-    } else if (repeat) {
+-      if (repeat.every === "day") trigger = applyTime(addDays(base, 1).getTime(), 10, 0);
+-      else if (repeat.every === "week") trigger = applyTime(addDays(base, 7).getTime(), 10, 0);
+-      else if (repeat.every === "biweek") trigger = applyTime(addDays(base, 14).getTime(), 10, 0);
+-      else if (repeat.every === "monthEnd") trigger = applyTime(new Date(now.getFullYear(), now.getMonth() + 1, 0, 10, 0, 0, 0).getTime(), 10, 0);
+-      else if (repeat.every === "nthWeekday") trigger = nthWeekdayOfNextMonth(now, repeat.nth || 1, repeat.dow != null ? repeat.dow : 1, hour, minute);
+-      // H-02：「每月N号」锚到 N 号的下一次出现
+-      else if (monthDay != null) trigger = applyTime(nextDayOfMonth(now, monthDay), hour, minute);
+-      else trigger = applyTime(addDays(base, 30).getTime(), 10, 0);
+-      confidence = "mid";
+-    }
+-
+-    if (!trigger) {
+-      trigger = applyTime(addDays(base, 7).getTime(), 10, 0);
+-      confidence = "low";
+-    }
+-
+-    // N-04 / M-03：带截止语义的表达，其时间点即截止（有明确时刻精确到那一刻，否则取当天末尾）。
+-    // 只对「X 前 / 之前」生效 —— 按 hasDeadlineKw 放宽会把「每月最后一天交房租」这类
+-    // **周期**表达也变成截止事项，每个周期多一轮截止提醒，净增打扰。
+-    if (beforeToken != null && deadline == null && trigger != null) {
+-      deadline = hour != null ? trigger : endOfDay(new Date(trigger)).getTime();
+-    }
+-
+-    let title = cleaned
+-      .replace(/提醒我|提醒一下|提醒|记得|别忘了|需要|帮我|请/g, " ")
+-      .replace(/看一眼|看一下|看看|瞧瞧/g, "看看")
+-      .replace(/\s+/g, " ")
+-      .trim();
+-    if (!title) title = text.trim() || "未命名事项";
+-
+-    const tags = [];
+-    const hashTags = title.match(/#([^\s#]+)/g) || [];
+-    hashTags.forEach(t => tags.push(t.slice(1)));
+-    title = title.replace(/#[^\s#]+/g, "").replace(/\s+/g, " ").trim();
+-
+-    return { title, trigger, deadline, window: win, repeat, confidence, raw: text, tags };
++  /* ---------- utils ---------- */
++
++  /**
++   * 日历原语：**唯一来源 `lib/date-utils.js`**。
++   *
++   * 走**命名空间**（`AttentionLib.DatePrimitives`）而不是扁平 `AttentionLib.startOfDay` ——
++   * 后者是 UMD `Object.assign` 合并出来的，parse-cn / repeat 都往里写过同名键，
++   * 「哪一份在跑」由 `<script>` 顺序决定，而顺序错了不抛错。
++   * 拿不到由 `assertRuntimeDependencies()` 在启动前拦下并给出可读失败。
++   */
++  // `DatePrimitives` 的绑定由 `bindRuntime()` 写入（见文件顶部「运行时依赖：唯一装配入口」）。
++
++  /* ---------- UI 纯格式化：唯一来源 lib/ui-format.js ---------- */
++
++  /**
++   * 命名空间挂载（同 `DatePrimitives`），不取扁平导出。
++   * 这里的每一个都是**纯函数**（输入 → 字符串），不碰 DOM、不读 `state`：
++   * 它们此前和几千行编排逻辑挤在同一个 IIFE 里，导致「时间怎么显示」这种事
++   * 也得先把整个 app-core 跑起来才能验。
++   * 取不到 = 装配错误，由 `assertRuntimeDependencies()` 在启动前拦下。
++   */
++  // `UiFormat` 的绑定同样由 `bindRuntime()` 写入（见文件顶部）。
++
++  function uid() {
++    return UiFormat.uid();
++  }
++  function pad(n) { return UiFormat.pad(n); }
++  // 兼容别名：同一来源的委托，不另存算法体
++  // startOfDay / endOfDay / addDays / sameDay / nextWeekend 的绑定由 `bindRuntime()` 写入。
++  function fmtTime(ts) {
++    return UiFormat.fmtTime(ts);
++  }
++  function fmtDate(ts) {
++    return UiFormat.fmtDate(ts);
++  }
++  function relDue(ts) {
++    return UiFormat.relDue(ts);
++  }
++  // `nextWeekend` 的绑定由 `bindRuntime()` 写入（同上）。
++  function escapeHtml(s) {
++    return UiFormat.escapeHtml(s);
+   }
+ 
++  /**
++   * O3：**属性上下文**转义 —— 唯一来源 `lib/ui-format.js`。
++   *
++   * 字符集与 `escapeHtml` 相同（`& < > " '` 已覆盖能在属性里闭合引号的每一个字符），
++   * 但语义不同、也必须分开命名：`escapeHtml` 是给**文本节点**用的，这里是给
++   * `attr="…"` 用的。事项 id 未必由内部 `uid()` 生成 —— 导入数据里可以带任意字符串，
++   * 直接拼进 `data-id="…"` 就能闭合引号、往标签里塞新属性。
++   * 分开命名是为了让「改转义字符集」的人一眼看到属性侧也是消费者，不会只改一边。
++   */
++  function escapeAttr(v) {
++    return UiFormat.escapeAttr(v);
++  }
++
++  /**
++   * O3：可点击外部链接的**协议白名单** —— 唯一来源 `lib/app-ui.js`。
++   *
++   * 只放行「解析后协议是 `http:` / `https:`」的串，其余一律返回 `null`，
++   * 由调用方降级成转义后的**纯文本**（原始数据照旧保留在 `it.url` 里，不静默删除）。
++   *
++   * 为什么不能用 `startsWith("http")` 或 `escapeHtml` 代替（完整理由随实现写在
++   * `lib/app-ui.js` 的同名函数上，不在这里复制一份）：判定必须落在 **URL 解析结果**上，
++   * 而不是字形上 —— 解析器会先剔除 TAB / LF / CR，于是 `"java\nscript:alert(1)"` 的
++   * 真实协议是 `javascript:`，只看字面前缀根本拦不到。
++   *
++   * 无 `URL` 构造器时的保守字形分支也一并搬走，因此**没有第二份**可放行路径；
++   * 该降级已登记（触发条件 / 唯一实现 / 失败反馈 / 覆盖用例见 `lib/app-ui.js`）。
++   */
++  // `safeExternalHref` 的绑定由 `bindRuntime()` 写入（它取自 `AppUi`，与上面同一来源）。
++
++  /* 时间输入的本地串转换与归档日标签 —— 唯一来源 lib/ui-format.js */
++
++  /** `<input type="datetime-local">` 的本地串（不含秒）。 */
++  function toLocalInput(ts) {
++    return UiFormat.toLocalInput(ts);
++  }
++  /** `datetime-local` 串 → 时间戳；解析不出返回 `null`（**不兜底成「现在」**）。 */
++  function parseLocalInput(v) {
++    return UiFormat.parseLocalInput(v);
++  }
++  /**
++   * 归档/列表用的「日」标签。
++   *
++   * 与 `fmtDate` **刻意不合并**（不是遗漏）：空值语义（`"更早"` vs `""`）、有无「明天」
++   * 分支、跨年是否回完整年月日，三处都不同。合并任何一条都是显示行为变更，须单独立项。
++   */
++  function dayLabel(ts) {
++    return UiFormat.dayLabel(ts);
++  }
++  /* ---------- 日历 / 周期：全部委托给唯一来源，本文件不再持有算法体 ---------- */
++
++  // lib/date-utils.js（命名空间）与 lib/repeat.js 的这批绑定同样由 `bindRuntime()` 写入 ——
++  // 这里刻意**不留**「求值时抓一次」的副本：那正是 F03 的成因（重试之后业务仍跑在旧函数上）。
++
++  /**
++   * L03：下一周期时刻 —— 唯一来源 `lib/repeat.js`。
++   *
++   * 本文件此前自带一份逐字副本，靠文件中的「Lib 有就覆盖」块换掉；那套做法让
++   * 「哪一份在跑」取决于脚本顺序与覆盖块是否被执行，而副本已经分叉（M-10）。
++   * 现在直接取模块导出：取不到就是装配错误，由 `bindRuntime()` 在业务启动之前拦下。
++   * 绑定本身也不再是 `const` —— 「重试」时必须能换成补载进来的那一份（F03）。
++   */
++  // lib/repeat.js
++  /* Minimal markdown renderer —— 唯一来源 lib/ui-format.js */
++  function renderMarkdown(src) {
++    return UiFormat.renderMarkdown(src);
++  }
++
++  /* ---------- Chinese NL parser：唯一来源 lib/parse-cn.js ---------- */
++
++  /**
++   * 解析器与中文数字**唯一实现在 `lib/parse-cn.js`**。
++   *
++   * 本文件此前自带一整份副本（CN_NUM / cnInt / parseChineseTime），名义上只作「Lib 缺失时兜底」，
++   * 再由文件末尾的 `if (Lib.parseChineseTime) parseChineseTime = Lib.parseChineseTime;` 覆盖回去。
++   * 但两份**已经分叉**，所以「兜底」并不是同一套规则，而是悄悄换一套：
++   *   · cnInt 副本只认「三十/二十/十」前缀；lib 还认「二零二三」式逐位与「百/千」段位单位。
++   *   · parseChineseTime 副本缺全角数字归一（normalizeTimeText）与时长复合表达（extractDuration），
++   *     返回对象也没有 scheduleBasis 字段（elapsed / wall-clock 的判据就压在那里）。
++   * 现在只保留唯一来源；取不到 = 装配错误，由 bindRuntime() 在业务启动之前拦下，
++   * 而且绑定是「重试时可重建」的（F03）——补载脚本后点重试，业务真的跑在新函数上。
++   */
++
+   /* ---------- state ---------- */
+   const PROJECT_COLORS = ["#1b6b4a", "#3d5a80", "#9a6b12", "#8f3a3a", "#5b4b8a", "#2f6f7a"];
+ 
+@@ -679,6 +1231,18 @@
+    *    共享的是**已冻结的独立副本**，不是活对象，H1 不受影响。
+    */
+   async function writeSnapshot(payload, options) {
++    // P2-C-R **写闸门**：唯一收口。
++    //
++    // 权威状态没有确认恢复成功（`failed` 或仍在 `unconfirmed`）时，**一笔都不许写**：
++    // 既不能落权威后端，也不能落镜像 + 待回放凭据 —— 后者会在下一次启动时被
++    // `replayPendingSnapshot()` 写进健康的 IDB，把旧数据换成这份空快照。
++    // 抛错而不是静默返回，是为了让调用方**无法**把这次提交当成成功。
++    if (!authoritativeWritesAllowed()) {
++      blockedWriteCount += 1;
++      const blocked = new Error("state-authority-" + stateAuthority);
++      blocked.code = "state-authority-blocked";
++      throw blocked;
++    }
+     const json = JSON.stringify(payload || currentPayload());
+     // O5：唯一的一次全量解析 —— 结果既交给后端，也作为「已提交快照」发布。
+     // 绝不能用 `payload || currentPayload()` 本身：那是活对象（items 就是 state.items）。
+@@ -713,6 +1277,16 @@
+     return true;
+   }
+ 
++  /**
++   * P2-C-R：权威状态**已确认**（`loaded` / `empty`）才允许写。
++   *
++   * `unconfirmed`（恢复尝试还没结束）同样算关闭：读库期间的任何写入都发生在
++   * 「还不知道权威里有什么」的窗口里，风险与 `failed` 完全相同。
++   */
++  function authoritativeWritesAllowed() {
++    return stateAuthority === LOAD_LOADED || stateAuthority === LOAD_EMPTY;
++  }
++
+   /**
+    * H-07：IndexedDB 可用、但**这一次没有用它**（本会话降级到了 localStorage 镜像）。
+    *
+@@ -722,7 +1296,24 @@
+    */
+   function authoritativeBackendMissing() {
+     try {
+-      return typeof Lib.hasIdb === "function" && Lib.hasIdb() && storage.backend !== "idb";
++      return Lib.hasIdb() && storage.backend !== "idb";
++    } catch (error) {
++      return false;
++    }
++  }
++
++  /**
++   * P2-C-R 独立复验（2026-09-22）补的第一个判据：**这台设备到底有没有权威后端**。
++   *
++   * `authoritativeBackendMissing()` 只看 `storage.backend` 是不是 `idb`，覆盖不到
++   * 「backend 确实已经选成 idb，但这一次 `get` 抛错了」的形态 —— 那条路径是从
++   * `storage.load()` 内部抛出来的，`ensure()` 早已把 backend 置好。
++   * 判断粒度的差别就是灾难与否：前者只对一半场景收口，漏掉的那一半（get 失败）
++   * 恰好是**镜像有值**时最容易发生的。
++   */
++  function idbIsAvailable() {
++    try {
++      return !!Lib.hasIdb();
+     } catch (error) {
+       return false;
+     }
+@@ -737,7 +1328,28 @@
+    */
+   const PENDING_REPLAY_KEY = KEY + "-pending-replay";
+ 
++  /** 当前内存状态是不是**只从镜像**来的（权威这一轮没有确认成功）。 */
++  function stateCameFromMirror() {
++    const reason = lastLoadReport && lastLoadReport.reason ? String(lastLoadReport.reason) : "";
++    return reason === "mirror-recovered" ||
++      reason === "mirror-recovered-unconfirmed-authority" ||
++      reason === "degraded-mirror" ||
++      reason === "degraded-mirror-unconfirmed-authority";
++  }
++
+   function markPendingReplay(json) {
++    // P2-C-R 独立复验（2026-09-22）：待回放凭据**只能代表权威状态的降级写入**。
++    //
++    // 写闸门（`writeSnapshot` 首行）已经拦住了绝大多数路径，但凭据是「下一次启动会
++    // 无条件覆盖权威」的授权书 —— 生成点自己也必须认得来源。镜像兜底出来的状态留凭据，
++    // 等于把「这次读不到」改写成「下次一定会覆盖」，正是被复现的那条链。
++    if (!authoritativeWritesAllowed() || stateCameFromMirror()) {
++      console.error(
++        "pending replay refused: state is not authority-confirmed",
++        lastLoadReport ? lastLoadReport.reason : null
++      );
++      return;
++    }
+     try {
+       localStorage.setItem(PENDING_REPLAY_KEY, JSON.stringify({ at: Date.now(), json: json }));
+     } catch (error) {
+@@ -765,6 +1377,9 @@
+     try { localStorage.removeItem(PENDING_REPLAY_KEY); } catch (error) {}
+   }
+ 
++  /** 上一次 `replayPendingSnapshot()` 是否**应用失败**（`null` = 没有失败）。 */
++  let lastReplayFailure = null;
++
+   /**
+    * **提交闸门**：同一时刻只有一笔权威提交在跑，轮到谁谁才取快照。
+    * 原生动作的校验、草稿变更、提交与发布整体在闸门内；普通保存排在它的结果之后，
+@@ -828,7 +1443,13 @@
+     if (suppressInnerSave) return;
+     const pending = saveAsync(options);
+     pending.catch(error => {
+-      toast("保存失败 · 修改仍保留在本机内存，下一次保存会重试");
++      // P2-C-R：被写闸门拦下与「写库失败」是两件事，文案不能混 ——
++      // 前者要告诉用户「数据还没恢复，所以一个字都没写」，而不是「下次会重试」。
++      if (error && error.code === "state-authority-blocked") {
++        toast("数据尚未恢复 · 已阻止写入，请先重试恢复");
++      } else {
++        toast("保存失败 · 修改仍保留在本机内存，下一次保存会重试");
++      }
+       console.error("State save failed:", error && error.message ? error.message : error);
+     });
+     return pending;
+@@ -1056,6 +1677,7 @@
+    * 与 D39/D40 的「回滚 + 按序重放」不冲突：那里重放的是**用户命令**，这里重放的是**终态**。
+    */
+   async function replayPendingSnapshot() {
++    lastReplayFailure = null;
+     const pending = readPendingReplay();
+     if (!pending) return false;
+     let payload = null;
+@@ -1069,7 +1691,14 @@
+       clearPendingReplay();
+       return false;
+     }
+-    applyParsedState(payload);
++    try {
++      applyParsedState(payload);
++    } catch (error) {
++      // P2-C-R：这份快照**没能**被应用（内存可能已被改了一半）。调用方必须把它
++      // 判成 `failed`，而不是「没有快照」—— 后者会让下游把半个状态当成权威。
++      lastReplayFailure = error;
++      return false;
++    }
+     try {
+       await storage.save(payload);
+       clearPendingReplay();
+@@ -1083,7 +1712,61 @@
+     return true;
+   }
+ 
++  /**
++   * 一次恢复尝试的判定结果（**三态**）。
++   *
++   * `writesAllowed` 是唯一的写闸门读数：只有 `loaded` / `empty` 为真。
++   * `mirror` 记下镜像字节数（真机探针要用它核对「这轮到底有没有镜像」）。
++   */
++  function publishLoadReport(status, reason, attempt, at, detail) {
++    stateAuthority = status;
++    lastLoadReport = {
++      status: status,
++      reason: reason,
++      detail: detail ? String((detail && detail.message) || detail) : null,
++      attempt: attempt,
++      at: at,
++      backend: storage ? storage.backend : null,
++      mirrorBytes: mirrorBytes(),
++      writesAllowed: status !== LOAD_FAILED
++    };
++    return lastLoadReport;
++  }
++
++  /** 镜像键的原始字节数（`null` = 没有镜像键）；只读，不改任何东西。 */
++  function mirrorBytes() {
++    try {
++      if (typeof localStorage === "undefined" || localStorage == null) return null;
++      const raw = localStorage.getItem(KEY);
++      return raw == null ? null : String(raw).length;
++    } catch (error) {
++      return null;
++    }
++  }
++
++  /**
++   * 权威状态读取的**唯一入口**（P2-C-R：返回三态判定，不再返回布尔）。
++   *
++   * 旧实现把四种完全不同的处境折叠成同一个 `false`，而 `init()` 又不看返回值：
++   *   · 权威读到空（真首启）；
++   *   · 打开/读取/解析失败且镜像也没东西；
++   *   · 读到了值但回放时抛错；
++   * 于是「没有确认恢复成功」与「确认从未有数据」在下游**无法区分** ——
++   * 两者都会开放保存、原生对账与业务心跳，内存里那份空收件箱随时可能变成新的权威快照。
++   *
++   * 判定规则（每条都保留原因，供恢复面板与真机探针读取）：
++   *   · 读到并应用成功                                  ⇒ `loaded`
++   *   · 待回放快照被采用（H-07）                        ⇒ `loaded`
++   *   · 权威**成功读取**到空，且镜像与待回放都没有残留   ⇒ `empty`
++   *   · 其余一切（打开/读取/解析/回放失败、读到空但仍有残留证据、
++   *     镜像恢复不了数据）                              ⇒ `failed` ⇒ 写闸门关闭
++   */
+   async function loadAsync() {
++    loadAttempts += 1;
++    const attempt = loadAttempts;
++    const at = Date.now();
++    let authoritativeError = null;
++
+     if (storage) {
+       try {
+         const parsed = await storage.load();
+@@ -1093,15 +1776,125 @@
+         //
+         // 只有**真的换回了 IDB** 才重放：仍跑在镜像上时重放会白白清掉凭据，
+         // 下一次 IDB 恢复就再也拿不回这段改动（这一条是本轮真机/探测器实测暴露的盲区）。
+-        if (storage.backend === "idb" && await replayPendingSnapshot()) return true;
+-        if (!parsed) return false;
++        if (storage.backend === "idb" && await replayPendingSnapshot()) {
++          return publishLoadReport(LOAD_LOADED, "pending-replay", attempt, at);
++        }
++        // 回放**失败**（应用那份快照时抛错）不是「没有快照」：内存可能已经被改了一半，
++        // 这时既不能宣布首启、也不能开放保存。
++        if (lastReplayFailure) {
++          return publishLoadReport(LOAD_FAILED, "pending-replay-failed", attempt, at, lastReplayFailure);
++        }
++        if (parsed == null) {
++          // 权威后端**本该可用却没用上**（`openDb()` 失败 ⇒ 后端整体降级为 local）：
++          // 这时的「空」来自镜像，不是权威 —— 不能据此宣布首启。
++          // 漏掉这一条的后果很具体：本次启动会照常开放保存 ⇒ 那次提交走
++          // `markPendingReplay`（`authoritativeBackendMissing()` 恰好为真），
++          // 下一次启动 IDB 恢复正常时，这份**空快照**经 `replayPendingSnapshot()`
++          // 写回权威 —— 「读不到」就此变成「覆盖掉」。
++          if (authoritativeBackendMissing()) {
++            return publishLoadReport(LOAD_FAILED, "authoritative-backend-degraded", attempt, at);
++          }
++          // 「权威读到空」只有在**别处也没有半点残留**时才等于「从未有过数据」：
++          // `storage.load()` 已经尝试过把镜像迁移进 IDB，走到这里说明镜像不可解析
++          // （或被清空但键还在）／待回放快照还在 —— 那是「读到空」，不是「真的空」。
++          if (mirrorBytes() != null || readPendingReplay() != null) {
++            return publishLoadReport(LOAD_FAILED, "authoritative-empty-with-residual-evidence", attempt, at);
++          }
++          return publishLoadReport(LOAD_EMPTY, "authoritative-empty", attempt, at);
++        }
++        if (typeof parsed !== "object" || Array.isArray(parsed)) {
++          // 值读出来了但不是可以回放的状态对象（例如被别的东西写脏了）。
++          return publishLoadReport(LOAD_FAILED, "authoritative-value-not-object", attempt, at);
++        }
+         applyParsedState(parsed);
+-        return true;
+-      } catch (e) {
++        // ⚠️ 本轮是否真的读到权威，和「这次有没有用到 IDB 后端」是两件事：
++        // 设备**本来就有** IndexedDB 时，只要这次没用上它，`parsed` 就是镜像里的内容
++        // （`ensure()` 已在 `openDb()` 失败时把后端整体降为 local），它比 IDB 里的那份
++        // **旧**，不是权威 —— 把它当 loaded 会立刻开放写入：本次会话留下的待回放凭据，
++        // 会在下一次健康启动里被优先回放，把更新的权威数据覆盖掉。
++        // 独立复验的「双启动反例」（IDB 两条 / 镜像一条）逐条复现了这条链，故此处必须 fail closed。
++        //
++        // 设备**根本没有** IndexedDB 时不一样：localStorage 本身就是权威
++        // （`lib/storage.js` 的后端契约），这时照旧判 loaded，不允许顺手降级用户的可用性。
++        if (authoritativeBackendMissing()) {
++          return publishLoadReport(
++            LOAD_FAILED, "degraded-mirror-unconfirmed-authority", attempt, at
++          );
++        }
++        // 降级路径（IDB 本该可用但只落了镜像）与真正的权威读要分开记：
++        // 两者都算 `loaded`（H-07 的待回放凭据会兜住差异），但真机排查时
++        // 「这一次到底是从哪读的」是第一个要看的事实。
++        return publishLoadReport(LOAD_LOADED, "authoritative", attempt, at);
++      } catch (error) {
++        // 打开 / 读取 / 解析（都由 `storage.load()` 内部完成）失败：权威后端这次
++        // **没有**给出可用的值。记下原因，然后走唯一允许的降级来源 —— 镜像。
+         storageReady = false;
++        authoritativeError = error;
+       }
+     }
+-    return loadSync();
++
++    const mirror = recoverFromMirror();
++    if (mirror.status === LOAD_LOADED) {
++      // ⚠️ 镜像**不是**权威：它只在「IDB 还是空的」时代表上一次落盘的样子。
++      // 设备有 IDB 而这次读不到它 ⇒ 我们**不知道**权威里有没有更新的数据，此时把镜像
++      // 提升为可写 loaded，等于允许用一份可能过期的快照去覆盖权威：
++      //   本次启动开放保存 → 降级写入留下待回放凭据 → 下次健康启动优先回放 → 覆盖 IDB。
++      // 这是独立复验用「IDB 两条 / 镜像一条」复现出的完整链，故 fail closed：
++      // 内存里可以留下镜像内容供**只读查看**（什么都没写出去），但不判 loaded、不开写闸门。
++      if (idbIsAvailable()) {
++        return publishLoadReport(
++          LOAD_FAILED, "mirror-recovered-unconfirmed-authority", attempt, at, authoritativeError
++        );
++      }
++      // 环境根本没有 IndexedDB ⇒ localStorage 就是权威（`lib/storage.js` 后端契约），
++      // 这时镜像恢复 = 权威恢复，照旧判 loaded。
++      return publishLoadReport(LOAD_LOADED, "mirror-recovered", attempt, at, authoritativeError);
++    }
++    // ⚠️ 这里刻意**不**把「镜像也没有值」判成 `empty`。
++    // 权威读失败本身就意味着「我们不知道权威里有什么」，此时宣布首启等于把
++    // 「读不到」当成「不存在」—— 那正是本轮要封的那个窗口（空快照覆盖旧数据）。
++    // 只有权威**成功读取**到空才算首启（见上面的 `authoritative-empty`）。
++    return publishLoadReport(
++      LOAD_FAILED,
++      "authoritative-read-failed:" + mirror.reason,
++      attempt,
++      at,
++      authoritativeError || mirror.error
++    );
++  }
++
++  /**
++   * 权威读失败时**唯一**允许的降级来源：localStorage 镜像。
++   *
++   * 与 `loadSync()` 的区别就在**不折叠**：读不到 / 解析不了 / 应用不了各自有名字，
++   * 调用方据此决定「是不是可以宣布首启」（答案永远是「不可以」）。
++   */
++  function recoverFromMirror() {
++    let raw = null;
++    try {
++      if (typeof localStorage === "undefined" || localStorage == null) {
++        return { status: LOAD_FAILED, reason: "mirror-unavailable" };
++      }
++      raw = localStorage.getItem(KEY);
++    } catch (error) {
++      return { status: LOAD_FAILED, reason: "mirror-unreadable", error: error };
++    }
++    if (raw == null) return { status: LOAD_EMPTY, reason: "mirror-absent" };
++    let parsed = null;
++    try {
++      parsed = JSON.parse(raw);
++    } catch (error) {
++      return { status: LOAD_FAILED, reason: "mirror-unparsable", error: error };
++    }
++    if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) {
++      return { status: LOAD_FAILED, reason: "mirror-not-object" };
++    }
++    try {
++      applyParsedState(parsed);
++    } catch (error) {
++      return { status: LOAD_FAILED, reason: "mirror-apply-failed", error: error };
++    }
++    return { status: LOAD_LOADED, reason: "mirror-recovered" };
+   }
+ 
+   function loadSync() {
+@@ -1213,15 +2006,13 @@
+ 
+   /**
+    * 截止保护的阶段身份（L02 / INV-05）。
+-   * 规范实现在 lib/reminder.js；这里只做转发 + 兜底，避免两份规则各自漂移。
++   *
++   * **唯一实现在 `lib/reminder.js`**。这里不再保留「Lib 缺失时按 24h/2h 自己算一份」的兜底 ——
++   * 那份兜底与规范实现是**两套边界常量**，一旦生效，界面上看不出任何差异，只是阶段判定
++   * 悄悄换了标准（与 native-reminders 里「只排 p24、丢掉 p2」是同一类静默降级）。
+    */
+   function deadlineStageKeyOf(deadlineAt, now) {
+-    if (Lib.deadlineStageKey) return Lib.deadlineStageKey(deadlineAt, now);
+-    const dl = Number(deadlineAt) || 0;
+-    if (!dl) return null;
+-    const left = dl - Number(now == null ? Date.now() : now);
+-    if (left > 24 * 3600000 || left <= -24 * 3600000) return null;
+-    return (left <= 2 * 3600000 ? "p2" : "p24") + "@" + dl;
++    return Lib.deadlineStageKey(deadlineAt, now);
+   }
+ 
+   /** 已完成 / 已归档是终态：只允许通过明确的恢复动作重开（L04） */
+@@ -1308,11 +2099,6 @@
+     return d.getTime();
+   }
+ 
+-  function hasSpecificTimeWord(text) {
+-    if (Lib.hasSpecificTimeWord) return Lib.hasSpecificTimeWord(text);
+-    return /明天|后天|下周|下周|月底|今晚/.test(String(text || ""));
+-  }
+-
+   const VAGUE_RE = /^(这个|那个|它|something)?\s*(以后|后面|之后|过阵子|回头|有空|有时间)?\s*(看看|看一下|关注|处理|研究|了解)?\s*$/;
+ 
+   function isVagueContent(title, note, url) {
+@@ -1860,37 +2646,20 @@
+     return item.triggerAt <= now;
+   }
+ 
+-  function parseHHMM(s, fallbackH, fallbackM) {
+-    const m = String(s || "").match(/^(\d{1,2}):(\d{2})$/);
+-    if (!m) return { h: fallbackH, m: fallbackM };
+-    return { h: parseInt(m[1], 10), m: parseInt(m[2], 10) };
+-  }
+-
++  /**
++   * 勿扰规则**唯一实现在 `lib/reminder.js`**（`inQuietHours` / `quietEnd` / `parseHHMM`）。
++   *
++   * 本文件此前是「`Lib.*` 有就调用，没有就走内联副本」——内联副本是第二套算法，
++   * 于是「Lib 没加载」这件事不会浮出水面，只是**换一套规则继续跑**。
++   * 现在不再有副本：规则模块属于必需依赖，缺失在启动前就被拦下。
++   * 这里只保留**读取当前设置**这一层适配（不参与任何算法）。
++   */
+   function inQuietHours(d) {
+-    if (Lib.inQuietHours) return Lib.inQuietHours(d, state.settings);
+-    if (!state.settings.dnd) return false;
+-    const start = parseHHMM(state.settings.quietStart, 23, 0);
+-    const end = parseHHMM(state.settings.quietEnd, 7, 30);
+-    const mins = d.getHours() * 60 + d.getMinutes();
+-    const s = start.h * 60 + start.m;
+-    const e = end.h * 60 + end.m;
+-    if (s === e) return false;
+-    if (s < e) return mins >= s && mins < e;
+-    return mins >= s || mins < e;
++    return Lib.inQuietHours(d, state.settings);
+   }
+ 
+   function quietEnd(d) {
+-    if (Lib.quietEnd) return Lib.quietEnd(d, state.settings);
+-    const end = parseHHMM(state.settings.quietEnd, 7, 30);
+-    const x = new Date(d);
+-    const mins = d.getHours() * 60 + d.getMinutes();
+-    const s = parseHHMM(state.settings.quietStart, 23, 0);
+-    const startM = s.h * 60 + s.m;
+-    const endM = end.h * 60 + end.m;
+-    const wrapped = startM >= endM;
+-    if (wrapped && mins >= startM) x.setDate(x.getDate() + 1);
+-    x.setHours(end.h, end.m, 0, 0);
+-    return x.getTime();
++    return Lib.quietEnd(d, state.settings);
+   }
+ 
+   function promoteDue(now) {
+@@ -1905,7 +2674,7 @@
+       const fallbackSuppressed = isFallbackSuppressed(it);
+       if (!fallbackSuppressed && (it.status === "waiting" || it.status === "snoozed")) {
+         // 柔性窗口：仅对 waiting 生效，避免覆盖用户 snooze
+-        if (it.status === "waiting" && Lib.applyWindowTrigger && (it.windowStart || it.windowEnd)) {
++        if (it.status === "waiting" && (it.windowStart || it.windowEnd)) {
+           const winTs = Lib.applyWindowTrigger(it, now);
+           if (winTs && winTs !== it.triggerAt) { it.triggerAt = winTs; changed = true; }
+         }
+@@ -1944,51 +2713,7 @@
+     if (changed) save();
+   }
+ 
+-  /* L03：与 lib/repeat.js 保持同一实现（本文件内的副本仅作 Lib 缺失时的兜底） */
+-  function nextRepeatTrigger(it, fromTs) {
+-    const rep = (it && it.repeat) || {};
+-    const every = rep.every;
+-    if (!every) return null;
+-    const ackBased = rep.mode === "ack";
+-    const from = fromTs != null
+-      ? Number(fromTs)
+-      : (ackBased
+-        ? (it.acknowledgedAt || Date.now())
+-        : (it.triggerAt || it.acknowledgedAt || Date.now()));
+-    if (!Number.isFinite(from)) return null;
+-    if (every === "day") return applyClock(addDays(new Date(from), 1), it.triggerAt);
+-    if (every === "week") return applyClock(addDays(new Date(from), 7), it.triggerAt);
+-    if (every === "biweek") return applyClock(addDays(new Date(from), 14), it.triggerAt);
+-    if (every === "month") {
+-      const base = new Date(from);
+-      const m = base.getMonth() + 1;
+-      const ny = base.getFullYear() + Math.floor(m / 12);
+-      const nm = ((m % 12) + 12) % 12;
+-      const day = Math.min(base.getDate(), new Date(ny, nm + 1, 0).getDate());
+-      return applyClock(new Date(ny, nm, day), it.triggerAt);
+-    }
+-    if (every === "monthEnd") {
+-      // V04：按「日」比较（与 lib/repeat.js 同一实现）
+-      const base = new Date(from);
+-      const baseDay = new Date(base.getFullYear(), base.getMonth(), base.getDate()).getTime();
+-      let d = lastDayOfMonth(base);
+-      if (new Date(d.getFullYear(), d.getMonth(), d.getDate()).getTime() <= baseDay) {
+-        d = lastDayOfMonth(new Date(base.getFullYear(), base.getMonth() + 1, 1));
+-      }
+-      return applyClock(d, it.triggerAt);
+-    }
+-    if (every === "nthWeekday") {
+-      const s = new Date(it.triggerAt || from);
+-      return nthWeekdayOfNextMonth(
+-        from,
+-        rep.nth || 1,
+-        rep.dow != null ? rep.dow : 1,
+-        s.getHours(),
+-        s.getMinutes()
+-      );
+-    }
+-    return null;
+-  }
++  /* nextRepeatTrigger 见文件顶部的别名声明（唯一来源 lib/repeat.js） */
+ 
+   /**
+    * F3：保证周期事项有稳定的系列身份。
+@@ -2130,12 +2855,6 @@
+     return true;
+   }
+ 
+-  // Prefer lib implementations when loaded (single source of truth)
+-  if (Lib.parseChineseTime) parseChineseTime = Lib.parseChineseTime;
+-  if (Lib.nextRepeatTrigger) nextRepeatTrigger = Lib.nextRepeatTrigger;
+-  if (Lib.repeatLabel) repeatLabel = Lib.repeatLabel;
+-  if (Lib.nextRepeatPreview) nextRepeatPreview = Lib.nextRepeatPreview;
+-
+   /**
+    * 完成 —— 归档当前实例。
+    *
+@@ -3073,7 +3792,7 @@
+     }
+     const sum = $("#summarySub");
+     if (sum) sum.textContent = state.settings.dailySummary ? "已开启 · 新增较多时轻量提示" : "默认关闭 · 仅增强可信感";
+-    renderAiSub();
++    ai.renderAiSub();
+     renderStats();
+     renderPwaStatus();
+     $("#pageTitle").textContent = "我的";
+@@ -3177,378 +3896,38 @@
+     });
+   }
+ 
+-  /* ---------- AI (optional BYOK, OpenAI-compatible) ---------- */
+-  function aiConfig() {
+-    return state.settings.ai || {
+-      enabled: false, baseUrl: "", apiKey: "", model: "", autoOnSave: false
+-    };
+-  }
+-
+-  function aiReady() {
+-    const c = aiConfig();
+-    return !!(c.enabled && c.baseUrl && c.apiKey && c.model);
+-  }
+-
+-  function aiNowIso() {
+-    const d = new Date();
+-    const off = -d.getTimezoneOffset();
+-    const sign = off >= 0 ? "+" : "-";
+-    const abs = Math.abs(off);
+-    return d.getFullYear() + "-" + pad(d.getMonth() + 1) + "-" + pad(d.getDate()) +
+-      "T" + pad(d.getHours()) + ":" + pad(d.getMinutes()) + sign +
+-      pad(Math.floor(abs / 60)) + ":" + pad(abs % 60);
+-  }
+-
+-  function aiSystemPrompt() {
+-    return [
+-      "你是「安心收件箱」的隐形解析引擎。用户会输入一句中文待办/提醒。",
+-      "你的职责仅限：提炼标题、提取提醒时间与截止时间、提取标签、必要时补一句上下文。",
+-      "禁止：评价优先级重要性、展开对话、给出建议、编造未提及的事项。",
+-      "当前本地时间 ISO：" + aiNowIso(),
+-      "只返回一个 JSON 对象，不要 markdown 代码块，字段：",
+-      "{",
+-      '  "title": string,',
+-      '  "trigger_at": string|null,  // ISO 本地时间，无则 null',
+-      '  "deadline": string|null,',
+-      '  "tags": string[],',
+-      '  "note": string,',
+-      '  "priority": "normal"|"important"|"critical",',
+-      '  "repeat": null|{"every":"day"|"week"|"biweek"|"month"|"monthEnd"|"nthWeekday","mode":"calendar"|"ack","nth"?:1|2|3|4|-1,"dow"?:0|1|2|3|4|5|6}',
+-      "}"
+-    ].join("\n");
+-  }
+-
+-  async function aiChat(userText, systemExtra) {
+-    const c = aiConfig();
+-    if (!c.baseUrl || !c.apiKey || !c.model) {
+-      throw new Error("请先配置 AI API");
+-    }
+-    const base = c.baseUrl.replace(/\/+$/, "");
+-    const url = base + "/chat/completions";
+-    const body = {
+-      model: c.model,
+-      temperature: 0.1,
+-      messages: [
+-        { role: "system", content: aiSystemPrompt() + (systemExtra ? "\n" + systemExtra : "") },
+-        { role: "user", content: userText }
+-      ]
+-    };
+-    const res = await fetch(url, {
+-      method: "POST",
+-      headers: {
+-        "Content-Type": "application/json",
+-        "Authorization": "Bearer " + c.apiKey
+-      },
+-      body: JSON.stringify(body)
+-    });
+-    if (!res.ok) {
+-      const t = await res.text().catch(() => "");
+-      throw new Error("HTTP " + res.status + (t ? " · " + t.slice(0, 120) : ""));
+-    }
+-    const data = await res.json();
+-    const content = data && data.choices && data.choices[0] && data.choices[0].message
+-      ? data.choices[0].message.content
+-      : "";
+-    if (!content) throw new Error("AI 返回为空");
+-    return content;
+-  }
+-
+-  function extractJson(text) {
+-    let s = String(text || "").trim();
+-    s = s.replace(/^```(?:json)?/i, "").replace(/```$/, "").trim();
+-    const start = s.indexOf("{");
+-    const end = s.lastIndexOf("}");
+-    if (start >= 0 && end > start) s = s.slice(start, end + 1);
+-    return JSON.parse(s);
+-  }
+-
+-  function parseIsoSafe(v) {
+-    if (!v) return null;
+-    const t = new Date(v).getTime();
+-    return Number.isFinite(t) ? t : null;
+-  }
+-
+-  function normalizeAiResult(obj, fallbackText) {
+-    const title = (obj.title && String(obj.title).trim()) || fallbackText || "未命名事项";
+-    const triggerAt = parseIsoSafe(obj.trigger_at);
+-    const deadlineAt = parseIsoSafe(obj.deadline);
+-    const tags = Array.isArray(obj.tags)
+-      ? obj.tags.map(t => String(t).trim()).filter(Boolean).slice(0, 8)
+-      : [];
+-    const note = obj.note ? String(obj.note).trim() : "";
+-    let priority = obj.priority;
+-    if (priority !== "important" && priority !== "critical") priority = "normal";
+-    let repeat = null;
+-    if (obj.repeat && obj.repeat.every) {
+-      const every = ["day", "week", "biweek", "month", "monthEnd", "nthWeekday"].includes(obj.repeat.every)
+-        ? obj.repeat.every : null;
+-      if (every) {
+-        repeat = {
+-          every,
+-          mode: obj.repeat.mode === "ack" ? "ack" : "calendar"
+-        };
+-        if (every === "nthWeekday") {
+-          repeat.nth = obj.repeat.nth === -1 ? -1 : (parseInt(obj.repeat.nth, 10) || 1);
+-          repeat.dow = obj.repeat.dow != null ? (parseInt(obj.repeat.dow, 10) || 0) : 1;
+-        }
+-      }
+-    }
+-    return { title, triggerAt, deadlineAt, tags, note, priority, repeat, confidence: triggerAt ? "high" : "low" };
+-  }
+-
+-  async function aiParseCapture(text) {
+-    const content = await aiChat(text, "任务类型：capture_parse。把用户原话解析成结构化提醒。");
+-    const obj = extractJson(content);
+-    return normalizeAiResult(obj, text);
+-  }
+-
+-  async function aiPolishCapture(text) {
+-    const content = await aiChat(
+-      text,
+-      "任务类型：polish。只润色 title 与 note，尽量保留原意；时间字段若原文没有则给 null。"
+-    );
+-    const obj = extractJson(content);
+-    return normalizeAiResult(obj, text);
+-  }
+-
+-  async function aiTestConnection() {
+-    const c = aiConfig();
+-    if (!c.baseUrl || !c.apiKey || !c.model) throw new Error("请先填写 API 配置");
+-    const base = c.baseUrl.replace(/\/+$/, "");
+-    const res = await fetch(base + "/chat/completions", {
+-      method: "POST",
+-      headers: {
+-        "Content-Type": "application/json",
+-        "Authorization": "Bearer " + c.apiKey
+-      },
+-      body: JSON.stringify({
+-        model: c.model,
+-        max_tokens: 8,
+-        messages: [{ role: "user", content: "ping" }]
+-      })
+-    });
+-    if (!res.ok) {
+-      const t = await res.text().catch(() => "");
+-      throw new Error("HTTP " + res.status + (t ? " · " + t.slice(0, 100) : ""));
+-    }
+-    return true;
+-  }
+-
+-  function applyAiToForm(r, sourceLabel) {
+-    if (r.title) $("#capText").value = r.title;
+-    if (r.triggerAt) $("#capTrigger").value = toLocalInput(r.triggerAt);
+-    if (r.deadlineAt) $("#capDeadline").value = toLocalInput(r.deadlineAt);
+-    if (r.note && !$("#capNote").value.trim()) $("#capNote").value = r.note;
+-    if (r.tags && r.tags.length) {
+-      const existing = $("#capTags").value.trim().split(/\s+/).filter(Boolean);
+-      const merged = Array.from(new Set(existing.concat(r.tags)));
+-      $("#capTags").value = merged.join(" ");
+-    }
+-    if (r.priority) {
+-      $$("#capPriority .chip").forEach(c => c.classList.toggle("on", c.dataset.p === r.priority));
+-    }
+-    if (r.repeat) {
+-      $("#capRepeat").value = r.repeat.every;
+-      $("#capRepeatMode").value = r.repeat.mode;
+-      if (r.repeat.every === "nthWeekday") {
+-        $("#capNth").value = String(r.repeat.nth || 1);
+-        $("#capWeekday").value = String(r.repeat.dow != null ? r.repeat.dow : 1);
+-      }
+-      updateRepeatPreview();
+-    }
+-    let msg = (sourceLabel || "AI") + "：" + (r.triggerAt ? fmtTime(r.triggerAt) : "未识别时间");
+-    if (r.deadlineAt) msg += " · 截止 " + fmtDate(r.deadlineAt);
+-    if (r.repeat) msg += " · " + repeatLabel(r.repeat);
+-    msg += " · 可修改";
+-    $("#capHint").textContent = msg;
+-    $("#capHint").classList.remove("muted");
+-  }
++  /* ---------- AI：唯一来源 lib/app-ai.js（P2-A 已整体迁出） ---------- */
+ 
+   /**
+-   * R-F03：把 AI 结果合并进**冻结草稿的副本**。
++   * AI 请求、结果归一、设置页与表单合并的**唯一实现在 `lib/app-ai.js`**
++   * （由文件顶部的 `createAppAi` 装配绑定 —— 见 `bindRuntime()` 里那一处）。
++   *
++   * 这里刻意**不留实现体、也不留转发壳**：留壳就等于同时存在两个可调用入口，
++   * 而「改了模块、忘了改壳」是静默分叉最舒服的温床。调用点一律写 `ai.xxx()`；
++   * `ai == null`（装配失败）时应用停在失败面板上，根本走不到这些按钮。
++   *
++   * 仍然**留在入口**的三件事 —— 它们不是 AI 逻辑，搬走会让所有权错位：
++   *   · `submitToken` / `beginSaveSubmit()` —— 提交身份属于事务层，
++   *     AI 只是「占用同一个身份」（`ai:<时间戳>` 那个重复提交的 bug 就是另起身份来的）；
++   *   · `itemFormSession` / `formUntouched()` —— 表单会话身份属于捕获表单，
++   *     「迟到结果能不能回填」由它裁决，模块只提供纯快照合并 `ai.mergedDraft()`（R-F03）；
++   *   · `#btnAiTest` 的「临时换上表单里的配置再测」 —— 那是设置页交互。
+    *
+-   * 逐条对应 `applyAiToForm` 的字段语义（标题/时间/截止/空备注/标签并集/优先级/周期），
+-   * 但作用在快照上而不是界面上 —— 于是「落库内容」与改前**完全一致**，
+-   * 只是不再从「可能已经被用户改过的当前表单」里读。「迟到结果覆盖新草稿」正是那一步造成的。
++   * 对应测试：`test-boot-combination.js` 里「抽掉 lib/app-ai.js」的反例与
++   * `APP_AI_INSTANCE_CONTRACT` 的双向闭合；AI 请求/归一/合并的行为断言走 `test-regressions.js`。
+    */
+-  function aiMergedDraft(base, r) {
+-    const snap = Object.assign({}, base);
+-    if (r.title) snap.text = r.title;
+-    if (r.triggerAt) snap.trigger = toLocalInput(r.triggerAt);
+-    if (r.deadlineAt) snap.deadline = toLocalInput(r.deadlineAt);
+-    if (r.note && !String(snap.note == null ? "" : snap.note).trim()) snap.note = r.note;
+-    if (r.tags && r.tags.length) {
+-      const existing = String(snap.tags == null ? "" : snap.tags).trim().split(/\s+/).filter(Boolean);
+-      snap.tags = Array.from(new Set(existing.concat(r.tags))).join(" ");
+-    }
+-    if (r.priority) snap.priority = r.priority;
+-    if (r.repeat) {
+-      snap.repeat = r.repeat.every;
+-      snap.repeatMode = r.repeat.mode;
+-      if (r.repeat.every === "nthWeekday") {
+-        snap.nth = String(r.repeat.nth || 1);
+-        snap.weekday = String(r.repeat.dow != null ? r.repeat.dow : 1);
+-      }
+-    }
+-    return snap;
+-  }
+-
+-  let aiBusy = false;
+-
+-  async function runAiOnCapture(mode) {
+-    if (aiBusy) return;
+-    if (!aiReady()) {
+-      toast("请先在「我的 → AI 智能理解」开启并配置");
+-      state.ui.tab = "me";
+-      renderMe();
+-      openAiSheet();
+-      return;
+-    }
+-    const text = $("#capText").value.trim();
+-    if (!text) { toast("先写一句话吧"); return; }
+-
+-    // local parse first so UI never blocks empty
+-    const local = parseChineseTime(text);
+-    if (mode === "parse") {
+-      $("#capTrigger").value = toLocalInput(local.trigger);
+-      $("#capDeadline").value = toLocalInput(local.deadline);
+-    }
+-
+-    aiBusy = true;
+-    const btn = mode === "polish" ? $("#btnAiPolish") : $("#btnAiParse");
+-    const prev = btn.textContent;
+-    btn.textContent = "✦ 思考中…";
+-    btn.disabled = true;
+-    try {
+-      const r = mode === "polish" ? await aiPolishCapture(text) : await aiParseCapture(text);
+-      applyAiToForm(r, mode === "polish" ? "AI 润色" : "AI 理解");
+-      toast("AI 已更新字段");
+-    } catch (e) {
+-      $("#capHint").textContent = "AI 暂不可用，已用本地解析 · " + (e && e.message ? e.message : "失败");
+-      $("#capHint").classList.remove("muted");
+-      toast("AI 失败，已回退本地解析");
+-    } finally {
+-      aiBusy = false;
+-      btn.textContent = prev;
+-      btn.disabled = false;
+-    }
+-  }
+-
+-  function openAiSheet() {
+-    const c = aiConfig();
+-    $("#swAi").classList.toggle("on", !!c.enabled);
+-    $("#aiBaseUrl").value = c.baseUrl || "";
+-    $("#aiApiKey").value = c.apiKey || "";
+-    $("#aiModel").value = c.model || "";
+-    $$("#aiAutoChips .chip").forEach(ch => {
+-      ch.classList.toggle("on", (ch.dataset.auto === "on") === !!c.autoOnSave);
+-    });
+-    openSheet("sheetAi");
+-  }
+-
+-  function saveAiSettings() {
+-    state.settings.ai = {
+-      enabled: $("#swAi").classList.contains("on"),
+-      baseUrl: ($("#aiBaseUrl").value || "").trim().replace(/\/+$/, ""),
+-      apiKey: ($("#aiApiKey").value || "").trim(),
+-      model: ($("#aiModel").value || "").trim(),
+-      autoOnSave: ($$("#aiAutoChips .chip.on")[0] || {}).dataset?.auto === "on"
+-    };
+-    save();
+-    closeSheet("sheetAi");
+-    renderMe();
+-    toast(state.settings.ai.enabled ? "AI 已启用" : "AI 已关闭");
+-  }
+-
+-  function renderAiSub() {
+-    const c = aiConfig();
+-    const el = $("#aiSub");
+-    if (!el) return;
+-    if (!c.enabled) el.textContent = "未开启 · 解析时间与提炼标题";
+-    else if (!c.apiKey || !c.baseUrl || !c.model) el.textContent = "已开启 · 请完善 API 配置";
+-    else el.textContent = "已开启 · " + (c.model || "模型") + (c.autoOnSave ? " · 保存时自动" : " · 仅手动");
+-  }
+-
+-  /* ---------- sheets ---------- */
+-  function openSheet(id) {
+-    $("#backdrop").classList.add("show");
+-    $("#" + id).classList.add("open");
+-  }
+-  function closeSheet(id) {
+-    $("#" + id).classList.remove("open");
+-    if (!$$(".sheet.open").length) $("#backdrop").classList.remove("show");
+-  }
+-  function closeAllSheets() {
+-    $$(".sheet").forEach(s => s.classList.remove("open"));
+-    $("#backdrop").classList.remove("show");
+-  }
+-
+-  /* In-app confirm (preview may block native confirm) */
+-  function confirmDialog(message, title) {
+-    return new Promise((resolve) => {
+-      const sheet = $("#sheetConfirm");
+-      const body = $("#confirmBody");
+-      const titleEl = $("#confirmTitle");
+-      if (!sheet || !body) {
+-        // last resort
+-        try { resolve(window.confirm(message)); } catch (e) { resolve(true); }
+-        return;
+-      }
+-      titleEl.textContent = title || "确认";
+-      body.textContent = message || "确定继续？";
+-      openSheet("sheetConfirm");
+-
+-      const cleanup = (val) => {
+-        $("#confirmOk").onclick = null;
+-        $("#confirmCancel").onclick = null;
+-        $("#confirmClose").onclick = null;
+-        closeSheet("sheetConfirm");
+-        resolve(val);
+-      };
+-      $("#confirmOk").onclick = () => cleanup(true);
+-      $("#confirmCancel").onclick = () => cleanup(false);
+-      $("#confirmClose").onclick = () => cleanup(false);
+-    });
+-  }
++  /* ---------- sheets / toast / confirm：唯一来源 lib/app-ui.js ---------- */
+ 
+-  let toastTimer = null;
+   /**
+-   * 浮动提示。
++   * 弹层与提示的**唯一实现**在 lib/app-ui.js（由文件顶部的 createUi 装配绑定）。
++   *
++   * 这里只留一条说明，是因为这几支最容易被人「就近补一个」：它们的调用点散布在
++   * 视图、表单、备份、原生回调各处，看上去像本文件自己的小工具。实际情况相反 ——
++   * 它们是唯一一处「有状态的展示会话」（toastTimer、确认框的 cleanup、backdrop 的
++   * 引用计数式关闭），第二份实现会让「关掉哪一层、什么时候撤掉 backdrop」出现两套口径。
+    *
+-   * `second` 是 UX-C03/A03 需要的**第二个动作**（例如「查看」旁边的「撤销」）——
+-   * 一个提示槽只有一个按钮时，「撤销」这种限时入口就没有位置，
+-   * 会被迫缩成不可点的一句说明，等于没有恢复路径。
++   * 由此往上，本文件不再持有任何 DOM 展示动作的定义；`$` / `$$` 也来自同一处。
+    */
+-  function toast(msg, actionLabel, onAction, second, opts) {
+-    // M1：重放用户操作时不重复弹提示 —— 那一次提示在用户操作时已经弹过了
+-    if (suppressUserFeedback) return;
+-    const t = $("#toast"), a = $("#toastAction"), b = $("#toastAction2");
+-    $("#toastText").textContent = msg;
+-    if (actionLabel) {
+-      a.hidden = false;
+-      a.textContent = actionLabel;
+-      a.onclick = () => { hideToast(); if (onAction) onAction(); };
+-    } else {
+-      a.hidden = true;
+-      a.onclick = null;
+-    }
+-    if (b) {
+-      if (second && second.label) {
+-        b.hidden = false;
+-        b.textContent = second.label;
+-        b.onclick = () => { hideToast(); if (second.onClick) second.onClick(); };
+-      } else {
+-        b.hidden = true;
+-        b.onclick = null;
+-      }
+-    }
+-    t.classList.add("show");
+-    clearTimeout(toastTimer);
+-    const hasAction = !!(actionLabel || (second && second.label));
+-    const duration = (opts && opts.durationMs) || (hasAction ? 5000 : 2400);
+-    toastTimer = setTimeout(hideToast, duration);
+-  }
+-  function hideToast() { $("#toast").classList.remove("show"); }
+ 
+   /* ---------- UX-T01：保存结果与排程结果分开 ---------- */
+ 
+@@ -3703,10 +4082,10 @@
+   function keepDraftForRetry(draft) {
+     restoreItemForm(draft);
+     openSheet("sheetItem");
+-    const f = FeedbackLib
++    const feedbackResult = FeedbackLib
+       ? FeedbackLib.saveFeedback("failed")
+       : { text: "未能保存 · 内容还在，可重试", actionLabel: "重试" };
+-    toast(f.text, f.actionLabel, () => {
++    toast(feedbackResult.text, feedbackResult.actionLabel, () => {
+       restoreItemForm(draft);
+       saveItemFromForm();
+     });
+@@ -3785,7 +4164,7 @@
+    * 版本已经变过，就说「这条之后又被改过，以最新设置为准」，不再替旧版本下结论。
+    */
+   function feedbackVerdictFor(it, waiter) {
+-    const f = FeedbackLib;
++    const feedbackApi = FeedbackLib;
+     if (waiter && waiter.rev != null && it && it.rev != null && it.rev !== waiter.rev) {
+       return {
+         kind: "superseded",
+@@ -3802,11 +4181,11 @@
+       native: feedbackNativeSnapshot(),
+       itemScheduled: evidence === "scheduled" || evidence === "delivered" ? true : null
+     };
+-    if (!f) {
++    if (!feedbackApi) {
+       // lib 未加载时的兜底：宁可说「尚未确认」，也不冒充已安排
+       return { kind: "unknown", text: "已保存，提醒安排尚未确认", actionLabel: "查看状态", actionKind: "open-status", tone: "info" };
+     }
+-    return f.reminderFeedback(ctx);
++    return feedbackApi.reminderFeedback(ctx);
+   }
+ 
+   function runFeedbackAction(kind, it, waiter) {
+@@ -3899,9 +4278,9 @@
+     feedbackWaiters = feedbackWaiters.filter(w => Date.now() - w.at < FEEDBACK_WAIT_MS);
+     feedbackWaiters.push(waiter);
+     // 排程结论未知时**不**借用全局状态：先把「已保存」这半句说实
+-    const f = FeedbackLib;
+-    const pending = f
+-      ? f.reminderFeedback({ persistence: "confirmed", item: feedbackItemSnapshot(it), native: feedbackNativeSnapshot(), itemScheduled: null })
++    const feedbackApi = FeedbackLib;
++    const pending = feedbackApi
++      ? feedbackApi.reminderFeedback({ persistence: "confirmed", item: feedbackItemSnapshot(it), native: feedbackNativeSnapshot(), itemScheduled: null })
+       : { text: "已保存，提醒安排尚未确认" };
+     // UX-C03：新建与编辑都给「查看」定位入口；**只有新建**给 8 秒撤销
+     const undoSecond = (!waiter.editing && waiter.allowUndo !== false && it)
+@@ -4245,15 +4624,15 @@
+   function renderCaptureSummary() {
+     const host = $("#capSummary");
+     if (!host) return;
+-    const f = FeedbackLib;
+-    if (!f) { host.textContent = ""; return; }
++    const feedbackApi = FeedbackLib;
++    if (!feedbackApi) { host.textContent = ""; return; }
+     const hasContent = !!state.ui.editItemId ||
+       ($("#capText") && $("#capText").value.trim());
+     if (!hasContent) { host.textContent = ""; host.className = "cap-summary"; return; }
+     const rep = formRepeat();
+     const chip = $$("#capPriority .chip.on")[0];
+     const pv = chip ? chip.dataset.p : "normal";
+-    const s = f.captureSummary({
++    const s = feedbackApi.captureSummary({
+       triggerAt: parseLocalInput($("#capTrigger").value),
+       repeatText: rep
+         ? repeatLabel(rep) + (rep.mode === "ack" ? " · 从我点过「我知道了」重新计时" : "")
+@@ -4590,7 +4969,7 @@
+     //
+     // UX-T01：AI 是**本地回退**而不是前提 —— 它失败时走的是 `finishSave(null)`（本地解析），
+     // 所以这一段只负责「保存中有反馈 + 不重复提交」，不再自己占着按钮状态不还。
+-    if (!editing && aiReady() && aiConfig().autoOnSave && raw) {
++    if (!editing && ai.ready() && ai.config().autoOnSave && raw) {
+       const btn = $("#btnSaveItem");
+       // F02：AI 在途期间占用的必须是**同一个提交身份**（以前是 `ai:<时间戳>`，
+       // 于是「AI 还没回来又按一次回车」既不命中按钮闸门、也不命中待提交集合，
+@@ -4600,10 +4979,13 @@
+       // R-F03：AI 结果**只**允许落进「还是当初那张表单」的界面；
+       // 落库内容一律来自提交时冻结的 `frozenDraft`（AI 结果合并在它的副本上）。
+       const frozenText = String(frozenDraft.text == null ? "" : frozenDraft.text).trim();
+-      aiParseCapture(raw)
++      ai.parseCapture(raw)
+         .then(r => {
+-          const merged = aiMergedDraft(frozenDraft, r);
+-          if (formUntouched()) applyAiToForm(r, "AI 理解");
++          // `ai.mergedDraft()` 是**纯快照合并**：不碰当前表单、不碰 DOM。
++          // 「合到哪儿」由入口按 `formUntouched()` 决定 —— 那道闸门不能搬进模块，
++          // 否则模块就得自己认识 `itemFormSession`（R-F03 的迟到响应保护）。
++          const merged = ai.mergedDraft(frozenDraft, r);
++          if (formUntouched()) ai.applyToForm(r, "AI 理解");
+           finishSave({
+             title: String(merged.text == null ? "" : merged.text).trim() || frozenText || r.title,
+             trigger: parseLocalInput(merged.trigger),
+@@ -5138,7 +5520,9 @@
+     totalRequests: 0,
+     bySource: {},
+     runs: 0,
+-    deduped: 0
++    deduped: 0,
++    /** P2-C-R：因权威状态未确认而被拦下的原生对账次数（`failed` 期间必须为 0 次真实排程）。 */
++    blockedByAuthority: 0
+   };
+ 
+   function bumpNativeSyncVersion() {
+@@ -5249,6 +5633,14 @@
+ 
+   function queueNativeReminderSync(source) {
+     source = source || "default";
++    // P2-C-R：权威状态未确认时**不排任何通知**。
++    //
++    // 启动链在 `failed` 时已经整段跳过，这里是第二道闸：拦住绕过启动链的调用
++    // （迟到的异步回调、旁路入口），否则「不排通知」只靠调用顺序成立。
++    if (stateAuthority === LOAD_FAILED) {
++      nativeSyncMetrics.blockedByAuthority++;
++      return;
++    }
+     nativeSyncMetrics.totalRequests++;
+     nativeSyncMetrics.bySource[source] = (nativeSyncMetrics.bySource[source] || 0) + 1;
+     if (!NativeReminders.reconcile) return;
+@@ -6650,8 +7042,8 @@
+     if (!isNativeAndroidRuntime()) { writeIfChanged(host, ""); return; }
+     if (state.settings.setupDone || state.settings.setupDismissed) { writeIfChanged(host, ""); return; }
+     if (!state.settings.setupPromptStarted) { writeIfChanged(host, ""); return; }
+-    const f = FeedbackLib;
+-    const st = f ? f.setupSteps(nativeReminderStatus, setupStepsContext()) : null;
++    const feedbackApi = FeedbackLib;
++    const st = feedbackApi ? feedbackApi.setupSteps(nativeReminderStatus, setupStepsContext()) : null;
+     if (!st || !st.next) { writeIfChanged(host, ""); return; }
+     const missing = st.steps.filter(s => !s.done);
+     const html = '<button class="soft-entry" id="setupEntry" style="margin-bottom:10px">' +
+@@ -6821,8 +7213,8 @@
+     const run = currentTestRun();
+     // F07：上一次测试的答案不许再亮着 —— 只有**本次运行**之后的反馈才算数
+     const fresh = !!cur && (!run || Number(cur.at || 0) >= Number(run.startedAt || 0));
+-    const f = FeedbackLib;
+-    const list = f ? f.TEST_FEEDBACK : [
++    const feedbackApi = FeedbackLib;
++    const list = feedbackApi ? feedbackApi.TEST_FEEDBACK : [
+       { value: "heard", label: "我听到了" }, { value: "seen", label: "我看到了" },
+       { value: "missed", label: "没收到" }, { value: "unsure", label: "不确定" }
+     ];
+@@ -6896,8 +7288,8 @@
+   function renderSetupSheetBody() {
+     const body = $("#setupBody");
+     if (!body) return;
+-    const f = FeedbackLib;
+-    const st = f ? f.setupSteps(nativeReminderStatus, setupStepsContext()) : { steps: [], next: null };
++    const feedbackApi = FeedbackLib;
++    const st = feedbackApi ? feedbackApi.setupSteps(nativeReminderStatus, setupStepsContext()) : { steps: [], next: null };
+     const missing = st.steps.filter(s => !s.done);
+     const cur = missing[0] || null;
+     let html = "";
+@@ -6964,8 +7356,8 @@
+     if (!row) return;
+     const sub = $("#setupSub");
+     if (!sub) return;
+-    const f = FeedbackLib;
+-    const st = f ? f.setupSteps(nativeReminderStatus, setupStepsContext()) : { steps: [], next: null };
++    const feedbackApi = FeedbackLib;
++    const st = feedbackApi ? feedbackApi.setupSteps(nativeReminderStatus, setupStepsContext()) : { steps: [], next: null };
+     const missing = st.steps.filter(s => !s.done);
+     sub.textContent = missing.length
+       ? "还差 " + missing.length + " 步 · 检查必要设置 · 60 秒测试"
+@@ -7140,7 +7532,6 @@
+       if (it.status !== "due") return false;
+       if (shouldSkipAlert(it)) return false;
+       if (!it.lastAlertShownAt) return true;
+-      if (!Lib.shouldRealert) return false;
+       return Lib.shouldRealert(it, now, {
+         importantRepeat: state.settings.importantRepeat !== false,
+         dismissedAt: dismissedAlerts[it.id] || null
+@@ -7153,7 +7544,7 @@
+         return (a.triggerAt || 0) - (b.triggerAt || 0);
+       });
+       const next = candidates[0];
+-      if (next.lastAlertShownAt && Lib.markReminded) Lib.markReminded(next, now);
++      if (next.lastAlertShownAt) Lib.markReminded(next, now);
+       next.lastAlertShownAt = now;
+       save();
+       showAlert(next);
+@@ -7162,208 +7553,26 @@
+     else if (state.ui.tab === "me") renderStats();
+   }
+ 
+-  /* ---------- data import/export ---------- */
+-  let exportInProgress = false;
+-  let exportOperationId = 0;
+-  let pendingNativeExport = null;
+-  const EXPORT_RESULT_GRACE_MS = 8000;
+-
+-  function buildLegacyBackupPayload() {
+-    return {
+-      app: "attention-inbox",
+-      schema: SCHEMA,
+-      exportedAt: new Date().toISOString(),
+-      items: state.items,
+-      notes: state.notes,
+-      projects: state.projects,
+-      settings: {
+-        notify: state.settings.notify,
+-        dnd: state.settings.dnd,
+-        importantRepeat: state.settings.importantRepeat,
+-        quietStart: state.settings.quietStart,
+-        quietEnd: state.settings.quietEnd,
+-        dailySummary: state.settings.dailySummary,
+-        privacyNotify: state.settings.privacyNotify,
+-        defaultDeliveryMode: state.settings.defaultDeliveryMode || "notification",
+-        userMode: state.settings.userMode || "beginner",
+-        // do not export AI secrets
+-        ai: {
+-          enabled: !!(state.settings.ai && state.settings.ai.enabled),
+-          baseUrl: "",
+-          apiKey: "",
+-          model: state.settings.ai && state.settings.ai.model ? state.settings.ai.model : "",
+-          autoOnSave: !!(state.settings.ai && state.settings.ai.autoOnSave)
+-        }
+-      }
+-    };
+-  }
+-
+-  function setExportBusy(busy) {
+-    const button = $("#btnExport");
+-    if (button) {
+-      button.disabled = !!busy;
+-      button.setAttribute("aria-busy", busy ? "true" : "false");
+-    }
+-    const sub = $("#exportSub");
+-    if (sub) sub.textContent = busy ? "正在等待保存结果…" : "JSON 备份到文件";
+-  }
+-
+-  function clearPendingNativeExport(operationId) {
+-    const pending = pendingNativeExport;
+-    if (!pending || (operationId != null && pending.id !== operationId)) return;
+-    if (pending.timer) clearTimeout(pending.timer);
+-    pendingNativeExport = null;
+-  }
++  /* ---------- 数据备份：唯一来源 lib/app-backup.js（P2-C 已整体迁出） ---------- */
+ 
+   /**
+-   * 系统文件选择器正常返回时，Capacitor 的 ActivityCallback 会直接兑现 Promise。
+-   * 若宿主 Activity 返回前台却一直没有结果（厂商回收/请求丢失），不能让按钮永久卡死；
+-   * 等一小段回调宽限期后恢复可重试，并明确说“结果无法确认”，绝不报保存成功。
++   * 导出（原生 saveDocument / Web 分享 / `<a download>` 三条通路）、导入覆盖、
++   * 以及原生导出「结果未返回」的宽限闸门 —— **唯一实现在 `lib/app-backup.js`**
++   * （由 `bindRuntime()` 里那一处 `createAppBackup` 装配绑定）。
++   *
++   * 这里刻意**不留实现体、也不留转发壳**：调用点一律写 `backup.xxx()`；
++   * `backup == null`（装配失败）时应用停在失败面板上，根本走不到这些按钮。
++   *
++   * 导入覆盖用的持久化命令由装配注入（`backupRuntimeDeps().save`）—— 与表单/
++   * 撤销走**同一条**持久化边界，不存在第二条写库路径。
++   *
++   * 已知缺口（逐字保留，未修复）：Web 回退通路的 `<a download>` 在 Android 上
++   * 没有落地出口（「导出没有落地出口」待裁决 E1–E4）—— 修它属产品决策，先过裁决。
++   *
++   * 对应测试：`test-boot-combination.js` 的「抽掉 lib/app-backup.js」反例、
++   * 空壳实例反例与 `APP_BACKUP_INSTANCE_CONTRACT` 双向闭合；
++   * 导出三通路/宽限闸门/密钥排除的行为断言走 `test-smoke.js`。
+    */
+-  function noteExportAppVisibility(active) {
+-    const pending = pendingNativeExport;
+-    if (!pending) return;
+-    if (!active) {
+-      pending.leftApp = true;
+-      if (pending.timer) clearTimeout(pending.timer);
+-      pending.timer = null;
+-      return;
+-    }
+-    if (!pending.leftApp || pending.timer) return;
+-    pending.timer = setTimeout(() => {
+-      if (pendingNativeExport !== pending || !exportInProgress) return;
+-      pendingNativeExport = null;
+-      exportOperationId++;
+-      exportInProgress = false;
+-      setExportBusy(false);
+-      toast("保存结果未返回 · 文件状态无法确认，请重试");
+-    }, EXPORT_RESULT_GRACE_MS);
+-  }
+-
+-  function isShareCancellation(error) {
+-    if (!error) return false;
+-    const name = String(error.name || "");
+-    const message = String(error.message || error);
+-    return name === "AbortError" || /abort|cancel|取消/i.test(message);
+-  }
+-
+-  function savedBackupMessage(result, fallbackName) {
+-    const fileName = result && result.fileName ? String(result.fileName) : fallbackName;
+-    const location = result && result.locationLabel ? String(result.locationLabel) : "你选择的位置";
+-    return "已保存「" + fileName + "」 · 位置：" + location;
+-  }
+-
+-  async function exportData() {
+-    if (exportInProgress) {
+-      toast("导出正在进行 · 请先完成或取消保存");
+-      return { status: "busy" };
+-    }
+-
+-    exportInProgress = true;
+-    const operationId = ++exportOperationId;
+-    setExportBusy(true);
+-
+-    // 只在这里拍一次快照。即使系统对话框停留很久，最终写入的仍是点击时的数据。
+-    const payload = buildLegacyBackupPayload();
+-    const text = JSON.stringify(payload, null, 2);
+-    const name = "安心收件箱备份-" + new Date().toISOString().slice(0, 10) + ".json";
+-    const mimeType = "application/json";
+-
+-    try {
+-      if (isNativeAndroidRuntime()) {
+-        const bridge = systemBridge();
+-        if (!bridge || typeof bridge.saveDocument !== "function") {
+-          toast("当前版本缺少系统保存能力 · 文件未导出，请更新应用后重试");
+-          return { status: "unavailable" };
+-        }
+-
+-        pendingNativeExport = { id: operationId, leftApp: false, timer: null };
+-        toast("请选择保存位置和文件名");
+-        const result = await bridge.saveDocument({ fileName: name, content: text, mimeType });
+-        if (operationId !== exportOperationId) return { status: "stale" };
+-        clearPendingNativeExport(operationId);
+-        if (result && result.status === "saved") {
+-          toast(savedBackupMessage(result, name));
+-          return result;
+-        }
+-        if (result && result.status === "cancelled") {
+-          toast("已取消导出 · 未保存文件");
+-          return result;
+-        }
+-        toast("导出失败 · 文件未保存，请重试");
+-        return Object.assign({ status: "failed" }, result || {});
+-      }
+-
+-      let file = null;
+-      let canShareFile = false;
+-      if (typeof navigator.share === "function" && typeof navigator.canShare === "function"
+-          && typeof File === "function") {
+-        try {
+-          file = new File([text], name, { type: mimeType });
+-          canShareFile = !!navigator.canShare({ files: [file] });
+-        } catch (error) {
+-          canShareFile = false;
+-        }
+-      }
+-      if (canShareFile) {
+-        toast("正在打开分享面板…");
+-        try {
+-          await navigator.share({ files: [file], title: "安心收件箱备份" });
+-          toast("已分享「" + name + "」");
+-          return { status: "shared", fileName: name };
+-        } catch (error) {
+-          if (isShareCancellation(error)) {
+-            toast("已取消分享 · 未再次发起下载");
+-            return { status: "cancelled" };
+-          }
+-          toast("分享失败 · 未再次发起下载，请重试");
+-          return { status: "failed" };
+-        }
+-      }
+-
+-      downloadFile(name, text, mimeType);
+-      toast("已发起下载 · 请查看浏览器下载记录");
+-      return { status: "download-started", fileName: name };
+-    } catch (error) {
+-      if (operationId === exportOperationId) {
+-        clearPendingNativeExport(operationId);
+-        toast("导出失败 · 文件未保存，请重试");
+-      }
+-      return { status: "failed" };
+-    } finally {
+-      if (operationId === exportOperationId) {
+-        clearPendingNativeExport(operationId);
+-        exportInProgress = false;
+-        setExportBusy(false);
+-      }
+-    }
+-  }
+-
+-  function importDataFile(file) {
+-    const reader = new FileReader();
+-    reader.onload = async () => {
+-      try {
+-        const data = JSON.parse(String(reader.result || ""));
+-        if (!data || !Array.isArray(data.items)) throw new Error("bad format");
+-        const okImp = await confirmDialog("导入将覆盖当前数据，继续？", "导入数据");
+-        if (!okImp) return;
+-        if (inflightActionDepth > 0) {
+-          toast("提醒操作正在保存 · 请稍后重新导入");
+-          return;
+-        }
+-        state.items = data.items.map(normalizeItem);
+-        state.notes = Array.isArray(data.notes) ? data.notes : [];
+-        state.projects = Array.isArray(data.projects) ? data.projects : [];
+-        state.settings = Object.assign(state.settings, data.settings || {});
+-        save();
+-        render();
+-        toast("导入成功 · " + state.items.length + " 条事项");
+-      } catch (e) {
+-        toast("导入失败：文件格式不正确");
+-      }
+-    };
+-    reader.readAsText(file);
+-  }
+ 
+   /* ---------- seed ---------- */
+   /* ---------- UX-C01：演示是只读预览，不是「载入示例数据」 ---------- */
+@@ -7947,8 +8156,9 @@
+       toast("勿扰时段已更新");
+     });
+ 
+-    // AI
+-    $("#btnAi").addEventListener("click", openAiSheet);
++    // AI —— 一律写成 `() => ai.xxx()`，**不**直接传 `ai.xxx`：
++    // 后者在绑定那一刻就把函数值取走了，重试重建实例之后这些按钮还指着旧的那一份。
++    $("#btnAi").addEventListener("click", () => ai.openAiSheet());
+     $("#swAi").addEventListener("click", () => {
+       $("#swAi").classList.toggle("on");
+     });
+@@ -7958,7 +8168,7 @@
+         ch.classList.add("on");
+       });
+     });
+-    $("#btnSaveAi").addEventListener("click", saveAiSettings);
++    $("#btnSaveAi").addEventListener("click", () => ai.saveAiSettings());
+     $("#btnAiTest").addEventListener("click", async () => {
+       // apply current form values temporarily for test
+       const prev = state.settings.ai;
+@@ -7973,7 +8183,7 @@
+       btn.disabled = true;
+       btn.textContent = "测试中…";
+       try {
+-        await aiTestConnection();
++        await ai.testConnection();
+         toast("连接成功");
+       } catch (e) {
+         toast("连接失败：" + (e && e.message ? e.message : "未知错误"));
+@@ -7983,14 +8193,14 @@
+         btn.textContent = "测试连接";
+       }
+     });
+-    $("#btnAiParse").addEventListener("click", () => runAiOnCapture("parse"));
+-    $("#btnAiPolish").addEventListener("click", () => runAiOnCapture("polish"));
++    $("#btnAiParse").addEventListener("click", () => ai.runOnCapture("parse"));
++    $("#btnAiPolish").addEventListener("click", () => ai.runOnCapture("polish"));
+ 
+-    $("#btnExport").addEventListener("click", exportData);
++    $("#btnExport").addEventListener("click", () => backup.exportData());
+     $("#btnImport").addEventListener("click", () => $("#importFile").click());
+     $("#importFile").addEventListener("change", e => {
+-      const f = e.target.files && e.target.files[0];
+-      if (f) importDataFile(f);
++      const selectedFile = e.target.files && e.target.files[0];
++      if (selectedFile) backup.importDataFile(selectedFile);
+       e.target.value = "";
+     });
+     // UX-C01：「载入示例数据」这个会覆盖用户状态的入口已移除。
+@@ -8227,10 +8437,10 @@
+     }, 2000);
+     window.addEventListener("online", renderPwaStatus);
+     window.addEventListener("offline", renderPwaStatus);
+-    window.addEventListener("blur", () => noteExportAppVisibility(false));
+-    window.addEventListener("focus", () => noteExportAppVisibility(true));
++    window.addEventListener("blur", () => backup.noteExportAppVisibility(false));
++    window.addEventListener("focus", () => backup.noteExportAppVisibility(true));
+     document.addEventListener("visibilitychange", () => {
+-      noteExportAppVisibility(document.visibilityState === "visible");
++      backup.noteExportAppVisibility(document.visibilityState === "visible");
+       if (document.visibilityState === "visible") {
+         // Q6：切回前台是补做原生初始化的天然时机。
+         // 冷启动时若桥还没注入（存在稳定时间差），这里的 ensure 会再试一遍并把排程补上。
+@@ -8270,7 +8480,12 @@
+     }
+   }
+ 
+-  async function init() {
++  /** 全局错误监听只装一次（恢复面板重试会再进 `init()`）。 */
++  let globalErrorHandlerInstalled = false;
++
++  function installGlobalErrorHandler() {
++    if (globalErrorHandlerInstalled) return;
++    globalErrorHandlerInstalled = true;
+     window.addEventListener("error", (e) => {
+       console.error("App error:", e && e.message, e && e.error);
+       try {
+@@ -8286,8 +8501,43 @@
+         }
+       } catch (err) {}
+     });
++  }
++
++  /**
++   * P2-C-R：**恢复闸门**。
++   *
++   * `init()` 拆成两半，分界线就是这次恢复尝试的判定：
++   *   · `loaded` / `empty` ⇒ 权威状态已确认，进入 `startBusinessStartup()`；
++   *   · `failed`           ⇒ **到此为止**：不 bind（没有任何业务入口可点）、
++   *     不做 schema 迁移 save、不 `ensureNativeReminders()`（不排钟、不建渠道）、
++   *     不 `scheduleNextReviewAlarm()`、不起 15 秒心跳、不 tick、不更新角标。
++   *     取而代之的是一个**可见的恢复面板**（重试 / 重新加载），重试成功后才走正常启动。
++   *
++   * 为什么整段跳过而不是「只关掉写库」：这些旁路会**读**一份我们并不信任的状态
++   * 去对外产生事实 —— 排钟会把空收件箱的排程对账给原生、心跳会把空状态推进业务
++   * （`promoteDue` / 截止对账），那些事实在数据恢复后会变成脏排程与脏台账。
++   */
++  async function init() {
++    installGlobalErrorHandler();
++
++    const report = await loadAsync();
++    if (report.status === LOAD_FAILED) {
++      try {
++        renderStateRecovery(report);
++      } catch (error) {
++        console.error(
++          "Failed to render state recovery panel:",
++          error && error.message ? error.message : error
++        );
++      }
++      return;
++    }
++    removeStateRecoveryPanel();
++    startBusinessStartup();
++  }
+ 
+-    const loaded = await loadAsync();
++  /** `init()` 的后半段：只有权威状态确认之后才跑的**全部**业务启动。 */
++  function startBusinessStartup() {
+     syncUserMode();
+     bind();
+     if (schemaMigrationNeeded) {
+@@ -8359,11 +8609,67 @@
+    */
+   let readyPromise = null;
+ 
++  /**
++   * 最近一次装配闸门的判定结果（`null` = 装配完好）。
++   *
++   * 失败面板是给用户看的，测试不该只靠「DOM 里多了一个节点」来判断闸门有没有生效 ——
++   * 那测的是渲染，不是判定。所以把判定本身留在这里，`ready() === false` 与该字段
++   * 一起构成「启动被明确拒绝」的两个可断言事实。
++   */
++  let lastStartupFailure = null;
++
++  /**
++   * 成功启动只发生一次（F03 的「重试不得重复注册监听 / 计时器」）。
++   *
++   * 首次失败时 `init()` 一行都没跑，所以重试要重跑它 —— 那时本标志仍是 `false`；
++   * 而一旦 `init()` 真的跑起来过（无论成败），再点重试就**不能**再跑一遍：
++   * 那会多装一份 15 秒心跳、一套 document/window 事件监听，以及一轮原生对账。
++   */
++  let initStarted = false;
++
+   function startApp() {
++    // P1：**装配闸门在业务启动之前**，而且闸门**本身就是装配**（独立复验 F03）——
++    // 校验过的值当场被绑上去，「闸门读的是新 `Lib`、业务跑的是旧函数」这一窗口被消除。
++    //
++    // 顺序上必须早于 `init()` 的全部内容 —— 一旦进了 init，就会依次发生
++    // loadAsync（读库并整体替换 state）、schema 迁移的 save()、ensureNativeReminders
++    // （排钟 / 建通知渠道）、`setInterval(tick, 15000)`。缺模块时这些都会带着
++    // 「半套规则」跑起来，而且不报错。
++    const depProblems = bindRuntime();
++    lastStartupFailure = depProblems.length ? depProblems : null;
++    if (depProblems.length) {
++      console.error("Startup dependency check failed:", depProblems);
++      try {
++        renderStartupFailure(depProblems);
++      } catch (error) {
++        console.error("Failed to render startup failure:", error && error.message ? error.message : error);
++      }
++      // ready 必须**明确失败**（false），而不是挂起或假装成功。
++      readyPromise = Promise.resolve(false);
++      return readyPromise;
++    }
++    if (initStarted) {
++      // 已经起来过的应用不再重起一遍（见 initStarted 的说明）。
++      readyPromise = Promise.resolve(true);
++      return readyPromise;
++    }
++    initStarted = true;
+     // 同步启动，保持与之前一致的启动时机；只把结果包成一个总是兑现的 Promise
+     const running = init();
+-    readyPromise = running.then(() => true, err => {
++    readyPromise = running.then(() => {
++      // P2-C-R：恢复闸门拒绝启动（权威状态未确认）时，`ready` 必须**明确失败**，
++      // 与装配闸门失败同一语义 —— 「脚本加载了」不等于「应用就绪」，
++      // 更不能让测试/调试代码拿到 true 之后往一份未确认的状态里写东西。
++      // 同时把 `initStarted` 放回可重入状态，让恢复面板的「重试恢复」能再跑一遍。
++      if (lastLoadReport && lastLoadReport.status === LOAD_FAILED) {
++        initStarted = false;
++        return false;
++      }
++      return true;
++    }, err => {
+       console.error("App init failed:", err && err.message ? err.message : err);
++      // 启动链中途失败 ⇒ 允许「重试」再跑一次（否则会卡在既没起来、又不许重试的状态）。
++      initStarted = false;
+       return false;
+     });
+     return readyPromise;
+@@ -8406,15 +8712,22 @@
+   }
+ 
+   // Dev/test hook — no user-facing effect
++  //
++  // ⚠️ 这些是**装配出来的绑定**（`let`，重试时会整体换新），所以必须按**取值器**导出：
++  // 写成简写属性（`parseChineseTime,`）拿到的是「钩子构造那一刻」的旧值，
++  // 于是「补载脚本后点重试，业务真的能用了吗」在测试里永远测不出来 —— 而那正是 F03。
+   if (typeof globalThis !== "undefined") {
+     globalThis.__ATTENTION_INBOX__ = {
+-      parseChineseTime,
++      get parseChineseTime() { return parseChineseTime; },
+       makeItem,
+-      nextRepeatTrigger,
+-      nthWeekdayOfNextMonth,
+-      nthWeekdayInMonth,
+-      lastDayOfMonth,
+-      repeatLabel,
++      get nextRepeatTrigger() { return nextRepeatTrigger; },
++      // 同名函数两种语义必须**显式命名**（见 lib/date-utils.js）：
++      // 首期候选按具体时刻比较，周期推进按「日」比较，合并就会让周期原地打转。
++      get nthWeekdayOfNextMonthByInstant() { return DatePrimitives.nthWeekdayOfNextMonthByInstant; },
++      get nthWeekdayOfNextMonthByDay() { return DatePrimitives.nthWeekdayOfNextMonthByDay; },
++      get nthWeekdayInMonth() { return nthWeekdayInMonth; },
++      get lastDayOfMonth() { return lastDayOfMonth; },
++      get repeatLabel() { return repeatLabel; },
+       findSimilarItems,
+       isDue,
+       inQuietHours,
+@@ -8427,7 +8740,7 @@
+       restoreItem,
+       deleteItem,
+       seed,
+-      hasSpecificTimeWord,
++      get hasSpecificTimeWord() { return hasSpecificTimeWord; },
+       fallbackTriggerAt,
+       resolveDeliveryMode,
+       ensureReviewSettings,
+@@ -8539,18 +8852,143 @@
+       load,
+       // H-07：降级恢复的取证入口（探测器需要在不重启页面的情况下重放一次）
+       loadAsync,
+-      // 导出真实入口与旧备份快照：行为测试必须覆盖原生保存、浏览器分享/下载和密钥排除。
+-      exportData,
+-      buildLegacyBackupPayload,
+-      noteExportAppVisibility,
+-      normalizeAiResult,
+-      extractJson,
++      // P2-C：备份实例同样取**当前绑定**（取值器，不是装配那一刻的快照）——
++      // 「补载脚本后点重试」这条链上测到的必须是新实例，否则宽限闸门/在途状态
++      // 还挂在旧实例上，测试会给出假结论。
++      get exportData() { return backup.exportData; },
++      get buildLegacyBackupPayload() { return backup.buildLegacyBackupPayload; },
++      get noteExportAppVisibility() { return backup.noteExportAppVisibility; },
++      // P2-A：AI 的纯函数与实例都取自**当前绑定**（取值器，不是装配那一刻的快照）——
++      // 否则「重试之后」这条链上测到的还是旧实例。
++      get normalizeAiResult() { return AppAi.normalizeAiResult; },
++      get extractJson() { return AppAi.extractJsonObject; },
++      get ai() { return ai; },
++      // 在途请求闸门的**可观测出口**：测试要能断言「第二次点击被挡住」。
++      // 在空壳实例上这条恒为 false —— 所以 `isBusy` 也在实例契约里。
++      get aiBusy() { return ai ? ai.isBusy() : null; },
+       renderMarkdown,
+       uid,
+-      startOfDay,
+-      addDays,
+-      sameDay,
+-      applyClock
++      // 同上：都是装配绑定，按取值器导出才反映「重试之后」的那一份。
++      get startOfDay() { return startOfDay; },
++      get addDays() { return addDays; },
++      get sameDay() { return sameDay; },
++      get applyClock() { return applyClock; },
++      get storage() { return storage; },
++      // P1：装配闸门本身可被直接驱动 —— 只有这样才能构造「缺模块」的反例。
++      // 光测「正常组合能起来」证明不了闸门有效：闸门的作用对象恰恰是坏组合。
++      assertRuntimeDependencies,
++      renderStartupFailure,
++      REQUIRED_RUNTIME_EXPORTS,
++      // F02/F03：装配的两半都要能被单独驱动 ——
++      //  `collectRuntimeBindings` 看「检查与取值」；`bindRuntime` 看「真的绑上了」；
++      //  `startApp` 让「补载脚本后点重试」这条路上能被实测。
++      collectRuntimeBindings,
++      bindRuntime,
++      RUNTIME_BINDING_PATHS,
++      APP_UI_INSTANCE_CONTRACT,
++      APP_AI_INSTANCE_CONTRACT,
++      APP_BACKUP_INSTANCE_CONTRACT,
++      startApp,
++      // 绑定结果的**可观测快照**：断言对象是「绑定到的东西是不是现在这一份」，
++      // 不是「曾经绑过一次」（F03 的判据）。
++      runtimeBindings: () => ({
++        parseChineseTime: typeof parseChineseTime === "function"
++          ? (Lib.parseChineseTime === parseChineseTime ? "current" : "stale")
++          : "missing",
++        nextRepeatTrigger: typeof nextRepeatTrigger === "function"
++          ? (Lib.nextRepeatTrigger === nextRepeatTrigger ? "current" : "stale")
++          : "missing",
++        cnInt: typeof cnInt === "function"
++          ? (Lib.cnInt === cnInt ? "current" : "stale")
++          : "missing",
++        hasQuery: typeof $ === "function",
++        // 「有没有被换成 null / 空壳」与「是不是当前那一份」是**两件事**：
++        // 前者证明「失败不覆盖」，后者证明「成功即同源」。
++        feedback: !!(FeedbackLib && typeof FeedbackLib === "object"),
++        feedbackIsCurrent: FeedbackLib === Lib.Feedback,
++        evidence: !!(EvidenceLib && typeof EvidenceLib === "object"),
++        evidenceIsCurrent: EvidenceLib === Lib.DeliveryEvidence,
++        native: !!(NativeReminders && typeof NativeReminders === "object"),
++        nativeIsCurrent: NativeReminders ===
++          (typeof AttentionNativeReminders !== "undefined" && AttentionNativeReminders)
++      }),
++      startupFailure: () => (lastStartupFailure ? lastStartupFailure.slice() : null),
++      /**
++       * P2-C-R：**权威状态恢复**的三个可断言事实。
++       *
++       * 测试与真机探针都不该靠「DOM 里多了个节点」判断恢复闸门有没有生效 ——
++       * 那测的是渲染，不是判定。这里给出判定本身：
++       *   · `status` —— `loaded` / `empty` / `failed` / `unconfirmed`；
++       *   · `blockedWriteCount` —— 被写闸门拦下的提交次数；
++       *   · `nativeBlocked` —— 因未确认而被拦下的原生对账次数。
++       */
++      stateAuthority: () => ({
++        status: stateAuthority,
++        report: lastLoadReport ? Object.assign({}, lastLoadReport) : null,
++        attempts: loadAttempts,
++        blockedWriteCount: blockedWriteCount,
++        nativeBlocked: nativeSyncMetrics.blockedByAuthority,
++        writesAllowed: authoritativeWritesAllowed(),
++        mirrorBytes: mirrorBytes(),
++        recoveryPanel: stateRecoveryPanelShown
++      }),
++      retryRestore,
++      // P2-b：展示能力的接线证明。断言对象是**调用结果**而不是「绑定是否存在」——
++      // `typeof $ === "function"` 才能说明 AppUi 真的装上了；只看 `appUi` 是不是空对象
++      // 会漏掉「模块在、但 createUi 返回了空壳」。
++      uiSurface: () => ({
++        hasQuery: typeof $ === "function",
++        hasQueryAll: typeof $$ === "function",
++        hasSheet: typeof openSheet === "function",
++        hasCloseSheet: typeof closeSheet === "function",
++        hasCloseAllSheets: typeof closeAllSheets === "function",
++        hasConfirm: typeof confirmDialog === "function",
++        hasToast: typeof toast === "function",
++        hasHideToast: typeof hideToast === "function",
++        hasSafeHref: typeof safeExternalHref === "function",
++        // 三档协议判定的实测结果（相对断言容易写成恒真，这里取真实返回值）。
++        hrefHttps: safeExternalHref ? safeExternalHref("https://example.com/x") : "MISSING",
++        hrefJs: safeExternalHref ? safeExternalHref("javascript:alert(1)") : "MISSING",
++        hrefTab: safeExternalHref ? safeExternalHref("ja\tvascript:alert(1)") : "MISSING"
++      }),
++      /**
++       * P2-A：AI 能力的接线证明。判据同样是**调用结果**，不是「绑定在不在」——
++       * `typeof ai === "object"` 在空壳实例上也成立，而后果是所有 AI 入口点了没反应。
++       *
++       * 这里全部取真实返回值（含一次真的 `normalizeAiResult` 与一次真的 `mergedDraft`），
++       * 让「模块在、但行为不对」也能被测出来。
++       */
++      aiSurface: () => {
++        if (!ai || !AppAi) return { missing: true };
++        const base = { text: "orig", tags: "home", note: "", trigger: "", deadline: "" };
++        const merged = ai.mergedDraft(base, {
++          title: "ai-title",
++          triggerAt: Date.UTC(2026, 8, 21, 2, 0, 0),
++          tags: ["work", "home"],
++          note: "ai-note",
++          priority: "important",
++          repeat: { every: "week", mode: "ack" }
++        });
++        return {
++          hasConfig: typeof ai.config === "function",
++          config: ai.config(),
++          ready: ai.ready(),
++          nowIso: ai.nowIso(),
++          promptHasClock: ai.systemPrompt().indexOf("当前本地时间 ISO") >= 0,
++          isBusy: ai.isBusy(),
++          // 合并结果是**新对象**：`mergedDraft` 不能改动提交时冻结的那份草稿
++          mergedTitle: merged.text,
++          mergedPriority: merged.priority,
++          mergedRepeatEvery: merged.repeat,
++          mergedTags: merged.tags,
++          mergedNote: merged.note,
++          baseUntouched: base.text === "orig" && base.tags === "home" && base.note === "",
++          // 归一：模型自创的优先级必须被收窄，不能绕过重要档的渠道规则
++          normalizePriority: AppAi.normalizeAiResult({ priority: "super-urgent" }, "").priority,
++          normalizeRepeat: AppAi.normalizeAiResult({ repeat: { every: "yearly" } }, "").repeat,
++          extract: JSON.stringify(AppAi.extractJsonObject("```json\n{\"a\":1}\n```"))
++        };
++      }
+     };
+     // Console helper for manual recovery in preview
+     globalThis.seedAttentionInbox = seed;
+diff --git a/sw.js b/sw.js
+index 4cf3b4f..fa7ef2b 100644
+--- a/sw.js
++++ b/sw.js
+@@ -1,5 +1,13 @@
+ /* 安心收件箱 Service Worker — network-first for app shell, offline fallback */
+-const CACHE = "attention-inbox-v5";
++// v13：G01/G02 修复（独立复验 `20260921T134843`）改了 `lib/app-backup.js` 的**内容**
++//（导入等待权威提交兑现 + 读取失败反馈）。脚本 URL 没变，但预缓存按 URL 存 ——
++// 不换缓存名，已装用户会一直吃旧内容，修复对他们等于没发生。
++// v12：P2-C 把数据备份迁出为 `lib/app-backup.js`（新增运行时脚本）。**新增脚本必须换
++// 缓存名** —— 上一版清单里没有它，已装用户会一直吃旧清单，于是在「全新安装 →
++// 第一次就没网」那条路上 `caches.match` 未命中、回落成 `./index.html`，
++// 浏览器拿到一段 HTML 当 JS 执行 ⇒ `AttentionLib.AppBackup` 静默缺失，
++// 而 `AppBackup` 是必需声明，结果就是**启动失败面板**。不换名等于给用户送一个坏版本。
++const CACHE = "attention-inbox-v15";
+ /**
+  * 预缓存清单必须**逐条等于** `index.html` 里真正加载的运行时脚本。
+  *
+@@ -16,6 +24,11 @@ const ASSETS = [
+   "./",
+   "./index.html",
+   "./app-core.js",
++  "./lib/date-utils.js",
++  "./lib/ui-format.js",
++  "./lib/app-ui.js",
++  "./lib/app-ai.js",
++  "./lib/app-backup.js",
+   "./lib/parse-cn.js",
+   "./lib/repeat.js",
+   "./lib/reminder.js",
+diff --git a/test-unit.js b/test-unit.js
+index bcd2fd8..877d4b8 100644
+--- a/test-unit.js
++++ b/test-unit.js
+@@ -11,6 +11,13 @@ const evidenceMod = require(path.join(__dirname, "lib/delivery-evidence.js"));
+ 
+ let passed = 0, failed = 0;
+ const failures = [];
++/**
++ * 异步段的**收尾门**计数（声明必须在这里，不能放到文件尾部跟 `finish()` 一起 ——
++ * 段首登记发生在文件中部，`let` 在那时还处于 TDZ）。用法见文件末尾的
++ * `beginAsyncSection()`：段首 `const done = beginAsyncSection();`，段尾 `done()`。
++ * 每段自己销账，账平了才真正打印结果。
++ */
++let asyncSectionsPending = 0;
+ function ok(name, cond, extra) {
+   if (cond) { passed++; console.log("  ✓ " + name); }
+   else {
+@@ -548,9 +555,959 @@ section("import-map");
+   ok("未注入兜底函数时明确告警", r4.warnings.some(w => w.indexOf("fallbackTriggerAt") >= 0));
+ }
+ 
++/* ui-format（P2 首批搬移：从 app-core 抽出的纯格式化工具） */
++section("ui-format");
++{
++  const uf = require(path.join(__dirname, "lib/ui-format.js"));
++  const prim = require(path.join(__dirname, "lib/date-utils.js"));
++
++  // 别名同一性：格式化里用到的日历判定必须来自 lib/date-utils.js 同一份，
++  // 不是「行为相同的另一份 sameDay」。
++  ok("ui-format 挂在命名空间 AttentionLib.UiFormat 上（不是扁平合并）",
++    (function () {
++      // Node 下走 module.exports，浏览器下走 root.AttentionLib.UiFormat —— 这里验形状与自洽。
++      return typeof uf.fmtTime === "function" && typeof uf.renderMarkdown === "function" &&
++        typeof uf.escapeHtml === "function" && typeof uf.escapeAttr === "function";
++    })());
++
++  // 固定时钟：「今天 / 明天 / 昨天 / 带日期 / 跨年带年份」
++  const ref = new Date(2026, 8, 18, 14, 0, 0).getTime();   // 2026-09-18 周五 14:00
++  ok("fmtTime 今天", uf.fmtTime(new Date(2026, 8, 18, 9, 5, 0).getTime(), ref) === "今天 09:05",
++    uf.fmtTime(new Date(2026, 8, 18, 9, 5, 0).getTime(), ref));
++  ok("fmtTime 明天", uf.fmtTime(new Date(2026, 8, 19, 23, 59, 0).getTime(), ref) === "明天 23:59",
++    uf.fmtTime(new Date(2026, 8, 19, 23, 59, 0).getTime(), ref));
++  ok("fmtTime 昨天", uf.fmtTime(new Date(2026, 8, 17, 0, 0, 0).getTime(), ref) === "昨天 00:00",
++    uf.fmtTime(new Date(2026, 8, 17, 0, 0, 0).getTime(), ref));
++  ok("fmtTime 同年带月日", uf.fmtTime(new Date(2026, 8, 23, 10, 0, 0).getTime(), ref) === "9月23日 10:00",
++    uf.fmtTime(new Date(2026, 8, 23, 10, 0, 0).getTime(), ref));
++  ok("fmtTime 跨年带年份", uf.fmtTime(new Date(2027, 0, 3, 8, 0, 0).getTime(), ref) === "2027年1月3日 08:00",
++    uf.fmtTime(new Date(2027, 0, 3, 8, 0, 0).getTime(), ref));
++  ok("fmtTime 空值返回空串", uf.fmtTime(0, ref) === "" && uf.fmtTime(null, ref) === "");
++
++  ok("fmtDate 不带钟点", uf.fmtDate(new Date(2026, 8, 19, 5, 0, 0).getTime(), ref) === "明天",
++    uf.fmtDate(new Date(2026, 8, 19, 5, 0, 0).getTime(), ref));
++
++  // 相对到期：边界分钟 / 小时 / 天
++  ok("relDue 未来不足 1 分钟 = 现在", uf.relDue(ref + 30000, ref) === "现在");
++  ok("relDue 未来 5 分钟", uf.relDue(ref + 300000, ref) === "5 分钟后");
++  ok("relDue 未来 3 小时", uf.relDue(ref + 3 * 3600000, ref) === "3 小时后");
++  ok("relDue 未来 2 天", uf.relDue(ref + 2 * 86400000, ref) === "2 天后");
++  ok("relDue 已过不足 1 小时至少报 1 分钟", uf.relDue(ref - 30000, ref) === "已过 1 分钟");
++  ok("relDue 已过 2 小时", uf.relDue(ref - 2 * 3600000, ref) === "已过 2 小时");
++  ok("relDue 已过 3 天", uf.relDue(ref - 3 * 86400000, ref) === "已过 3 天");
++
++  // 转义：文本侧与属性侧字符集一致、命名分开
++  const evil = '<img src=x onerror="alert(1)">';
++  ok("escapeHtml 转义尖引号", uf.escapeHtml(evil).indexOf("<") < 0 && uf.escapeHtml(evil).indexOf('"') < 0,
++    uf.escapeHtml(evil));
++  ok("escapeAttr 与 escapeHtml 字符集一致（同样的输入同样输出）",
++    uf.escapeAttr(evil) === uf.escapeHtml(evil));
++  ok("escapeHtml 空值安全", uf.escapeHtml(null) === "" && uf.escapeHtml(undefined) === "");
++
++  // Markdown：必须先转义再插标签，用户内容里的标签不能活着出去
++  const md = uf.renderMarkdown('# 标题\n\n**粗** 与 `代码`\n\n- 甲\n- 乙');
++  ok("renderMarkdown 生成 h1", md.indexOf("<h1>标题</h1>") >= 0, md);
++  ok("renderMarkdown 生成 strong 与 code", md.indexOf("<strong>粗</strong>") >= 0 && md.indexOf("<code>代码</code>") >= 0, md);
++  ok("renderMarkdown 生成 ul/li", md.indexOf("<ul>") >= 0 && md.indexOf("<li>甲</li>") >= 0, md);
++  ok("renderMarkdown 先转义：用户写 <script> 不会变成真标签",
++    uf.renderMarkdown("<script>alert(1)</script>").indexOf("<script>") < 0,
++    uf.renderMarkdown("<script>alert(1)</script>"));
++  ok("renderMarkdown 只放行 http(s) 链接",
++    uf.renderMarkdown("[a](javascript:alert(1))").indexOf("<a ") < 0,
++    uf.renderMarkdown("[a](javascript:alert(1))"));
++  ok("renderMarkdown 放行 https 链接",
++    uf.renderMarkdown("[a](https://example.com)").indexOf('href="https://example.com"') >= 0);
++
++  // pad / uid 形状
++  ok("pad 补零", uf.pad(3) === "03" && uf.pad(12) === "12");
++  const id1 = uf.uid();
++  ok("uid 形状为 i_ 前缀的字符串", typeof id1 === "string" && id1.indexOf("i_") === 0, id1);
++
++  // P2-b 追加：归档日标签与时间输入框双向转换（固定时钟，不依赖运行时「今天」）
++  ok("dayLabel 空值 = 「更早」（与 fmtDate 的 \"\" 不同，刻意不合并）",
++    uf.dayLabel(null) === "更早" && uf.dayLabel(0) === "更早" && uf.fmtDate(null) === "");
++  ok("dayLabel 今天", uf.dayLabel(new Date(2026, 8, 18, 1, 0, 0).getTime(), ref) === "今天");
++  ok("dayLabel 昨天", uf.dayLabel(new Date(2026, 8, 17, 23, 0, 0).getTime(), ref) === "昨天");
++  ok("dayLabel 没有「明天」分支（回月日，而 fmtDate 回「明天」）",
++    uf.dayLabel(new Date(2026, 8, 19, 9, 0, 0).getTime(), ref) === "9月19日" &&
++    uf.fmtDate(new Date(2026, 8, 19, 9, 0, 0).getTime(), ref) === "明天");
++  ok("dayLabel 跨年回完整年月日（fmtDate 不回）",
++    uf.dayLabel(new Date(2025, 11, 31, 9, 0, 0).getTime(), ref) === "2025年12月31日" &&
++    uf.fmtDate(new Date(2025, 11, 31, 9, 0, 0).getTime(), ref) === "12月31日");
++  ok("toLocalInput 形状 YYYY-MM-DDTHH:mm（补零到分、不含秒）",
++    uf.toLocalInput(new Date(2026, 0, 5, 9, 7, 42).getTime()) === "2026-01-05T09:07",
++    uf.toLocalInput(new Date(2026, 0, 5, 9, 7, 42).getTime()));
++  ok("toLocalInput 空值 = 空串", uf.toLocalInput(null) === "" && uf.toLocalInput(0) === "");
++  ok("parseLocalInput 与 toLocalInput 回环（同一分钟进出不变）",
++    uf.parseLocalInput(uf.toLocalInput(new Date(2026, 0, 5, 9, 7, 0).getTime())) ===
++    new Date(2026, 0, 5, 9, 7, 0).getTime());
++  ok("parseLocalInput 解析不出时返回 null（**不**兜底成「现在」）",
++    uf.parseLocalInput("") === null && uf.parseLocalInput(null) === null &&
++    uf.parseLocalInput("不是时间") === null);
++
++  // 依赖同一来源：ui-format 的「今天/明天」判定与 date-utils 的 sameDay 一致
++  ok("ui-format 的日判定与 date-utils.sameDay 一致（不是另一套实现）",
++    prim.sameDay(new Date(2026, 8, 18, 1, 0, 0), new Date(2026, 8, 18, 23, 0, 0)) === true &&
++    uf.fmtDate(new Date(2026, 8, 18, 1, 0, 0).getTime(), ref) === "今天");
++}
++
++/* ---------- P2-b：DOM 共用展示能力（lib/app-ui.js） ---------- */
++section("app-ui — 弹层 / toast / 确认框 / 外链白名单");
++const appUiDone = beginAsyncSection();
++(async function () {
++  const appUiMod = require(path.join(__dirname, "lib/app-ui.js"));
++  const hadDoc = Object.prototype.hasOwnProperty.call(global, "document");
++  const savedDoc = global.document;
++  const savedSetTimeout = global.setTimeout;
++  const savedClearTimeout = global.clearTimeout;
++
++  /* 假 DOM：只实现被测代码真正用到的选择器与属性（多一个都算我没核对过）。 */
++  function makeFakeDocument(extraSheetIds) {
++    const byId = Object.create(null);
++    const sheets = [];
++    function node(id, isSheet) {
++      const cls = new Set();
++      const n = {
++        id: id, textContent: "", hidden: false, onclick: null, _cls: cls,
++        classList: {
++          add(c) { cls.add(c); },
++          remove(c) { cls.delete(c); },
++          contains(c) { return cls.has(c); }
++        }
++      };
++      byId[id] = n;
++      if (isSheet) sheets.push(n);
++      return n;
++    }
++    node("backdrop");
++    node("toast"); node("toastText"); node("toastAction"); node("toastAction2");
++    node("sheetConfirm", true);
++    (extraSheetIds || []).forEach(function (id) { node(id, true); });
++    node("confirmBody"); node("confirmTitle");
++    node("confirmOk"); node("confirmCancel"); node("confirmClose");
++    return {
++      byId: byId,
++      document: {
++        querySelector(s) { return s.charAt(0) === "#" ? (byId[s.slice(1)] || null) : null; },
++        querySelectorAll(s) {
++          if (s === ".sheet") return sheets.slice();
++          if (s === ".sheet.open") return sheets.filter(x => x._cls.has("open"));
++          return [];
++        }
++      }
++    };
++  }
++
++  /* 假定时器：否则「时长」这条只能等真实 2.4 秒才验得了。 */
++  const scheduled = [];
++  let seq = 0;
++  global.setTimeout = function (fn, delay) { seq += 1; scheduled.push({ id: seq, fn: fn, delay: delay }); return seq; };
++  global.clearTimeout = function (id) {
++    const i = scheduled.findIndex(s => s.id === id);
++    if (i >= 0) scheduled.splice(i, 1);
++  };
++
++  const dom = makeFakeDocument(["sheetCapture", "sheetDetail"]);
++  global.document = dom.document;
++  const box = { suppressed: false };
++  const ui = appUiMod.createUi({ isFeedbackSuppressed: function () { return box.suppressed; } });
++
++  try {
++    /* 形状与「模块求值无副作用」 */
++    ok("createUi 交出 8 支展示能力（$ / $$ / 弹层三支 / 确认框 / toast / hideToast）",
++      typeof ui.$ === "function" && typeof ui.$$ === "function" &&
++      typeof ui.openSheet === "function" && typeof ui.closeSheet === "function" &&
++      typeof ui.closeAllSheets === "function" && typeof ui.confirmDialog === "function" &&
++      typeof ui.toast === "function" && typeof ui.hideToast === "function");
++    ok("safeExternalHref 是模块级纯函数（不需要实例）",
++      typeof appUiMod.safeExternalHref === "function");
++    ok("模块求值 + 实例化都不建定时器、不动 DOM（求值无副作用）",
++      scheduled.length === 0 && !dom.byId.toast._cls.has("show") && dom.byId.toastText.textContent === "");
++
++    /* 弹层：backdrop 的撤销口径是「还有没有开着的层」，不是「关了一次就撤」 */
++    ui.openSheet("sheetCapture");
++    ok("openSheet 打开目标层并亮出 backdrop",
++      dom.byId.sheetCapture._cls.has("open") && dom.byId.backdrop._cls.has("show"));
++    ui.openSheet("sheetDetail");
++    ui.closeSheet("sheetCapture");
++    ok("还有一层开着时关一层：backdrop 必须留着",
++      !dom.byId.sheetCapture._cls.has("open") && dom.byId.sheetDetail._cls.has("open") &&
++      dom.byId.backdrop._cls.has("show"));
++    ui.closeSheet("sheetDetail");
++    ok("关掉最后一层：backdrop 撤掉", !dom.byId.backdrop._cls.has("show"));
++    ui.openSheet("sheetCapture"); ui.openSheet("sheetDetail");
++    ui.closeAllSheets();
++    ok("closeAllSheets 关掉全部层并撤遮罩",
++      !dom.byId.sheetCapture._cls.has("open") && !dom.byId.sheetDetail._cls.has("open") &&
++      !dom.byId.backdrop._cls.has("show"));
++
++    /* toast：文案 / 按钮 / 时长 / 覆盖 / 抑制 */
++    let acted = 0;
++    ui.toast("已删除", "撤销", function () { acted += 1; });
++    ok("toast 写入文案并亮出提示条",
++      dom.byId.toastText.textContent === "已删除" && dom.byId.toast._cls.has("show"));
++    ok("toast 亮出动作按钮并挂上回调",
++      dom.byId.toastAction.hidden === false && dom.byId.toastAction.textContent === "撤销" &&
++      typeof dom.byId.toastAction.onclick === "function");
++    ok("未给第二个动作时该槽位置隐藏并清空 onclick",
++      dom.byId.toastAction2.hidden === true && dom.byId.toastAction2.onclick === null);
++    ok("带动作的提示时长 = 5000ms",
++      scheduled.length === 1 && scheduled[0].delay === 5000, JSON.stringify(scheduled.map(s => s.delay)));
++    dom.byId.toastAction.onclick();
++    ok("点动作：先收起提示再执行回调",
++      acted === 1 && !dom.byId.toast._cls.has("show"));
++
++    scheduled.length = 0;
++    ui.toast("普通提示");
++    ok("无动作的提示时长 = 2400ms，且动作槽被收起",
++      scheduled.length === 1 && scheduled[0].delay === 2400 &&
++      dom.byId.toastAction.hidden === true && dom.byId.toastAction.onclick === null);
++
++    scheduled.length = 0;
++    ui.toast("第一条"); ui.toast("第二条");
++    ok("连续两次 toast：前一个定时器必须被撤掉（挂起只剩 1 个）",
++      scheduled.length === 1 && dom.byId.toastText.textContent === "第二条");
++
++    ui.hideToast();
++    scheduled.length = 0;
++    box.suppressed = true;
++    ui.toast("重放期不该弹出来", "撤销", function () {});
++    ok("抑制反馈时 toast 完全不动 DOM、也不建定时器（M1 的判据）",
++      scheduled.length === 0 && !dom.byId.toast._cls.has("show") &&
++      // 文案停在进入抑制前那一次（"第二条"），既没被覆盖、也没重新亮起
++      dom.byId.toastText.textContent === "第二条" && dom.byId.toastAction.hidden === true);
++    box.suppressed = false;
++    ui.toast("恢复正常");
++    ok("解除抑制后 toast 恢复（文案更新、定时器重建、提示条亮出）",
++      scheduled.length === 1 && dom.byId.toastText.textContent === "恢复正常" &&
++      dom.byId.toast._cls.has("show"));
++    ui.hideToast();
++    ok("hideToast 收起提示条", !dom.byId.toast._cls.has("show"));
++
++    /* 确认框：DOM 效果（同步）与返回值（需要 await） */
++    const p1 = ui.confirmDialog("确定删除？", "删除");
++    ok("确认框弹出：标题/正文回填、层打开、backdrop 亮出",
++      dom.byId.confirmTitle.textContent === "删除" && dom.byId.confirmBody.textContent === "确定删除？" &&
++      dom.byId.sheetConfirm._cls.has("open") && dom.byId.backdrop._cls.has("show"));
++    ok("确认框三个出口都挂上了 onclick",
++      typeof dom.byId.confirmOk.onclick === "function" &&
++      typeof dom.byId.confirmCancel.onclick === "function" &&
++      typeof dom.byId.confirmClose.onclick === "function");
++    dom.byId.confirmOk.onclick();
++    ok("点确定：层关闭、backdrop 撤掉、三个 onclick 全部清干净",
++      !dom.byId.sheetConfirm._cls.has("open") && !dom.byId.backdrop._cls.has("show") &&
++      dom.byId.confirmOk.onclick === null && dom.byId.confirmCancel.onclick === null &&
++      dom.byId.confirmClose.onclick === null);
++    ok("点确定 ⇒ 解析为 true", (await p1) === true);
++
++    const p2 = ui.confirmDialog("确定删除？");
++    ok("省略标题时用默认「确认」，正文原样回填",
++      dom.byId.confirmTitle.textContent === "确认" && dom.byId.confirmBody.textContent === "确定删除？");
++    dom.byId.confirmCancel.onclick();
++    ok("点取消 ⇒ 解析为 false", (await p2) === false);
++
++    const p3 = ui.confirmDialog();
++    ok("省略正文时用默认「确定继续？」", dom.byId.confirmBody.textContent === "确定继续？");
++    dom.byId.confirmClose.onclick();
++    ok("点关闭 ⇒ 解析为 false", (await p3) === false);
++
++    /* 兜底路径：没有 #sheetConfirm 时落到 window.confirm */
++    const domNoSheet = makeFakeDocument([]);
++    delete domNoSheet.byId.sheetConfirm;
++    const savedQuery = domNoSheet.document.querySelector;
++    domNoSheet.document.querySelector = function (s) {
++      return s === "#sheetConfirm" ? null : savedQuery(s);
++    };
++    global.document = domNoSheet.document;
++    const hadWindow = Object.prototype.hasOwnProperty.call(global, "window");
++    const savedWindow = global.window;
++    global.window = { confirm: function () { return false; } };
++    ok("没有 #sheetConfirm 时落到 window.confirm，返回 false",
++      (await ui.confirmDialog("危险操作")) === false);
++    global.window = { confirm: function () { throw new Error("blocked"); } };
++    ok("兜底路径里 window.confirm 抛错 ⇒ 保守取 true（不静默当作取消）",
++      (await ui.confirmDialog("危险操作")) === true);
++    if (hadWindow) global.window = savedWindow; else delete global.window;
++  } finally {
++    if (hadDoc) global.document = savedDoc; else delete global.document;
++    global.setTimeout = savedSetTimeout;
++    global.clearTimeout = savedClearTimeout;
++  }
++
++  /* 外链白名单：模块级，不需要 DOM */
++  const safe = appUiMod.safeExternalHref;
++  ok("https 放行", safe("https://example.com/x") === "https://example.com/x");
++  ok("http 放行", safe("http://example.com") === "http://example.com");
++  ok("javascript: 拒绝", safe("javascript:alert(1)") === null);
++  ok("大小写混杂的 JaVaScRiPt: 拒绝（按解析后的协议判定，不看字形）", safe("jAvAsCrIpT:alert(1)") === null);
++  ok("带换行的 java\\nscript: 拒绝（解析器会剔除控制字符后再判定）", safe("java\nscript:alert(1)") === null);
++  ok("带 TAB 的 ja\\tvascript: 拒绝", safe("ja\tvascript:alert(1)") === null);
++  ok("data: 拒绝", safe("data:text/html;base64,PHNjcmlwdD4=") === null);
++  ok("空值 / 空串 / 纯空白一律拒绝", safe(null) === null && safe("") === null && safe("   ") === null);
++  ok("前后空白被裁掉", safe("  https://example.com/x  ") === "https://example.com/x");
++  ok("相对路径拒绝（不是绝对 URL）", safe("example.com/x") === null && safe("//example.com/x") === null);
++  ok("解析不出授权段拒绝", safe("https://") === null && safe("https://a b") === null);
++
++  appUiDone();
++})();
++
++/* ---------- P2-A：AI 智能理解（lib/app-ai.js） ---------- */
++section("app-ai — 请求 / 归一 / 设置 / 表单合并");
++const appAiDone = beginAsyncSection();
++(async function () {
++  const appAiMod = require(path.join(__dirname, "lib/app-ai.js"));
++  const hadFetch = Object.prototype.hasOwnProperty.call(global, "fetch");
++  const savedFetch = global.fetch;
++  // ⚠️ 假 DOM **不挂到 `global.document`**：本文件里 app-ui 那一段也是异步的，
++  //    两段会在 `await` 处交错 —— 挂在全局上，我这段 await 期间 app-ui 恢复的那次
++  //    「还原」会被我覆盖、而我这段又会在它恢复后拿到 undefined。
++  //    DOM 一律从 `deps.query` 注入，这也是被测模块**只通过依赖拿 DOM** 的证据。
++
++  /* 假 DOM：只造被测代码真正查询的那几个选择器（多一个都算没核对过）。 */
++  const byId = Object.create(null);
++  const groups = Object.create(null);
++  function node(id, group) {
++    const cls = new Set();
++    const n = {
++      id: id, value: "", textContent: "", disabled: false, dataset: {},
++      _cls: cls,
++      classList: {
++        add(c) { cls.add(c); }, remove(c) { cls.delete(c); },
++        contains(c) { return cls.has(c); },
++        toggle(c, on) { if (on === undefined) on = !cls.has(c); if (on) cls.add(c); else cls.delete(c); return on; }
++      }
++    };
++    byId[id] = n;
++    if (group) { groups[group] = groups[group] || []; groups[group].push(n); }
++    return n;
++  }
++  ["capText", "capTrigger", "capDeadline", "capNote", "capTags", "capHint",
++    "capRepeat", "capRepeatMode", "capNth", "capWeekday",
++    "swAi", "aiBaseUrl", "aiApiKey", "aiModel", "aiSub",
++    "btnAiParse", "btnAiPolish"].forEach(id => node(id));
++  ["normal", "important", "critical"].forEach(p => {
++    const n = node("chip-" + p, "capPriority");
++    n.dataset.p = p;
++  });
++  ["on", "off"].forEach(a => {
++    const n = node("auto-" + a, "aiAutoChips");
++    n.dataset.auto = a;
++  });
++  const fakeDoc = {
++    querySelector(s) { return s.charAt(0) === "#" ? (byId[s.slice(1)] || null) : null; },
++    querySelectorAll(s) {
++      const m = /^#(\w+) \.chip(\.on)?$/.exec(s);
++      if (!m) return [];
++      const list = groups[m[1]] || [];
++      return m[2] ? list.filter(x => x._cls.has("on")) : list.slice();
++    }
++  };
++
++  /* 依赖替身：记录每一次被调用的「外部权力」，好断言 AI 只用了它被给的东西。 */
++  const calls = { toast: [], sheet: [], closeSheet: [], renderMe: 0, save: 0, preview: 0, missingConfig: 0 };
++  let settings = { ai: { enabled: false, baseUrl: "", apiKey: "", model: "", autoOnSave: false } };
++  const deps = {
++    getSettings: () => settings,
++    setAiConfig: (next) => { settings.ai = next; },
++    query: (s) => fakeDoc.querySelector(s),
++    queryAll: (s) => fakeDoc.querySelectorAll(s),
++    pad: (n) => String(n).padStart(2, "0"),
++    toLocalInput: (ts) => (ts == null ? "" : "L" + ts),
++    fmtTime: (ts) => "T" + ts,
++    fmtDate: (ts) => "D" + ts,
++    repeatLabel: (r) => "R:" + r.every,
++    parseChineseTime: (t) => ({ trigger: 111, deadline: 222, title: t }),
++    updateRepeatPreview: () => { calls.preview += 1; },
++    toast: (m) => { calls.toast.push(m); },
++    openSheet: (id) => { calls.sheet.push(id); },
++    closeSheet: (id) => { calls.closeSheet.push(id); },
++    renderMe: () => { calls.renderMe += 1; },
++    save: () => { calls.save += 1; },
++    onMissingConfig: () => { calls.missingConfig += 1; }
++  };
++
++  try {
++    /* ① 模块级纯函数 */
++    ok("createAppAi 是模块级导出（实例由入口统一装配）", typeof appAiMod.createAppAi === "function");
++    ok("归一 / 提取 / 本地 ISO 都是模块级纯函数（不需要实例）",
++      typeof appAiMod.normalizeAiResult === "function" &&
++      typeof appAiMod.extractJsonObject === "function" &&
++      typeof appAiMod.localIsoWithOffset === "function");
++    ok("围栏剥离：```json 代码块 + 前后客套话都能剥出 JSON",
++      JSON.stringify(appAiMod.extractJsonObject("好的：\n```json\n{\"a\":1}\n```\n希望有用")) === '{"a":1}');
++    ok("围栏剥离：只截第一个 { 到最后一个 }",
++      JSON.stringify(appAiMod.extractJsonObject("前缀 {\"a\":1} 后缀")) === '{"a":1}');
++    ok("围栏剥离：没有 JSON 时**抛出**（不静默返回空对象）",
++      (function () { try { appAiMod.extractJsonObject("抱歉我做不到"); return false; } catch (e) { return true; } })());
++
++    const n1 = appAiMod.normalizeAiResult({ priority: "super-urgent", repeat: { every: "yearly" } }, "原话");
++    ok("归一：模型自创的优先级被收窄成 normal（越权值不得绕过重要档的渠道规则）",
++      n1.priority === "normal");
++    ok("归一：白名单外的周期被整体丢弃（不能造一个算不出下一轮的事项）", n1.repeat === null);
++    ok("归一：标题空时回落用户原话", n1.title === "原话");
++    const n2 = appAiMod.normalizeAiResult(
++      { tags: [" a ", "b", "", "c", "d", "e", "f", "g", "h", "i", "j"] }, "x");
++    ok("归一：标签去空、trim、截到 8 个", n2.tags.length === 8 && n2.tags[0] === "a");
++    const n3 = appAiMod.normalizeAiResult({ trigger_at: "not-a-date", deadline: "2026-09-21T10:00:00" }, "x");
++    ok("归一：解析不出的时间是 null（**不兜底成现在**），能解析的保留",
++      n3.triggerAt === null && typeof n3.deadlineAt === "number");
++    ok("归一：confidence 由**提醒时间**推导，不由模型自评 —— " +
++      "只有 deadline 不算「解析出了时间」（否则低置信度确认面板会整体消失）",
++      n3.confidence === "low" &&
++      appAiMod.normalizeAiResult({ trigger_at: "2026-09-21T09:00:00" }, "x").confidence === "high" &&
++      appAiMod.normalizeAiResult({}, "x").confidence === "low");
++    const n4 = appAiMod.normalizeAiResult(
++      { repeat: { every: "nthWeekday", mode: "ack", nth: -1, dow: 3 } }, "x");
++    ok("归一：nthWeekday 的 nth / dow 被转成数字（-1 保留）",
++      n4.repeat.nth === -1 && n4.repeat.dow === 3 && n4.repeat.mode === "ack");
++    ok("归一：mode 不在 calendar/ack 里一律回落 calendar",
++      appAiMod.normalizeAiResult({ repeat: { every: "day", mode: "weird" } }, "x").repeat.mode === "calendar");
++
++    /* ② 工厂：缺依赖必须抛（不静默装一个半残实例） */
++    let threw = null;
++    try { appAiMod.createAppAi({ getSettings: () => settings }); } catch (e) { threw = e && e.message; }
++    ok("缺依赖时 createAppAi **抛错并点名缺哪几项**（不装半残实例）",
++      typeof threw === "string" && threw.indexOf("缺少依赖") >= 0 && threw.indexOf("setAiConfig") >= 0,
++      String(threw));
++
++    const ai = appAiMod.createAppAi(deps);
++    ok("实例交出 15 支 AI API",
++      ["config", "ready", "nowIso", "systemPrompt", "chat", "parseCapture", "polishCapture",
++        "testConnection", "applyToForm", "mergedDraft", "isBusy", "runOnCapture",
++        "openAiSheet", "saveAiSettings", "renderAiSub"].every(k => typeof ai[k] === "function"));
++    ok("模块求值不开定时器、不发请求、不读 DOM（装配前 isBusy 为 false、无记录）",
++      ai.isBusy() === false && calls.preview === 0 && calls.toast.length === 0);
++
++    /* ③ 设置：三态小字 + 保存走入口给定的那几个出口 */
++    ai.renderAiSub();
++    ok("未开启 ⇒ 小字说「未开启」", byId.aiSub.textContent.indexOf("未开启") === 0);
++    settings.ai = { enabled: true, baseUrl: "https://x/v1", apiKey: "k", model: "m", autoOnSave: false };
++    ai.renderAiSub();
++    ok("已开启且配全 ⇒ 小字带上模型名与「仅手动」",
++      byId.aiSub.textContent.indexOf("已开启 · m") === 0 &&
++      byId.aiSub.textContent.indexOf("仅手动") > 0);
++    settings.ai = { enabled: true, baseUrl: "", apiKey: "", model: "", autoOnSave: true };
++    ai.renderAiSub();
++    ok("已开启但没配全 ⇒ 小字提醒「请完善 API 配置」（不是报成可用）",
++      byId.aiSub.textContent.indexOf("请完善") > 0);
++    ok("ready() 四样齐全才算能用（enabled / baseUrl / apiKey / model 缺一即 false）",
++      ai.ready() === false &&
++      (settings.ai = { enabled: true, baseUrl: "b", apiKey: "k", model: "m", autoOnSave: false },
++        ai.ready() === true));
++
++    byId.swAi._cls.add("on");
++    byId.aiBaseUrl.value = " https://api.example.com/v1/ ";
++    byId.aiApiKey.value = " sk-x ";
++    byId.aiModel.value = " gpt-4o-mini ";
++    byId["auto-on"]._cls.add("on");
++    ai.saveAiSettings();
++    ok("保存：整段写回（不是逐字段 patch），斜杠去掉、空白 trim",
++      settings.ai.enabled === true && settings.ai.baseUrl === "https://api.example.com/v1" &&
++      settings.ai.apiKey === "sk-x" && settings.ai.model === "gpt-4o-mini" &&
++      settings.ai.autoOnSave === true,
++      JSON.stringify(settings.ai));
++    ok("保存：落库 / 关弹层 / 重渲染「我的」/ 提示，四件事按序发生且各一次",
++      calls.save === 1 && calls.closeSheet.length === 1 && calls.closeSheet[0] === "sheetAi" &&
++      calls.renderMe === 1 && calls.toast[calls.toast.length - 1] === "AI 已启用",
++      JSON.stringify(calls));
++
++    ai.openAiSheet();
++    ok("打开设置弹层：每次都从**当前配置**重画（不留弹层里的旧值）",
++      calls.sheet[calls.sheet.length - 1] === "sheetAi" &&
++      byId.aiBaseUrl.value === "https://api.example.com/v1" &&
++      byId.aiModel.value === "gpt-4o-mini" && byId.swAi._cls.has("on"));
++
++    /* ④ 表单合并：applyToForm 写界面，mergedDraft 只写快照 */
++    byId.capText.value = "";
++    byId.capTags.value = "home";
++    byId.capNote.value = "我写的备注";
++    ai.applyToForm({
++      title: "AI 标题", triggerAt: 1000, deadlineAt: 2000, note: "AI 备注",
++      tags: ["work", "home"], priority: "important",
++      repeat: { every: "week", mode: "ack" }
++    }, "AI 理解");
++    ok("applyToForm：标题 / 时间 / 截止都写进表单",
++      byId.capText.value === "AI 标题" && byId.capTrigger.value === "L1000" &&
++      byId.capDeadline.value === "L2000");
++    ok("applyToForm：备注**只在用户没写时**才填（不覆盖人写的上下文）",
++      byId.capNote.value === "我写的备注");
++    ok("applyToForm：标签是**并集**（用户手打的一个都不丢）",
++      byId.capTags.value.split(" ").sort().join(",") === "home,work");
++    ok("applyToForm：优先级点亮对应 chip",
++      byId["chip-important"]._cls.has("on") && !byId["chip-normal"]._cls.has("on"));
++    ok("applyToForm：周期写进 select 并**刷新预览**",
++      byId.capRepeat.value === "week" && byId.capRepeatMode.value === "ack" && calls.preview === 1);
++    ok("applyToForm：提示行以「 · 可修改」收尾（结果不是判决）",
++      byId.capHint.textContent.indexOf("AI 理解：T1000") === 0 &&
++      byId.capHint.textContent.indexOf(" · 截止 D2000") > 0 &&
++      byId.capHint.textContent.indexOf(" · R:week") > 0 &&
++      / · 可修改$/.test(byId.capHint.textContent),
++      byId.capHint.textContent);
++
++    const base = { text: "orig", tags: "home", note: "   ", trigger: "", deadline: "" };
++    const merged = ai.mergedDraft(base, {
++      title: "ai-title", triggerAt: 1000, deadlineAt: 2000, note: "ai-note",
++      tags: ["work"], priority: "critical", repeat: { every: "nthWeekday", mode: "ack", nth: 2, dow: 5 }
++    });
++    ok("mergedDraft：合出了 AI 结果（标题 / 时间 / 截止 / 优先级 / 周期）",
++      merged.text === "ai-title" && merged.trigger === "L1000" && merged.deadline === "L2000" &&
++      merged.priority === "critical" && merged.repeat === "nthWeekday" &&
++      merged.nth === "2" && merged.weekday === "5",
++      JSON.stringify(merged));
++    ok("mergedDraft：**纯的** —— 提交时冻结的那份草稿一个字都没被改",
++      base.text === "orig" && base.tags === "home" && base.note === "   " && !("priority" in base),
++      JSON.stringify(base));
++    ok("mergedDraft：标签并集（work + home）",
++      String(merged.tags).split(" ").sort().join(",") === "home,work");
++    ok("mergedDraft：备注**只在原快照为空时**填（空白串算空）", merged.note === "ai-note");
++
++    /* ⑤ 请求：URL / 头 / body 形状，以及 HTTP 错误**原样冒上去** */
++    const sent = [];
++    let nextRes = { ok: true, json: async () => ({ choices: [{ message: { content: '{"title":"t"}' } }] }) };
++    global.fetch = async (url, init) => { sent.push({ url: url, init: init }); return nextRes; };
++    const r1 = await ai.parseCapture("明天九点开会");
++    ok("请求：baseUrl 的尾斜杠被去掉后再拼 /chat/completions",
++      sent[0].url === "https://api.example.com/v1/chat/completions", sent[0].url);
++    ok("请求：Authorization 头是 Bearer + key，Content-Type 是 JSON",
++      sent[0].init.headers.Authorization === "Bearer sk-x" &&
++      sent[0].init.headers["Content-Type"] === "application/json");
++    ok("请求：system prompt 带本地时钟，并在 systemExtra 里写明任务类型",
++      JSON.parse(sent[0].init.body).messages[0].content.indexOf("当前本地时间 ISO") >= 0 &&
++      JSON.parse(sent[0].init.body).messages[0].content.indexOf("capture_parse") >= 0);
++    ok("请求：temperature 0.1 与 model 都来自配置",
++      JSON.parse(sent[0].init.body).temperature === 0.1 &&
++      JSON.parse(sent[0].init.body).model === "gpt-4o-mini");
++    ok("解析结果走同一套归一（标题来自模型）", r1.title === "t");
++    await ai.polishCapture("明天九点开会");
++    ok("润色用的是另一段 systemExtra（polish）",
++      JSON.parse(sent[1].init.body).messages[0].content.indexOf("polish") >= 0);
++    await ai.testConnection();
++    ok("连通性测试：只求能通（max_tokens 8 + ping），端点同样是 /chat/completions",
++      sent[2].url === "https://api.example.com/v1/chat/completions" &&
++      JSON.parse(sent[2].init.body).max_tokens === 8 &&
++      JSON.parse(sent[2].init.body).messages[0].content === "ping");
++
++    nextRes = { ok: false, status: 401, text: async () => "invalid api key" };
++    let httpErr = null;
++    try { await ai.testConnection(); } catch (e) { httpErr = e && e.message; }
++    ok("HTTP 错误**原样冒上去**（带状态码与响应片段），不吞成一句「AI 不可用」",
++      typeof httpErr === "string" && httpErr.indexOf("HTTP 401") === 0 &&
++      httpErr.indexOf("invalid api key") > 0, String(httpErr));
++    nextRes = { ok: true, json: async () => ({ choices: [] }) };
++    let emptyErr = null;
++    try { await ai.parseCapture("x"); } catch (e) { emptyErr = e && e.message; }
++    ok("空返回抛「AI 返回为空」（不静默当成解析成功）", emptyErr === "AI 返回为空", String(emptyErr));
++
++    /* ⑥ runOnCapture：本地解析先行、busy 闸门、按钮 busy 还原、失败回退文案 */
++    byId.capText.value = "明天九点开会";
++    byId.capTrigger.value = "";
++    byId.capHint.textContent = "";
++    nextRes = { ok: true, json: async () => ({ choices: [{ message: { content: '{"title":"AI 标题","trigger_at":"2026-09-21T09:00:00"}' } }] }) };
++    const sentBefore = sent.length;
++    const flying = ai.runOnCapture("parse");
++    ok("runOnCapture：请求在途时 isBusy() 为 true（这是**唯一**的在途闸门）", ai.isBusy() === true);
++    ok("runOnCapture：按钮被置成「思考中」并 disabled",
++      byId.btnAiParse.textContent === "✦ 思考中…" && byId.btnAiParse.disabled === true);
++    ok("runOnCapture：**先落本地解析**（等待期间界面不是空的）",
++      byId.capTrigger.value === "L111" && byId.capDeadline.value === "L222");
++    const secondCall = ai.runOnCapture("parse");
++    ok("runOnCapture：在途期间的第二次调用**立刻返回**且 busy 仍为真（闸门没被绕过）",
++      ai.isBusy() === true);
++    await flying;
++    await secondCall;
++    ok("runOnCapture：在途期间的第二次调用**没有再发请求**（连点不会叠加两次结果）",
++      sent.length === sentBefore + 1,
++      JSON.stringify({ sentBefore: sentBefore, sentAfter: sent.length }));
++    ok("runOnCapture：整个连点过程只填了一次表单（没有第二次结果覆盖第一次）",
++      byId.capText.value === "AI 标题", byId.capText.value);
++    ok("runOnCapture：完成后 busy 复位、按钮文案与 disabled 还原",
++      ai.isBusy() === false && byId.btnAiParse.disabled === false &&
++      byId.btnAiParse.textContent === "");
++    ok("runOnCapture：AI 结果真的填进了表单",
++      byId.capText.value === "AI 标题", byId.capText.value);
++
++    nextRes = { ok: false, status: 500, text: async () => "upstream down" };
++    await ai.runOnCapture("parse");
++    ok("runOnCapture：失败时按钮**仍然**还原（finally 无条件复位，失败也能再按一次）",
++      ai.isBusy() === false && byId.btnAiParse.disabled === false);
++    ok("runOnCapture：失败提示写明「已用本地解析」并带上原因",
++      byId.capHint.textContent.indexOf("AI 暂不可用，已用本地解析") === 0 &&
++      byId.capHint.textContent.indexOf("HTTP 500") > 0, byId.capHint.textContent);
++
++    byId.capText.value = "";
++    await ai.runOnCapture("parse");
++    ok("runOnCapture：空输入不发请求（提示「先写一句话吧」）",
++      calls.toast[calls.toast.length - 1] === "先写一句话吧");
++    settings.ai = { enabled: false, baseUrl: "", apiKey: "", model: "", autoOnSave: false };
++    byId.capText.value = "有事";
++    await ai.runOnCapture("parse");
++    ok("runOnCapture：没配置时不发请求，提示去配置并跳过去（跳转由入口编排，模块只回调）",
++      calls.toast[calls.toast.length - 1].indexOf("开启并配置") > 0 && calls.missingConfig === 1);
++  } finally {
++    if (hadFetch) global.fetch = savedFetch; else delete global.fetch;
++  }
++
++  appAiDone();
++})();
++
++/* ---------- P2-C：导入可靠性（lib/app-backup.js，独立复验 G01/G02 修复） ---------- */
++section("app-backup — 导入的读取失败反馈与「成功 = 提交已兑现」");
++const appBackupDone = beginAsyncSection();
++(async function () {
++  const appBackupMod = require(path.join(__dirname, "lib/app-backup.js"));
++
++  // 假 FileReader：只实现被测代码真正用的四个成员。不挂 `global` 的恢复交给
++  // 段尾 finally —— 其它异步段不碰 FileReader，这里没有交错风险。
++  const hadFileReader = Object.prototype.hasOwnProperty.call(global, "FileReader");
++  const savedFileReader = global.FileReader;
++  function FakeFileReader() {
++    this.onload = null; this.onerror = null; this.onabort = null;
++  }
++  FakeFileReader.last = null;
++  FakeFileReader.prototype.readAsText = function () { FakeFileReader.last = this; };
++  global.FileReader = FakeFileReader;
++
++  /* 依赖替身：save 是**可控的权威提交** —— 挂住 / 兑现 / 拒绝三态都能演。 */
++  const calls = { toast: [], render: 0, confirm: 0 };
++  const state = { items: [], notes: [], projects: [], settings: {} };
++  let saveImpl = async () => {};
++  const deps = {
++    getSchema: () => 5,
++    getState: () => state,
++    normalizeItem: (x) => Object.assign({}, x),
++    save: () => saveImpl(),
++    render: () => { calls.render += 1; },
++    toast: (m) => { calls.toast.push(m); },
++    confirmDialog: async () => { calls.confirm += 1; return true; },
++    query: () => null,
++    isNativeAndroidRuntime: () => false,
++    systemBridge: () => null,
++    getInflightActionDepth: () => 0
++  };
++  const backup = appBackupMod.createAppBackup(deps);
++
++  function lastToast() { return calls.toast[calls.toast.length - 1] || ""; }
++  function importPayload(payload) {
++    backup.importDataFile({ name: "backup.json" });
++    FakeFileReader.last.result = JSON.stringify(payload);
++    FakeFileReader.last.onload();
++  }
++
++  try {
++    /* G02 ①：提交挂住时**不许**报成功 —— 这是「成功 = 提交已兑现」的核心反例，
++       拔掉 `await deps.save()` 这条立即变红（旧实现同步路径里 toast 先出现）。 */
++    let releaseSave;
++    saveImpl = () => new Promise(resolve => { releaseSave = resolve; });
++    importPayload({ items: [{ id: "a" }], notes: [], projects: [] });
++    await Promise.resolve(); await Promise.resolve(); await Promise.resolve();
++    ok("导入：提交在途时不出现「导入成功」，也不提前渲染",
++      calls.toast.indexOf("导入成功 · 1 条事项") < 0 && calls.render === 0,
++      JSON.stringify({ toasts: calls.toast, render: calls.render }));
++    releaseSave();
++    await Promise.resolve(); await Promise.resolve(); await Promise.resolve();
++    await new Promise(r => setTimeout(r, 0));
++    ok("导入：提交兑现**之后**才渲染并报成功（条数来自归一后的清单）",
++      calls.render === 1 && lastToast() === "导入成功 · 1 条事项",
++      JSON.stringify({ toasts: calls.toast, render: calls.render }));
++
++    /* G02 ②：提交拒绝 ⇒ 报「未能保存」而不是成功，更不能落进「格式不正确」
++       的误导文案 —— 文件本身是好的。 */
++    saveImpl = async () => { throw new Error("idb write failed"); };
++    importPayload({ items: [{ id: "b" }, { id: "c" }], notes: [], projects: [] });
++    await new Promise(r => setTimeout(r, 0));
++    ok("导入：提交失败报「数据未能保存」，不报成功、不误报格式错误",
++      lastToast() === "导入失败 · 数据未能保存，请重新导入",
++      JSON.stringify(calls.toast));
++    ok("导入：提交失败时内存状态保留（与保存失败路径同一语义，不清空）",
++      state.items.length === 2 && calls.confirm === 2);
++
++    /* G02 ③：正常路径仍是老语义 —— 成功提示文案与条数逐字保持。 */
++    saveImpl = async () => {};
++    importPayload({ items: [{ id: "d" }], notes: [{ id: "n" }], projects: [{ id: "p" }] });
++    await new Promise(r => setTimeout(r, 0));
++    ok("导入：提交成功后渲染 + 成功提示（文案逐字保持）",
++      calls.render === 2 && lastToast() === "导入成功 · 1 条事项" &&
++      state.notes.length === 1 && state.projects.length === 1);
++
++    /* G01 ④：读取失败必须有反馈 —— 旧实现没有 onerror，这条拔掉即红。 */
++    backup.importDataFile({ name: "broken.json" });
++    FakeFileReader.last.onerror();
++    ok("导入：读取失败给出明确反馈（不是「点了没反应」）",
++      lastToast() === "导入失败：文件读取失败，请重试" && calls.render === 2);
++    backup.importDataFile({ name: "broken.json" });
++    FakeFileReader.last.onabort();
++    ok("导入：读取中止同样给出反馈",
++      lastToast() === "导入失败 · 文件读取已取消" && calls.render === 2);
++    ok("导入：读取失败/中止不触发确认框、不触发提交（反馈止步在读取层）",
++      calls.confirm === 3);
++  } finally {
++    if (hadFileReader) global.FileReader = savedFileReader; else delete global.FileReader;
++  }
++
++  appBackupDone();
++})();
++
++/* ---------- P2-C-R：导出「结果未返回」宽限闸门（假计时器，8 秒） ----------
++ *
++ * 真机上这条分支是 NOT_PERFORMED：`am force-stop com.coloros.filemanager` 之后平台
++ * **仍然投递了 RESULT_CANCELED**，构造不出「结果永不返回」（见
++ * `docs/reviews/verification-runs/20260921T1610-p2c-device-closure/not-performed.md`）。
++ * 所以这里用**假计时器**把 7999 / 8000 两个边界钉死，并证明「超时之后迟到的结果
++ * 不许再改界面」—— 那是宽限闸门存在的全部意义。
++ *
++ * 假计时器只在**同步块**内安装（本文件多个异步段并发推进，长窗口替换全局 `setTimeout`
++ * 会把别的段挂住）：宽限计时器的确立与推进都在同一个同步块里完成，退出即还原。
++ */
++section("app-backup — 导出宽限闸门（假计时器：7999 / 8000 ms 与迟到结果）");
++const graceDone = beginAsyncSection();
++(async function () {
++  const fs = require("fs");
++  const os = require("os");
++  const backupMod = require(path.join(__dirname, "lib/app-backup.js"));
++  const GRACE = backupMod.EXPORT_RESULT_GRACE_MS;
++
++  const nodes = {
++    "#btnExport": { disabled: false, attrs: {}, setAttribute(k, v) { this.attrs[k] = v; } },
++    "#exportSub": { textContent: "" }
++  };
++  const calls = { toast: [] };
++  const pendingResolvers = [];
++  let bridgeCalls = 0;
++  const bridge = {
++    saveDocument() {
++      bridgeCalls += 1;
++      return new Promise(resolve => { pendingResolvers.push(resolve); });
++    }
++  };
++  const deps = {
++    getSchema: () => 5,
++    getState: () => ({ items: [], notes: [], projects: [], settings: {} }),
++    normalizeItem: x => x,
++    save: async () => {},
++    render: () => {},
++    toast: m => { calls.toast.push(m); },
++    confirmDialog: async () => true,
++    query: sel => nodes[sel] || null,
++    isNativeAndroidRuntime: () => true,
++    systemBridge: () => bridge,
++    getInflightActionDepth: () => 0
++  };
++  const backup = backupMod.createAppBackup(deps);
++  const lastToast = () => calls.toast[calls.toast.length - 1] || "";
++  const settle = () => new Promise(r => setImmediate(r));
++
++  /** 同步块内安装假计时器，退出即还原；`fn(api)` 必须是**同步**的。 */
++  function withClock(fn) {
++    const clock = { now: 0, seq: 0, timers: [], fired: [] };
++    const realSet = global.setTimeout;
++    const realClear = global.clearTimeout;
++    const api = {
++      now: () => clock.now,
++      armed: () => clock.timers.filter(t => !t.cleared).length,
++      firedAt: () => clock.fired.slice(),
++      advance(ms) {
++        clock.now += ms;
++        clock.timers.filter(t => !t.cleared && t.at <= clock.now).forEach(t => {
++          t.cleared = true;
++          clock.fired.push(clock.now);
++          t.fn();
++        });
++      }
++    };
++    global.setTimeout = (f, ms) => {
++      const t = { id: ++clock.seq, at: clock.now + (Number(ms) || 0), fn: f, cleared: false };
++      clock.timers.push(t);
++      return t.id;
++    };
++    global.clearTimeout = id => {
++      const t = clock.timers.find(x => x.id === id);
++      if (t) t.cleared = true;
++    };
++    try { fn(api); } finally { global.setTimeout = realSet; global.clearTimeout = realClear; }
++  }
++
++  /* ① 边界：7999 不触发、8000 触发并恢复按钮。 */
++  let round1 = null;
++  ok("（前置）宽限时长是 8 秒", GRACE === 8000, String(GRACE));
++  withClock(clock => {
++    round1 = backup.exportData();               // 同步跑到 `await saveDocument`
++    ok("（前置）原生导出进入在途：按钮被锁 + 副文案改成「正在等待保存结果…」",
++      bridgeCalls === 1 && nodes["#btnExport"].disabled === true &&
++      nodes["#exportSub"].textContent === "正在等待保存结果…",
++      JSON.stringify({ calls: bridgeCalls, btn: nodes["#btnExport"].disabled,
++        sub: nodes["#exportSub"].textContent }));
++
++    backup.noteExportAppVisibility(false);      // 用户进了系统选择器
++    backup.noteExportAppVisibility(true);       // 回到应用：开始计时
++    ok("（前置）回到前台后宽限计时器被装上（离开期间不计时）",
++      clock.armed() === 1, JSON.stringify(clock.firedAt()));
++
++    clock.advance(7999);
++    ok("宽限：7999 ms **不触发**（不报「无法确认」、按钮仍保持等待）",
++      clock.firedAt().length === 0 && clock.armed() === 1 &&
++      nodes["#btnExport"].disabled === true &&
++      lastToast() === "请选择保存位置和文件名",
++      JSON.stringify({ fired: clock.firedAt(), armed: clock.armed(),
++        btn: nodes["#btnExport"].disabled, toast: lastToast() }));
++
++    clock.advance(1);                            // 累计 8000 ms
++    ok("宽限：8000 ms 触发「保存结果未返回 · 文件状态无法确认，请重试」",
++      clock.firedAt().length === 1 && clock.firedAt()[0] === 8000 &&
++      lastToast() === "保存结果未返回 · 文件状态无法确认，请重试",
++      JSON.stringify({ fired: clock.firedAt(), toast: lastToast() }));
++    ok("宽限：超时时恢复按钮与副文案（可以重试，不是永久卡死）",
++      clock.armed() === 0 && nodes["#btnExport"].disabled === false &&
++      nodes["#btnExport"].attrs["aria-busy"] === "false" &&
++      nodes["#exportSub"].textContent === "JSON 备份到文件",
++      JSON.stringify({ armed: clock.armed(), btn: nodes["#btnExport"].disabled,
++        attrs: nodes["#btnExport"].attrs, sub: nodes["#exportSub"].textContent }));
++    ok("宽限：整条超时路径**一句「已保存」都没有出现过**（绝不报成功）",
++      calls.toast.every(m => !/已保存|已分享/.test(m)), JSON.stringify(calls.toast));
++  });
++
++  /* ② 迟到结果：超时作废了这轮操作身份 ⇒ 不得再 toast、不得再改界面。 */
++  const afterGrace = calls.toast.length;
++  pendingResolvers.shift()({ status: "saved", fileName: "安心收件箱备份-x.json", locationLabel: "下载" });
++  const r1 = await round1;
++  await settle();
++  ok("迟到结果：超时之后才回来的 saved ⇒ 返回 stale，**不再 toast**、也不再改按钮",
++    r1 && r1.status === "stale" && calls.toast.length === afterGrace &&
++    nodes["#btnExport"].disabled === false,
++    JSON.stringify({ r1: r1, toasts: calls.toast }));
++
++  /* ③ 新一轮不受上一轮迟到结果影响：晚到的 stale 结果不得把新一轮说成已保存。 */
++  const round2 = backup.exportData();
++  await settle();
++  ok("新一轮：上一轮已作废后可以重新导出（按钮重新进入在途）",
++    bridgeCalls === 2 && nodes["#btnExport"].disabled === true,
++    JSON.stringify({ calls: bridgeCalls, btn: nodes["#btnExport"].disabled }));
++  pendingResolvers.shift()({ status: "saved", fileName: "安心收件箱备份-新.json", locationLabel: "下载" });
++  const r2 = await round2;
++  await settle();
++  ok("新一轮：结果正常时照旧报「已保存」，且用的是**这一轮**的文件名",
++    r2 && r2.status === "saved" && /安心收件箱备份-新\.json/.test(lastToast()) &&
++    nodes["#btnExport"].disabled === false,
++    JSON.stringify({ r2: r2, toast: lastToast() }));
++
++  /* ④ 迟到的 cancelled 同样不许再 toast（超时判定已经把这个「取消」变成了不可信信息）。 */
++  let round3 = null;
++  withClock(clock => {
++    round3 = backup.exportData();
++    backup.noteExportAppVisibility(false);
++    backup.noteExportAppVisibility(true);
++    clock.advance(8000);
++    ok("（前置）第三轮宽限同样在 8000 ms 触发", clock.firedAt().length === 1,
++      JSON.stringify(clock.firedAt()));
++  });
++  const beforeLateCancel = calls.toast.length;
++  pendingResolvers.shift()({ status: "cancelled" });
++  const r3 = await round3;
++  await settle();
++  ok("迟到结果：超时之后才回来的 cancelled ⇒ 也不 toast「已取消导出」",
++    r3 && r3.status === "stale" && calls.toast.length === beforeLateCancel &&
++    !calls.toast.some(m => /已取消导出/.test(m.slice(beforeLateCancel))),
++    JSON.stringify({ r3: r3, toasts: calls.toast }));
++
++  /* ⑤ 反向对照：把两处守卫各自拔掉，上面的断言必须变红。
++   *
++   * 用**本轮工作区字节**做最小反向编辑（只改 lib/app-backup.js 的临时副本，
++   * harness 与其它模块一个字不动）—— 这是「同一组合、只有这一处差别」。 */
++  {
++    const srcPath = path.join(__dirname, "lib/app-backup.js");
++    const src = fs.readFileSync(srcPath, "utf8");
++    const tmpMod = (name, text) => {
++      const p = path.join(os.tmpdir(), name);
++      fs.writeFileSync(p, text);
++      return p;
++    };
++    /** 用给定模块做一轮「超时 → 迟到 saved」；返回该轮的观察值。 */
++    async function lateSavedRun(mod) {
++      const localCalls = { toast: [] };
++      const localNodes = { "#btnExport": { disabled: false, attrs: {}, setAttribute(k, v) { this.attrs[k] = v; } },
++        "#exportSub": { textContent: "" } };
++      const resolvers = [];
++      const localDeps = Object.assign({}, deps, {
++        toast: m => localCalls.toast.push(m),
++        query: sel => localNodes[sel] || null,
++        systemBridge: () => ({ saveDocument: () => new Promise(r => resolvers.push(r)) })
++      });
++      const inst = mod.createAppBackup(localDeps);
++      let round = null;
++      let lockedAtGrace = null;
++      withClock(clock => {
++        round = inst.exportData();
++        inst.noteExportAppVisibility(false);
++        inst.noteExportAppVisibility(true);
++        clock.advance(8000);
++        lockedAtGrace = localNodes["#btnExport"].disabled;
++      });
++      const afterGraceLocal = localCalls.toast.length;
++      resolvers.shift()({ status: "saved", fileName: "迟到.json", locationLabel: "下载" });
++      const result = await round;
++      await settle();
++      return { toasts: localCalls.toast, afterGrace: afterGraceLocal, result: result,
++        lockedAtGrace: lockedAtGrace };
++    }
++
++    const STALE_GUARD = 'if (operationId !== exportOperationId) return { status: "stale" };';
++    const m10Src = src.replace(STALE_GUARD, 'if (false) return { status: "stale" };');
++    ok("（前置）M10 反例补丁真的拔掉了 stale 判断（只改这一行）",
++      m10Src !== src && m10Src.indexOf(STALE_GUARD) < 0 &&
++      m10Src.split("\n").length === src.split("\n").length);
++    const m10 = require(tmpMod("attention-m10-app-backup.js", m10Src));
++    const m10Run = await lateSavedRun(m10);
++    ok("M10 变红：拔掉 stale 判断后，超时后迟到的 saved **重新 toast 出「已保存」**" +
++      "⇒ ② 的断言不会恒真",
++      m10Run.toasts.length > m10Run.afterGrace &&
++      /已保存/.test(m10Run.toasts[m10Run.toasts.length - 1]),
++      JSON.stringify({ toasts: m10Run.toasts, afterGrace: m10Run.afterGrace }));
++    ok("M10 的对照面：同一路径在**未变异**模块上不 toast（两边合起来才说明判据有分辨力）",
++      await (async () => {
++        const clean = await lateSavedRun(backupMod);
++        return clean.toasts.length === clean.afterGrace && clean.result.status === "stale" &&
++          clean.lockedAtGrace === false;
++      })());
++
++    const ARM_BLOCK = [
++      "      pending.timer = setTimeout(() => {",
++      '        if (pendingNativeExport !== pending || !exportInProgress) return;',
++      "        pendingNativeExport = null;",
++      "        exportOperationId++;",
++      "        exportInProgress = false;",
++      "        setExportBusy(false);",
++      '        deps.toast("保存结果未返回 · 文件状态无法确认，请重试");',
++      "      }, EXPORT_RESULT_GRACE_MS);"
++    ].join("\n");
++    const m11Src = src.replace(ARM_BLOCK, "      pending.timer = 0;");
++    ok("（前置）M11 反例补丁真的删掉了宽限计时器的装配",
++      m11Src !== src && src.indexOf(ARM_BLOCK) > 0 &&
++      m11Src.indexOf("EXPORT_RESULT_GRACE_MS);") < 0);
++    const m11 = require(tmpMod("attention-m11-app-backup.js", m11Src));
++    const m11Run = await lateSavedRun(m11);
++    ok("M11 变红：宽限计时器被删掉后，8000 ms **不再有任何判定** —— 按钮一直锁在等待态，" +
++      "迟到的结果反被当成成功 ⇒ ① 的两个边界断言都不会恒真",
++      m11Run.lockedAtGrace === true &&
++      !m11Run.toasts.some(m => /文件状态无法确认/.test(m)) &&
++      m11Run.result && m11Run.result.status === "saved",
++      JSON.stringify({ lockedAtGrace: m11Run.lockedAtGrace, toasts: m11Run.toasts,
++        result: m11Run.result }));
++    ok("M11 的对照面：同一路径在**未变异**模块上，8000 ms 已恢复按钮且判为 stale",
++      await (async () => {
++        const clean = await lateSavedRun(backupMod);
++        return clean.lockedAtGrace === false && clean.result.status === "stale" &&
++          clean.toasts.some(m => /文件状态无法确认/.test(m));
++      })());
++    ok("收口：反向编辑只用临时副本，工作区 lib/app-backup.js 未被改写",
++      fs.readFileSync(srcPath, "utf8") === src);
++  }
++
++  graceDone();
++})();
++
+ /* storage memory backend */
+ section("storage");
+ {
++  const storageDone = beginAsyncSection();
+   // force memory by temporarily removing indexedDB
+   const store = storageMod.createStorage({ lsKey: "attention-inbox-v2" });
+   store._useMemory();
+@@ -560,10 +1517,10 @@ section("storage");
+     return store.save({ items: [{ id: "a" }], notes: [] });
+   }).then(() => store.load()).then(v => {
+     ok("memory save/load", v && v.items && v.items[0].id === "a");
+-    finish();
++    storageDone();
+   }).catch(e => {
+     ok("storage async", false, e && e.message);
+-    finish();
++    storageDone();
+   });
+ }
+ 
+@@ -929,7 +1886,30 @@ section("delivery-evidence — 证据合并与事后核查");
+     ev.evidenceStatusFor(item4[0], { now: now }).at === now - 1800000);
+ }
+ 
++/**
++ * 异步段的**收尾门**（计数变量的声明在文件顶部，见 `asyncSectionsPending`）。
++ *
++ * 本文件此前只有 storage 一段是异步的，`finish()` 就直接写在它的链尾 —— 那等于隐含
++ * 假定「异步只有一段」。P2-b 起 app-ui 的确认框也必须被 `await`（它的返回值就是
++ * 「确定 / 取消」这个契约本身），再加一段之后，**先到达的那一段不能提前出结果**，
++ * 否则后一段的断言会在 `process.exit` 之前被丢掉、结果却看起来是「全过」。
++ *
++ * 用法：段首 `const done = beginAsyncSection();`，段尾（异步链的最后）`done()`。
++ */
++function beginAsyncSection() {
++  asyncSectionsPending += 1;
++  let settled = false;
++  return function () {
++    if (settled) return;
++    settled = true;
++    asyncSectionsPending -= 1;
++    finish();
++  };
++}
++
+ function finish() {
++  // 还有异步段没回话 —— 先不出结果。
++  if (asyncSectionsPending > 0) return;
+   console.log("\n========== unit results ==========");
+   console.log("通过: " + passed + "  失败: " + failed);
+   if (failed) {

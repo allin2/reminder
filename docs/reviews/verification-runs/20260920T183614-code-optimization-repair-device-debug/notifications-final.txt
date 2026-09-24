@@ -1,0 +1,166 @@
+176-      mAdjustments=[]
+177-      shortcut=null found valid? false
+178-      mUserVisOverride=-1000
+179-      hasSummarization=false
+180-      mDelayVibForSound=false
+181:    NotificationRecord(0x08468333: pkg=space.alliswell.inbox user=UserHandle{0} id=986882581 tag=null importance=3 key=0|space.alliswell.inbox|986882581|null|10558: Notification(channel=attention-normal-v2 shortcut=null contentView=null vibrate=null sound=null defaults=0 flags=ONLY_ALERT_ONCE|AUTO_CANCEL color=0xff1b6b4a actions=3 vis=PRIVATE))
+182-      uid=10558 userId=0
+183:      opPkg=space.alliswell.inbox
+184:      icon=Icon(typ=RESOURCE pkg=space.alliswell.inbox id=0x7f0c0000)
+185-      flags=ONLY_ALERT_ONCE|AUTO_CANCEL
+186-      originalFlags=ONLY_ALERT_ONCE|AUTO_CANCEL
+187-      pri=0
+188:      key=0|space.alliswell.inbox|986882581|null|10558
+189-      seen=false
+190:      groupKey=0|space.alliswell.inbox|986882581|null|10558
+191-      notification=
+192-            fullscreenIntent=null
+193:            contentIntent=PendingIntent{e7196f0: PendingIntentRecord{74cf1fd space.alliswell.inbox startActivity (allowlist: 215dc98:+30s0ms/0/NOTIFICATION_SERVICE/NotificationManagerService)}}
+194:            deleteIntent=PendingIntent{ffa9469: PendingIntentRecord{5cb5e54 space.alliswell.inbox broadcastIntent (allowlist: 215dc98:+30s0ms/0/NOTIFICATION_SERVICE/NotificationManagerService)}}
+195-            number=0
+196-            groupAlertBehavior=0
+197-            when=1789907315002/1789907315002
+198-            tickerText=null
+199-            vis=0
+--
+201-            bigContentView=null
+202-            headsUpContentView=null
+203-            color=0xff1b6b4a
+204-            timeout=PT72H
+205-            actions={
+206:                [0] "我知道了" -> PendingIntent{91f5eee: PendingIntentRecord{eeb7266 space.alliswell.inbox startActivity (allowlist: 215dc98:+30s0ms/0/NOTIFICATION_SERVICE/NotificationManagerService)}}
+207:                [1] "稍后 2 小时" -> PendingIntent{b5c1f8f: PendingIntentRecord{7fef9a7 space.alliswell.inbox startActivity (allowlist: 215dc98:+30s0ms/0/NOTIFICATION_SERVICE/NotificationManagerService)}}
+208:                [2] "完成" -> PendingIntent{f71321c: PendingIntentRecord{1156ac1 space.alliswell.inbox startActivity (allowlist: 215dc98:+30s0ms/0/NOTIFICATION_SERVICE/NotificationManagerService)}}
+209-              }
+210-            extras={
+211-                android.title=String (安心收件箱提醒)
+212-                android.reduced.images=Boolean (true)
+213-                oplus_smallicon_use_app_icon=Boolean (true)
+214-                android.subText=null
+215-                android.showChronometer=Boolean (false)
+216-                android.text=String (买饭。)
+217-                android.progress=Integer (0)
+218-                android.progressMax=Integer (0)
+219:                android.appInfo=ApplicationInfo (ApplicationInfo{e1f0e25 space.alliswell.inbox})
+220-                android.showWhen=Boolean (true)
+221-                in_conference_scene_mode=Boolean (false)
+222-                android.largeIcon=null
+223-                android.infoText=null
+224-                android.progressIndeterminate=Boolean (false)
+225-                android.remoteInputHistory=null
+226:                oplus_small_icon=Icon (Icon(typ=RESOURCE pkg=space.alliswell.inbox id=0x7f070062))
+227-                in_full_screen_mode=Boolean (false)
+228-            }
+229-      publicNotification=
+230-            None
+231-      stats=SingleNotificationStats{posttimeElapsedMs=235731580, posttimeToFirstClickMs=-1, posttimeToDismissMs=-1, airtimeCount=0, airtimeMs=0, currentAirtimeStartElapsedMs=-1, airtimeExpandedMs=0, posttimeToFirstVisibleExpansionMs=-1, currentAirtimeExpandedStartElapsedMs=-1, requestedImportance=3, naturalImportance=3, isNoisy=true}
+--
+248-      mCreationTimeMs=1789907315007
+249-      mVisibleSinceMs=0
+250-      mUpdateTimeMs=1789907315007
+251-      mInterruptionTimeMs=1789907315011
+252-      mSuppressedVisualEffects= 0
+253:      mSound= android.resource://space.alliswell.inbox/raw/attention_reminder
+254-      mVibration= Composed{segments=[Step{amplitude=0.0, frequencyHz=0.0, duration=0}, Step{amplitude=-1.0, frequencyHz=0.0, duration=200}, Step{amplitude=0.0, frequencyHz=0.0, duration=200}, Step{amplitude=-1.0, frequencyHz=0.0, duration=0}], repeat=-1}
+255-      mAttributes= AudioAttributes: usage=USAGE_NOTIFICATION content=CONTENT_TYPE_SONIFICATION flags=0x800 tags= bundle=null
+256-      mLight= null
+257-      mShowBadge=true
+258-      mColorized=false
+259-      mAllowBubble=false
+260-      isBubble=false
+261-      mIsInterruptive=true
+262:      effectiveNotificationChannel=NotificationChannel{mId='attention-normal-v2', mName=普通提醒, mDescription=hasDescription , mImportance=3, mBypassDnd=true, mLockscreenVisibility=-1000, mSound=android.resource://space.alliswell.inbox/raw/attention_reminder, mLights=false, mLightColor=0, mVibrationPattern=null, mVibrationEffect=null, mUserLockedFields=1, mUserVisibleTaskShown=false, mVibrationEnabled=true, mShowBadge=true, mDeleted=false, mDeletedTimeMs=-1, mDeletedByMcs=false, mGroup='null', mAudioAttributes=AudioAttributes: usage=USAGE_NOTIFICATION content=CONTENT_TYPE_SONIFICATION flags=0x800 tags= bundle=null, mBlockableSystem=false, mAllowBubbles=-1, mImportanceLockedDefaultApp=false, mOriginalImp=3, mParent=null, mConversationId=null, mDemoted=false, mImportantConvo=false, mLastNotificationUpdateTimeMs=0, mShowBanner=false, mFold=false, mOpush=false, mShowIcon=true, mMaxMessages=-1, mSupportNumBadge=false, mBadgeOption=0, mChangeableFold=true, mChangeableShowIcon=true, mUnimportant=false, mTempShowBadge=true}
+263-      mAdjustments=[]
+264-      shortcut=null found valid? false
+265-      mUserVisOverride=-1000
+266-      hasSummarization=false
+267-      mDelayVibForSound=false
+--
+2103-        NotificationChannel{mId='update_notification', mName=抖音精选, mDescription=, mImportance=2, mBypassDnd=false, mLockscreenVisibility=-1000, mSound=null, mLights=false, mLightColor=0, mVibrationPattern=null, mVibrationEffect=null, mUserLockedFields=0, mUserVisibleTaskShown=false, mVibrationEnabled=false, mShowBadge=true, mDeleted=false, mDeletedTimeMs=-1, mDeletedByMcs=false, mGroup='null', mAudioAttributes=AudioAttributes: usage=USAGE_NOTIFICATION content=CONTENT_TYPE_SONIFICATION flags=0x800 tags= bundle=null, mBlockableSystem=false, mAllowBubbles=-1, mImportanceLockedDefaultApp=false, mOriginalImp=2, mParent=null, mConversationId=null, mDemoted=false, mImportantConvo=false, mLastNotificationUpdateTimeMs=0, mShowBanner=false, mFold=false, mOpush=false, mShowIcon=true, mMaxMessages=-1, mSupportNumBadge=false, mBadgeOption=0, mChangeableFold=true, mChangeableShowIcon=true, mUnimportant=true, mTempShowBadge=true}
+2104-        NotificationChannelGroup{mId='oplus_mcs_standard_index##200', mName=通知通道, mDescription=, mBlocked=false, mChannels=[], mUserLockedFields=0}
+2105-      AppSettings: com.oplus.cell.map (10470) promoted=true
+2106-      AppSettings: com.oplus.sauhelper (1000) fixedImportance=true
+2107-      AppSettings: com.android.wallpaper.livepicker.overlay (10383) promoted=true
+2108:      AppSettings: space.alliswell.inbox (10245) promoted=true
+2109:      AppSettings: space.alliswell.inbox (10558) importance=DEFAULT userSet=true promoted=true
+2110:        NotificationChannel{mId='attention-critical-v2', mName=关键提醒, mDescription=hasDescription , mImportance=5, mBypassDnd=true, mLockscreenVisibility=-1000, mSound=android.resource://space.alliswell.inbox/raw/attention_reminder, mLights=false, mLightColor=0, mVibrationPattern=null, mVibrationEffect=null, mUserLockedFields=1, mUserVisibleTaskShown=false, mVibrationEnabled=true, mShowBadge=true, mDeleted=false, mDeletedTimeMs=-1, mDeletedByMcs=false, mGroup='null', mAudioAttributes=AudioAttributes: usage=USAGE_NOTIFICATION content=CONTENT_TYPE_SONIFICATION flags=0x800 tags= bundle=null, mBlockableSystem=false, mAllowBubbles=-1, mImportanceLockedDefaultApp=false, mOriginalImp=5, mParent=null, mConversationId=null, mDemoted=false, mImportantConvo=false, mLastNotificationUpdateTimeMs=0, mShowBanner=true, mFold=false, mOpush=false, mShowIcon=true, mMaxMessages=-1, mSupportNumBadge=false, mBadgeOption=0, mChangeableFold=true, mChangeableShowIcon=true, mUnimportant=false, mTempShowBadge=true}
+2111:        NotificationChannel{mId='attention-normal-v2', mName=普通提醒, mDescription=hasDescription , mImportance=3, mBypassDnd=true, mLockscreenVisibility=-1000, mSound=android.resource://space.alliswell.inbox/raw/attention_reminder, mLights=false, mLightColor=0, mVibrationPattern=null, mVibrationEffect=null, mUserLockedFields=1, mUserVisibleTaskShown=false, mVibrationEnabled=true, mShowBadge=true, mDeleted=false, mDeletedTimeMs=-1, mDeletedByMcs=false, mGroup='null', mAudioAttributes=AudioAttributes: usage=USAGE_NOTIFICATION content=CONTENT_TYPE_SONIFICATION flags=0x800 tags= bundle=null, mBlockableSystem=false, mAllowBubbles=-1, mImportanceLockedDefaultApp=false, mOriginalImp=3, mParent=null, mConversationId=null, mDemoted=false, mImportantConvo=false, mLastNotificationUpdateTimeMs=0, mShowBanner=false, mFold=false, mOpush=false, mShowIcon=true, mMaxMessages=-1, mSupportNumBadge=false, mBadgeOption=0, mChangeableFold=true, mChangeableShowIcon=true, mUnimportant=false, mTempShowBadge=true}
+2112-        NotificationChannel{mId='attention-alarm-guard', mName=闹钟送达护航, mDescription=hasDescription , mImportance=2, mBypassDnd=true, mLockscreenVisibility=-1000, mSound=null, mLights=false, mLightColor=0, mVibrationPattern=null, mVibrationEffect=null, mUserLockedFields=1, mUserVisibleTaskShown=true, mVibrationEnabled=false, mShowBadge=false, mDeleted=false, mDeletedTimeMs=-1, mDeletedByMcs=false, mGroup='null', mAudioAttributes=null, mBlockableSystem=false, mAllowBubbles=-1, mImportanceLockedDefaultApp=false, mOriginalImp=1, mParent=null, mConversationId=null, mDemoted=false, mImportantConvo=false, mLastNotificationUpdateTimeMs=0, mShowBanner=false, mFold=false, mOpush=false, mShowIcon=true, mMaxMessages=-1, mSupportNumBadge=false, mBadgeOption=0, mChangeableFold=true, mChangeableShowIcon=true, mUnimportant=true, mTempShowBadge=false}
+2113:        NotificationChannel{mId='attention-important-v2', mName=重要提醒, mDescription=hasDescription , mImportance=4, mBypassDnd=true, mLockscreenVisibility=-1000, mSound=android.resource://space.alliswell.inbox/raw/attention_reminder, mLights=false, mLightColor=0, mVibrationPattern=null, mVibrationEffect=null, mUserLockedFields=1, mUserVisibleTaskShown=false, mVibrationEnabled=true, mShowBadge=true, mDeleted=false, mDeletedTimeMs=-1, mDeletedByMcs=false, mGroup='null', mAudioAttributes=AudioAttributes: usage=USAGE_NOTIFICATION content=CONTENT_TYPE_SONIFICATION flags=0x800 tags= bundle=null, mBlockableSystem=false, mAllowBubbles=-1, mImportanceLockedDefaultApp=false, mOriginalImp=4, mParent=null, mConversationId=null, mDemoted=false, mImportantConvo=false, mLastNotificationUpdateTimeMs=0, mShowBanner=true, mFold=false, mOpush=false, mShowIcon=true, mMaxMessages=-1, mSupportNumBadge=false, mBadgeOption=0, mChangeableFold=true, mChangeableShowIcon=true, mUnimportant=false, mTempShowBadge=true}
+2114:        NotificationChannel{mId='attention-alarm-v4', mName=提醒闹钟, mDescription=hasDescription , mImportance=4, mBypassDnd=true, mLockscreenVisibility=-1000, mSound=android.resource://space.alliswell.inbox/2131558400, mLights=false, mLightColor=0, mVibrationPattern=null, mVibrationEffect=null, mUserLockedFields=1, mUserVisibleTaskShown=false, mVibrationEnabled=true, mShowBadge=true, mDeleted=false, mDeletedTimeMs=-1, mDeletedByMcs=false, mGroup='null', mAudioAttributes=AudioAttributes: usage=USAGE_ALARM content=CONTENT_TYPE_SONIFICATION flags=0x800 tags= bundle=null, mBlockableSystem=false, mAllowBubbles=-1, mImportanceLockedDefaultApp=false, mOriginalImp=4, mParent=null, mConversationId=null, mDemoted=false, mImportantConvo=false, mLastNotificationUpdateTimeMs=0, mShowBanner=true, mFold=false, mOpush=false, mShowIcon=true, mMaxMessages=-1, mSupportNumBadge=false, mBadgeOption=0, mChangeableFold=true, mChangeableShowIcon=true, mUnimportant=false, mTempShowBadge=true}
+2115:        NotificationChannel{mId='attention-bridge-v2', mName=提醒测试, mDescription=hasDescription , mImportance=4, mBypassDnd=true, mLockscreenVisibility=-1000, mSound=android.resource://space.alliswell.inbox/2131558400, mLights=false, mLightColor=0, mVibrationPattern=null, mVibrationEffect=null, mUserLockedFields=1, mUserVisibleTaskShown=false, mVibrationEnabled=true, mShowBadge=true, mDeleted=false, mDeletedTimeMs=-1, mDeletedByMcs=false, mGroup='null', mAudioAttributes=AudioAttributes: usage=USAGE_ALARM content=CONTENT_TYPE_SONIFICATION flags=0x800 tags= bundle=null, mBlockableSystem=false, mAllowBubbles=-1, mImportanceLockedDefaultApp=false, mOriginalImp=4, mParent=null, mConversationId=null, mDemoted=false, mImportantConvo=false, mLastNotificationUpdateTimeMs=0, mShowBanner=true, mFold=false, mOpush=false, mShowIcon=true, mMaxMessages=-1, mSupportNumBadge=false, mBadgeOption=0, mChangeableFold=true, mChangeableShowIcon=true, mUnimportant=false, mTempShowBadge=true}
+2116-        NotificationChannel{mId='default', mName=Default, mDescription=hasDescription , mImportance=3, mBypassDnd=true, mLockscreenVisibility=-1000, mSound=content://settings/system/notification_sound, mLights=false, mLightColor=0, mVibrationPattern=null, mVibrationEffect=null, mUserLockedFields=1, mUserVisibleTaskShown=false, mVibrationEnabled=false, mShowBadge=true, mDeleted=false, mDeletedTimeMs=-1, mDeletedByMcs=false, mGroup='null', mAudioAttributes=AudioAttributes: usage=USAGE_NOTIFICATION content=CONTENT_TYPE_SONIFICATION flags=0x800 tags= bundle=null, mBlockableSystem=false, mAllowBubbles=-1, mImportanceLockedDefaultApp=false, mOriginalImp=3, mParent=null, mConversationId=null, mDemoted=false, mImportantConvo=false, mLastNotificationUpdateTimeMs=0, mShowBanner=false, mFold=false, mOpush=false, mShowIcon=true, mMaxMessages=-1, mSupportNumBadge=false, mBadgeOption=0, mChangeableFold=true, mChangeableShowIcon=true, mUnimportant=false, mTempShowBadge=true}
+2117-      AppSettings: com.oplus.ovoicemanager.wakeup (10091)
+2118-        NotificationChannel{mId='notification_channel_ovms', mName=Foreground Service Notification, mDescription=hasDescription , mImportance=4, mBypassDnd=false, mLockscreenVisibility=-1000, mSound=content://settings/system/notification_sound, mLights=true, mLightColor=-65536, mVibrationPattern=[0, 1000, 500, 1000], mVibrationEffect=Composed{segments=[Step{amplitude=0.0, frequencyHz=0.0, duration=0}, Step{amplitude=-1.0, frequencyHz=0.0, duration=1000}, Step{amplitude=0.0, frequencyHz=0.0, duration=500}, Step{amplitude=-1.0, frequencyHz=0.0, duration=1000}], repeat=-1}, mUserLockedFields=0, mUserVisibleTaskShown=true, mVibrationEnabled=true, mShowBadge=true, mDeleted=false, mDeletedTimeMs=-1, mDeletedByMcs=false, mGroup='null', mAudioAttributes=AudioAttributes: usage=USAGE_NOTIFICATION content=CONTENT_TYPE_SONIFICATION flags=0x800 tags= bundle=null, mBlockableSystem=false, mAllowBubbles=-1, mImportanceLockedDefaultApp=false, mOriginalImp=4, mParent=null, mConversationId=null, mDemoted=false, mImportantConvo=false, mLastNotificationUpdateTimeMs=0, mShowBanner=true, mFold=false, mOpush=false, mShowIcon=true, mMaxMessages=-1, mSupportNumBadge=false, mBadgeOption=0, mChangeableFold=true, mChangeableShowIcon=true, mUnimportant=false, mTempShowBadge=true}
+2119-      AppSettings: com.coloros.smartsidebar (10200)
+2120-      AppSettings: com.oplus.safecenter (1000) importance=DEFAULT userSet=false fixedImportance=true
+--
+4245-manualRule=null,
+4246-deletedRules={}],
+4247-Diff[automaticRule[EVERY_NIGHT_DEFAULT_RULE]:ZenRuleDiff{condition:Condition[state=STATE_TRUE,id=condition://android/schedule?days=1.2.3.4.5.6.7&start=22.0&end=7.0&exitAtAlarm=false,summary=...,line1=...,line2=...,icon=0,source=SOURCE_UNKNOWN,flags=2]->Condition[state=STATE_FALSE,id=condition://android/schedule?days=1.2.3.4.5.6.7&start=22.0&end=7.0&exitAtAlarm=false,summary=...,line1=...,line2=...,icon=0,source=SOURCE_UNKNOWN,flags=2], (->inactive)}]
+4248-    2026-09-20T07:00:01.736283 - set_zen_mode: off,setAzrStateFromCps: condition://android/schedule?days=1.2.3.4.5.6.7&start=22.0&end=7.0&exitAtAlarm=false
+4249-    2026-09-20T07:00:01.736447 - set_zen_mode: off,updated setting
+4250:    2026-09-20T10:35:47.527746 - config: space.alliswell.inbox.exporttest|removeAutomaticZenRules (ORIGIN_SYSTEM) no changes
+4251:    2026-09-20T10:35:47.527934 - set_zen_mode: off,space.alliswell.inbox.exporttest|removeAutomaticZenRules
+4252-    2026-09-20T10:35:47.528015 - set_zen_mode: off,updated setting
+4253:    2026-09-20T10:35:50.092470 - config: space.alliswell.inbox|removeAutomaticZenRules (ORIGIN_SYSTEM) no changes
+4254:    2026-09-20T10:35:50.092770 - set_zen_mode: off,space.alliswell.inbox|removeAutomaticZenRules
+4255-    2026-09-20T10:35:50.092834 - set_zen_mode: off,updated setting
+4256:    2026-09-20T15:07:01.154871 - config: space.alliswell.inbox|removeAutomaticZenRules (ORIGIN_SYSTEM) no changes
+4257:    2026-09-20T15:07:01.155055 - set_zen_mode: off,space.alliswell.inbox|removeAutomaticZenRules
+4258-    2026-09-20T15:07:01.155080 - set_zen_mode: off,updated setting
+4259-
+4260-  Condition providers:
+4261-    Allowed condition providers:
+4262-      com.google.android.apps.wellbeing:com.google.android.gms (user: 0 isPrimary: true)
+--
+5131-      note_imp_quiet_: [0, 0, 0, 1, 0, 0]
+5132-      note_importance_: [0, 0, 0, 1, 0, 0]
+5133-      numUndecorateRVs=0
+5134-    }
+5135-    AggregatedStats{
+5136:      key='space.alliswell.inbox',
+5137-      numEnqueuedByApp=91,
+5138-      numPostedByApp=120,
+5139-      numUpdatedByApp=62,
+5140-      numRemovedByApp=79,
+5141-      numPeopleCacheHit=281,
+--
+5992-    }
+5993-    mStatsArrays.size(): 1
+5994-    mStats.size(): 43
+5995-
+5996-  TimeToLive alarms:
+5997:    mKeys [Pair{494128151 0|com.ss.android.lark|114478302|null|10370}, Pair{494178969 0|com.ss.android.lark|1574489386|null|10370}, Pair{494243316 0|com.ss.android.lark|1905134546|null|10370}, Pair{494334895 0|com.ss.android.lark|289999804|null|10370}, Pair{494377445 0|com.taobao.idlefish|-1094601561|null|10429}, Pair{494451452 0|com.android.systemui|10004|null|10221}, Pair{494454930 0|com.android.systemui|10005|null|10221}, Pair{494540422 0|com.tencent.mm|1688372947|null|10417}, Pair{494554367 0|tv.danmaku.bili|2333|null|10361}, Pair{494779501 0|com.ss.android.lark|1185467657|null|10370}, Pair{494821041 0|com.xingin.xhs|-44013|null|10332}, Pair{494834904 0|com.ss.android.lark|1950387173|null|10370}, Pair{494931578 0|space.alliswell.inbox|986882581|null|10558}, Pair{494958863 0|com.ss.android.lark|956910785|null|10370}, Pair{494988832 0|android|0|null|1000}, Pair{494989430 0|com.nextin.m78|1001|null|10499}]
+5998-
+5999- mMcsNotInterceptPkgStr: com.taobao.trip;com.tongcheng.android;com.sohu.newsclient;com.jd.jrapp;com.dragon.read;com.zenmen.palmchat;com.tmall.wireless;com.gotokeep.keep;com.ximalaya.ting.android;com.ss.android.article.vi;com.duowan.mobile;com.ss.android.ugc.liveli;com.duowan.kiwi;com.chinatelecom.bestpaycl;com.sohu.sohuvideo;com.ss.android.auto;com.zhihu.android;com.xingjiabi.shengsheng;com.rong360.app;com.sdu.didi.psnger;com.dangdang.buy2;me.ele;com.tencent.weishi;com.wuba.bangjob;com.lianjia.beike;com.tencent.map;com.netease.party.nearme.;com.duxiaoman.wallet;com.huajiao;com.hipu.yidian;com.bankcomm.Bankcomm;com.suning.mobile.ebuy;com.shuqu.banyan;com.sup.android.superb;com.job.android;com.snda.wifilocating;com.qiyi.video.lite;com.soft.blued;com.yiyou.ga;com.taou.maimai;com.csair.mbp;com.citicsf.finance;com.oppo.news;com.ukilive.wonderland;com.f100.android;com.sabac.hy;com.ctrip.jr;cn.v6.xiuchang;com.xiwang.zaixian;fm.qingting.qtradio;com.p1.mobile.putong;com.koolearn.android;com.ganji.android;com.tal.abctimelib;com.xiaolachuxing.driv;com.bankofbeijing.mobileb;com.cmbc.cc.mbank;com.pycredit.txxy;tv.danmaku.bili;com.yipiao;com.arvato.sephora.app;com.homelink.android;com.android.dazhihui;com.taobao.taobao;com.jingdong.app.mall;com.smile.gifmaker;com.oppo.store;com.kuaishou.nebula;com.xunmeng.pinduoduo;com.ss.android.ugc.aweme;com.xingin.xhs;com.achievo.vipshop;com.ss.android.article.news;com.tencent.mtt;com.wuba;com.shizhuang.duapp;com.ss.android.ugc.aweme.lite;com.UCMobile;com.anjuke.android.app;com.eg.android.AlipayGphone;com.quark.browser;com.qiyi.video;com.heytap.mcs;com.tencent.qqlive;com.ss.android.ugc.live;com.dianping.v1;com.kmxs.reader;com.nearme.gamecenter;com.cubic.autohome;com.ss.android.article.lite;com.baidu.haokan;com.finshell.wallet;com.hunantv.imgo.activity;com.chinamworld.main;cn.soulapp.android;com.cat.readall;com.xs.fm;com.Qunar;com.heytap.market;com.tencent.mobileqq;com.tencent.mm
+6000-
+6001- mMcsNotInterceptPkgList[ 
+6002-<com.homelink.android>
+--
+6130-<com.openai.chatgpt,false>
+6131-<com.oplus.battery,true>
+6132-<com.google.android.youtube,false>
+6133-<com.coloros.weather2,false>
+6134-<com.youku.phone,false>
+6135:<space.alliswell.inbox,false>
+6136-<com.android.email,false>
+6137:<space.alliswell.inbox.exporttest,false>
+6138-<com.ruaho.echat.icbc.sandbox,false>
+6139-<android,true>
+6140-<com.coloros.alarmclock,false>
+6141-<com.oplus.member,false>
+6142-<com.google.android.gms,false>
+--
+6174-            0|com.tencent.mm|1688372947|null|10417
+6175-        0|com.nextin.m78|g:Aggregate_AlertingSection
+6176-            0|com.nextin.m78|1001|null|10499
+6177-        0|com.taobao.idlefish|g:Aggregate_AlertingSection
+6178-            0|com.taobao.idlefish|-1094601561|null|10429
+6179:        0|space.alliswell.inbox|g:Aggregate_AlertingSection
+6180:            0|space.alliswell.inbox|986882581|null|10558
+6181-
+6182-    Autogrouped notifications:
+6183-        0|com.ss.android.lark|g:Aggregate_AlertingSection
+6184-            0|com.ss.android.lark|114478302|null|10370
+6185-            0|com.ss.android.lark|1574489386|null|10370

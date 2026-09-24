@@ -1,0 +1,286 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://attention-inbox.local/schemas/attention-inbox.export.v1.schema.json",
+  "title": "Attention Inbox 内容导出 v1",
+  "description": "「安心收件箱 / Attention Inbox」面向外部消费方的结构化导出契约。此格式用于让日历、待办、提醒类程序自动识别并据此建立提醒事项、日程或待办。消费方实现须知：attention_status=ACKNOWLEDGED 表示用户已看到，绝不表示事情已完成（ACK != Complete）；time_source=FALLBACK 表示该时间是系统兜底值而非用户本意，不得据此建立日程。",
+  "type": "object",
+  "required": [
+    "format",
+    "format_version",
+    "generator",
+    "exported_at",
+    "exported_at_ms",
+    "timezone",
+    "scope",
+    "counts",
+    "items"
+  ],
+  "properties": {
+    "format": {
+      "const": "attention-inbox.export",
+      "description": "格式标识，消费方据此识别本文件。"
+    },
+    "format_version": {
+      "const": "1.0",
+      "description": "对外契约版本。字段语义变更时递增主版本。"
+    },
+    "generator": {
+      "type": "object",
+      "required": ["app", "app_version", "internal_schema"],
+      "properties": {
+        "app": { "const": "attention-inbox" },
+        "app_version": { "type": "string" },
+        "internal_schema": {
+          "type": "integer",
+          "description": "生成本文件时的内部数据结构版本号，便于消费方定位差异。"
+        }
+      },
+      "additionalProperties": true
+    },
+    "exported_at": {
+      "$ref": "#/$defs/isoDateTime",
+      "description": "导出时刻，ISO 8601 且必须带 UTC 偏移。"
+    },
+    "exported_at_ms": {
+      "$ref": "#/$defs/epochMs",
+      "description": "导出时刻的 epoch 毫秒，用于消除字符串解析歧义。"
+    },
+    "timezone": {
+      "type": "string",
+      "description": "导出时所在时区（IANA 名，如 Asia/Shanghai）。本产品默认采用当地时间语义。",
+      "examples": ["Asia/Shanghai"]
+    },
+    "locale": {
+      "type": "string",
+      "examples": ["zh-CN"]
+    },
+    "scope": {
+      "$ref": "#/$defs/scope",
+      "description": "本次导出的范围。消费方据此理解「为什么某些条目不在文件里」。"
+    },
+    "counts": {
+      "type": "object",
+      "required": ["items"],
+      "properties": {
+        "items": { "type": "integer", "minimum": 0 },
+        "by_attention_status": {
+          "type": "object",
+          "additionalProperties": { "type": "integer", "minimum": 0 }
+        },
+        "by_completion_status": {
+          "type": "object",
+          "additionalProperties": { "type": "integer", "minimum": 0 }
+        },
+        "by_review_status": {
+          "type": "object",
+          "additionalProperties": { "type": "integer", "minimum": 0 }
+        },
+        "by_deadline_status": {
+          "type": "object",
+          "additionalProperties": { "type": "integer", "minimum": 0 }
+        }
+      },
+      "additionalProperties": true
+    },
+    "items": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/item" }
+    },
+    "extensions": {
+      "$ref": "#/$defs/extensions",
+      "description": "非契约扩展区。extensions.internal 仅供本应用回环导入使用，第三方消费方必须忽略。"
+    }
+  },
+  "additionalProperties": true,
+  "$defs": {
+    "isoDateTime": {
+      "type": "string",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}(:\\d{2}(\\.\\d+)?)?(Z|[+-]\\d{2}:\\d{2})$",
+      "description": "必须带 UTC 偏移或 Z 的 ISO 8601 时间。不允许无偏移的裸时间串。"
+    },
+    "epochMs": {
+      "type": "integer",
+      "description": "Unix epoch 毫秒。"
+    },
+    "nullableIso": {
+      "oneOf": [{ "$ref": "#/$defs/isoDateTime" }, { "type": "null" }]
+    },
+    "nullableMs": {
+      "oneOf": [{ "$ref": "#/$defs/epochMs" }, { "type": "null" }]
+    },
+    "attentionStatus": {
+      "type": "string",
+      "enum": ["WAITING", "DELIVERED", "ACKNOWLEDGED"],
+      "description": "注意力交付状态。ACKNOWLEDGED = 用户明确看到，不代表完成。"
+    },
+    "reviewStatus": {
+      "type": "string",
+      "enum": ["READY", "NEEDS_REVIEW", "REVIEWED"],
+      "description": "信息质量状态。与注意力、完成、截止三条轴正交。"
+    },
+    "completionStatus": {
+      "type": "string",
+      "enum": ["ACTIVE", "COMPLETED", "ARCHIVED"]
+    },
+    "deadlineStatus": {
+      "type": "string",
+      "enum": ["NONE", "PENDING", "PROTECTED", "PASSED"],
+      "description": "硬截止风险状态。PASSED 表示已过截止且未完成，不代表已完成。"
+    },
+    "importance": {
+      "type": "string",
+      "enum": ["NORMAL", "IMPORTANT", "CRITICAL"],
+      "description": "IMPORTANT / CRITICAL 均为用户显式标记。CRITICAL 表示「绝不能错过」。"
+    },
+    "timeSource": {
+      "type": "string",
+      "enum": ["PARSED", "USER", "FALLBACK"],
+      "description": "提醒时间的来源。FALLBACK 为系统兜底值，不是用户本意，消费方不得据此建立日程。"
+    },
+    "repeat": {
+      "type": "object",
+      "required": ["every", "mode"],
+      "properties": {
+        "every": {
+          "type": "string",
+          "enum": ["day", "week", "biweek", "month", "monthEnd", "nthWeekday"]
+        },
+        "mode": {
+          "type": "string",
+          "enum": ["calendar", "ack"],
+          "description": "calendar = 按日历规则；ack = 从本次确认时刻重新计时。"
+        },
+        "nth": { "type": ["integer", "null"], "description": "仅 nthWeekday：1..4 或 -1（最后一个）。" },
+        "dow": { "type": ["integer", "null"], "minimum": 0, "maximum": 6 },
+        "rrule": {
+          "oneOf": [
+            { "type": "string", "pattern": "^FREQ=" },
+            { "type": "null" }
+          ],
+          "description": "派生字段（RFC 5545 RRULE）。mode=ack 时为 null —— ACK 周期依赖确认时刻，不存在等价的 RRULE，不得用近似值填充。"
+        }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "mode": { "const": "ack" } }, "required": ["mode"] },
+          "then": {
+            "properties": { "rrule": { "type": "null" } },
+            "description": "ACK 周期没有等价的 RRULE。用 FREQ=DAILY;INTERVAL=14 之类的近似值填充会让消费方按固定日历重复建日程 —— 这是一条硬约束，不是建议。"
+          }
+        },
+        {
+          "if": { "properties": { "every": { "const": "nthWeekday" } }, "required": ["every"] },
+          "then": { "required": ["nth", "dow"] }
+        }
+      ],
+      "additionalProperties": false
+    },
+    "extensions": {
+      "type": "object",
+      "properties": {
+        "internal": {
+          "type": "object",
+          "description": "本应用回环导入专用。第三方消费方必须忽略整个对象。",
+          "additionalProperties": true
+        }
+      },
+      "additionalProperties": true
+    },
+    "scope": {
+      "type": "object",
+      "required": ["mode"],
+      "properties": {
+        "mode": {
+          "type": "string",
+          "enum": ["all", "active", "future", "range"]
+        },
+        "include_archived": { "type": "boolean" },
+        "include_needs_review": { "type": "boolean" },
+        "include_completed": { "type": "boolean" },
+        "from": { "$ref": "#/$defs/isoDateTime" },
+        "to": { "$ref": "#/$defs/isoDateTime" }
+      },
+      "additionalProperties": true
+    },
+    "item": {
+      "type": "object",
+      "required": [
+        "id",
+        "title",
+        "attention_status",
+        "review_status",
+        "completion_status",
+        "deadline_status",
+        "importance",
+        "time_source",
+        "created_at_iso",
+        "created_at_ms",
+        "derived"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "稳定标识。消费方应原样保留，用于跨次导出识别同一条内容。"
+        },
+        "rev": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "修订号。同 id 且 rev 变大表示这条已被用户改动过。"
+        },
+        "title": { "type": "string", "minLength": 1 },
+        "content": { "type": ["string", "null"], "description": "正文/说明，对应内部 note。" },
+        "original_capture": {
+          "type": ["string", "null"],
+          "description": "用户最初交给系统的原文。当前实现可能为 null（该字段尚未落地），消费方必须容忍 null。"
+        },
+        "url": { "type": ["string", "null"] },
+        "tags": { "type": "array", "items": { "type": "string" } },
+
+        "attention_status": { "$ref": "#/$defs/attentionStatus" },
+        "review_status": { "$ref": "#/$defs/reviewStatus" },
+        "completion_status": { "$ref": "#/$defs/completionStatus" },
+        "deadline_status": { "$ref": "#/$defs/deadlineStatus" },
+        "importance": { "$ref": "#/$defs/importance" },
+
+        "trigger_at_iso": { "$ref": "#/$defs/nullableIso" },
+        "trigger_at_ms": { "$ref": "#/$defs/nullableMs" },
+        "trigger_window_start_iso": { "$ref": "#/$defs/nullableIso" },
+        "trigger_window_end_iso": { "$ref": "#/$defs/nullableIso" },
+        "time_source": { "$ref": "#/$defs/timeSource" },
+
+        "deadline_at_iso": { "$ref": "#/$defs/nullableIso" },
+        "deadline_at_ms": { "$ref": "#/$defs/nullableMs" },
+        "deadline_paused": { "type": "boolean" },
+
+        "repeat": {
+          "oneOf": [{ "$ref": "#/$defs/repeat" }, { "type": "null" }]
+        },
+
+        "source_title": { "type": ["string", "null"] },
+        "source_url": { "type": ["string", "null"] },
+        "source_app": { "type": ["string", "null"] },
+        "source_quote": {
+          "type": ["string", "null"],
+          "description": "该条内容在来源文件中的原文片段（导入生成的条目才有）。"
+        },
+
+        "created_at_iso": { "$ref": "#/$defs/isoDateTime" },
+        "created_at_ms": { "$ref": "#/$defs/epochMs" },
+        "acknowledged_at_iso": { "$ref": "#/$defs/nullableIso" },
+        "acknowledged_at_ms": { "$ref": "#/$defs/nullableMs" },
+        "reviewed_at_iso": { "$ref": "#/$defs/nullableIso" },
+        "completed_at_iso": { "$ref": "#/$defs/nullableIso" },
+        "completed_at_ms": { "$ref": "#/$defs/nullableMs" },
+        "archived_at_iso": { "$ref": "#/$defs/nullableIso" },
+
+        "derived": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "本条中由导出方计算而非存储的字段名。未列入其中的字段是可直接信任的持久化事实；列入其中的是本应用的确定性解释。"
+        },
+        "extensions": { "$ref": "#/$defs/extensions" }
+      },
+      "additionalProperties": false
+    }
+  }
+}

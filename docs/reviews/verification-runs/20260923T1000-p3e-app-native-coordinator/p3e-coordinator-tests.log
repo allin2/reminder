@@ -1,0 +1,10 @@
+healthy coordinator behavior: PASS
+authority write gate check bypassed: mutation detected
+version drift protection bypassed: mutation detected
+deferNativeSync option removed in syncNativeRemindersNow: mutation detected
+ensureNativeReminders retry bypassed on late bridge: mutation detected
+indexItemsById first-item-wins check removed: mutation detected
+inflight dedup counter bypassed: mutation detected
+deliveryEvidenceState readable forced false: mutation detected
+roundBase dropped in applyReminderEvents: mutation detected
+lib/app-native-coordinator.js before/after SHA-256 match: 51d99e649ba1e9407d45e0b09b74458d2bd57476e61183c6b219c48f7c3f361d

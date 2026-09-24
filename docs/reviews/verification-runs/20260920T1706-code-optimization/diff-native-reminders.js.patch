@@ -1,0 +1,22 @@
+--- docs/reviews/verification-runs/20260920T1706-code-optimization/pre-edit/native-reminders.js	2026-09-20 17:09:42
++++ lib/native-reminders.js	2026-09-20 17:11:15
+@@ -679,8 +679,18 @@
+     if (forceRebuild) {
+       alarmSignaturesCache.clear();
+     }
++    // O4：原先每个 desired 项都 `items.find(x => x.id === …)`，一次对账是
++    // O(desired × items)。这里**调用内**建一次索引，语义与 `Array.find` 逐字一致 ——
++    // 先出现者胜（重复 id 不会被后出现者覆盖，那会把「首项」静默变成「末项」）。
++    // `items` 是调用方传入的固定数组（app-core 传的是已提交快照），循环内不增删成员。
++    const itemsById = new Map();
++    (Array.isArray(items) ? items : []).forEach(x => {
++      if (!x) return;
++      if (itemsById.has(x.id)) return;
++      itemsById.set(x.id, x);
++    });
+     for (const n of desired) {
+-      const item = (Array.isArray(items) ? items : []).find(x => x && x.id === n.extra.itemId);
++      const item = itemsById.get(n.extra.itemId);
+       const level = item && item.priority === "important" ? "☆ 重要" :
+         item && item.priority === "critical" ? "🚨 关键" : "提醒";
+       const sig = alarmSignature(n, item);

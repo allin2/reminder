@@ -1,0 +1,7 @@
+healthy checks passed
+mutant1_listenerDoubling: remove installBound / networkBound check: mutation detected
+mutant2_notificationActionBypassed: omit onNotificationAction: mutation detected
+mutant3_nativeAndroidWithoutCapacitor: return true when cap is null: mutation detected
+mutant4_lateBridgePollingBroken: immediate false on first check: mutation detected
+mutant5_deferredPromptNotClearedOnAppInstalled: omit clearing deferredInstallPrompt: mutation detected
+lib/app-platform.js before/after SHA-256 match: e28f3c6b493fc57d4e39dc3c3c795fa82701a0fa0568ddccb5d8649cdf90f44a

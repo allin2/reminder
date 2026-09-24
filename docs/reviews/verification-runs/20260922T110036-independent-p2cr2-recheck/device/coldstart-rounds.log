@@ -1,0 +1,12 @@
+ROUNDS=3 PKG=space.alliswell.inbox.exportrecheck
+run-start=2026-09-22T11:04:08+0800
+
+## timepoint A (启动前 · 进程活着)
+IDB_STATE_SHA256=0625aacabcd5068a
+BYTES=2443
+IDB_FILES=5 IDB_BYTES=143297 IDB_SHA256=323980cd3805a9fda27ed1dc04a415033547b2973082454ae52854cddf6f855a
+MIRROR_FILES=5 MIRROR_BYTES=16779 MIRROR_SHA256=77dfe37b9bdd4c26cc6b1147f01c235b37c0d073cc266e1fc2fcdb6b943c9e93
+IDB_WAL_BYTES=142466
+MIRROR_WAL_BYTES=16026
+PAGE={"items":2,"projects":1,"title":"P2C 复验事项","status":"loaded","reason":"authoritative","backend":"idb","writesAllowed":true,"blockedWriteCount":0,"nativeBlocked":0,"mirrorLen":2443,"mirrorSha16":"0625aacabcd5068a","panel":false}
+scripts/verification/p2cr-coldstart-rounds.sh: line 121: BASE_WAL�: unbound variable

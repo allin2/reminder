@@ -1,0 +1,6 @@
+  ✓ 000003.log 逐字节一致
+  ✓ CURRENT 逐字节一致
+  ✓ LOG 逐字节一致
+  ✓ LOG.old 逐字节一致
+  ✓ MANIFEST-000001 逐字节一致
+VERIFY=PASS

@@ -23,3 +23,69 @@ releases/*.stale-*
 
 # 证据脱敏规则（含待脱敏的原文）—— 故意只留本地；仓库只保留脚本与哈希清单
 scripts/verification/.redaction-rules.json
+
+# Python 字节码缓存
+__pycache__/
+
+# 真机/浏览器证据中不公开的部分（本地保留，见 docs/reviews/verification-runs/REDACTION-MANIFEST-2026-09-24.json 说明）
+# - 浏览器测试遗留的 Chrome profile（模型、Cookie、历史等，不是证据）
+docs/reviews/verification-runs/**/browser-profile/
+docs/reviews/verification-runs/**/browser-order-profile/
+docs/reviews/verification-runs/**/import-browser-profile/
+docs/reviews/verification-runs/**/import-reliability-profile/
+# - 从手机拉取的 OEM 系统二进制（专有代码）与含真实用户数据的 IDB WAL / 应用数据包（无法逐字节脱敏）
+docs/reviews/verification-runs/**/*.jar
+docs/reviews/verification-runs/**/*.dex
+docs/reviews/verification-runs/**/*.bin
+docs/reviews/verification-runs/**/*.tar
+# - 含其他应用内容、桌面/锁屏、账号昵称或文件列表的截图
+/docs/reviews/verification-runs/20260919-foreground-banner-other/banner-minus1s.png
+/docs/reviews/verification-runs/20260919-foreground-banner-other/banner-plus0_3s.png
+/docs/reviews/verification-runs/20260919-foreground-banner-other/banner-plus1_2s.png
+/docs/reviews/verification-runs/20260919-foreground-banner-other/banner-plus3_2s.png
+/docs/reviews/verification-runs/20260919-foreground-banner-other/due-screen.png
+/docs/reviews/verification-runs/20260919-n4-device/other/due-screen.png
+/docs/reviews/verification-runs/20260919-oppo-connect-baseline/comm-screencap.png
+/docs/reviews/verification-runs/20260919-oppo-current-build-full/comm-screencap.png
+/docs/reviews/verification-runs/20260919-oppo-current-cold/cleaned-screen.png
+/docs/reviews/verification-runs/20260919-oppo-current-cold/due-screen.png
+/docs/reviews/verification-runs/20260919-oppo-current-cold/scheduled-screen.png
+/docs/reviews/verification-runs/20260919-oppo-current-off/cleaned-screen.png
+/docs/reviews/verification-runs/20260919-oppo-current-off/due-screen.png
+/docs/reviews/verification-runs/20260919-oppo-current-off/scheduled-screen.png
+/docs/reviews/verification-runs/20260919-oppo-current-other/cleaned-screen.png
+/docs/reviews/verification-runs/20260919-oppo-current-other/due-screen.png
+/docs/reviews/verification-runs/20260919-oppo-current-other/scheduled-screen.png
+/docs/reviews/verification-runs/20260919-oppo3-asleep/shot_asleep_+8s.png
+/docs/reviews/verification-runs/20260919-u3-autostart-landing/com.oplus.startupapp.view.OptimizationAutoStartActivity.png
+/docs/reviews/verification-runs/20260919-u3-autostart-landing/com.oplus.startupapp.view.PreventRecordActivity.png
+/docs/reviews/verification-runs/20260919-vivo-candidate/off/due-screen.png
+/docs/reviews/verification-runs/20260919-vivo-candidate/other/due-screen.png
+/docs/reviews/verification-runs/20260919T043405Z-device-verify/comm-screencap.png
+/docs/reviews/verification-runs/20260919T051023Z-device-verify/comm-screencap.png
+/docs/reviews/verification-runs/20260919T071920Z-device-verify/comm-screencap.png
+/docs/reviews/verification-runs/20260920T115939-full-device/background-settings.png
+/docs/reviews/verification-runs/20260920T115939-full-device/baseline-probe/comm-screencap.png
+/docs/reviews/verification-runs/20260920T115939-full-device/delivery-asleep/after-complete-screen.png
+/docs/reviews/verification-runs/20260920T115939-full-device/delivery-cold-log/after-complete-screen.png
+/docs/reviews/verification-runs/20260920T115939-full-device/delivery-cold/after-complete-screen.png
+/docs/reviews/verification-runs/20260920T115939-full-device/export-folder.png
+/docs/reviews/verification-runs/20260920T115939-full-device/export-return.png
+/docs/reviews/verification-runs/20260920T115939-full-device/first-launch.png
+/docs/reviews/verification-runs/20260920T115939-full-device/fresh-home.png
+/docs/reviews/verification-runs/20260920T115939-full-device/immediate-notification.png
+/docs/reviews/verification-runs/20260920T124045-bg-diag/diag-asleep/due-120-screen.png
+/docs/reviews/verification-runs/20260920T124045-bg-diag/diag-cold/due-120-screen.png
+/docs/reviews/verification-runs/20260920T183614-code-optimization-repair-device-debug/ui-after-mistap.png
+/docs/reviews/verification-runs/20260920T183614-code-optimization-repair-device-debug/ui-buy-food-restored-final.png
+/docs/reviews/verification-runs/20260920T183614-code-optimization-repair-device-debug/ui-future-before-restore.png
+/docs/reviews/verification-runs/20260920T183614-code-optimization-repair-device-debug/ui-production-woken.png
+/docs/reviews/verification-runs/20260920T183614-code-optimization-repair-device-debug/ui-resume-before-recovery.png
+/docs/reviews/verification-runs/20260921T1610-p2c-device-closure/device-exports/shot-broken-confirm.png
+/docs/reviews/verification-runs/20260921T1610-p2c-device-closure/device-exports/shot-broken2.png
+/docs/reviews/verification-runs/20260921T1610-p2c-device-closure/device-exports/shot-picker.png
+/docs/reviews/verification-runs/20260923T073920Z-device-verify/comm-screencap.png
+/docs/reviews/verification-runs/20260923T073944Z-device-verify/comm-screencap.png
+/docs/reviews/verification-runs/20260923T1540-p3g-device-verification/scheduled-background.png
+/docs/reviews/verification-runs/20260923T1605-p3gr-delivery-closure/scheduled-background.png
+/docs/reviews/verification-runs/20260924T1526-a15-device-acceptance/raw/step3-A3-alarm-panel.png

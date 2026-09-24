@@ -1,0 +1,21 @@
+{
+  "name": "attention-inbox",
+  "version": "1.1.0",
+  "private": true,
+  "description": "安心收件箱 — 少记挂，不错过",
+  "scripts": {
+    "sync:www": "node scripts/sync-www.js",
+    "cap:sync": "npm run sync:www && npx cap sync android",
+    "cap:open": "npx cap open android",
+    "test": "node test-unit.js && node test-native-reminders.js && node test-boot-combination.js && node test-smoke.js && node test-regressions.js && node scripts/verification/parse-single-source.js"
+  },
+  "devDependencies": {
+    "@capacitor/android": "^6.0.0",
+    "@capacitor/cli": "^6.0.0",
+    "@capacitor/core": "^6.0.0"
+  },
+  "dependencies": {
+    "@capacitor/app": "6.0.3",
+    "@capacitor/local-notifications": "6.1.3"
+  }
+}

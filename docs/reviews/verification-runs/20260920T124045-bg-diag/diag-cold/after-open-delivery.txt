@@ -1,0 +1,26 @@
+<?xml version='1.0' encoding='utf-8' standalone='yes' ?>
+<map>
+    <boolean name="deliveryExactEnabled" value="true" />
+    <long name="carrierAt" value="1789881713032" />
+    <boolean name="deliveryNotifyEnabled" value="true" />
+    <long name="deliveryShownAt" value="1789881713084" />
+    <boolean name="deliveryFullScreenIntentEnabled" value="true" />
+    <string name="deliveryTrace">1605768639:73f0b6a3-814c-422b-ad86-6a0e6b911778</string>
+    <boolean name="deliveryScreenOn" value="false" />
+    <long name="deliveryHiddenAt" value="0" />
+    <boolean name="deliveryNotificationPosted" value="true" />
+    <boolean name="deliveryOverlay" value="true" />
+    <string name="carrierSound">none</string>
+    <string name="deliveryLevel">☆ 重要</string>
+    <boolean name="deliveryVisible" value="true" />
+    <boolean name="deliveryInCall" value="false" />
+    <boolean name="carrierForegroundService" value="false" />
+    <string name="carrierVibrate">none</string>
+    <string name="deliveryTitle">☆ 重要事项</string>
+    <long name="deliveryAt" value="1789881712645" />
+    <boolean name="deliveryAttempted" value="true" />
+    <string name="deliveryPath">fsi+direct</string>
+    <string name="carrierTrace">1605768639:73f0b6a3-814c-422b-ad86-6a0e6b911778</string>
+    <string name="pendingActions">[]</string>
+    <boolean name="deliveryLocked" value="true" />
+</map>

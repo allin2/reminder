@@ -1,0 +1,26 @@
+[
+  {
+    "token": "1410259324:e666cd4e-ca70-4772-ab14-67a92234e0fa",
+    "stage": "requested",
+    "at": 1789877627864,
+    "detail": "delayMs=24141"
+  },
+  {
+    "token": "1410259324:e666cd4e-ca70-4772-ab14-67a92234e0fa",
+    "stage": "item",
+    "at": 1789877627865,
+    "detail": "verify-asleep-1789877627745"
+  },
+  {
+    "token": "1410259324:e666cd4e-ca70-4772-ab14-67a92234e0fa",
+    "stage": "unfreezerScheduled",
+    "at": 1789877627879,
+    "detail": "triggerAt=1789877652006;mode=alarmClock"
+  },
+  {
+    "token": "1410259324:e666cd4e-ca70-4772-ab14-67a92234e0fa",
+    "stage": "scheduled",
+    "at": 1789877627880,
+    "detail": "triggerAt=1789877652006;mode=alarmClock"
+  }
+]

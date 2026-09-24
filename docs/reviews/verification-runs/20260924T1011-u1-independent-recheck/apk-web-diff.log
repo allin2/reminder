@@ -1,0 +1,3 @@
+OLD_RESOURCES 41 NEW_RESOURCES 41
+CHANGED ['assets/public/app-core.js', 'assets/public/lib/app-events.js', 'assets/public/sw.js']
+EXIT=0

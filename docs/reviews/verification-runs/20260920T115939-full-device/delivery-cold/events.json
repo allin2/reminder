@@ -1,0 +1,26 @@
+[
+  {
+    "token": "121404750:a1525fc4-3a4e-43d7-b1c8-2c512d3f7a88",
+    "stage": "requested",
+    "at": 1789877801475,
+    "detail": "delayMs=24529"
+  },
+  {
+    "token": "121404750:a1525fc4-3a4e-43d7-b1c8-2c512d3f7a88",
+    "stage": "item",
+    "at": 1789877801477,
+    "detail": "verify-cold-1789877801380"
+  },
+  {
+    "token": "121404750:a1525fc4-3a4e-43d7-b1c8-2c512d3f7a88",
+    "stage": "unfreezerScheduled",
+    "at": 1789877801483,
+    "detail": "triggerAt=1789877826006;mode=alarmClock"
+  },
+  {
+    "token": "121404750:a1525fc4-3a4e-43d7-b1c8-2c512d3f7a88",
+    "stage": "scheduled",
+    "at": 1789877801484,
+    "detail": "triggerAt=1789877826006;mode=alarmClock"
+  }
+]

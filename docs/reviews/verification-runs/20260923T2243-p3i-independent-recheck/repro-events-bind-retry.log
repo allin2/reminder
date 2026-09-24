@@ -1,0 +1,22 @@
+CONTROL: first bind registers 1 document listeners
+{"case":"retry after transient bind failure","bound":true,"setupCalls":1,"listeners":0}
+node:assert:126
+  throw new AssertionError(obj);
+  ^
+
+AssertionError [ERR_ASSERTION]: retry must re-enter binding after a failed first attempt
+    at Object.<anonymous> (/Users/qlyf/Developer/reminder/docs/reviews/verification-runs/20260923T2243-p3i-independent-recheck/repro-events-bind-retry.js:46:8)
+    at Module._compile (node:internal/modules/cjs/loader:1469:14)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1548:10)
+    at Module.load (node:internal/modules/cjs/loader:1288:32)
+    at Module._load (node:internal/modules/cjs/loader:1104:12)
+    at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:174:12)
+    at node:internal/main/run_main_module:28:49 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: 1,
+  expected: 2,
+  operator: 'strictEqual'
+}
+
+Node.js v20.17.0

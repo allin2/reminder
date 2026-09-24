@@ -1,0 +1,163 @@
+{
+  "tag": "u2proof_1789827884",
+  "triggerAt": 1789827936000,
+  "nativeTraceRows": [
+    {
+      "token": "1364451926:a6b71b46-8d06-474c-9b3d-0d33e55edd60",
+      "stage": "requested",
+      "at": 1789827887098,
+      "detail": "delayMs=48913"
+    },
+    {
+      "token": "1364451926:a6b71b46-8d06-474c-9b3d-0d33e55edd60",
+      "stage": "item",
+      "at": 1789827887103,
+      "detail": "u2proof_1789827884"
+    },
+    {
+      "token": "1364451926:a6b71b46-8d06-474c-9b3d-0d33e55edd60",
+      "stage": "unfreezerScheduled",
+      "at": 1789827887125,
+      "detail": "triggerAt=1789827936018;mode=alarmClock"
+    },
+    {
+      "token": "1364451926:a6b71b46-8d06-474c-9b3d-0d33e55edd60",
+      "stage": "scheduled",
+      "at": 1789827887130,
+      "detail": "triggerAt=1789827936018;mode=alarmClock"
+    },
+    {
+      "token": "1364451926:a6b71b46-8d06-474c-9b3d-0d33e55edd60",
+      "stage": "carrierRecorded",
+      "at": 1789827936100,
+      "detail": "sound=native;vibrate=native;foreground=true"
+    },
+    {
+      "token": "1364451926:a6b71b46-8d06-474c-9b3d-0d33e55edd60",
+      "stage": "ringStarted",
+      "at": 1789827936104,
+      "detail": "carrier=native;foreground=true;sound=true;vibrate=true"
+    },
+    {
+      "token": "1364451926:a6b71b46-8d06-474c-9b3d-0d33e55edd60",
+      "stage": "received",
+      "at": 1789827936114,
+      "detail": ""
+    },
+    {
+      "token": "1364451926:a6b71b46-8d06-474c-9b3d-0d33e55edd60",
+      "stage": "environment",
+      "at": 1789827936118,
+      "detail": "screenOn=true;locked=false;inCall=false;path=direct+banner"
+    },
+    {
+      "token": "1364451926:a6b71b46-8d06-474c-9b3d-0d33e55edd60",
+      "stage": "ringServiceRequested",
+      "at": 1789827936123,
+      "detail": "foreground service asked to hold sound+vibration"
+    },
+    {
+      "token": "1364451926:a6b71b46-8d06-474c-9b3d-0d33e55edd60",
+      "stage": "launchRequested",
+      "at": 1789827936137,
+      "detail": "direct launch alongside full-screen intent"
+    },
+    {
+      "token": "1364451926:a6b71b46-8d06-474c-9b3d-0d33e55edd60",
+      "stage": "systemNotificationPosted",
+      "at": 1789827936141,
+      "detail": "NotificationManager accepted active delivery"
+    },
+    {
+      "token": "1364451926:a6b71b46-8d06-474c-9b3d-0d33e55edd60",
+      "stage": "notifyReturned",
+      "at": 1789827936142,
+      "detail": "system notification posted; fullScreenIntent=true; sound+vibration carried by AlarmRingService; banner visibility is OEM-controlled"
+    },
+    {
+      "token": "1364451926:a6b71b46-8d06-474c-9b3d-0d33e55edd60",
+      "stage": "ringDuplicateStart",
+      "at": 1789827936145,
+      "detail": "same delivery already ringing; kept as-is"
+    },
+    {
+      "token": "1364451926:a6b71b46-8d06-474c-9b3d-0d33e55edd60",
+      "stage": "created",
+      "at": 1789827936151,
+      "detail": "test=false"
+    },
+    {
+      "token": "1364451926:a6b71b46-8d06-474c-9b3d-0d33e55edd60",
+      "stage": "localFallbackStopped",
+      "at": 1789827936160,
+      "detail": "service-owned sound is stopped separately"
+    },
+    {
+      "token": "1364451926:a6b71b46-8d06-474c-9b3d-0d33e55edd60",
+      "stage": "resumed",
+      "at": 1789827936162,
+      "detail": "lifecycle only"
+    },
+    {
+      "token": "1364451926:a6b71b46-8d06-474c-9b3d-0d33e55edd60",
+      "stage": "localFallbackStopped",
+      "at": 1789827936163,
+      "detail": "service-owned sound is stopped separately"
+    },
+    {
+      "token": "1364451926:a6b71b46-8d06-474c-9b3d-0d33e55edd60",
+      "stage": "focus",
+      "at": 1789827936209,
+      "detail": "true"
+    },
+    {
+      "token": "1364451926:a6b71b46-8d06-474c-9b3d-0d33e55edd60",
+      "stage": "windowVisible",
+      "at": 1789827936210,
+      "detail": "via=focus;focused=true;shown=true"
+    },
+    {
+      "token": "1364451926:a6b71b46-8d06-474c-9b3d-0d33e55edd60",
+      "stage": "windowSample",
+      "at": 1789827936465,
+      "detail": "after=300ms;focus=true;shown=true;visibility=0;playing=false"
+    },
+    {
+      "token": "1364451926:a6b71b46-8d06-474c-9b3d-0d33e55edd60",
+      "stage": "windowSample",
+      "at": 1789827936966,
+      "detail": "after=800ms;focus=true;shown=true;visibility=0;playing=false"
+    },
+    {
+      "token": "1364451926:a6b71b46-8d06-474c-9b3d-0d33e55edd60",
+      "stage": "windowSample",
+      "at": 1789827937670,
+      "detail": "after=1500ms;focus=true;shown=true;visibility=0;playing=false"
+    }
+  ],
+  "nativeReceived": true,
+  "nativeWindowVisible": true,
+  "ledger": {
+    "reminderEvents": {
+      "1@1789829736000": {
+        "at": 1789829736000,
+        "state": "scheduled"
+      },
+      "2@1789831536000": {
+        "at": 1789831536000,
+        "state": "scheduled"
+      },
+      "3@1789833336000": {
+        "at": 1789833336000,
+        "state": "scheduled"
+      },
+      "0@1789827936000": {
+        "at": 1789827936000,
+        "state": "scheduled"
+      }
+    },
+    "deadlineEvents": {},
+    "status": "due"
+  },
+  "conclusion": "台账无 delivered 写入者：实际已送达，但所有条目仍是 scheduled"
+}

@@ -1,0 +1,34 @@
+{
+  "undeclared": [],
+  "aliases": {},
+  "ambiguousAliases": [
+    "f"
+  ],
+  "guardedRefs": 16,
+  "uiInstance": {
+    "used": [
+      "$",
+      "$$",
+      "closeAllSheets",
+      "closeSheet",
+      "confirmDialog",
+      "hideToast",
+      "openSheet",
+      "toast"
+    ],
+    "declared": [
+      "$",
+      "$$",
+      "closeAllSheets",
+      "closeSheet",
+      "confirmDialog",
+      "hideToast",
+      "openSheet",
+      "toast"
+    ],
+    "missingInContract": [],
+    "unusedInContract": []
+  },
+  "precacheProblems": [],
+  "packagingProblems": []
+}

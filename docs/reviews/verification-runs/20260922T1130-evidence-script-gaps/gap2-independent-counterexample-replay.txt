@@ -1,0 +1,26 @@
+=== 用**独立方保存的原反例字节**复跑修复后的工具 ===
+（docs/reviews/verification-runs/20260922T110036-independent-p2cr2-recheck/evidence/wal-synthetic-{before,after}.bin）
+-rw-r--r--@ 1 qlyf  staff  43 Sep 22 11:14 docs/reviews/verification-runs/20260922T110036-independent-p2cr2-recheck/evidence/wal-synthetic-after.bin
+-rw-r--r--@ 1 qlyf  staff   0 Sep 22 11:14 docs/reviews/verification-runs/20260922T110036-independent-p2cr2-recheck/evidence/wal-synthetic-before.bin
+
+--- 独立方的原始判定（修复前，记录在它的 json 里）---
+{"delta_bytes": 43, "record_kind": "FULL", "payload_bytes": 12, "ops": 0, "seq": 10, "entries": [], "records_appended": 2, "record_kind_label": "EMPTY_MARKER", "verdict": "NO_OPERATIONS"}
+
+--- 修复后：新工具 ---
+DELTA_BYTES=43
+RECORD_KIND=NO_BASELINE
+OPS=None
+SEQ=None
+ENTRIES=
+RECORDS_APPENDED=0
+NOTE=基线或当前 WAL 为空（before=0 B, after=43 B），无法比较
+VERDICT=INCONCLUSIVE
+EXIT=3
+
+--- 修复后：旧逻辑（只解码 recs[0]）---
+OLD_RECS0 count=0 VERDICT=NO_OPERATIONS
+
+--- 增量字节逐条解析 ---
+追加区 43 字节 = 000000000c00010a0000000000000000000000000000001100010a000000000000000100000001016b0176
+  off=0 FULL payload=12B seq=10 count=0 entries=[]
+  off=19 FULL payload=17B seq=10 count=1 entries=[(1, 1, 1)]

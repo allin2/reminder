@@ -1,0 +1,12 @@
+=== ⑧ 边界说明：应用启动一次之后再 verify 会怎样 ===
+（verify 的前提是「restore 之后、应用启动之前」；应用一启动 leveldb 就会追加 19 B 空标记，
+  000003.log 逐字节必然变 ⇒ 此时 verify 报 FAIL 是**正确**行为，不是缺陷）
+  文件集合：备份清单 5 个 / 设备当前 5 个
+  ✓ 无多余文件（设备普通文件集合 ⊆ 备份清单）
+  ✗ 000003.log 不一致：备份 739b77f234a64189fc0c4b6ff487f76d2d504ab5b1ffe5c4b4065ae9b764f58d 设备 72da30daec12117db830ffedc22e97cda58c04591459665e9afe0815e2060bd2
+  ✓ CURRENT 逐字节一致
+  ✗ LOG 不一致：备份 bd6398ac3c2e04d35f76ee40a90a68e76bd2da721906bb386b1ffa516711a99f 设备 e807d60bd5b88b382782f381dc40c579377c2d3449bede315f43c548f703a895
+  ✗ LOG.old 不一致：备份 d26b6246b5e8de15bca1ff65a261ee89041b5ce75f28c9a31833fd6487586d9a 设备 bd6398ac3c2e04d35f76ee40a90a68e76bd2da721906bb386b1ffa516711a99f
+  ✓ MANIFEST-000001 逐字节一致
+VERIFY=FAIL
+VERIFY_EXIT=1

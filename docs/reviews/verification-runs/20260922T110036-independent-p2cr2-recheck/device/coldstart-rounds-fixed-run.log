@@ -1,0 +1,26 @@
+ROUNDS=3 PKG=space.alliswell.inbox.exportrecheck
+run-start=2026-09-22T11:04:56+0800
+
+## timepoint A (启动前 · 进程活着)
+
+
+PAGE=<CDP 无响应>
+BASE_WAL=（冷启动前 WAL 字节数；下面每轮与它比，看有没有新增提交）
+WAL_A_LOCAL=/tmp/p2cr2-independent-wal-2/wal-A.bin BYTES=142466
+
+════ round 1 / 3 ════
+## [1] timepoint B (进程死亡后且尚未启动)
+B1: 
+pid-after-kill=[]
+B2: 
+  ✓ 死亡窗口静止（3 秒间隔两次文件哈希相同；此期间没有任何写入者）
+
+## [1] timepoint C (启动恢复完成后)
+
+file: 
+PAGE=<CDP 无响应>
+
+## [1] 判定
+  ✗ 记录级哈希 A!=C： -> 
+docs/reviews/verification-runs/20260922T110036-independent-p2cr2-recheck/evidence/p2cr-coldstart-rounds-independent.sh: line 180: docs/reviews/verification-runs/20260922T110036-independent-p2cr2-recheck/device/wal-delta-round-1.txt: No such file or directory
+docs/reviews/verification-runs/20260922T110036-independent-p2cr2-recheck/evidence/p2cr-coldstart-rounds-independent.sh: line 184: C_WAL�: unbound variable

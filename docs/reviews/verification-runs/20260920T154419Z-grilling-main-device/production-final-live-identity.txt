@@ -1,0 +1,9 @@
+serial=QSKFAE95CQEUJZ8L
+device_apk_path=/data/app/~~QXBujJjS_0Qw_hv5atNsbg==/space.alliswell.inbox-B3Op3jG2zIX9nUXPvqmAIA==/base.apk
+13631aa57dab731a8b2f250571f6c332e3031ec2d0e30bcb27bc9f6857fb8593  /data/app/~~QXBujJjS_0Qw_hv5atNsbg==/space.alliswell.inbox-B3Op3jG2zIX9nUXPvqmAIA==/base.apk
+versionCode=2 minSdk=22 targetSdk=34
+versionName=1.1
+lastUpdateTime=2026-09-20 23:49:16
+pkgFlags=[ HAS_CODE ALLOW_CLEAR_USER_DATA ALLOW_BACKUP ]
+firstInstallTime=2026-09-20 15:07:22
+firstInstallTime=1970-01-01 08:00:00

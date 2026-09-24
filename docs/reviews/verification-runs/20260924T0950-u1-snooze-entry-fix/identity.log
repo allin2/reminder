@@ -1,0 +1,13 @@
+== 本轮改动文件的 SHA-256（源码 == www == APK 内资源，见 resource-closure.json）==
+90d49cd22e7c8e35f9934f813e4fb6fdd659fa8b4fc1b4e0cf80c3e713b1832b app-core.js
+dffc0c55a3b17f78d8441f944fc2578f976b16fe3213c05fe4771019934238bd lib/app-events.js
+7287ed883d37fef8cb13c2c0865cb0fee2184837d39ee805d787fac8d722292d sw.js
+db152e8f0a259b05a4b2c0aafb24b0df76cdd6f354698d916de4b5edab205970 scripts/verification/parse-single-source.js
+485bddd8607afc04c2d424d7ee9a22f8df2e68cd98ba556034a28ce1de714f4e scripts/verification/p3i-modularization-tests.js
+
+== 候选 APK ==
+340975ff957d8ee45d5da844450fd24e97bac431ba9d94bb59af1ff78f2c922e releases/candidates/20260924T0950-u1-snooze-entry-fix-candidate/app-debug.apk
+
+== git 身份 ==
+3574824357dc7beb04cbd3e32aa413cd508e8484
+3574824357dc7beb04cbd3e32aa413cd508e8484

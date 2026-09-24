@@ -1,0 +1,2 @@
+{"ready": true, "hasPlatform": true, "hasAllContract": true, "contractLength": 9, "isNative": false, "sysBridgeIsNull": true, "appSettingsIsNull": true, "initialBtnHidden": true, "promptPrevented": true, "btnVisibleAfterPrompt": true, "deferredPromptSaved": true, "btnHiddenAfterInstalled": true, "deferredPromptCleared": true}
+All browser platform checks PASSED

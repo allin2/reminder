@@ -1,0 +1,14 @@
+{
+  "tag": "warmctl_1789826037",
+  "triggerAt": 1789826089000,
+  "screenAtTrigger": "Dozing",
+  "warm": true,
+  "sendingAlarmLines": [
+    "09-19 21:54:49.007 V/AlarmManager( 2021): sending alarm Alarm{8aa0d53 type 0 origWhen 1789826089007 whenElapsed 154505575 space.alliswell.inbox} uid 10556 whenElapsed 154505575 windowLength 0 maxWhenElapsed 154505575 repeatInterval 0 action null component ComponentInfo{space.alliswell.inbox/space.alliswell.inbox.AlarmRingService} flags 0x9 procName space.alliswell.inbox",
+    "09-19 21:54:49.021 V/AlarmManager( 2021): sending alarm Alarm{a8f878e type 0 origWhen 1789826089007 whenElapsed 154505575 space.alliswell.inbox} uid 10556 whenElapsed 154505575 windowLength 0 maxWhenElapsed 154505575 repeatInterval 0 action space.alliswell.inbox.ACTION_TEST_ALARM component ComponentInfo{space.alliswell.inbox/space.alliswell.inbox.AlarmTestReceiver} flags 0x9 procName space.alliswell.inbox"
+  ],
+  "preventStartLines": [],
+  "itemAfter": {
+    "status": "due"
+  }
+}

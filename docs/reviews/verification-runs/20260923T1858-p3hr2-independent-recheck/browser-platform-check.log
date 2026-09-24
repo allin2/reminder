@@ -1,0 +1,2 @@
+ASSERTION FAILED: unexpected browser check output
+{"ready": true, "hasPlatform": true, "hasAllContract": true, "contractLength": 9, "isNative": false, "sysBridgeIsNull": true, "appSettingsIsNull": true, "swRegistered": true, "platformRegMatches": true, "swActive": true, "cacheNames": ["attention-inbox-v37"], "hasV37Cache": true, "platformCached": true, "repeatPreservesReg": true, "initialBtnHidden": false, "promptPrevented": true, "btnVisibleAfterPrompt": true, "deferredPromptSaved": true, "btnHiddenAfterInstalled": true, "deferredPromptCleared": true}

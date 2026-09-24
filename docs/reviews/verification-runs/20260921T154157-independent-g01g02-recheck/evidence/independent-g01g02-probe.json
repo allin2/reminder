@@ -1,0 +1,115 @@
+{
+  "mutationApplied": true,
+  "current": {
+    "behavior": {
+      "pending": {
+        "successBeforeCommit": false,
+        "renderBeforeCommit": 0,
+        "stateIds": [
+          "pending"
+        ]
+      },
+      "resolved": {
+        "lastToast": "导入成功 · 1 条事项",
+        "render": 1
+      },
+      "rejected": {
+        "lastToast": "导入失败 · 数据未能保存，请重新导入",
+        "allToasts": [
+          "导入失败 · 数据未能保存，请重新导入"
+        ],
+        "stateIds": [
+          "rejected",
+          "kept"
+        ],
+        "render": 0
+      },
+      "readerHandlers": {
+        "onerror": "function",
+        "onabort": "function"
+      },
+      "readerResult": {
+        "toasts": [
+          "导入失败：文件读取失败，请重试",
+          "导入失败 · 文件读取已取消"
+        ],
+        "confirm": 0,
+        "save": 0,
+        "render": 0
+      }
+    },
+    "verdict": {
+      "pendingNoSuccess": true,
+      "pendingNoRender": true,
+      "memoryChangedBeforeCommit": true,
+      "successAfterResolve": true,
+      "rejectSpecific": true,
+      "rejectNoWrongMessages": true,
+      "rejectKeepsMemory": true,
+      "rejectNoRender": true,
+      "readerHandlersPresent": true,
+      "readerMessages": true,
+      "readerStopsBeforeConfirmAndSave": true
+    },
+    "failures": []
+  },
+  "mutant": {
+    "behavior": {
+      "pending": {
+        "successBeforeCommit": true,
+        "renderBeforeCommit": 1,
+        "stateIds": [
+          "pending"
+        ]
+      },
+      "resolved": {
+        "lastToast": "导入成功 · 1 条事项",
+        "render": 1
+      },
+      "rejected": {
+        "lastToast": "导入成功 · 2 条事项",
+        "allToasts": [
+          "导入成功 · 2 条事项"
+        ],
+        "stateIds": [
+          "rejected",
+          "kept"
+        ],
+        "render": 1
+      },
+      "readerHandlers": {
+        "onerror": "object",
+        "onabort": "object"
+      },
+      "readerResult": {
+        "toasts": [],
+        "confirm": 0,
+        "save": 0,
+        "render": 0
+      }
+    },
+    "verdict": {
+      "pendingNoSuccess": false,
+      "pendingNoRender": false,
+      "memoryChangedBeforeCommit": true,
+      "successAfterResolve": true,
+      "rejectSpecific": false,
+      "rejectNoWrongMessages": false,
+      "rejectKeepsMemory": true,
+      "rejectNoRender": false,
+      "readerHandlersPresent": false,
+      "readerMessages": false,
+      "readerStopsBeforeConfirmAndSave": true
+    },
+    "failures": [
+      "pendingNoSuccess",
+      "pendingNoRender",
+      "rejectSpecific",
+      "rejectNoWrongMessages",
+      "rejectNoRender",
+      "readerHandlersPresent",
+      "readerMessages"
+    ]
+  },
+  "passed": true
+}

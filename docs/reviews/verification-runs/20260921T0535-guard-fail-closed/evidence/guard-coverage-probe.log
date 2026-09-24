@@ -1,0 +1,148 @@
+{
+  "generatedAt": "2026-09-20T21:22:06.142Z",
+  "note": "修复后 = 当前工作区；beforeOnSameFixture = 同一份变异源码在「根守卫算豁免」的旧扫描器上的结果",
+  "after": {
+    "undeclared": [],
+    "ambiguousAliases": [],
+    "ambiguousRefs": [],
+    "problems": [],
+    "aliases": {
+      "feedbackApi": "FeedbackLib"
+    },
+    "declaredCount": 73,
+    "refsCount": 66,
+    "guardedCount": 12
+  },
+  "counterexample": {
+    "fixtureApplied": true,
+    "guardedAlias": {
+      "undeclared": [
+        {
+          "path": "Feedback.independentGuardedMember",
+          "lines": [
+            6637
+          ]
+        }
+      ],
+      "ambiguousAliases": [],
+      "ambiguousRefs": [],
+      "problems": [
+        "undeclared-dependency:Feedback.independentGuardedMember（app-core.js:6637）"
+      ],
+      "aliases": {
+        "feedbackApi": "FeedbackLib"
+      },
+      "declaredCount": 73,
+      "refsCount": 67,
+      "guardedCount": 12
+    },
+    "guardedNamespace": {
+      "undeclared": [
+        {
+          "path": "Feedback.independentGuardedMember",
+          "lines": [
+            2175
+          ]
+        }
+      ],
+      "ambiguousAliases": [],
+      "ambiguousRefs": [],
+      "problems": [
+        "undeclared-dependency:Feedback.independentGuardedMember（app-core.js:2175）"
+      ],
+      "aliases": {
+        "feedbackApi": "FeedbackLib"
+      },
+      "declaredCount": 73,
+      "refsCount": 67,
+      "guardedCount": 12
+    }
+  },
+  "beforeOnSameFixture": {
+    "guardedAlias": {
+      "undeclared": [],
+      "ambiguousAliases": [],
+      "ambiguousRefs": [],
+      "problems": [],
+      "aliases": {
+        "feedbackApi": "FeedbackLib"
+      },
+      "declaredCount": 73,
+      "refsCount": 61,
+      "guardedCount": 19
+    },
+    "guardedNamespace": {
+      "undeclared": [],
+      "ambiguousAliases": [],
+      "ambiguousRefs": [],
+      "problems": [],
+      "aliases": {
+        "feedbackApi": "FeedbackLib"
+      },
+      "declaredCount": 73,
+      "refsCount": 61,
+      "guardedCount": 19
+    }
+  },
+  "movedMembers": [
+    {
+      "path": "Feedback.actionSpec",
+      "inRefs": true,
+      "inGuarded": false,
+      "declared": true
+    },
+    {
+      "path": "Feedback.setupSteps",
+      "inRefs": true,
+      "inGuarded": false,
+      "declared": true
+    },
+    {
+      "path": "Feedback.testFeedbackVerdict",
+      "inRefs": true,
+      "inGuarded": false,
+      "declared": true
+    },
+    {
+      "path": "Feedback.TEST_FEEDBACK",
+      "inRefs": true,
+      "inGuarded": false,
+      "declared": true
+    },
+    {
+      "path": "Feedback.UNDO_WINDOW_MS",
+      "inRefs": true,
+      "inGuarded": false,
+      "declared": true
+    },
+    {
+      "path": "DeliveryEvidence.entryRoundBase",
+      "inRefs": true,
+      "inGuarded": false,
+      "declared": true
+    }
+  ],
+  "guardedRefsNow": [
+    "NativeReminders.buildDesired",
+    "NativeReminders.drainAlarmActions",
+    "NativeReminders.getDeliveryEvidence",
+    "NativeReminders.getPermissionState",
+    "NativeReminders.isNativeAndroid",
+    "NativeReminders.migrateItem",
+    "NativeReminders.onAlarmAction",
+    "NativeReminders.openExactAlarmSettings",
+    "NativeReminders.reconcile",
+    "NativeReminders.requestNotificationPermission",
+    "NativeReminders.suppressPastReminderReplay",
+    "NativeReminders.systemBridge"
+  ],
+  "unusedDeclarations": [
+    "AttentionLib",
+    "AttentionNativeReminders",
+    "createStorage",
+    "deadlineStagePoints",
+    "hasSpecificTimeWord",
+    "nextRepeatPreview",
+    "repeatLabel"
+  ]
+}

@@ -1,0 +1,25 @@
+HEAD
+3574824357dc7beb04cbd3e32aa413cd508e8484
+origin/main
+3574824357dc7beb04cbd3e32aa413cd508e8484
+branch
+main
+hashes
+ef37935be81929b98cb7b5f8eeb34e88c1e787c5d5c2be8dcea4cfdde394b0cc  app-core.js
+f59fa78ae41d29f4678c6c6ce3c40005809c33204a6731e6cce6ec18fde03bf8  scripts/verification/production-scripts.js
+d79d0e7cfc0a49b975e3f1486bdca5be1f7ab9b7815de9a08932cc38ab0e8336  test-boot-combination.js
+08922995df3233a09030b7b2ec70c8e27137da0b101b0cf37ecf9170584a7ba9  scripts/verification/parse-single-source.js
+e72eb4319b95b38a9dd33f47c958a01fff211d63179544b2355da6ab0156ce4a  scripts/verification/browser-recovery-check.py
+a342b66ab62c6269971b7d0d36f737156f5f60849dc95217a39b32230fdaf102  sw.js
+bfe41dd392d5ff27d8c92b41154fc7e4e5a125eaaa1c8fae6ae3298186669eb3  lib/feedback.js
+sizes
+    8709  404171 app-core.js
+     580   28667 scripts/verification/production-scripts.js
+    2448  146194 test-boot-combination.js
+     851   48860 scripts/verification/parse-single-source.js
+     426   18702 scripts/verification/browser-recovery-check.py
+     123    4586 sw.js
+   13137  651180 total
+diff-check
+diff_check_exit=0
+syntax_check_exit=0

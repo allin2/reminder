@@ -1,0 +1,13 @@
+反向对照：把新实现的默认时长改成 2500 ⇒ 能被报出差异 = true
+自检：同一实现连跑两遍轨迹一致 = true
+自检：轨迹里出现过非空 DOM 状态 = true，出现过挂起定时器 = true
+
+场景数：16，比对字段项：590
+发现 1 处差异（前 10 条）：
+  ✗ 弹层：逐层开关与 backdrop 的撤销口径 / 步骤 2「关 capture（detail 还开着 ⇒ backdrop 该留）」 #backdrop
+      oracle = {"text":"","hidden":false,"onclick":"null","classes":["show"]}
+      next   = {"text":"","hidden":false,"onclick":"null","classes":[]}
+
+结果：搬移改变了行为（FAIL）
+
+EXIT_CODE=1

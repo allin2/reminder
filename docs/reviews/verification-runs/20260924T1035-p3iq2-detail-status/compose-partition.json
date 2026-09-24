@@ -1,0 +1,6610 @@
+{
+  "source": "/Users/qlyf/Developer/reminder/app-core.js",
+  "published": {
+    "total": {
+      "funcs": 254,
+      "lines": 2365
+    },
+    "A": {
+      "funcs": 22,
+      "lines": 1393
+    },
+    "B": {
+      "funcs": 9,
+      "lines": 295
+    },
+    "C": {
+      "funcs": 177,
+      "lines": 435
+    },
+    "D": {
+      "funcs": 11,
+      "lines": 33
+    },
+    "E": {
+      "funcs": 35,
+      "lines": 209
+    }
+  },
+  "naive": {
+    "rows": [
+      {
+        "name": "runtimeRoots",
+        "line": 655,
+        "lines": 12,
+        "cls": "A"
+      },
+      {
+        "name": "readRuntimePath",
+        "line": 674,
+        "lines": 12,
+        "cls": "A"
+      },
+      {
+        "name": "describeGot",
+        "line": 688,
+        "lines": 51,
+        "cls": "A"
+      },
+      {
+        "name": "describeTypeMismatch",
+        "line": 758,
+        "lines": 18,
+        "cls": "A"
+      },
+      {
+        "name": "missingItemShape",
+        "line": 780,
+        "lines": 7,
+        "cls": "A"
+      },
+      {
+        "name": "aiRuntimeDeps",
+        "line": 806,
+        "lines": 25,
+        "cls": "A"
+      },
+      {
+        "name": "backupRuntimeDeps",
+        "line": 847,
+        "lines": 15,
+        "cls": "A"
+      },
+      {
+        "name": "diagnosticsRuntimeDeps",
+        "line": 875,
+        "lines": 22,
+        "cls": "A"
+      },
+      {
+        "name": "setupRuntimeDeps",
+        "line": 898,
+        "lines": 17,
+        "cls": "A"
+      },
+      {
+        "name": "contentRuntimeDeps",
+        "line": 917,
+        "lines": 14,
+        "cls": "A"
+      },
+      {
+        "name": "captureRuntimeDeps",
+        "line": 934,
+        "lines": 25,
+        "cls": "A"
+      },
+      {
+        "name": "viewsRuntimeDeps",
+        "line": 964,
+        "lines": 20,
+        "cls": "A"
+      },
+      {
+        "name": "reviewRuntimeDeps",
+        "line": 985,
+        "lines": 32,
+        "cls": "A"
+      },
+      {
+        "name": "alertsRuntimeDeps",
+        "line": 1018,
+        "lines": 34,
+        "cls": "A"
+      },
+      {
+        "name": "platformRuntimeDeps",
+        "line": 1053,
+        "lines": 28,
+        "cls": "A"
+      },
+      {
+        "name": "noticesRuntimeDeps",
+        "line": 1092,
+        "lines": 17,
+        "cls": "A"
+      },
+      {
+        "name": "feedbackActionSpec",
+        "line": 1110,
+        "lines": 4,
+        "cls": "E"
+      },
+      {
+        "name": "actionFeedbackRuntimeDeps",
+        "line": 1115,
+        "lines": 19,
+        "cls": "A"
+      },
+      {
+        "name": "eventsRuntimeDeps",
+        "line": 1135,
+        "lines": 67,
+        "cls": "A"
+      },
+      {
+        "name": "testApiRuntimeDeps",
+        "line": 1203,
+        "lines": 219,
+        "cls": "A"
+      },
+      {
+        "name": "collectRuntimeBindings",
+        "line": 1430,
+        "lines": 653,
+        "cls": "A"
+      },
+      {
+        "name": "assertRuntimeDependencies",
+        "line": 2135,
+        "lines": 3,
+        "cls": "A"
+      },
+      {
+        "name": "bindRuntime",
+        "line": 2145,
+        "lines": 83,
+        "cls": "A"
+      },
+      {
+        "name": "renderStartupFailure",
+        "line": 2239,
+        "lines": 67,
+        "cls": "B"
+      },
+      {
+        "name": "describeLoadFailure",
+        "line": 2328,
+        "lines": 12,
+        "cls": "B"
+      },
+      {
+        "name": "renderStateRecovery",
+        "line": 2352,
+        "lines": 59,
+        "cls": "B"
+      },
+      {
+        "name": "removeStateRecoveryPanel",
+        "line": 2419,
+        "lines": 10,
+        "cls": "B"
+      },
+      {
+        "name": "retryRestore",
+        "line": 2440,
+        "lines": 16,
+        "cls": "B"
+      },
+      {
+        "name": "uid",
+        "line": 2480,
+        "lines": 3,
+        "cls": "D"
+      },
+      {
+        "name": "pad",
+        "line": 2483,
+        "lines": 1,
+        "cls": "D"
+      },
+      {
+        "name": "fmtTime",
+        "line": 2486,
+        "lines": 3,
+        "cls": "D"
+      },
+      {
+        "name": "fmtDate",
+        "line": 2489,
+        "lines": 3,
+        "cls": "D"
+      },
+      {
+        "name": "relDue",
+        "line": 2492,
+        "lines": 3,
+        "cls": "D"
+      },
+      {
+        "name": "escapeHtml",
+        "line": 2496,
+        "lines": 3,
+        "cls": "D"
+      },
+      {
+        "name": "escapeAttr",
+        "line": 2509,
+        "lines": 3,
+        "cls": "D"
+      },
+      {
+        "name": "toLocalInput",
+        "line": 2532,
+        "lines": 3,
+        "cls": "D"
+      },
+      {
+        "name": "parseLocalInput",
+        "line": 2536,
+        "lines": 3,
+        "cls": "D"
+      },
+      {
+        "name": "dayLabel",
+        "line": 2545,
+        "lines": 3,
+        "cls": "D"
+      },
+      {
+        "name": "renderMarkdown",
+        "line": 2563,
+        "lines": 5,
+        "cls": "D"
+      },
+      {
+        "name": "currentPayload",
+        "line": 2586,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "writeSnapshot",
+        "line": 2591,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "getPersistenceStorage",
+        "line": 2595,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "authoritativeWritesAllowed",
+        "line": 2605,
+        "lines": 1,
+        "cls": "C"
+      },
+      {
+        "name": "runCommit",
+        "line": 2606,
+        "lines": 1,
+        "cls": "C"
+      },
+      {
+        "name": "saveAsync",
+        "line": 2607,
+        "lines": 1,
+        "cls": "C"
+      },
+      {
+        "name": "save",
+        "line": 2610,
+        "lines": 4,
+        "cls": "C"
+      },
+      {
+        "name": "itemConflictsWithActiveAction",
+        "line": 2617,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "isItemActionPending",
+        "line": 2621,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "rejectPendingItemCommand",
+        "line": 2625,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "runUserOp",
+        "line": 2629,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "wrapUserOp",
+        "line": 2633,
+        "lines": 12,
+        "cls": "E"
+      },
+      {
+        "name": "takeReplayCreatedId",
+        "line": 2646,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "inflightDepth",
+        "line": 2650,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "isFeedbackSuppressed",
+        "line": 2654,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "shouldSuppressInnerSave",
+        "line": 2658,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "applyParsedState",
+        "line": 2663,
+        "lines": 18,
+        "cls": "E"
+      },
+      {
+        "name": "replayPendingSnapshot",
+        "line": 2692,
+        "lines": 1,
+        "cls": "C"
+      },
+      {
+        "name": "loadAsync",
+        "line": 2693,
+        "lines": 1,
+        "cls": "C"
+      },
+      {
+        "name": "loadSync",
+        "line": 2694,
+        "lines": 1,
+        "cls": "C"
+      },
+      {
+        "name": "load",
+        "line": 2695,
+        "lines": 1,
+        "cls": "C"
+      },
+      {
+        "name": "mirrorBytes",
+        "line": 2696,
+        "lines": 1,
+        "cls": "C"
+      },
+      {
+        "name": "normalizeItem",
+        "line": 2698,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "resolveDeliveryMode",
+        "line": 2703,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "makeItem",
+        "line": 2707,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "bumpRev",
+        "line": 2718,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "deadlineStageKeyOf",
+        "line": 2729,
+        "lines": 3,
+        "cls": "E"
+      },
+      {
+        "name": "isTerminal",
+        "line": 2734,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "hasKnownRev",
+        "line": 2743,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "isFallbackSuppressed",
+        "line": 2752,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "isAttentionDue",
+        "line": 2763,
+        "lines": 5,
+        "cls": "E"
+      },
+      {
+        "name": "ensureReviewSettings",
+        "line": 2770,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "fallbackTriggerAt",
+        "line": 2774,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "isVagueContent",
+        "line": 2778,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "detectNeedsReview",
+        "line": 2782,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "needsReviewItems",
+        "line": 2786,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "reviewSessionKey",
+        "line": 2790,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "nextReviewWindowStart",
+        "line": 2794,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "inReviewWindow",
+        "line": 2798,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "fireReviewNotification",
+        "line": 2802,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "maybeReviewSession",
+        "line": 2806,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "openReviewSession",
+        "line": 2810,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "currentReviewItem",
+        "line": 2814,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "renderReviewCard",
+        "line": 2818,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "resolveReviewTrigger",
+        "line": 2828,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "markReviewDone",
+        "line": 2832,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "reviewConfirm",
+        "line": 2836,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "reviewSaveEdit",
+        "line": 2840,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "reviewKeepCurrent",
+        "line": 2844,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "reviewDelete",
+        "line": 2848,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "snoozeReview",
+        "line": 2852,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "skipReviewThisTime",
+        "line": 2856,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "inReviewHighlight",
+        "line": 2860,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "homeNoticeVerdict",
+        "line": 2875,
+        "lines": 4,
+        "cls": "C"
+      },
+      {
+        "name": "writeIfChanged",
+        "line": 2896,
+        "lines": 7,
+        "cls": "E"
+      },
+      {
+        "name": "renderHomeNotice",
+        "line": 2910,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "renderReviewEntry",
+        "line": 2914,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "scheduleNextReviewAlarm",
+        "line": 2918,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "isDue",
+        "line": 2927,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "inQuietHours",
+        "line": 2939,
+        "lines": 3,
+        "cls": "E"
+      },
+      {
+        "name": "quietEnd",
+        "line": 2943,
+        "lines": 3,
+        "cls": "E"
+      },
+      {
+        "name": "promoteDue",
+        "line": 2947,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "ensureSeriesId",
+        "line": 2951,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "seriesMembers",
+        "line": 2955,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "isUnstartedInstance",
+        "line": 2959,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "spawnNextInstance",
+        "line": 2963,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "openSnoozeSheet",
+        "line": 2980,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "ackItem",
+        "line": 2984,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "advanceSeriesOnArchive",
+        "line": 2988,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "lastCompleteUndo",
+        "line": 2992,
+        "lines": 4,
+        "cls": "C"
+      },
+      {
+        "name": "applyCompleteUndo",
+        "line": 2997,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "revertCompleteUndo",
+        "line": 3001,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "undoLastComplete",
+        "line": 3005,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "completeItem",
+        "line": 3009,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "snoozeItem",
+        "line": 3013,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "deleteItem",
+        "line": 3017,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "reopenItem",
+        "line": 3021,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "restoreItem",
+        "line": 3025,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "resumeDeadlineProtection",
+        "line": 3029,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "stopRepeat",
+        "line": 3033,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "updateAppBadge",
+        "line": 3057,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "renderHome",
+        "line": 3062,
+        "lines": 6,
+        "cls": "E"
+      },
+      {
+        "name": "setUserMode",
+        "line": 3081,
+        "lines": 10,
+        "cls": "E"
+      },
+      {
+        "name": "projectById",
+        "line": 3101,
+        "lines": 1,
+        "cls": "C"
+      },
+      {
+        "name": "priorityRank",
+        "line": 3102,
+        "lines": 1,
+        "cls": "C"
+      },
+      {
+        "name": "actionButton",
+        "line": 3103,
+        "lines": 1,
+        "cls": "C"
+      },
+      {
+        "name": "renderItemCard",
+        "line": 3104,
+        "lines": 1,
+        "cls": "C"
+      },
+      {
+        "name": "openDetail",
+        "line": 3105,
+        "lines": 1,
+        "cls": "C"
+      },
+      {
+        "name": "setBadge",
+        "line": 3106,
+        "lines": 1,
+        "cls": "C"
+      },
+      {
+        "name": "renderCalendar",
+        "line": 3107,
+        "lines": 1,
+        "cls": "C"
+      },
+      {
+        "name": "renderArchiveList",
+        "line": 3108,
+        "lines": 1,
+        "cls": "C"
+      },
+      {
+        "name": "renderFuture",
+        "line": 3109,
+        "lines": 1,
+        "cls": "C"
+      },
+      {
+        "name": "renderNotes",
+        "line": 3110,
+        "lines": 1,
+        "cls": "C"
+      },
+      {
+        "name": "renderStats",
+        "line": 3111,
+        "lines": 1,
+        "cls": "C"
+      },
+      {
+        "name": "syncUserMode",
+        "line": 3112,
+        "lines": 1,
+        "cls": "C"
+      },
+      {
+        "name": "renderMe",
+        "line": 3113,
+        "lines": 1,
+        "cls": "C"
+      },
+      {
+        "name": "renderPwaStatus",
+        "line": 3114,
+        "lines": 6,
+        "cls": "E"
+      },
+      {
+        "name": "render",
+        "line": 3120,
+        "lines": 5,
+        "cls": "E"
+      },
+      {
+        "name": "refreshProjectSelects",
+        "line": 3125,
+        "lines": 1,
+        "cls": "C"
+      },
+      {
+        "name": "runAiOnCapture",
+        "line": 3148,
+        "lines": 3,
+        "cls": "E"
+      },
+      {
+        "name": "saveAiSettings",
+        "line": 3152,
+        "lines": 3,
+        "cls": "E"
+      },
+      {
+        "name": "testAiConnection",
+        "line": 3156,
+        "lines": 3,
+        "cls": "E"
+      },
+      {
+        "name": "formSession",
+        "line": 3175,
+        "lines": 1,
+        "cls": "C"
+      },
+      {
+        "name": "snapshotItemForm",
+        "line": 3176,
+        "lines": 1,
+        "cls": "C"
+      },
+      {
+        "name": "formDraftSignature",
+        "line": 3177,
+        "lines": 1,
+        "cls": "C"
+      },
+      {
+        "name": "restoreItemForm",
+        "line": 3178,
+        "lines": 1,
+        "cls": "C"
+      },
+      {
+        "name": "itemScheduleEvidence",
+        "line": 3180,
+        "lines": 4,
+        "cls": "C"
+      },
+      {
+        "name": "feedbackNativeSnapshot",
+        "line": 3184,
+        "lines": 4,
+        "cls": "C"
+      },
+      {
+        "name": "feedbackItemSnapshot",
+        "line": 3188,
+        "lines": 4,
+        "cls": "C"
+      },
+      {
+        "name": "feedbackVerdictFor",
+        "line": 3192,
+        "lines": 4,
+        "cls": "C"
+      },
+      {
+        "name": "runFeedbackAction",
+        "line": 3196,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "undoNewItem",
+        "line": 3199,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "announceSaveOutcome",
+        "line": 3202,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "settleSaveFeedback",
+        "line": 3205,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "resetItemSheet",
+        "line": 3212,
+        "lines": 1,
+        "cls": "C"
+      },
+      {
+        "name": "openCapture",
+        "line": 3213,
+        "lines": 1,
+        "cls": "C"
+      },
+      {
+        "name": "openEditItem",
+        "line": 3214,
+        "lines": 1,
+        "cls": "C"
+      },
+      {
+        "name": "formRepeat",
+        "line": 3215,
+        "lines": 1,
+        "cls": "C"
+      },
+      {
+        "name": "updateRepeatPreview",
+        "line": 3216,
+        "lines": 1,
+        "cls": "C"
+      },
+      {
+        "name": "findSimilarItems",
+        "line": 3217,
+        "lines": 1,
+        "cls": "C"
+      },
+      {
+        "name": "renderSimilarHint",
+        "line": 3218,
+        "lines": 1,
+        "cls": "C"
+      },
+      {
+        "name": "applyItemEdit",
+        "line": 3220,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "applyNewItem",
+        "line": 3224,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "maybeDailySummary",
+        "line": 3232,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "openLowConfSheet",
+        "line": 3237,
+        "lines": 1,
+        "cls": "C"
+      },
+      {
+        "name": "finishSaveAfterLowConf",
+        "line": 3238,
+        "lines": 1,
+        "cls": "C"
+      },
+      {
+        "name": "setLowConfPick",
+        "line": 3239,
+        "lines": 1,
+        "cls": "C"
+      },
+      {
+        "name": "saveItemFromForm",
+        "line": 3240,
+        "lines": 1,
+        "cls": "C"
+      },
+      {
+        "name": "openNote",
+        "line": 3246,
+        "lines": 1,
+        "cls": "C"
+      },
+      {
+        "name": "saveNote",
+        "line": 3247,
+        "lines": 1,
+        "cls": "C"
+      },
+      {
+        "name": "doSearch",
+        "line": 3248,
+        "lines": 1,
+        "cls": "C"
+      },
+      {
+        "name": "renderProjectsSheet",
+        "line": 3249,
+        "lines": 1,
+        "cls": "C"
+      },
+      {
+        "name": "addProject",
+        "line": 3250,
+        "lines": 1,
+        "cls": "C"
+      },
+      {
+        "name": "deleteProject",
+        "line": 3251,
+        "lines": 1,
+        "cls": "C"
+      },
+      {
+        "name": "bindAppContent",
+        "line": 3252,
+        "lines": 1,
+        "cls": "C"
+      },
+      {
+        "name": "applyProjectRemovalToItems",
+        "line": 3254,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "setNativeReminderStatus",
+        "line": 3268,
+        "lines": 8,
+        "cls": "E"
+      },
+      {
+        "name": "refreshNativeScheduleBasis",
+        "line": 3277,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "applyDeadlineEvents",
+        "line": 3281,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "applyReminderEvents",
+        "line": 3285,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "markDeadlineDelivered",
+        "line": 3289,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "getNativeReminderStatus",
+        "line": 3293,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "getNativeSyncVersion",
+        "line": 3297,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "bumpNativeSyncVersion",
+        "line": 3301,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "syncNativeRemindersNow",
+        "line": 3305,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "ensureNativeReminders",
+        "line": 3309,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "queueNativeReminderSync",
+        "line": 3313,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "handleNativeNotificationAction",
+        "line": 3317,
+        "lines": 47,
+        "cls": "E"
+      },
+      {
+        "name": "alarmEventSeen",
+        "line": 3374,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "handleAlarmAction",
+        "line": 3378,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "systemBridge",
+        "line": 3383,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "isNativeAndroidRuntime",
+        "line": 3390,
+        "lines": 5,
+        "cls": "E"
+      },
+      {
+        "name": "waitForNativeBridge",
+        "line": 3396,
+        "lines": 4,
+        "cls": "C"
+      },
+      {
+        "name": "appSettingsPlugin",
+        "line": 3401,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "refreshNotifyLab",
+        "line": 3419,
+        "lines": 3,
+        "cls": "E"
+      },
+      {
+        "name": "labLog",
+        "line": 3423,
+        "lines": 3,
+        "cls": "E"
+      },
+      {
+        "name": "labCancelAlarms",
+        "line": 3427,
+        "lines": 4,
+        "cls": "E"
+      },
+      {
+        "name": "describeAlarmDelivery",
+        "line": 3432,
+        "lines": 4,
+        "cls": "E"
+      },
+      {
+        "name": "openSystemSetting",
+        "line": 3437,
+        "lines": 4,
+        "cls": "E"
+      },
+      {
+        "name": "openBackgroundGuide",
+        "line": 3442,
+        "lines": 4,
+        "cls": "E"
+      },
+      {
+        "name": "bindDiagnostics",
+        "line": 3447,
+        "lines": 3,
+        "cls": "E"
+      },
+      {
+        "name": "bindReviewControls",
+        "line": 3451,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "markReviewTriggerPicked",
+        "line": 3455,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "bindSetupReviewControls",
+        "line": 3462,
+        "lines": 4,
+        "cls": "E"
+      },
+      {
+        "name": "pad2",
+        "line": 3468,
+        "lines": 3,
+        "cls": "E"
+      },
+      {
+        "name": "deliveryEvidenceReadable",
+        "line": 3472,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "getDeliveryEvidenceState",
+        "line": 3476,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "getNativeSyncMetrics",
+        "line": 3480,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "readDeliveryEvidence",
+        "line": 3484,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "applyNativeDeliveryEvidence",
+        "line": 3488,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "applyReminderDelivered",
+        "line": 3492,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "detailReminderStatusRow",
+        "line": 3499,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "initializeNativeReminders",
+        "line": 3503,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "maybePromptAndroidNotify",
+        "line": 3508,
+        "lines": 1,
+        "cls": "C"
+      },
+      {
+        "name": "noteFirstRemindSaved",
+        "line": 3509,
+        "lines": 1,
+        "cls": "C"
+      },
+      {
+        "name": "renderSetupEntry",
+        "line": 3510,
+        "lines": 1,
+        "cls": "C"
+      },
+      {
+        "name": "updateSetupEntry",
+        "line": 3511,
+        "lines": 1,
+        "cls": "C"
+      },
+      {
+        "name": "openSetupSheet",
+        "line": 3512,
+        "lines": 1,
+        "cls": "C"
+      },
+      {
+        "name": "startSetupTestRun",
+        "line": 3513,
+        "lines": 1,
+        "cls": "C"
+      },
+      {
+        "name": "stopSetupTestRun",
+        "line": 3514,
+        "lines": 1,
+        "cls": "C"
+      },
+      {
+        "name": "setupEvidenceHtml",
+        "line": 3515,
+        "lines": 1,
+        "cls": "C"
+      },
+      {
+        "name": "setupStepsContext",
+        "line": 3516,
+        "lines": 1,
+        "cls": "C"
+      },
+      {
+        "name": "renderSetupSheetBody",
+        "line": 3517,
+        "lines": 1,
+        "cls": "C"
+      },
+      {
+        "name": "runSetupStep",
+        "line": 3518,
+        "lines": 1,
+        "cls": "C"
+      },
+      {
+        "name": "shouldSkipAlert",
+        "line": 3521,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "showSystemNotification",
+        "line": 3525,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "showAlert",
+        "line": 3529,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "hideAlert",
+        "line": 3533,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "dismissAlert",
+        "line": 3537,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "applyAlertDismissal",
+        "line": 3541,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "tick",
+        "line": 3545,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "getAlertItem",
+        "line": 3549,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "stopPolling",
+        "line": 3553,
+        "lines": 3,
+        "cls": "E"
+      },
+      {
+        "name": "clearAlert",
+        "line": 3557,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "bindAlertControls",
+        "line": 3561,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "exportData",
+        "line": 3565,
+        "lines": 3,
+        "cls": "E"
+      },
+      {
+        "name": "importDataFile",
+        "line": 3569,
+        "lines": 3,
+        "cls": "E"
+      },
+      {
+        "name": "buildLegacyBackupPayload",
+        "line": 3573,
+        "lines": 3,
+        "cls": "E"
+      },
+      {
+        "name": "demoPreviewRows",
+        "line": 3608,
+        "lines": 4,
+        "cls": "C"
+      },
+      {
+        "name": "openDemoPreview",
+        "line": 3612,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "seed",
+        "line": 3615,
+        "lines": 4,
+        "cls": "C"
+      },
+      {
+        "name": "applyShareParams",
+        "line": 3621,
+        "lines": 4,
+        "cls": "C"
+      },
+      {
+        "name": "bind",
+        "line": 3625,
+        "lines": 5,
+        "cls": "E"
+      },
+      {
+        "name": "getDeferredInstallPrompt",
+        "line": 3632,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "registerPwa",
+        "line": 3636,
+        "lines": 3,
+        "cls": "E"
+      },
+      {
+        "name": "bindInstall",
+        "line": 3640,
+        "lines": 3,
+        "cls": "E"
+      },
+      {
+        "name": "deliveryHandledByCommittedItem",
+        "line": 3645,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "completeActiveAlarm",
+        "line": 3649,
+        "lines": 4,
+        "cls": "C"
+      },
+      {
+        "name": "refreshActiveAlarmPanel",
+        "line": 3654,
+        "lines": 4,
+        "cls": "C"
+      },
+      {
+        "name": "bindNetwork",
+        "line": 3659,
+        "lines": 3,
+        "cls": "E"
+      },
+      {
+        "name": "handleQueryActions",
+        "line": 3663,
+        "lines": 4,
+        "cls": "C"
+      },
+      {
+        "name": "installGlobalErrorHandler",
+        "line": 3670,
+        "lines": 19,
+        "cls": "B"
+      },
+      {
+        "name": "init",
+        "line": 3704,
+        "lines": 17,
+        "cls": "B"
+      },
+      {
+        "name": "startBusinessStartup",
+        "line": 3724,
+        "lines": 38,
+        "cls": "B"
+      },
+      {
+        "name": "startApp",
+        "line": 3816,
+        "lines": 57,
+        "cls": "B"
+      }
+    ],
+    "buckets": {
+      "A": [
+        {
+          "name": "runtimeRoots",
+          "line": 655,
+          "lines": 12,
+          "cls": "A"
+        },
+        {
+          "name": "readRuntimePath",
+          "line": 674,
+          "lines": 12,
+          "cls": "A"
+        },
+        {
+          "name": "describeGot",
+          "line": 688,
+          "lines": 51,
+          "cls": "A"
+        },
+        {
+          "name": "describeTypeMismatch",
+          "line": 758,
+          "lines": 18,
+          "cls": "A"
+        },
+        {
+          "name": "missingItemShape",
+          "line": 780,
+          "lines": 7,
+          "cls": "A"
+        },
+        {
+          "name": "aiRuntimeDeps",
+          "line": 806,
+          "lines": 25,
+          "cls": "A"
+        },
+        {
+          "name": "backupRuntimeDeps",
+          "line": 847,
+          "lines": 15,
+          "cls": "A"
+        },
+        {
+          "name": "diagnosticsRuntimeDeps",
+          "line": 875,
+          "lines": 22,
+          "cls": "A"
+        },
+        {
+          "name": "setupRuntimeDeps",
+          "line": 898,
+          "lines": 17,
+          "cls": "A"
+        },
+        {
+          "name": "contentRuntimeDeps",
+          "line": 917,
+          "lines": 14,
+          "cls": "A"
+        },
+        {
+          "name": "captureRuntimeDeps",
+          "line": 934,
+          "lines": 25,
+          "cls": "A"
+        },
+        {
+          "name": "viewsRuntimeDeps",
+          "line": 964,
+          "lines": 20,
+          "cls": "A"
+        },
+        {
+          "name": "reviewRuntimeDeps",
+          "line": 985,
+          "lines": 32,
+          "cls": "A"
+        },
+        {
+          "name": "alertsRuntimeDeps",
+          "line": 1018,
+          "lines": 34,
+          "cls": "A"
+        },
+        {
+          "name": "platformRuntimeDeps",
+          "line": 1053,
+          "lines": 28,
+          "cls": "A"
+        },
+        {
+          "name": "noticesRuntimeDeps",
+          "line": 1092,
+          "lines": 17,
+          "cls": "A"
+        },
+        {
+          "name": "actionFeedbackRuntimeDeps",
+          "line": 1115,
+          "lines": 19,
+          "cls": "A"
+        },
+        {
+          "name": "eventsRuntimeDeps",
+          "line": 1135,
+          "lines": 67,
+          "cls": "A"
+        },
+        {
+          "name": "testApiRuntimeDeps",
+          "line": 1203,
+          "lines": 219,
+          "cls": "A"
+        },
+        {
+          "name": "collectRuntimeBindings",
+          "line": 1430,
+          "lines": 653,
+          "cls": "A"
+        },
+        {
+          "name": "assertRuntimeDependencies",
+          "line": 2135,
+          "lines": 3,
+          "cls": "A"
+        },
+        {
+          "name": "bindRuntime",
+          "line": 2145,
+          "lines": 83,
+          "cls": "A"
+        }
+      ],
+      "B": [
+        {
+          "name": "renderStartupFailure",
+          "line": 2239,
+          "lines": 67,
+          "cls": "B"
+        },
+        {
+          "name": "describeLoadFailure",
+          "line": 2328,
+          "lines": 12,
+          "cls": "B"
+        },
+        {
+          "name": "renderStateRecovery",
+          "line": 2352,
+          "lines": 59,
+          "cls": "B"
+        },
+        {
+          "name": "removeStateRecoveryPanel",
+          "line": 2419,
+          "lines": 10,
+          "cls": "B"
+        },
+        {
+          "name": "retryRestore",
+          "line": 2440,
+          "lines": 16,
+          "cls": "B"
+        },
+        {
+          "name": "installGlobalErrorHandler",
+          "line": 3670,
+          "lines": 19,
+          "cls": "B"
+        },
+        {
+          "name": "init",
+          "line": 3704,
+          "lines": 17,
+          "cls": "B"
+        },
+        {
+          "name": "startBusinessStartup",
+          "line": 3724,
+          "lines": 38,
+          "cls": "B"
+        },
+        {
+          "name": "startApp",
+          "line": 3816,
+          "lines": 57,
+          "cls": "B"
+        }
+      ],
+      "C": [
+        {
+          "name": "currentPayload",
+          "line": 2586,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "writeSnapshot",
+          "line": 2591,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "getPersistenceStorage",
+          "line": 2595,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "authoritativeWritesAllowed",
+          "line": 2605,
+          "lines": 1,
+          "cls": "C"
+        },
+        {
+          "name": "runCommit",
+          "line": 2606,
+          "lines": 1,
+          "cls": "C"
+        },
+        {
+          "name": "saveAsync",
+          "line": 2607,
+          "lines": 1,
+          "cls": "C"
+        },
+        {
+          "name": "save",
+          "line": 2610,
+          "lines": 4,
+          "cls": "C"
+        },
+        {
+          "name": "itemConflictsWithActiveAction",
+          "line": 2617,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "isItemActionPending",
+          "line": 2621,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "rejectPendingItemCommand",
+          "line": 2625,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "runUserOp",
+          "line": 2629,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "takeReplayCreatedId",
+          "line": 2646,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "inflightDepth",
+          "line": 2650,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "isFeedbackSuppressed",
+          "line": 2654,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "shouldSuppressInnerSave",
+          "line": 2658,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "replayPendingSnapshot",
+          "line": 2692,
+          "lines": 1,
+          "cls": "C"
+        },
+        {
+          "name": "loadAsync",
+          "line": 2693,
+          "lines": 1,
+          "cls": "C"
+        },
+        {
+          "name": "loadSync",
+          "line": 2694,
+          "lines": 1,
+          "cls": "C"
+        },
+        {
+          "name": "load",
+          "line": 2695,
+          "lines": 1,
+          "cls": "C"
+        },
+        {
+          "name": "mirrorBytes",
+          "line": 2696,
+          "lines": 1,
+          "cls": "C"
+        },
+        {
+          "name": "normalizeItem",
+          "line": 2698,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "resolveDeliveryMode",
+          "line": 2703,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "makeItem",
+          "line": 2707,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "bumpRev",
+          "line": 2718,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "isTerminal",
+          "line": 2734,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "hasKnownRev",
+          "line": 2743,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "isFallbackSuppressed",
+          "line": 2752,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "ensureReviewSettings",
+          "line": 2770,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "fallbackTriggerAt",
+          "line": 2774,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "isVagueContent",
+          "line": 2778,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "detectNeedsReview",
+          "line": 2782,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "needsReviewItems",
+          "line": 2786,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "reviewSessionKey",
+          "line": 2790,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "nextReviewWindowStart",
+          "line": 2794,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "inReviewWindow",
+          "line": 2798,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "fireReviewNotification",
+          "line": 2802,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "maybeReviewSession",
+          "line": 2806,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "openReviewSession",
+          "line": 2810,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "currentReviewItem",
+          "line": 2814,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "renderReviewCard",
+          "line": 2818,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "resolveReviewTrigger",
+          "line": 2828,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "markReviewDone",
+          "line": 2832,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "reviewConfirm",
+          "line": 2836,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "reviewSaveEdit",
+          "line": 2840,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "reviewKeepCurrent",
+          "line": 2844,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "reviewDelete",
+          "line": 2848,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "snoozeReview",
+          "line": 2852,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "skipReviewThisTime",
+          "line": 2856,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "inReviewHighlight",
+          "line": 2860,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "homeNoticeVerdict",
+          "line": 2875,
+          "lines": 4,
+          "cls": "C"
+        },
+        {
+          "name": "renderHomeNotice",
+          "line": 2910,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "renderReviewEntry",
+          "line": 2914,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "scheduleNextReviewAlarm",
+          "line": 2918,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "isDue",
+          "line": 2927,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "promoteDue",
+          "line": 2947,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "ensureSeriesId",
+          "line": 2951,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "seriesMembers",
+          "line": 2955,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "isUnstartedInstance",
+          "line": 2959,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "spawnNextInstance",
+          "line": 2963,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "openSnoozeSheet",
+          "line": 2980,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "ackItem",
+          "line": 2984,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "advanceSeriesOnArchive",
+          "line": 2988,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "lastCompleteUndo",
+          "line": 2992,
+          "lines": 4,
+          "cls": "C"
+        },
+        {
+          "name": "applyCompleteUndo",
+          "line": 2997,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "revertCompleteUndo",
+          "line": 3001,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "undoLastComplete",
+          "line": 3005,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "completeItem",
+          "line": 3009,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "snoozeItem",
+          "line": 3013,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "deleteItem",
+          "line": 3017,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "reopenItem",
+          "line": 3021,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "restoreItem",
+          "line": 3025,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "resumeDeadlineProtection",
+          "line": 3029,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "stopRepeat",
+          "line": 3033,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "updateAppBadge",
+          "line": 3057,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "projectById",
+          "line": 3101,
+          "lines": 1,
+          "cls": "C"
+        },
+        {
+          "name": "priorityRank",
+          "line": 3102,
+          "lines": 1,
+          "cls": "C"
+        },
+        {
+          "name": "actionButton",
+          "line": 3103,
+          "lines": 1,
+          "cls": "C"
+        },
+        {
+          "name": "renderItemCard",
+          "line": 3104,
+          "lines": 1,
+          "cls": "C"
+        },
+        {
+          "name": "openDetail",
+          "line": 3105,
+          "lines": 1,
+          "cls": "C"
+        },
+        {
+          "name": "setBadge",
+          "line": 3106,
+          "lines": 1,
+          "cls": "C"
+        },
+        {
+          "name": "renderCalendar",
+          "line": 3107,
+          "lines": 1,
+          "cls": "C"
+        },
+        {
+          "name": "renderArchiveList",
+          "line": 3108,
+          "lines": 1,
+          "cls": "C"
+        },
+        {
+          "name": "renderFuture",
+          "line": 3109,
+          "lines": 1,
+          "cls": "C"
+        },
+        {
+          "name": "renderNotes",
+          "line": 3110,
+          "lines": 1,
+          "cls": "C"
+        },
+        {
+          "name": "renderStats",
+          "line": 3111,
+          "lines": 1,
+          "cls": "C"
+        },
+        {
+          "name": "syncUserMode",
+          "line": 3112,
+          "lines": 1,
+          "cls": "C"
+        },
+        {
+          "name": "renderMe",
+          "line": 3113,
+          "lines": 1,
+          "cls": "C"
+        },
+        {
+          "name": "refreshProjectSelects",
+          "line": 3125,
+          "lines": 1,
+          "cls": "C"
+        },
+        {
+          "name": "formSession",
+          "line": 3175,
+          "lines": 1,
+          "cls": "C"
+        },
+        {
+          "name": "snapshotItemForm",
+          "line": 3176,
+          "lines": 1,
+          "cls": "C"
+        },
+        {
+          "name": "formDraftSignature",
+          "line": 3177,
+          "lines": 1,
+          "cls": "C"
+        },
+        {
+          "name": "restoreItemForm",
+          "line": 3178,
+          "lines": 1,
+          "cls": "C"
+        },
+        {
+          "name": "itemScheduleEvidence",
+          "line": 3180,
+          "lines": 4,
+          "cls": "C"
+        },
+        {
+          "name": "feedbackNativeSnapshot",
+          "line": 3184,
+          "lines": 4,
+          "cls": "C"
+        },
+        {
+          "name": "feedbackItemSnapshot",
+          "line": 3188,
+          "lines": 4,
+          "cls": "C"
+        },
+        {
+          "name": "feedbackVerdictFor",
+          "line": 3192,
+          "lines": 4,
+          "cls": "C"
+        },
+        {
+          "name": "runFeedbackAction",
+          "line": 3196,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "undoNewItem",
+          "line": 3199,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "announceSaveOutcome",
+          "line": 3202,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "settleSaveFeedback",
+          "line": 3205,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "resetItemSheet",
+          "line": 3212,
+          "lines": 1,
+          "cls": "C"
+        },
+        {
+          "name": "openCapture",
+          "line": 3213,
+          "lines": 1,
+          "cls": "C"
+        },
+        {
+          "name": "openEditItem",
+          "line": 3214,
+          "lines": 1,
+          "cls": "C"
+        },
+        {
+          "name": "formRepeat",
+          "line": 3215,
+          "lines": 1,
+          "cls": "C"
+        },
+        {
+          "name": "updateRepeatPreview",
+          "line": 3216,
+          "lines": 1,
+          "cls": "C"
+        },
+        {
+          "name": "findSimilarItems",
+          "line": 3217,
+          "lines": 1,
+          "cls": "C"
+        },
+        {
+          "name": "renderSimilarHint",
+          "line": 3218,
+          "lines": 1,
+          "cls": "C"
+        },
+        {
+          "name": "applyItemEdit",
+          "line": 3220,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "applyNewItem",
+          "line": 3224,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "maybeDailySummary",
+          "line": 3232,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "openLowConfSheet",
+          "line": 3237,
+          "lines": 1,
+          "cls": "C"
+        },
+        {
+          "name": "finishSaveAfterLowConf",
+          "line": 3238,
+          "lines": 1,
+          "cls": "C"
+        },
+        {
+          "name": "setLowConfPick",
+          "line": 3239,
+          "lines": 1,
+          "cls": "C"
+        },
+        {
+          "name": "saveItemFromForm",
+          "line": 3240,
+          "lines": 1,
+          "cls": "C"
+        },
+        {
+          "name": "openNote",
+          "line": 3246,
+          "lines": 1,
+          "cls": "C"
+        },
+        {
+          "name": "saveNote",
+          "line": 3247,
+          "lines": 1,
+          "cls": "C"
+        },
+        {
+          "name": "doSearch",
+          "line": 3248,
+          "lines": 1,
+          "cls": "C"
+        },
+        {
+          "name": "renderProjectsSheet",
+          "line": 3249,
+          "lines": 1,
+          "cls": "C"
+        },
+        {
+          "name": "addProject",
+          "line": 3250,
+          "lines": 1,
+          "cls": "C"
+        },
+        {
+          "name": "deleteProject",
+          "line": 3251,
+          "lines": 1,
+          "cls": "C"
+        },
+        {
+          "name": "bindAppContent",
+          "line": 3252,
+          "lines": 1,
+          "cls": "C"
+        },
+        {
+          "name": "applyProjectRemovalToItems",
+          "line": 3254,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "refreshNativeScheduleBasis",
+          "line": 3277,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "applyDeadlineEvents",
+          "line": 3281,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "applyReminderEvents",
+          "line": 3285,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "markDeadlineDelivered",
+          "line": 3289,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "getNativeReminderStatus",
+          "line": 3293,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "getNativeSyncVersion",
+          "line": 3297,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "bumpNativeSyncVersion",
+          "line": 3301,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "syncNativeRemindersNow",
+          "line": 3305,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "ensureNativeReminders",
+          "line": 3309,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "queueNativeReminderSync",
+          "line": 3313,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "alarmEventSeen",
+          "line": 3374,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "handleAlarmAction",
+          "line": 3378,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "systemBridge",
+          "line": 3383,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "waitForNativeBridge",
+          "line": 3396,
+          "lines": 4,
+          "cls": "C"
+        },
+        {
+          "name": "appSettingsPlugin",
+          "line": 3401,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "bindReviewControls",
+          "line": 3451,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "markReviewTriggerPicked",
+          "line": 3455,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "deliveryEvidenceReadable",
+          "line": 3472,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "getDeliveryEvidenceState",
+          "line": 3476,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "getNativeSyncMetrics",
+          "line": 3480,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "readDeliveryEvidence",
+          "line": 3484,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "applyNativeDeliveryEvidence",
+          "line": 3488,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "applyReminderDelivered",
+          "line": 3492,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "detailReminderStatusRow",
+          "line": 3499,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "initializeNativeReminders",
+          "line": 3503,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "maybePromptAndroidNotify",
+          "line": 3508,
+          "lines": 1,
+          "cls": "C"
+        },
+        {
+          "name": "noteFirstRemindSaved",
+          "line": 3509,
+          "lines": 1,
+          "cls": "C"
+        },
+        {
+          "name": "renderSetupEntry",
+          "line": 3510,
+          "lines": 1,
+          "cls": "C"
+        },
+        {
+          "name": "updateSetupEntry",
+          "line": 3511,
+          "lines": 1,
+          "cls": "C"
+        },
+        {
+          "name": "openSetupSheet",
+          "line": 3512,
+          "lines": 1,
+          "cls": "C"
+        },
+        {
+          "name": "startSetupTestRun",
+          "line": 3513,
+          "lines": 1,
+          "cls": "C"
+        },
+        {
+          "name": "stopSetupTestRun",
+          "line": 3514,
+          "lines": 1,
+          "cls": "C"
+        },
+        {
+          "name": "setupEvidenceHtml",
+          "line": 3515,
+          "lines": 1,
+          "cls": "C"
+        },
+        {
+          "name": "setupStepsContext",
+          "line": 3516,
+          "lines": 1,
+          "cls": "C"
+        },
+        {
+          "name": "renderSetupSheetBody",
+          "line": 3517,
+          "lines": 1,
+          "cls": "C"
+        },
+        {
+          "name": "runSetupStep",
+          "line": 3518,
+          "lines": 1,
+          "cls": "C"
+        },
+        {
+          "name": "shouldSkipAlert",
+          "line": 3521,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "showSystemNotification",
+          "line": 3525,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "showAlert",
+          "line": 3529,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "hideAlert",
+          "line": 3533,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "dismissAlert",
+          "line": 3537,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "applyAlertDismissal",
+          "line": 3541,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "tick",
+          "line": 3545,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "getAlertItem",
+          "line": 3549,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "clearAlert",
+          "line": 3557,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "bindAlertControls",
+          "line": 3561,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "demoPreviewRows",
+          "line": 3608,
+          "lines": 4,
+          "cls": "C"
+        },
+        {
+          "name": "openDemoPreview",
+          "line": 3612,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "seed",
+          "line": 3615,
+          "lines": 4,
+          "cls": "C"
+        },
+        {
+          "name": "applyShareParams",
+          "line": 3621,
+          "lines": 4,
+          "cls": "C"
+        },
+        {
+          "name": "getDeferredInstallPrompt",
+          "line": 3632,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "deliveryHandledByCommittedItem",
+          "line": 3645,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "completeActiveAlarm",
+          "line": 3649,
+          "lines": 4,
+          "cls": "C"
+        },
+        {
+          "name": "refreshActiveAlarmPanel",
+          "line": 3654,
+          "lines": 4,
+          "cls": "C"
+        },
+        {
+          "name": "handleQueryActions",
+          "line": 3663,
+          "lines": 4,
+          "cls": "C"
+        }
+      ],
+      "D": [
+        {
+          "name": "uid",
+          "line": 2480,
+          "lines": 3,
+          "cls": "D"
+        },
+        {
+          "name": "pad",
+          "line": 2483,
+          "lines": 1,
+          "cls": "D"
+        },
+        {
+          "name": "fmtTime",
+          "line": 2486,
+          "lines": 3,
+          "cls": "D"
+        },
+        {
+          "name": "fmtDate",
+          "line": 2489,
+          "lines": 3,
+          "cls": "D"
+        },
+        {
+          "name": "relDue",
+          "line": 2492,
+          "lines": 3,
+          "cls": "D"
+        },
+        {
+          "name": "escapeHtml",
+          "line": 2496,
+          "lines": 3,
+          "cls": "D"
+        },
+        {
+          "name": "escapeAttr",
+          "line": 2509,
+          "lines": 3,
+          "cls": "D"
+        },
+        {
+          "name": "toLocalInput",
+          "line": 2532,
+          "lines": 3,
+          "cls": "D"
+        },
+        {
+          "name": "parseLocalInput",
+          "line": 2536,
+          "lines": 3,
+          "cls": "D"
+        },
+        {
+          "name": "dayLabel",
+          "line": 2545,
+          "lines": 3,
+          "cls": "D"
+        },
+        {
+          "name": "renderMarkdown",
+          "line": 2563,
+          "lines": 5,
+          "cls": "D"
+        }
+      ],
+      "E": [
+        {
+          "name": "feedbackActionSpec",
+          "line": 1110,
+          "lines": 4,
+          "cls": "E"
+        },
+        {
+          "name": "wrapUserOp",
+          "line": 2633,
+          "lines": 12,
+          "cls": "E"
+        },
+        {
+          "name": "applyParsedState",
+          "line": 2663,
+          "lines": 18,
+          "cls": "E"
+        },
+        {
+          "name": "deadlineStageKeyOf",
+          "line": 2729,
+          "lines": 3,
+          "cls": "E"
+        },
+        {
+          "name": "isAttentionDue",
+          "line": 2763,
+          "lines": 5,
+          "cls": "E"
+        },
+        {
+          "name": "writeIfChanged",
+          "line": 2896,
+          "lines": 7,
+          "cls": "E"
+        },
+        {
+          "name": "inQuietHours",
+          "line": 2939,
+          "lines": 3,
+          "cls": "E"
+        },
+        {
+          "name": "quietEnd",
+          "line": 2943,
+          "lines": 3,
+          "cls": "E"
+        },
+        {
+          "name": "renderHome",
+          "line": 3062,
+          "lines": 6,
+          "cls": "E"
+        },
+        {
+          "name": "setUserMode",
+          "line": 3081,
+          "lines": 10,
+          "cls": "E"
+        },
+        {
+          "name": "renderPwaStatus",
+          "line": 3114,
+          "lines": 6,
+          "cls": "E"
+        },
+        {
+          "name": "render",
+          "line": 3120,
+          "lines": 5,
+          "cls": "E"
+        },
+        {
+          "name": "runAiOnCapture",
+          "line": 3148,
+          "lines": 3,
+          "cls": "E"
+        },
+        {
+          "name": "saveAiSettings",
+          "line": 3152,
+          "lines": 3,
+          "cls": "E"
+        },
+        {
+          "name": "testAiConnection",
+          "line": 3156,
+          "lines": 3,
+          "cls": "E"
+        },
+        {
+          "name": "setNativeReminderStatus",
+          "line": 3268,
+          "lines": 8,
+          "cls": "E"
+        },
+        {
+          "name": "handleNativeNotificationAction",
+          "line": 3317,
+          "lines": 47,
+          "cls": "E"
+        },
+        {
+          "name": "isNativeAndroidRuntime",
+          "line": 3390,
+          "lines": 5,
+          "cls": "E"
+        },
+        {
+          "name": "refreshNotifyLab",
+          "line": 3419,
+          "lines": 3,
+          "cls": "E"
+        },
+        {
+          "name": "labLog",
+          "line": 3423,
+          "lines": 3,
+          "cls": "E"
+        },
+        {
+          "name": "labCancelAlarms",
+          "line": 3427,
+          "lines": 4,
+          "cls": "E"
+        },
+        {
+          "name": "describeAlarmDelivery",
+          "line": 3432,
+          "lines": 4,
+          "cls": "E"
+        },
+        {
+          "name": "openSystemSetting",
+          "line": 3437,
+          "lines": 4,
+          "cls": "E"
+        },
+        {
+          "name": "openBackgroundGuide",
+          "line": 3442,
+          "lines": 4,
+          "cls": "E"
+        },
+        {
+          "name": "bindDiagnostics",
+          "line": 3447,
+          "lines": 3,
+          "cls": "E"
+        },
+        {
+          "name": "bindSetupReviewControls",
+          "line": 3462,
+          "lines": 4,
+          "cls": "E"
+        },
+        {
+          "name": "pad2",
+          "line": 3468,
+          "lines": 3,
+          "cls": "E"
+        },
+        {
+          "name": "stopPolling",
+          "line": 3553,
+          "lines": 3,
+          "cls": "E"
+        },
+        {
+          "name": "exportData",
+          "line": 3565,
+          "lines": 3,
+          "cls": "E"
+        },
+        {
+          "name": "importDataFile",
+          "line": 3569,
+          "lines": 3,
+          "cls": "E"
+        },
+        {
+          "name": "buildLegacyBackupPayload",
+          "line": 3573,
+          "lines": 3,
+          "cls": "E"
+        },
+        {
+          "name": "bind",
+          "line": 3625,
+          "lines": 5,
+          "cls": "E"
+        },
+        {
+          "name": "registerPwa",
+          "line": 3636,
+          "lines": 3,
+          "cls": "E"
+        },
+        {
+          "name": "bindInstall",
+          "line": 3640,
+          "lines": 3,
+          "cls": "E"
+        },
+        {
+          "name": "bindNetwork",
+          "line": 3659,
+          "lines": 3,
+          "cls": "E"
+        }
+      ]
+    },
+    "summary": {
+      "A": {
+        "funcs": 22,
+        "lines": 1393
+      },
+      "B": {
+        "funcs": 9,
+        "lines": 295
+      },
+      "C": {
+        "funcs": 177,
+        "lines": 435
+      },
+      "D": {
+        "funcs": 11,
+        "lines": 33
+      },
+      "E": {
+        "funcs": 35,
+        "lines": 209
+      }
+    },
+    "total": {
+      "funcs": 254,
+      "lines": 2365
+    }
+  },
+  "precise": {
+    "rows": [
+      {
+        "name": "runtimeRoots",
+        "line": 655,
+        "lines": 7,
+        "cls": "A"
+      },
+      {
+        "name": "readRuntimePath",
+        "line": 674,
+        "lines": 12,
+        "cls": "A"
+      },
+      {
+        "name": "describeGot",
+        "line": 688,
+        "lines": 5,
+        "cls": "A"
+      },
+      {
+        "name": "describeTypeMismatch",
+        "line": 758,
+        "lines": 18,
+        "cls": "A"
+      },
+      {
+        "name": "missingItemShape",
+        "line": 780,
+        "lines": 7,
+        "cls": "A"
+      },
+      {
+        "name": "aiRuntimeDeps",
+        "line": 806,
+        "lines": 25,
+        "cls": "A"
+      },
+      {
+        "name": "backupRuntimeDeps",
+        "line": 847,
+        "lines": 15,
+        "cls": "A"
+      },
+      {
+        "name": "diagnosticsRuntimeDeps",
+        "line": 875,
+        "lines": 22,
+        "cls": "A"
+      },
+      {
+        "name": "setupRuntimeDeps",
+        "line": 898,
+        "lines": 17,
+        "cls": "A"
+      },
+      {
+        "name": "contentRuntimeDeps",
+        "line": 917,
+        "lines": 14,
+        "cls": "A"
+      },
+      {
+        "name": "captureRuntimeDeps",
+        "line": 934,
+        "lines": 25,
+        "cls": "A"
+      },
+      {
+        "name": "viewsRuntimeDeps",
+        "line": 964,
+        "lines": 20,
+        "cls": "A"
+      },
+      {
+        "name": "reviewRuntimeDeps",
+        "line": 985,
+        "lines": 32,
+        "cls": "A"
+      },
+      {
+        "name": "alertsRuntimeDeps",
+        "line": 1018,
+        "lines": 34,
+        "cls": "A"
+      },
+      {
+        "name": "platformRuntimeDeps",
+        "line": 1053,
+        "lines": 28,
+        "cls": "A"
+      },
+      {
+        "name": "noticesRuntimeDeps",
+        "line": 1092,
+        "lines": 17,
+        "cls": "A"
+      },
+      {
+        "name": "feedbackActionSpec",
+        "line": 1110,
+        "lines": 4,
+        "cls": "E"
+      },
+      {
+        "name": "actionFeedbackRuntimeDeps",
+        "line": 1115,
+        "lines": 19,
+        "cls": "A"
+      },
+      {
+        "name": "eventsRuntimeDeps",
+        "line": 1135,
+        "lines": 67,
+        "cls": "A"
+      },
+      {
+        "name": "testApiRuntimeDeps",
+        "line": 1203,
+        "lines": 219,
+        "cls": "A"
+      },
+      {
+        "name": "collectRuntimeBindings",
+        "line": 1430,
+        "lines": 653,
+        "cls": "A"
+      },
+      {
+        "name": "assertRuntimeDependencies",
+        "line": 2135,
+        "lines": 3,
+        "cls": "A"
+      },
+      {
+        "name": "bindRuntime",
+        "line": 2145,
+        "lines": 83,
+        "cls": "A"
+      },
+      {
+        "name": "renderStartupFailure",
+        "line": 2239,
+        "lines": 65,
+        "cls": "B"
+      },
+      {
+        "name": "describeLoadFailure",
+        "line": 2328,
+        "lines": 12,
+        "cls": "B"
+      },
+      {
+        "name": "renderStateRecovery",
+        "line": 2352,
+        "lines": 59,
+        "cls": "B"
+      },
+      {
+        "name": "removeStateRecoveryPanel",
+        "line": 2419,
+        "lines": 10,
+        "cls": "B"
+      },
+      {
+        "name": "retryRestore",
+        "line": 2440,
+        "lines": 16,
+        "cls": "B"
+      },
+      {
+        "name": "uid",
+        "line": 2480,
+        "lines": 3,
+        "cls": "D"
+      },
+      {
+        "name": "pad",
+        "line": 2483,
+        "lines": 1,
+        "cls": "D"
+      },
+      {
+        "name": "fmtTime",
+        "line": 2486,
+        "lines": 3,
+        "cls": "D"
+      },
+      {
+        "name": "fmtDate",
+        "line": 2489,
+        "lines": 3,
+        "cls": "D"
+      },
+      {
+        "name": "relDue",
+        "line": 2492,
+        "lines": 3,
+        "cls": "D"
+      },
+      {
+        "name": "escapeHtml",
+        "line": 2496,
+        "lines": 3,
+        "cls": "D"
+      },
+      {
+        "name": "escapeAttr",
+        "line": 2509,
+        "lines": 3,
+        "cls": "D"
+      },
+      {
+        "name": "toLocalInput",
+        "line": 2532,
+        "lines": 3,
+        "cls": "D"
+      },
+      {
+        "name": "parseLocalInput",
+        "line": 2536,
+        "lines": 3,
+        "cls": "D"
+      },
+      {
+        "name": "dayLabel",
+        "line": 2545,
+        "lines": 3,
+        "cls": "D"
+      },
+      {
+        "name": "renderMarkdown",
+        "line": 2563,
+        "lines": 3,
+        "cls": "D"
+      },
+      {
+        "name": "currentPayload",
+        "line": 2586,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "writeSnapshot",
+        "line": 2591,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "getPersistenceStorage",
+        "line": 2595,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "authoritativeWritesAllowed",
+        "line": 2605,
+        "lines": 1,
+        "cls": "C"
+      },
+      {
+        "name": "runCommit",
+        "line": 2606,
+        "lines": 1,
+        "cls": "C"
+      },
+      {
+        "name": "saveAsync",
+        "line": 2607,
+        "lines": 1,
+        "cls": "C"
+      },
+      {
+        "name": "save",
+        "line": 2610,
+        "lines": 4,
+        "cls": "C"
+      },
+      {
+        "name": "itemConflictsWithActiveAction",
+        "line": 2617,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "isItemActionPending",
+        "line": 2621,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "rejectPendingItemCommand",
+        "line": 2625,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "runUserOp",
+        "line": 2629,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "wrapUserOp",
+        "line": 2633,
+        "lines": 12,
+        "cls": "E"
+      },
+      {
+        "name": "takeReplayCreatedId",
+        "line": 2646,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "inflightDepth",
+        "line": 2650,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "isFeedbackSuppressed",
+        "line": 2654,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "shouldSuppressInnerSave",
+        "line": 2658,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "applyParsedState",
+        "line": 2663,
+        "lines": 18,
+        "cls": "E"
+      },
+      {
+        "name": "replayPendingSnapshot",
+        "line": 2692,
+        "lines": 1,
+        "cls": "C"
+      },
+      {
+        "name": "loadAsync",
+        "line": 2693,
+        "lines": 1,
+        "cls": "C"
+      },
+      {
+        "name": "loadSync",
+        "line": 2694,
+        "lines": 1,
+        "cls": "C"
+      },
+      {
+        "name": "load",
+        "line": 2695,
+        "lines": 1,
+        "cls": "C"
+      },
+      {
+        "name": "mirrorBytes",
+        "line": 2696,
+        "lines": 1,
+        "cls": "C"
+      },
+      {
+        "name": "normalizeItem",
+        "line": 2698,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "resolveDeliveryMode",
+        "line": 2703,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "makeItem",
+        "line": 2707,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "bumpRev",
+        "line": 2718,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "deadlineStageKeyOf",
+        "line": 2729,
+        "lines": 3,
+        "cls": "E"
+      },
+      {
+        "name": "isTerminal",
+        "line": 2734,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "hasKnownRev",
+        "line": 2743,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "isFallbackSuppressed",
+        "line": 2752,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "isAttentionDue",
+        "line": 2763,
+        "lines": 5,
+        "cls": "E"
+      },
+      {
+        "name": "ensureReviewSettings",
+        "line": 2770,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "fallbackTriggerAt",
+        "line": 2774,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "isVagueContent",
+        "line": 2778,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "detectNeedsReview",
+        "line": 2782,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "needsReviewItems",
+        "line": 2786,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "reviewSessionKey",
+        "line": 2790,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "nextReviewWindowStart",
+        "line": 2794,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "inReviewWindow",
+        "line": 2798,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "fireReviewNotification",
+        "line": 2802,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "maybeReviewSession",
+        "line": 2806,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "openReviewSession",
+        "line": 2810,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "currentReviewItem",
+        "line": 2814,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "renderReviewCard",
+        "line": 2818,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "resolveReviewTrigger",
+        "line": 2828,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "markReviewDone",
+        "line": 2832,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "reviewConfirm",
+        "line": 2836,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "reviewSaveEdit",
+        "line": 2840,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "reviewKeepCurrent",
+        "line": 2844,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "reviewDelete",
+        "line": 2848,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "snoozeReview",
+        "line": 2852,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "skipReviewThisTime",
+        "line": 2856,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "inReviewHighlight",
+        "line": 2860,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "homeNoticeVerdict",
+        "line": 2875,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "writeIfChanged",
+        "line": 2896,
+        "lines": 7,
+        "cls": "E"
+      },
+      {
+        "name": "renderHomeNotice",
+        "line": 2910,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "renderReviewEntry",
+        "line": 2914,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "scheduleNextReviewAlarm",
+        "line": 2918,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "isDue",
+        "line": 2927,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "inQuietHours",
+        "line": 2939,
+        "lines": 3,
+        "cls": "E"
+      },
+      {
+        "name": "quietEnd",
+        "line": 2943,
+        "lines": 3,
+        "cls": "E"
+      },
+      {
+        "name": "promoteDue",
+        "line": 2947,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "ensureSeriesId",
+        "line": 2951,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "seriesMembers",
+        "line": 2955,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "isUnstartedInstance",
+        "line": 2959,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "spawnNextInstance",
+        "line": 2963,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "openSnoozeSheet",
+        "line": 2980,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "ackItem",
+        "line": 2984,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "advanceSeriesOnArchive",
+        "line": 2988,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "lastCompleteUndo",
+        "line": 2992,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "applyCompleteUndo",
+        "line": 2997,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "revertCompleteUndo",
+        "line": 3001,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "undoLastComplete",
+        "line": 3005,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "completeItem",
+        "line": 3009,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "snoozeItem",
+        "line": 3013,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "deleteItem",
+        "line": 3017,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "reopenItem",
+        "line": 3021,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "restoreItem",
+        "line": 3025,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "resumeDeadlineProtection",
+        "line": 3029,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "stopRepeat",
+        "line": 3033,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "updateAppBadge",
+        "line": 3057,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "renderHome",
+        "line": 3062,
+        "lines": 6,
+        "cls": "E"
+      },
+      {
+        "name": "setUserMode",
+        "line": 3081,
+        "lines": 10,
+        "cls": "E"
+      },
+      {
+        "name": "projectById",
+        "line": 3101,
+        "lines": 1,
+        "cls": "C"
+      },
+      {
+        "name": "priorityRank",
+        "line": 3102,
+        "lines": 1,
+        "cls": "C"
+      },
+      {
+        "name": "actionButton",
+        "line": 3103,
+        "lines": 1,
+        "cls": "C"
+      },
+      {
+        "name": "renderItemCard",
+        "line": 3104,
+        "lines": 1,
+        "cls": "C"
+      },
+      {
+        "name": "openDetail",
+        "line": 3105,
+        "lines": 1,
+        "cls": "C"
+      },
+      {
+        "name": "setBadge",
+        "line": 3106,
+        "lines": 1,
+        "cls": "C"
+      },
+      {
+        "name": "renderCalendar",
+        "line": 3107,
+        "lines": 1,
+        "cls": "C"
+      },
+      {
+        "name": "renderArchiveList",
+        "line": 3108,
+        "lines": 1,
+        "cls": "C"
+      },
+      {
+        "name": "renderFuture",
+        "line": 3109,
+        "lines": 1,
+        "cls": "C"
+      },
+      {
+        "name": "renderNotes",
+        "line": 3110,
+        "lines": 1,
+        "cls": "C"
+      },
+      {
+        "name": "renderStats",
+        "line": 3111,
+        "lines": 1,
+        "cls": "C"
+      },
+      {
+        "name": "syncUserMode",
+        "line": 3112,
+        "lines": 1,
+        "cls": "C"
+      },
+      {
+        "name": "renderMe",
+        "line": 3113,
+        "lines": 1,
+        "cls": "C"
+      },
+      {
+        "name": "renderPwaStatus",
+        "line": 3114,
+        "lines": 6,
+        "cls": "E"
+      },
+      {
+        "name": "render",
+        "line": 3120,
+        "lines": 5,
+        "cls": "E"
+      },
+      {
+        "name": "refreshProjectSelects",
+        "line": 3125,
+        "lines": 1,
+        "cls": "C"
+      },
+      {
+        "name": "runAiOnCapture",
+        "line": 3148,
+        "lines": 3,
+        "cls": "E"
+      },
+      {
+        "name": "saveAiSettings",
+        "line": 3152,
+        "lines": 3,
+        "cls": "E"
+      },
+      {
+        "name": "testAiConnection",
+        "line": 3156,
+        "lines": 3,
+        "cls": "E"
+      },
+      {
+        "name": "formSession",
+        "line": 3175,
+        "lines": 1,
+        "cls": "C"
+      },
+      {
+        "name": "snapshotItemForm",
+        "line": 3176,
+        "lines": 1,
+        "cls": "C"
+      },
+      {
+        "name": "formDraftSignature",
+        "line": 3177,
+        "lines": 1,
+        "cls": "C"
+      },
+      {
+        "name": "restoreItemForm",
+        "line": 3178,
+        "lines": 1,
+        "cls": "C"
+      },
+      {
+        "name": "itemScheduleEvidence",
+        "line": 3180,
+        "lines": 4,
+        "cls": "C"
+      },
+      {
+        "name": "feedbackNativeSnapshot",
+        "line": 3184,
+        "lines": 4,
+        "cls": "C"
+      },
+      {
+        "name": "feedbackItemSnapshot",
+        "line": 3188,
+        "lines": 4,
+        "cls": "C"
+      },
+      {
+        "name": "feedbackVerdictFor",
+        "line": 3192,
+        "lines": 4,
+        "cls": "C"
+      },
+      {
+        "name": "runFeedbackAction",
+        "line": 3196,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "undoNewItem",
+        "line": 3199,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "announceSaveOutcome",
+        "line": 3202,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "settleSaveFeedback",
+        "line": 3205,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "resetItemSheet",
+        "line": 3212,
+        "lines": 1,
+        "cls": "C"
+      },
+      {
+        "name": "openCapture",
+        "line": 3213,
+        "lines": 1,
+        "cls": "C"
+      },
+      {
+        "name": "openEditItem",
+        "line": 3214,
+        "lines": 1,
+        "cls": "C"
+      },
+      {
+        "name": "formRepeat",
+        "line": 3215,
+        "lines": 1,
+        "cls": "C"
+      },
+      {
+        "name": "updateRepeatPreview",
+        "line": 3216,
+        "lines": 1,
+        "cls": "C"
+      },
+      {
+        "name": "findSimilarItems",
+        "line": 3217,
+        "lines": 1,
+        "cls": "C"
+      },
+      {
+        "name": "renderSimilarHint",
+        "line": 3218,
+        "lines": 1,
+        "cls": "C"
+      },
+      {
+        "name": "applyItemEdit",
+        "line": 3220,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "applyNewItem",
+        "line": 3224,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "maybeDailySummary",
+        "line": 3232,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "openLowConfSheet",
+        "line": 3237,
+        "lines": 1,
+        "cls": "C"
+      },
+      {
+        "name": "finishSaveAfterLowConf",
+        "line": 3238,
+        "lines": 1,
+        "cls": "C"
+      },
+      {
+        "name": "setLowConfPick",
+        "line": 3239,
+        "lines": 1,
+        "cls": "C"
+      },
+      {
+        "name": "saveItemFromForm",
+        "line": 3240,
+        "lines": 1,
+        "cls": "C"
+      },
+      {
+        "name": "openNote",
+        "line": 3246,
+        "lines": 1,
+        "cls": "C"
+      },
+      {
+        "name": "saveNote",
+        "line": 3247,
+        "lines": 1,
+        "cls": "C"
+      },
+      {
+        "name": "doSearch",
+        "line": 3248,
+        "lines": 1,
+        "cls": "C"
+      },
+      {
+        "name": "renderProjectsSheet",
+        "line": 3249,
+        "lines": 1,
+        "cls": "C"
+      },
+      {
+        "name": "addProject",
+        "line": 3250,
+        "lines": 1,
+        "cls": "C"
+      },
+      {
+        "name": "deleteProject",
+        "line": 3251,
+        "lines": 1,
+        "cls": "C"
+      },
+      {
+        "name": "bindAppContent",
+        "line": 3252,
+        "lines": 1,
+        "cls": "C"
+      },
+      {
+        "name": "applyProjectRemovalToItems",
+        "line": 3254,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "setNativeReminderStatus",
+        "line": 3268,
+        "lines": 8,
+        "cls": "E"
+      },
+      {
+        "name": "refreshNativeScheduleBasis",
+        "line": 3277,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "applyDeadlineEvents",
+        "line": 3281,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "applyReminderEvents",
+        "line": 3285,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "markDeadlineDelivered",
+        "line": 3289,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "getNativeReminderStatus",
+        "line": 3293,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "getNativeSyncVersion",
+        "line": 3297,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "bumpNativeSyncVersion",
+        "line": 3301,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "syncNativeRemindersNow",
+        "line": 3305,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "ensureNativeReminders",
+        "line": 3309,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "queueNativeReminderSync",
+        "line": 3313,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "handleNativeNotificationAction",
+        "line": 3317,
+        "lines": 47,
+        "cls": "E"
+      },
+      {
+        "name": "alarmEventSeen",
+        "line": 3374,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "handleAlarmAction",
+        "line": 3378,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "systemBridge",
+        "line": 3383,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "isNativeAndroidRuntime",
+        "line": 3390,
+        "lines": 5,
+        "cls": "E"
+      },
+      {
+        "name": "waitForNativeBridge",
+        "line": 3396,
+        "lines": 4,
+        "cls": "C"
+      },
+      {
+        "name": "appSettingsPlugin",
+        "line": 3401,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "refreshNotifyLab",
+        "line": 3419,
+        "lines": 3,
+        "cls": "E"
+      },
+      {
+        "name": "labLog",
+        "line": 3423,
+        "lines": 3,
+        "cls": "E"
+      },
+      {
+        "name": "labCancelAlarms",
+        "line": 3427,
+        "lines": 4,
+        "cls": "E"
+      },
+      {
+        "name": "describeAlarmDelivery",
+        "line": 3432,
+        "lines": 4,
+        "cls": "E"
+      },
+      {
+        "name": "openSystemSetting",
+        "line": 3437,
+        "lines": 4,
+        "cls": "E"
+      },
+      {
+        "name": "openBackgroundGuide",
+        "line": 3442,
+        "lines": 4,
+        "cls": "E"
+      },
+      {
+        "name": "bindDiagnostics",
+        "line": 3447,
+        "lines": 3,
+        "cls": "E"
+      },
+      {
+        "name": "bindReviewControls",
+        "line": 3451,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "markReviewTriggerPicked",
+        "line": 3455,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "bindSetupReviewControls",
+        "line": 3462,
+        "lines": 4,
+        "cls": "E"
+      },
+      {
+        "name": "pad2",
+        "line": 3468,
+        "lines": 3,
+        "cls": "E"
+      },
+      {
+        "name": "deliveryEvidenceReadable",
+        "line": 3472,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "getDeliveryEvidenceState",
+        "line": 3476,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "getNativeSyncMetrics",
+        "line": 3480,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "readDeliveryEvidence",
+        "line": 3484,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "applyNativeDeliveryEvidence",
+        "line": 3488,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "applyReminderDelivered",
+        "line": 3492,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "detailReminderStatusRow",
+        "line": 3499,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "initializeNativeReminders",
+        "line": 3503,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "maybePromptAndroidNotify",
+        "line": 3508,
+        "lines": 1,
+        "cls": "C"
+      },
+      {
+        "name": "noteFirstRemindSaved",
+        "line": 3509,
+        "lines": 1,
+        "cls": "C"
+      },
+      {
+        "name": "renderSetupEntry",
+        "line": 3510,
+        "lines": 1,
+        "cls": "C"
+      },
+      {
+        "name": "updateSetupEntry",
+        "line": 3511,
+        "lines": 1,
+        "cls": "C"
+      },
+      {
+        "name": "openSetupSheet",
+        "line": 3512,
+        "lines": 1,
+        "cls": "C"
+      },
+      {
+        "name": "startSetupTestRun",
+        "line": 3513,
+        "lines": 1,
+        "cls": "C"
+      },
+      {
+        "name": "stopSetupTestRun",
+        "line": 3514,
+        "lines": 1,
+        "cls": "C"
+      },
+      {
+        "name": "setupEvidenceHtml",
+        "line": 3515,
+        "lines": 1,
+        "cls": "C"
+      },
+      {
+        "name": "setupStepsContext",
+        "line": 3516,
+        "lines": 1,
+        "cls": "C"
+      },
+      {
+        "name": "renderSetupSheetBody",
+        "line": 3517,
+        "lines": 1,
+        "cls": "C"
+      },
+      {
+        "name": "runSetupStep",
+        "line": 3518,
+        "lines": 1,
+        "cls": "C"
+      },
+      {
+        "name": "shouldSkipAlert",
+        "line": 3521,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "showSystemNotification",
+        "line": 3525,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "showAlert",
+        "line": 3529,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "hideAlert",
+        "line": 3533,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "dismissAlert",
+        "line": 3537,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "applyAlertDismissal",
+        "line": 3541,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "tick",
+        "line": 3545,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "getAlertItem",
+        "line": 3549,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "stopPolling",
+        "line": 3553,
+        "lines": 3,
+        "cls": "E"
+      },
+      {
+        "name": "clearAlert",
+        "line": 3557,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "bindAlertControls",
+        "line": 3561,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "exportData",
+        "line": 3565,
+        "lines": 3,
+        "cls": "E"
+      },
+      {
+        "name": "importDataFile",
+        "line": 3569,
+        "lines": 3,
+        "cls": "E"
+      },
+      {
+        "name": "buildLegacyBackupPayload",
+        "line": 3573,
+        "lines": 3,
+        "cls": "E"
+      },
+      {
+        "name": "demoPreviewRows",
+        "line": 3608,
+        "lines": 4,
+        "cls": "C"
+      },
+      {
+        "name": "openDemoPreview",
+        "line": 3612,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "seed",
+        "line": 3615,
+        "lines": 4,
+        "cls": "C"
+      },
+      {
+        "name": "applyShareParams",
+        "line": 3621,
+        "lines": 4,
+        "cls": "C"
+      },
+      {
+        "name": "bind",
+        "line": 3625,
+        "lines": 5,
+        "cls": "E"
+      },
+      {
+        "name": "getDeferredInstallPrompt",
+        "line": 3632,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "registerPwa",
+        "line": 3636,
+        "lines": 3,
+        "cls": "E"
+      },
+      {
+        "name": "bindInstall",
+        "line": 3640,
+        "lines": 3,
+        "cls": "E"
+      },
+      {
+        "name": "deliveryHandledByCommittedItem",
+        "line": 3645,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "completeActiveAlarm",
+        "line": 3649,
+        "lines": 4,
+        "cls": "C"
+      },
+      {
+        "name": "refreshActiveAlarmPanel",
+        "line": 3654,
+        "lines": 4,
+        "cls": "C"
+      },
+      {
+        "name": "bindNetwork",
+        "line": 3659,
+        "lines": 3,
+        "cls": "E"
+      },
+      {
+        "name": "handleQueryActions",
+        "line": 3663,
+        "lines": 3,
+        "cls": "C"
+      },
+      {
+        "name": "installGlobalErrorHandler",
+        "line": 3670,
+        "lines": 19,
+        "cls": "B"
+      },
+      {
+        "name": "init",
+        "line": 3704,
+        "lines": 17,
+        "cls": "B"
+      },
+      {
+        "name": "startBusinessStartup",
+        "line": 3724,
+        "lines": 35,
+        "cls": "B"
+      },
+      {
+        "name": "startApp",
+        "line": 3816,
+        "lines": 32,
+        "cls": "B"
+      }
+    ],
+    "buckets": {
+      "A": [
+        {
+          "name": "runtimeRoots",
+          "line": 655,
+          "lines": 7,
+          "cls": "A"
+        },
+        {
+          "name": "readRuntimePath",
+          "line": 674,
+          "lines": 12,
+          "cls": "A"
+        },
+        {
+          "name": "describeGot",
+          "line": 688,
+          "lines": 5,
+          "cls": "A"
+        },
+        {
+          "name": "describeTypeMismatch",
+          "line": 758,
+          "lines": 18,
+          "cls": "A"
+        },
+        {
+          "name": "missingItemShape",
+          "line": 780,
+          "lines": 7,
+          "cls": "A"
+        },
+        {
+          "name": "aiRuntimeDeps",
+          "line": 806,
+          "lines": 25,
+          "cls": "A"
+        },
+        {
+          "name": "backupRuntimeDeps",
+          "line": 847,
+          "lines": 15,
+          "cls": "A"
+        },
+        {
+          "name": "diagnosticsRuntimeDeps",
+          "line": 875,
+          "lines": 22,
+          "cls": "A"
+        },
+        {
+          "name": "setupRuntimeDeps",
+          "line": 898,
+          "lines": 17,
+          "cls": "A"
+        },
+        {
+          "name": "contentRuntimeDeps",
+          "line": 917,
+          "lines": 14,
+          "cls": "A"
+        },
+        {
+          "name": "captureRuntimeDeps",
+          "line": 934,
+          "lines": 25,
+          "cls": "A"
+        },
+        {
+          "name": "viewsRuntimeDeps",
+          "line": 964,
+          "lines": 20,
+          "cls": "A"
+        },
+        {
+          "name": "reviewRuntimeDeps",
+          "line": 985,
+          "lines": 32,
+          "cls": "A"
+        },
+        {
+          "name": "alertsRuntimeDeps",
+          "line": 1018,
+          "lines": 34,
+          "cls": "A"
+        },
+        {
+          "name": "platformRuntimeDeps",
+          "line": 1053,
+          "lines": 28,
+          "cls": "A"
+        },
+        {
+          "name": "noticesRuntimeDeps",
+          "line": 1092,
+          "lines": 17,
+          "cls": "A"
+        },
+        {
+          "name": "actionFeedbackRuntimeDeps",
+          "line": 1115,
+          "lines": 19,
+          "cls": "A"
+        },
+        {
+          "name": "eventsRuntimeDeps",
+          "line": 1135,
+          "lines": 67,
+          "cls": "A"
+        },
+        {
+          "name": "testApiRuntimeDeps",
+          "line": 1203,
+          "lines": 219,
+          "cls": "A"
+        },
+        {
+          "name": "collectRuntimeBindings",
+          "line": 1430,
+          "lines": 653,
+          "cls": "A"
+        },
+        {
+          "name": "assertRuntimeDependencies",
+          "line": 2135,
+          "lines": 3,
+          "cls": "A"
+        },
+        {
+          "name": "bindRuntime",
+          "line": 2145,
+          "lines": 83,
+          "cls": "A"
+        }
+      ],
+      "B": [
+        {
+          "name": "renderStartupFailure",
+          "line": 2239,
+          "lines": 65,
+          "cls": "B"
+        },
+        {
+          "name": "describeLoadFailure",
+          "line": 2328,
+          "lines": 12,
+          "cls": "B"
+        },
+        {
+          "name": "renderStateRecovery",
+          "line": 2352,
+          "lines": 59,
+          "cls": "B"
+        },
+        {
+          "name": "removeStateRecoveryPanel",
+          "line": 2419,
+          "lines": 10,
+          "cls": "B"
+        },
+        {
+          "name": "retryRestore",
+          "line": 2440,
+          "lines": 16,
+          "cls": "B"
+        },
+        {
+          "name": "installGlobalErrorHandler",
+          "line": 3670,
+          "lines": 19,
+          "cls": "B"
+        },
+        {
+          "name": "init",
+          "line": 3704,
+          "lines": 17,
+          "cls": "B"
+        },
+        {
+          "name": "startBusinessStartup",
+          "line": 3724,
+          "lines": 35,
+          "cls": "B"
+        },
+        {
+          "name": "startApp",
+          "line": 3816,
+          "lines": 32,
+          "cls": "B"
+        }
+      ],
+      "C": [
+        {
+          "name": "currentPayload",
+          "line": 2586,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "writeSnapshot",
+          "line": 2591,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "getPersistenceStorage",
+          "line": 2595,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "authoritativeWritesAllowed",
+          "line": 2605,
+          "lines": 1,
+          "cls": "C"
+        },
+        {
+          "name": "runCommit",
+          "line": 2606,
+          "lines": 1,
+          "cls": "C"
+        },
+        {
+          "name": "saveAsync",
+          "line": 2607,
+          "lines": 1,
+          "cls": "C"
+        },
+        {
+          "name": "save",
+          "line": 2610,
+          "lines": 4,
+          "cls": "C"
+        },
+        {
+          "name": "itemConflictsWithActiveAction",
+          "line": 2617,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "isItemActionPending",
+          "line": 2621,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "rejectPendingItemCommand",
+          "line": 2625,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "runUserOp",
+          "line": 2629,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "takeReplayCreatedId",
+          "line": 2646,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "inflightDepth",
+          "line": 2650,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "isFeedbackSuppressed",
+          "line": 2654,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "shouldSuppressInnerSave",
+          "line": 2658,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "replayPendingSnapshot",
+          "line": 2692,
+          "lines": 1,
+          "cls": "C"
+        },
+        {
+          "name": "loadAsync",
+          "line": 2693,
+          "lines": 1,
+          "cls": "C"
+        },
+        {
+          "name": "loadSync",
+          "line": 2694,
+          "lines": 1,
+          "cls": "C"
+        },
+        {
+          "name": "load",
+          "line": 2695,
+          "lines": 1,
+          "cls": "C"
+        },
+        {
+          "name": "mirrorBytes",
+          "line": 2696,
+          "lines": 1,
+          "cls": "C"
+        },
+        {
+          "name": "normalizeItem",
+          "line": 2698,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "resolveDeliveryMode",
+          "line": 2703,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "makeItem",
+          "line": 2707,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "bumpRev",
+          "line": 2718,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "isTerminal",
+          "line": 2734,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "hasKnownRev",
+          "line": 2743,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "isFallbackSuppressed",
+          "line": 2752,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "ensureReviewSettings",
+          "line": 2770,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "fallbackTriggerAt",
+          "line": 2774,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "isVagueContent",
+          "line": 2778,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "detectNeedsReview",
+          "line": 2782,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "needsReviewItems",
+          "line": 2786,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "reviewSessionKey",
+          "line": 2790,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "nextReviewWindowStart",
+          "line": 2794,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "inReviewWindow",
+          "line": 2798,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "fireReviewNotification",
+          "line": 2802,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "maybeReviewSession",
+          "line": 2806,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "openReviewSession",
+          "line": 2810,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "currentReviewItem",
+          "line": 2814,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "renderReviewCard",
+          "line": 2818,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "resolveReviewTrigger",
+          "line": 2828,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "markReviewDone",
+          "line": 2832,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "reviewConfirm",
+          "line": 2836,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "reviewSaveEdit",
+          "line": 2840,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "reviewKeepCurrent",
+          "line": 2844,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "reviewDelete",
+          "line": 2848,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "snoozeReview",
+          "line": 2852,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "skipReviewThisTime",
+          "line": 2856,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "inReviewHighlight",
+          "line": 2860,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "homeNoticeVerdict",
+          "line": 2875,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "renderHomeNotice",
+          "line": 2910,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "renderReviewEntry",
+          "line": 2914,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "scheduleNextReviewAlarm",
+          "line": 2918,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "isDue",
+          "line": 2927,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "promoteDue",
+          "line": 2947,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "ensureSeriesId",
+          "line": 2951,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "seriesMembers",
+          "line": 2955,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "isUnstartedInstance",
+          "line": 2959,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "spawnNextInstance",
+          "line": 2963,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "openSnoozeSheet",
+          "line": 2980,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "ackItem",
+          "line": 2984,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "advanceSeriesOnArchive",
+          "line": 2988,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "lastCompleteUndo",
+          "line": 2992,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "applyCompleteUndo",
+          "line": 2997,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "revertCompleteUndo",
+          "line": 3001,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "undoLastComplete",
+          "line": 3005,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "completeItem",
+          "line": 3009,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "snoozeItem",
+          "line": 3013,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "deleteItem",
+          "line": 3017,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "reopenItem",
+          "line": 3021,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "restoreItem",
+          "line": 3025,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "resumeDeadlineProtection",
+          "line": 3029,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "stopRepeat",
+          "line": 3033,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "updateAppBadge",
+          "line": 3057,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "projectById",
+          "line": 3101,
+          "lines": 1,
+          "cls": "C"
+        },
+        {
+          "name": "priorityRank",
+          "line": 3102,
+          "lines": 1,
+          "cls": "C"
+        },
+        {
+          "name": "actionButton",
+          "line": 3103,
+          "lines": 1,
+          "cls": "C"
+        },
+        {
+          "name": "renderItemCard",
+          "line": 3104,
+          "lines": 1,
+          "cls": "C"
+        },
+        {
+          "name": "openDetail",
+          "line": 3105,
+          "lines": 1,
+          "cls": "C"
+        },
+        {
+          "name": "setBadge",
+          "line": 3106,
+          "lines": 1,
+          "cls": "C"
+        },
+        {
+          "name": "renderCalendar",
+          "line": 3107,
+          "lines": 1,
+          "cls": "C"
+        },
+        {
+          "name": "renderArchiveList",
+          "line": 3108,
+          "lines": 1,
+          "cls": "C"
+        },
+        {
+          "name": "renderFuture",
+          "line": 3109,
+          "lines": 1,
+          "cls": "C"
+        },
+        {
+          "name": "renderNotes",
+          "line": 3110,
+          "lines": 1,
+          "cls": "C"
+        },
+        {
+          "name": "renderStats",
+          "line": 3111,
+          "lines": 1,
+          "cls": "C"
+        },
+        {
+          "name": "syncUserMode",
+          "line": 3112,
+          "lines": 1,
+          "cls": "C"
+        },
+        {
+          "name": "renderMe",
+          "line": 3113,
+          "lines": 1,
+          "cls": "C"
+        },
+        {
+          "name": "refreshProjectSelects",
+          "line": 3125,
+          "lines": 1,
+          "cls": "C"
+        },
+        {
+          "name": "formSession",
+          "line": 3175,
+          "lines": 1,
+          "cls": "C"
+        },
+        {
+          "name": "snapshotItemForm",
+          "line": 3176,
+          "lines": 1,
+          "cls": "C"
+        },
+        {
+          "name": "formDraftSignature",
+          "line": 3177,
+          "lines": 1,
+          "cls": "C"
+        },
+        {
+          "name": "restoreItemForm",
+          "line": 3178,
+          "lines": 1,
+          "cls": "C"
+        },
+        {
+          "name": "itemScheduleEvidence",
+          "line": 3180,
+          "lines": 4,
+          "cls": "C"
+        },
+        {
+          "name": "feedbackNativeSnapshot",
+          "line": 3184,
+          "lines": 4,
+          "cls": "C"
+        },
+        {
+          "name": "feedbackItemSnapshot",
+          "line": 3188,
+          "lines": 4,
+          "cls": "C"
+        },
+        {
+          "name": "feedbackVerdictFor",
+          "line": 3192,
+          "lines": 4,
+          "cls": "C"
+        },
+        {
+          "name": "runFeedbackAction",
+          "line": 3196,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "undoNewItem",
+          "line": 3199,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "announceSaveOutcome",
+          "line": 3202,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "settleSaveFeedback",
+          "line": 3205,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "resetItemSheet",
+          "line": 3212,
+          "lines": 1,
+          "cls": "C"
+        },
+        {
+          "name": "openCapture",
+          "line": 3213,
+          "lines": 1,
+          "cls": "C"
+        },
+        {
+          "name": "openEditItem",
+          "line": 3214,
+          "lines": 1,
+          "cls": "C"
+        },
+        {
+          "name": "formRepeat",
+          "line": 3215,
+          "lines": 1,
+          "cls": "C"
+        },
+        {
+          "name": "updateRepeatPreview",
+          "line": 3216,
+          "lines": 1,
+          "cls": "C"
+        },
+        {
+          "name": "findSimilarItems",
+          "line": 3217,
+          "lines": 1,
+          "cls": "C"
+        },
+        {
+          "name": "renderSimilarHint",
+          "line": 3218,
+          "lines": 1,
+          "cls": "C"
+        },
+        {
+          "name": "applyItemEdit",
+          "line": 3220,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "applyNewItem",
+          "line": 3224,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "maybeDailySummary",
+          "line": 3232,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "openLowConfSheet",
+          "line": 3237,
+          "lines": 1,
+          "cls": "C"
+        },
+        {
+          "name": "finishSaveAfterLowConf",
+          "line": 3238,
+          "lines": 1,
+          "cls": "C"
+        },
+        {
+          "name": "setLowConfPick",
+          "line": 3239,
+          "lines": 1,
+          "cls": "C"
+        },
+        {
+          "name": "saveItemFromForm",
+          "line": 3240,
+          "lines": 1,
+          "cls": "C"
+        },
+        {
+          "name": "openNote",
+          "line": 3246,
+          "lines": 1,
+          "cls": "C"
+        },
+        {
+          "name": "saveNote",
+          "line": 3247,
+          "lines": 1,
+          "cls": "C"
+        },
+        {
+          "name": "doSearch",
+          "line": 3248,
+          "lines": 1,
+          "cls": "C"
+        },
+        {
+          "name": "renderProjectsSheet",
+          "line": 3249,
+          "lines": 1,
+          "cls": "C"
+        },
+        {
+          "name": "addProject",
+          "line": 3250,
+          "lines": 1,
+          "cls": "C"
+        },
+        {
+          "name": "deleteProject",
+          "line": 3251,
+          "lines": 1,
+          "cls": "C"
+        },
+        {
+          "name": "bindAppContent",
+          "line": 3252,
+          "lines": 1,
+          "cls": "C"
+        },
+        {
+          "name": "applyProjectRemovalToItems",
+          "line": 3254,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "refreshNativeScheduleBasis",
+          "line": 3277,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "applyDeadlineEvents",
+          "line": 3281,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "applyReminderEvents",
+          "line": 3285,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "markDeadlineDelivered",
+          "line": 3289,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "getNativeReminderStatus",
+          "line": 3293,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "getNativeSyncVersion",
+          "line": 3297,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "bumpNativeSyncVersion",
+          "line": 3301,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "syncNativeRemindersNow",
+          "line": 3305,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "ensureNativeReminders",
+          "line": 3309,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "queueNativeReminderSync",
+          "line": 3313,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "alarmEventSeen",
+          "line": 3374,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "handleAlarmAction",
+          "line": 3378,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "systemBridge",
+          "line": 3383,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "waitForNativeBridge",
+          "line": 3396,
+          "lines": 4,
+          "cls": "C"
+        },
+        {
+          "name": "appSettingsPlugin",
+          "line": 3401,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "bindReviewControls",
+          "line": 3451,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "markReviewTriggerPicked",
+          "line": 3455,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "deliveryEvidenceReadable",
+          "line": 3472,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "getDeliveryEvidenceState",
+          "line": 3476,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "getNativeSyncMetrics",
+          "line": 3480,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "readDeliveryEvidence",
+          "line": 3484,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "applyNativeDeliveryEvidence",
+          "line": 3488,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "applyReminderDelivered",
+          "line": 3492,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "detailReminderStatusRow",
+          "line": 3499,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "initializeNativeReminders",
+          "line": 3503,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "maybePromptAndroidNotify",
+          "line": 3508,
+          "lines": 1,
+          "cls": "C"
+        },
+        {
+          "name": "noteFirstRemindSaved",
+          "line": 3509,
+          "lines": 1,
+          "cls": "C"
+        },
+        {
+          "name": "renderSetupEntry",
+          "line": 3510,
+          "lines": 1,
+          "cls": "C"
+        },
+        {
+          "name": "updateSetupEntry",
+          "line": 3511,
+          "lines": 1,
+          "cls": "C"
+        },
+        {
+          "name": "openSetupSheet",
+          "line": 3512,
+          "lines": 1,
+          "cls": "C"
+        },
+        {
+          "name": "startSetupTestRun",
+          "line": 3513,
+          "lines": 1,
+          "cls": "C"
+        },
+        {
+          "name": "stopSetupTestRun",
+          "line": 3514,
+          "lines": 1,
+          "cls": "C"
+        },
+        {
+          "name": "setupEvidenceHtml",
+          "line": 3515,
+          "lines": 1,
+          "cls": "C"
+        },
+        {
+          "name": "setupStepsContext",
+          "line": 3516,
+          "lines": 1,
+          "cls": "C"
+        },
+        {
+          "name": "renderSetupSheetBody",
+          "line": 3517,
+          "lines": 1,
+          "cls": "C"
+        },
+        {
+          "name": "runSetupStep",
+          "line": 3518,
+          "lines": 1,
+          "cls": "C"
+        },
+        {
+          "name": "shouldSkipAlert",
+          "line": 3521,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "showSystemNotification",
+          "line": 3525,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "showAlert",
+          "line": 3529,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "hideAlert",
+          "line": 3533,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "dismissAlert",
+          "line": 3537,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "applyAlertDismissal",
+          "line": 3541,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "tick",
+          "line": 3545,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "getAlertItem",
+          "line": 3549,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "clearAlert",
+          "line": 3557,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "bindAlertControls",
+          "line": 3561,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "demoPreviewRows",
+          "line": 3608,
+          "lines": 4,
+          "cls": "C"
+        },
+        {
+          "name": "openDemoPreview",
+          "line": 3612,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "seed",
+          "line": 3615,
+          "lines": 4,
+          "cls": "C"
+        },
+        {
+          "name": "applyShareParams",
+          "line": 3621,
+          "lines": 4,
+          "cls": "C"
+        },
+        {
+          "name": "getDeferredInstallPrompt",
+          "line": 3632,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "deliveryHandledByCommittedItem",
+          "line": 3645,
+          "lines": 3,
+          "cls": "C"
+        },
+        {
+          "name": "completeActiveAlarm",
+          "line": 3649,
+          "lines": 4,
+          "cls": "C"
+        },
+        {
+          "name": "refreshActiveAlarmPanel",
+          "line": 3654,
+          "lines": 4,
+          "cls": "C"
+        },
+        {
+          "name": "handleQueryActions",
+          "line": 3663,
+          "lines": 3,
+          "cls": "C"
+        }
+      ],
+      "D": [
+        {
+          "name": "uid",
+          "line": 2480,
+          "lines": 3,
+          "cls": "D"
+        },
+        {
+          "name": "pad",
+          "line": 2483,
+          "lines": 1,
+          "cls": "D"
+        },
+        {
+          "name": "fmtTime",
+          "line": 2486,
+          "lines": 3,
+          "cls": "D"
+        },
+        {
+          "name": "fmtDate",
+          "line": 2489,
+          "lines": 3,
+          "cls": "D"
+        },
+        {
+          "name": "relDue",
+          "line": 2492,
+          "lines": 3,
+          "cls": "D"
+        },
+        {
+          "name": "escapeHtml",
+          "line": 2496,
+          "lines": 3,
+          "cls": "D"
+        },
+        {
+          "name": "escapeAttr",
+          "line": 2509,
+          "lines": 3,
+          "cls": "D"
+        },
+        {
+          "name": "toLocalInput",
+          "line": 2532,
+          "lines": 3,
+          "cls": "D"
+        },
+        {
+          "name": "parseLocalInput",
+          "line": 2536,
+          "lines": 3,
+          "cls": "D"
+        },
+        {
+          "name": "dayLabel",
+          "line": 2545,
+          "lines": 3,
+          "cls": "D"
+        },
+        {
+          "name": "renderMarkdown",
+          "line": 2563,
+          "lines": 3,
+          "cls": "D"
+        }
+      ],
+      "E": [
+        {
+          "name": "feedbackActionSpec",
+          "line": 1110,
+          "lines": 4,
+          "cls": "E"
+        },
+        {
+          "name": "wrapUserOp",
+          "line": 2633,
+          "lines": 12,
+          "cls": "E"
+        },
+        {
+          "name": "applyParsedState",
+          "line": 2663,
+          "lines": 18,
+          "cls": "E"
+        },
+        {
+          "name": "deadlineStageKeyOf",
+          "line": 2729,
+          "lines": 3,
+          "cls": "E"
+        },
+        {
+          "name": "isAttentionDue",
+          "line": 2763,
+          "lines": 5,
+          "cls": "E"
+        },
+        {
+          "name": "writeIfChanged",
+          "line": 2896,
+          "lines": 7,
+          "cls": "E"
+        },
+        {
+          "name": "inQuietHours",
+          "line": 2939,
+          "lines": 3,
+          "cls": "E"
+        },
+        {
+          "name": "quietEnd",
+          "line": 2943,
+          "lines": 3,
+          "cls": "E"
+        },
+        {
+          "name": "renderHome",
+          "line": 3062,
+          "lines": 6,
+          "cls": "E"
+        },
+        {
+          "name": "setUserMode",
+          "line": 3081,
+          "lines": 10,
+          "cls": "E"
+        },
+        {
+          "name": "renderPwaStatus",
+          "line": 3114,
+          "lines": 6,
+          "cls": "E"
+        },
+        {
+          "name": "render",
+          "line": 3120,
+          "lines": 5,
+          "cls": "E"
+        },
+        {
+          "name": "runAiOnCapture",
+          "line": 3148,
+          "lines": 3,
+          "cls": "E"
+        },
+        {
+          "name": "saveAiSettings",
+          "line": 3152,
+          "lines": 3,
+          "cls": "E"
+        },
+        {
+          "name": "testAiConnection",
+          "line": 3156,
+          "lines": 3,
+          "cls": "E"
+        },
+        {
+          "name": "setNativeReminderStatus",
+          "line": 3268,
+          "lines": 8,
+          "cls": "E"
+        },
+        {
+          "name": "handleNativeNotificationAction",
+          "line": 3317,
+          "lines": 47,
+          "cls": "E"
+        },
+        {
+          "name": "isNativeAndroidRuntime",
+          "line": 3390,
+          "lines": 5,
+          "cls": "E"
+        },
+        {
+          "name": "refreshNotifyLab",
+          "line": 3419,
+          "lines": 3,
+          "cls": "E"
+        },
+        {
+          "name": "labLog",
+          "line": 3423,
+          "lines": 3,
+          "cls": "E"
+        },
+        {
+          "name": "labCancelAlarms",
+          "line": 3427,
+          "lines": 4,
+          "cls": "E"
+        },
+        {
+          "name": "describeAlarmDelivery",
+          "line": 3432,
+          "lines": 4,
+          "cls": "E"
+        },
+        {
+          "name": "openSystemSetting",
+          "line": 3437,
+          "lines": 4,
+          "cls": "E"
+        },
+        {
+          "name": "openBackgroundGuide",
+          "line": 3442,
+          "lines": 4,
+          "cls": "E"
+        },
+        {
+          "name": "bindDiagnostics",
+          "line": 3447,
+          "lines": 3,
+          "cls": "E"
+        },
+        {
+          "name": "bindSetupReviewControls",
+          "line": 3462,
+          "lines": 4,
+          "cls": "E"
+        },
+        {
+          "name": "pad2",
+          "line": 3468,
+          "lines": 3,
+          "cls": "E"
+        },
+        {
+          "name": "stopPolling",
+          "line": 3553,
+          "lines": 3,
+          "cls": "E"
+        },
+        {
+          "name": "exportData",
+          "line": 3565,
+          "lines": 3,
+          "cls": "E"
+        },
+        {
+          "name": "importDataFile",
+          "line": 3569,
+          "lines": 3,
+          "cls": "E"
+        },
+        {
+          "name": "buildLegacyBackupPayload",
+          "line": 3573,
+          "lines": 3,
+          "cls": "E"
+        },
+        {
+          "name": "bind",
+          "line": 3625,
+          "lines": 5,
+          "cls": "E"
+        },
+        {
+          "name": "registerPwa",
+          "line": 3636,
+          "lines": 3,
+          "cls": "E"
+        },
+        {
+          "name": "bindInstall",
+          "line": 3640,
+          "lines": 3,
+          "cls": "E"
+        },
+        {
+          "name": "bindNetwork",
+          "line": 3659,
+          "lines": 3,
+          "cls": "E"
+        }
+      ]
+    },
+    "summary": {
+      "A": {
+        "funcs": 22,
+        "lines": 1342
+      },
+      "B": {
+        "funcs": 9,
+        "lines": 265
+      },
+      "C": {
+        "funcs": 177,
+        "lines": 432
+      },
+      "D": {
+        "funcs": 11,
+        "lines": 31
+      },
+      "E": {
+        "funcs": 35,
+        "lines": 209
+      }
+    },
+    "total": {
+      "funcs": 254,
+      "lines": 2279
+    }
+  },
+  "artifacts": [
+    {
+      "name": "runtimeRoots",
+      "line": 655,
+      "stolen": [
+        {
+          "line": 668,
+          "text": "const RUNTIME_ROOT_PREFIX = {"
+        },
+        {
+          "line": 669,
+          "text": "AttentionLib: \"AttentionLib\","
+        },
+        {
+          "line": 670,
+          "text": "AttentionNativeReminders: \"AttentionNativeReminders\","
+        },
+        {
+          "line": 671,
+          "text": "NativeReminders: \"AttentionNativeReminders\""
+        },
+        {
+          "line": 672,
+          "text": "};"
+        }
+      ]
+    },
+    {
+      "name": "describeGot",
+      "line": 688,
+      "stolen": [
+        {
+          "line": 701,
+          "text": "const RUNTIME_BINDING_PATHS = ["
+        },
+        {
+          "line": 702,
+          "text": "[\"AttentionNativeReminders\", \"NativeReminders\"],"
+        },
+        {
+          "line": 703,
+          "text": "[\"AppUi\", \"AppUi\"],"
+        },
+        {
+          "line": 704,
+          "text": "[\"AppAi\", \"AppAi\"],"
+        },
+        {
+          "line": 705,
+          "text": "[\"AppBackup\", \"AppBackup\"],"
+        },
+        {
+          "line": 706,
+          "text": "[\"AppDiagnostics\", \"AppDiagnostics\"],"
+        },
+        {
+          "line": 707,
+          "text": "[\"AppSetup\", \"AppSetup\"],"
+        },
+        {
+          "line": 708,
+          "text": "[\"AppContent\", \"AppContent\"],"
+        },
+        {
+          "line": 709,
+          "text": "[\"AppCapture\", \"AppCapture\"],"
+        },
+        {
+          "line": 710,
+          "text": "[\"AppViews\", \"AppViews\"],"
+        },
+        {
+          "line": 711,
+          "text": "[\"AppModel\", \"AppModel\"],"
+        },
+        {
+          "line": 712,
+          "text": "[\"AppPersistence\", \"AppPersistence\"],"
+        },
+        {
+          "line": 713,
+          "text": "[\"AppTransaction\", \"AppTransaction\"],"
+        },
+        {
+          "line": 714,
+          "text": "[\"AppItems\", \"AppItems\"],"
+        },
+        {
+          "line": 715,
+          "text": "[\"AppNativeCoordinator\", \"AppNativeCoordinator\"],"
+        },
+        {
+          "line": 716,
+          "text": "[\"AppReview\", \"AppReview\"],"
+        },
+        {
+          "line": 717,
+          "text": "[\"AppAlerts\", \"AppAlerts\"],"
+        },
+        {
+          "line": 718,
+          "text": "[\"AppPlatform\", \"AppPlatform\"],"
+        },
+        {
+          "line": 719,
+          "text": "[\"AppNotices\", \"AppNotices\"],"
+        },
+        {
+          "line": 720,
+          "text": "[\"AppActionFeedback\", \"AppActionFeedback\"],"
+        },
+        {
+          "line": 721,
+          "text": "[\"AppEvents\", \"AppEvents\"],"
+        },
+        {
+          "line": 722,
+          "text": "[\"AppTestApi\", \"AppTestApi\"],"
+        },
+        {
+          "line": 723,
+          "text": "[\"Feedback\", \"FeedbackLib\"],"
+        },
+        {
+          "line": 724,
+          "text": "[\"DeliveryEvidence\", \"EvidenceLib\"],"
+        },
+        {
+          "line": 725,
+          "text": "[\"DatePrimitives\", \"DatePrimitives\"],"
+        },
+        {
+          "line": 726,
+          "text": "[\"UiFormat\", \"UiFormat\"],"
+        },
+        {
+          "line": 727,
+          "text": "[\"createStorage\", \"createStorageFactory\"],"
+        },
+        {
+          "line": 728,
+          "text": "[\"AppUi.safeExternalHref\", \"safeExternalHref\"],"
+        },
+        {
+          "line": 729,
+          "text": "[\"DatePrimitives.startOfDay\", \"startOfDay\"],"
+        },
+        {
+          "line": 730,
+          "text": "[\"DatePrimitives.endOfDay\", \"endOfDay\"],"
+        },
+        {
+          "line": 731,
+          "text": "[\"DatePrimitives.addDays\", \"addDays\"],"
+        },
+        {
+          "line": 732,
+          "text": "[\"DatePrimitives.sameDay\", \"sameDay\"],"
+        },
+        {
+          "line": 733,
+          "text": "[\"DatePrimitives.nextWeekend\", \"nextWeekend\"],"
+        },
+        {
+          "line": 734,
+          "text": "[\"DatePrimitives.applyClock\", \"applyClock\"],"
+        },
+        {
+          "line": 735,
+          "text": "[\"DatePrimitives.lastDayOfMonth\", \"lastDayOfMonth\"],"
+        },
+        {
+          "line": 736,
+          "text": "[\"DatePrimitives.nthWeekdayInMonth\", \"nthWeekdayInMonth\"],"
+        },
+        {
+          "line": 737,
+          "text": "[\"DatePrimitives.weekdayOfNextWeek\", \"weekdayOfNextWeek\"],"
+        },
+        {
+          "line": 738,
+          "text": "[\"DatePrimitives.dayOfMonthIn\", \"dayOfMonthIn\"],"
+        },
+        {
+          "line": 739,
+          "text": "[\"DatePrimitives.nextDayOfMonth\", \"nextDayOfMonth\"],"
+        },
+        {
+          "line": 740,
+          "text": "[\"nextRepeatTrigger\", \"nextRepeatTrigger\"],"
+        },
+        {
+          "line": 741,
+          "text": "[\"repeatLabel\", \"repeatLabel\"],"
+        },
+        {
+          "line": 742,
+          "text": "[\"nextRepeatPreview\", \"nextRepeatPreview\"],"
+        },
+        {
+          "line": 743,
+          "text": "[\"parseChineseTime\", \"parseChineseTime\"],"
+        },
+        {
+          "line": 744,
+          "text": "[\"cnInt\", \"cnInt\"],"
+        },
+        {
+          "line": 745,
+          "text": "[\"hasSpecificTimeWord\", \"hasSpecificTimeWord\"]"
+        },
+        {
+          "line": 746,
+          "text": "];"
+        }
+      ]
+    },
+    {
+      "name": "renderStartupFailure",
+      "line": 2239,
+      "stolen": [
+        {
+          "line": 2318,
+          "text": "let restoreRetryInFlight = false;"
+        },
+        {
+          "line": 2325,
+          "text": "let stateRecoveryPanelShown = false;"
+        }
+      ]
+    },
+    {
+      "name": "renderMarkdown",
+      "line": 2563,
+      "stolen": [
+        {
+          "line": 2583,
+          "text": "let PROJECT_COLORS = null;"
+        },
+        {
+          "line": 2584,
+          "text": "let state = null;"
+        }
+      ]
+    },
+    {
+      "name": "homeNoticeVerdict",
+      "line": 2875,
+      "stolen": [
+        {
+          "line": 2895,
+          "text": "const lastWrittenHtml = new WeakMap();"
+        }
+      ]
+    },
+    {
+      "name": "lastCompleteUndo",
+      "line": 2992,
+      "stolen": [
+        {
+          "line": 2995,
+          "text": "let undoNativeCheckPending = false;"
+        }
+      ]
+    },
+    {
+      "name": "handleQueryActions",
+      "line": 3663,
+      "stolen": [
+        {
+          "line": 3668,
+          "text": "let globalErrorHandlerInstalled = false;"
+        }
+      ]
+    },
+    {
+      "name": "startBusinessStartup",
+      "line": 3724,
+      "stolen": [
+        {
+          "line": 3796,
+          "text": "let readyPromise = null;"
+        },
+        {
+          "line": 3805,
+          "text": "let lastStartupFailure = null;"
+        },
+        {
+          "line": 3814,
+          "text": "let initStarted = false;"
+        }
+      ]
+    },
+    {
+      "name": "startApp",
+      "line": 3816,
+      "stolen": [
+        {
+          "line": 3880,
+          "text": "const itemCommand = { userFacing: true, itemArg: 0 };"
+        },
+        {
+          "line": 3881,
+          "text": "applyDeadlineEvents = wrapUserOp(applyDeadlineEvents);"
+        },
+        {
+          "line": 3882,
+          "text": "markDeadlineDelivered = wrapUserOp(markDeadlineDelivered);"
+        },
+        {
+          "line": 3883,
+          "text": "refreshNativeScheduleBasis = wrapUserOp(refreshNativeScheduleBasis);"
+        },
+        {
+          "line": 3885,
+          "text": "if (document.readyState === \"loading\") {"
+        },
+        {
+          "line": 3886,
+          "text": "document.addEventListener(\"DOMContentLoaded\", function () { startApp(); });"
+        },
+        {
+          "line": 3887,
+          "text": "} else {"
+        },
+        {
+          "line": 3888,
+          "text": "startApp();"
+        },
+        {
+          "line": 3889,
+          "text": "}"
+        },
+        {
+          "line": 3892,
+          "text": "const testApiLib = (AppTestApi && typeof AppTestApi.createAppTestApi === \"function\")"
+        },
+        {
+          "line": 3893,
+          "text": "? AppTestApi"
+        },
+        {
+          "line": 3894,
+          "text": ": ((typeof AttentionLib !== \"undefined\" && AttentionLib && AttentionLib.AppTestApi) || null);"
+        },
+        {
+          "line": 3895,
+          "text": "if (!appTestApi && testApiLib && typeof testApiLib.createAppTestApi === \"function\") {"
+        },
+        {
+          "line": 3896,
+          "text": "try {"
+        },
+        {
+          "line": 3897,
+          "text": "appTestApi = testApiLib.createAppTestApi(testApiRuntimeDeps());"
+        },
+        {
+          "line": 3898,
+          "text": "} catch (_) {}"
+        },
+        {
+          "line": 3899,
+          "text": "}"
+        },
+        {
+          "line": 3900,
+          "text": "if (appTestApi && typeof appTestApi.assembleTestApi === \"function\") {"
+        },
+        {
+          "line": 3901,
+          "text": "appTestApi.assembleTestApi();"
+        },
+        {
+          "line": 3902,
+          "text": "} else if (typeof globalThis !== \"undefined\" && !globalThis.__ATTENTION_INBOX__) {"
+        },
+        {
+          "line": 3903,
+          "text": "const fallbackDeps = testApiRuntimeDeps();"
+        },
+        {
+          "line": 3904,
+          "text": "globalThis.__ATTENTION_INBOX__ = fallbackDeps;"
+        },
+        {
+          "line": 3905,
+          "text": "globalThis.seedAttentionInbox = fallbackDeps.seed;"
+        },
+        {
+          "line": 3906,
+          "text": "}"
+        },
+        {
+          "line": 3907,
+          "text": "})();"
+        }
+      ]
+    }
+  ],
+  "artifactLines": 86
+}

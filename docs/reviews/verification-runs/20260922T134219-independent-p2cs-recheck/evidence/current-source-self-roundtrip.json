@@ -1,0 +1,19 @@
+{
+  "sourceModuleSha256": "e59f32c47669849245eb2234c554d9f2454680f8c8117b2c12e039414c0c90e0",
+  "exportedApp": "attention-inbox",
+  "exportedSchema": 5,
+  "exportedCreatedAt": [
+    "2026-09-21T08:00:00+08:00",
+    1790009208456
+  ],
+  "exportedNoteCreatedAt": [
+    "2026-09-21T08:00:00+08:00"
+  ],
+  "secretsCleared": true,
+  "verdict": {
+    "ok": false,
+    "code": "field-type",
+    "path": "items[0].createdAt",
+    "message": "时间戳必须是有限数字（毫秒）或 null"
+  }
+}

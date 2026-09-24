@@ -1,0 +1,16 @@
+candidate=releases/candidates/20260920T154419Z-grilling-main-device/attention-inbox-release.apk
+13631aa57dab731a8b2f250571f6c332e3031ec2d0e30bcb27bc9f6857fb8593  releases/candidates/20260920T154419Z-grilling-main-device/attention-inbox-release.apk
+package: name='space.alliswell.inbox' versionCode='2' versionName='1.1' platformBuildVersionName='14' platformBuildVersionCode='34' compileSdkVersion='34' compileSdkVersionCodename='14'
+application-label:'安心收件箱'
+Verifies
+Verified using v1 scheme (JAR signing): true
+Verified using v2 scheme (APK Signature Scheme v2): true
+Verified using v3 scheme (APK Signature Scheme v3): true
+Verified using v3.1 scheme (APK Signature Scheme v3.1): false
+Signer #1 certificate SHA-256 digest: bbdaeece7fa34052a529e3fc3aaab2a4f6d688b7e60845750f10cd4e17469f0b
+source app-core: c959eec75a60d68ca279e89707eefccf0fce5b6ddb852ad9f16e7197b530cf06
+apk app-core: c959eec75a60d68ca279e89707eefccf0fce5b6ddb852ad9f16e7197b530cf06
+source index: 763ab49917d61b51b8231ae7c31a060246b34ad0fe66314e6fd4ad0d60c6cb5f
+apk index: 763ab49917d61b51b8231ae7c31a060246b34ad0fe66314e6fd4ad0d60c6cb5f
+source feedback: bfe41dd392d5ff27d8c92b41154fc7e4e5a125eaaa1c8fae6ae3298186669eb3
+apk feedback: bfe41dd392d5ff27d8c92b41154fc7e4e5a125eaaa1c8fae6ae3298186669eb3

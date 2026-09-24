@@ -1,0 +1,995 @@
+{
+  "coverage": {
+    "refs": [
+      "AppUi",
+      "AppUi.createUi",
+      "AppUi.safeExternalHref",
+      "DatePrimitives",
+      "DatePrimitives.addDays",
+      "DatePrimitives.applyClock",
+      "DatePrimitives.dayOfMonthIn",
+      "DatePrimitives.endOfDay",
+      "DatePrimitives.lastDayOfMonth",
+      "DatePrimitives.nextDayOfMonth",
+      "DatePrimitives.nextWeekend",
+      "DatePrimitives.nthWeekdayInMonth",
+      "DatePrimitives.nthWeekdayOfNextMonthByDay",
+      "DatePrimitives.nthWeekdayOfNextMonthByInstant",
+      "DatePrimitives.sameDay",
+      "DatePrimitives.startOfDay",
+      "DatePrimitives.weekdayOfNextWeek",
+      "DeliveryEvidence",
+      "Feedback",
+      "UiFormat",
+      "UiFormat.dayLabel",
+      "UiFormat.escapeAttr",
+      "UiFormat.escapeHtml",
+      "UiFormat.fmtDate",
+      "UiFormat.fmtTime",
+      "UiFormat.pad",
+      "UiFormat.parseLocalInput",
+      "UiFormat.relDue",
+      "UiFormat.renderMarkdown",
+      "UiFormat.toLocalInput",
+      "UiFormat.uid",
+      "applyWindowTrigger",
+      "cnInt",
+      "createStorage",
+      "deadlineStageKey",
+      "hasIdb",
+      "hasSpecificTimeWord",
+      "inQuietHours",
+      "markReminded",
+      "nextRepeatPreview",
+      "nextRepeatTrigger",
+      "parseChineseTime",
+      "quietEnd",
+      "repeatLabel",
+      "shouldRealert"
+    ],
+    "declared": [
+      "AppUi",
+      "AppUi.createUi",
+      "AppUi.safeExternalHref",
+      "DatePrimitives",
+      "DatePrimitives.addDays",
+      "DatePrimitives.applyClock",
+      "DatePrimitives.dayOfMonthIn",
+      "DatePrimitives.endOfDay",
+      "DatePrimitives.lastDayOfMonth",
+      "DatePrimitives.nextDayOfMonth",
+      "DatePrimitives.nextWeekend",
+      "DatePrimitives.nthWeekdayInMonth",
+      "DatePrimitives.nthWeekdayOfNextMonthByDay",
+      "DatePrimitives.nthWeekdayOfNextMonthByInstant",
+      "DatePrimitives.sameDay",
+      "DatePrimitives.startOfDay",
+      "DatePrimitives.weekdayOfNextWeek",
+      "DeliveryEvidence",
+      "Feedback",
+      "UiFormat",
+      "UiFormat.dayLabel",
+      "UiFormat.escapeAttr",
+      "UiFormat.escapeHtml",
+      "UiFormat.fmtDate",
+      "UiFormat.fmtTime",
+      "UiFormat.pad",
+      "UiFormat.parseLocalInput",
+      "UiFormat.relDue",
+      "UiFormat.renderMarkdown",
+      "UiFormat.toLocalInput",
+      "UiFormat.uid",
+      "applyWindowTrigger",
+      "cnInt",
+      "createStorage",
+      "deadlineStageKey",
+      "deadlineStagePoints",
+      "hasIdb",
+      "hasSpecificTimeWord",
+      "inQuietHours",
+      "markReminded",
+      "nextRepeatPreview",
+      "nextRepeatTrigger",
+      "parseChineseTime",
+      "quietEnd",
+      "repeatLabel",
+      "shouldRealert"
+    ],
+    "undeclared": [],
+    "unusedDeclarations": [
+      "deadlineStagePoints"
+    ]
+  },
+  "results": [
+    {
+      "name": "control-complete-android",
+      "ready": true,
+      "errors": [],
+      "consoleErrors": [],
+      "dependencyProblems": null,
+      "puts": 1,
+      "intervals": [
+        2000,
+        15000
+      ],
+      "panels": [
+        "tmp",
+        "tmp",
+        "tmp",
+        "tmp",
+        "tmp",
+        "tmp",
+        "tmp",
+        "#main"
+      ],
+      "nativeLoaded": true,
+      "calls": {
+        "actionTypes": [
+          {
+            "types": [
+              {
+                "id": "attention-actions",
+                "actions": [
+                  {
+                    "id": "ack",
+                    "title": "我知道了"
+                  },
+                  {
+                    "id": "snooze",
+                    "title": "稍后 2 小时"
+                  },
+                  {
+                    "id": "done",
+                    "title": "完成"
+                  }
+                ]
+              },
+              {
+                "id": "attention-review-actions",
+                "actions": [
+                  {
+                    "id": "review_start",
+                    "title": "开始整理"
+                  },
+                  {
+                    "id": "review_snooze",
+                    "title": "稍后 30 分钟"
+                  },
+                  {
+                    "id": "review_skip",
+                    "title": "今天跳过"
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "channels": [
+          {
+            "id": "attention-normal-v2",
+            "name": "普通提醒",
+            "description": "普通事项提醒",
+            "importance": 3,
+            "sound": "attention_reminder",
+            "vibration": true
+          },
+          {
+            "id": "attention-important-v2",
+            "name": "重要提醒",
+            "description": "重要事项持续提醒",
+            "importance": 4,
+            "sound": "attention_reminder",
+            "vibration": true
+          },
+          {
+            "id": "attention-critical-v2",
+            "name": "关键提醒",
+            "description": "关键事项高显著提醒",
+            "importance": 5,
+            "sound": "attention_reminder",
+            "vibration": true
+          },
+          {
+            "id": "attention-normal-v2",
+            "name": "普通提醒",
+            "description": "普通事项提醒",
+            "importance": 3,
+            "sound": "attention_reminder",
+            "vibration": true
+          },
+          {
+            "id": "attention-important-v2",
+            "name": "重要提醒",
+            "description": "重要事项持续提醒",
+            "importance": 4,
+            "sound": "attention_reminder",
+            "vibration": true
+          },
+          {
+            "id": "attention-critical-v2",
+            "name": "关键提醒",
+            "description": "关键事项高显著提醒",
+            "importance": 5,
+            "sound": "attention_reminder",
+            "vibration": true
+          }
+        ],
+        "appListeners": [
+          "appStateChange",
+          "appStateChange"
+        ],
+        "bridgeListeners": [],
+        "localListeners": [
+          "localNotificationActionPerformed",
+          "localNotificationReceived"
+        ],
+        "schedule": [
+          [
+            {
+              "title": "🚨 关键事项",
+              "body": "independent isolated reminder",
+              "id": 1175185715,
+              "channelId": "attention-critical-v2",
+              "actionTypeId": "attention-actions",
+              "autoCancel": true,
+              "sound": "attention_reminder",
+              "schedule": {
+                "at": "2026-09-20T20:26:23.000Z",
+                "allowWhileIdle": true
+              },
+              "extra": {
+                "managedKind": "attention-reminder",
+                "scheduleVersion": 2,
+                "itemId": "i_wqzrogpwmua828un",
+                "itemRev": 1,
+                "event": "realert",
+                "attempt": 1,
+                "scheduleKey": "2|i_wqzrogpwmua828un|1|realert|1|1789935983000|🚨 关键事项|independent isolated reminder|attention-critical-v2",
+                "reminderKey": "1@1789935983000"
+              }
+            },
+            {
+              "title": "🚨 关键事项",
+              "body": "independent isolated reminder",
+              "id": 1888862926,
+              "channelId": "attention-critical-v2",
+              "actionTypeId": "attention-actions",
+              "autoCancel": true,
+              "sound": "attention_reminder",
+              "schedule": {
+                "at": "2026-09-20T20:41:23.000Z",
+                "allowWhileIdle": true
+              },
+              "extra": {
+                "managedKind": "attention-reminder",
+                "scheduleVersion": 2,
+                "itemId": "i_wqzrogpwmua828un",
+                "itemRev": 1,
+                "event": "realert",
+                "attempt": 2,
+                "scheduleKey": "2|i_wqzrogpwmua828un|1|realert|2|1789936883000|🚨 关键事项|independent isolated reminder|attention-critical-v2",
+                "reminderKey": "2@1789936883000"
+              }
+            },
+            {
+              "title": "🚨 关键事项",
+              "body": "independent isolated reminder",
+              "id": 2098239157,
+              "channelId": "attention-critical-v2",
+              "actionTypeId": "attention-actions",
+              "autoCancel": true,
+              "sound": "attention_reminder",
+              "schedule": {
+                "at": "2026-09-20T20:56:23.000Z",
+                "allowWhileIdle": true
+              },
+              "extra": {
+                "managedKind": "attention-reminder",
+                "scheduleVersion": 2,
+                "itemId": "i_wqzrogpwmua828un",
+                "itemRev": 1,
+                "event": "realert",
+                "attempt": 3,
+                "scheduleKey": "2|i_wqzrogpwmua828un|1|realert|3|1789937783000|🚨 关键事项|independent isolated reminder|attention-critical-v2",
+                "reminderKey": "3@1789937783000"
+              }
+            },
+            {
+              "title": "🚨 关键事项",
+              "body": "independent isolated reminder",
+              "id": 2106165128,
+              "channelId": "attention-critical-v2",
+              "actionTypeId": "attention-actions",
+              "autoCancel": true,
+              "sound": "attention_reminder",
+              "schedule": {
+                "at": "2026-09-20T21:11:23.000Z",
+                "allowWhileIdle": true
+              },
+              "extra": {
+                "managedKind": "attention-reminder",
+                "scheduleVersion": 2,
+                "itemId": "i_wqzrogpwmua828un",
+                "itemRev": 1,
+                "event": "realert",
+                "attempt": 4,
+                "scheduleKey": "2|i_wqzrogpwmua828un|1|realert|4|1789938683000|🚨 关键事项|independent isolated reminder|attention-critical-v2",
+                "reminderKey": "4@1789938683000"
+              }
+            },
+            {
+              "title": "🚨 关键事项",
+              "body": "independent isolated reminder",
+              "id": 898440439,
+              "channelId": "attention-critical-v2",
+              "actionTypeId": "attention-actions",
+              "autoCancel": true,
+              "sound": "attention_reminder",
+              "schedule": {
+                "at": "2026-09-20T21:26:23.000Z",
+                "allowWhileIdle": true
+              },
+              "extra": {
+                "managedKind": "attention-reminder",
+                "scheduleVersion": 2,
+                "itemId": "i_wqzrogpwmua828un",
+                "itemRev": 1,
+                "event": "realert",
+                "attempt": 5,
+                "scheduleKey": "2|i_wqzrogpwmua828un|1|realert|5|1789939583000|🚨 关键事项|independent isolated reminder|attention-critical-v2",
+                "reminderKey": "5@1789939583000"
+              }
+            },
+            {
+              "title": "🚨 关键事项",
+              "body": "independent isolated reminder",
+              "id": 1396588139,
+              "channelId": "attention-critical-v2",
+              "actionTypeId": "attention-actions",
+              "autoCancel": true,
+              "sound": "attention_reminder",
+              "schedule": {
+                "at": "2026-09-20T21:41:23.000Z",
+                "allowWhileIdle": true
+              },
+              "extra": {
+                "managedKind": "attention-reminder",
+                "scheduleVersion": 2,
+                "itemId": "i_wqzrogpwmua828un",
+                "itemRev": 1,
+                "event": "realert",
+                "attempt": 6,
+                "scheduleKey": "2|i_wqzrogpwmua828un|1|realert|6|1789940483000|🚨 关键事项|independent isolated reminder|attention-critical-v2",
+                "reminderKey": "6@1789940483000"
+              }
+            },
+            {
+              "title": "🚨 关键事项",
+              "body": "independent isolated reminder",
+              "id": 1053872968,
+              "channelId": "attention-critical-v2",
+              "actionTypeId": "attention-actions",
+              "autoCancel": true,
+              "sound": "attention_reminder",
+              "schedule": {
+                "at": "2026-09-20T21:56:23.000Z",
+                "allowWhileIdle": true
+              },
+              "extra": {
+                "managedKind": "attention-reminder",
+                "scheduleVersion": 2,
+                "itemId": "i_wqzrogpwmua828un",
+                "itemRev": 1,
+                "event": "realert",
+                "attempt": 7,
+                "scheduleKey": "2|i_wqzrogpwmua828un|1|realert|7|1789941383000|🚨 关键事项|independent isolated reminder|attention-critical-v2",
+                "reminderKey": "7@1789941383000"
+              }
+            }
+          ]
+        ],
+        "scheduleAlarm": [
+          {
+            "delayMs": 1799252,
+            "title": "🚨 关键事项",
+            "body": "independent isolated reminder",
+            "id": 234617886,
+            "itemId": "i_wqzrogpwmua828un",
+            "itemRev": 1,
+            "reminderKey": "0@1789935083000",
+            "level": "🚨 关键",
+            "scheduleBasis": "wall-clock",
+            "localTrigger": "2026-09-21T04:11:23"
+          }
+        ],
+        "cancelAlarm": [],
+        "cancelNotification": [],
+        "getPending": 2,
+        "permissionChecks": 0,
+        "activeAlarms": [],
+        "stopAlarmDelivery": []
+      },
+      "action": {
+        "saved": true,
+        "schedule": 1,
+        "scheduleAlarm": 1,
+        "startupFailure": null
+      }
+    },
+    {
+      "name": "missing-native-script-android",
+      "ready": true,
+      "errors": [],
+      "consoleErrors": [],
+      "dependencyProblems": null,
+      "puts": 0,
+      "intervals": [
+        2000,
+        15000
+      ],
+      "panels": [
+        "tmp",
+        "tmp",
+        "tmp",
+        "tmp",
+        "tmp",
+        "tmp",
+        "tmp",
+        "#main"
+      ],
+      "nativeLoaded": false,
+      "calls": {
+        "actionTypes": [],
+        "channels": [],
+        "appListeners": [],
+        "bridgeListeners": [],
+        "localListeners": [],
+        "schedule": [],
+        "scheduleAlarm": [],
+        "cancelAlarm": [],
+        "cancelNotification": [],
+        "getPending": 0,
+        "permissionChecks": 0,
+        "activeAlarms": [],
+        "stopAlarmDelivery": []
+      },
+      "action": {
+        "saved": true,
+        "schedule": 0,
+        "scheduleAlarm": 0,
+        "startupFailure": null
+      }
+    },
+    {
+      "name": "missing-app-ui-control",
+      "ready": false,
+      "errors": [],
+      "consoleErrors": [
+        "Startup dependency check failed: [object Object],[object Object],[object Object]"
+      ],
+      "dependencyProblems": [
+        {
+          "path": "AppUi",
+          "expected": "object",
+          "actual": "undefined",
+          "why": "lib/app-ui.js 未加载 —— DOM 查询/弹层/toast/确认框全部失效：界面看似能渲染，但点不动、也没有任何反馈"
+        },
+        {
+          "path": "AppUi.createUi",
+          "expected": "function",
+          "actual": "undefined",
+          "why": "lib/app-ui.js 导出被破坏（展示能力装配入口）"
+        },
+        {
+          "path": "AppUi.safeExternalHref",
+          "expected": "function",
+          "actual": "undefined",
+          "why": "lib/app-ui.js 导出被破坏 —— 外链协议白名单失效：`javascript:` / `data:` 这类用户数据可能被渲染成可点 href"
+        }
+      ],
+      "puts": 0,
+      "intervals": [],
+      "panels": [
+        "tmp",
+        "tmp",
+        "tmp",
+        "tmp",
+        "tmp",
+        "tmp",
+        "tmp",
+        "#main"
+      ],
+      "nativeLoaded": true,
+      "calls": {
+        "actionTypes": [],
+        "channels": [],
+        "appListeners": [],
+        "bridgeListeners": [],
+        "localListeners": [],
+        "schedule": [],
+        "scheduleAlarm": [],
+        "cancelAlarm": [],
+        "cancelNotification": [],
+        "getPending": 0,
+        "permissionChecks": 0,
+        "activeAlarms": [],
+        "stopAlarmDelivery": []
+      }
+    },
+    {
+      "name": "feedback-missing-setupSteps",
+      "ready": false,
+      "errors": [],
+      "consoleErrors": [
+        "App init failed: f.setupSteps is not a function"
+      ],
+      "dependencyProblems": null,
+      "puts": 1,
+      "intervals": [],
+      "panels": [
+        "tmp",
+        "tmp",
+        "tmp",
+        "tmp",
+        "tmp",
+        "tmp",
+        "tmp",
+        "#main"
+      ],
+      "nativeLoaded": true,
+      "calls": {
+        "actionTypes": [
+          {
+            "types": [
+              {
+                "id": "attention-actions",
+                "actions": [
+                  {
+                    "id": "ack",
+                    "title": "我知道了"
+                  },
+                  {
+                    "id": "snooze",
+                    "title": "稍后 2 小时"
+                  },
+                  {
+                    "id": "done",
+                    "title": "完成"
+                  }
+                ]
+              },
+              {
+                "id": "attention-review-actions",
+                "actions": [
+                  {
+                    "id": "review_start",
+                    "title": "开始整理"
+                  },
+                  {
+                    "id": "review_snooze",
+                    "title": "稍后 30 分钟"
+                  },
+                  {
+                    "id": "review_skip",
+                    "title": "今天跳过"
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "channels": [
+          {
+            "id": "attention-normal-v2",
+            "name": "普通提醒",
+            "description": "普通事项提醒",
+            "importance": 3,
+            "sound": "attention_reminder",
+            "vibration": true
+          },
+          {
+            "id": "attention-important-v2",
+            "name": "重要提醒",
+            "description": "重要事项持续提醒",
+            "importance": 4,
+            "sound": "attention_reminder",
+            "vibration": true
+          },
+          {
+            "id": "attention-critical-v2",
+            "name": "关键提醒",
+            "description": "关键事项高显著提醒",
+            "importance": 5,
+            "sound": "attention_reminder",
+            "vibration": true
+          }
+        ],
+        "appListeners": [
+          "appStateChange",
+          "appStateChange"
+        ],
+        "bridgeListeners": [],
+        "localListeners": [
+          "localNotificationActionPerformed",
+          "localNotificationReceived"
+        ],
+        "schedule": [],
+        "scheduleAlarm": [],
+        "cancelAlarm": [],
+        "cancelNotification": [],
+        "getPending": 1,
+        "permissionChecks": 0,
+        "activeAlarms": [],
+        "stopAlarmDelivery": []
+      }
+    },
+    {
+      "name": "feedback-null",
+      "ready": true,
+      "errors": [],
+      "consoleErrors": [],
+      "dependencyProblems": null,
+      "puts": 1,
+      "intervals": [
+        2000,
+        15000
+      ],
+      "panels": [
+        "tmp",
+        "tmp",
+        "tmp",
+        "tmp",
+        "tmp",
+        "tmp",
+        "tmp",
+        "#main"
+      ],
+      "nativeLoaded": true,
+      "calls": {
+        "actionTypes": [
+          {
+            "types": [
+              {
+                "id": "attention-actions",
+                "actions": [
+                  {
+                    "id": "ack",
+                    "title": "我知道了"
+                  },
+                  {
+                    "id": "snooze",
+                    "title": "稍后 2 小时"
+                  },
+                  {
+                    "id": "done",
+                    "title": "完成"
+                  }
+                ]
+              },
+              {
+                "id": "attention-review-actions",
+                "actions": [
+                  {
+                    "id": "review_start",
+                    "title": "开始整理"
+                  },
+                  {
+                    "id": "review_snooze",
+                    "title": "稍后 30 分钟"
+                  },
+                  {
+                    "id": "review_skip",
+                    "title": "今天跳过"
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "channels": [
+          {
+            "id": "attention-normal-v2",
+            "name": "普通提醒",
+            "description": "普通事项提醒",
+            "importance": 3,
+            "sound": "attention_reminder",
+            "vibration": true
+          },
+          {
+            "id": "attention-important-v2",
+            "name": "重要提醒",
+            "description": "重要事项持续提醒",
+            "importance": 4,
+            "sound": "attention_reminder",
+            "vibration": true
+          },
+          {
+            "id": "attention-critical-v2",
+            "name": "关键提醒",
+            "description": "关键事项高显著提醒",
+            "importance": 5,
+            "sound": "attention_reminder",
+            "vibration": true
+          }
+        ],
+        "appListeners": [
+          "appStateChange",
+          "appStateChange"
+        ],
+        "bridgeListeners": [],
+        "localListeners": [
+          "localNotificationActionPerformed",
+          "localNotificationReceived"
+        ],
+        "schedule": [],
+        "scheduleAlarm": [],
+        "cancelAlarm": [],
+        "cancelNotification": [],
+        "getPending": 1,
+        "permissionChecks": 0,
+        "activeAlarms": [],
+        "stopAlarmDelivery": []
+      }
+    },
+    {
+      "name": "evidence-missing-normalizeEvidence",
+      "ready": true,
+      "errors": [],
+      "consoleErrors": [],
+      "dependencyProblems": null,
+      "puts": 1,
+      "intervals": [
+        2000,
+        15000
+      ],
+      "panels": [
+        "tmp",
+        "tmp",
+        "tmp",
+        "tmp",
+        "tmp",
+        "tmp",
+        "tmp",
+        "#main"
+      ],
+      "nativeLoaded": true,
+      "calls": {
+        "actionTypes": [
+          {
+            "types": [
+              {
+                "id": "attention-actions",
+                "actions": [
+                  {
+                    "id": "ack",
+                    "title": "我知道了"
+                  },
+                  {
+                    "id": "snooze",
+                    "title": "稍后 2 小时"
+                  },
+                  {
+                    "id": "done",
+                    "title": "完成"
+                  }
+                ]
+              },
+              {
+                "id": "attention-review-actions",
+                "actions": [
+                  {
+                    "id": "review_start",
+                    "title": "开始整理"
+                  },
+                  {
+                    "id": "review_snooze",
+                    "title": "稍后 30 分钟"
+                  },
+                  {
+                    "id": "review_skip",
+                    "title": "今天跳过"
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "channels": [
+          {
+            "id": "attention-normal-v2",
+            "name": "普通提醒",
+            "description": "普通事项提醒",
+            "importance": 3,
+            "sound": "attention_reminder",
+            "vibration": true
+          },
+          {
+            "id": "attention-important-v2",
+            "name": "重要提醒",
+            "description": "重要事项持续提醒",
+            "importance": 4,
+            "sound": "attention_reminder",
+            "vibration": true
+          },
+          {
+            "id": "attention-critical-v2",
+            "name": "关键提醒",
+            "description": "关键事项高显著提醒",
+            "importance": 5,
+            "sound": "attention_reminder",
+            "vibration": true
+          }
+        ],
+        "appListeners": [
+          "appStateChange",
+          "appStateChange"
+        ],
+        "bridgeListeners": [],
+        "localListeners": [
+          "localNotificationActionPerformed",
+          "localNotificationReceived"
+        ],
+        "schedule": [],
+        "scheduleAlarm": [],
+        "cancelAlarm": [],
+        "cancelNotification": [],
+        "getPending": 1,
+        "permissionChecks": 0,
+        "activeAlarms": [],
+        "stopAlarmDelivery": []
+      },
+      "actionError": "EvidenceLib.normalizeEvidence is not a function"
+    },
+    {
+      "name": "app-ui-incomplete-factory",
+      "ready": false,
+      "errors": [],
+      "consoleErrors": [
+        "App init failed: $ is not a function"
+      ],
+      "dependencyProblems": null,
+      "puts": 0,
+      "intervals": [],
+      "panels": [
+        "tmp",
+        "tmp",
+        "tmp",
+        "tmp",
+        "tmp",
+        "tmp",
+        "tmp",
+        "#main"
+      ],
+      "nativeLoaded": true,
+      "calls": {
+        "actionTypes": [],
+        "channels": [],
+        "appListeners": [],
+        "bridgeListeners": [],
+        "localListeners": [],
+        "schedule": [],
+        "scheduleAlarm": [],
+        "cancelAlarm": [],
+        "cancelNotification": [],
+        "getPending": 0,
+        "permissionChecks": 0,
+        "activeAlarms": [],
+        "stopAlarmDelivery": []
+      }
+    },
+    {
+      "name": "native-missing-constant",
+      "ready": true,
+      "errors": [],
+      "consoleErrors": [],
+      "dependencyProblems": null,
+      "puts": 1,
+      "intervals": [
+        2000,
+        15000
+      ],
+      "panels": [
+        "tmp",
+        "tmp",
+        "tmp",
+        "tmp",
+        "tmp",
+        "tmp",
+        "tmp",
+        "#main"
+      ],
+      "nativeLoaded": true,
+      "calls": {
+        "actionTypes": [
+          {
+            "types": [
+              {
+                "id": "attention-actions",
+                "actions": [
+                  {
+                    "id": "ack",
+                    "title": "我知道了"
+                  },
+                  {
+                    "id": "snooze",
+                    "title": "稍后 2 小时"
+                  },
+                  {
+                    "id": "done",
+                    "title": "完成"
+                  }
+                ]
+              },
+              {
+                "id": "attention-review-actions",
+                "actions": [
+                  {
+                    "id": "review_start",
+                    "title": "开始整理"
+                  },
+                  {
+                    "id": "review_snooze",
+                    "title": "稍后 30 分钟"
+                  },
+                  {
+                    "id": "review_skip",
+                    "title": "今天跳过"
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "channels": [
+          {
+            "id": "attention-normal-v2",
+            "name": "普通提醒",
+            "description": "普通事项提醒",
+            "importance": 3,
+            "sound": "attention_reminder",
+            "vibration": true
+          },
+          {
+            "id": "attention-important-v2",
+            "name": "重要提醒",
+            "description": "重要事项持续提醒",
+            "importance": 4,
+            "sound": "attention_reminder",
+            "vibration": true
+          },
+          {
+            "id": "attention-critical-v2",
+            "name": "关键提醒",
+            "description": "关键事项高显著提醒",
+            "importance": 5,
+            "sound": "attention_reminder",
+            "vibration": true
+          }
+        ],
+        "appListeners": [
+          "appStateChange",
+          "appStateChange"
+        ],
+        "bridgeListeners": [],
+        "localListeners": [
+          "localNotificationActionPerformed",
+          "localNotificationReceived"
+        ],
+        "schedule": [],
+        "scheduleAlarm": [],
+        "cancelAlarm": [],
+        "cancelNotification": [],
+        "getPending": 1,
+        "permissionChecks": 0,
+        "activeAlarms": [],
+        "stopAlarmDelivery": []
+      }
+    },
+    {
+      "name": "retry-after-parser-arrives",
+      "initialReady": false,
+      "dependencyProblemsAfterArrival": [],
+      "capturedParseType": "undefined"
+    }
+  ]
+}

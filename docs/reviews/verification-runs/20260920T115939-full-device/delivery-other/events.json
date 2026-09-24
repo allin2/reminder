@@ -1,0 +1,26 @@
+[
+  {
+    "token": "1612567854:34f9747f-a28a-4ab3-91e3-307dc6491848",
+    "stage": "requested",
+    "at": 1789877369427,
+    "detail": "delayMs=24616"
+  },
+  {
+    "token": "1612567854:34f9747f-a28a-4ab3-91e3-307dc6491848",
+    "stage": "item",
+    "at": 1789877369428,
+    "detail": "verify-other-1789877369244"
+  },
+  {
+    "token": "1612567854:34f9747f-a28a-4ab3-91e3-307dc6491848",
+    "stage": "unfreezerScheduled",
+    "at": 1789877369458,
+    "detail": "triggerAt=1789877394044;mode=alarmClock"
+  },
+  {
+    "token": "1612567854:34f9747f-a28a-4ab3-91e3-307dc6491848",
+    "stage": "scheduled",
+    "at": 1789877369458,
+    "detail": "triggerAt=1789877394044;mode=alarmClock"
+  }
+]

@@ -1,0 +1,8 @@
+test-unit exit=0
+test-smoke exit=0
+test-regressions exit=0
+test-native-reminders exit=0
+test-boot-combination exit=0
+parse exit=0
+ui-format exit=0
+ui-dom exit=0

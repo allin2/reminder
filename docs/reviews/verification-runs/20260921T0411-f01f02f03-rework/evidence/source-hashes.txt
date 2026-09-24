@@ -1,0 +1,21 @@
+# 交付身份（工作区字节）
+# generated: 2026-09-21T04:24:02+0800
+
+789ee3b7abbb2f4849ea1fea02c7cd5f9c133cbefd2822140eec93cccc0cc1ed  app-core.js  397859 bytes
+ad706717c2accb966aaac2cc4db49d2be68fa3f202b38f63449fc7ecc06b9653  index.html  79352 bytes
+2b8e1c6faa2e347a2a6cfda0f8de8e3262f4d457ed6f5cbc0b66328799ab2186  sw.js  4498 bytes
+22d183c857ce060047054b524d3f2cae0c37d54e30553134091c26884ff3d6bb  lib/native-reminders.js  60999 bytes
+80c6e4db43ebe018c2fc90fbe1e8b1cc126be801aec5ae790490cb5fe53a9f9d  lib/parse-cn.js  22716 bytes
+3dcccc41863aef136abe513527d79955c5b80be9d997f5ff90d68f0fd5850c9f  lib/ui-format.js  9232 bytes
+7328f1e6ec1634a523deb21ba96ff9f9bf50f6b2ebe827b3a1e7765394cdb46c  lib/date-utils.js  7506 bytes
+84e3e97663c2a7525ff25432f335a5a422791c83e26f81014b34443d63b632e4  lib/app-ui.js  8394 bytes
+bfe41dd392d5ff27d8c92b41154fc7e4e5a125eaaa1c8fae6ae3298186669eb3  lib/feedback.js  16445 bytes
+7ee77186881d8462450c8fe8a550840647ec9d7626c259fb9e29768290062d03  lib/delivery-evidence.js  15664 bytes
+8c90239d56ca2134cfc783eb8c0642094413dee8ead997d86265f46d53c68a48  test-boot-combination.js  124632 bytes
+f8d790cdc03ba0cb6be70cfc7dd0516f9a918d64fe06c482fa88e32069e7e10d  test-smoke.js  82749 bytes
+53d5e47fb22886cc524636bbcd75738e3f1c0307ab962798a9f3868c85caef25  test-regressions.js  179497 bytes
+ca3b9f905c171a334540bb54934638a59b37e30b4c01d0274aa35f8ab0fd6f51  test-unit.js  75329 bytes
+a0008176e878766a56e58846e4e5f0452e6d88a966d260b5670081a442369330  test-native-reminders.js  133988 bytes
+a2092fc4db9f2ec7b97d9131e336d5068bc3e806a3eeb847b8fe0e26cbdeff5a  scripts/verification/production-scripts.js  23058 bytes
+30b633538171af415df13be5bd9ced6a201342af94dbc4ac0bc2eb2d5abe7590  scripts/verification/parse-single-source.js  38894 bytes
+3fd068e294e40e6c43651b8178fdf710c31547f04d9b3f37b3663b58512b665e  scripts/verification/browser-recovery-check.py  17019 bytes

@@ -1,0 +1,22 @@
+反验：真机 19 B 空标记 CRC32C 自校验 PASS（len=12 type=1 seq=548 count=0）
+反验：真机 off=132907 记录 CRC32C 自校验 PASS（payload=4457 B count=5 end=137371）
+
+    夹具                     期望VERDICT      码    实得VERDICT      码    OPS    说明
+✓   marker-only            NO_OPERATIONS  0    NO_OPERATIONS  0    0      只有 19 B 空 WriteBatch ⇒ 零键操作，不是提交
+✓   marker-then-1put       HAS_OPERATIONS 2    HAS_OPERATIONS 2    1      首条 count=0 + 次条 count=1 ⇒ 旧版只看 recs[0] 会误判无操作
+✓   marker-then-real5put   HAS_OPERATIONS 2    HAS_OPERATIONS 2    5      首条 count=0 + 次条真机 count=5 ⇒ 操作数应汇总为 5
+✓   real5put-only          HAS_OPERATIONS 2    HAS_OPERATIONS 2    5      真机 count=5 写批量 ⇒ 必须报红（判据有牙齿）
+✓   rotated-prefix         INCONCLUSIVE   3    INCONCLUSIVE   3    None   前缀不一致 ⇒ 轮转，fail closed
+✓   rotated-shrink         INCONCLUSIVE   3    INCONCLUSIVE   3    None   WAL 变小 ⇒ 轮转/压实
+✓   truncated-record       INCONCLUSIVE   3    INCONCLUSIVE   3    None   记录头声明长度 > 剩余字节 ⇒ 写入中断，fail closed
+✓   short-nonzero-tail     INCONCLUSIVE   3    INCONCLUSIVE   3    None   残尾 3 B 非零填充 ⇒ 不可判定，fail closed
+✓   no-baseline            INCONCLUSIVE   3    INCONCLUSIVE   3    None   基线为空 ⇒ 无从比较
+✓   unchanged              NO_OPERATIONS  0    NO_OPERATIONS  0    None   WAL 未变化
+✓   indep-43B-degenerate-baseline INCONCLUSIVE   3    INCONCLUSIVE   3    None   独立方的 before 是 0 B：无基线 ⇒ 不得默认「无操作」，fail closed
+✓   indep-43B-as-increment HAS_OPERATIONS 2    HAS_OPERATIONS 2    1      同一 43 B 作为真增量：首条 count=0 + 次条 count=1 ⇒ 汇总 OPS=1
+
+── 对照：旧版「只解码 recs[0]」的逻辑 ──
+  marker-then-1put       旧版: OLD_RECS0 count=0 VERDICT=NO_OPERATIONS 新版: VERDICT=HAS_OPERATIONS (exit=2)
+  marker-then-real5put   旧版: OLD_RECS0 count=0 VERDICT=NO_OPERATIONS 新版: VERDICT=HAS_OPERATIONS (exit=2)
+
+OVERALL=PASS（12/12 夹具符合预期）

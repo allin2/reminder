@@ -1,0 +1,9 @@
+healthy direct behavior: PASS
+ACK repeat derivation bypassed: mutation detected
+Calendar repeat derivation on complete bypassed: mutation detected
+stopRepeat overwrites historical acknowledged status: mutation detected
+promoteDue inflight check removed: mutation detected
+undo complete failure rollback removed: mutation detected
+wrapUserOp wrapper removed on completeItem: mutation detected
+applyNewItem ignores replayCreatedId: mutation detected
+lib/app-items.js before/after SHA-256 match: e807599395caa4f0a69e13ab957a43bd6d377d5dbab682c32c121c4a7a4be519

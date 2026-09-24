@@ -1,0 +1,6 @@
+checked_at_local=2026-09-20T18:18:26+08:00
+adb=/Users/qlyf/Library/Android/sdk/platform-tools/adb
+command=adb devices -l
+output=List of devices attached
+recognized_devices=0
+result=NOT_PERFORMED

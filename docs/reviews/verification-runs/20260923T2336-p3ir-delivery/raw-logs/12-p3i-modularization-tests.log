@@ -1,0 +1,85 @@
+== P3-I. AppActionFeedback, AppEvents, AppNotices & AppTestApi 模块自测 ==
+  ✓ lib/app-action-feedback.js：求值期纯净且不主动查询 DOM
+  ✓ lib/app-events.js：求值期纯净且不主动查询 DOM
+  ✓ lib/app-notices.js：求值期纯净且不主动查询 DOM
+  ✓ lib/app-test-api.js：求值期纯净且不主动查询 DOM
+  ✓ AppActionFeedback 挂载于 AttentionLib.AppActionFeedback.createAppActionFeedback
+  ✓ AppActionFeedback 缺必要依赖时同步抛错（fail closed）
+  ✓ AppActionFeedback 包含合同成员 announceSaveOutcome
+  ✓ AppActionFeedback 包含合同成员 settleSaveFeedback
+  ✓ AppActionFeedback 包含合同成员 itemScheduleEvidence
+  ✓ AppActionFeedback 包含合同成员 feedbackNativeSnapshot
+  ✓ AppActionFeedback 包含合同成员 feedbackItemSnapshot
+  ✓ AppActionFeedback 包含合同成员 feedbackVerdictFor
+  ✓ AppActionFeedback 包含合同成员 runFeedbackAction
+  ✓ announceSaveOutcome 记录保存结果并派发 toast
+  ✓ settleSaveFeedback 正常调用无异常
+  ✓ AppEvents 挂载于 AttentionLib.AppEvents.createAppEvents
+  ✓ AppEvents 缺必要依赖时同步抛错（fail closed）
+  ✓ AppEvents 包含合同成员 bind
+  ✓ AppEvents 包含合同成员 isBound
+  ✓ AppEvents 包含合同成员 applyShareParams
+  ✓ AppEvents 包含合同成员 handleQueryActions
+  ✓ AppEvents 包含合同成员 demoPreviewRows
+  ✓ AppEvents 包含合同成员 openDemoPreview
+  ✓ AppEvents 包含合同成员 seed
+  ✓ demoPreviewRows 返回只读示例行（长度为 5）
+  ✓ 初始未绑定
+  ✓ 初次 bind() 后 isBound() 为 true
+  ✓ 重复调用 bind() 不累加事件监听（幂等）
+  ✓ AppEvents 对照：健康绑定挂上 document 监听器且宣布已绑定
+  ✓ AppEvents 早段绑定抛错：原样上抛且不宣布已绑定
+  ✓ AppEvents 早段绑定抛错：不留半套监听器
+  ✓ AppEvents 早段抛错后重试真的重进绑定（不短路）
+  ✓ AppEvents 后段绑定抛错：原样上抛且不宣布已绑定
+  ✓ AppEvents 后段绑定抛错：已登记的监听器被整体回滚
+  ✓ AppEvents 后段抛错后重试不翻倍（等于对照计数）
+  ✓ AppEvents 被委托模块已绑定时本模块失败：本模块监听器整体回滚、被委托监听器保留
+  ✓ AppEvents 重试不得让已绑定的被委托监听器翻倍
+  ✓ （前置）变异真的改到了 catch 里的回滚调用（否则下面那条是空断言）
+  ✓ 对照：摘掉回滚后，后段抛错的重试会翻倍（证明上面的回滚断言有牙齿）
+  ✓ AppNotices 挂载于 AttentionLib.AppNotices.createAppNotices
+  ✓ AppNotices 缺必要依赖时同步抛错（fail closed）
+  ✓ AppNotices 判定①：总开关关闭优先于权限 —— 说「开关」不说「去授权」
+  ✓ AppNotices 判定②：系统通知权限被拒 ⇒ permission
+  ✓ AppNotices 判定③：原生桥未就绪 ⇒ bridge
+  ✓ AppNotices 判定④：对账失败 ⇒ error
+  ✓ AppNotices 判定：链路正常 ⇒ null（不出声）
+  ✓ AppNotices 红线：notifications=unknown 是「还没问过」⇒ null
+  ✓ AppNotices 红线：未知桥状态（未定）⇒ null
+  ✓ AppNotices 红线：非原生运行时 ⇒ null（Web 上没有「关掉 App 就不响」这件事）
+  ✓ AppNotices 范围边界：exactAlarm=denied 不进首页（只影响到达时刻）
+  ✓ AppNotices 渲染：链路正常 ⇒ 返回 null 且容器保持空
+  ✓ AppNotices 渲染：断链 ⇒ 返回同一判定并写入告警
+  ✓ AppNotices 渲染：结论未变 ⇒ 不重复写同一容器（单写入者短路）
+  ✓ AppNotices 渲染：断链消失 ⇒ 主动清空（警告不残留）
+  ✓ AppNotices 渲染：无容器时安静返回 null（不抛）
+  ✓ AppNotices 摘要：今天新增 3 条 ⇒ 出摘要（toast + 系统通知各一次、只保存一次）
+  ✓ AppNotices 摘要：20 小时内再调 ⇒ 直接 null（不重复打扰）
+  ✓ AppNotices 摘要：不足 3 条但有重要项 ⇒ 仍然出声
+  ✓ AppNotices 摘要：总开关关闭 ⇒ null 且不保存、不打扰
+  ✓ AppNotices 摘要：不读真实墙钟 —— 两个相隔很远的固定时刻都出摘要
+  ✓ AppNotices 摘要：两个时刻各自保存一次、打扰各一次
+  ✓ AppNotices 摘要：改回 new Date() 后时钟断言变红（对照组有牙齿）
+  ✓ AppTestApi 挂载于 AttentionLib.AppTestApi.createAppTestApi
+  ✓ AppTestApi 缺必要依赖时同步抛错（fail closed）
+  ✓ AppTestApi 包含合同成员 assembleTestApi
+  ✓ AppTestApi 包含合同成员 getTestApi
+  ✓ assembleTestApi 返回测试接口对象
+  ✓ getTestApi 返回测试接口对象
+  ✓ assembleTestApi 挂载到宿主全局 __ATTENTION_INBOX__
+  ✓ api.state 动态读取初始状态
+  ✓ api.state 动态反映运行时状态变更（无陈旧闭包）
+  ✓ api.buildLegacyBackupPayload 是可调用的函数
+  ✓ api.buildLegacyBackupPayload() 返回规范备份快照
+  ✓ applyReminderEvents 透传全部 3 个参数（含 cancelledEvents）
+  ✓ applyDeadlineEvents 透传全部 3 个参数（含 cancelledStages）
+  ✓ api.notices 返回告知实例（动态 getter）
+  ✓ api.maybeDailySummary 桥接到告知实例（不是空返回）
+  ✓ api.homeNoticeVerdict / renderHomeNotice 均已挂载
+  ✓ assembleTestApi 成功将接口挂载至 globalThis.__ATTENTION_INBOX__
+  ✓ lib/app-action-feedback.js：测试运行未篡改源文件内容
+  ✓ lib/app-events.js：测试运行未篡改源文件内容
+  ✓ lib/app-notices.js：测试运行未篡改源文件内容
+  ✓ lib/app-test-api.js：测试运行未篡改源文件内容
+全部通过：共 83 项断言。

@@ -1,0 +1,50 @@
+{
+  "runId": "20260920T181826-code-optimization-repair",
+  "browser": {
+    "kind": "Codex in-app Chromium browser",
+    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/153.0.0.0 Safari/537.36",
+    "origin": "http://127.0.0.1:18764",
+    "data": "synthetic audit records only"
+  },
+  "results": [
+    {
+      "name": "tag edit invalidates home signature",
+      "status": "PASS",
+      "input": { "before": ["work,home"], "after": ["work", "home"] },
+      "observedBeforeSave": ["#work,home"],
+      "observedImmediatelyAfterSave": ["#work", "#home"],
+      "reloadRequired": false
+    },
+    {
+      "name": "stable refresh keeps DOM and focus",
+      "status": "PASS",
+      "observed": {
+        "sameCardNode": true,
+        "focusedEditButtonPreserved": true,
+        "tags": ["#work", "#home"]
+      }
+    },
+    {
+      "name": "URL matrix",
+      "status": "PASS",
+      "rejectedAsPlainText": [
+        "javascript:alert(1)",
+        "java\\nscript:alert(1)",
+        "data:text/html,<script>alert(1)</script>",
+        "file:///tmp/a",
+        "//example.com",
+        "https://[",
+        "http://%zz",
+        "https://example.com:99999",
+        "mailto:a@example.com"
+      ],
+      "clickable": [
+        "https://example.com",
+        "HTTPS://example.com/a",
+        "https://example.com/path?q=a&b=c"
+      ],
+      "quotedItemIdRemainedSingleDataIdAttribute": true
+    }
+  ],
+  "boundary": "No Android device was visible to adb; browser results do not prove APK or device behavior."
+}

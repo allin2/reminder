@@ -1,0 +1,3 @@
+scripts/verification/p2cr-coldstart-rounds.sh: bare_adjacent_non_ascii=0 []
+scripts/verification/p2cr-idb-fault-inject.sh: bare_adjacent_non_ascii=0 []
+bash-n=PASS

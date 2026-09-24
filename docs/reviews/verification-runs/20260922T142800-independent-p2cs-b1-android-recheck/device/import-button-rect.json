@@ -1,0 +1,31 @@
+{
+  "innerWidth": 360,
+  "innerHeight": 736,
+  "dpr": 3,
+  "scrollY": 35.66666793823242,
+  "rect": {
+    "x": 17,
+    "y": 331.77606201171875,
+    "width": 326,
+    "height": 72.515625
+  },
+  "hidden": false,
+  "nav": [
+    {
+      "tab": "home",
+      "active": false
+    },
+    {
+      "tab": "future",
+      "active": false
+    },
+    {
+      "tab": "notes",
+      "active": false
+    },
+    {
+      "tab": "me",
+      "active": true
+    }
+  ]
+}

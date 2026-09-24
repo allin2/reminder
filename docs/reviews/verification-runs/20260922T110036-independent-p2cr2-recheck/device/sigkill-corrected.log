@@ -1,0 +1,9 @@
+Warning: Activity not started, intent has been delivered to currently running top-most instance.
+A_SHA=0625aacabcd5068a PID=21749
+{"status":"loaded","reason":"authoritative","backend":"idb","writesAllowed":true,"blockedWriteCount":0,"items":2,"panel":false}
+PID_AFTER_KILL=[]
+B1=e79173ef74d6a1fc7b50bf7d7eb64cf610a4c7b114e0894422c9039f8f3f1996
+B2=e79173ef74d6a1fc7b50bf7d7eb64cf610a4c7b114e0894422c9039f8f3f1996
+C_SHA=0625aacabcd5068a PID=22061
+{"status":"loaded","reason":"authoritative","backend":"idb","writesAllowed":true,"blockedWriteCount":0,"items":2,"panel":false}
+OVERALL=PASS

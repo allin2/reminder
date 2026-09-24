@@ -1,0 +1,76 @@
+{
+  "generatedAt": "2026-09-20T20:50:06.807Z",
+  "note": "修复前 (a) 是复验方在旧源码上跑出的原样日志（只读引用）；(b) 是把当前工作区源码退回旧别名形态后，用**当前**扫描器得到的输出。修复后 = 工作区。",
+  "before_independent_baseline": {
+    "baseline": {
+      "undeclared": [],
+      "ambiguousAliases": [
+        "f"
+      ],
+      "ambiguousRefs": [
+        "f.TEST_FEEDBACK",
+        "f.actionLabel",
+        "f.captureSummary",
+        "f.reminderFeedback",
+        "f.setupSteps",
+        "f.text"
+      ],
+      "aliases": {}
+    },
+    "ambiguousFMutation": {
+      "undeclared": [],
+      "ambiguousRefs": [
+        "f.independentUndeclaredMember"
+      ]
+    },
+    "directAliasControl": {
+      "undeclared": [
+        {
+          "path": "Feedback.independentUndeclaredMember",
+          "lines": [
+            3661
+          ]
+        }
+      ]
+    },
+    "blindSpotReproduced": true
+  },
+  "before_reproduced_current_scanner": {
+    "undeclared": [],
+    "ambiguousAliases": [
+      "f"
+    ],
+    "ambiguousRefs": [
+      "f.TEST_FEEDBACK",
+      "f.actionLabel",
+      "f.captureSummary",
+      "f.reminderFeedback",
+      "f.setupSteps",
+      "f.text"
+    ],
+    "problems": [
+      "ambiguous-alias:f（同一名字既被赋成已知命名空间、又被赋成别的东西）",
+      "ambiguous-ref:f.TEST_FEEDBACK（归属不可证明）",
+      "ambiguous-ref:f.actionLabel（归属不可证明）",
+      "ambiguous-ref:f.captureSummary（归属不可证明）",
+      "ambiguous-ref:f.reminderFeedback（归属不可证明）",
+      "ambiguous-ref:f.setupSteps（归属不可证明）",
+      "ambiguous-ref:f.text（归属不可证明）"
+    ],
+    "aliases": {},
+    "declaredCount": 71,
+    "refsCount": 59
+  },
+  "after_workspace": {
+    "undeclared": [],
+    "ambiguousAliases": [],
+    "ambiguousRefs": [],
+    "problems": [],
+    "aliases": {
+      "feedbackApi": "FeedbackLib"
+    },
+    "declaredCount": 71,
+    "refsCount": 61
+  },
+  "after_all_four_empty": true
+}

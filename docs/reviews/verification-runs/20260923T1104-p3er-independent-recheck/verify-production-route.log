@@ -1,0 +1,7 @@
+{
+  "verdict": "PASS",
+  "drains": 1,
+  "detailId": null,
+  "ackStatus": "acknowledged",
+  "eventSeenAfterReboot": true
+}

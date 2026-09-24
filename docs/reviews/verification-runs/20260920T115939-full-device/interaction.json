@@ -1,0 +1,212 @@
+{
+  "capture-double-submit": [
+    {
+      "id": "i_atobo5jemu9al6s7",
+      "title": "实机验证取快递",
+      "triggerAt": 1789974000000,
+      "status": "waiting"
+    }
+  ],
+  "demo-read-only": {
+    "before": 1,
+    "after": 1,
+    "pass": true
+  },
+  "project": [
+    {
+      "id": "p_i_cnvuqyd9mu9al8ct",
+      "name": "实机验证项目"
+    }
+  ],
+  "note": [
+    {
+      "id": "i_ed25021fmu9al8go",
+      "title": "实机验证笔记",
+      "projectId": "p_i_cnvuqyd9mu9al8ct"
+    }
+  ],
+  "edit": {
+    "id": "i_atobo5jemu9al6s7",
+    "title": "实机验证已编辑",
+    "note": "保留中文上下文",
+    "tags": [],
+    "url": "",
+    "projectId": "",
+    "priority": "normal",
+    "status": "waiting",
+    "triggerAt": null,
+    "windowStart": null,
+    "windowEnd": null,
+    "repeat": null,
+    "createdAt": 1789877060503,
+    "acknowledgedAt": null,
+    "completedAt": null,
+    "snoozeCount": 0,
+    "deliveredAt": null,
+    "remindCount": 0,
+    "lastRemindAt": null,
+    "lastAlertShownAt": null,
+    "scheduleBasis": "wall-clock",
+    "localTrigger": "",
+    "snoozedAt": null,
+    "snoozeDelayMs": null,
+    "dismissedUntil": null,
+    "review_status": "READY",
+    "reviewed_at": null,
+    "sourceTitle": "",
+    "sourceApp": "",
+    "delivery_mode": "notification",
+    "isFallbackTrigger": false,
+    "deadlineStageKey": null,
+    "deadlineEvents": {},
+    "deadlinePaused": false,
+    "ackAdvancedAt": null,
+    "rev": 2,
+    "seriesId": null,
+    "repeatParentId": null
+  },
+  "ack": {
+    "status": "acknowledged",
+    "pass": true
+  },
+  "snooze": {
+    "status": "snoozed",
+    "basis": "elapsed",
+    "delay": 7200000,
+    "pass": true
+  },
+  "complete-terminal": {
+    "status": "archived",
+    "rejected": [
+      false,
+      false
+    ],
+    "pass": true
+  },
+  "restart-before": {
+    "items": [
+      {
+        "id": "i_atobo5jemu9al6s7",
+        "title": "实机验证已编辑",
+        "note": "保留中文上下文",
+        "tags": [],
+        "url": "",
+        "projectId": "",
+        "priority": "normal",
+        "status": "archived",
+        "triggerAt": 1789884264607,
+        "windowStart": null,
+        "windowEnd": null,
+        "repeat": null,
+        "createdAt": 1789877060503,
+        "acknowledgedAt": 1789877064452,
+        "completedAt": 1789877064737,
+        "snoozeCount": 1,
+        "deliveredAt": null,
+        "remindCount": 0,
+        "lastRemindAt": null,
+        "lastAlertShownAt": null,
+        "scheduleBasis": "elapsed",
+        "localTrigger": null,
+        "snoozedAt": 1789877064607,
+        "snoozeDelayMs": 7200000,
+        "dismissedUntil": null,
+        "review_status": "READY",
+        "reviewed_at": null,
+        "sourceTitle": "",
+        "sourceApp": "",
+        "delivery_mode": "notification",
+        "isFallbackTrigger": false,
+        "deadlineStageKey": null,
+        "deadlineEvents": {},
+        "deadlinePaused": false,
+        "ackAdvancedAt": null,
+        "rev": 5,
+        "seriesId": null,
+        "repeatParentId": null
+      }
+    ],
+    "notes": [
+      {
+        "id": "i_ed25021fmu9al8go",
+        "title": "实机验证笔记",
+        "body": "# 中文记录\n验证 **Markdown** 与持久化",
+        "projectId": "p_i_cnvuqyd9mu9al8ct",
+        "pinned": false,
+        "createdAt": 1789877062680,
+        "updatedAt": 1789877062680
+      }
+    ],
+    "projects": [
+      {
+        "id": "p_i_cnvuqyd9mu9al8ct",
+        "name": "实机验证项目",
+        "color": "#1b6b4a"
+      }
+    ]
+  },
+  "restart-after": {
+    "items": [
+      {
+        "id": "i_atobo5jemu9al6s7",
+        "title": "实机验证已编辑",
+        "note": "保留中文上下文",
+        "tags": [],
+        "url": "",
+        "projectId": "",
+        "priority": "normal",
+        "status": "archived",
+        "triggerAt": 1789884264607,
+        "windowStart": null,
+        "windowEnd": null,
+        "deadlineAt": null,
+        "repeat": null,
+        "createdAt": 1789877060503,
+        "acknowledgedAt": 1789877064452,
+        "completedAt": 1789877064737,
+        "snoozeCount": 1,
+        "deliveredAt": null,
+        "remindCount": 0,
+        "lastRemindAt": null,
+        "lastAlertShownAt": null,
+        "scheduleBasis": "elapsed",
+        "localTrigger": null,
+        "snoozedAt": 1789877064607,
+        "snoozeDelayMs": 7200000,
+        "dismissedUntil": null,
+        "review_status": "READY",
+        "reviewed_at": null,
+        "sourceTitle": "",
+        "sourceApp": "",
+        "delivery_mode": "notification",
+        "isFallbackTrigger": false,
+        "deadlineStageKey": null,
+        "deadlineEvents": {},
+        "reminderEvents": {},
+        "deadlinePaused": false,
+        "ackAdvancedAt": null,
+        "rev": 5,
+        "seriesId": null,
+        "repeatParentId": null
+      }
+    ],
+    "notes": [
+      {
+        "id": "i_ed25021fmu9al8go",
+        "title": "实机验证笔记",
+        "body": "# 中文记录\n验证 **Markdown** 与持久化",
+        "projectId": "p_i_cnvuqyd9mu9al8ct",
+        "pinned": false,
+        "createdAt": 1789877062680,
+        "updatedAt": 1789877062680
+      }
+    ],
+    "projects": [
+      {
+        "id": "p_i_cnvuqyd9mu9al8ct",
+        "name": "实机验证项目",
+        "color": "#1b6b4a"
+      }
+    ]
+  }
+}

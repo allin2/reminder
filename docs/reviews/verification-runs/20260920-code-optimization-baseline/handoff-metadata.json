@@ -1,0 +1,34 @@
+{
+  "kind": "historical_audit_evidence_plus_handoff_snapshot",
+  "createdAt": "2026-09-20T08:56:19.011407+00:00",
+  "repository": "/Users/qlyf/Developer/reminder",
+  "branch": "main",
+  "head": "4de5f597573bc2c45b51ba8ab18a279d054339a0",
+  "historicalTestTotals": {
+    "unit": 330,
+    "native": 321,
+    "smoke": 244,
+    "regressions": 730,
+    "total": 1625,
+    "failed": 0
+  },
+  "testBaselineNote": "Prior audit run, not a fresh test of the handoff checkout. Exact historical source files were not frozen. Probe hashes are preserved separately; do not reconstruct from HEAD or claim exact replay of old source.",
+  "handoffCurrentSourceSha256": {
+    "app-core.js": "282308a4189f0d9a43bd5db9b2736b6ca26c66fb641d56b890b68271f67c589b",
+    "lib/storage.js": "d7f5ca0d766f796cdeea6f4ce0b73875dc5778ed4eefdb8c939cae6b5b27d2d1",
+    "lib/native-reminders.js": "7c09fa1c53e21f5be997a59261ec8005f38a4f58c81fb8f068ee42022e5b06af",
+    "index.html": "f13eca9a0479a59d19e2c03f7d3152406fe7d378ff62e33a0627f4ed2171c0b5",
+    "test-smoke.js": "266ebac5d22165154fec15c77444c82f733b6bbb24f24b37c8ad83ebb4930bac",
+    "test-regressions.js": "588a8e4f39c1ac5028399a8ad49096274c3279c7e1555b822189330f3310ac46"
+  },
+  "changedSinceProbe": [
+    "app-core.js",
+    "test-smoke.js"
+  ],
+  "archiveFilesSha256": {
+    "probe.cjs": "07d75a7ef5582b9caf9325875fe6761ebf8d32a9b9f19385b7ff064c8e6b8a2f",
+    "npm-test.log": "56bac509d8c68465937058068bbe2eb12f1aad83c917942a290b9c32e2a3d8a9",
+    "probe-results.json": "da72cc5744ff5f687ab8368e4f8deaa4c98f152bbf86a013195a1ce26bee243d",
+    "original-probe.cjs": "3d169ab91e04d4a7eca7569499e244cb1beb3ca52a5097b149fd649b7e18fcd9"
+  }
+}

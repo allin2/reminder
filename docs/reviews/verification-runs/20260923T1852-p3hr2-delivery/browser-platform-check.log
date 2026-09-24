@@ -1,0 +1,2 @@
+{"ready": true, "hasPlatform": true, "hasAllContract": true, "contractLength": 9, "isNative": false, "sysBridgeIsNull": true, "appSettingsIsNull": true, "swRegistered": true, "platformRegMatches": true, "swActive": true, "cacheNames": ["attention-inbox-v37"], "hasV37Cache": true, "platformCached": true, "repeatPreservesReg": true, "initialBtnHidden": true, "promptPrevented": true, "btnVisibleAfterPrompt": true, "deferredPromptSaved": true, "btnHiddenAfterInstalled": true, "deferredPromptCleared": true}
+All browser platform and SW checks PASSED

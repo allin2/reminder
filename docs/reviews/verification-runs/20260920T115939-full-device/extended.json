@@ -1,0 +1,230 @@
+{
+  "title-only-edit": {
+    "before": {
+      "trigger": 1789974000000,
+      "form": "2026-09-21T15:00"
+    },
+    "after": null
+  },
+  "fuzzy-capture": {
+    "id": "i_saz66ugmmu9apvib",
+    "title": "看看实机验证阅读资料",
+    "note": "",
+    "tags": [],
+    "url": "",
+    "projectId": "",
+    "priority": "normal",
+    "status": "waiting",
+    "triggerAt": 1789911000000,
+    "windowStart": null,
+    "windowEnd": null,
+    "deadlineAt": null,
+    "repeat": null,
+    "createdAt": 1789877279171,
+    "acknowledgedAt": null,
+    "completedAt": null,
+    "snoozeCount": 0,
+    "deliveredAt": null,
+    "remindCount": 0,
+    "lastRemindAt": null,
+    "lastAlertShownAt": null,
+    "scheduleBasis": "wall-clock",
+    "localTrigger": "2026-09-20T21:30",
+    "snoozedAt": null,
+    "snoozeDelayMs": null,
+    "dismissedUntil": null,
+    "review_status": "NEEDS_REVIEW",
+    "reviewed_at": null,
+    "sourceTitle": "",
+    "sourceApp": "",
+    "delivery_mode": "notification",
+    "isFallbackTrigger": true,
+    "deadlineStageKey": null,
+    "deadlineEvents": {},
+    "reminderEvents": {},
+    "deadlinePaused": false,
+    "ackAdvancedAt": null,
+    "rev": 1,
+    "seriesId": null,
+    "repeatParentId": null
+  },
+  "review-retain": {
+    "before": [
+      "i_saz66ugmmu9apvib"
+    ],
+    "after": [
+      "i_saz66ugmmu9apvib"
+    ]
+  },
+  "search": "项目\n实机验证项目\n\n项目\n\n实机验证已编辑\n完成于 今天 12:04\n\n保留中文上下文\n\n详情\n恢复到待办\n不会自动提醒\n实机验证保留原时间\n未设定时间\n\n仅修改备注\n\n详情\n修改\n看看实机验证阅读资料\n今天 21:30\n详情\n修改\n实机验证笔记\n\n# 中文记录\n验证 **Markdown** 与持久化",
+  "recurrence": [
+    {
+      "id": "verify-repeat-1789877280841",
+      "status": "archived",
+      "triggerAt": 1789963680000,
+      "repeat": {
+        "every": "day",
+        "mode": "calendar"
+      },
+      "seriesId": "s_i_s5w2ssw4mu9apwsp"
+    },
+    {
+      "id": "i_k8cg8upymu9apwsr",
+      "status": "waiting",
+      "triggerAt": 1790050080000,
+      "repeat": {
+        "every": "day",
+        "mode": "calendar"
+      },
+      "seriesId": "s_i_s5w2ssw4mu9apwsp"
+    }
+  ],
+  "restore-no-reminder": {
+    "status": "waiting",
+    "triggerAt": null,
+    "deadlinePaused": true
+  },
+  "parse-matrix": [
+    {
+      "text": "两小时后实机验证",
+      "parsed": {
+        "title": "实机验证",
+        "trigger": 1789884481052,
+        "deadline": null,
+        "window": null,
+        "repeat": null,
+        "confidence": "high",
+        "raw": "两小时后实机验证",
+        "tags": [],
+        "scheduleBasis": "elapsed"
+      }
+    },
+    {
+      "text": "明天15点实机验证",
+      "parsed": {
+        "title": "实机验证",
+        "trigger": 1789974000000,
+        "deadline": null,
+        "window": null,
+        "repeat": null,
+        "confidence": "high",
+        "raw": "明天15点实机验证",
+        "tags": [],
+        "scheduleBasis": "wall-clock"
+      }
+    },
+    {
+      "text": "9月30日截止，提前5天提醒实机验证",
+      "parsed": {
+        "title": "截止， 实机验证",
+        "trigger": 1790301600000,
+        "deadline": 1790783999999,
+        "window": null,
+        "repeat": null,
+        "confidence": "high",
+        "raw": "9月30日截止，提前5天提醒实机验证",
+        "tags": [],
+        "scheduleBasis": "wall-clock"
+      }
+    },
+    {
+      "text": "每周五下午3点实机验证",
+      "parsed": {
+        "title": "实机验证",
+        "trigger": 1790319600000,
+        "deadline": null,
+        "window": null,
+        "repeat": {
+          "mode": "calendar",
+          "every": "week"
+        },
+        "confidence": "high",
+        "raw": "每周五下午3点实机验证",
+        "tags": [],
+        "scheduleBasis": "wall-clock"
+      }
+    },
+    {
+      "text": "以后看看实机验证",
+      "parsed": {
+        "title": "看看实机验证",
+        "trigger": 1790474400000,
+        "deadline": null,
+        "window": null,
+        "repeat": null,
+        "confidence": "low",
+        "raw": "以后看看实机验证",
+        "tags": [],
+        "scheduleBasis": "wall-clock"
+      }
+    }
+  ],
+  "native-permissions": {
+    "notification": {
+      "display": "granted"
+    },
+    "exact": {
+      "exact_alarm": "granted"
+    },
+    "pending": {
+      "notifications": [
+        {
+          "id": 1829208599,
+          "title": "安心收件箱提醒",
+          "body": "实机验证周期",
+          "schedule": {
+            "at": "Tue Sep 22 12:08:00 GMT+08:00 2026",
+            "count": 1,
+            "repeats": false
+          },
+          "extra": {
+            "managedKind": "attention-reminder",
+            "scheduleVersion": 2,
+            "itemId": "i_k8cg8upymu9apwsr",
+            "itemRev": 1,
+            "event": "primary",
+            "attempt": 0,
+            "scheduleKey": "2|i_k8cg8upymu9apwsr|1|primary|0|1790050080000|安心收件箱提醒|实机验证周期|attention-normal-v2",
+            "reminderKey": "0@1790050080000"
+          }
+        },
+        {
+          "id": 523965042,
+          "title": "待整理",
+          "body": "有 1 条随手记录待整理 · 预计只需几分钟",
+          "schedule": {
+            "at": "Sun Sep 20 22:30:00 GMT+08:00 2026",
+            "count": 1,
+            "repeats": false
+          },
+          "extra": {
+            "managedKind": "review-session",
+            "scheduleVersion": 2,
+            "itemId": "review-session",
+            "event": "review",
+            "attempt": 1,
+            "scheduleKey": "2|review|1|1789914600000|待整理|有 1 条随手记录待整理 · 预计只需几分钟"
+          }
+        },
+        {
+          "id": 450487072,
+          "title": "待整理",
+          "body": "有 1 条随手记录待整理 · 预计只需几分钟",
+          "schedule": {
+            "at": "Sun Sep 20 21:30:00 GMT+08:00 2026",
+            "count": 1,
+            "repeats": false
+          },
+          "extra": {
+            "managedKind": "review-session",
+            "scheduleVersion": 2,
+            "itemId": "review-session",
+            "event": "review",
+            "attempt": 0,
+            "scheduleKey": "2|review|0|1789911000000|待整理|有 1 条随手记录待整理 · 预计只需几分钟"
+          }
+        }
+      ]
+    }
+  }
+}

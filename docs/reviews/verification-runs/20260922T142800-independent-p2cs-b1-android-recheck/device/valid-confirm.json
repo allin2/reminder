@@ -1,0 +1,15 @@
+{
+  "title": "导入数据",
+  "body": "导入将覆盖当前数据，继续？",
+  "okText": "确定",
+  "cancelText": "取消",
+  "okRect": {
+    "x": 186,
+    "y": 631.5364990234375,
+    "width": 156,
+    "height": 52.796875
+  },
+  "innerWidth": 360,
+  "innerHeight": 736,
+  "dpr": 3
+}

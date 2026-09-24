@@ -1,0 +1,8 @@
+15:== P2-F2 AppViews — direct live dependencies ==
+16:  ✓ P2-F2 archive 通过注入 startOfDay 分组
+17:  ✓ P2-F2 stats 通过注入 pad2
+18:  ✓ P2-F2 原生 getter 每次渲染读取，Web→native 可见性更新
+1255:  ✓ P2-F2 反例：抽掉 lib/app-views.js ⇒ ready=false 且点名 AppViews
+1256:  ✓ P2-F2 抽掉 views 时 fail closed 前不读库、不排程、不起业务心跳
+1257:  ✓ P2-F2 工厂抛错：ready=false、点名 AppViews.createAppViews() 且零业务副作用
+1258:  ✓ P2-F2 缺实例成员：ready=false、点名 AppViews.priorityRank 且零业务副作用

@@ -1,0 +1,68 @@
+{
+  "item": {
+    "id": "verify-cold-1789877801380",
+    "title": "实机验证 cold",
+    "note": "",
+    "tags": [],
+    "url": "",
+    "projectId": "",
+    "priority": "important",
+    "status": "archived",
+    "triggerAt": 1789877826000,
+    "windowStart": null,
+    "windowEnd": null,
+    "deadlineAt": null,
+    "repeat": null,
+    "createdAt": 1789877801380,
+    "acknowledgedAt": null,
+    "completedAt": 1789877892664,
+    "snoozeCount": 0,
+    "deliveredAt": 1789877888127,
+    "remindCount": 1,
+    "lastRemindAt": 1789877888127,
+    "lastAlertShownAt": 1789877888129,
+    "scheduleBasis": "wall-clock",
+    "localTrigger": "2026-09-20T12:17:06",
+    "snoozedAt": null,
+    "snoozeDelayMs": null,
+    "dismissedUntil": null,
+    "review_status": "READY",
+    "reviewed_at": null,
+    "sourceTitle": "",
+    "sourceApp": "",
+    "delivery_mode": "alarm",
+    "isFallbackTrigger": false,
+    "deadlineStageKey": null,
+    "deadlineEvents": {},
+    "reminderEvents": {
+      "1@1789879626000": {
+        "at": 1789879626000,
+        "state": "scheduled",
+        "roundBase": 1789877826000
+      },
+      "2@1789881426000": {
+        "at": 1789881426000,
+        "state": "scheduled",
+        "roundBase": 1789877826000
+      },
+      "3@1789883226000": {
+        "at": 1789883226000,
+        "state": "scheduled",
+        "roundBase": 1789877826000
+      },
+      "0@1789877826000": {
+        "at": 1789877826000,
+        "state": "scheduled",
+        "roundBase": 1789877826000
+      }
+    },
+    "deadlinePaused": false,
+    "ackAdvancedAt": null,
+    "rev": 2,
+    "seriesId": null,
+    "repeatParentId": null
+  },
+  "active": {
+    "alarms": []
+  }
+}

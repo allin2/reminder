@@ -1,0 +1,10 @@
+{
+  "ready": true,
+  "archived": true,
+  "me": true,
+  "stable": true,
+  "projectRefresh": true,
+  "detail": true,
+  "unsafeUrlPlain": true,
+  "errors": []
+}

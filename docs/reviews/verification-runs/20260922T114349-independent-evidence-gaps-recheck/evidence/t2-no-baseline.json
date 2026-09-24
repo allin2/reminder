@@ -1,0 +1,1 @@
+{"delta_bytes": 137620, "record_kind": "NO_BASELINE", "ops": null, "seq": null, "entries": [], "records_appended": 0, "note": "基线或当前 WAL 为空（before=0 B, after=137620 B），无法比较", "verdict": "INCONCLUSIVE"}

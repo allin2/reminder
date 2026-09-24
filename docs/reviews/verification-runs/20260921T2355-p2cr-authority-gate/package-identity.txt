@@ -1,0 +1,15 @@
+=== dumpsys package（包身份，排除重装/清数据）===
+    codePath=/data/app/~~jwWq5S5fA4TKwloVJCeslA==/space.alliswell.inbox.exportrecheck-Vw4S93mj4Kwm37_ntga45w==
+    versionCode=2 minSdk=22 targetSdk=34
+    versionName=1.1
+    lastUpdateTime=2026-09-21 23:48:42
+      dataDir=/data/user/0/space.alliswell.inbox.exportrecheck
+      firstInstallTime=2026-09-21 16:10:02
+      dataDir=null
+      firstInstallTime=2026-09-21 16:10:02
+=== 数据目录身份（inode/属主）===
+drwx------ 9 u0_a30 u0_a30 3452 2026-09-21 16:10 /data/data/space.alliswell.inbox.exportrecheck
+=== 生产包未被触碰 ===
+    lastUpdateTime=2026-09-20 23:49:16
+      firstInstallTime=2026-09-20 15:07:22
+      firstInstallTime=1970-01-01 08:00:00

@@ -1,0 +1,66 @@
+{
+  "runId": "20260920T124045-bg-diag",
+  "itemId": "diag-other-1789879664846",
+  "snapshots": {
+    "due-3": [
+      {
+        "token": "980759701:56a68916-9d72-48d2-b5f4-b5b6c181dfeb",
+        "stage": "scheduled",
+        "at": 1789879666356,
+        "detail": "triggerAt=1789879694007;mode=alarmClock"
+      }
+    ],
+    "due-10": [
+      {
+        "token": "980759701:56a68916-9d72-48d2-b5f4-b5b6c181dfeb",
+        "stage": "scheduled",
+        "at": 1789879666356,
+        "detail": "triggerAt=1789879694007;mode=alarmClock"
+      }
+    ],
+    "due-30": [
+      {
+        "token": "980759701:56a68916-9d72-48d2-b5f4-b5b6c181dfeb",
+        "stage": "scheduled",
+        "at": 1789879666356,
+        "detail": "triggerAt=1789879694007;mode=alarmClock"
+      }
+    ],
+    "due-60": [
+      {
+        "token": "980759701:56a68916-9d72-48d2-b5f4-b5b6c181dfeb",
+        "stage": "scheduled",
+        "at": 1789879666356,
+        "detail": "triggerAt=1789879694007;mode=alarmClock"
+      }
+    ],
+    "due-120": [
+      {
+        "token": "980759701:56a68916-9d72-48d2-b5f4-b5b6c181dfeb",
+        "stage": "scheduled",
+        "at": 1789879666356,
+        "detail": "triggerAt=1789879694007;mode=alarmClock"
+      }
+    ],
+    "after-open": [
+      {
+        "token": "980759701:56a68916-9d72-48d2-b5f4-b5b6c181dfeb",
+        "stage": "scheduled",
+        "at": 1789879666356,
+        "detail": "triggerAt=1789879694007;mode=alarmClock"
+      },
+      {
+        "token": "980759701:56a68916-9d72-48d2-b5f4-b5b6c181dfeb",
+        "stage": "received",
+        "at": 1789879816880,
+        "detail": ""
+      },
+      {
+        "token": "980759701:56a68916-9d72-48d2-b5f4-b5b6c181dfeb",
+        "stage": "windowVisible",
+        "at": 1789879817014,
+        "detail": "via=focus;focused=true;shown=true"
+      }
+    ]
+  }
+}

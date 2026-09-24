@@ -1,0 +1,27 @@
+{
+  "ready": true,
+  "results": {
+    "it-pending": {
+      "domMatchesDirect": true,
+      "rowHtml": "<div class=\"detail-row\"><dt>提醒结果</dt><dd>还没到提醒时间</dd></div>"
+    },
+    "it-processing": {
+      "domMatchesDirect": true,
+      "rowHtml": "<div class=\"detail-row\"><dt>提醒结果</dt><dd>正在处理 · 稍后会自动更新</dd></div>"
+    },
+    "it-unknown": {
+      "domMatchesDirect": true,
+      "rowHtml": "<div class=\"detail-row\"><dt>提醒结果</dt><dd>本次提醒结果尚未确认</dd></div>"
+    },
+    "it-unverifiable": {
+      "domMatchesDirect": true,
+      "rowHtml": "<div class=\"detail-row\"><dt>提醒结果</dt><dd>这条记录的提醒无法核查</dd></div>"
+    },
+    "it-delivered": {
+      "domMatchesDirect": true,
+      "rowHtml": "<div class=\"detail-row\"><dt>提醒结果</dt><dd>系统已接收这次提醒（只代表系统收到了这次提醒）</dd></div>"
+    }
+  }
+}
+P3_I_Q2_REAL_CHROME=PASS
+Exit: 0

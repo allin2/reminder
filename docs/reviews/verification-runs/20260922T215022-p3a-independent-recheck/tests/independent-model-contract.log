@@ -1,0 +1,14 @@
+PASS missing script fails closed
+PASS empty namespace fails closed
+PASS factory throw fails closed
+PASS missing member SCHEMA
+PASS missing member PROJECT_COLORS
+PASS missing member createInitialState
+PASS missing member normalizeItem
+PASS missing member makeItem
+PASS missing member resolveDeliveryMode
+PASS missing member bumpRev
+PASS missing member isTerminal
+PASS missing member hasKnownRev
+PASS healthy production instance
+RESULT pass=13 fail=0

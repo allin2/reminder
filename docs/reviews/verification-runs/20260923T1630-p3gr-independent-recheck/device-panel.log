@@ -1,0 +1,10 @@
+baseline {'items': 0, 'alarms': 0, 'notify': True}
+scheduled {'id': 'independent_p3gr_panel_1790152588', 'triggerAt': 1790152610000}
+geometry-before {'hidden': False, 'cardText': '闹钟待处理\n\nP3GR 独立面板触控\n\n全屏未显示时，也可以在这里处理。\n\n停止声振 完成事项', 'buttonRect': {'left': 129.20834350585938, 'top': 163.5625, 'right': 222.00001525878906, 'bottom': 214.359375}, 'x': 175.60417938232422, 'y': 188.9609375, 'hitTag': 'DIV', 'hitAlarmDone': False, 'viewport': {'width': 360, 'height': 742, 'dpr': 3}, 'bannerVisible': True}
+geometry-after-visual-hide {'hidden': False, 'cardText': '闹钟待处理\n\nP3GR 独立面板触控\n\n全屏未显示时，也可以在这里处理。\n\n停止声振 完成事项', 'buttonRect': {'left': 129.20834350585938, 'top': 163.5625, 'right': 222.00001525878906, 'bottom': 214.359375}, 'x': 175.60417938232422, 'y': 188.9609375, 'hitTag': 'BUTTON', 'hitAlarmDone': True, 'viewport': {'width': 360, 'height': 742, 'dpr': 3}, 'bannerVisible': False}
+outcome {'status': 'due', 'remaining': 1, 'panelHidden': False}
+cleanup {'items': 0, 'remaining': 0}
+Traceback (most recent call last):
+  File "/Users/qlyf/Developer/reminder/docs/reviews/verification-runs/20260923T1630-p3gr-independent-recheck/check-device-panel.py", line 94, in <module>
+    assert outcome["status"] in ("archived","completed") and outcome["remaining"]==0
+AssertionError

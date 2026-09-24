@@ -1,0 +1,10 @@
+healthy checks passed
+windowKeyPrefixMutant: prefix W: removed from reviewSessionKey: mutation detected
+quotaLimitBypassMutant: maxNotifications check removed: mutation detected
+markReviewDoneUnwrappedMutant: wrapUserOp bypassed: mutation detected
+writeIfChangedBypassMutant: writeIfChanged short-circuit bypassed: mutation detected
+fallbackSuppressedBypassMutant: isFallbackSuppressed forced false: mutation detected
+completionButtonListenerOmittedMutant: click listener not added to done button: mutation detected
+saveFailureAdvanceMutant: reviewIndex advanced on save error: mutation detected
+appModelDefaultsBypassMutant: hardcoded defaults used instead of getInitialReviewSettings: mutation detected
+lib/app-review.js before/after SHA-256 match: 23611a2375f7705dc77e4d35114458cd0da08f79e3d4c47750bb3016ebf739a5

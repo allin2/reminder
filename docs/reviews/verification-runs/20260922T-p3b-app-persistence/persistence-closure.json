@@ -1,0 +1,39 @@
+{
+  "local": "appPersistence",
+  "contract": "APP_PERSISTENCE_INSTANCE_CONTRACT",
+  "used": [
+    "authoritativeWritesAllowed",
+    "authoritySnapshot",
+    "committedItemById",
+    "currentPayload",
+    "getStorage",
+    "load",
+    "loadAsync",
+    "loadSync",
+    "reopen",
+    "replayPendingSnapshot",
+    "runCommit",
+    "save",
+    "saveAsync",
+    "writeSnapshot"
+  ],
+  "declared": [
+    "authoritativeWritesAllowed",
+    "authoritySnapshot",
+    "committedItemById",
+    "currentPayload",
+    "getStorage",
+    "load",
+    "loadAsync",
+    "loadSync",
+    "reopen",
+    "replayPendingSnapshot",
+    "runCommit",
+    "save",
+    "saveAsync",
+    "writeSnapshot"
+  ],
+  "internalOnly": [],
+  "missingInContract": [],
+  "unusedInContract": []
+}

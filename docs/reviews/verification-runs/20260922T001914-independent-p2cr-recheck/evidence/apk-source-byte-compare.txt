@@ -1,0 +1,25 @@
+SOURCE_MISSING	cordova.js
+SOURCE_MISSING	cordova_plugins.js
+MATCH	icon-192.png
+MATCH	icon-512.png
+MATCH	icon.svg
+MATCH	index.html
+MATCH	lib/app-ai.js
+MATCH	lib/app-backup.js
+MATCH	lib/app-ui.js
+MATCH	lib/date-utils.js
+MATCH	lib/delivery-evidence.js
+MATCH	lib/export-format.js
+MATCH	lib/feedback.js
+MATCH	lib/import-extract.js
+MATCH	lib/import-map.js
+MATCH	lib/native-reminders.js
+MATCH	lib/parse-cn.js
+MATCH	lib/reminder.js
+MATCH	lib/repeat.js
+MATCH	lib/ui-format.js
+MATCH	manifest.json
+MATCH	app-core.js
+MATCH	lib/storage.js
+MATCH	sw.js
+SUMMARY	MATCH=22 SOURCE_MISSING=2

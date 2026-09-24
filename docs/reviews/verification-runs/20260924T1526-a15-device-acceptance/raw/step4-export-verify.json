@@ -1,0 +1,31 @@
+{
+ "fileSha256": "c1f10bd625ad5d609cd26a74fcc99b6d4132ebadcc9b1d994608638890065a52",
+ "bytes": 11968,
+ "topKeys": [
+  "app",
+  "exportedAt",
+  "items",
+  "notes",
+  "projects",
+  "schema",
+  "settings"
+ ],
+ "schema": 5,
+ "exportedAt": "2026-09-24T07:51:05.084Z",
+ "exportItemCount": 7,
+ "idbItemCount": 7,
+ "idsEqual": true,
+ "itemsByteEqual": 7,
+ "itemsDiffer": [],
+ "notesEqual": true,
+ "projectsEqual": true,
+ "a15TokensInFile": [
+  "A15A1-153958",
+  "A15A2-153958",
+  "A15A3-154553",
+  "A15N1-153356",
+  "A15N2-153356",
+  "A15N3-153356",
+  "A15P1-153123"
+ ]
+}

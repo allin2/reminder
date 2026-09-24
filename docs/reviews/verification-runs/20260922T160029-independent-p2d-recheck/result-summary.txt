@@ -1,0 +1,16 @@
+npm_exit=0
+  ✓ 迟到结果：超时之后才回来的 saved ⇒ 返回 stale，**不再 toast**、也不再改按钮
+  ✓ 迟到结果：超时之后才回来的 cancelled ⇒ 也不 toast「已取消导出」
+通过: 607  失败: 0
+通过: 324  失败: 0
+通过: 400  失败: 0
+通过: 266  失败: 0
+通过: 730  失败: 0
+通过 160 项，失败 0 项
+结果：单一来源已闭合（PASS）
+diag_exit=0
+import_exit=0
+node_exit=0
+diff_exit=0
+mutations_exit=0
+apk_exit=0

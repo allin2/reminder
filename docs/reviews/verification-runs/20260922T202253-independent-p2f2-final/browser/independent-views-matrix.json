@@ -1,0 +1,14 @@
+{
+  "ready": true,
+  "homeCollapsed": true,
+  "homeExpanded": true,
+  "cardSafety": true,
+  "modeActions": true,
+  "futureFilter": true,
+  "calendar": true,
+  "archive": true,
+  "pinned": true,
+  "projectSelect": true,
+  "detail": true,
+  "errors": []
+}

@@ -1,0 +1,19 @@
+=== P3-C D41 Coordinator Unique Ownership Scan ===
+State declaration [let suppressInnerSave]: in app-core.js=false, in lib/app-transaction.js=true
+State declaration [let inflightActionDepth]: in app-core.js=false, in lib/app-transaction.js=true
+State declaration [let pendingUserOps]: in app-core.js=false, in lib/app-transaction.js=true
+State declaration [let suppressUserFeedback]: in app-core.js=false, in lib/app-transaction.js=true
+State declaration [let replayCreatedIds]: in app-core.js=false, in lib/app-transaction.js=true
+State declaration [let activeActionScope]: in app-core.js=false, in lib/app-transaction.js=true
+State declaration [let applyingActionDraft]: in app-core.js=false, in lib/app-transaction.js=true
+State declaration [inflightAlarmActions = new Map]: in app-core.js=false, in lib/app-transaction.js=true
+State declaration [recentAlarmActions = Object.create]: in app-core.js=false, in lib/app-transaction.js=true
+Algorithm body [function withDraftState]: in app-core.js=false, in lib/app-transaction.js=true
+Algorithm body [function publishActionDraft]: in app-core.js=false, in lib/app-transaction.js=true
+Algorithm body [function replayUserOps]: in app-core.js=false, in lib/app-transaction.js=true
+Algorithm body [function recordArg]: in app-core.js=false, in lib/app-transaction.js=true
+Algorithm body [function resolveArg]: in app-core.js=false, in lib/app-transaction.js=true
+Algorithm body [function performAlarmAction]: in app-core.js=false, in lib/app-transaction.js=true
+Algorithm body [function applyAlarmAction]: in app-core.js=false, in lib/app-transaction.js=true
+
+Unique ownership verdict: PASS (100% uniquely owned by lib/app-transaction.js)

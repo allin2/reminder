@@ -1,0 +1,37 @@
+[
+  {
+    "mode": "title",
+    "pass": true,
+    "id": "i_h0dd5k9dmu9c8ulv"
+  },
+  {
+    "mode": "time-words",
+    "pass": true,
+    "id": "i_wzgluskpmu9c8wb9"
+  },
+  {
+    "mode": "metadata",
+    "pass": true,
+    "id": "i_2xob9xxcmu9c8y0m"
+  },
+  {
+    "mode": "snooze",
+    "pass": true,
+    "id": "i_u5luu8j0mu9c8zpx"
+  },
+  {
+    "mode": "clear",
+    "pass": true,
+    "id": "i_f1isczeamu9c929x"
+  },
+  {
+    "mode": "reschedule",
+    "pass": true,
+    "id": "i_gk9tx51dmu9c93z7"
+  },
+  {
+    "mode": "ack-title",
+    "pass": true,
+    "id": "i_ys1lecyamu9c95om"
+  }
+]

@@ -20,6 +20,35 @@ const ROOT = __dirname;
 const native = require(path.join(ROOT, "lib/native-reminders.js"));
 
 const LIB_SOURCES = [
+  // 日历原语必须最先：parse-cn / repeat 在求值时就把 DatePrimitives 抓进闭包常量
+  "lib/date-utils.js",
+  "lib/ui-format.js",
+  "lib/app-ui.js",
+  // P2-A：AI 能力的唯一实现。不加载它 ⇒ app-core 里的 `AppAi` 是空对象，
+  // 装配闸门会失败、停在启动失败面板 —— 那正是本轮反例要的形态；
+  // 反过来，若这里漏了而 index.html 有，则「AI 相关断言」全测在空壳上。
+  "lib/app-ai.js",
+  // P2-C：数据备份的唯一实现。不加载它 ⇒ `AppBackup` 是空对象 ⇒ 装配闸门失败
+  // （与 app-ai 同一条规矩，缺了会静默测在空壳上）。
+  "lib/app-backup.js",
+  // P2-D：诊断能力的唯一实现。不加载它 ⇒ `AppDiagnostics` 是空对象 ⇒ 装配闸门失败。
+  "lib/app-diagnostics.js",
+  "lib/app-setup.js",
+  "lib/app-content.js",
+  "lib/app-capture.js",
+  "lib/app-views.js",
+  "lib/app-model.js",
+  "lib/app-persistence.js",
+  "lib/app-transaction.js",
+  "lib/app-items.js",
+  "lib/app-native-coordinator.js",
+  "lib/app-review.js",
+  "lib/app-alerts.js",
+  "lib/app-platform.js",
+  "lib/app-action-feedback.js",
+  "lib/app-events.js",
+  "lib/app-test-api.js",
+  "lib/app-notices.js",
   "lib/parse-cn.js",
   "lib/repeat.js",
   "lib/reminder.js",
@@ -28,7 +57,11 @@ const LIB_SOURCES = [
   // app-core 里的 FeedbackLib / EvidenceLib 会静默退化成兜底分支，
   // 于是「反馈与证据」的全部断言都测在了没有实现的那条路上。
   "lib/feedback.js",
-  "lib/delivery-evidence.js"
+  "lib/delivery-evidence.js",
+  // F01：`lib/native-reminders.js` 是生产清单里的必需脚本（index.html 始终加载，
+  // 任何平台都往全局写 `AttentionNativeReminders`）。从前这套 harness 不加载它 ——
+  // 于是「app-core 抓到空对象」成了常态，缺件的后果就没人看得见。
+  "lib/native-reminders.js"
 ].map(f => ({ name: f, code: fs.readFileSync(path.join(ROOT, f), "utf8") }));
 const APP_SOURCE = { name: "app-core.js", code: fs.readFileSync(path.join(ROOT, "app-core.js"), "utf8") };
 
@@ -224,15 +257,35 @@ function createApp(options) {
     globalThis: null
   };
   sandbox.globalThis = sandbox;
-  sandbox.window = Object.assign(sandbox.window, sandbox);
-  // 只把**真实**的原生实现挂上去；isNativeAndroid 归 false，
-  // 免得 app-core 启动时自己去初始化原生链路（那属于 test-native-reminders 的范围）
-  sandbox.AttentionNativeReminders = Object.assign({}, native, { isNativeAndroid: () => false });
+  // 浏览器 / Android WebView 里 `window` **就是**全局对象本身，不是一份浅拷贝
+  // （boot-combination 与 smoke 同此处理）。浅拷贝会让「测试设的平台 mock」与
+  // 「模块读到的平台」落在两个不同对象上 —— 那种不忠诚的夹具只会掩盖缺陷。
+  sandbox.window = sandbox;
+  sandbox.self = sandbox;
+  sandbox.addEventListener = function () {};
+  sandbox.removeEventListener = function () {};
+  sandbox.dispatchEvent = function () { return true; };
+  // `lib/native-reminders.js` 按 UMD 约定读 `root.Capacitor`（真实环境里就是
+  // `window.Capacitor`，由原生 WebView 注入）。本 harness 的平台 mock 装在**宿主**
+  // `global.Capacitor` 上（`installCapacitor()` / `cleanup()` 成对增删），所以这里用
+  // 取值器把它转发进沙箱 —— 否则「装上了 mock」与「模块看得见 mock」会是两件事，
+  // 而恰好是那种不一致让 F01 这类缺口长期不可见。
+  Object.defineProperty(sandbox, "Capacitor", {
+    get() { return global.Capacitor; },
+    configurable: true
+  });
 
   if (options.noIdb) delete sandbox.indexedDB; // 模拟没有 IndexedDB 的设备：localStorage 即权威
 
   vm.createContext(sandbox);
   LIB_SOURCES.forEach(f => vm.runInContext(f.code, sandbox, { filename: f.name }));
+  // 本 harness 刻意让「平台判定」为假 —— 原生链路**初始化**本身的行为归
+  // `test-native-reminders.js` 管，这里只关心 app-core 的编排。
+  //
+  // 但「把 isNativeAndroid 改成 false」与「整个模块不在」是**两件事**（F01 的要点）：
+  // 前者是模块完整、平台不在（正常降级），后者是缺一支必需脚本（必须启动失败）。
+  // 从前这套 harness 用的是后者，却当成了前者。
+  sandbox.AttentionNativeReminders.isNativeAndroid = () => false;
   vm.runInContext(APP_SOURCE.code, sandbox, { filename: APP_SOURCE.name });
 
   const app = sandbox.__ATTENTION_INBOX__;

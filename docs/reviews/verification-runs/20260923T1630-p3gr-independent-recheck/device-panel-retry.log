@@ -1,0 +1,7 @@
+baseline {'items': 0, 'alarms': 0, 'notify': True}
+scheduled {'id': 'independent_p3gr_panel_1790152731', 'triggerAt': 1790152753000}
+geometry-before {'hidden': False, 'cardText': '闹钟待处理\n\nP3GR 独立面板触控\n\n全屏未显示时，也可以在这里处理。\n\n停止声振 完成事项', 'buttonRect': {'left': 129.20834350585938, 'top': 163.5625, 'right': 222.00001525878906, 'bottom': 214.359375}, 'x': 175.60417938232422, 'y': 188.9609375, 'hitTag': 'DIV', 'hitAlarmDone': False, 'viewport': {'width': 360, 'height': 742, 'dpr': 3}, 'bannerVisible': True}
+geometry-after-visual-hide {'hidden': False, 'cardText': '闹钟待处理\n\nP3GR 独立面板触控\n\n全屏未显示时，也可以在这里处理。\n\n停止声振 完成事项', 'buttonRect': {'left': 129.20834350585938, 'top': 163.5625, 'right': 222.00001525878906, 'bottom': 214.359375}, 'x': 175.60417938232422, 'y': 188.9609375, 'hitTag': 'BUTTON', 'hitAlarmDone': True, 'viewport': {'width': 360, 'height': 742, 'dpr': 3}, 'bannerVisible': False}
+screen-tap {'x': 526, 'y': 686, 'webviewOrigin': [0, 120]}
+outcome {'status': 'archived', 'remaining': 0, 'panelHidden': True}
+cleanup {'items': 0, 'remaining': 0}

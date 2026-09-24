@@ -1,0 +1,10 @@
+{
+  "module": "lib/native-reminders.js",
+  "result": false,
+  "second": false,
+  "before": "{\"id\":\"x\",\"triggerAt\":1790007870000,\"scheduleBasis\":\"wall-clock\",\"localTrigger\":\"2026-09-22T00:24:30\",\"dismissedUntil\":null}",
+  "after": "{\"id\":\"x\",\"triggerAt\":1790007870000,\"scheduleBasis\":\"wall-clock\",\"localTrigger\":\"2026-09-22T00:24:30\",\"dismissedUntil\":null}",
+  "bytesChanged": false,
+  "expectedResult": false,
+  "pass": true
+}

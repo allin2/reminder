@@ -1,0 +1,63 @@
+{
+  "id": "verify-cold-log-1789878039894",
+  "title": "实机验证 cold-log",
+  "note": "",
+  "tags": [],
+  "url": "",
+  "projectId": "",
+  "priority": "important",
+  "status": "waiting",
+  "triggerAt": 1789878064000,
+  "windowStart": null,
+  "windowEnd": null,
+  "deadlineAt": null,
+  "repeat": null,
+  "createdAt": 1789878039894,
+  "acknowledgedAt": null,
+  "completedAt": null,
+  "snoozeCount": 0,
+  "deliveredAt": null,
+  "remindCount": 0,
+  "lastRemindAt": null,
+  "lastAlertShownAt": null,
+  "scheduleBasis": "wall-clock",
+  "localTrigger": "2026-09-20T12:21:04",
+  "snoozedAt": null,
+  "snoozeDelayMs": null,
+  "dismissedUntil": null,
+  "review_status": "READY",
+  "reviewed_at": null,
+  "sourceTitle": "",
+  "sourceApp": "",
+  "delivery_mode": "alarm",
+  "isFallbackTrigger": false,
+  "deadlineStageKey": null,
+  "deadlineEvents": {},
+  "reminderEvents": {
+    "0@1789878064000": {
+      "at": 1789878064000,
+      "state": "scheduled",
+      "roundBase": 1789878064000
+    },
+    "1@1789879864000": {
+      "at": 1789879864000,
+      "state": "scheduled",
+      "roundBase": 1789878064000
+    },
+    "2@1789881664000": {
+      "at": 1789881664000,
+      "state": "scheduled",
+      "roundBase": 1789878064000
+    },
+    "3@1789883464000": {
+      "at": 1789883464000,
+      "state": "scheduled",
+      "roundBase": 1789878064000
+    }
+  },
+  "deadlinePaused": false,
+  "ackAdvancedAt": null,
+  "rev": 1,
+  "seriesId": null,
+  "repeatParentId": null
+}

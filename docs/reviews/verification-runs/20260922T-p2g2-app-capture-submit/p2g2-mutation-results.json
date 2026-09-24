@@ -1,0 +1,44 @@
+{
+  "purpose": "P2-G2 behavioral mutation proof",
+  "results": [
+    {
+      "name": "M1-token-gate",
+      "anchor": "saveSubmitsInFlight.has(submitToken)",
+      "healthy": true,
+      "mutantBroken": true,
+      "red": true
+    },
+    {
+      "name": "M2-session-signature-gate",
+      "anchor": "session() === frozenSession && formDraftSignature(snapshotItemForm()) === frozenSig",
+      "healthy": true,
+      "mutantBroken": true,
+      "red": true
+    },
+    {
+      "name": "M3-authoritative-save-promise",
+      "anchor": "const pendingNew = save();",
+      "healthy": true,
+      "mutantBroken": true,
+      "red": true
+    },
+    {
+      "name": "M4-failure-rollback",
+      "anchor": "rollbackNewItem(newId);",
+      "healthy": true,
+      "mutantBroken": true,
+      "red": true
+    }
+  ],
+  "sourceHashes": {
+    "before": {
+      "capture": "cbf3285f427c8aec7394b8305255a545e84c4ec8152faf0d1d8c6ce35da57a4b",
+      "core": "5dd1f515ab7b0202eacfde7543e0ae1111a285ede92435660d4d55da47ec6fab"
+    },
+    "after": {
+      "capture": "cbf3285f427c8aec7394b8305255a545e84c4ec8152faf0d1d8c6ce35da57a4b",
+      "core": "5dd1f515ab7b0202eacfde7543e0ae1111a285ede92435660d4d55da47ec6fab"
+    }
+  },
+  "workspaceRestore": true
+}

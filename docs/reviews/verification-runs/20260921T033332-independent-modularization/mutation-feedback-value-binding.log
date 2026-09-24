@@ -1,0 +1,163 @@
+
+== A. 结构：app-core 里不再持有任何算法副本（只允许「取模块导出」的绑定） ==
+  ✓ app-core 不再定义 function parseChineseTime（中文时间解析器（唯一来源 lib/parse-cn.js））
+  ✓ app-core 不再定义 function cnInt（中文数字转换（唯一来源 lib/parse-cn.js））
+  ✓ app-core 不再定义 const CN_NUM（中文数字表（唯一来源 lib/parse-cn.js））
+  ✓ app-core 不再定义 function hasSpecificTimeWord（明确时间词判定（唯一来源 lib/parse-cn.js））
+  ✓ app-core 不再定义 function nextRepeatTrigger（周期推进（唯一来源 lib/repeat.js））
+  ✓ app-core 不再定义 function repeatLabel（周期文案（唯一来源 lib/repeat.js））
+  ✓ app-core 不再定义 function nextRepeatPreview（周期预演（唯一来源 lib/repeat.js））
+  ✓ app-core 不再定义 function startOfDay（日历原语（唯一来源 lib/date-utils.js））
+  ✓ app-core 不再定义 function endOfDay（日历原语（唯一来源 lib/date-utils.js））
+  ✓ app-core 不再定义 function addDays（日历原语（唯一来源 lib/date-utils.js））
+  ✓ app-core 不再定义 function applyClock（日历原语（唯一来源 lib/date-utils.js））
+  ✓ app-core 不再定义 function lastDayOfMonth（日历原语（唯一来源 lib/date-utils.js））
+  ✓ app-core 不再定义 function nthWeekdayInMonth（日历原语（唯一来源 lib/date-utils.js））
+  ✓ app-core 不再定义 function nthWeekdayOfNextMonth（日历原语（唯一来源 lib/date-utils.js））
+  ✓ app-core 不再定义 function weekdayOfNextWeek（日历原语（唯一来源 lib/date-utils.js））
+  ✓ app-core 不再定义 function dayOfMonthIn（日历原语（唯一来源 lib/date-utils.js））
+  ✓ app-core 不再定义 function nextDayOfMonth（日历原语（唯一来源 lib/date-utils.js））
+  ✓ app-core 不再定义 function nextWeekend（日历原语（唯一来源 lib/date-utils.js））
+  ✓ inQuietHours 是单行转发（读 state.settings 后交给 lib/reminder.js），不再内联算法
+  ✓ quietEnd 是单行转发（同上）
+  ✓ 免打扰算法标记 parseHHMM 已从 app-core 消失（它是内联副本的伴生函数）
+  ✓ 免打扰的兜底常量已消失（旧副本的 `23, 0` / `7, 30` 默认值）
+  ✓ 反向对照：塞回 function startOfDay / function cnInt 后，判据确实变红
+  ✓ 反向对照：注释里的 function cnInt 不被误判（剥注释生效）
+
+== A2. 结构：UI 纯格式化已搬出 app-core（只留 UiFormat 委托，不留算法体） ==
+  ✓ app-core 的 uid 只剩单行委托（不内联算法）
+  ✓ app-core 的 pad 只剩单行委托（不内联算法）
+  ✓ app-core 的 fmtTime 只剩单行委托（不内联算法）
+  ✓ app-core 的 fmtDate 只剩单行委托（不内联算法）
+  ✓ app-core 的 relDue 只剩单行委托（不内联算法）
+  ✓ app-core 的 escapeHtml 只剩单行委托（不内联算法）
+  ✓ app-core 的 escapeAttr 只剩单行委托（不内联算法）
+  ✓ app-core 的 renderMarkdown 只剩单行委托（不内联算法）
+  ✓ app-core 的 dayLabel 只剩单行委托（不内联算法）
+  ✓ app-core 的 toLocalInput 只剩单行委托（不内联算法）
+  ✓ app-core 的 parseLocalInput 只剩单行委托（不内联算法）
+  ✓ app-core 不再含「事项 id 生成算法体」
+  ✓ app-core 不再含「补零算法体」
+  ✓ app-core 不再含「时间拼接算法体」
+  ✓ app-core 不再含「转义字符表（文本侧与属性侧共用一份）」
+  ✓ app-core 不再含「相对到期算法体」
+  ✓ app-core 不再含「Markdown 渲染算法体」
+  ✓ app-core 不再含「归档日标签的跨年分支（`dayLabel` 与 `fmtDate` 的差异点之一）」
+  ✓ app-core 不再含「本地时间串拼接（`toLocalInput` 算法体；`aiNowIso` 是另一支，不共用此行）」
+  ✓ 反向对照：把 id 生成算法体塞回 app-core 后，标记「事项 id 生成算法体」确实被检出
+  ✓ ui-format 仍导出 dayLabel 与 fmtDate **两支**（未被合并）
+  ✓ 空值语义不同：dayLabel(null)="更早"，fmtDate(null)=""
+  ✓ 「明天」分支不同：fmtDate 认「明天」，dayLabel 回「9月19日」
+  ✓ 跨年分支不同：dayLabel 回「2025年12月31日」，fmtDate 回「12月31日」
+
+== A3. 结构：DOM 共用展示能力已搬出 app-core（唯一来源 lib/app-ui.js） ==
+  ✓ app-core 不再定义 function openSheet（弹层开关（唯一来源 lib/app-ui.js））
+  ✓ app-core 不再定义 function closeSheet（弹层关闭（唯一来源 lib/app-ui.js））
+  ✓ app-core 不再定义 function closeAllSheets（全部弹层关闭（唯一来源 lib/app-ui.js））
+  ✓ app-core 不再定义 function confirmDialog（确认框（唯一来源 lib/app-ui.js））
+  ✓ app-core 不再定义 function toast（浮动提示（唯一来源 lib/app-ui.js））
+  ✓ app-core 不再定义 function hideToast（提示收起（唯一来源 lib/app-ui.js））
+  ✓ app-core 不再定义 function safeExternalHref（外链协议白名单（唯一来源 lib/app-ui.js））
+  ✓ app-core 不再定义 let toastTimer（提示定时器（必须随实现一起走，否则会出现两个定时器口径））
+  ✓ app-core 不再含「DOM 查询实现体」
+  ✓ app-core 不再含「DOM 批量查询实现体」
+  ✓ app-core 不再含「弹层开启算法体」
+  ✓ app-core 不再含「backdrop 的多层关闭判据」
+  ✓ app-core 不再含「closeAllSheets 算法体」
+  ✓ app-core 不再含「确认框文案回填算法体」
+  ✓ app-core 不再含「确认框兜底路径」
+  ✓ app-core 不再含「提示时长口径」
+  ✓ app-core 不再含「提示定时器实现体」
+  ✓ app-core 不再含「外链控制字符判定」
+  ✓ app-core 不再含「外链协议白名单判定」
+  ✓ app-core 存在绑定「const $ = appUi.$;」
+  ✓ app-core 存在绑定「const $$ = appUi.$$;」
+  ✓ app-core 存在绑定「const openSheet = appUi.openSheet;」
+  ✓ app-core 存在绑定「const closeSheet = appUi.closeSheet;」
+  ✓ app-core 存在绑定「const closeAllSheets = appUi.closeAllSheets;」
+  ✓ app-core 存在绑定「const confirmDialog = appUi.confirmDialog;」
+  ✓ app-core 存在绑定「const toast = appUi.toast;」
+  ✓ app-core 存在绑定「const hideToast = appUi.hideToast;」
+  ✓ app-core 存在绑定「const safeExternalHref = AppUi.safeExternalHref;」
+  ✗ 抑制反馈按取值函数注入（按值传会让 M1 静默失效）
+  ✗ 没有把抑制反馈按值传进去
+  ✓ 搬移后的名字在 app-core 里仍被真实引用（11 种引用形状）
+  ✓ 反向对照：把 $("#backdrop").classList.add("show") 塞回 app-core 后，判据变红
+
+== B. 绑定：app-core 取的是模块导出，且 lib 的别名就是同一函数对象 ==
+  ✓ app-core 存在绑定「const parseChineseTime = Lib.parseChineseTime;」（解析器）
+  ✓ app-core 存在绑定「const cnInt = Lib.cnInt;」（中文数字）
+  ✓ app-core 存在绑定「const hasSpecificTimeWord = Lib.hasSpecificTimeWord;」（明确时间词）
+  ✓ app-core 存在绑定「const nextRepeatTrigger = Lib.nextRepeatTrigger;」（周期推进）
+  ✓ app-core 存在绑定「const repeatLabel = Lib.repeatLabel;」（周期文案）
+  ✓ app-core 存在绑定「const nextRepeatPreview = Lib.nextRepeatPreview;」（周期预演）
+  ✓ app-core 存在绑定「const startOfDay = DatePrimitives.startOfDay;」（startOfDay）
+  ✓ app-core 存在绑定「const endOfDay = DatePrimitives.endOfDay;」（endOfDay）
+  ✓ app-core 存在绑定「const addDays = DatePrimitives.addDays;」（addDays）
+  ✓ app-core 存在绑定「const applyClock = DatePrimitives.applyClock;」（applyClock）
+  ✓ app-core 存在绑定「const nextWeekend = DatePrimitives.nextWeekend;」（nextWeekend）
+  ✓ lib/parse-cn.js 的 startOfDay 就是 lib/date-utils.js 那一个（同一函数对象）
+  ✓ lib/parse-cn.js 的 addDays 就是 lib/date-utils.js 那一个
+  ✓ lib/repeat.js 的 lastDayOfMonth 就是 lib/date-utils.js 那一个
+  ✓ lib/repeat.js 的 applyClock 就是 lib/date-utils.js 那一个
+  ✓ lib/repeat.js 的 nthWeekdayInMonth 就是 lib/date-utils.js 那一个
+  ✓ parse 的 nthWeekdayOfNextMonth 指向 ByInstant（首期候选：按具体时刻比较）
+  ✓ repeat 的 nthWeekdayOfNextMonth 指向 ByDay（周期推进：按「日」比较）
+  ✓ 两个语义确实是**两个不同的函数**（不是同一个实现换了名字）
+  ✓ 锚点落在目标星期几且早于 10:00 时，两种语义分叉（ByInstant 留在本月、ByDay 推下月）
+  ✓ 普通锚点（周二）上两种语义一致（说明分叉只发生在那个边界）
+
+== C. 规则语义：语料走唯一入口，逐条断言可独立推导的性质 ==
+  ✓ 「明天上午9点」= 2026-09-19 09:00（明天 + 句内钟点）
+  ✓ 「明天上午9点」的记账基准是 wall-clock（不是 elapsed）
+  ✓ 「今天晚上8点」= 2026-09-18 20:00（当天 + 句内钟点）
+  ✓ 「下周三」落在星期三
+  ✓ 「下周三」= 2026-09-23（下个日历周的周三）
+  ✓ 「下周三」确实在基准日之后（不是已过去的那一周）
+  ✓ 「下周日」落在星期日
+  ✓ 「下周日」= 2026-09-27（下个日历周的周日，与「下周三」同一周）
+  ✓ 「每周一早上9点」触发点落在星期一
+  ✓ 「每周一早上9点」钟点为 09:00
+  ✓ 「每周一早上9点」被识别为每周重复（every=week）
+  ✓ 「每周一早上9点」后续 4 轮都落在星期一 09:00（星期几由锚点承载，不由 dow 字段承载）
+  ✓ 「每周一早上9点」后续 4 轮严格 +7 天推进
+  ✓ 「每月31号」在 9 月收敛到月末（30 日，不溢出成 10-01）
+  ✓ 「每月最后一天」落在当月最后一天
+  ✓ 「下个月5号」= 2026-10-05
+  ✓ 「3天后」按 elapsed 基准（保留当前时刻，而不是跳到 10:00）
+  ✓ 「3天后」= 2026-09-21 14:00（基准时刻 +3 天）
+  ✓ 无时间词的「记得买牛奶」= low 置信度
+  ✓ 无时间词时不产生重复规则
+
+== D. 周期推进：每一步都落在正确的那一天（按日历，不按毫秒） ==
+  ✓ 每周重复：四次推进每次恰好 +7 天
+  ✓ 每周重复：每一步都落在星期一 09:00（不会被锚点的钟点带偏）
+  ✓ 月末重复：每一步都落在当月最后一天（10/31、11/30、12/31）
+  ✓ 月末重复：严格向后推进且每一步都晚于上一步
+  ✓ 周期推进在「锚点=目标周几且早于 10:00」时不原地打转（必须晚于锚点）
+
+== E. 中文数字：唯一入口的结果语义（含旧守护保留的用例） ==
+  ✓ cnInt(四十) = 40
+  ✓ cnInt(九十) = 90
+  ✓ cnInt(一百) = 100
+  ✓ cnInt(三十五) = 35
+  ✓ cnInt(二十三) = 23
+  ✓ cnInt(二零二三) = 2023
+  ✓ cnInt(三百零五) = 305
+
+== F. 覆盖矩阵：app-core 的每个 Lib 引用都在启动闸门的声明表里 ==
+  ✓ 矩阵闭合：无未声明的 Lib / DatePrimitives 引用
+  ✓ 声明表规模合理（≥25 项，且含解析器与日历原语）
+  ✓ 反向对照：未声明的 Lib.brandNewThing 会被报出来（闭合判定有牙齿）
+
+== G. 语料冒烟：整份语料走唯一入口，输出形状必须合法 ==
+  ✓ 语料 35 条全部返回合法形状（trigger / confidence / title）
+
+通过 135 项，失败 2 项
+  ✗ 抑制反馈按取值函数注入（按值传会让 M1 静默失效）
+  ✗ 没有把抑制反馈按值传进去
+
+结果：单一来源未闭合（FAIL）
+
+EXIT_CODE=1

@@ -1,0 +1,13 @@
+PASS marker-only: verdict=NO_OPERATIONS exit=0 ops=0 records=1
+PASS marker-then-1put: verdict=HAS_OPERATIONS exit=2 ops=1 records=2
+PASS marker-then-real5put: verdict=HAS_OPERATIONS exit=2 ops=5 records=2
+PASS real5put-only: verdict=HAS_OPERATIONS exit=2 ops=5 records=1
+PASS rotated-prefix: verdict=INCONCLUSIVE exit=3 ops=None records=0
+PASS rotated-shrink: verdict=INCONCLUSIVE exit=3 ops=None records=0
+PASS truncated-record: verdict=INCONCLUSIVE exit=3 ops=None records=0
+PASS short-nonzero-tail: verdict=INCONCLUSIVE exit=3 ops=None records=0
+PASS no-baseline: verdict=INCONCLUSIVE exit=3 ops=None records=0
+PASS unchanged: verdict=NO_OPERATIONS exit=0 ops=None records=0
+PASS indep-43B-degenerate-baseline: verdict=INCONCLUSIVE exit=3 ops=None records=0
+PASS indep-43B-as-increment: verdict=HAS_OPERATIONS exit=2 ops=1 records=2
+OVERALL=PASS (12/12)

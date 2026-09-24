@@ -1,0 +1,26 @@
+{
+  "app": "attention-inbox",
+  "schema": 5,
+  "exportedAt": "2026-09-21T08:12:29.511Z",
+  "items": [],
+  "notes": [],
+  "projects": [],
+  "settings": {
+    "notify": false,
+    "dnd": true,
+    "importantRepeat": true,
+    "quietStart": "23:00",
+    "quietEnd": "07:30",
+    "dailySummary": false,
+    "privacyNotify": false,
+    "defaultDeliveryMode": "notification",
+    "userMode": "beginner",
+    "ai": {
+      "enabled": false,
+      "baseUrl": "",
+      "apiKey": "",
+      "model": "gpt-4o-mini",
+      "autoOnSave": false
+    }
+  }
+}

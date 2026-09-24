@@ -1,0 +1,59 @@
+== final identity ==
+2026-09-22T22:21:16+08:00
+main
+3574824357dc7beb04cbd3e32aa413cd508e8484
+3574824357dc7beb04cbd3e32aa413cd508e8484
+    6636  315791 app-core.js
+      77    4997 lib/app-model.js
+    6713  320788 total
+== unique implementation ==
+lib/app-model.js:15:    function createInitialState() {
+lib/app-model.js:34:    function normalizeItem(it) {
+lib/app-model.js:62:    function resolveDeliveryMode(priority) {
+lib/app-model.js:66:    function makeItem(o) {
+lib/app-model.js:70:    function bumpRev(it) { if (it) it.rev = (Number(it.rev) || 0) + 1; }
+lib/app-model.js:71:    function isTerminal(it) { return !!it && (it.status === "archived" || it.status === "completed"); }
+lib/app-model.js:72:    function hasKnownRev(rev) { if (rev == null || rev === "") return false; const n = Number(rev); return Number.isFinite(n) && n > 0; }
+app-core.js:2205:  function normalizeItem(it) {
+app-core.js:2210:  function resolveDeliveryMode(priority) {
+app-core.js:2214:  function makeItem(o) {
+app-core.js:2225:  function bumpRev(it) {
+app-core.js:2241:  function isTerminal(it) {
+app-core.js:2250:  function hasKnownRev(rev) {
+== selected duplicate defaults in core ==
+== load/cache ==
+2014:<script src="lib/app-model.js"></script>
+2024:<script src="app-core.js"></script>
+2:// v24：P3-A 把事项模型与默认状态迁出为 `lib/app-model.js`。
+24:const CACHE = "attention-inbox-v24";
+51:  "./lib/app-model.js",
+== model coverage ==
+{
+  "local": "appModel",
+  "contract": "APP_MODEL_INSTANCE_CONTRACT",
+  "used": [
+    "PROJECT_COLORS",
+    "SCHEMA",
+    "bumpRev",
+    "createInitialState",
+    "hasKnownRev",
+    "isTerminal",
+    "makeItem",
+    "normalizeItem",
+    "resolveDeliveryMode"
+  ],
+  "declared": [
+    "PROJECT_COLORS",
+    "SCHEMA",
+    "bumpRev",
+    "createInitialState",
+    "hasKnownRev",
+    "isTerminal",
+    "makeItem",
+    "normalizeItem",
+    "resolveDeliveryMode"
+  ],
+  "internalOnly": [],
+  "missingInContract": [],
+  "unusedInContract": []
+}

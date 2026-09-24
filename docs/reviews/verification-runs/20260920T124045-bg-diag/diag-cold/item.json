@@ -1,0 +1,30 @@
+{
+  "id": "diag-cold-1789881682508",
+  "rev": 1,
+  "triggerAt": 1789881712000,
+  "localTrigger": "2026-09-20T13:21:52",
+  "priority": "important",
+  "delivery_mode": "alarm",
+  "reminderEvents": {
+    "0@1789881712000": {
+      "at": 1789881712000,
+      "state": "scheduled",
+      "roundBase": 1789881712000
+    },
+    "1@1789883512000": {
+      "at": 1789883512000,
+      "state": "scheduled",
+      "roundBase": 1789881712000
+    },
+    "2@1789885312000": {
+      "at": 1789885312000,
+      "state": "scheduled",
+      "roundBase": 1789881712000
+    },
+    "3@1789887112000": {
+      "at": 1789887112000,
+      "state": "scheduled",
+      "roundBase": 1789881712000
+    }
+  }
+}

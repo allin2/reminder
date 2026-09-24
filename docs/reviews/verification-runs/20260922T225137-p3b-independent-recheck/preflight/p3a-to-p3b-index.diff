@@ -1,0 +1,11 @@
+--- docs/reviews/verification-runs/20260922T225137-p3b-independent-recheck/preflight/p3a-index.html	2026-09-22 22:52:02
++++ index.html	2026-09-22 22:34:47
+@@ -2012,6 +2012,8 @@
+ <script src="lib/app-views.js"></script>
+ <!-- 事项模型与默认状态（P3-A）：工厂求值零副作用，由 app-core 在依赖闸门通过后装配。 -->
+ <script src="lib/app-model.js"></script>
++<!-- 权威恢复、提交 FIFO、镜像回放与已提交基线（P3-B）：工厂求值零副作用。 -->
++<script src="lib/app-persistence.js"></script>
+ <script src="lib/parse-cn.js"></script>
+ <script src="lib/repeat.js"></script>
+ <script src="lib/reminder.js"></script>

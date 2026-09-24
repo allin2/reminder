@@ -1,0 +1,781 @@
+--- docs/reviews/verification-runs/20260922T225137-p3b-independent-recheck/preflight/p3a-app-core.js	2026-09-22 22:52:02
++++ app-core.js	2026-09-22 22:41:02
+@@ -61,6 +61,8 @@
+   let appCapture = null;
+   let AppModel = {};
+   let appModel = null;
++  let AppPersistence = {};
++  let appPersistence = null;
+   let $ = null;
+   let $$ = null;
+   let openSheet = null;
+@@ -73,7 +75,6 @@
+   let FeedbackLib = null;
+   // UX-T03：原生送达证据的合并与事后核查判定
+   let EvidenceLib = null;
+-  let storage = null;
+   // 命名空间（lib/date-utils.js / lib/ui-format.js）
+   let DatePrimitives = {};
+   let UiFormat = {};
+@@ -97,7 +98,6 @@
+   let parseChineseTime = null;
+   let cnInt = null;
+   let hasSpecificTimeWord = null;
+-  let storageReady = false;
+   /**
+    * **权威状态三态**（P2-C-R）。
+    *
+@@ -117,12 +117,6 @@
+   const LOAD_FAILED = "failed";
+   /** 恢复之前一律视为**未确认**（不等于 failed：加载进行中不该被当成故障）。 */
+   const LOAD_UNCONFIRMED = "unconfirmed";
+-  let stateAuthority = LOAD_UNCONFIRMED;
+-  /** 最近一次恢复尝试的判定（`init()` / 恢复面板 / 测试与真机探针读它）。 */
+-  let lastLoadReport = null;
+-  let loadAttempts = 0;
+-  /** 被写闸门拦下的提交次数（`failed` 期间必须恒为 0 次真实落库 + 可见的拦截计数）。 */
+-  let blockedWriteCount = 0;
+   let schemaMigrationNeeded = false;
+   let nativeReady = false;
+   let nativeSyncTimer = null;
+@@ -247,6 +241,8 @@
+     ["AppCapture.createAppCapture", "function", "lib/app-capture.js 导出被破坏（表单能力装配入口）"],
+     ["AppModel", "object", "lib/app-model.js 未加载 —— 事项模型与初始状态无法装配"],
+     ["AppModel.createAppModel", "function", "lib/app-model.js 导出被破坏（模型能力装配入口）"],
++    ["AppPersistence", "object", "lib/app-persistence.js 未加载 —— 权威恢复与保存闸门无法装配"],
++    ["AppPersistence.createAppPersistence", "function", "lib/app-persistence.js 导出被破坏（持久化能力装配入口）"],
+     ["AppViews", "object", "lib/app-views.js 未加载 —— 首页、未来、笔记、我的和详情展示整体失效"],
+     ["AppViews.createAppViews", "function", "lib/app-views.js 导出被破坏（展示能力装配入口）"],
+     ["parseChineseTime", "function",
+@@ -491,6 +487,13 @@
+       "resolveDeliveryMode", "bumpRev", "isTerminal", "hasKnownRev"],
+     instanceWhy: "lib/app-model.js 的 createAppModel 返回的实例缺少模型 API —— 事项默认值或版本判定无法保证",
+     factoryThrowWhy: "lib/app-model.js 的 createAppModel 抛了异常 —— 事项模型无法装配"
++  };
++  const APP_PERSISTENCE_INSTANCE_CONTRACT = {
++    factory: "AppPersistence.createAppPersistence",
++    instance: ["currentPayload", "writeSnapshot", "runCommit", "saveAsync", "save", "loadAsync", "loadSync", "load",
++      "replayPendingSnapshot", "authoritativeWritesAllowed", "authoritySnapshot", "reopen", "committedItemById", "getStorage"],
++    instanceWhy: "lib/app-persistence.js 的 createAppPersistence 返回的实例缺少恢复或提交 API —— 数据权威状态无法保证",
++    factoryThrowWhy: "lib/app-persistence.js 的 createAppPersistence 抛了异常 —— 持久化能力无法装配"
+   };
+ 
+   /** 按 `a.b.c` 取路径；任一段缺失返回 undefined。 */
+@@ -558,6 +561,7 @@
+     ["AppCapture", "AppCapture"],
+     ["AppViews", "AppViews"],
+     ["AppModel", "AppModel"],
++    ["AppPersistence", "AppPersistence"],
+     ["Feedback", "FeedbackLib"],
+     ["DeliveryEvidence", "EvidenceLib"],
+     ["DatePrimitives", "DatePrimitives"],
+@@ -1054,11 +1058,63 @@
+     });
+     if (problems.length) return { problems: problems, bindings: null };
+ 
++    // P3-B：持久化实例与模型一起在装配闸门中创建；此处不调用 getStorage，故检查失败不打开数据库。
++    let persistenceInstance = null;
++    const persistenceFactory = readRuntimePath(roots, APP_PERSISTENCE_INSTANCE_CONTRACT.factory);
++    try {
++      persistenceInstance = appPersistence;
++      if (!persistenceInstance) {
++      let persistenceStorage = null;
++      persistenceInstance = persistenceFactory({
++        key: KEY,
++        getSchema: () => SCHEMA,
++        getItems: () => state.items,
++        getNotes: () => state.notes,
++        getProjects: () => state.projects,
++        getSettings: () => state.settings,
++        applyRecoveredState: applyParsedState,
++        getStorage: () => {
++          if (!persistenceStorage) persistenceStorage = readRuntimePath(roots, "createStorage")({ lsKey: KEY });
++          return persistenceStorage;
++        },
++        hasIdb: () => readRuntimePath(roots, "hasIdb")(),
++        readLocal: key => localStorage.getItem(key),
++        writeLocal: (key, value) => localStorage.setItem(key, value),
++        removeLocal: key => localStorage.removeItem(key),
++        now: () => Date.now(),
++        onCommitted: options => {
++          if (!(options && options.deferNativeSync)) {
++            bumpNativeSyncVersion();
++            queueNativeReminderSync("save");
++          }
++        },
++        onSaveFailure: error => {
++          if (error && error.code === "state-authority-blocked") toast("数据尚未恢复 · 已阻止写入，请先重试恢复");
++          else toast("保存失败 · 修改仍保留在本机内存，下一次保存会重试");
++          console.error("State save failed:", error && error.message ? error.message : error);
++        }
++      });
++      }
++    } catch (error) {
++      problems.push({ path: APP_PERSISTENCE_INSTANCE_CONTRACT.factory + "()", expected: "instance",
++        actual: "threw:" + (error && error.message ? error.message : String(error)),
++        why: APP_PERSISTENCE_INSTANCE_CONTRACT.factoryThrowWhy });
++      return { problems: problems, bindings: null };
++    }
++    APP_PERSISTENCE_INSTANCE_CONTRACT.instance.forEach(function (name) {
++      if (persistenceInstance == null || typeof persistenceInstance[name] !== "function") {
++        problems.push({ path: "AppPersistence." + name, expected: "function",
++          actual: persistenceInstance == null ? describeGot(persistenceInstance) : describeGot(persistenceInstance[name]),
++          why: APP_PERSISTENCE_INSTANCE_CONTRACT.instanceWhy });
++      }
++    });
++    if (problems.length) return { problems: problems, bindings: null };
++
+     // 走到这里说明每一项都核对过了 —— 下面绑的就是刚才核对过的那批值。
+     const bindings = {
+       appUi: instance, ai: aiInstance, backup: backupInstance,
+       diagnostics: diagnosticsInstance, setup: setupInstance, content: contentInstance, views: viewsInstance, capture: captureInstance,
+-      model: modelInstance
++      model: modelInstance, persistence: persistenceInstance
+     };
+     for (let i = 0; i < RUNTIME_BINDING_PATHS.length; i++) {
+       bindings[RUNTIME_BINDING_PATHS[i][1]] = readRuntimePath(roots, RUNTIME_BINDING_PATHS[i][0]);
+@@ -1105,6 +1161,8 @@
+     appCapture = b.capture;
+     AppModel = b.AppModel;
+     appModel = b.model;
++    AppPersistence = b.AppPersistence;
++    appPersistence = b.persistence;
+     SCHEMA = appModel.SCHEMA;
+     PROJECT_COLORS = appModel.PROJECT_COLORS;
+     // 模型验证通过后才建立可写 state；缺模型时 bindRuntime 已提前返回，业务启动不会拿到半套状态。
+@@ -1139,11 +1197,6 @@
+     parseChineseTime = b.parseChineseTime;
+     cnInt = b.cnInt;
+     hasSpecificTimeWord = b.hasSpecificTimeWord;
+-    // storage 放在最后：它会开 IndexedDB（有副作用），必须在所有检查都过之后才建 ——
+-    // 「装配失败但库已经开了一半」比干脆不开更麻烦。
+-    storage = typeof b.createStorageFactory === "function"
+-      ? b.createStorageFactory({ lsKey: KEY })
+-      : null;
+     return [];
+   }
+ 
+@@ -1362,7 +1415,7 @@
+     restoreRetryInFlight = true;
+     let running = null;
+     try {
+-      if (storage && typeof storage.reopen === "function") storage.reopen();
++      if (appPersistence) appPersistence.reopen();
+       running = startApp();
+     } catch (error) {
+       console.error("State recovery retry failed:", error && error.message ? error.message : error);
+@@ -1504,74 +1557,12 @@
+   let state = null;
+ 
+   function currentPayload() {
+-    return {
+-      schema: SCHEMA,
+-      items: state.items,
+-      notes: state.notes,
+-      projects: state.projects,
+-      settings: state.settings
+-    };
++    return appPersistence.currentPayload();
+   }
+ 
+-  /**
+-   * 把整个状态写一份快照到权威后端。**不加闸门**，只做「取快照 + 写」这一件事。
+-   *
+-   *  · **H2 权威后端**：能用 IndexedDB 就以它为准（storage.save 内部把 localStorage 当镜像
+-   *    尽力写），没有可用后端时才由 localStorage 拍板。判定只看**权威后端**的提交结果 ——
+-   *    镜像写失败不能把已经提交的事务说成没提交，否则内存回滚、磁盘却留着新数据。
+-   *  · **H1 独立快照**：一次提交只序列化一次，再解析出**独立副本**交给后端。
+-   *    IndexedDB 的 `put` 发生在 microtask 之后，直接传活对象会让期间的内存改动混进
+-   *    这次提交的内容，让「这笔到底写了什么」不可预测。
+-   *  · **O5 同一份独立快照给两个消费者**：后端写入与 `committedAlarmItems` 读的是
+-   *    **同一次解析出来的那一份**，正常路径因此少一次全量 `JSON.parse`。
+-   *    它们本来就是同一个语义对象（「这次提交了什么」），此前各解析一份纯属重复；
+-   *    共享的是**已冻结的独立副本**，不是活对象，H1 不受影响。
+-   */
+-  async function writeSnapshot(payload, options) {
+-    // P2-C-R **写闸门**：唯一收口。
+-    //
+-    // 权威状态没有确认恢复成功（`failed` 或仍在 `unconfirmed`）时，**一笔都不许写**：
+-    // 既不能落权威后端，也不能落镜像 + 待回放凭据 —— 后者会在下一次启动时被
+-    // `replayPendingSnapshot()` 写进健康的 IDB，把旧数据换成这份空快照。
+-    // 抛错而不是静默返回，是为了让调用方**无法**把这次提交当成成功。
+-    if (!authoritativeWritesAllowed()) {
+-      blockedWriteCount += 1;
+-      const blocked = new Error("state-authority-" + stateAuthority);
+-      blocked.code = "state-authority-blocked";
+-      throw blocked;
+-    }
+-    const json = JSON.stringify(payload || currentPayload());
+-    // O5：唯一的一次全量解析 —— 结果既交给后端，也作为「已提交快照」发布。
+-    // 绝不能用 `payload || currentPayload()` 本身：那是活对象（items 就是 state.items）。
+-    const snapshot = JSON.parse(json);
+-    if (storage && storageReady) {
+-      await storage.save(snapshot); // 权威提交：失败即本次提交失败
+-      // H-07：这次写入**没有落进权威后端** —— IDB 本来可用（hasIdb 为真），
+-      // 但本次会话只降级落在 localStorage 镜像上。必须留待回放凭据，否则下次
+-      // IDB 恢复正常时 loadAsync 会读到 IDB 里的旧值，这段改动静默消失。
+-      //
+-      // 只在「本该用 IDB 却只落了镜像」时留凭据：设备**根本没有** IndexedDB 时
+-      // backend 恒为 local，IDB 不可能是权威，留凭据只会让每次启动都做一次无效重放。
+-      if (authoritativeBackendMissing()) markPendingReplay(json);
+-      // 只在**权威提交成功之后**才发布已提交快照（上面 await 抛错到不了这里）。
+-      committedAlarmItems = snapshot.items || [];
+-      if (!(options && options.deferNativeSync)) {
+-        bumpNativeSyncVersion();
+-        queueNativeReminderSync("save");
+-      }
+-      return true;
+-    }
+-    // 没有可用存储后端：localStorage 就是权威
+-    localStorage.setItem(KEY, json);
+-    // H-07：降级期的写入**必须留一份待回放凭据**。否则 IDB 一旦恢复，
+-    // loadAsync 会从 IDB 的旧值加载，这期间用户改的东西静默消失。
+-    markPendingReplay(json);
+-    committedAlarmItems = snapshot.items || [];
+-    if (!(options && options.deferNativeSync)) {
+-      bumpNativeSyncVersion();
+-      queueNativeReminderSync("save");
+-    }
+-    return true;
++  /* Persistence entrypoints are compatibility forwards to the one appPersistence instance. */
++  function writeSnapshot(payload, options) {
++    return appPersistence.writeSnapshot(payload, options);
+   }
+ 
+   /**
+@@ -1580,176 +1571,15 @@
+    * `unconfirmed`（恢复尝试还没结束）同样算关闭：读库期间的任何写入都发生在
+    * 「还不知道权威里有什么」的窗口里，风险与 `failed` 完全相同。
+    */
+-  function authoritativeWritesAllowed() {
+-    return stateAuthority === LOAD_LOADED || stateAuthority === LOAD_EMPTY;
+-  }
++  function authoritativeWritesAllowed() { return !!(appPersistence && appPersistence.authoritativeWritesAllowed()); }
++  function runCommit(job, args) { return appPersistence.runCommit(job, args); }
++  function saveAsync(options) { return appPersistence.saveAsync(options); }
+ 
+-  /**
+-   * H-07：IndexedDB 可用、但**这一次没有用它**（本会话降级到了 localStorage 镜像）。
+-   *
+-   * `lib/storage.js` 的 `ensure()` 在 `openDb()` 失败时会整体切到 `backend = "local"`，
+-   * 此后所有写入都只落镜像 —— `storageReady` 仍然是 true，这条路径**不会**走上面的
+-   * 降级分支，所以必须单独识别，否则「IDB 打不开」这一最常见形态恰好漏掉。
+-   */
+-  function authoritativeBackendMissing() {
+-    try {
+-      return Lib.hasIdb() && storage.backend !== "idb";
+-    } catch (error) {
+-      return false;
+-    }
+-  }
+-
+-  /**
+-   * P2-C-R 独立复验（2026-09-22）补的第一个判据：**这台设备到底有没有权威后端**。
+-   *
+-   * `authoritativeBackendMissing()` 只看 `storage.backend` 是不是 `idb`，覆盖不到
+-   * 「backend 确实已经选成 idb，但这一次 `get` 抛错了」的形态 —— 那条路径是从
+-   * `storage.load()` 内部抛出来的，`ensure()` 早已把 backend 置好。
+-   * 判断粒度的差别就是灾难与否：前者只对一半场景收口，漏掉的那一半（get 失败）
+-   * 恰好是**镜像有值**时最容易发生的。
+-   */
+-  function idbIsAvailable() {
+-    try {
+-      return !!Lib.hasIdb();
+-    } catch (error) {
+-      return false;
+-    }
+-  }
+-
+-  /**
+-   * H-07 / D47：降级期写入的「待回放快照」。
+-   *
+-   * 降到 localStorage 之后**照旧立即落盘**（用户可见行为不变：写入仍然成功），
+-   * 但同时把这一份完整状态留在独立键里 —— IDB 恢复时由 `replayPendingSnapshot`
+-   * 写回权威后端，降级期间的改动不再丢失。
+-   */
+-  const PENDING_REPLAY_KEY = KEY + "-pending-replay";
+-
+-  /** 当前内存状态是不是**只从镜像**来的（权威这一轮没有确认成功）。 */
+-  function stateCameFromMirror() {
+-    const reason = lastLoadReport && lastLoadReport.reason ? String(lastLoadReport.reason) : "";
+-    return reason === "mirror-recovered" ||
+-      reason === "mirror-recovered-unconfirmed-authority" ||
+-      reason === "degraded-mirror" ||
+-      reason === "degraded-mirror-unconfirmed-authority";
+-  }
+-
+-  function markPendingReplay(json) {
+-    // P2-C-R 独立复验（2026-09-22）：待回放凭据**只能代表权威状态的降级写入**。
+-    //
+-    // 写闸门（`writeSnapshot` 首行）已经拦住了绝大多数路径，但凭据是「下一次启动会
+-    // 无条件覆盖权威」的授权书 —— 生成点自己也必须认得来源。镜像兜底出来的状态留凭据，
+-    // 等于把「这次读不到」改写成「下次一定会覆盖」，正是被复现的那条链。
+-    if (!authoritativeWritesAllowed() || stateCameFromMirror()) {
+-      console.error(
+-        "pending replay refused: state is not authority-confirmed",
+-        lastLoadReport ? lastLoadReport.reason : null
+-      );
+-      return;
+-    }
+-    try {
+-      localStorage.setItem(PENDING_REPLAY_KEY, JSON.stringify({ at: Date.now(), json: json }));
+-    } catch (error) {
+-      // 配额不足时**不能**影响主写入路径（localStorage 此刻就是权威，已经写成功了），
+-      // 但必须留下可见痕迹：这一份改动将无法自动回放到 IDB。
+-      console.error(
+-        "pending replay snapshot failed (degraded write will not be replayed):",
+-        error && error.message ? error.message : error
+-      );
+-    }
+-  }
+-
+-  function readPendingReplay() {
+-    try {
+-      const raw = localStorage.getItem(PENDING_REPLAY_KEY);
+-      if (!raw) return null;
+-      const pending = JSON.parse(raw);
+-      return pending && typeof pending.json === "string" ? pending : null;
+-    } catch (error) {
+-      return null;
+-    }
+-  }
+-
+-  function clearPendingReplay() {
+-    try { localStorage.removeItem(PENDING_REPLAY_KEY); } catch (error) {}
+-  }
+-
+-  /** 上一次 `replayPendingSnapshot()` 是否**应用失败**（`null` = 没有失败）。 */
+-  let lastReplayFailure = null;
+-
+-  /**
+-   * **提交闸门**：同一时刻只有一笔权威提交在跑，轮到谁谁才取快照。
+-   * 原生动作的校验、草稿变更、提交与发布整体在闸门内；普通保存排在它的结果之后，
+-   * 失败不会锁死后续提交，成功前也不会把未确认动作混入其它快照。
+-   */
+-  let commitChain = Promise.resolve();
+-
+-  /**
+-   * O2：闸门只负责**串行与放行**，作业参数由调用方显式给出。
+-   *
+-   * 旧实现是 `commitChain.then(job, job)` —— `job` 会被当作 `then` 的处理器调用，
+-   * 参数是**前一笔的兑现值**（恒为 `undefined`），调用方给的选项原地丢失。
+-   * `save({ deferNativeSync: true })` 因此长期形同虚设：选项传不进 `writeSnapshot`，
+-   * 「只确认投影结果」的那次保存照旧请求下一轮原生对账。
+-   *
+-   * **快照仍然在轮到本笔时才取**：`writeSnapshot` 收到的 payload 依旧是 `undefined`，
+-   * `currentPayload()` 在作业体内、也就是闸门轮到它执行的那一刻才求值。
+-   * 这里只是把「作业 + 它的参数」一起入队，不提前冻结任何状态。
+-   */
+-  function runCommit(job, args) {
+-    const invoke = () => job.apply(null, args || []);
+-    // 前一笔不论成败都要放行下一笔，否则一次失败会永久卡住后续所有保存
+-    const next = commitChain.then(invoke, invoke);
+-    commitChain = next.then(() => {}, () => {});
+-    return next;
+-  }
+-
+-  /**
+-   * F2 / I1：返回**真实的持久化 Promise**（过闸门）。
+-   *
+-   * 原生动作队列必须在数据真正落库之后才确认删除，所以不能再「发起了 save 就当已保存」——
+-   * 那样 handler 一返回原生就把事件删了，此时 IndexedDB 事务可能还没提交，崩溃即丢操作。
+-   */
+-  async function saveAsync(options) {
+-    // 位置参数与 `writeSnapshot(payload, options)` 对齐：payload 留空 = 轮到本笔时取当前状态
+-    return runCommit(writeSnapshot, [undefined, options]);
+-  }
+-
+-  /**
+-   * H1：**只**抑制「动作同步变更体内部」的重复保存。
+-   *
+-   * `ackItem` / `completeItem` / `snoozeItem` 内部各自会 `save()`。当草稿 reducer 复用它们时，
+-   * 必须抑制内部保存，由事务出口一次提交完整草稿。
+-   *
+-   * 这个标记**只在同步变更体内为真**，所以丢弃是安全的：那个窗口是同步的，
+-   * 期间任何改动都在内存里，会被事务出口的快照一并提交。
+-   * 而提交期间的其它保存（用户点了完成 / 稍后 / 新建）**绝不能吞掉** ——
+-   * 它们会各自排进闸门，在前一笔定成败之后按当时的状态取快照。
+-   * （此前的计数器跨越 await 持续为正，会把这类保存静默丢弃。）
+-   */
++  /* D41 owns this synchronous reducer-only suppression flag. */
+   let suppressInnerSave = false;
+-
+-  /**
+-   * O2：`options` 必须能一路走到 `writeSnapshot` 的位置参数上。
+-   *
+-   * 只有 `deferNativeSync: true` 一种语义：**这次保存只确认已知的排程投影结果**，
+-   * 不需要因为落库而再请求一次原生对账。它**不**影响持久化本身 —— 提交、镜像、
+-   * pending 回放、失败重试全部照旧；丢的只是由此触发的下一轮对账。
+-   */
+   function save(options) {
+     if (suppressInnerSave) return;
+-    const pending = saveAsync(options);
+-    pending.catch(error => {
+-      // P2-C-R：被写闸门拦下与「写库失败」是两件事，文案不能混 ——
+-      // 前者要告诉用户「数据还没恢复，所以一个字都没写」，而不是「下次会重试」。
+-      if (error && error.code === "state-authority-blocked") {
+-        toast("数据尚未恢复 · 已阻止写入，请先重试恢复");
+-      } else {
+-        toast("保存失败 · 修改仍保留在本机内存，下一次保存会重试");
+-      }
+-      console.error("State save failed:", error && error.message ? error.message : error);
+-    });
+-    return pending;
++    return appPersistence.save(options);
+   }
+ 
+   /* ---------- 统一事务：提交在途期的「后续状态命令」日志 ---------- */
+@@ -1922,11 +1752,9 @@
+     return ops.length;
+   }
+ 
++  /* Core owns live state normalization only; appPersistence establishes its committed baseline after recovery. */
+   function applyParsedState(parsed) {
+     const modelDefaults = appModel.createInitialState();
+-    // `Object.assign` below may replace `settings.ai` with a partial legacy value.
+-    // Retain the model-owned defaults first so the subsequent nested merge never
+-    // accidentally merges that partial value with itself.
+     const modelAiDefaults = modelDefaults.settings.ai;
+     schemaMigrationNeeded = parsed.schema !== SCHEMA || (Array.isArray(parsed.items) && parsed.items.some(it =>
+       !it || !it.scheduleBasis || it.dismissedUntil === undefined || it.reminderEvents === undefined
+@@ -1935,25 +1763,13 @@
+     state.notes = Array.isArray(parsed.notes) ? parsed.notes : [];
+     state.projects = Array.isArray(parsed.projects) ? parsed.projects : [];
+     state.settings = Object.assign(modelDefaults.settings, parsed.settings || {});
+-    if (state.settings.userMode !== "normal" && state.settings.userMode !== "beginner") {
+-      state.settings.userMode = "beginner";
+-    }
++    if (state.settings.userMode !== "normal" && state.settings.userMode !== "beginner") state.settings.userMode = "beginner";
+     syncUserMode();
+-    if (!state.settings.ai || typeof state.settings.ai !== "object") {
+-      state.settings.ai = modelAiDefaults;
+-    } else {
+-      state.settings.ai = Object.assign(modelAiDefaults, state.settings.ai);
+-    }
++    if (!state.settings.ai || typeof state.settings.ai !== "object") state.settings.ai = modelAiDefaults;
++    else state.settings.ai = Object.assign(modelAiDefaults, state.settings.ai);
+     ensureReviewSettings();
+-    state.items.forEach(it => {
+-      if (!it.review_status) it.review_status = "READY";
+-    });
+-    // N-03：冷启动基线。`committedAlarmItems` 此前**只在 `writeSnapshot` 里赋值**，
+-    // 于是「刚启动、还没提交过任何事务」时它恒为 `[]`；原生投递面板拿它当对照，
+-    // 找不到任何项 → 本该被自动忽略的旧投递会一直挂在面板上等用户手动处理。
+-    // 加载完成时，「最后一次已提交的快照」就等于刚读到的权威状态，这里补齐基线。
+-    // 用深拷贝与 `writeSnapshot` 口径一致：快照必须是独立副本，不被后续内存改动污染。
+-    committedAlarmItems = JSON.parse(JSON.stringify(state.items));
++    state.items.forEach(it => { if (!it.review_status) it.review_status = "READY"; });
++    return state.items;
+   }
+ 
+   /**
+@@ -1966,241 +1782,11 @@
+    * 所以中间态没有任何独立价值 —— 保留全部中间快照只会先撞爆 localStorage 配额。
+    * 与 D39/D40 的「回滚 + 按序重放」不冲突：那里重放的是**用户命令**，这里重放的是**终态**。
+    */
+-  async function replayPendingSnapshot() {
+-    lastReplayFailure = null;
+-    const pending = readPendingReplay();
+-    if (!pending) return false;
+-    let payload = null;
+-    try {
+-      payload = JSON.parse(pending.json);
+-    } catch (error) {
+-      clearPendingReplay();
+-      return false;
+-    }
+-    if (!payload || typeof payload !== "object") {
+-      clearPendingReplay();
+-      return false;
+-    }
+-    try {
+-      applyParsedState(payload);
+-    } catch (error) {
+-      // P2-C-R：这份快照**没能**被应用（内存可能已被改了一半）。调用方必须把它
+-      // 判成 `failed`，而不是「没有快照」—— 后者会让下游把半个状态当成权威。
+-      lastReplayFailure = error;
+-      return false;
+-    }
+-    try {
+-      await storage.save(payload);
+-      clearPendingReplay();
+-    } catch (error) {
+-      // 写回失败：内存已经是较新的状态，**保留**待回放快照留给下次启动再试 —— 绝不丢。
+-      console.error(
+-        "pending replay writeback failed (kept for next launch):",
+-        error && error.message ? error.message : error
+-      );
+-    }
+-    return true;
+-  }
+-
+-  /**
+-   * 一次恢复尝试的判定结果（**三态**）。
+-   *
+-   * `writesAllowed` 是唯一的写闸门读数：只有 `loaded` / `empty` 为真。
+-   * `mirror` 记下镜像字节数（真机探针要用它核对「这轮到底有没有镜像」）。
+-   */
+-  function publishLoadReport(status, reason, attempt, at, detail) {
+-    stateAuthority = status;
+-    lastLoadReport = {
+-      status: status,
+-      reason: reason,
+-      detail: detail ? String((detail && detail.message) || detail) : null,
+-      attempt: attempt,
+-      at: at,
+-      backend: storage ? storage.backend : null,
+-      mirrorBytes: mirrorBytes(),
+-      writesAllowed: status !== LOAD_FAILED
+-    };
+-    return lastLoadReport;
+-  }
+-
+-  /** 镜像键的原始字节数（`null` = 没有镜像键）；只读，不改任何东西。 */
+-  function mirrorBytes() {
+-    try {
+-      if (typeof localStorage === "undefined" || localStorage == null) return null;
+-      const raw = localStorage.getItem(KEY);
+-      return raw == null ? null : String(raw).length;
+-    } catch (error) {
+-      return null;
+-    }
+-  }
+-
+-  /**
+-   * 权威状态读取的**唯一入口**（P2-C-R：返回三态判定，不再返回布尔）。
+-   *
+-   * 旧实现把四种完全不同的处境折叠成同一个 `false`，而 `init()` 又不看返回值：
+-   *   · 权威读到空（真首启）；
+-   *   · 打开/读取/解析失败且镜像也没东西；
+-   *   · 读到了值但回放时抛错；
+-   * 于是「没有确认恢复成功」与「确认从未有数据」在下游**无法区分** ——
+-   * 两者都会开放保存、原生对账与业务心跳，内存里那份空收件箱随时可能变成新的权威快照。
+-   *
+-   * 判定规则（每条都保留原因，供恢复面板与真机探针读取）：
+-   *   · 读到并应用成功                                  ⇒ `loaded`
+-   *   · 待回放快照被采用（H-07）                        ⇒ `loaded`
+-   *   · 权威**成功读取**到空，且镜像与待回放都没有残留   ⇒ `empty`
+-   *   · 其余一切（打开/读取/解析/回放失败、读到空但仍有残留证据、
+-   *     镜像恢复不了数据）                              ⇒ `failed` ⇒ 写闸门关闭
+-   */
+-  async function loadAsync() {
+-    loadAttempts += 1;
+-    const attempt = loadAttempts;
+-    const at = Date.now();
+-    let authoritativeError = null;
+-
+-    if (storage) {
+-      try {
+-        const parsed = await storage.load();
+-        storageReady = true;
+-        // H-07：先把降级期攒下的改动重放回权威后端，并以它作为权威状态；
+-        // 否则「降级期间改过的东西」会被这里读到的旧值静默覆盖。
+-        //
+-        // 只有**真的换回了 IDB** 才重放：仍跑在镜像上时重放会白白清掉凭据，
+-        // 下一次 IDB 恢复就再也拿不回这段改动（这一条是本轮真机/探测器实测暴露的盲区）。
+-        if (storage.backend === "idb" && await replayPendingSnapshot()) {
+-          return publishLoadReport(LOAD_LOADED, "pending-replay", attempt, at);
+-        }
+-        // 回放**失败**（应用那份快照时抛错）不是「没有快照」：内存可能已经被改了一半，
+-        // 这时既不能宣布首启、也不能开放保存。
+-        if (lastReplayFailure) {
+-          return publishLoadReport(LOAD_FAILED, "pending-replay-failed", attempt, at, lastReplayFailure);
+-        }
+-        if (parsed == null) {
+-          // 权威后端**本该可用却没用上**（`openDb()` 失败 ⇒ 后端整体降级为 local）：
+-          // 这时的「空」来自镜像，不是权威 —— 不能据此宣布首启。
+-          // 漏掉这一条的后果很具体：本次启动会照常开放保存 ⇒ 那次提交走
+-          // `markPendingReplay`（`authoritativeBackendMissing()` 恰好为真），
+-          // 下一次启动 IDB 恢复正常时，这份**空快照**经 `replayPendingSnapshot()`
+-          // 写回权威 —— 「读不到」就此变成「覆盖掉」。
+-          if (authoritativeBackendMissing()) {
+-            return publishLoadReport(LOAD_FAILED, "authoritative-backend-degraded", attempt, at);
+-          }
+-          // 「权威读到空」只有在**别处也没有半点残留**时才等于「从未有过数据」：
+-          // `storage.load()` 已经尝试过把镜像迁移进 IDB，走到这里说明镜像不可解析
+-          // （或被清空但键还在）／待回放快照还在 —— 那是「读到空」，不是「真的空」。
+-          if (mirrorBytes() != null || readPendingReplay() != null) {
+-            return publishLoadReport(LOAD_FAILED, "authoritative-empty-with-residual-evidence", attempt, at);
+-          }
+-          return publishLoadReport(LOAD_EMPTY, "authoritative-empty", attempt, at);
+-        }
+-        if (typeof parsed !== "object" || Array.isArray(parsed)) {
+-          // 值读出来了但不是可以回放的状态对象（例如被别的东西写脏了）。
+-          return publishLoadReport(LOAD_FAILED, "authoritative-value-not-object", attempt, at);
+-        }
+-        applyParsedState(parsed);
+-        // ⚠️ 本轮是否真的读到权威，和「这次有没有用到 IDB 后端」是两件事：
+-        // 设备**本来就有** IndexedDB 时，只要这次没用上它，`parsed` 就是镜像里的内容
+-        // （`ensure()` 已在 `openDb()` 失败时把后端整体降为 local），它比 IDB 里的那份
+-        // **旧**，不是权威 —— 把它当 loaded 会立刻开放写入：本次会话留下的待回放凭据，
+-        // 会在下一次健康启动里被优先回放，把更新的权威数据覆盖掉。
+-        // 独立复验的「双启动反例」（IDB 两条 / 镜像一条）逐条复现了这条链，故此处必须 fail closed。
+-        //
+-        // 设备**根本没有** IndexedDB 时不一样：localStorage 本身就是权威
+-        // （`lib/storage.js` 的后端契约），这时照旧判 loaded，不允许顺手降级用户的可用性。
+-        if (authoritativeBackendMissing()) {
+-          return publishLoadReport(
+-            LOAD_FAILED, "degraded-mirror-unconfirmed-authority", attempt, at
+-          );
+-        }
+-        // 降级路径（IDB 本该可用但只落了镜像）与真正的权威读要分开记：
+-        // 两者都算 `loaded`（H-07 的待回放凭据会兜住差异），但真机排查时
+-        // 「这一次到底是从哪读的」是第一个要看的事实。
+-        return publishLoadReport(LOAD_LOADED, "authoritative", attempt, at);
+-      } catch (error) {
+-        // 打开 / 读取 / 解析（都由 `storage.load()` 内部完成）失败：权威后端这次
+-        // **没有**给出可用的值。记下原因，然后走唯一允许的降级来源 —— 镜像。
+-        storageReady = false;
+-        authoritativeError = error;
+-      }
+-    }
+-
+-    const mirror = recoverFromMirror();
+-    if (mirror.status === LOAD_LOADED) {
+-      // ⚠️ 镜像**不是**权威：它只在「IDB 还是空的」时代表上一次落盘的样子。
+-      // 设备有 IDB 而这次读不到它 ⇒ 我们**不知道**权威里有没有更新的数据，此时把镜像
+-      // 提升为可写 loaded，等于允许用一份可能过期的快照去覆盖权威：
+-      //   本次启动开放保存 → 降级写入留下待回放凭据 → 下次健康启动优先回放 → 覆盖 IDB。
+-      // 这是独立复验用「IDB 两条 / 镜像一条」复现出的完整链，故 fail closed：
+-      // 内存里可以留下镜像内容供**只读查看**（什么都没写出去），但不判 loaded、不开写闸门。
+-      if (idbIsAvailable()) {
+-        return publishLoadReport(
+-          LOAD_FAILED, "mirror-recovered-unconfirmed-authority", attempt, at, authoritativeError
+-        );
+-      }
+-      // 环境根本没有 IndexedDB ⇒ localStorage 就是权威（`lib/storage.js` 后端契约），
+-      // 这时镜像恢复 = 权威恢复，照旧判 loaded。
+-      return publishLoadReport(LOAD_LOADED, "mirror-recovered", attempt, at, authoritativeError);
+-    }
+-    // ⚠️ 这里刻意**不**把「镜像也没有值」判成 `empty`。
+-    // 权威读失败本身就意味着「我们不知道权威里有什么」，此时宣布首启等于把
+-    // 「读不到」当成「不存在」—— 那正是本轮要封的那个窗口（空快照覆盖旧数据）。
+-    // 只有权威**成功读取**到空才算首启（见上面的 `authoritative-empty`）。
+-    return publishLoadReport(
+-      LOAD_FAILED,
+-      "authoritative-read-failed:" + mirror.reason,
+-      attempt,
+-      at,
+-      authoritativeError || mirror.error
+-    );
+-  }
+-
+-  /**
+-   * 权威读失败时**唯一**允许的降级来源：localStorage 镜像。
+-   *
+-   * 与 `loadSync()` 的区别就在**不折叠**：读不到 / 解析不了 / 应用不了各自有名字，
+-   * 调用方据此决定「是不是可以宣布首启」（答案永远是「不可以」）。
+-   */
+-  function recoverFromMirror() {
+-    let raw = null;
+-    try {
+-      if (typeof localStorage === "undefined" || localStorage == null) {
+-        return { status: LOAD_FAILED, reason: "mirror-unavailable" };
+-      }
+-      raw = localStorage.getItem(KEY);
+-    } catch (error) {
+-      return { status: LOAD_FAILED, reason: "mirror-unreadable", error: error };
+-    }
+-    if (raw == null) return { status: LOAD_EMPTY, reason: "mirror-absent" };
+-    let parsed = null;
+-    try {
+-      parsed = JSON.parse(raw);
+-    } catch (error) {
+-      return { status: LOAD_FAILED, reason: "mirror-unparsable", error: error };
+-    }
+-    if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) {
+-      return { status: LOAD_FAILED, reason: "mirror-not-object" };
+-    }
+-    try {
+-      applyParsedState(parsed);
+-    } catch (error) {
+-      return { status: LOAD_FAILED, reason: "mirror-apply-failed", error: error };
+-    }
+-    return { status: LOAD_LOADED, reason: "mirror-recovered" };
+-  }
+-
+-  function loadSync() {
+-    try {
+-      const raw = localStorage.getItem(KEY);
+-      if (!raw) return false;
+-      applyParsedState(JSON.parse(raw));
+-      return true;
+-    } catch (e) {
+-      return false;
+-    }
+-  }
+-
+-  function load() {
+-    return loadSync();
+-  }
++  function replayPendingSnapshot() { return appPersistence.replayPendingSnapshot(); }
++  function loadAsync() { return appPersistence.loadAsync(); }
++  function loadSync() { return appPersistence.loadSync(); }
++  function load() { return appPersistence.load(); }
++  function mirrorBytes() { return appPersistence ? appPersistence.authoritySnapshot().mirrorBytes : null; }
+ 
+   function normalizeItem(it) {
+     return appModel.normalizeItem(it);
+@@ -4363,7 +3949,7 @@
+     //
+     // 启动链在 `failed` 时已经整段跳过，这里是第二道闸：拦住绕过启动链的调用
+     // （迟到的异步回调、旁路入口），否则「不排通知」只靠调用顺序成立。
+-    if (stateAuthority === LOAD_FAILED) {
++    if (!authoritativeWritesAllowed()) {
+       nativeSyncMetrics.blockedByAuthority++;
+       return;
+     }
+@@ -5945,7 +5531,6 @@
+   }
+ 
+   // Native deliveries can outlive their window, or have no item (diagnostic/removed item).
+-  let committedAlarmItems = [];
+   function deliveryHandledByCommittedItem(alarm, item) {
+     if (!item) return false;
+     if (isTerminal(item)) return true;
+@@ -5976,7 +5561,7 @@
+       for (const alarm of result.alarms || []) {
+         const item = state.items.find(it => it.id === alarm.itemId);
+         // Current committed item state wins over an old delivery; never change it from a stale alarm.
+-        const committedItem = committedAlarmItems.find(it => it.id === alarm.itemId);
++        const committedItem = appPersistence ? appPersistence.committedItemById(alarm.itemId) : null;
+         if (deliveryHandledByCommittedItem(alarm, committedItem)) {
+           await bridge.stopAlarmDelivery({ id: alarm.id, token: alarm.token });
+           continue;
+@@ -6258,7 +5843,7 @@
+       // 与装配闸门失败同一语义 —— 「脚本加载了」不等于「应用就绪」，
+       // 更不能让测试/调试代码拿到 true 之后往一份未确认的状态里写东西。
+       // 同时把 `initStarted` 放回可重入状态，让恢复面板的「重试恢复」能再跑一遍。
+-      if (lastLoadReport && lastLoadReport.status === LOAD_FAILED) {
++      if (appPersistence && appPersistence.authoritySnapshot().status === LOAD_FAILED) {
+         initStarted = false;
+         return false;
+       }
+@@ -6466,7 +6051,7 @@
+       get addDays() { return addDays; },
+       get sameDay() { return sameDay; },
+       get applyClock() { return applyClock; },
+-      get storage() { return storage; },
++      get storage() { return appPersistence ? appPersistence.getStorage() : null; },
+       // P1：装配闸门本身可被直接驱动 —— 只有这样才能构造「缺模块」的反例。
+       // 光测「正常组合能起来」证明不了闸门有效：闸门的作用对象恰恰是坏组合。
+       assertRuntimeDependencies,
+@@ -6562,14 +6147,11 @@
+        *   · `blockedWriteCount` —— 被写闸门拦下的提交次数；
+        *   · `nativeBlocked` —— 因未确认而被拦下的原生对账次数。
+        */
+-      stateAuthority: () => ({
+-        status: stateAuthority,
+-        report: lastLoadReport ? Object.assign({}, lastLoadReport) : null,
+-        attempts: loadAttempts,
+-        blockedWriteCount: blockedWriteCount,
++      stateAuthority: () => Object.assign({}, appPersistence ? appPersistence.authoritySnapshot() : {
++        status: LOAD_UNCONFIRMED, report: null, attempts: 0, blockedWriteCount: 0,
++        writesAllowed: false, mirrorBytes: null
++      }, {
+         nativeBlocked: nativeSyncMetrics.blockedByAuthority,
+-        writesAllowed: authoritativeWritesAllowed(),
+-        mirrorBytes: mirrorBytes(),
+         recoveryPanel: stateRecoveryPanelShown
+       }),
+       retryRestore,

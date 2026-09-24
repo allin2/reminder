@@ -7,7 +7,7 @@
     "sync:www": "node scripts/sync-www.js",
     "cap:sync": "npm run sync:www && npx cap sync android",
     "cap:open": "npx cap open android",
-    "test": "node test-unit.js && node test-native-reminders.js && node test-boot-combination.js && node test-smoke.js && node test-regressions.js"
+    "test": "node test-unit.js && node test-native-reminders.js && node scripts/verification/p3a-model-tests.js && node scripts/verification/p3b-persistence-tests.js && node scripts/verification/p3c-transaction-tests.js && node scripts/verification/p3d-items-tests.js && node scripts/verification/p3e-coordinator-tests.js && node scripts/verification/p3f-review-tests.js && node scripts/verification/p3g-alerts-tests.js && node scripts/verification/p3h-platform-tests.js && node scripts/verification/p3i-modularization-tests.js && node test-boot-combination.js && node test-smoke.js && node test-regressions.js && node scripts/verification/parse-single-source.js"
   },
   "devDependencies": {
     "@capacitor/android": "^6.0.0",

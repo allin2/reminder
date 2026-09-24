@@ -1,0 +1,7 @@
+healthy direct behavior: PASS
+write gate removed: mutation detected
+snapshot becomes live: mutation detected
+FIFO locks after failure: mutation detected
+degraded mirror becomes loaded: mutation detected
+replay clears before writeback: mutation detected
+baseline updates before save: mutation detected

@@ -1,0 +1,15 @@
+=== P3-C Baseline Byte Comparison (Unchanged Files) ===
+lib/app-persistence.js:
+  expected: d31a3112044af28c5efe14f770ccec99e9a5a3ce18172d81d79376ce3d6aab50
+  actual:   d31a3112044af28c5efe14f770ccec99e9a5a3ce18172d81d79376ce3d6aab50
+  match:    true
+lib/storage.js:
+  expected: b710ec23d819dfdc7eeeafa4688e44d69a11062a18c35b931c2240177721478a
+  actual:   b710ec23d819dfdc7eeeafa4688e44d69a11062a18c35b931c2240177721478a
+  match:    true
+lib/native-reminders.js:
+  expected: 723f218c68866309f364e1e71968eb3efc6ae8b9b85aea7e211c878bee6e031b
+  actual:   723f218c68866309f364e1e71968eb3efc6ae8b9b85aea7e211c878bee6e031b
+  match:    true
+
+Baseline preservation verdict: PASS (100% byte-for-byte unchanged)

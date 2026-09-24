@@ -1,0 +1,54 @@
+--- scripts/verification/p2cr-coldstart-rounds.sh	2026-09-22 10:42:21
++++ docs/reviews/verification-runs/20260922T110036-independent-p2cr2-recheck/evidence/p2cr-coldstart-rounds-independent.sh	2026-09-22 11:07:34
+@@ -32,7 +32,7 @@
+ PORT=9223
+ PY="${PY:-$HOME/.workbuddy/binaries/python/envs/default/bin/python}"
+ 
+-ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
++ROOT="/Users/qlyf/Developer/reminder"
+ cd "$ROOT"
+ 
+ ACTIVITY="$PKG/space.alliswell.inbox.MainActivity"
+@@ -118,7 +118,7 @@
+ page
+ A_RSHA="$(rec_sha "$A_REC")"
+ BASE_WAL="$(fwals "$A_F")"
+-echo "BASE_WAL=$BASE_WAL（冷启动前 WAL 字节数；下面每轮与它比，看有没有新增提交）"
++echo "BASE_WAL=${BASE_WAL}（冷启动前 WAL 字节数；下面每轮与它比，看有没有新增提交）"
+ WAL_PREV="$WALTMP/wal-A.bin"
+ if walpull "$WAL_PREV"; then
+   echo "WAL_A_LOCAL=$WAL_PREV BYTES=$(wc -c < "$WAL_PREV" | tr -d ' ')"
+@@ -160,7 +160,7 @@
+ 
+   echo "## [$i] 判定"
+   if [ -n "$A_RSHA" ] && [ "$A_RSHA" = "$C_RSHA" ]; then
+-    echo "  ✓ 记录级哈希 A==C（$A_RSHA）：冷启动后权威记录与启动前逐字节一致 ⇒ 未被空快照覆盖"
++    echo "  ✓ 记录级哈希 A==C（${A_RSHA}）：冷启动后权威记录与启动前逐字节一致 ⇒ 未被空快照覆盖"
+   else
+     echo "  ✗ 记录级哈希 A!=C：$A_RSHA -> $C_RSHA"
+     FAILED=1
+@@ -181,19 +181,19 @@
+         > "$RUN/wal-delta-round-$i.txt" 2>&1
+       OPS="$("$PY" scripts/verification/idb-wal-delta.py "$WAL_PREV" "$WAL_NOW" 2>/dev/null | grep '^OPS=' | cut -d= -f2)"
+       KIND="$("$PY" scripts/verification/idb-wal-delta.py "$WAL_PREV" "$WAL_NOW" 2>/dev/null | grep '^RECORD_KIND=' | cut -d= -f2)"
+-      echo "  WAL 字节：$BASE_WAL -> $C_WAL（相对 A 时点累计 +$((C_WAL - BASE_WAL)) B；**逐轮增量**见下面这一行）"
++      echo "  WAL 字节：$BASE_WAL -> ${C_WAL}（相对 A 时点累计 +$((C_WAL - BASE_WAL)) B；**逐轮增量**见下面这一行）"
+       if [ "$OPS" = "0" ]; then
+-        echo "  ✓ 追加记录为**空标记**（OPS=0，RECORD_KIND=$KIND）：零键操作、序号不前进 ⇒ 本轮冷启动没有产生任何提交"
++        echo "  ✓ 追加记录为**空标记**（OPS=0，RECORD_KIND=${KIND}）：零键操作、序号不前进 ⇒ 本轮冷启动没有产生任何提交"
+       elif [ -z "$OPS" ] || [ "$OPS" = "None" ]; then
+-        echo "  · 追加记录无法解析（RECORD_KIND=$KIND）⇒ 记为信息项，见 wal-delta-round-$i.txt"
++        echo "  · 追加记录无法解析（RECORD_KIND=${KIND}）⇒ 记为信息项，见 wal-delta-round-$i.txt"
+       else
+-        echo "  ✗ 追加记录含 **$OPS 条真实操作**（RECORD_KIND=$KIND）⇒ 冷启动仍写回了数据，幂等未生效"
++        echo "  ✗ 追加记录含 **$OPS 条真实操作**（RECORD_KIND=${KIND}）⇒ 冷启动仍写回了数据，幂等未生效"
+         FAILED=1
+       fi
+     fi
+     WAL_PREV="$WAL_NOW"
+   else
+-    echo "  ✗ WAL 拉取失败（$WAL_REMOTE）"
++    echo "  ✗ WAL 拉取失败（${WAL_REMOTE}）"
+     FAILED=1
+   fi
+   echo ""

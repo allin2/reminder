@@ -1,0 +1,14 @@
+./README.md: OK
+./evidence/current-import-format-probe.js: OK
+./evidence/current-import-format-probe.json: OK
+./evidence/current-import-format-summary.txt: OK
+./evidence/device-current-backup-shape.json: OK
+./evidence/git-status-after.txt: OK
+./evidence/git-status-before.txt: OK
+./evidence/head.txt: OK
+./evidence/import-source-lines.txt: OK
+./evidence/relevant-current-diff.patch: OK
+./evidence/schema-compatibility.txt: OK
+./evidence/source-hash-diff.txt: OK
+./evidence/source-hashes-after.txt: OK
+./evidence/source-hashes.txt: OK

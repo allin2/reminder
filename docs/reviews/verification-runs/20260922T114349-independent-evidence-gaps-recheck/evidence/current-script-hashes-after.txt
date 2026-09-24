@@ -1,0 +1,3 @@
+bc07734c72388b15e28d1813d5fcf89f3bf5020ee8931232a79d76172f59823f  scripts/verification/p2cr-coldstart-rounds.sh
+7c4973f398384655355deabd52dde7339836c23fe2ff501b0fde469b5fc608cc  scripts/verification/idb-wal-delta.py
+8c1a6d93a582c2fcce92ef4438350ddda6ba8334e4ca283d7e006862ac2428d1  scripts/verification/p2cr-idb-fault-inject.sh

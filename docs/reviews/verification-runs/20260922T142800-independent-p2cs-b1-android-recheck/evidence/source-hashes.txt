@@ -1,0 +1,5 @@
+6871da9c87c906b943762a75c73573cbf9b9c13c84c40e8860652f3a3c8104e0  lib/app-backup.js
+989d841c0c40b767cba140ed3ef0577262be269aaa4c80db03f3bb1e7ade3ebe  test-unit.js
+a6728dfba3acb8d5eb4368a1e80246a6db8a58f8fc6db62e778354655a0039e4  sw.js
+f5d638244072233ee55f08ba1c1f565b133eba2f405a6b72183f542f855f17ea  scripts/verification/browser-import-format-check.py
+c7e0e09fd4bdb4235c4a653cb07232ddb26d54adc04625ca18b5e84de7a47cda  app-core.js

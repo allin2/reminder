@@ -1,0 +1,15 @@
+PASS default object exact
+PASS two default states deeply independent
+PASS project colors copy cannot mutate internal default
+PASS zero false and caller collections preserve old semantics
+PASS fallback event objects are independent
+PASS native migrate runs exactly once and in-place changes visible before return
+PASS live delivery default and priority matrix
+FAIL normalize preserves old falsey fallback to notification Expected values to be strictly equal:
++ actual - expected
+
++ ''
+- 'notification'
+PASS repeat identity and parent preserved
+PASS rev and terminal matrices
+RESULT pass=9 fail=1

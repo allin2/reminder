@@ -1,0 +1,16 @@
+{
+  "anchorFound": true,
+  "healthy": {
+    "status": "due",
+    "dueInDom": true,
+    "puts": 1
+  },
+  "mutant": {
+    "status": "waiting",
+    "dueInDom": true,
+    "puts": 1
+  },
+  "sourceBefore": "3eff2c1107c1f6d1f577a0dd2ea37480364495c284c9480e4aeb62cdc0241125",
+  "sourceAfter": "3eff2c1107c1f6d1f577a0dd2ea37480364495c284c9480e4aeb62cdc0241125",
+  "red": true
+}

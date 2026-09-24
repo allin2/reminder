@@ -1,0 +1,2 @@
+extra_expected_exit=1 actual_exit=1
+missing_expected_exit=1 actual_exit=1

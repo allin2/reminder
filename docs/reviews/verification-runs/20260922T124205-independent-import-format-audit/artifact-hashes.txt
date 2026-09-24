@@ -1,0 +1,14 @@
+079cef8e5603c46e1d38ecdba06da9e00d3ace8b59c2be378f105effc6c6f33a  ./README.md
+6bf4efaf8155debe0fe15b0012c5487668fa44bf380fada8b91c877055e71f60  ./evidence/current-import-format-probe.js
+b7ba7f2aa79e5ee399ea67e90afe25e8d8823e56db0dd8b0e2b29d662be08d4e  ./evidence/current-import-format-probe.json
+a83da26defc289b9e7ca6b00ee3ab31fc83b59383112b0fb7cfd6af124cc777c  ./evidence/current-import-format-summary.txt
+31de8645d5469fb6e85561b8fc3e2da98aa33cc0693655884ccc5b054d72f374  ./evidence/device-current-backup-shape.json
+7723e8600a320f2accec4fd44197ac680466d28209a5b2132181ed5fb86e1b6c  ./evidence/git-status-after.txt
+7723e8600a320f2accec4fd44197ac680466d28209a5b2132181ed5fb86e1b6c  ./evidence/git-status-before.txt
+a2a394df8a574001bb54cea33df8ffdc255eacc2c5774a459c54dfcf7bf10205  ./evidence/head.txt
+ed789151684115085237eb77f7794a61e95b423afedab0f5c571036779d4bd86  ./evidence/import-source-lines.txt
+bcce11a755262922c8ac6659042fbb5bec0f4c335211097c221d72869e7c8e49  ./evidence/relevant-current-diff.patch
+a5c1ba3a9bef921b6c7a1f8ac8da6a530fd561a1a7adfe6382664a1f1af23cc5  ./evidence/schema-compatibility.txt
+e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  ./evidence/source-hash-diff.txt
+2c42dd17c0b30ef4bb061c4e27c3c4a5c88b8f566238947b4ee2dcd911757fd0  ./evidence/source-hashes-after.txt
+2c42dd17c0b30ef4bb061c4e27c3c4a5c88b8f566238947b4ee2dcd911757fd0  ./evidence/source-hashes.txt

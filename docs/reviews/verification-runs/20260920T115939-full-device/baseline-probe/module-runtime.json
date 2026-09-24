@@ -1,0 +1,17 @@
+{
+  "ready": true,
+  "items": 0,
+  "notify": false,
+  "scheduled": 0,
+  "hasLib": "object",
+  "capacitor": true,
+  "plugins": [
+    "App",
+    "AppSettings",
+    "LocalNotifications",
+    "CapacitorCookies",
+    "WebView",
+    "CapacitorHttp",
+    "SystemBridge"
+  ]
+}

@@ -1,0 +1,33 @@
+{
+  "local": "appTransaction",
+  "contract": "APP_TRANSACTION_INSTANCE_CONTRACT",
+  "used": [
+    "alarmEventSeen",
+    "handleAlarmAction",
+    "inflightDepth",
+    "isFeedbackSuppressed",
+    "isItemActionPending",
+    "itemConflictsWithActiveAction",
+    "rejectPendingItemCommand",
+    "runUserOp",
+    "shouldSuppressInnerSave",
+    "takeReplayCreatedId",
+    "wrapUserOp"
+  ],
+  "declared": [
+    "alarmEventSeen",
+    "handleAlarmAction",
+    "inflightDepth",
+    "isFeedbackSuppressed",
+    "isItemActionPending",
+    "itemConflictsWithActiveAction",
+    "rejectPendingItemCommand",
+    "runUserOp",
+    "shouldSuppressInnerSave",
+    "takeReplayCreatedId",
+    "wrapUserOp"
+  ],
+  "internalOnly": [],
+  "missingInContract": [],
+  "unusedInContract": []
+}

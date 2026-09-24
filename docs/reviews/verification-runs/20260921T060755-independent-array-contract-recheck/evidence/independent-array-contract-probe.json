@@ -1,0 +1,161 @@
+{
+  "checks": {
+    "baseline_ready": true,
+    "baseline_static_closed": true,
+    "declaration_is_array": true,
+    "type_whitelist_supports_array": true,
+    "bad_shapes_fail_before_effects": true,
+    "static_downgrade_remains_closed": true,
+    "array_check_has_teeth": true,
+    "item_shape_check_has_teeth": true,
+    "nonempty_check_has_teeth": true,
+    "documented_value_type_boundary_confirmed": true,
+    "cache_version_raised": true
+  },
+  "baseline": {
+    "ready": true,
+    "static": {
+      "undeclared": [],
+      "ambiguousAliases": [],
+      "ambiguousRefs": [],
+      "problems": []
+    },
+    "testFeedbackType": "array",
+    "undoType": "number",
+    "declaredTypes": [
+      "array",
+      "function",
+      "number",
+      "object"
+    ],
+    "contractTypes": [
+      "array",
+      "boolean",
+      "function",
+      "number",
+      "object",
+      "string"
+    ]
+  },
+  "badShapes": {
+    "object": {
+      "ready": false,
+      "problem": {
+        "path": "Feedback.TEST_FEEDBACK",
+        "expected": "array<value,label>",
+        "actual": "object（不是数组）",
+        "why": "lib/feedback.js 导出被破坏 —— 测试反馈清单静默退回硬编码数组，与真实动作语义脱节；形状不对（缺 value/label 或不是数组）时该界面直接崩"
+      },
+      "sideEffects": {
+        "puts": 0,
+        "schedules": 0,
+        "alarmSchedules": 0,
+        "intervals": []
+      }
+    },
+    "empty": {
+      "ready": false,
+      "problem": {
+        "path": "Feedback.TEST_FEEDBACK",
+        "expected": "array<value,label>",
+        "actual": "空数组（清单至少要有一项）",
+        "why": "lib/feedback.js 导出被破坏 —— 测试反馈清单静默退回硬编码数组，与真实动作语义脱节；形状不对（缺 value/label 或不是数组）时该界面直接崩"
+      },
+      "sideEffects": {
+        "puts": 0,
+        "schedules": 0,
+        "alarmSchedules": 0,
+        "intervals": []
+      }
+    },
+    "missingLabel": {
+      "ready": false,
+      "problem": {
+        "path": "Feedback.TEST_FEEDBACK",
+        "expected": "array<value,label>",
+        "actual": "array[0] 缺少 label",
+        "why": "lib/feedback.js 导出被破坏 —— 测试反馈清单静默退回硬编码数组，与真实动作语义脱节；形状不对（缺 value/label 或不是数组）时该界面直接崩"
+      },
+      "sideEffects": {
+        "puts": 0,
+        "schedules": 0,
+        "alarmSchedules": 0,
+        "intervals": []
+      }
+    },
+    "missingValue": {
+      "ready": false,
+      "problem": {
+        "path": "Feedback.TEST_FEEDBACK",
+        "expected": "array<value,label>",
+        "actual": "array[0] 缺少 value",
+        "why": "lib/feedback.js 导出被破坏 —— 测试反馈清单静默退回硬编码数组，与真实动作语义脱节；形状不对（缺 value/label 或不是数组）时该界面直接崩"
+      },
+      "sideEffects": {
+        "puts": 0,
+        "schedules": 0,
+        "alarmSchedules": 0,
+        "intervals": []
+      }
+    },
+    "primitiveItem": {
+      "ready": false,
+      "problem": {
+        "path": "Feedback.TEST_FEEDBACK",
+        "expected": "array<value,label>",
+        "actual": "array[0] 元素不是对象（number）",
+        "why": "lib/feedback.js 导出被破坏 —— 测试反馈清单静默退回硬编码数组，与真实动作语义脱节；形状不对（缺 value/label 或不是数组）时该界面直接崩"
+      },
+      "sideEffects": {
+        "puts": 0,
+        "schedules": 0,
+        "alarmSchedules": 0,
+        "intervals": []
+      }
+    },
+    "laterMissingLabel": {
+      "ready": false,
+      "problem": {
+        "path": "Feedback.TEST_FEEDBACK",
+        "expected": "array<value,label>",
+        "actual": "array[1] 缺少 label",
+        "why": "lib/feedback.js 导出被破坏 —— 测试反馈清单静默退回硬编码数组，与真实动作语义脱节；形状不对（缺 value/label 或不是数组）时该界面直接崩"
+      },
+      "sideEffects": {
+        "puts": 0,
+        "schedules": 0,
+        "alarmSchedules": 0,
+        "intervals": []
+      }
+    }
+  },
+  "staticBoundary": {
+    "downgradedType": "object",
+    "exits": {
+      "undeclared": [],
+      "ambiguousAliases": [],
+      "ambiguousRefs": [],
+      "problems": []
+    }
+  },
+  "mutationControls": {
+    "typeDowngrade": {
+      "ready": true,
+      "failure": null
+    },
+    "itemShapeRemoved": {
+      "ready": true,
+      "failure": null
+    },
+    "nonemptyRemoved": {
+      "ready": true,
+      "failure": null
+    }
+  },
+  "documentedBoundary": {
+    "wrongFieldValueTypes": {
+      "ready": true,
+      "failure": null
+    }
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "lib/app-platform.js": "d4c22ee5fa2b8ea61ea8c82424dce31ce78420d9362e233567ab7a8a70d8b562",
+  "sw.js": "d69356a836781651e1cbd706f7e87f2f575a4c514d81d85cf10feffc976edbeb",
+  "app-core.js": "12e841dcb401f584f17d3b0abf21d534315e0a6f89f515e172f38bdfe0c61e9e",
+  "index.html": "0cc4e73abd6a7d7303e662d695bfbe4170e5834bf0b4192180158ff4dd5d46d8",
+  "lib/app-native-coordinator.js": "3de9902b0cb97d3159b5c710a1698908211189c7de71861caf69637b0f30948f",
+  "scripts/verification/production-scripts.js": "734d23bfcefaa24ee76adb19cd6936c0f9cd2002475ff6f5731d59fbada1b2a7",
+  "scripts/verification/p3h-platform-tests.js": "063f960bb78fba47325451cb83da608598e9320b85a1a80f0bd368763b4a5b6d",
+  "scripts/verification/browser-platform-check.py": "1cea360735306ffd8b44d271946d9321e7b83ac346dac0c201caea81dc905733",
+  "scripts/verification/p3h-device-verify.py": "0443ba9e861242d3df1a652a42a7ae97526602e80481016d56b4ebacefaa57cd",
+  "test-boot-combination.js": "7e8a3de2ecefaf66c5fc6b1e556517db4ed07a8a40951bcd4a1bc5e274dc004c",
+  "package.json": "a1056927ae22dcd74f484b316c8b372be4f9dcc06349c2852826b8b26515c811",
+  "releases/candidates/20260923T1852-p3hr2-candidate/app-debug.apk": "a0e192968a4e4c01ffbf959eb29fe81b39805a512acf4e6883af0a23be0c4a99",
+  "releases/candidates/20260923T1745-p3hr-candidate/app-debug.apk": "dc1f21fe1578f4a8e8cc49eb0d4ed5a1e68fa4a1a521d2e19df667fc3e859554",
+  "releases/candidates/20260923T1719-p3h-candidate/app-debug.apk": "6fd03728a329f05e6a3676718779a161a0863ba6c76c99f2511072050c9fada0"
+}

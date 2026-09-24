@@ -1,0 +1,678 @@
+{
+  "runId": "20260920T1706-code-optimization",
+  "generatedAt": "2026-09-20T10:03:14.966Z",
+  "environment": {
+    "node": "v20.17.0",
+    "platform": "darwin arm64",
+    "host": "QLYFdeMacBook-Air.local",
+    "deviceLevel": "NOT_PERFORMED —— 本次未在 Android 实机/浏览器上采样；下列全部是 Node 桌面环境计数",
+    "note": "计数（JSON 调用 / find 谓词比较 / 桥调用 / 卡片数 / DOM 写入）是主证据；耗时样本仅作参考，不跨环境乘倍数推算"
+  },
+  "o2": {
+    "note": "「一轮对账」= reconcile 真的执行一次；桥调用单独计。业务开关 notify=true 后才可观察排程。",
+    "businessSaveOnce": {
+      "syncStats": {
+        "totalRequests": 1,
+        "runs": 1,
+        "deduped": 0,
+        "bySource": {
+          "save": 1
+        }
+      },
+      "bridgeCalls": {
+        "scheduleAlarm": 1,
+        "schedule": 1,
+        "cancelAlarm": 0
+      }
+    },
+    "idle600msAfterLedgerWriteback": {
+      "syncStats": {
+        "totalRequests": 1,
+        "runs": 1,
+        "deduped": 0,
+        "bySource": {
+          "save": 1
+        }
+      },
+      "verdict": "台账回写不再自激：runs 与 firstBridge 之后没有新增"
+    },
+    "samePlanRepeatSave": {
+      "syncStats": {
+        "totalRequests": 2,
+        "runs": 2,
+        "deduped": 0,
+        "bySource": {
+          "save": 2
+        }
+      },
+      "bridgeCalls": {
+        "scheduleAlarm": 0,
+        "schedule": 0,
+        "cancelAlarm": 0
+      },
+      "verdict": "允许一轮对账，但不重排、不误撤"
+    },
+    "userReschedule": {
+      "syncStats": {
+        "totalRequests": 3,
+        "runs": 3,
+        "deduped": 0,
+        "bySource": {
+          "save": 3
+        }
+      },
+      "bridgeCalls": {
+        "scheduleAlarm": 1,
+        "schedule": 1,
+        "cancelAlarm": 1
+      },
+      "verdict": "业务改变后最终计划正确：旧排程撤销 + 新排程落下"
+    }
+  },
+  "o4": {
+    "rows": [
+      {
+        "target": "baseline",
+        "n": 100,
+        "ledger": "empty",
+        "eventCount": 0,
+        "targetCount": 100,
+        "reminders": {
+          "findCalls": 0,
+          "preds": 0,
+          "bigFindCalls": 0,
+          "bigPreds": 0,
+          "maxArrayLen": 0,
+          "mapBuilds": 2
+        },
+        "deadlines": {
+          "findCalls": 100,
+          "preds": 5050,
+          "bigFindCalls": 100,
+          "bigPreds": 5050,
+          "maxArrayLen": 100,
+          "mapBuilds": 102
+        }
+      },
+      {
+        "target": "baseline",
+        "n": 100,
+        "ledger": "full",
+        "eventCount": 100,
+        "targetCount": 100,
+        "reminders": {
+          "findCalls": 100,
+          "preds": 5050,
+          "bigFindCalls": 100,
+          "bigPreds": 5050,
+          "maxArrayLen": 100,
+          "mapBuilds": 102
+        },
+        "deadlines": {
+          "findCalls": 100,
+          "preds": 5050,
+          "bigFindCalls": 100,
+          "bigPreds": 5050,
+          "maxArrayLen": 100,
+          "mapBuilds": 102
+        }
+      },
+      {
+        "target": "baseline",
+        "n": 500,
+        "ledger": "empty",
+        "eventCount": 0,
+        "targetCount": 500,
+        "reminders": {
+          "findCalls": 0,
+          "preds": 0,
+          "bigFindCalls": 0,
+          "bigPreds": 0,
+          "maxArrayLen": 0,
+          "mapBuilds": 2
+        },
+        "deadlines": {
+          "findCalls": 500,
+          "preds": 125250,
+          "bigFindCalls": 500,
+          "bigPreds": 125250,
+          "maxArrayLen": 500,
+          "mapBuilds": 502
+        }
+      },
+      {
+        "target": "baseline",
+        "n": 500,
+        "ledger": "full",
+        "eventCount": 500,
+        "targetCount": 500,
+        "reminders": {
+          "findCalls": 500,
+          "preds": 125250,
+          "bigFindCalls": 500,
+          "bigPreds": 125250,
+          "maxArrayLen": 500,
+          "mapBuilds": 502
+        },
+        "deadlines": {
+          "findCalls": 500,
+          "preds": 125250,
+          "bigFindCalls": 500,
+          "bigPreds": 125250,
+          "maxArrayLen": 500,
+          "mapBuilds": 502
+        }
+      },
+      {
+        "target": "baseline",
+        "n": 2000,
+        "ledger": "empty",
+        "eventCount": 0,
+        "targetCount": 2000,
+        "reminders": {
+          "findCalls": 0,
+          "preds": 0,
+          "bigFindCalls": 0,
+          "bigPreds": 0,
+          "maxArrayLen": 0,
+          "mapBuilds": 2
+        },
+        "deadlines": {
+          "findCalls": 2000,
+          "preds": 2001000,
+          "bigFindCalls": 2000,
+          "bigPreds": 2001000,
+          "maxArrayLen": 2000,
+          "mapBuilds": 2002
+        }
+      },
+      {
+        "target": "baseline",
+        "n": 2000,
+        "ledger": "full",
+        "eventCount": 2000,
+        "targetCount": 2000,
+        "reminders": {
+          "findCalls": 2000,
+          "preds": 2001000,
+          "bigFindCalls": 2000,
+          "bigPreds": 2001000,
+          "maxArrayLen": 2000,
+          "mapBuilds": 2002
+        },
+        "deadlines": {
+          "findCalls": 2000,
+          "preds": 2001000,
+          "bigFindCalls": 2000,
+          "bigPreds": 2001000,
+          "maxArrayLen": 2000,
+          "mapBuilds": 2002
+        }
+      },
+      {
+        "target": "current",
+        "n": 100,
+        "ledger": "empty",
+        "eventCount": 0,
+        "targetCount": 100,
+        "reminders": {
+          "findCalls": 0,
+          "preds": 0,
+          "bigFindCalls": 0,
+          "bigPreds": 0,
+          "maxArrayLen": 0,
+          "mapBuilds": 3
+        },
+        "deadlines": {
+          "findCalls": 0,
+          "preds": 0,
+          "bigFindCalls": 0,
+          "bigPreds": 0,
+          "maxArrayLen": 0,
+          "mapBuilds": 103
+        }
+      },
+      {
+        "target": "current",
+        "n": 100,
+        "ledger": "full",
+        "eventCount": 100,
+        "targetCount": 100,
+        "reminders": {
+          "findCalls": 0,
+          "preds": 0,
+          "bigFindCalls": 0,
+          "bigPreds": 0,
+          "maxArrayLen": 0,
+          "mapBuilds": 103
+        },
+        "deadlines": {
+          "findCalls": 0,
+          "preds": 0,
+          "bigFindCalls": 0,
+          "bigPreds": 0,
+          "maxArrayLen": 0,
+          "mapBuilds": 103
+        }
+      },
+      {
+        "target": "current",
+        "n": 500,
+        "ledger": "empty",
+        "eventCount": 0,
+        "targetCount": 500,
+        "reminders": {
+          "findCalls": 0,
+          "preds": 0,
+          "bigFindCalls": 0,
+          "bigPreds": 0,
+          "maxArrayLen": 0,
+          "mapBuilds": 3
+        },
+        "deadlines": {
+          "findCalls": 0,
+          "preds": 0,
+          "bigFindCalls": 0,
+          "bigPreds": 0,
+          "maxArrayLen": 0,
+          "mapBuilds": 503
+        }
+      },
+      {
+        "target": "current",
+        "n": 500,
+        "ledger": "full",
+        "eventCount": 500,
+        "targetCount": 500,
+        "reminders": {
+          "findCalls": 0,
+          "preds": 0,
+          "bigFindCalls": 0,
+          "bigPreds": 0,
+          "maxArrayLen": 0,
+          "mapBuilds": 503
+        },
+        "deadlines": {
+          "findCalls": 0,
+          "preds": 0,
+          "bigFindCalls": 0,
+          "bigPreds": 0,
+          "maxArrayLen": 0,
+          "mapBuilds": 503
+        }
+      },
+      {
+        "target": "current",
+        "n": 2000,
+        "ledger": "empty",
+        "eventCount": 0,
+        "targetCount": 2000,
+        "reminders": {
+          "findCalls": 0,
+          "preds": 0,
+          "bigFindCalls": 0,
+          "bigPreds": 0,
+          "maxArrayLen": 0,
+          "mapBuilds": 3
+        },
+        "deadlines": {
+          "findCalls": 0,
+          "preds": 0,
+          "bigFindCalls": 0,
+          "bigPreds": 0,
+          "maxArrayLen": 0,
+          "mapBuilds": 2003
+        }
+      },
+      {
+        "target": "current",
+        "n": 2000,
+        "ledger": "full",
+        "eventCount": 2000,
+        "targetCount": 2000,
+        "reminders": {
+          "findCalls": 0,
+          "preds": 0,
+          "bigFindCalls": 0,
+          "bigPreds": 0,
+          "maxArrayLen": 0,
+          "mapBuilds": 2003
+        },
+        "deadlines": {
+          "findCalls": 0,
+          "preds": 0,
+          "bigFindCalls": 0,
+          "bigPreds": 0,
+          "maxArrayLen": 0,
+          "mapBuilds": 2003
+        }
+      }
+    ]
+  },
+  "o5": {
+    "normalSave": {
+      "jsonCalls": {
+        "parse": 1,
+        "stringify": 2,
+        "idbPuts": 1
+      },
+      "verdict": "一次正常保存 = 1 次全量 parse（编辑前是 2 次：后端一份 + 已提交快照一份）",
+      "stringifyBreakdown": "① 生成 json 载荷 ② localStorage 镜像序列化",
+      "idbPuts": 1,
+      "idbPayloadBytes": 739,
+      "localStorageKeys": {
+        "attention-inbox-v2": 739
+      }
+    },
+    "inFlightSnapshotIsolation": {
+      "heldInFlight": {
+        "puts": 2,
+        "held": 1
+      },
+      "landedTitle": "提交时刻的标题",
+      "containsInFlightNewItem": false,
+      "verdict": "复用的是**已冻结的独立副本**：提交在途时改内存 / 新增项都不会混进这次提交"
+    }
+  },
+  "o6": {
+    "note": "counts 是 **HTML 字符串**体积，不是实测 DOM/堆内存（浏览器侧为 NOT_PERFORMED）。「编辑前 1000 条折叠 = 1000 个 article / 667,617 字节」由 baseline 行的 n=2000 同比例外推可复算。",
+    "rows": [
+      {
+        "target": "baseline",
+        "n": 100,
+        "collapsed": {
+          "cards": 100,
+          "htmlBytes": 59598,
+          "activeCardsReported": "NOT_INSTRUMENTED（编辑前没有这个计数钩子）"
+        },
+        "expanded": {
+          "cards": 100,
+          "htmlBytes": 59591,
+          "activeCardsReported": "NOT_INSTRUMENTED（编辑前没有这个计数钩子）"
+        }
+      },
+      {
+        "target": "baseline",
+        "n": 500,
+        "collapsed": {
+          "cards": 500,
+          "htmlBytes": 299598,
+          "activeCardsReported": "NOT_INSTRUMENTED（编辑前没有这个计数钩子）"
+        },
+        "expanded": {
+          "cards": 500,
+          "htmlBytes": 299591,
+          "activeCardsReported": "NOT_INSTRUMENTED（编辑前没有这个计数钩子）"
+        }
+      },
+      {
+        "target": "baseline",
+        "n": 2000,
+        "collapsed": {
+          "cards": 2000,
+          "htmlBytes": 1204599,
+          "activeCardsReported": "NOT_INSTRUMENTED（编辑前没有这个计数钩子）"
+        },
+        "expanded": {
+          "cards": 2000,
+          "htmlBytes": 1204592,
+          "activeCardsReported": "NOT_INSTRUMENTED（编辑前没有这个计数钩子）"
+        }
+      },
+      {
+        "target": "current",
+        "n": 100,
+        "collapsed": {
+          "cards": 0,
+          "htmlBytes": 147,
+          "activeCardsReported": 0
+        },
+        "expanded": {
+          "cards": 100,
+          "htmlBytes": 59591,
+          "activeCardsReported": 100
+        }
+      },
+      {
+        "target": "current",
+        "n": 500,
+        "collapsed": {
+          "cards": 0,
+          "htmlBytes": 147,
+          "activeCardsReported": 0
+        },
+        "expanded": {
+          "cards": 500,
+          "htmlBytes": 299591,
+          "activeCardsReported": 500
+        }
+      },
+      {
+        "target": "current",
+        "n": 2000,
+        "collapsed": {
+          "cards": 0,
+          "htmlBytes": 148,
+          "activeCardsReported": 0
+        },
+        "expanded": {
+          "cards": 2000,
+          "htmlBytes": 1204592,
+          "activeCardsReported": 2000
+        }
+      }
+    ]
+  },
+  "o7": {
+    "note": "卡片容器（#homeDue / #homeActive / #homeEmpty / #homeStart）才是 O7 的目标；#homeSetup / #homeNotice 是独立容器，它们的写入次数单列，不计入「首页卡片容器」。",
+    "baselineDataBoot": {
+      "writes": {
+        "#homeSetup": 4,
+        "#homeNotice": 6,
+        "#homeUpcoming": 3,
+        "#homeDue": 3,
+        "#homeActive": 3,
+        "#homeEmpty": 3,
+        "#homeStart": 3,
+        "#homeReview": 3,
+        "#capProject": 2,
+        "#noteProject": 2,
+        "#activeAlarmPanel": 1
+      },
+      "total": 33
+    },
+    "emptyBoot": {
+      "writes": {
+        "#homeSetup": 1,
+        "#homeNotice": 1,
+        "#homeUpcoming": 1,
+        "#homeDue": 1,
+        "#homeActive": 1,
+        "#homeEmpty": 1,
+        "#homeStart": 1,
+        "#homeReview": 1,
+        "#capProject": 1,
+        "#noteProject": 1,
+        "#activeAlarmPanel": 1
+      },
+      "total": 11,
+      "intervals": [
+        2000,
+        15000
+      ]
+    },
+    "dataBoot": {
+      "writes": {
+        "#homeSetup": 1,
+        "#homeNotice": 3,
+        "#homeUpcoming": 1,
+        "#homeDue": 1,
+        "#homeActive": 1,
+        "#homeEmpty": 1,
+        "#homeStart": 1,
+        "#homeReview": 1,
+        "#capProject": 1,
+        "#noteProject": 1,
+        "#activeAlarmPanel": 1
+      },
+      "total": 13,
+      "dueProcessedImmediately": "due"
+    },
+    "deepLinkFuture": {
+      "writes": {
+        "#homeSetup": 1,
+        "#calMount": 1,
+        "#futureList": 1,
+        "#capProject": 1,
+        "#noteProject": 1,
+        "#homeNotice": 1,
+        "#activeAlarmPanel": 1
+      },
+      "total": 7,
+      "tab": "future"
+    }
+  },
+  "timing": {
+    "baseline_n500": {
+      "target": "baseline",
+      "n": 500,
+      "operation": "applyReminderEvents([]) + applyDeadlineEvents([])，空台账",
+      "warmup": 5,
+      "samplesMs": [
+        1.399333,
+        1.383375,
+        1.470667,
+        1.321417,
+        1.242,
+        1.243083,
+        1.253917,
+        1.2565,
+        1.199375,
+        1.143667,
+        1.203625,
+        1.145084,
+        1.210375,
+        1.151042,
+        1.064792,
+        1.057917,
+        1.071791,
+        1.066292,
+        1.050875,
+        1.050417,
+        1.032583,
+        1.019834,
+        1.88025,
+        1.023583,
+        0.994792,
+        1.086208,
+        1.033125,
+        1.099,
+        1.031041,
+        0.999208,
+        0.99
+      ],
+      "stats": {
+        "n": 31,
+        "min": 0.99,
+        "median": 1.099,
+        "p95": 1.470667,
+        "max": 1.88025,
+        "mean": 1.167
+      }
+    },
+    "current_n500": {
+      "target": "current",
+      "n": 500,
+      "operation": "applyReminderEvents([]) + applyDeadlineEvents([])，空台账",
+      "warmup": 5,
+      "samplesMs": [
+        0.366625,
+        0.351542,
+        0.425333,
+        0.334584,
+        0.320083,
+        0.325916,
+        0.316709,
+        0.315083,
+        0.319208,
+        0.319083,
+        0.346167,
+        0.351708,
+        1.101917,
+        0.344625,
+        0.321291,
+        0.30975,
+        0.311958,
+        0.316167,
+        0.313791,
+        0.298375,
+        0.290792,
+        0.292333,
+        0.29325,
+        0.289875,
+        0.291584,
+        0.292083,
+        0.2925,
+        0.292166,
+        0.290041,
+        0.292083,
+        0.290541
+      ],
+      "stats": {
+        "n": 31,
+        "min": 0.289875,
+        "median": 0.315083,
+        "p95": 0.425333,
+        "max": 1.101917,
+        "mean": 0.342
+      }
+    },
+    "current_n2000": {
+      "target": "current",
+      "n": 2000,
+      "operation": "applyReminderEvents([]) + applyDeadlineEvents([])，空台账",
+      "warmup": 5,
+      "samplesMs": [
+        1.310208,
+        1.321792,
+        1.265625,
+        1.252625,
+        1.25425,
+        1.268,
+        1.957167,
+        1.200667,
+        1.184584,
+        1.175833,
+        1.166708,
+        1.121625,
+        1.134667,
+        1.127917,
+        1.094667,
+        1.101875,
+        1.247584,
+        1.104541,
+        1.094875,
+        1.116416,
+        1.184666,
+        1.108917,
+        1.102917,
+        1.112708,
+        1.091834,
+        1.085917,
+        1.232125,
+        1.080542,
+        1.074709,
+        1.083833,
+        1.077166
+      ],
+      "stats": {
+        "n": 31,
+        "min": 1.074709,
+        "median": 1.127917,
+        "p95": 1.321792,
+        "max": 1.957167,
+        "mean": 1.185
+      }
+    }
+  }
+}

@@ -1,0 +1,3 @@
+Initial check: {"ready": true, "hasContract": true, "entryRendered": true, "sheetOpen": true, "cardTitleMatched": true, "scheduleOpen": true, "scheduleClosed": true, "completed": true, "sheetClosedByDone": true, "reviewIndexAfterFault": 0, "completedAfterFault": false, "cardHasConfirm": true, "persistedStatusDuringFault": "NEEDS_REVIEW", "reviewIndexAfterRetry": 1, "completedAfterRetry": true}
+After reload: {"ready": true, "reloadedStatus": "REVIEWED", "reloadedTitle": "编辑后标题"}
+All browser review checks PASSED

@@ -1,0 +1,5 @@
+<?xml version='1.0' encoding='utf-8' standalone='yes' ?>
+<map>
+    <int name="schemaVersion" value="1" />
+    <string name="alarms">[{&quot;id&quot;:1354819241,&quot;triggerAtMs&quot;:1789908660032,&quot;triggerAt&quot;:1789908660032,&quot;scheduleBasis&quot;:&quot;wall-clock&quot;,&quot;localTrigger&quot;:&quot;2026-09-20T20:51:00&quot;,&quot;title&quot;:&quot;☆ 重要事项&quot;,&quot;body&quot;:&quot;交房租&quot;,&quot;itemId&quot;:&quot;i_8zju7b9emu5j3pv6&quot;,&quot;level&quot;:&quot;☆ 重要&quot;,&quot;itemRev&quot;:&quot;2&quot;}]</string>
+</map>

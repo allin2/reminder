@@ -1,0 +1,30 @@
+{
+  "id": "diag-foreground-1789881032983",
+  "rev": 1,
+  "triggerAt": 1789881062000,
+  "localTrigger": "2026-09-20T13:11:02",
+  "priority": "important",
+  "delivery_mode": "alarm",
+  "reminderEvents": {
+    "0@1789881062000": {
+      "at": 1789881062000,
+      "state": "scheduled",
+      "roundBase": 1789881062000
+    },
+    "1@1789882862000": {
+      "at": 1789882862000,
+      "state": "scheduled",
+      "roundBase": 1789881062000
+    },
+    "2@1789884662000": {
+      "at": 1789884662000,
+      "state": "scheduled",
+      "roundBase": 1789881062000
+    },
+    "3@1789886462000": {
+      "at": 1789886462000,
+      "state": "scheduled",
+      "roundBase": 1789881062000
+    }
+  }
+}

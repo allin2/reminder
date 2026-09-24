@@ -1,0 +1,36 @@
+45-    Temp exemption list appids: [1000, 10558]
+46-    Exempted bucket packages:
+47-      User 0
+48:        space.alliswell.inbox
+49-    
+50-    Restricted packages:
+51-      u0a393 com.autonavi.minimap
+--
+427-      policyWhenElapsed: requester=+46m49s829ms app_standby=-1h3m4s172ms device_idle=-- battery_saver=-3h29m32s568ms adjustment=+48m6s149ms
+428-      whenElapsed=+48m6s149ms maxWhenElapsed=+48m6s149ms
+429-      operation=PendingIntent{3122811: PendingIntentRecord{a2d9f0a com.oplus.metis broadcastIntent}}
+430:    RTC_WAKEUP #52: Alarm{319b744 type 0 origWhen 1789914600000 whenElapsed 243016569 space.alliswell.inbox} uid 10558 whenElapsed 243016569 windowLength 2181336 maxWhenElapsed 245197905 repeatInterval 0 action null component ComponentInfo{space.alliswell.inbox/com.capacitorjs.plugins.localnotifications.TimedNotificationPublisher} flags 0x8 procName space.alliswell.inbox
+431:      tag=*walarm*:space.alliswell.inbox/com.capacitorjs.plugins.localnotifications.TimedNotificationPublisher
+432-      type=RTC_WAKEUP origWhen=2026-09-20 22:30:00.000 window=+36m21s336ms exactAllowReason=permission repeatInterval=0 count=0 flags=0x8
+433-      policyWhenElapsed: requester=+48m22s718ms app_standby=-5s731ms device_idle=-- battery_saver=-5s731ms adjustment=--
+434-      whenElapsed=+48m22s718ms maxWhenElapsed=+1h24m44s54ms
+435:      operation=PendingIntent{a61f02d: PendingIntentRecord{2af2962 space.alliswell.inbox broadcastIntent}}
+436-      idle-options=Bundle[{android.pendingIntent.backgroundActivityAllowed=2, android:broadcast.temporaryAppAllowlistReasonCode=302, android:broadcast.temporaryAppAllowlistDuration=10000, android:broadcast.temporaryAppAllowlistReason=, android:broadcast.temporaryAppAllowlistType=0, android:broadcast.flags=8}]
+437-    ELAPSED #53: Alarm{6fcaaf3 type 3 origWhen 243666069 whenElapsed 243666069 com.oplus.powermonitor} uid 1000 whenElapsed 243666069 windowLength 2700000 maxWhenElapsed 246366069 repeatInterval 0 action oplus.intent.action.ACTION_PWST_PERIODIC_UPDATE component ComponentInfo{com.oplus.powermonitor/com.oplus.powermonitor.standbymonitor.PowerConnectionReceiver} flags 0x8 procName com.oplus.powermonitor
+438-      tag=*alarm*:oplus.intent.action.ACTION_PWST_PERIODIC_UPDATE
+--
+3261-    u0a558:
+3262-      #1: Reason=alarm_cancelled elapsed=-5s740ms rtc=2026-09-20 21:41:31.543
+3263-        Snapshot:
+3264:          type=RTC_WAKEUP tag=*walarm*:space.alliswell.inbox/com.capacitorjs.plugins.localnotifications.TimedNotificationPublisher 
+3265-          policyWhenElapsed: requester=+48m22s717ms app_standby=-32s645ms device_idle=-- battery_saver=-6s105ms adjustment=--
+3266-      #2: Reason=alarm_cancelled elapsed=-2h12m51s426ms rtc=2026-09-20 19:28:45.857
+3267-        Snapshot:
+3268:          type=RTC_WAKEUP tag=*walarm*:space.alliswell.inbox/com.capacitorjs.plugins.localnotifications.TimedNotificationPublisher 
+3269-          policyWhenElapsed: requester=-11m37s283ms app_standby=-2h39m23s429ms device_idle=-- battery_saver=-2h13m41s594ms adjustment=-11m53s851ms
+3270-      #3: Reason=alarm_cancelled elapsed=-2h12m51s430ms rtc=2026-09-20 19:28:45.852
+3271-        Snapshot:
+3272:          type=RTC_WAKEUP tag=*walarm*:space.alliswell.inbox/com.capacitorjs.plugins.localnotifications.TimedNotificationPublisher 
+3273-          policyWhenElapsed: requester=+48m22s718ms app_standby=-2h39m23s429ms device_idle=-- battery_saver=-2h13m41s594ms adjustment=+48m6s149ms
+3274-    u999a99:
+3275-      #1: Reason=alarm_cancelled elapsed=-17m45s650ms rtc=2026-09-20 21:23:51.632

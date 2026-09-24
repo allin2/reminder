@@ -1,0 +1,31 @@
+# 生产脚本组合核对（静态，从 index.html 推导；本脚本不执行任何被核对的脚本）
+# captured at: 2026-09-20T09:46:17.415Z
+
+## index.html 外部脚本顺序（8 支）
+  1. lib/parse-cn.js  (24005 bytes, sha256 79b12b5ba0621a11)
+  2. lib/repeat.js  (5945 bytes, sha256 8b01c7e3b1f926bc)
+  3. lib/reminder.js  (5598 bytes, sha256 886ab9eb1a438b34)
+  4. lib/storage.js  (5006 bytes, sha256 d7f5ca0d766f796c)
+  5. lib/feedback.js  (15702 bytes, sha256 94d7133657bcf5b0)
+  6. lib/delivery-evidence.js  (15664 bytes, sha256 7ee77186881d8462)
+  7. lib/native-reminders.js  (61071 bytes, sha256 718cc42589df3f6a)
+  8. app-core.js  (386621 bytes, sha256 3055d7a166040bf1)
+
+## 正向：这份清单本身合法
+  inspectList                          = []
+  precacheProblems(sw.js ASSETS)       = []
+  packagingProblems(scripts/sync-www.js) = []
+
+## 反向对照（每一条都必须被报出来，否则判定没有牙齿）
+  ① 清单里删掉 lib/native-reminders.js（模拟四件套漏一处）
+     coverageProblems = ["unaccounted-production-script:lib/native-reminders.js（本 harness 既没加载它，也没声明替代注入或有意的缺席；app-core 的 `|| {}` 兜底会让这个缺口静默通过）"]
+  ② app-core.js 提到最前（顺序错）
+     inspectList = ["app-core-not-last:index=0/7（app-core 在 IIFE 开头就取 AttentionLib / AttentionNativeReminders，必须最后加载）","lib-after-app-core:lib/parse-cn.js","lib-after-app-core:lib/repeat.js","lib-after-app-core:lib/reminder.js","lib-after-app-core:lib/storage.js","lib-after-app-core:lib/feedback.js","lib-after-app-core:lib/delivery-evidence.js","lib-after-app-core:lib/native-reminders.js"]
+  ③ 加载期依赖倒置（native-reminders 与 reminder 互换）
+     inspectList = ["load-order:lib/native-reminders.js 在 lib/reminder.js 之前（它在求值时就把 AttentionLib.deadlineStageKey/deadlineStagePoints 抓进闭包常量 Lib，而那三个标识符定义在 lib/reminder.js）"]
+  ④ 清单里塞进一支形状不合法的脚本
+     inspectList = ["unknown-script:vendor/jquery.js（只允许 app-core.js 与 lib/*.js）"]
+  ⑤ 清单里塞进一个不存在的文件
+     inspectList = ["missing-file:lib/ghost.js"]
+
+## 生产组合本身没有变化：本轮未增删 index.html 的外部脚本，故 sw.js / sync-www.js 无需同步改动

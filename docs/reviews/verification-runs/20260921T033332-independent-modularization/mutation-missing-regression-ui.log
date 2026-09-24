@@ -1,0 +1,28 @@
+
+== N5 / D13 整理四条即时落盘，重启仅继续剩余六条 ==
+Startup dependency check failed: [
+  {
+    path: 'AppUi',
+    expected: 'object',
+    actual: 'undefined',
+    why: 'lib/app-ui.js 未加载 —— DOM 查询/弹层/toast/确认框全部失效：界面看似能渲染，但点不动、也没有任何反馈'
+  },
+  {
+    path: 'AppUi.createUi',
+    expected: 'function',
+    actual: 'undefined',
+    why: 'lib/app-ui.js 导出被破坏（展示能力装配入口）'
+  },
+  {
+    path: 'AppUi.safeExternalHref',
+    expected: 'function',
+    actual: 'undefined',
+    why: 'lib/app-ui.js 导出被破坏 —— 外链协议白名单失效：`javascript:` / `data:` 这类用户数据可能被渲染成可点 href'
+  }
+]
+Failed to render startup failure: host.insertBefore is not a function
+TypeError: openSheet is not a function
+    at Object.openReviewSession (app-core.js:1329:5)
+    at run (/Users/qlyf/Developer/reminder/docs/reviews/verification-runs/20260921T033332-independent-modularization/mutation-copy/test-regressions.js:451:9)
+
+EXIT_CODE=1

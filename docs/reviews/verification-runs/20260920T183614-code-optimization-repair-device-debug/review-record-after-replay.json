@@ -1,0 +1,26 @@
+{
+  "id": 13,
+  "result": {
+    "result": {
+      "type": "object",
+      "value": {
+        "record": [
+          {
+            "id": "i_cj2tk9nimu9k6g6n",
+            "title": "<personal-item-title-1>",
+            "status": "waiting",
+            "triggerAt": 1789911000000,
+            "localTrigger": "2026-09-20T21:30",
+            "review_status": "NEEDS_REVIEW",
+            "reviewed_at": null,
+            "isFallbackTrigger": true,
+            "createdAt": 1789893169007,
+            "rev": 3
+          }
+        ],
+        "queueCount": 1,
+        "pendingReplay": null
+      }
+    }
+  }
+}

@@ -1,0 +1,95 @@
+[
+  {
+    name: 'control-complete-android',
+    ready: true,
+    puts: 1,
+    errors: [],
+    action: {
+      saved: true,
+      schedule: 0,
+      scheduleAlarm: 0,
+      startupFailure: null
+    },
+    actionError: undefined,
+    capturedParseType: undefined
+  },
+  {
+    name: 'missing-native-script-android',
+    ready: true,
+    puts: 0,
+    errors: [],
+    action: {
+      saved: true,
+      schedule: 0,
+      scheduleAlarm: 0,
+      startupFailure: null
+    },
+    actionError: undefined,
+    capturedParseType: undefined
+  },
+  {
+    name: 'missing-app-ui-control',
+    ready: false,
+    puts: 0,
+    errors: [
+      'Startup dependency check failed: [object Object],[object Object],[object Object]'
+    ],
+    action: undefined,
+    actionError: undefined,
+    capturedParseType: undefined
+  },
+  {
+    name: 'feedback-missing-setupSteps',
+    ready: false,
+    puts: 1,
+    errors: [ 'App init failed: f.setupSteps is not a function' ],
+    action: undefined,
+    actionError: undefined,
+    capturedParseType: undefined
+  },
+  {
+    name: 'feedback-null',
+    ready: true,
+    puts: 1,
+    errors: [],
+    action: undefined,
+    actionError: undefined,
+    capturedParseType: undefined
+  },
+  {
+    name: 'evidence-missing-normalizeEvidence',
+    ready: true,
+    puts: 1,
+    errors: [],
+    action: undefined,
+    actionError: 'EvidenceLib.normalizeEvidence is not a function',
+    capturedParseType: undefined
+  },
+  {
+    name: 'app-ui-incomplete-factory',
+    ready: false,
+    puts: 0,
+    errors: [ 'App init failed: $ is not a function' ],
+    action: undefined,
+    actionError: undefined,
+    capturedParseType: undefined
+  },
+  {
+    name: 'native-missing-constant',
+    ready: true,
+    puts: 1,
+    errors: [],
+    action: undefined,
+    actionError: undefined,
+    capturedParseType: undefined
+  },
+  {
+    name: 'retry-after-parser-arrives',
+    ready: undefined,
+    puts: undefined,
+    errors: undefined,
+    action: undefined,
+    actionError: undefined,
+    capturedParseType: 'undefined'
+  }
+]

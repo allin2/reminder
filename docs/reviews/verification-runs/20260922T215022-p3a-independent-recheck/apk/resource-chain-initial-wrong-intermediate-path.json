@@ -1,0 +1,234 @@
+{
+  "sourceAssetCount": 28,
+  "passCount": 0,
+  "rows": [
+    {
+      "path": "app-core.js",
+      "sourceSha256": "805d1bec1fef0689d34b41c091b25715deaec8efd22d2838a3f56d5f7760a05a",
+      "wwwToAndroid": true,
+      "wwwToIntermediate": false,
+      "wwwToApk": true,
+      "apkEntry": true
+    },
+    {
+      "path": "icon-192.png",
+      "sourceSha256": "48e5078385c990aa02f164874609dccb1108a54cdb8fb8882bdbfb3caaf38411",
+      "wwwToAndroid": true,
+      "wwwToIntermediate": false,
+      "wwwToApk": true,
+      "apkEntry": true
+    },
+    {
+      "path": "icon-512.png",
+      "sourceSha256": "a558b0502031e078b7a3087779f2777dffe5f5f7f8ccb3869783cc28f776f3af",
+      "wwwToAndroid": true,
+      "wwwToIntermediate": false,
+      "wwwToApk": true,
+      "apkEntry": true
+    },
+    {
+      "path": "icon.svg",
+      "sourceSha256": "fb09a46eae6dcd7c165811710d8fb91ae47f4273bb7228711076ea016ce8ddbb",
+      "wwwToAndroid": true,
+      "wwwToIntermediate": false,
+      "wwwToApk": true,
+      "apkEntry": true
+    },
+    {
+      "path": "index.html",
+      "sourceSha256": "3c0d060a1e8ce2d88bd0192976059a75ffa04a4c2a40c30ec8b12877bd6b091d",
+      "wwwToAndroid": true,
+      "wwwToIntermediate": false,
+      "wwwToApk": true,
+      "apkEntry": true
+    },
+    {
+      "path": "lib/app-ai.js",
+      "sourceSha256": "e55a286009b102129e2efe3e1bdc0a9dc8b9fbb2f1bd4884b02b56d8e20862d9",
+      "wwwToAndroid": true,
+      "wwwToIntermediate": false,
+      "wwwToApk": true,
+      "apkEntry": true
+    },
+    {
+      "path": "lib/app-backup.js",
+      "sourceSha256": "6871da9c87c906b943762a75c73573cbf9b9c13c84c40e8860652f3a3c8104e0",
+      "wwwToAndroid": true,
+      "wwwToIntermediate": false,
+      "wwwToApk": true,
+      "apkEntry": true
+    },
+    {
+      "path": "lib/app-capture.js",
+      "sourceSha256": "cbf3285f427c8aec7394b8305255a545e84c4ec8152faf0d1d8c6ce35da57a4b",
+      "wwwToAndroid": true,
+      "wwwToIntermediate": false,
+      "wwwToApk": true,
+      "apkEntry": true
+    },
+    {
+      "path": "lib/app-content.js",
+      "sourceSha256": "82be748ea5719244cb725602a78599c1daff9a7fc349128d3e64eb7d76ab4289",
+      "wwwToAndroid": true,
+      "wwwToIntermediate": false,
+      "wwwToApk": true,
+      "apkEntry": true
+    },
+    {
+      "path": "lib/app-diagnostics.js",
+      "sourceSha256": "36f91c1b7612628e6b7fab7c6d99560afd132f72ecc6c3df4622ad5df3c78b54",
+      "wwwToAndroid": true,
+      "wwwToIntermediate": false,
+      "wwwToApk": true,
+      "apkEntry": true
+    },
+    {
+      "path": "lib/app-model.js",
+      "sourceSha256": "0219c576a82d4df6fefe4dca62561c491f1b36c97d59de426afff7ccad41f94e",
+      "wwwToAndroid": true,
+      "wwwToIntermediate": false,
+      "wwwToApk": true,
+      "apkEntry": true
+    },
+    {
+      "path": "lib/app-setup.js",
+      "sourceSha256": "e7b000620da77777f0bd1cc5537d1f4a87aee0efc7aed6566d9248077a8ce112",
+      "wwwToAndroid": true,
+      "wwwToIntermediate": false,
+      "wwwToApk": true,
+      "apkEntry": true
+    },
+    {
+      "path": "lib/app-ui.js",
+      "sourceSha256": "84e3e97663c2a7525ff25432f335a5a422791c83e26f81014b34443d63b632e4",
+      "wwwToAndroid": true,
+      "wwwToIntermediate": false,
+      "wwwToApk": true,
+      "apkEntry": true
+    },
+    {
+      "path": "lib/app-views.js",
+      "sourceSha256": "2ef2c72b6319feb3414fd07914804296d4f9fa7888a834b3d95f1a98b2fafa37",
+      "wwwToAndroid": true,
+      "wwwToIntermediate": false,
+      "wwwToApk": true,
+      "apkEntry": true
+    },
+    {
+      "path": "lib/date-utils.js",
+      "sourceSha256": "7328f1e6ec1634a523deb21ba96ff9f9bf50f6b2ebe827b3a1e7765394cdb46c",
+      "wwwToAndroid": true,
+      "wwwToIntermediate": false,
+      "wwwToApk": true,
+      "apkEntry": true
+    },
+    {
+      "path": "lib/delivery-evidence.js",
+      "sourceSha256": "7ee77186881d8462450c8fe8a550840647ec9d7626c259fb9e29768290062d03",
+      "wwwToAndroid": true,
+      "wwwToIntermediate": false,
+      "wwwToApk": true,
+      "apkEntry": true
+    },
+    {
+      "path": "lib/export-format.js",
+      "sourceSha256": "37e60a07624c2dda1f1afadec8c1b2d61fe5b4a5a34b4c9c82f2c10ed0270423",
+      "wwwToAndroid": true,
+      "wwwToIntermediate": false,
+      "wwwToApk": true,
+      "apkEntry": true
+    },
+    {
+      "path": "lib/feedback.js",
+      "sourceSha256": "bfe41dd392d5ff27d8c92b41154fc7e4e5a125eaaa1c8fae6ae3298186669eb3",
+      "wwwToAndroid": true,
+      "wwwToIntermediate": false,
+      "wwwToApk": true,
+      "apkEntry": true
+    },
+    {
+      "path": "lib/import-extract.js",
+      "sourceSha256": "edd959660e9fb9525ba7c290cde3019a81d53f1873c0ce31af24da30e1714bfa",
+      "wwwToAndroid": true,
+      "wwwToIntermediate": false,
+      "wwwToApk": true,
+      "apkEntry": true
+    },
+    {
+      "path": "lib/import-map.js",
+      "sourceSha256": "51fe5528bb7189400946685ab0b9e9819f71eae8096166920deb048a4a0529d9",
+      "wwwToAndroid": true,
+      "wwwToIntermediate": false,
+      "wwwToApk": true,
+      "apkEntry": true
+    },
+    {
+      "path": "lib/native-reminders.js",
+      "sourceSha256": "723f218c68866309f364e1e71968eb3efc6ae8b9b85aea7e211c878bee6e031b",
+      "wwwToAndroid": true,
+      "wwwToIntermediate": false,
+      "wwwToApk": true,
+      "apkEntry": true
+    },
+    {
+      "path": "lib/parse-cn.js",
+      "sourceSha256": "80c6e4db43ebe018c2fc90fbe1e8b1cc126be801aec5ae790490cb5fe53a9f9d",
+      "wwwToAndroid": true,
+      "wwwToIntermediate": false,
+      "wwwToApk": true,
+      "apkEntry": true
+    },
+    {
+      "path": "lib/reminder.js",
+      "sourceSha256": "886ab9eb1a438b34122b71a461ed89a4a5b37fa85dedf8ee7afa558ee58f62fd",
+      "wwwToAndroid": true,
+      "wwwToIntermediate": false,
+      "wwwToApk": true,
+      "apkEntry": true
+    },
+    {
+      "path": "lib/repeat.js",
+      "sourceSha256": "d48b8d67336976c4d514101b9990c904d8a00a9aa1ecabf3fe6abace86afd83a",
+      "wwwToAndroid": true,
+      "wwwToIntermediate": false,
+      "wwwToApk": true,
+      "apkEntry": true
+    },
+    {
+      "path": "lib/storage.js",
+      "sourceSha256": "b710ec23d819dfdc7eeeafa4688e44d69a11062a18c35b931c2240177721478a",
+      "wwwToAndroid": true,
+      "wwwToIntermediate": false,
+      "wwwToApk": true,
+      "apkEntry": true
+    },
+    {
+      "path": "lib/ui-format.js",
+      "sourceSha256": "3dcccc41863aef136abe513527d79955c5b80be9d997f5ff90d68f0fd5850c9f",
+      "wwwToAndroid": true,
+      "wwwToIntermediate": false,
+      "wwwToApk": true,
+      "apkEntry": true
+    },
+    {
+      "path": "manifest.json",
+      "sourceSha256": "660c2314cc921232ed9f9c3f7271839f57109e6640e1a9b0cf2a7259ca42e2f1",
+      "wwwToAndroid": true,
+      "wwwToIntermediate": false,
+      "wwwToApk": true,
+      "apkEntry": true
+    },
+    {
+      "path": "sw.js",
+      "sourceSha256": "dd3ca91f891a56ff54e7791be905aa6dc7dce5f148a57b24431d02633f7b1fdf",
+      "wwwToAndroid": true,
+      "wwwToIntermediate": false,
+      "wwwToApk": true,
+      "apkEntry": true
+    }
+  ],
+  "generatedExtras": [
+    "assets/public/cordova.js",
+    "assets/public/cordova_plugins.js"
+  ]
+}

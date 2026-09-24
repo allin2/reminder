@@ -1,0 +1,400 @@
+09-20 23:49:17.306 23644 23644 D ActivityThread: Package [space.alliswell.inbox] reported as REPLACED, but missing application info. Assuming REMOVED.
+09-20 23:49:17.306 29012 29012 D ActivityThread: Package [space.alliswell.inbox] reported as REPLACED, but missing application info. Assuming REMOVED.
+09-20 23:49:17.307  7269  7269 D ActivityThread: Package [space.alliswell.inbox] reported as REPLACED, but missing application info. Assuming REMOVED.
+09-20 23:49:17.307 23180 23180 D ActivityThread: Package [space.alliswell.inbox] reported as REPLACED, but missing application info. Assuming REMOVED.
+09-20 23:49:17.307 28332 28332 D ActivityThread: Package [space.alliswell.inbox] reported as REPLACED, but missing application info. Assuming REMOVED.
+09-20 23:49:17.307  8109  8109 D ActivityThread: Package [space.alliswell.inbox] reported as REPLACED, but missing application info. Assuming REMOVED.
+09-20 23:49:17.307  5311  5311 D ActivityThread: Package [space.alliswell.inbox] reported as REPLACED, but missing application info. Assuming REMOVED.
+09-20 23:49:17.308  6147  6147 D ActivityThread: Package [space.alliswell.inbox] reported as REPLACED, but missing application info. Assuming REMOVED.
+09-20 23:49:17.310  7265  7265 D ActivityThread: Package [space.alliswell.inbox] reported as REPLACED, but missing application info. Assuming REMOVED.
+09-20 23:49:17.310 25978 25978 D ActivityThread: Package [space.alliswell.inbox] reported as REPLACED, but missing application info. Assuming REMOVED.
+09-20 23:49:17.312 23442 23442 D ActivityThread: Package [space.alliswell.inbox] reported as REPLACED, but missing application info. Assuming REMOVED.
+09-20 23:49:17.312 23300 23300 D ActivityThread: Package [space.alliswell.inbox] reported as REPLACED, but missing application info. Assuming REMOVED.
+09-20 23:49:17.313 23337 23337 D ActivityThread: Package [space.alliswell.inbox] reported as REPLACED, but missing application info. Assuming REMOVED.
+09-20 23:49:17.313  6708  6708 D ActivityThread: Package [space.alliswell.inbox] reported as REPLACED, but missing application info. Assuming REMOVED.
+09-20 23:49:17.313 23393 23393 D ActivityThread: Package [space.alliswell.inbox] reported as REPLACED, but missing application info. Assuming REMOVED.
+09-20 23:49:17.313 23377 23377 D ActivityThread: Package [space.alliswell.inbox] reported as REPLACED, but missing application info. Assuming REMOVED.
+09-20 23:49:17.313  4299  4299 D ActivityThread: Package [space.alliswell.inbox] reported as REPLACED, but missing application info. Assuming REMOVED.
+09-20 23:49:17.314  8133  8133 D ActivityThread: Package [space.alliswell.inbox] reported as REPLACED, but missing application info. Assuming REMOVED.
+09-20 23:49:17.315 12360 12360 D ActivityThread: Package [space.alliswell.inbox] reported as REPLACED, but missing application info. Assuming REMOVED.
+09-20 23:49:17.315 24198 24198 D ActivityThread: Package [space.alliswell.inbox] reported as REPLACED, but missing application info. Assuming REMOVED.
+09-20 23:49:17.316 28115 28115 D ActivityThread: Package [space.alliswell.inbox] reported as REPLACED, but missing application info. Assuming REMOVED.
+09-20 23:49:17.316 24110 24110 D ActivityThread: Package [space.alliswell.inbox] reported as REPLACED, but missing application info. Assuming REMOVED.
+09-20 23:49:17.317  3666  3666 D ActivityThread: Package [space.alliswell.inbox] reported as REPLACED, but missing application info. Assuming REMOVED.
+09-20 23:49:17.317  7649  7649 D ActivityThread: Package [space.alliswell.inbox] reported as REPLACED, but missing application info. Assuming REMOVED.
+09-20 23:49:17.318 20635 20635 D ActivityThread: Package [space.alliswell.inbox] reported as REPLACED, but missing application info. Assuming REMOVED.
+09-20 23:49:17.318  3369  3369 D ActivityThread: Package [space.alliswell.inbox] reported as REPLACED, but missing application info. Assuming REMOVED.
+09-20 23:49:17.319  9479  9479 D ActivityThread: Package [space.alliswell.inbox] reported as REPLACED, but missing application info. Assuming REMOVED.
+09-20 23:49:17.319 24281 24281 D ActivityThread: Package [space.alliswell.inbox] reported as REPLACED, but missing application info. Assuming REMOVED.
+09-20 23:49:17.319 23329 23329 D ActivityThread: Package [space.alliswell.inbox] reported as REPLACED, but missing application info. Assuming REMOVED.
+09-20 23:49:17.319 23506 23506 D ActivityThread: Package [space.alliswell.inbox] reported as REPLACED, but missing application info. Assuming REMOVED.
+09-20 23:49:17.319 20821 20821 D ActivityThread: Package [space.alliswell.inbox] reported as REPLACED, but missing application info. Assuming REMOVED.
+09-20 23:49:17.319 11755 11755 D ActivityThread: Package [space.alliswell.inbox] reported as REPLACED, but missing application info. Assuming REMOVED.
+09-20 23:49:17.320  3574  3574 D ActivityThread: Package [space.alliswell.inbox] reported as REPLACED, but missing application info. Assuming REMOVED.
+09-20 23:49:17.320  3401  3401 D ActivityThread: Package [space.alliswell.inbox] reported as REPLACED, but missing application info. Assuming REMOVED.
+09-20 23:49:17.320  3522  3522 D ActivityThread: Package [space.alliswell.inbox] reported as REPLACED, but missing application info. Assuming REMOVED.
+09-20 23:49:17.320  2021  2021 D ActivityThread: Package [space.alliswell.inbox] reported as REPLACED, but missing application info. Assuming REMOVED.
+09-20 23:49:17.320  3458  3458 D ActivityThread: Package [space.alliswell.inbox] reported as REPLACED, but missing application info. Assuming REMOVED.
+09-20 23:49:17.320  3028  3028 D ActivityThread: Package [space.alliswell.inbox] reported as REPLACED, but missing application info. Assuming REMOVED.
+09-20 23:49:17.320  3559  3559 D ActivityThread: Package [space.alliswell.inbox] reported as REPLACED, but missing application info. Assuming REMOVED.
+09-20 23:49:17.321  3420  3420 D ActivityThread: Package [space.alliswell.inbox] reported as REPLACED, but missing application info. Assuming REMOVED.
+09-20 23:49:17.322  3037  3037 D ActivityThread: Package [space.alliswell.inbox] reported as REPLACED, but missing application info. Assuming REMOVED.
+09-20 23:49:17.322  3489  3489 D ActivityThread: Package [space.alliswell.inbox] reported as REPLACED, but missing application info. Assuming REMOVED.
+09-20 23:49:17.322  3614  3614 D ActivityThread: Package [space.alliswell.inbox] reported as REPLACED, but missing application info. Assuming REMOVED.
+09-20 23:49:17.323  3372  3372 D ActivityThread: Package [space.alliswell.inbox] reported as REPLACED, but missing application info. Assuming REMOVED.
+09-20 23:49:17.323 27857 27857 D ActivityThread: Package [space.alliswell.inbox] reported as REPLACED, but missing application info. Assuming REMOVED.
+09-20 23:49:17.323  2021  2070 D FlexibleWindowUtils: use pkg to determine whether support flexible while ar is null, task:Task{4eb9925 #18744 type=standard A=10558:space.alliswell.inbox}
+09-20 23:49:17.323  2021  2070 D OplusTransitionAnimationManager:    ChangeInfo{2087d4b container=Task{4eb9925 #18744 type=standard A=10558:space.alliswell.inbox} flags=0x0}
+09-20 23:49:17.323  2021  2070 D OplusTransitionAnimationManager:    ChangeInfo{c69777d container=ActivityRecord{244030958 u0 space.alliswell.inbox/.MainActivity t18744 f} isExiting} flags=0x0}
+09-20 23:49:17.324  2021  2070 W WindowManager: captureTaskSnapshot mSnapshotMode= 0 source=Task{4eb9925 #18744 type=standard A=10558:space.alliswell.inbox}
+09-20 23:49:17.324 23626 23626 D ActivityThread: Package [space.alliswell.inbox] reported as REPLACED, but missing application info. Assuming REMOVED.
+09-20 23:49:17.325 23626 23626 D ActivityThread: Package [space.alliswell.inbox] reported as REPLACED, but missing application info. Assuming REMOVED.
+09-20 23:49:17.324  5494  5494 D ActivityThread: Package [space.alliswell.inbox] reported as REPLACED, but missing application info. Assuming REMOVED.
+09-20 23:49:17.325 26418 26418 D ActivityThread: Package [space.alliswell.inbox] reported as REPLACED, but missing application info. Assuming REMOVED.
+09-20 23:49:17.329  2021  2070 D TaskSnapshotCache: putSnapshot mRunningCache top= ActivityRecord{244030958 u0 space.alliswell.inbox/.MainActivity t18744 f} isExiting}, mTaskId=18744, snapshot=TaskSnapshot{ mId=1789919357324 mCaptureTime=247773898207731 mTopActivityComponent=space.alliswell.inbox/.MainActivity mSnapshot=android.hardware.HardwareBuffer@2bbd01f (1080x2376) mColorSpace=sRGB IEC61966-2.1 (id=0, model=RGB) mOrientation=1 mRotation=0 mTaskSize=Point(1080, 2376) mOplusCompatMode=false mTopActivityBounds=[0,120][1080,2328] mHasDimLayer=false mContentInsets=[0,120][0,48] mLetterboxInsets=[0,0][0,0] mIsLowResolution=false mIsRealSnapshot=true mWindowingMode=1 mAppearance=0 mIsTranslucent=false mHasImeSurface=false mInternalReferences=2 mUiMode=11 mSnapshotColor=0 mSnapshotBundle=Bundle[{}], mAppIdMap size= 24
+09-20 23:49:17.329  2021  2066 V WindowManager: Sent Transition (#4682) createdAt=09-20 23:49:17.115 via request=TransitionRequestInfo { type = CLOSE, triggerTask = TaskInfo{userId=0 taskId=18744 effectiveUid=10558 displayId=0 isRunning=false baseIntent=Intent { flg=0x10000000 cmp=space.alliswell.inbox/.MainActivity mCallingUid=2000 } baseActivity=null topActivity=null origActivity=null realActivity=ComponentInfo{space.alliswell.inbox/space.alliswell.inbox.MainActivity}
+09-20 23:49:17.329  2021  2066 V WindowManager:  numActivities=0 lastActiveTime=247738480 supportsSplitScreenMultiWindow=true supportsMultiWindow=true supportsPocketStudioMultiWindow=true isInFlexibleEmbedded = false uid = -1 pid = -1 resizeMode=1 isResizeable=true minWidth=-1 minHeight=-1 defaultMinSize=220 token=WCT{RemoteToken{f87e8ae Task{4eb9925 #18744 type=standard A=10558:space.alliswell.inbox}}} topActivityType=1 pictureInPictureParams=null shouldDockBigOverlays=false launchIntoPipHostTaskId=-1 lastParentTaskIdBeforePip=-1 displayCutoutSafeInsets=Rect(0, 0 - 0, 0)
+09-20 23:49:17.330  2021  2066 V WindowManager:         {WCT{RemoteToken{f87e8ae Task{4eb9925 #18744 type=standard A=10558:space.alliswell.inbox}}} m=CLOSE f=NONE leash=Surface(name=Task=18744)/@0x32b457c sb=Rect(0, 0 - 1080, 2376) eb=Rect(0, 0 - 1080, 2376) epz=Point(1080, 2376) d=0 taskParent=-1}
+09-20 23:49:17.330 23520 23520 D ActivityThread: Package [space.alliswell.inbox] reported as REPLACED, but missing application info. Assuming REMOVED.
+09-20 23:49:17.332 17040 17040 D ActivityThread: Package [space.alliswell.inbox] reported as REPLACED, but missing application info. Assuming REMOVED.
+09-20 23:49:17.332 17040 17040 D ActivityThread: Package [space.alliswell.inbox] reported as REPLACED, but missing application info. Assuming REMOVED.
+09-20 23:49:17.334  3341  3341 D ActivityThread: Package [space.alliswell.inbox] reported as REPLACED, but missing application info. Assuming REMOVED.
+09-20 23:49:17.336  5589  5589 D ActivityThread: Package [space.alliswell.inbox] reported as REPLACED, but missing application info. Assuming REMOVED.
+09-20 23:49:17.342 24965 24965 D ActivityThread: Package [space.alliswell.inbox] reported as REPLACED, but missing application info. Assuming REMOVED.
+09-20 23:49:17.342 11303 11303 D ActivityThread: Package [space.alliswell.inbox] reported as REPLACED, but missing application info. Assuming REMOVED.
+09-20 23:49:17.342 12790 12790 D ActivityThread: Package [space.alliswell.inbox] reported as REPLACED, but missing application info. Assuming REMOVED.
+09-20 23:49:17.342  3627  3627 D ActivityThread: Package [space.alliswell.inbox] reported as REPLACED, but missing application info. Assuming REMOVED.
+09-20 23:49:17.343 12790 12790 D ActivityThread: Package [space.alliswell.inbox] reported as REPLACED, but missing application info. Assuming REMOVED.
+09-20 23:49:17.366 25980 25980 D ActivityThread: Package [space.alliswell.inbox] reported as REPLACED, but missing application info. Assuming REMOVED.
+09-20 23:49:17.425 12185 12185 D ActivityThread: Package [space.alliswell.inbox] reported as REPLACED, but missing application info. Assuming REMOVED.
+09-20 23:49:17.425  3627  3627 D ActivityThread: Package [space.alliswell.inbox] reported as REPLACED, but missing application info. Assuming REMOVED.
+09-20 23:49:17.429  9663  9663 D ActivityThread: Package [space.alliswell.inbox] reported as REPLACED, but missing application info. Assuming REMOVED.
+09-20 23:49:17.414 17935 17935 D ActivityThread: Package [space.alliswell.inbox] reported as REPLACED, but missing application info. Assuming REMOVED.
+09-20 23:49:17.440 22154 22154 D ActivityThread: Package [space.alliswell.inbox] reported as REPLACED, but missing application info. Assuming REMOVED.
+09-20 23:49:17.440 19915 19915 D ActivityThread: Package [space.alliswell.inbox] reported as REPLACED, but missing application info. Assuming REMOVED.
+09-20 23:49:17.441  8032  8032 D ActivityThread: Package [space.alliswell.inbox] reported as REPLACED, but missing application info. Assuming REMOVED.
+09-20 23:49:17.441 16350 16350 D ActivityThread: Package [space.alliswell.inbox] reported as REPLACED, but missing application info. Assuming REMOVED.
+09-20 23:49:17.442  8129  8129 D ActivityThread: Package [space.alliswell.inbox] reported as REPLACED, but missing application info. Assuming REMOVED.
+09-20 23:49:17.443  2021  3328 I WindowManager: WIN DEATH: Window{36a54c3 u0 space.alliswell.inbox/space.alliswell.inbox.MainActivity}
+09-20 23:49:17.443  2021  3952 I ActivityManager: Death received, pid = 0, processName = space.alliswell.inbox for thread android.os.BinderProxy@bedb636
+09-20 23:49:17.446  7562  7562 D ActivityThread: Package [space.alliswell.inbox] reported as REPLACED, but missing application info. Assuming REMOVED.
+09-20 23:49:17.447  7562  7562 D ActivityThread: Package [space.alliswell.inbox] reported as REPLACED, but missing application info. Assuming REMOVED.
+09-20 23:49:17.449  2021  6145 V ActivityManager: Got obituary of 30189:space.alliswell.inbox
+09-20 23:49:17.452 27290 27290 D ActivityThread: Package [space.alliswell.inbox] reported as REPLACED, but missing application info. Assuming REMOVED.
+09-20 23:49:17.454 27290 27290 D ActivityThread: Package [space.alliswell.inbox] reported as REPLACED, but missing application info. Assuming REMOVED.
+09-20 23:49:17.462 20283 20283 D ActivityThread: Package [space.alliswell.inbox] reported as REPLACED, but missing application info. Assuming REMOVED.
+09-20 23:49:17.466  8061  8061 D ActivityThread: Package [space.alliswell.inbox] reported as REPLACED, but missing application info. Assuming REMOVED.
+09-20 23:49:17.481  8480  8480 D ActivityThread: Package [space.alliswell.inbox] reported as REPLACED, but missing application info. Assuming REMOVED.
+09-20 23:49:17.486  9663  9663 D ActivityThread: Package [space.alliswell.inbox] reported as REPLACED, but missing application info. Assuming REMOVED.
+09-20 23:49:17.489  9975  9975 D ActivityThread: Package [space.alliswell.inbox] reported as REPLACED, but missing application info. Assuming REMOVED.
+09-20 23:49:17.491 29692 29692 D ActivityThread: Package [space.alliswell.inbox] reported as REPLACED, but missing application info. Assuming REMOVED.
+09-20 23:49:17.492 16350 16350 D ActivityThread: Package [space.alliswell.inbox] reported as REPLACED, but missing application info. Assuming REMOVED.
+09-20 23:49:17.492 25980 25980 D ActivityThread: Package [space.alliswell.inbox] reported as REPLACED, but missing application info. Assuming REMOVED.
+09-20 23:49:17.494 29692 29692 D ActivityThread: Package [space.alliswell.inbox] reported as REPLACED, but missing application info. Assuming REMOVED.
+09-20 23:49:17.520  8061  8061 D ActivityThread: Package [space.alliswell.inbox] reported as REPLACED, but missing application info. Assuming REMOVED.
+09-20 23:49:17.531 17935 17935 D ActivityThread: Package [space.alliswell.inbox] reported as REPLACED, but missing application info. Assuming REMOVED.
+09-20 23:49:17.533 20550 20550 D ActivityThread: Package [space.alliswell.inbox] reported as REPLACED, but missing application info. Assuming REMOVED.
+09-20 23:49:17.535 24965 24965 D ActivityThread: Package [space.alliswell.inbox] reported as REPLACED, but missing application info. Assuming REMOVED.
+09-20 23:49:17.546 19915 19915 D ActivityThread: Package [space.alliswell.inbox] reported as REPLACED, but missing application info. Assuming REMOVED.
+09-20 23:49:17.563  8129  8129 D ActivityThread: Package [space.alliswell.inbox] reported as REPLACED, but missing application info. Assuming REMOVED.
+09-20 23:49:17.572 12185 12185 D ActivityThread: Package [space.alliswell.inbox] reported as REPLACED, but missing application info. Assuming REMOVED.
+09-20 23:49:17.572 24071 24071 D ActivityThread: Package [space.alliswell.inbox] reported as REPLACED, but missing application info. Assuming REMOVED.
+09-20 23:49:17.573 24071 24071 D ActivityThread: Package [space.alliswell.inbox] reported as REPLACED, but missing application info. Assuming REMOVED.
+09-20 23:49:17.573 22154 22154 D ActivityThread: Package [space.alliswell.inbox] reported as REPLACED, but missing application info. Assuming REMOVED.
+09-20 23:49:17.592 22222 22222 D ActivityThread: Package [space.alliswell.inbox] reported as REPLACED, but missing application info. Assuming REMOVED.
+09-20 23:49:17.596  8787  8787 D ActivityThread: Package [space.alliswell.inbox] reported as REPLACED, but missing application info. Assuming REMOVED.
+09-20 23:49:17.607 24888 24888 D ActivityThread: Package [space.alliswell.inbox] reported as REPLACED, but missing application info. Assuming REMOVED.
+09-20 23:49:17.613 27975 27975 D ActivityThread: Package [space.alliswell.inbox] reported as REPLACED, but missing application info. Assuming REMOVED.
+09-20 23:49:17.614  7692  7692 D ActivityThread: Package [space.alliswell.inbox] reported as REPLACED, but missing application info. Assuming REMOVED.
+09-20 23:49:17.614  8159  8159 D ActivityThread: Package [space.alliswell.inbox] reported as REPLACED, but missing application info. Assuming REMOVED.
+09-20 23:49:17.628 20550 20550 D ActivityThread: Package [space.alliswell.inbox] reported as REPLACED, but missing application info. Assuming REMOVED.
+09-20 23:49:17.629  9225  9225 D ActivityThread: Package [space.alliswell.inbox] reported as REPLACED, but missing application info. Assuming REMOVED.
+09-20 23:49:17.636  9975  9975 D ActivityThread: Package [space.alliswell.inbox] reported as REPLACED, but missing application info. Assuming REMOVED.
+09-20 23:49:17.637 30621 30621 D ActivityThread: Package [space.alliswell.inbox] reported as REPLACED, but missing application info. Assuming REMOVED.
+09-20 23:49:17.642  8159  8159 D ActivityThread: Package [space.alliswell.inbox] reported as REPLACED, but missing application info. Assuming REMOVED.
+09-20 23:49:17.642  7692  7692 D ActivityThread: Package [space.alliswell.inbox] reported as REPLACED, but missing application info. Assuming REMOVED.
+09-20 23:49:17.662  1085  1085 D ActivityThread: Package [space.alliswell.inbox] reported as REPLACED, but missing application info. Assuming REMOVED.
+09-20 23:49:17.665  1085  1085 D ActivityThread: Package [space.alliswell.inbox] reported as REPLACED, but missing application info. Assuming REMOVED.
+09-20 23:49:17.680  7610  7610 D ActivityThread: Package [space.alliswell.inbox] reported as REPLACED, but missing application info. Assuming REMOVED.
+09-20 23:49:17.684  6835  6835 D ActivityThread: Package [space.alliswell.inbox] reported as REPLACED, but missing application info. Assuming REMOVED.
+09-20 23:49:17.684  8032  8032 D ActivityThread: Package [space.alliswell.inbox] reported as REPLACED, but missing application info. Assuming REMOVED.
+09-20 23:49:17.685  6835  6835 D ActivityThread: Package [space.alliswell.inbox] reported as REPLACED, but missing application info. Assuming REMOVED.
+09-20 23:49:17.686  9225  9225 D ActivityThread: Package [space.alliswell.inbox] reported as REPLACED, but missing application info. Assuming REMOVED.
+09-20 23:49:17.694  7610  7610 D ActivityThread: Package [space.alliswell.inbox] reported as REPLACED, but missing application info. Assuming REMOVED.
+09-20 23:49:17.715  2021  3952 I ActivityManager: Force stopping space.alliswell.inbox appid=10558 user=0: from pid 13354
+09-20 23:49:17.726  2021  3952 I WindowManager:   Force removing ActivityRecord{244030958 u0 space.alliswell.inbox/.MainActivity t18744 f} isExiting}
+09-20 23:49:17.727  2021  3952 W WindowManager: removeAppToken: Attempted to remove non-existing token: Token{897aafa ActivityRecord{244030958 u0 space.alliswell.inbox/.MainActivity t18744 f} isExiting}}
+09-20 23:49:17.732  9591  9591 D ActivityThread: Package [space.alliswell.inbox] reported as REPLACED, but missing application info. Assuming REMOVED.
+09-20 23:49:17.733  9591  9591 D ActivityThread: Package [space.alliswell.inbox] reported as REPLACED, but missing application info. Assuming REMOVED.
+09-20 23:49:17.739  2021  3952 D BootPressureHolder:  clear delayed queue records for space.alliswell.inbox
+09-20 23:49:17.760  2021  3952 I AppsFilter: interaction: PackageSetting{fa40225 com.android.microdroid.empty_payload/10284} -> PackageSetting{376280b space.alliswell.inbox/10558} BLOCKED
+09-20 23:49:17.760  2021  3952 I AppsFilter: interaction: PackageSetting{cd539ab com.oplus.locationproxy/10176} -> PackageSetting{376280b space.alliswell.inbox/10558} BLOCKED
+09-20 23:49:17.760  2021  3952 I AppsFilter: interaction: PackageSetting{39dd808 com.android.certinstaller/10226} -> PackageSetting{376280b space.alliswell.inbox/10558} BLOCKED
+09-20 23:49:17.760  2021  3952 I AppsFilter: interaction: PackageSetting{379ba1 com.oplus.location/10246} -> PackageSetting{376280b space.alliswell.inbox/10558} BLOCKED
+09-20 23:49:17.760  2021  3952 W ActivityManager: Invalid packageName: space.alliswell.inbox
+09-20 23:49:17.903 32763 32763 D ActivityThread: Package [space.alliswell.inbox] reported as REPLACED, but missing application info. Assuming REMOVED.
+09-20 23:49:17.906 32763 32763 D ActivityThread: Package [space.alliswell.inbox] reported as REPLACED, but missing application info. Assuming REMOVED.
+09-20 23:49:17.913 25797 25797 D ActivityThread: Package [space.alliswell.inbox] reported as REPLACED, but missing application info. Assuming REMOVED.
+09-20 23:49:17.926 25797 25797 D ActivityThread: Package [space.alliswell.inbox] reported as REPLACED, but missing application info. Assuming REMOVED.
+09-20 23:49:17.936  2021  2049 D Transition:    ChangeInfo{2087d4b container=Task{4eb9925 #18744 type=standard A=10558:space.alliswell.inbox} flags=0x0}
+09-20 23:49:17.936  2021  2049 D Transition:    ChangeInfo{c69777d container=ActivityRecord{244030958 u0 space.alliswell.inbox/.MainActivity t18744 f} isExiting} flags=0x0}
+09-20 23:49:17.936  2021  2049 D Transition: finishTransition ar ActivityRecord{244030958 u0 space.alliswell.inbox/.MainActivity t18744 f} isExiting}, isVisibleRequested=false, state=DESTROYED, visibleAtTransitionEndTokens={ActivityRecord{126118525 u0 com.twitter.android/com.x.android.main.MainActivity t18741}}, this=TransitionRecord{a07ee1a id=4682 track=0 type=CLOSE flags=0x0 state=2 c=[
+09-20 23:49:17.936  2021  2049 D Transition:    ChangeInfo{2087d4b container=Task{4eb9925 #18744 type=standard A=10558:space.alliswell.inbox} flags=0x0}
+09-20 23:49:17.936  2021  2049 D Transition:    ChangeInfo{c69777d container=ActivityRecord{244030958 u0 space.alliswell.inbox/.MainActivity t18744 f} isExiting} flags=0x0}
+09-20 23:49:17.936  2021  2049 D ActivityTaskManager: commitVisibility: ActivityRecord{244030958 u0 space.alliswell.inbox/.MainActivity t18744 f} isExiting}: visible=false visibleRequested=false, isInTransition=false 
+09-20 23:49:17.936  2021  2049 D WindowManager: NFW_setClientVisible:ActivityRecord{244030958 u0 space.alliswell.inbox/.MainActivity t18744 f} isExiting} clientVisible:false
+09-20 23:49:17.936  2021  2049 W WindowManager: Exception thrown during dispatchAppVisibility Window{36a54c3 u0 space.alliswell.inbox/space.alliswell.inbox.MainActivity EXITING}
+09-20 23:49:17.936  2021  2049 I WindowManager: Window{36a54c3 u0 space.alliswell.inbox/space.alliswell.inbox.MainActivity EXITING} state from HAS_DRAWN to DRAW_PENDING; reason: resetDrawState
+09-20 23:49:17.937  2021  2049 D ActivityTaskManager: removeAppToken: ActivityRecord{244030958 u0 space.alliswell.inbox/.MainActivity t18744 f}} delayed=false parent=Task{4eb9925 #18744 type=standard A=10558:space.alliswell.inbox} animating=false Callers=com.android.server.wm.ActivityRecord.removeImmediately:5370 com.android.server.wm.WindowToken.removeIfPossible:267 com.android.server.wm.WindowToken.handleCompleteDeferredRemoval:273 com.android.server.wm.WindowContainer.handleCompleteDeferredRemoval:1648 
+09-20 23:49:17.938  2021  2049 I WindowManager: Window{36a54c3 u0 space.alliswell.inbox/space.alliswell.inbox.MainActivity EXITING} state from DRAW_PENDING to NO_SURFACE; reason: destroySurface
+09-20 23:49:17.940  2021  2049 D OplusTransitionController:    ChangeInfo{2087d4b container=Task{4eb9925 #18744 type=standard A=10558:space.alliswell.inbox} flags=0x0}
+09-20 23:49:17.940  2021  2049 D OplusTransitionController:    ChangeInfo{c69777d container=ActivityRecord{244030958 u0 space.alliswell.inbox/.MainActivity t-1 f}} flags=0x0}
+09-20 23:49:17.940  2021  2049 D FlexibleTaskTransitionController:    ChangeInfo{2087d4b container=Task{4eb9925 #18744 type=standard A=10558:space.alliswell.inbox} flags=0x0}
+09-20 23:49:17.940  2021  2049 D FlexibleTaskTransitionController:    ChangeInfo{c69777d container=ActivityRecord{244030958 u0 space.alliswell.inbox/.MainActivity t-1 f}} flags=0x0}
+09-20 23:49:17.943  2021  2070 D OplusFlexibleWindowMinimizedManagerHelper: onTaskVanished taskInfo:18744 task:Task{4eb9925 #18744 type=standard A=10558:space.alliswell.inbox}
+09-20 23:49:17.943  2021  2070 D FlexibleTaskController: no need releaseFlexibleCaptionView or destroyFlexibleDragLeash when non-caption-view-task vanished, task=Task{4eb9925 #18744 type=standard A=10558:space.alliswell.inbox}
+09-20 23:49:17.944  2021  2070 D OplusFlexibleWindowMinimizedManagerHelper: onTaskVanished taskInfo:18744 task:Task{4eb9925 #18744 type=standard A=10558:space.alliswell.inbox}
+09-20 23:49:17.944  2021  2070 D FlexibleTaskController: no need releaseFlexibleCaptionView or destroyFlexibleDragLeash when non-caption-view-task vanished, task=Task{4eb9925 #18744 type=standard A=10558:space.alliswell.inbox}
+09-20 23:49:17.964  2021  3930 D ActivityTaskManager: after skip size:31,pre-Filtered:[com.ruaho.echat.icbc.sandbox 18732, tv.danmaku.bili 18691, com.netease.uuremote 18740, com.didapinche.booking 18704, com.ss.android.ugc.aweme 18723, com.oplus.camera 18693, com.android.chrome 18705, com.heytap.market 18701, com.deepseek.chat 18731, com.xingin.xhs 18710, com.taobao.idlefish 18713, com.google.android.gms 18719, com.nextin.m78 18687, com.tencent.mm 18697, com.android.mms 18707, com.hupu.games 18686, com.google.android.googlequicksearchbox 18718, com.google.android.googlequicksearchbox 18716, com.ss.android.lark 18690, com.twitter.android 18741, com.android.settings 18729, com.google.android.gms 18722, com.autonavi.minimap 18726, com.google.android.gms 18720, com.google.android.gms 18721, com.android.settings 18678, com.oppo.store 18728, com.openai.chatgpt 18694, com.android.contacts 18711, com.tencent.mobileqq 18714, space.alliswell.inbox 18744]
+09-20 23:49:18.138  2021  3664 D StartingSurfacePreviewController: checkSupportSurfacePreview app not support, package: space.alliswell.inbox
+09-20 23:49:18.140  2021  3664 D WindowManager: NFW_setClientVisible:ActivityRecord{70562559 u0 space.alliswell.inbox/.MainActivity clientVisible:true
+09-20 23:49:18.140  2021  3664 D ActivityTaskManager: The isLandscapeFullscreenEnabled is: space.alliswell.inbox/.MainActivity
+09-20 23:49:18.140  2021  3664 D ActivityTaskManager: The isLandscapeFullscreenEnabled is: space.alliswell.inbox/.MainActivity
+09-20 23:49:18.140  2021  3664 D ActivityTaskManager: The isLandscapeFullscreenEnabled is: space.alliswell.inbox/.MainActivity
+09-20 23:49:18.140  2021  3664 D ActivityTaskManager: The isLandscapeFullscreenEnabled is: space.alliswell.inbox/.MainActivity
+09-20 23:49:18.140  2021  3664 D ActivityTaskManager: The isLandscapeFullscreenEnabled is: space.alliswell.inbox/.MainActivity
+09-20 23:49:18.140  2021  3664 D FlexibleTaskController: isSupportFlexibleWindow target = space.alliswell.inbox/.MainActivity callPkg = FlexibleTaskController support = true ,caller = 2021
+09-20 23:49:18.140  2021  3664 I AppSnapshotController: init, sysSupport = true, mActivitySupport = false, activityRecord = ActivityRecord{70562559 u0 space.alliswell.inbox/.MainActivity t-1}
+09-20 23:49:18.140  2021  3664 I OPM-IO  : space.alliswell.inbox cold actStart
+09-20 23:49:18.140  2021  2079 E QosSceneRecognizer[ActivityStartScene]: notifyActivityStart get launchedFromUid failed through AppManager! launchedFromPackage: com.android.shell, pkg: space.alliswell.inbox
+09-20 23:49:18.141  2021  3664 D FlexibleTaskController: isSupportFlexibleWindow target = space.alliswell.inbox/.MainActivity callPkg = FlexibleTaskController support = true ,caller = 2021
+09-20 23:49:18.143  2021  3664 D ActivityTaskManager: The isLandscapeFullscreenEnabled is: space.alliswell.inbox/.MainActivity
+09-20 23:49:18.143  2021  3664 D OplusMirageWindowManagerService: updateCarMirageConfigToTask task:Task{259df91 #18745 type=standard A=10558:space.alliswell.inbox} options:null
+09-20 23:49:18.143  2021  3664 D ActivityTaskManager: The isLandscapeFullscreenEnabled is: space.alliswell.inbox/.MainActivity
+09-20 23:49:18.143  2021  3664 D ActivityTaskManager: The isLandscapeFullscreenEnabled is: space.alliswell.inbox/.MainActivity
+09-20 23:49:18.143  2021  3664 D ActivityTaskManager: The isLandscapeFullscreenEnabled is: space.alliswell.inbox/.MainActivity
+09-20 23:49:18.143  2021  3664 D ActivityTaskManager: The isLandscapeFullscreenEnabled is: space.alliswell.inbox/.MainActivity
+09-20 23:49:18.143  2021  3664 D ActivityTaskManager: The isLandscapeFullscreenEnabled is: space.alliswell.inbox/.MainActivity
+09-20 23:49:18.143  2021  3664 D ActivityTaskManager: The isLandscapeFullscreenEnabled is: space.alliswell.inbox/.MainActivity
+09-20 23:49:18.143  2021  3664 D ActivityTaskManager: The isLandscapeFullscreenEnabled is: space.alliswell.inbox/.MainActivity
+09-20 23:49:18.144  2021  3664 D ActivityTaskManager: validateStartingWindowTheme:  Pkg=space.alliswell.inbox, Translucent=false, Floating=false, ShowWallpaper=false, Disable=false, LaunchSource=4, Prev=null, LaunchedFromPackage=com.android.shell
+09-20 23:49:18.144  2021  3664 D OplusAlwaysAliveManager: save launch theme 0x7f0f0008 for Task{259df91 #18745 type=standard A=10558:space.alliswell.inbox}, act=com.android.server.wm.OplusAlwaysAliveManager@9dc7a87
+09-20 23:49:18.144  2021  3664 D ActivityTaskManager: addStartingWindow for ActivityRecord{70562559 u0 space.alliswell.inbox/.MainActivity t18745}, mainWin=null, state=INITIALIZING, isKeyguardLocked=false, isKeyguardGoingAway=false
+09-20 23:49:18.146  2021  3664 D TaskFragmentExtImpl: shouldSetReadyFalse and resumedActivity: ActivityRecord{70562559 u0 space.alliswell.inbox/.MainActivity t18745} prev: ActivityRecord{126118525 u0 com.twitter.android/com.x.android.main.MainActivity t18741} prev.isVisible(): true resumedLaunchFromLauncher: false prevLaunchFromApp: false transitionType: 1
+09-20 23:49:18.146  2021  3664 D ActivityTaskManager: notifyTaskRemoved, task: Task{4eb9925 #18744 type=standard A=10558:space.alliswell.inbox} trace:com.android.server.wm.RecentTasks.removeForAddTask:1893 com.android.server.wm.RecentTasks.add:1382 com.android.server.wm.ActivityStarter.startActivityInner:3089 com.android.server.wm.ActivityStarter.startActivityUnchecked:2194 com.android.server.wm.ActivityStarter.executeRequest:1944 
+09-20 23:49:18.147  2021  3664 I ActivityTaskManager: START u0 {flg=0x10000000 xflg=0x5 cmp=space.alliswell.inbox/.MainActivity mCallingUid=2000} with LAUNCH_SINGLE_TASK from uid 2000 (BAL_ALLOW_PERMISSION (START_ACTIVITIES_FROM_BACKGROUND permission granted)) result code=0
+09-20 23:49:18.147  3574  3766 V WindowManagerShell: Transition requested (#4683): android.os.BinderProxy@cee00bb TransitionRequestInfo { type = OPEN, triggerTask = TaskInfo{userId=0 taskId=18745 effectiveUid=10558 displayId=0 isRunning=true baseIntent=Intent { flg=0x10000000 cmp=space.alliswell.inbox/.MainActivity mCallingUid=2000 } baseActivity=ComponentInfo{space.alliswell.inbox/space.alliswell.inbox.MainActivity} topActivity=ComponentInfo{space.alliswell.inbox/space.alliswell.inbox.MainActivity} origActivity=null realActivity=ComponentInfo{space.alliswell.inbox/space.alliswell.inbox.MainActivity}
+09-20 23:49:18.147  3574  3766 V WindowManagerShell:  topActivityInfo=ActivityInfo{a40e131 space.alliswell.inbox.MainActivity} launchCookies=[] positionInParent=Point(0, 0) parentTaskId=-1 isFocused=false isVisible=false isVisibleRequested=false isTopActivityNoDisplay=false isSleeping=false locusId=null displayAreaFeatureId=1 isTopActivityTransparent=false isActivityStackTransparent=false lastNonFullscreenBounds=Rect(276, 684 - 804, 1764) capturedLink=null capturedLinkTimestamp=0 requestedVisibleTypes=-9 topActivityRequestOpenInBrowserEducationTimestamp=0
+09-20 23:49:18.148  2021  2049 I AppsFilter: interaction: PackageSetting{fa40225 com.android.microdroid.empty_payload/10284} -> PackageSetting{3283ce8 space.alliswell.inbox/10558} BLOCKED
+09-20 23:49:18.148  2021  2049 I AppsFilter: interaction: PackageSetting{cd539ab com.oplus.locationproxy/10176} -> PackageSetting{3283ce8 space.alliswell.inbox/10558} BLOCKED
+09-20 23:49:18.148  2021  2049 I AppsFilter: interaction: PackageSetting{39dd808 com.android.certinstaller/10226} -> PackageSetting{3283ce8 space.alliswell.inbox/10558} BLOCKED
+09-20 23:49:18.148  2021  2049 I AppsFilter: interaction: PackageSetting{379ba1 com.oplus.location/10246} -> PackageSetting{3283ce8 space.alliswell.inbox/10558} BLOCKED
+09-20 23:49:18.148  2021  2049 D RefreshRate: Trigger app switch boost, ar=ActivityRecord{70562559 u0 space.alliswell.inbox/.MainActivity t18745},currDisplayRate=60.0,boostId=1
+09-20 23:49:18.148  2021  2049 D RefreshRate: startAppSwitchBoost targetMode={id=5, width=1080, height=2376, fps=90.0, vsync=90.0, synthetic=false, alternativeRefreshRates=[60.0, 120.00001, 120.00001], supportedHdrTypes=[1, 2, 3, 4]} record=ActivityRecord{70562559 u0 space.alliswell.inbox/.MainActivity t18745}: votes=PRIORITY_START_ANIMATION_BOOST -> Vote{mRefreshRate=90.0, mMinRefreshRate=90.0, mRequestSource=null};PRIORITY_WINDOW_REQUEST -> Vote{mRefreshRate=90.0, mMinRefreshRate=90.0, mRequestSource=null};
+09-20 23:49:18.149  2021  2049 D ActivityTaskManager: setAppVisibility(Token{d888ef6 ActivityRecord{70562559 u0 space.alliswell.inbox/.MainActivity t18745}}, visible=true):  visible=false mVisibleRequested=false
+09-20 23:49:18.149  2021  2049 D ActivityTaskManager: setVisibility(Token{d888ef6 ActivityRecord{70562559 u0 space.alliswell.inbox/.MainActivity t18745}}, visible=true) defer commitVisibility for transition collecting
+09-20 23:49:18.151  2021  3663 I AppSnapshotController: attachStartingWindow, win = Window{ed0a1a6 u0 Splash Screen space.alliswell.inbox}, shouldAppSnapshot = false
+09-20 23:49:18.151  2021  3663 D ActivityTaskManager: attachStartingWindow: mStartingData=SplashScreenStartingData{fb83f94 removeAfterTransaction= 0}, mAssociatedTask=null, mStartingWindow=Window{ed0a1a6 u0 Splash Screen space.alliswell.inbox}
+09-20 23:49:18.155  2021  3483 I OPM-IO  : space.alliswell.inbox coldStart activityStart 0
+09-20 23:49:18.155  2021  2084 I ActivityManager: Start proc 11890:space.alliswell.inbox/u0a558 for next-top-activity {space.alliswell.inbox/space.alliswell.inbox.MainActivity}
+09-20 23:49:18.155  2021  3483 I OPM     : handleActivityStart : ActivityRecord{70562559 u0 space.alliswell.inbox/.MainActivity t18745}
+09-20 23:49:18.156  2021  3469 D NativeFreezeManager: freezeForAppSwitchScene mAppLaunchFzDxEnable enter, mFgAppPkgname space.alliswell.inbox
+09-20 23:49:18.157  2021  3483 I OPM-IO  : space.alliswell.inbox coldStart procStart 2
+09-20 23:49:18.157  2021  3483 I OPM     : handleProcessStart : ProcessRecord{ee8a60b 11890:space.alliswell.inbox/u0a558}
+09-20 23:49:18.158  2021  3663 I WindowManager: addWindow: New client android.os.BinderProxy@e20cf01 : window=Window{ed0a1a6 u0 Splash Screen space.alliswell.inbox}
+09-20 23:49:18.158  2021  3663 D ActivityTaskManager: The isLandscapeFullscreenEnabled is: space.alliswell.inbox/.MainActivity
+09-20 23:49:18.158  2021  3663 D ActivityTaskManager: The isLandscapeFullscreenEnabled is: space.alliswell.inbox/.MainActivity
+09-20 23:49:18.160  2021  2099 I MemoryOperationUtils: add 11890 to space.alliswell.inbox
+09-20 23:49:18.162  2021  3747 V WindowManager: Relayout Window{ed0a1a6 u0 Splash Screen space.alliswell.inbox}: viewVisibility=0, oldvis=0, req=1080x2376 , apr = 8, , x=0, y=0
+09-20 23:49:18.162  2021  3747 I WindowManager: Window{ed0a1a6 u0 Splash Screen space.alliswell.inbox} state from NO_SURFACE to DRAW_PENDING; reason: resetDrawState
+09-20 23:49:18.164  2021  3747 D ActivityTaskManager: The isLandscapeFullscreenEnabled is: space.alliswell.inbox/.MainActivity
+09-20 23:49:18.164  2021  3747 D ActivityTaskManager: The isLandscapeFullscreenEnabled is: space.alliswell.inbox/.MainActivity
+09-20 23:49:18.165  2021  3138 D CoreBackPreview: Window{ed0a1a6 u0 Splash Screen space.alliswell.inbox}: Setting back callback OnBackInvokedCallbackInfo{mCallback=android.window.IOnBackInvokedCallback$Stub$Proxy@8789b73, mPriority=0, mIsAnimationCallback=false, mOverrideBehavior=0}
+09-20 23:49:18.166  2021  3663 D ActivityTaskManager: The isLandscapeFullscreenEnabled is: space.alliswell.inbox/.MainActivity
+09-20 23:49:18.167  2021  3663 D ActivityTaskManager: The isLandscapeFullscreenEnabled is: space.alliswell.inbox/.MainActivity
+09-20 23:49:18.167  2021  3663 D ActivityTaskManager: The isLandscapeFullscreenEnabled is: space.alliswell.inbox/.MainActivity
+09-20 23:49:18.167  2021  3663 D ActivityTaskManager: The isLandscapeFullscreenEnabled is: space.alliswell.inbox/.MainActivity
+09-20 23:49:18.167  2021  3663 D ActivityTaskManager: The isLandscapeFullscreenEnabled is: space.alliswell.inbox/.MainActivity
+09-20 23:49:18.167  2021  3663 D ActivityTaskManager: The isLandscapeFullscreenEnabled is: space.alliswell.inbox/.MainActivity
+09-20 23:49:18.167  2021  3663 D ActivityTaskManager: The isLandscapeFullscreenEnabled is: space.alliswell.inbox/.MainActivity
+09-20 23:49:18.167  2021  3663 D ActivityTaskManager: The isLandscapeFullscreenEnabled is: space.alliswell.inbox/.MainActivity
+09-20 23:49:18.167  2021  3663 D ActivityTaskManager: The isLandscapeFullscreenEnabled is: space.alliswell.inbox/.MainActivity
+09-20 23:49:18.167  2021  3663 D ActivityTaskManager: The isLandscapeFullscreenEnabled is: space.alliswell.inbox/.MainActivity
+09-20 23:49:18.167  2021  3663 D ActivityTaskManager: setAppVisibility(Token{d888ef6 ActivityRecord{70562559 u0 space.alliswell.inbox/.MainActivity t18745}}, visible=true):  visible=false mVisibleRequested=true
+09-20 23:49:18.167  2021  3663 D ActivityTaskManager: setVisibility(Token{d888ef6 ActivityRecord{70562559 u0 space.alliswell.inbox/.MainActivity t18745}}, visible=true) defer commitVisibility for transition collecting
+09-20 23:49:18.167  2021  3663 E OplusDexOptimizeManager: pkgSetting or primaryCpuAbi is null for package: space.alliswell.inbox
+09-20 23:49:18.167  2021  3483 I OPM-WakePreloadPolicy: remove preload pkg = space.alliswell.inbox, reason = app launch
+09-20 23:49:18.167  2021  3663 D ActivityTaskManager: onWindowFocusChanged Task{259df91 #18745 type=standard A=10558:space.alliswell.inbox} would transfer to compact
+09-20 23:49:18.167  2021  3483 I OPM     : handlePackageLaunched pkg: space.alliswell.inbox, uid: 10558, pid: 11890
+09-20 23:49:18.167  2021  2079 I UserAwareMgr: handleTopAppChanged: space.alliswell.inbox, pid: 11890, uid: 10558
+09-20 23:49:18.167  2021  3663 D ActivityTaskManager: NFW_setLastResumedActivityUncheckLocked:true r:ActivityRecord{70562559 u0 space.alliswell.inbox/.MainActivity t18745} currentFocus:null
+09-20 23:49:18.167  2021  3663 D FlexibleTaskController: onTaskFocusChanged prevTask:Task{de99883 #18741 type=standard A=10423:com.twitter.android} ,currentTask:Task{259df91 #18745 type=standard A=10558:space.alliswell.inbox}, reason: realStartActivityLocked - onActivityStateChanged
+09-20 23:49:18.167  2021  3663 D OplusFlexibleDCSManager: onNextPkgChanged pkg = space.alliswell.inbox
+09-20 23:49:18.167  2021  3663 I OplusAppSwitchManagerService: appswitch hasProcess ActivityRecord{70562559 u0 space.alliswell.inbox/.MainActivity t18745}
+09-20 23:49:18.167  2021  3663 I GameManagerServiceExt-GameManagerServiceExt: on FG change: com.twitter.android|space.alliswell.inbox
+09-20 23:49:18.168  2021  3663 I OplusAppSwitchManagerService: appswitch hasProcess ActivityRecord{70562559 u0 space.alliswell.inbox/.MainActivity t18745}
+09-20 23:49:18.169  2021  3663 D ActivityTaskManager: The isLandscapeFullscreenEnabled is: space.alliswell.inbox/.MainActivity
+09-20 23:49:18.172  2021  3138 D WindowManager: onSyncFinishedDrawing: Window{ed0a1a6 u0 Splash Screen space.alliswell.inbox}
+09-20 23:49:18.172  2021  3138 I WindowManager: finishDrawing skipLayout:false,syncSeqId=0,mPrepareSyncSeqId=0 Window{ed0a1a6 u0 Splash Screen space.alliswell.inbox} com.android.server.wm.WindowManagerService.finishDrawingWindow:3256 com.android.server.wm.Session.finishDrawing:403 android.view.IWindowSession$Stub.onTransact:807 
+09-20 23:49:18.172  2021  3138 I WindowManager: Window{ed0a1a6 u0 Splash Screen space.alliswell.inbox} state from DRAW_PENDING to COMMIT_DRAW_PENDING; reason: finishDrawingLocked
+09-20 23:49:18.172  2021  2070 I WindowManager: Window{ed0a1a6 u0 Splash Screen space.alliswell.inbox} state from COMMIT_DRAW_PENDING to READY_TO_SHOW; reason: commitFinishDrawingLocked
+09-20 23:49:18.172  2021  2070 D ActivityTaskManager: onStartingWindowDrawn: app=ProcessRecord{ee8a60b 11890:space.alliswell.inbox/u0a558}, mStartingData=SplashScreenStartingData{fb83f94 removeAfterTransaction= 0}, finishing=false,mLaunchedFromBubble=false, mVisibleRequested=true, mDisplayContent=Display{#0 state=ON size=1080x2376 ROTATION_0}, isZoomMode=false
+09-20 23:49:18.173  2021  2070 D ActivityTaskManager: commitVisibility: ActivityRecord{70562559 u0 space.alliswell.inbox/.MainActivity t18745}: visible=true visibleRequested=true, isInTransition=true 
+09-20 23:49:18.173  2021  2070 I WindowManager: Window{ed0a1a6 u0 Splash Screen space.alliswell.inbox} state from READY_TO_SHOW to HAS_DRAWN; reason: performShowLocked
+09-20 23:49:18.173  2021  2070 I WindowStateExtImpl: onSurfaceShowChange show = true mPackageName = space.alliswell.inbox parentPkgName = space.alliswell.inbox
+09-20 23:49:18.173  2021  2093 E OplusThermalStats: Error getting package info: space.alliswell.inbox
+09-20 23:49:18.174  2021 10019 D ActivityTaskManager: The isLandscapeFullscreenEnabled is: space.alliswell.inbox/.MainActivity
+09-20 23:49:18.174  2021 10019 D ActivityTaskManager: The isLandscapeFullscreenEnabled is: space.alliswell.inbox/.MainActivity
+09-20 23:49:18.174  2021 10019 D ActivityTaskManager: The isLandscapeFullscreenEnabled is: space.alliswell.inbox/.MainActivity
+09-20 23:49:18.174  2021 10019 D ActivityTaskManager: The isLandscapeFullscreenEnabled is: space.alliswell.inbox/.MainActivity
+09-20 23:49:18.174  2021 10019 D ActivityTaskManager: The isLandscapeFullscreenEnabled is: space.alliswell.inbox/.MainActivity
+09-20 23:49:18.174  2021 10019 D ActivityTaskManager: The isLandscapeFullscreenEnabled is: space.alliswell.inbox/.MainActivity
+09-20 23:49:18.174  2021 10019 D ActivityTaskManager: The isLandscapeFullscreenEnabled is: space.alliswell.inbox/.MainActivity
+09-20 23:49:18.174  2021 10019 D ActivityTaskManager: The isLandscapeFullscreenEnabled is: space.alliswell.inbox/.MainActivity
+09-20 23:49:18.174  2021 10019 D ActivityTaskManager: The isLandscapeFullscreenEnabled is: space.alliswell.inbox/.MainActivity
+09-20 23:49:18.174  2021 10019 D ActivityTaskManager: The isLandscapeFullscreenEnabled is: space.alliswell.inbox/.MainActivity
+09-20 23:49:18.174  2021  2070 D OplusTransitionAnimationManager:    ChangeInfo{201b192 container=Task{259df91 #18745 type=standard A=10558:space.alliswell.inbox} flags=0x30}
+09-20 23:49:18.174  2021  2070 D OplusTransitionAnimationManager:    ChangeInfo{7bf4763 container=ActivityRecord{70562559 u0 space.alliswell.inbox/.MainActivity t18745} flags=0x0}
+09-20 23:49:18.174  2021 10019 D ActivityTaskManager: The isLandscapeFullscreenEnabled is: space.alliswell.inbox/.MainActivity
+09-20 23:49:18.174  2021 10019 D ActivityTaskManager: The isLandscapeFullscreenEnabled is: space.alliswell.inbox/.MainActivity
+09-20 23:49:18.174  2021 10019 D ActivityTaskManager: The isLandscapeFullscreenEnabled is: space.alliswell.inbox/.MainActivity
+09-20 23:49:18.174  2021 10019 D ActivityTaskManager: The isLandscapeFullscreenEnabled is: space.alliswell.inbox/.MainActivity
+09-20 23:49:18.174  2021 10019 D ActivityTaskManager: The isLandscapeFullscreenEnabled is: space.alliswell.inbox/.MainActivity
+09-20 23:49:18.174  2021 10019 D ActivityTaskManager: The isLandscapeFullscreenEnabled is: space.alliswell.inbox/.MainActivity
+09-20 23:49:18.174  2021 10019 D OplusEapManager: mTargetEnterName :space.alliswell.inbox
+09-20 23:49:18.175  2021  2113 D VRR [OPlusRefreshRateService]: handleFrontAppChange pkgName: space.alliswell.inbox
+09-20 23:49:18.181  2021  2111 D OplusAppSwitchListener: Detect space.alliswell.inbox switch to foreground
+09-20 23:49:18.182  3519  3549 I iopgp   : record start: space.alliswell.inbox 10558 11890 coldStart
+09-20 23:49:18.185  2021  2070 D FlexibleWindowManagerService: should not dispatch appeared task Task{259df91 #18745 type=standard A=10558:space.alliswell.inbox}
+09-20 23:49:18.186  2021  2066 V WindowManager: Sent Transition (#4683) createdAt=09-20 23:49:18.140 via request=TransitionRequestInfo { type = OPEN, triggerTask = TaskInfo{userId=0 taskId=18745 effectiveUid=10558 displayId=0 isRunning=true baseIntent=Intent { flg=0x10000000 cmp=space.alliswell.inbox/.MainActivity mCallingUid=2000 } baseActivity=ComponentInfo{space.alliswell.inbox/space.alliswell.inbox.MainActivity} topActivity=ComponentInfo{space.alliswell.inbox/space.alliswell.inbox.MainActivity} origActivity=null realActivity=ComponentInfo{space.alliswell.inbox/space.alliswell.inbox.MainActivity}
+09-20 23:49:18.186  2021  2066 V WindowManager:  numActivities=1 lastActiveTime=247774715 supportsSplitScreenMultiWindow=true supportsMultiWindow=true supportsPocketStudioMultiWindow=true isInFlexibleEmbedded = false uid = 10558 pid = 0 resizeMode=1 isResizeable=true minWidth=-1 minHeight=-1 defaultMinSize=220 token=WCT{RemoteToken{c2f0d89 Task{259df91 #18745 type=standard A=10558:space.alliswell.inbox}}} topActivityType=1 pictureInPictureParams=null shouldDockBigOverlays=false launchIntoPipHostTaskId=-1 lastParentTaskIdBeforePip=-1 displayCutoutSafeInsets=Rect(0, 120 - 0, 0)
+09-20 23:49:18.186  2021  2066 V WindowManager:  topActivityInfo=ActivityInfo{71eb18e space.alliswell.inbox.MainActivity} launchCookies=[] positionInParent=Point(0, 0) parentTaskId=-1 isFocused=false isVisible=false isVisibleRequested=false isTopActivityNoDisplay=false isSleeping=false locusId=null displayAreaFeatureId=1 isTopActivityTransparent=false isActivityStackTransparent=false lastNonFullscreenBounds=Rect(276, 684 - 804, 1764) capturedLink=null capturedLinkTimestamp=0 requestedVisibleTypes=-9 topActivityRequestOpenInBrowserEducationTimestamp=0
+09-20 23:49:18.186  2021  2066 V WindowManager:  mOplusExtraBundle = Bundle[{androidx.flexible.taskFrame=Rect(0, 0 - 0, 0), androidx.flexible.Alpha=1.0, androidx.activity.task.attach.blur=0, androidx.flexible.task_snapshot_mode=0, androidx.activity.LaunchInsensible=0, androidx.activity.LaunchCornerRadius=0, key_flexible_task_state=0, topActivitySupportAppInnerSplit=false, key_flexible_task_animating_type=-1, key_flexible_task_root_activity_processname=space.alliswell.inbox, androidx.activity.LaunchScenario=0, is_oplus_clone_task=false, flexible_super_mini_state=false, topRunningActivityHash=70562559, flexible.floatwindow.is_multi_instance=false, androidx.activity.LaunchScale=1.0, androidx.activity.LaunchShadowRadius=0, is_transient_hide_for_task_info=false, androidx.activity.key_flexible_task_pending_exit_to=0, key_flexible_task_root_activity_pid=0, key_flexible_task_root_activity_uid=10558}]}, pipChange = null, remoteTransition = null, displayChange = null, flags = 0, debugId = 4683 }
+09-20 23:49:18.186  2021  2066 V WindowManager:         {WCT{RemoteToken{c2f0d89 Task{259df91 #18745 type=standard A=10558:space.alliswell.inbox}}} m=OPEN f=MOVE_TO_TOP leash=Surface(name=Task=18745)/@0xd9317f4 sb=Rect(0, 0 - 1080, 2376) eb=Rect(0, 0 - 1080, 2376) epz=Point(1080, 2376) d=0 taskParent=-1},
+09-20 23:49:18.190  2021  3138 D OplusBatteryServiceFeature: setSmartCoolDown: coolDown = 7, normalCoolDown = 7, pkgName = space.alliswell.inbox
+09-20 23:49:18.206  2021  3663 D ActivityTaskManager: after skip size:31,pre-Filtered:[com.ruaho.echat.icbc.sandbox 18732, tv.danmaku.bili 18691, com.netease.uuremote 18740, com.didapinche.booking 18704, com.ss.android.ugc.aweme 18723, com.oplus.camera 18693, com.android.chrome 18705, com.heytap.market 18701, com.deepseek.chat 18731, com.xingin.xhs 18710, com.taobao.idlefish 18713, com.google.android.gms 18719, com.nextin.m78 18687, com.tencent.mm 18697, com.android.mms 18707, com.hupu.games 18686, com.google.android.googlequicksearchbox 18718, com.google.android.googlequicksearchbox 18716, com.ss.android.lark 18690, com.twitter.android 18741, com.android.settings 18729, com.google.android.gms 18722, com.autonavi.minimap 18726, com.google.android.gms 18720, com.google.android.gms 18721, com.android.settings 18678, com.oppo.store 18728, com.openai.chatgpt 18694, com.android.contacts 18711, space.alliswell.inbox 18745, com.tencent.mobileqq 18714]
+09-20 23:49:18.303  2021  2084 I ActivityManager: Start proc 13622:com.google.android.webview:sandboxed_process0:org.chromium.content.app.SandboxedProcessService0:0/u0i398 for  {space.alliswell.inbox/org.chromium.content.app.SandboxedProcessService0:0}
+09-20 23:49:18.308  2021  2099 I MemoryOperationUtils: add 13622 to space.alliswell.inbox
+09-20 23:49:18.341 11890 11890 D ActivityThread: ComponentInfo{space.alliswell.inbox/space.alliswell.inbox.MainActivity} checkFinished=false 2
+09-20 23:49:18.363  2021  4007 I WindowManager: addWindow: New client android.os.BinderProxy@a7d1cda : window=Window{abe50b u0 space.alliswell.inbox/space.alliswell.inbox.MainActivity}
+09-20 23:49:18.372  2021  3637 V WindowManager: Relayout Window{abe50b u0 space.alliswell.inbox/space.alliswell.inbox.MainActivity}: viewVisibility=0, oldvis=4, req=1080x2376 , apr = 0, , x=0, y=0
+09-20 23:49:18.372  2021  3637 I WindowManager: Window{abe50b u0 space.alliswell.inbox/space.alliswell.inbox.MainActivity} state from NO_SURFACE to DRAW_PENDING; reason: resetDrawState
+09-20 23:49:18.374  2021  3637 D WindowManager: NFW_findFocusedWindowIfNeeded:Window{abe50b u0 space.alliswell.inbox/space.alliswell.inbox.MainActivity} mCurrentFocus:null
+09-20 23:49:18.374  2021  3637 V WindowManager: Changing focus from null to Window{abe50b u0 space.alliswell.inbox/space.alliswell.inbox.MainActivity},diplayid=0
+09-20 23:49:18.375  2021  3637 D ActivityTaskManager: The isLandscapeFullscreenEnabled is: space.alliswell.inbox/.MainActivity
+09-20 23:49:18.375  2021  3930 D CoreBackPreview: Window{abe50b u0 space.alliswell.inbox/space.alliswell.inbox.MainActivity}: Setting back callback OnBackInvokedCallbackInfo{mCallback=android.window.IOnBackInvokedCallback$Stub$Proxy@b7978c4, mPriority=0, mIsAnimationCallback=false, mOverrideBehavior=0}
+09-20 23:49:18.399  2021  3637 I WindowManager: Window{abe50b u0 space.alliswell.inbox/space.alliswell.inbox.MainActivity} state from DRAW_PENDING to COMMIT_DRAW_PENDING; reason: finishDrawingLocked
+09-20 23:49:18.401  2021  2070 I WindowManager: Window{abe50b u0 space.alliswell.inbox/space.alliswell.inbox.MainActivity} state from COMMIT_DRAW_PENDING to READY_TO_SHOW; reason: commitFinishDrawingLocked
+09-20 23:49:18.401  2021  2070 D ActivityTaskManager: Finish StartingWindow: ActivityRecord{70562559 u0 space.alliswell.inbox/.MainActivity t18745}first real window is shown
+09-20 23:49:18.401  2021  2070 D ActivityTaskManager: removeStartingWindowAnimation starting ActivityRecord{70562559 u0 space.alliswell.inbox/.MainActivity t18745} startingWindow=null ,startingView=com.android.server.wm.StartingSurfaceController$StartingSurface@a4103a,Callers=com.android.server.wm.ActivityRecord.removeStartingWindow:3412 com.android.server.wm.ActivityRecord.onFirstWindowDrawn:8100 com.android.server.wm.WindowState.performShowLocked:4982 com.android.server.wm.WindowStateAnimator.commitFinishDrawingLocked:403 com.android.server.wm.DisplayContent.lambda$new$8:1152 
+09-20 23:49:18.401  2021  2070 D OplusStartingWindowManager: interceptRemoveStartingWindow: packageName=space.alliswell.inbox,  componentName=space.alliswell.inbox/.MainActivity, isSnapshot=false, startingSurfaceRunnable=null, isDrawCompleted=false, hasSurfaceView=false, inTransition=true
+09-20 23:49:18.401  2021  2070 D OplusStartingWindowManager: interceptRemoveStartingWindow: hasSplashWindowFlag() return false for activity=ActivityRecord{70562559 u0 space.alliswell.inbox/.MainActivity t18745}
+09-20 23:49:18.402  2021  2070 D QuickBackInputPolicy: setAppLaunchEndTime update timePair=Pair{ActivityRecord{70562559 u0 space.alliswell.inbox/.MainActivity t18745} 177286190}
+09-20 23:49:18.402  2021  2070 I WindowManager: Window{abe50b u0 space.alliswell.inbox/space.alliswell.inbox.MainActivity} state from READY_TO_SHOW to HAS_DRAWN; reason: performShowLocked
+09-20 23:49:18.404  2021  3483 I OPM-IO  : space.alliswell.inbox coldStart activityFinish 1
+09-20 23:49:18.405  2021  3483 I OPM-IO  : space.alliswell.inbox coldStart activityFinish 3
+09-20 23:49:18.406  2021  3483 I OPM     : handleNotifyLaunchTime : space.alliswell.inbox, :253
+09-20 23:49:18.408  3519  3549 I iopgp   : record stop: space.alliswell.inbox 10558 11890 coldStart
+09-20 23:49:18.411  2021  3664 I OPM-IO  : recorded space.alliswell.inbox
+09-20 23:49:18.439  2021  2049 D ClipboardService: clipboardAccessAllowed: op=29 result=true callingPackage=space.alliswell.inbox
+09-20 23:49:18.440  2021  2651 D InputMethodManagerService: isSecurity: attribute.packageName = space.alliswell.inbox mCurMethodId = com.bytedance.android.doubaoime/.ImeService isSecurity = false ( enable = true needShow = false inBlackList = false isExist = true )
+09-20 23:49:18.469  2021  3854 D CoreBackPreview: Window{abe50b u0 space.alliswell.inbox/space.alliswell.inbox.MainActivity}: Setting back callback OnBackInvokedCallbackInfo{mCallback=android.window.IOnBackInvokedCallback$Stub$Proxy@f947a9e, mPriority=0, mIsAnimationCallback=true, mOverrideBehavior=0}
+09-20 23:49:18.476  2021  2049 D CoreBackPreview: Window{abe50b u0 space.alliswell.inbox/space.alliswell.inbox.MainActivity}: Setting back callback OnBackInvokedCallbackInfo{mCallback=android.window.IOnBackInvokedCallback$Stub$Proxy@3c8897f, mPriority=0, mIsAnimationCallback=false, mOverrideBehavior=0}
+09-20 23:49:18.487  2021  4007 D WindowManager: NFW_findFocusedWindowIfNeeded:Window{abe50b u0 space.alliswell.inbox/space.alliswell.inbox.MainActivity} mCurrentFocus:Window{abe50b u0 space.alliswell.inbox/space.alliswell.inbox.MainActivity}
+09-20 23:49:18.487  2021  4007 D ActivityTaskManager: The isLandscapeFullscreenEnabled is: space.alliswell.inbox/.MainActivity
+09-20 23:49:18.731  9663 13708 I GameSpaceUI.COSASDKManager: getManagerInfoListNoTimeOut 1789919358727 getPrintAppInfoString AppInfo{mPackageName='space.alliswell.inbox', mType=7, mUserMarkType=-1}
+09-20 23:49:18.771  3574  3832 D ViewRootImplExtImpl: wrapConfigInfoIntoFlags rotation=0, smallestScreenWidthDp=360, isAutolayoutSwdpModified=false, residentWS=false, scenario=0, bounds=Rect(0, 0 - 1080, 2376), isFirstDraw=false, relayoutAsync=false, flags=0, newFlags=1245719808, title=Splash Screen space.alliswell.inbox
+09-20 23:49:18.771  2021  4007 V WindowManager: Relayout Window{ed0a1a6 u0 Splash Screen space.alliswell.inbox}: viewVisibility=8, oldvis=0, req=1080x2376 , apr = 8, 
+09-20 23:49:18.773  2021  4007 D WindowManager: NFW_findFocusedWindowIfNeeded:Window{abe50b u0 space.alliswell.inbox/space.alliswell.inbox.MainActivity} mCurrentFocus:Window{abe50b u0 space.alliswell.inbox/space.alliswell.inbox.MainActivity}
+09-20 23:49:18.773  2021  4007 D ActivityTaskManager: The isLandscapeFullscreenEnabled is: space.alliswell.inbox/.MainActivity
+09-20 23:49:18.773  3574  3574 D CommandQueueLogger: onSystemBarAttributesChanged displayId=0 appearance=0 packageName=space.alliswell.inbox
+09-20 23:49:18.774  2021  3854 D WindowManager: NFW_findFocusedWindowIfNeeded:Window{abe50b u0 space.alliswell.inbox/space.alliswell.inbox.MainActivity} mCurrentFocus:Window{abe50b u0 space.alliswell.inbox/space.alliswell.inbox.MainActivity}
+09-20 23:49:18.775  2021  4007 D CoreBackPreview: Window{ed0a1a6 u0 Splash Screen space.alliswell.inbox EXITING}: Setting back callback null
+09-20 23:49:18.784  2021  2071 D SurfaceAnimationRunner: onAnimationStart:Surface(name=Surface(name=ed0a1a6 Splash Screen space.alliswell.inbox)/@0xef78d53 - animation-leash of window_animation)/@0xda8a690
+09-20 23:49:18.786  2021  3854 D Transition: finishTransition ar ActivityRecord{70562559 u0 space.alliswell.inbox/.MainActivity t18745}, isVisibleRequested=true, state=RESUMED, visibleAtTransitionEndTokens={ActivityRecord{70562559 u0 space.alliswell.inbox/.MainActivity t18745}}, this=TransitionRecord{3a5bb1d id=4683 track=0 type=OPEN flags=0x0 state=2 c=[
+09-20 23:49:18.786  2021  3854 D Transition:    ChangeInfo{201b192 container=Task{259df91 #18745 type=standard A=10558:space.alliswell.inbox} flags=0x30}
+09-20 23:49:18.786  2021  3854 D Transition:    ChangeInfo{7bf4763 container=ActivityRecord{70562559 u0 space.alliswell.inbox/.MainActivity t18745} flags=0x0}
+09-20 23:49:18.786  2021  3854 D Transition: finishTransition ar ActivityRecord{126118525 u0 com.twitter.android/com.x.android.main.MainActivity t18741}, isVisibleRequested=false, state=PAUSED, visibleAtTransitionEndTokens={ActivityRecord{70562559 u0 space.alliswell.inbox/.MainActivity t18745}}, this=TransitionRecord{3a5bb1d id=4683 track=0 type=OPEN flags=0x0 state=2 c=[
+09-20 23:49:18.786  2021  3854 D Transition:    ChangeInfo{201b192 container=Task{259df91 #18745 type=standard A=10558:space.alliswell.inbox} flags=0x30}
+09-20 23:49:18.786  2021  3854 D Transition:    ChangeInfo{7bf4763 container=ActivityRecord{70562559 u0 space.alliswell.inbox/.MainActivity t18745} flags=0x0}
+09-20 23:49:18.786  2021  3854 I OplusAppSwitchManagerService:  handleAppVisible , r = ActivityRecord{70562559 u0 space.alliswell.inbox/.MainActivity t18745}
+09-20 23:49:18.786  2021  3854 D ActivityTaskManager: The isLandscapeFullscreenEnabled is: space.alliswell.inbox/.MainActivity
+09-20 23:49:18.786  2021  3854 D OplusTransitionController:    ChangeInfo{201b192 container=Task{259df91 #18745 type=standard A=10558:space.alliswell.inbox} flags=0x30}
+09-20 23:49:18.786  2021  3854 D OplusTransitionController:    ChangeInfo{7bf4763 container=ActivityRecord{70562559 u0 space.alliswell.inbox/.MainActivity t18745} flags=0x0}
+09-20 23:49:18.787  2021  3854 D FlexibleTaskTransitionController:    ChangeInfo{201b192 container=Task{259df91 #18745 type=standard A=10558:space.alliswell.inbox} flags=0x30}
+09-20 23:49:18.787  2021  3854 D FlexibleTaskTransitionController:    ChangeInfo{7bf4763 container=ActivityRecord{70562559 u0 space.alliswell.inbox/.MainActivity t18745} flags=0x0}
+09-20 23:49:18.788  2021  2069 I PowerHalWrapper: amsBoostNotify pid:23626,activity:com.x.android.main.MainActivity, package:com.twitter.android, mProcessCreatePackspace.alliswell.inbox 
+09-20 23:49:18.788  1192  1192 I MTK_APPList: [notifyAPPstate] multi_resumed_app_info[0] space.alliswell.inbox/space.alliswell.inbox.MainActivity, pid:11890, activityId:70562559, fps:-1, isMultiWindow:0
+09-20 23:49:18.790  2021  2069 D WindowManager: NFW_findFocusedWindowIfNeeded:Window{abe50b u0 space.alliswell.inbox/space.alliswell.inbox.MainActivity} mCurrentFocus:Window{abe50b u0 space.alliswell.inbox/space.alliswell.inbox.MainActivity}
+09-20 23:49:18.814  9663  9663 W GameSpaceUI.gs_NewInstallTagPackageObserver: onPackageReplaced pkg=space.alliswell.inbox
+09-20 23:49:18.847  2021  3637 D WindowManager: NFW_findFocusedWindowIfNeeded:Window{abe50b u0 space.alliswell.inbox/space.alliswell.inbox.MainActivity} mCurrentFocus:Window{abe50b u0 space.alliswell.inbox/space.alliswell.inbox.MainActivity}
+09-20 23:49:18.847  2021  3637 D ActivityTaskManager: The isLandscapeFullscreenEnabled is: space.alliswell.inbox/.MainActivity
+09-20 23:49:18.936  2021  2071 D SurfaceAnimationRunner: onAnimationEnd:Surface(name=Surface(name=ed0a1a6 Splash Screen space.alliswell.inbox)/@0xef78d53 - animation-leash of window_animation)/@0xda8a690
+09-20 23:49:18.936  2021  2070 I WindowStateExtImpl: onSurfaceShowChange show = false mPackageName = space.alliswell.inbox parentPkgName = space.alliswell.inbox
+09-20 23:49:18.937  2021  2070 I WindowManager: Window{ed0a1a6 u0 Splash Screen space.alliswell.inbox EXITING} state from HAS_DRAWN to NO_SURFACE; reason: destroySurface
+09-20 23:49:18.938  3574  3574 D CommandQueueLogger: onSystemBarAttributesChanged displayId=0 appearance=0 packageName=space.alliswell.inbox
+09-20 23:49:19.057  2021  4007 D OplusAlarmManagerServiceHelper: pkg = space.alliswell.inbox, isSystem = false
+09-20 23:49:19.059  2021  4007 D OplusAlarmManagerServiceHelper: pkg = space.alliswell.inbox, isSystem = false
+09-20 23:49:19.069  2021  3637 D OplusAlarmManagerServiceHelper: pkg = space.alliswell.inbox, isSystem = false
+09-20 23:49:19.070  2021  3637 D OplusAlarmManagerServiceHelper: pkg = space.alliswell.inbox, isSystem = false
+09-20 23:49:19.155  3614 11663 D ActivityAdapter: notifyActivityQuery: [space.alliswell.inbox; space.alliswell.inbox.MainActivity; 1; COMMON; 10558; 0; 0]
+09-20 23:49:19.155  3614 11663 D OPlusFrontAppManager: useAdapterResult, pkg=space.alliswell.inbox,activity=space.alliswell.inbox.MainActivity,result=true
+09-20 23:49:19.155  3614 11663 D OPlusFrontAppManager: decide -->> [space.alliswell.inbox; space.alliswell.inbox.MainActivity; 1; COMMON; 10558; 0; 0]
+09-20 23:49:19.155  3614 11663 D ActivityAdapter: notifyActivityQuery: [space.alliswell.inbox; space.alliswell.inbox.MainActivity; 1; COMMON; 10558; 0; 0]
+09-20 23:49:19.155  3614 11663 D OPlusFrontAppManager: useAdapterResult, pkg=space.alliswell.inbox,activity=space.alliswell.inbox.MainActivity,result=true
+09-20 23:49:19.155  3614 11663 D OPlusFrontAppManager: decide -->> [space.alliswell.inbox; space.alliswell.inbox.MainActivity; 1; COMMON; 10558; 0; 0]
+09-20 23:49:19.155  3614 11663 D ConferenceScene: pkg:space.alliswell.inbox, activity:space.alliswell.inbox.MainActivity, appSense:COMMON
+09-20 23:49:19.156  3614  9777 D CellMap/QoeMapService: handleAppSceneChange: [{pkgName:space.alliswell.inbox,activityName:,winMode:1,event:COMMON,type:0,subEvent:0,pid:11890,uid:10558, hostPkgName:}]
+09-20 23:49:19.156  3614  3614 D AtomHighLoadSenseInfo: handleAppSenseChanged appInfoUnit:{pkgName:space.alliswell.inbox,activityName:,winMode:1,event:COMMON,type:0,subEvent:0,pid:11890,uid:10558, hostPkgName:}
+09-20 23:49:19.156  3614  3614 D ExtremeCommService: updateAppInfo appInfoUnit: space.alliswell.inbox, winMode:1
+09-20 23:49:19.156  3614 32369 D EstManager: onAppSceneChanged, pkgName:space.alliswell.inbox, type:0,event:0
+09-20 23:49:19.157  3614 11663 D AppSenseService: notifySenseEvent: {pkgName:space.alliswell.inbox,activityName:space.alliswell.inbox.MainActivity,winMode:1,event:COMMON,type:0,subEvent:0,pid:11890,uid:10558, hostPkgName:},
+09-20 23:49:19.157  3458  3972 D AppSenseClient: handleSenseEvent appInfoUnits: {pkgName:space.alliswell.inbox,activityName:space.alliswell.inbox.MainActivity,winMode:1,event:COMMON,type:0,subEvent:0,pid:11890,uid:10558, hostPkgName:},
+09-20 23:49:19.157  3458  3972 D AppSenseClient: notifyAppEvent: pkgName: space.alliswell.inbox,activityName:space.alliswell.inbox.MainActivity;state: 1;event: COMMON;type: 0;subEvent: 0;pid: 11890;uid: 10558
+09-20 23:49:19.157  3458  3972 D AppSenseClient: notifyAppChanges: [{pkgName:space.alliswell.inbox,activityName:space.alliswell.inbox.MainActivity,winMode:1,event:COMMON,type:0,subEvent:0,pid:11890,uid:10558, hostPkgName:}]
+09-20 23:49:19.157  3458  3972 D NAS-DataSceneEvent: new event: event=0, state=1, pkg=space.alliswell.inbox, type=0, subEvent=0
+09-20 23:49:19.157  3458  3972 D NAS-DataSceneEvent: updateAppSenseChange [{pkgName:space.alliswell.inbox,activityName:space.alliswell.inbox.MainActivity,winMode:1,event:COMMON,type:0,subEvent:0,pid:11890,uid:10558, hostPkgName:}]
+09-20 23:49:19.157  2021  2021 D AppSenseClient: handleSenseEvent appInfoUnits: {pkgName:space.alliswell.inbox,activityName:space.alliswell.inbox.MainActivity,winMode:1,event:COMMON,type:0,subEvent:0,pid:11890,uid:10558, hostPkgName:},
+09-20 23:49:19.157  2021  2021 D AppSenseClient: notifyAppEvent: pkgName: space.alliswell.inbox,activityName:space.alliswell.inbox.MainActivity;state: 1;event: COMMON;type: 0;subEvent: 0;pid: 11890;uid: 10558
+09-20 23:49:19.157  3614  9777 D CellMap/GameLatencyMapService: handleAppSceneChange: [{pkgName:space.alliswell.inbox,activityName:,winMode:1,event:COMMON,type:0,subEvent:0,pid:11890,uid:10558, hostPkgName:}]
+09-20 23:49:19.157  2021  2021 D AppSenseClient: notifyAppChanges: [{pkgName:space.alliswell.inbox,activityName:space.alliswell.inbox.MainActivity,winMode:1,event:COMMON,type:0,subEvent:0,pid:11890,uid:10558, hostPkgName:}]
+09-20 23:49:19.157  2021  2021 D AppSenseClient: notifyAppEvent: pkgName: space.alliswell.inbox,activityName:space.alliswell.inbox.MainActivity;state: 1;event: COMMON;type: 0;subEvent: 0;pid: 11890;uid: 10558
+09-20 23:49:19.157  2021  2021 D AppSenseClient: notifyAppChanges: [{pkgName:space.alliswell.inbox,activityName:space.alliswell.inbox.MainActivity,winMode:1,event:COMMON,type:0,subEvent:0,pid:11890,uid:10558, hostPkgName:}]
+09-20 23:49:19.157  3614  9777 D CellMap/AppMonitor: front app: space.alliswell.inbox
+09-20 23:49:19.158  3614 11213 D Subsys-ScoreAppManager: appSceneChange fgAppUnits size 2 fgAppUnits [{pkgName:space.alliswell.inbox,activityName:,winMode:1,event:COMMON,type:0,subEvent:0,pid:11890,uid:10558, hostPkgName:}, {pkgName:com.oplus.aiunit,activityName:,winMode:1,event:FILE_TRANSFER,type:0,subEvent:0,pid:0,uid:10153, hostPkgName:}] mLastNetworkList[269, 276]
+09-20 23:49:19.159  3614  3614 D AtomGameLatencyInfo: front app: space.alliswell.inbox
+09-20 23:49:19.159  3614  3614 D SceneService: notifyAppSceneChanged original mode:{live:0,video:0,voice call:0,video call:0,live host:0,game:0,meeting:0,news:0,file transfer:0},appInfoUnit:[{pkgName:space.alliswell.inbox,activityName:,winMode:1,event:COMMON,type:0,subEvent:0,pid:11890,uid:10558, hostPkgName:}]
+09-20 23:49:19.159  3614  3614 D FrontAppsEvent: onAppSceneUpdate, infoList:[{pkgName:space.alliswell.inbox,activityName:,winMode:1,event:COMMON,type:0,subEvent:0,pid:11890,uid:10558, hostPkgName:}]
+09-20 23:49:19.160  3489  3489 D AppSenseClient: handleSenseEvent appInfoUnits: {pkgName:space.alliswell.inbox,activityName:space.alliswell.inbox.MainActivity,winMode:1,event:COMMON,type:0,subEvent:0,pid:11890,uid:10558, hostPkgName:},
+09-20 23:49:19.160  3489  3489 D AppSenseClient: notifyAppEvent: pkgName: space.alliswell.inbox,activityName:space.alliswell.inbox.MainActivity;state: 1;event: COMMON;type: 0;subEvent: 0;pid: 11890;uid: 10558
+09-20 23:49:19.160  3401  3938 D AppSenseClient: handleSenseEvent appInfoUnits: {pkgName:space.alliswell.inbox,activityName:space.alliswell.inbox.MainActivity,winMode:1,event:COMMON,type:0,subEvent:0,pid:11890,uid:10558, hostPkgName:},
+09-20 23:49:19.160  3489  3489 D AppSenseClient: notifyAppChanges: [{pkgName:space.alliswell.inbox,activityName:space.alliswell.inbox.MainActivity,winMode:1,event:COMMON,type:0,subEvent:0,pid:11890,uid:10558, hostPkgName:}]
+09-20 23:49:19.160  3489  3489 D NhsAppSenseListener: new event: event=0, state=1, pkg=space.alliswell.inbox, type=0, subEvent=0
+09-20 23:49:19.160  3401  3938 D AppSenseClient: notifyAppEvent: pkgName: space.alliswell.inbox,activityName:space.alliswell.inbox.MainActivity;state: 1;event: COMMON;type: 0;subEvent: 0;pid: 11890;uid: 10558
+09-20 23:49:19.160  3401  3938 D AppSenseClient: notifyAppChanges: [{pkgName:space.alliswell.inbox,activityName:space.alliswell.inbox.MainActivity,winMode:1,event:COMMON,type:0,subEvent:0,pid:11890,uid:10558, hostPkgName:}]
+09-20 23:49:19.179  3614 11213 D Subsys-ScoreAppManager: unit: {pkgName:space.alliswell.inbox,activityName:,winMode:1,event:COMMON,type:0,subEvent:0,pid:11890,uid:10558, hostPkgName:}
+09-20 23:49:19.196  3651  4352 W Battery : Thermal.FpsControl: writeFps 0 space.alliswell.inbox
+09-20 23:49:19.343 23393 23588 I RemoteGuardClient_16.1.2.ActivityMonitor: checkoutActivityChange topActivities = [space.alliswell.inbox] mProcessEnable: true
+09-20 23:49:19.345  1255  4922 D AudioFlingerExtImpl: updateForegroundInfo, mapInf mForegroundMap(1)|[space.alliswell.inbox]=1, uidPidMapInf mForegroundUidPidMap(1)|[10558]=11890
+09-20 23:49:19.347  2021  1360 I OStatsManager_Calc: add screen power pkgName = space.alliswell.inbox, uid = 10558, power = 273.1875, is Fg = true, fore size = 2, mScale = 1.0
+09-20 23:49:19.348  2021  1360 I OStatsManager_OplusBatteryStatsManager: notePkgBackground [space.alliswell.inbox10558], uid = 10423, pid = 23626, pkgName = com.twitter.android
+09-20 23:49:19.440 11890 13549 D OplusScrollToTopManager: space.alliswell.inbox/space.alliswell.inbox.MainActivity,This com.android.internal.policy.DecorView{add6284 V.E...... R....... 0,0-1080,2376 alpha=1.0 viewInfo = }[MainActivity] change focus to true
+09-20 23:49:19.871  9663 10430 I GameSpaceUI.NotificationReceiveCommandExecutor: action : android.intent.action.PACKAGE_REMOVED, pkg : space.alliswell.inbox
+09-20 23:49:19.871  9663 10430 I GameSpaceUI.PackageNotificationReceiver: handlePackageChanged action : android.intent.action.PACKAGE_REMOVED, pkg: space.alliswell.inbox 
+09-20 23:49:19.872  9663  9693 I GameSpaceUI.NotificationReceiveCommandExecutor: action : android.intent.action.PACKAGE_REPLACED, pkg : space.alliswell.inbox
+09-20 23:49:19.872  9663  9693 I GameSpaceUI.PackageNotificationReceiver: handlePackageChanged action : android.intent.action.PACKAGE_REPLACED, pkg: space.alliswell.inbox 
+09-20 23:49:20.513 13306 13916 W cdo_md5 : refresh app: md5 and sign: compute: Md5DbItem{pkgName='space.alliswell.inbox', md5='bd45c18ffb54db26fdc011888616875d', status='2_1789919356948_1789919355501', signList=[170f46552ebcc0180cb34e1c99344e96]} ,cost: 285
+09-20 23:49:20.514 13306 13916 W market_check_upgrade: startCheckUpgrade: part app: [space.alliswell.inbox] ,isCtaPass: true
+09-20 23:49:20.549  8159  9736 I DigitalAppSDK_1.2.0.PackageUtil: has remove pkg = space.alliswell.inbox
+09-20 23:49:20.561  8159  9765 I DigitalAppSDK_1.2.0.PackageUtil: has add pkg = space.alliswell.inbox
+09-20 23:49:21.086 13306 13964 W market_check_upgrade: req pkgs: {space.alliswell.inbox: 2_bd45c18ffb54db26fdc011888616875d}, 
+09-20 23:49:22.122 14344 14344 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
+09-20 23:49:22.164 14344 14344 I AndroidRuntime: Using default boot image
+09-20 23:49:22.164 14344 14344 I AndroidRuntime: Leaving lock profiling enabled
+09-20 23:49:22.411 14344 14344 D AndroidRuntime: Calling main entry com.android.commands.uiautomator.Launcher
+09-20 23:49:22.854  6708 13398 W PTC.DATATRANS.d: [space.alliswell.inbox] removed. Stop sending intent
+09-20 23:49:23.376 11890 13624 D ContentResolverExt: reject package: space.alliswell.inbox, restricted: 2
+09-20 23:49:23.450  5311 14373 D OplusRiskAppCache: getRiskApps mRiskApps = [cn.byr.bbs.app, com.android.skip, com.nextin.m78, com.ruaho.echat.icbc.sandbox, com.wpengapp.lightstart, sh.paseo, space.alliswell.inbox]
+09-20 23:49:23.450  5311 14373 I MediaProvider: get risk apps:[cn.byr.bbs.app, com.android.skip, com.nextin.m78, com.ruaho.echat.icbc.sandbox, com.wpengapp.lightstart, sh.paseo, space.alliswell.inbox]
+09-20 23:49:23.507 14344 14344 D AndroidRuntime: Shutting down VM
+09-20 23:49:24.096 11890 14374 D ProfileInstaller: Installing profile for space.alliswell.inbox

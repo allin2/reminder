@@ -1,0 +1,30 @@
+{
+  "sourceBefore": "2ef2c72b6319feb3414fd07914804296d4f9fa7888a834b3d95f1a98b2fafa37",
+  "sourceAfter": "2ef2c72b6319feb3414fd07914804296d4f9fa7888a834b3d95f1a98b2fafa37",
+  "anchorsFound": true,
+  "project": {
+    "healthy": {
+      "buildsBeforeRename": 2,
+      "buildsAfterRename": 3,
+      "domShowsRenamed": true
+    },
+    "mutant": {
+      "buildsBeforeRename": 2,
+      "buildsAfterRename": 2,
+      "domShowsRenamed": false
+    },
+    "red": true
+  },
+  "unsafeUrl": {
+    "healthy": {
+      "unsafeAnchor": false,
+      "plainText": true
+    },
+    "mutant": {
+      "unsafeAnchor": true,
+      "plainText": false
+    },
+    "red": true
+  },
+  "red": true
+}

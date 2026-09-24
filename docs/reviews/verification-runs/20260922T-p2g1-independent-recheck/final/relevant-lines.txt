@@ -1,0 +1,61 @@
+15:== P2-G1 AppCapture — 表单会话、live 状态与幂等绑定 ==
+16:  ✓ P2-G1 模块求值零 DOM/state/timer 副作用
+17:  ✓ P2-G1 reset 每次递增独立会话，手选时间进入签名
+18:  ✓ P2-G1 同内容重新打开仍是另一会话且走 live 项目刷新
+19:  ✓ P2-G1 编辑复杂事项保留项目/周期并展开更多字段
+20:  ✓ P2-G1 重复预览与相似提示真实渲染且危险 id/title 均转义
+21:  ✓ P2-G1 parse hint 尊重用户手选时间并更新摘要
+22:  ✓ P2-G1 capture bind 对输入、重复、时间和更多选项幂等
+1267:  ✓ P2-G1 反例：抽掉 lib/app-capture.js ⇒ ready=false 且只点名 AppCapture 系
+1268:  ✓ P2-G1 抽掉 capture 时 fail closed 前不读库、不排程、不起业务心跳
+1269:  ✓ P2-G1 空 AppCapture 命名空间：首次启动点名 AppCapture.createAppCapture 并 ready=false
+1270:  ✓ P2-G1 空 AppCapture 命名空间：fail closed 前不读库、不排程、不起业务心跳
+1271:  ✓ P2-G1 工厂返回空壳：首次启动点名 AppCapture.bind 并 ready=false
+1272:  ✓ P2-G1 工厂返回空壳：fail closed 前不读库、不排程、不起业务心跳
+1273:  ✓ P2-G1 工厂抛错：首次启动点名 AppCapture.createAppCapture() 并 ready=false
+1274:  ✓ P2-G1 工厂抛错：fail closed 前不读库、不排程、不起业务心跳
+1275:  ✓ P2-G1 缺实例成员 bind：首次启动点名 AppCapture.bind 并 ready=false
+1276:  ✓ P2-G1 缺实例成员 bind：fail closed 前不读库、不排程、不起业务心跳
+1277:  ✓ P2-G1 缺实例成员 findSimilarItems：首次启动点名 AppCapture.findSimilarItems 并 ready=false
+1278:  ✓ P2-G1 缺实例成员 findSimilarItems：fail closed 前不读库、不排程、不起业务心跳
+1279:  ✓ P2-G1 缺实例成员 formDraftSignature：首次启动点名 AppCapture.formDraftSignature 并 ready=false
+1280:  ✓ P2-G1 缺实例成员 formDraftSignature：fail closed 前不读库、不排程、不起业务心跳
+1281:  ✓ P2-G1 缺实例成员 formRepeat：首次启动点名 AppCapture.formRepeat 并 ready=false
+1282:  ✓ P2-G1 缺实例成员 formRepeat：fail closed 前不读库、不排程、不起业务心跳
+1283:  ✓ P2-G1 缺实例成员 markTriggerPicked：首次启动点名 AppCapture.markTriggerPicked 并 ready=false
+1284:  ✓ P2-G1 缺实例成员 markTriggerPicked：fail closed 前不读库、不排程、不起业务心跳
+1285:  ✓ P2-G1 缺实例成员 openCapture：首次启动点名 AppCapture.openCapture 并 ready=false
+1286:  ✓ P2-G1 缺实例成员 openCapture：fail closed 前不读库、不排程、不起业务心跳
+1287:  ✓ P2-G1 缺实例成员 openEditItem：首次启动点名 AppCapture.openEditItem 并 ready=false
+1288:  ✓ P2-G1 缺实例成员 openEditItem：fail closed 前不读库、不排程、不起业务心跳
+1289:  ✓ P2-G1 缺实例成员 renderCaptureSummary：首次启动点名 AppCapture.renderCaptureSummary 并 ready=false
+1290:  ✓ P2-G1 缺实例成员 renderCaptureSummary：fail closed 前不读库、不排程、不起业务心跳
+1291:  ✓ P2-G1 缺实例成员 renderSimilarHint：首次启动点名 AppCapture.renderSimilarHint 并 ready=false
+1292:  ✓ P2-G1 缺实例成员 renderSimilarHint：fail closed 前不读库、不排程、不起业务心跳
+1293:  ✓ P2-G1 缺实例成员 resetItemSheet：首次启动点名 AppCapture.resetItemSheet 并 ready=false
+1294:  ✓ P2-G1 缺实例成员 resetItemSheet：fail closed 前不读库、不排程、不起业务心跳
+1295:  ✓ P2-G1 缺实例成员 restoreItemForm：首次启动点名 AppCapture.restoreItemForm 并 ready=false
+1296:  ✓ P2-G1 缺实例成员 restoreItemForm：fail closed 前不读库、不排程、不起业务心跳
+1297:  ✓ P2-G1 缺实例成员 session：首次启动点名 AppCapture.session 并 ready=false
+1298:  ✓ P2-G1 缺实例成员 session：fail closed 前不读库、不排程、不起业务心跳
+1299:  ✓ P2-G1 缺实例成员 snapshotItemForm：首次启动点名 AppCapture.snapshotItemForm 并 ready=false
+1300:  ✓ P2-G1 缺实例成员 snapshotItemForm：fail closed 前不读库、不排程、不起业务心跳
+1301:  ✓ P2-G1 缺实例成员 updateParseHint：首次启动点名 AppCapture.updateParseHint 并 ready=false
+1302:  ✓ P2-G1 缺实例成员 updateParseHint：fail closed 前不读库、不排程、不起业务心跳
+1303:  ✓ P2-G1 缺实例成员 updateRepeatPreview：首次启动点名 AppCapture.updateRepeatPreview 并 ready=false
+1304:  ✓ P2-G1 缺实例成员 updateRepeatPreview：fail closed 前不读库、不排程、不起业务心跳
+1305:  ✓ P2-G1 临时 boot 反例只写 /tmp，工作区 app-capture.js 字节未被改写
+1306:  ✓ P2-G1 正向：capture 实例已进生产组合且会话可读
+2772:== 返工2 R-F03：AI 迟到结果不得覆盖新草稿（复验 X2） ==
+2773:  ✓ R-F03 迟到结果不清空新草稿（旧实现：#capText 被清成空）
+2774:  ✓ R-F03 第二条的备注仍在表单上
+2775:  ✓ R-F03 第一条**没有**串进第二条的备注（旧实现：标题「取快递」+ 备注「第二条的备注」）
+2776:  ✓ R-F03 第一条落库的仍是它自己草稿的内容（AI 归一化标题照常生效）
+2777:  ✓ R-F03 对照组：正常路径照常落库（AI 归一化标题生效）
+2778:  ✓ R-F03 对照组：正常路径照常关闭并复位表单（面板用 open 类，不是 hidden）
+2779:  ✓ R-F03 AI 失败时不吞掉新写的内容
+2780:  ✓ R-F03 AI 失败时落库的是**提交时冻结的**那份草稿，不是后来写的那份
+2781:  ✓ R-F03 前置：重开表单确实换了会话身份
+2782:  ✓ R-F03 换表单之后迟到的 AI 结果不碰新表单（内容相同也不行）
+2783:  ✓ R-F03 前置：两次不同内容的提交各自都在途
+2784:  ✓ R-F03 两次提交各落一条、内容不串写

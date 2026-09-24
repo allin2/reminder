@@ -1,0 +1,36 @@
+PKG=space.alliswell.inbox.exportrecheck  run-start=2026-09-22T00:05:29+0800
+
+════ 终止方式：SIGKILL(run-as kill -9) ════
+## [SIGKILL(run-as kill -9)] 活着时：A 时点
+IDB_STATE_SHA256=a22c3748c400e643
+BYTES=1638
+file: IDB_FILES=5 IDB_BYTES=88335 IDB_SHA256=3efb8ab2cd4a8b6a908324365e2604251de0f693f9bc024d8eb4708d37673ac8
+PAGE={"items":1,"projects":1,"title":"P2C 复验事项","status":"loaded","reason":"authoritative","backend":"idb","writesAllowed":true,"blockedWriteCount":0,"nativeBlocked":0,"panel":false}
+
+## [SIGKILL(run-as kill -9)] 终止
+  pid-after-kill=[]
+  B1: IDB_FILES=5 IDB_BYTES=88335 IDB_SHA256=3efb8ab2cd4a8b6a908324365e2604251de0f693f9bc024d8eb4708d37673ac8
+  B2: IDB_FILES=5 IDB_BYTES=88335 IDB_SHA256=3efb8ab2cd4a8b6a908324365e2604251de0f693f9bc024d8eb4708d37673ac8
+  ✓ 死亡窗口静止
+
+## [SIGKILL(run-as kill -9)] 冷启动后：C 时点
+IDB_STATE_SHA256=a22c3748c400e643
+BYTES=1638
+file: IDB_FILES=5 IDB_BYTES=91611 IDB_SHA256=36bb2299a76550f236cffc73977acb297e3584c910f39973fd1e6112285dfc7c
+PAGE={"items":1,"projects":1,"title":"P2C 复验事项","status":"loaded","reason":"authoritative","backend":"idb","writesAllowed":true,"blockedWriteCount":0,"nativeBlocked":0,"panel":false}
+
+  ✓ 记录级哈希 A==C（a22c3748c400e643）：内容零变化
+
+════ 终止方式：后台回收(HOME + am kill) ════
+## [后台回收(HOME + am kill)] 活着时：A 时点
+IDB_STATE_SHA256=a22c3748c400e643
+BYTES=1638
+file: IDB_FILES=5 IDB_BYTES=94868 IDB_SHA256=69cb6b1f971cdf1e53178d73daecba98ff9bc3f4ba5c563294755618cb12878b
+PAGE={"items":1,"projects":1,"title":"P2C 复验事项","status":"loaded","reason":"authoritative","backend":"idb","writesAllowed":true,"blockedWriteCount":0,"nativeBlocked":0,"panel":false}
+
+## [后台回收(HOME + am kill)] 终止
+  pid-after-kill=[11596]
+  ✗ 进程仍然活着（本次终止没有生效，证据无效）
+
+结束 2026-09-22T00:06:12+0800
+OVERALL=FAIL

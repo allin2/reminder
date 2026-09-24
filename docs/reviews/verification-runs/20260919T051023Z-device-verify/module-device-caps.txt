@@ -1,0 +1,8 @@
+{
+  "wmSize": "1080x2400",
+  "wmDensity": "480",
+  "batteryLevel": 100,
+  "batteryStatus": "0",
+  "dataFree": "79370984",
+  "wakefulness": "Awake"
+}

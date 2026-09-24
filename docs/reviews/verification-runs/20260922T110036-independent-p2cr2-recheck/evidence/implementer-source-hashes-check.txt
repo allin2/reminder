@@ -1,0 +1,9 @@
+app-core.js: OK
+lib/storage.js: OK
+lib/native-reminders.js: OK
+sw.js: OK
+test-unit.js: OK
+test-native-reminders.js: OK
+test-boot-combination.js: OK
+test-smoke.js: OK
+test-regressions.js: OK

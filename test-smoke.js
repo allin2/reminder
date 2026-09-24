@@ -6,6 +6,34 @@ const path = require("path");
 const vm = require("vm");
 
 const ROOT = path.join(__dirname);
+const libDateUtils = fs.readFileSync(path.join(ROOT, "lib/date-utils.js"), "utf8");
+const libUiFormat = fs.readFileSync(path.join(ROOT, "lib/ui-format.js"), "utf8");
+const libAppUi = fs.readFileSync(path.join(ROOT, "lib/app-ui.js"), "utf8");
+// P2-A：AI 能力。与 `lib/app-ui.js` 同属「有状态功能模块 + 工厂实例」一类：
+// 不加载它 ⇒ `AppAi` 是空对象 ⇒ 装配闸门失败。这里按 index.html 的同一顺序加载。
+const libAppAi = fs.readFileSync(path.join(ROOT, "lib/app-ai.js"), "utf8");
+// P2-C：数据备份。同属「有状态功能模块 + 工厂实例」一类：
+// 不加载它 ⇒ `AppBackup` 是空对象 ⇒ 装配闸门失败。按 index.html 的同一顺序加载。
+const libAppBackup = fs.readFileSync(path.join(ROOT, "lib/app-backup.js"), "utf8");
+// P2-D：诊断能力。同属「有状态功能模块 + 工厂实例」：不加载它 ⇒ `AppDiagnostics`
+// 是空对象 ⇒ 装配闸门失败（与 app-ai / app-backup 同一条规矩）。
+const libAppDiagnostics = fs.readFileSync(path.join(ROOT, "lib/app-diagnostics.js"), "utf8");
+const libAppSetup = fs.readFileSync(path.join(ROOT, "lib/app-setup.js"), "utf8");
+const libAppContent = fs.readFileSync(path.join(ROOT, "lib/app-content.js"), "utf8");
+const libAppCapture = fs.readFileSync(path.join(ROOT, "lib/app-capture.js"), "utf8");
+const libAppViews = fs.readFileSync(path.join(ROOT, "lib/app-views.js"), "utf8");
+const libAppModel = fs.readFileSync(path.join(ROOT, "lib/app-model.js"), "utf8");
+const libAppPersistence = fs.readFileSync(path.join(ROOT, "lib/app-persistence.js"), "utf8");
+const libAppTransaction = fs.readFileSync(path.join(ROOT, "lib/app-transaction.js"), "utf8");
+const libAppItems = fs.readFileSync(path.join(ROOT, "lib/app-items.js"), "utf8");
+const libAppNativeCoordinator = fs.readFileSync(path.join(ROOT, "lib/app-native-coordinator.js"), "utf8");
+const libAppReview = fs.readFileSync(path.join(ROOT, "lib/app-review.js"), "utf8");
+const libAppAlerts = fs.readFileSync(path.join(ROOT, "lib/app-alerts.js"), "utf8");
+const libAppPlatform = fs.readFileSync(path.join(ROOT, "lib/app-platform.js"), "utf8");
+const libAppActionFeedback = fs.readFileSync(path.join(ROOT, "lib/app-action-feedback.js"), "utf8");
+const libAppEvents = fs.readFileSync(path.join(ROOT, "lib/app-events.js"), "utf8");
+const libAppTestApi = fs.readFileSync(path.join(ROOT, "lib/app-test-api.js"), "utf8");
+const libAppNotices = fs.readFileSync(path.join(ROOT, "lib/app-notices.js"), "utf8");
 const libParse = fs.readFileSync(path.join(ROOT, "lib/parse-cn.js"), "utf8");
 const libRepeat = fs.readFileSync(path.join(ROOT, "lib/repeat.js"), "utf8");
 const libReminder = fs.readFileSync(path.join(ROOT, "lib/reminder.js"), "utf8");
@@ -14,6 +42,10 @@ const libStorage = fs.readFileSync(path.join(ROOT, "lib/storage.js"), "utf8");
 // EvidenceLib 会静默退化成兜底分支 —— 断言看似通过，实际测的是「没有实现」的那条路。
 const libFeedback = fs.readFileSync(path.join(ROOT, "lib/feedback.js"), "utf8");
 const libDeliveryEvidence = fs.readFileSync(path.join(ROOT, "lib/delivery-evidence.js"), "utf8");
+// F01：`lib/native-reminders.js` 是**生产清单里的一支必需脚本**（index.html 始终加载它，
+// 任何平台都会往全局写 `AttentionNativeReminders`）。从前这套 harness 不加载它，
+// 于是「app-core 抓到的是空对象」被当成了常态 —— 独立复验 F01 的缺口正是从这里长出来的。
+const libNativeReminders = fs.readFileSync(path.join(ROOT, "lib/native-reminders.js"), "utf8");
 const src = fs.readFileSync(path.join(ROOT, "app-core.js"), "utf8");
 const indexHtml = fs.readFileSync(path.join(ROOT, "index.html"), "utf8");
 const systemBridgeJava = fs.readFileSync(path.join(ROOT,
@@ -157,15 +189,49 @@ const sandbox = {
   globalThis: null
 };
 sandbox.globalThis = sandbox;
-sandbox.window = Object.assign(sandbox.window, sandbox);
+// 浏览器 / Android WebView 里 `window` **就是**全局对象本身，不是一份浅拷贝。
+//
+// 这里从前写的是 `Object.assign(sandbox.window, sandbox)` —— 于是「测试设置
+// `window.Capacitor`」与「模块读 `globalThis.Capacitor`」会落在两个不同的对象上。
+// 加载 `lib/native-reminders.js` 之后这个不忠诚的夹具立刻暴露：它按 UMD 约定读
+// `root.Capacitor`（真实环境里就是 `window.Capacitor`），而拷贝里设的那份它看不见。
+// 平台 mock 要能被判定，前提就是两边看到同一个对象（boot-combination 同此处理）。
+sandbox.window = sandbox;
+sandbox.self = sandbox;
+sandbox.addEventListener = function () {};
+sandbox.removeEventListener = function () {};
+sandbox.dispatchEvent = function () { return true; };
 
 vm.createContext(sandbox);
+vm.runInContext(libDateUtils, sandbox, { filename: "lib/date-utils.js" });
+vm.runInContext(libUiFormat, sandbox, { filename: "lib/ui-format.js" });
+vm.runInContext(libAppUi, sandbox, { filename: "lib/app-ui.js" });
+vm.runInContext(libAppAi, sandbox, { filename: "lib/app-ai.js" });
+vm.runInContext(libAppBackup, sandbox, { filename: "lib/app-backup.js" });
+vm.runInContext(libAppDiagnostics, sandbox, { filename: "lib/app-diagnostics.js" });
+vm.runInContext(libAppSetup, sandbox, { filename: "lib/app-setup.js" });
+vm.runInContext(libAppContent, sandbox, { filename: "lib/app-content.js" });
+vm.runInContext(libAppCapture, sandbox, { filename: "lib/app-capture.js" });
+vm.runInContext(libAppViews, sandbox, { filename: "lib/app-views.js" });
+vm.runInContext(libAppModel, sandbox, { filename: "lib/app-model.js" });
+vm.runInContext(libAppPersistence, sandbox, { filename: "lib/app-persistence.js" });
+vm.runInContext(libAppTransaction, sandbox, { filename: "lib/app-transaction.js" });
+vm.runInContext(libAppItems, sandbox, { filename: "lib/app-items.js" });
+vm.runInContext(libAppNativeCoordinator, sandbox, { filename: "lib/app-native-coordinator.js" });
+vm.runInContext(libAppReview, sandbox, { filename: "lib/app-review.js" });
+vm.runInContext(libAppAlerts, sandbox, { filename: "lib/app-alerts.js" });
+vm.runInContext(libAppPlatform, sandbox, { filename: "lib/app-platform.js" });
+vm.runInContext(libAppActionFeedback, sandbox, { filename: "lib/app-action-feedback.js" });
+vm.runInContext(libAppEvents, sandbox, { filename: "lib/app-events.js" });
+vm.runInContext(libAppTestApi, sandbox, { filename: "lib/app-test-api.js" });
+vm.runInContext(libAppNotices, sandbox, { filename: "lib/app-notices.js" });
 vm.runInContext(libParse, sandbox, { filename: "lib/parse-cn.js" });
 vm.runInContext(libRepeat, sandbox, { filename: "lib/repeat.js" });
 vm.runInContext(libReminder, sandbox, { filename: "lib/reminder.js" });
 vm.runInContext(libStorage, sandbox, { filename: "lib/storage.js" });
 vm.runInContext(libFeedback, sandbox, { filename: "lib/feedback.js" });
 vm.runInContext(libDeliveryEvidence, sandbox, { filename: "lib/delivery-evidence.js" });
+vm.runInContext(libNativeReminders, sandbox, { filename: "lib/native-reminders.js" });
 vm.runInContext(src, sandbox, { filename: "app-core.js" });
 
 const app = sandbox.__ATTENTION_INBOX__;
@@ -572,8 +638,8 @@ section("3g. 环境判断健壮性");
 {
   // `"Notification" in window` 在「属性存在但值为 undefined」的环境（部分 WebView/壳）会通过判断，
   // 随后访问 Notification.permission 抛错。本仓统一改用真值判断。
-  ok("不再使用 `\"Notification\" in window` 判断", src.indexOf('"Notification" in window') === -1);
-  ok("showSystemNotification 走真值判断", /const N = typeof window !== "undefined" \? window\.Notification : null/.test(src));
+  ok("不再使用 `\"Notification\" in window` 判断", src.indexOf('"Notification" in window') === -1 && libAppAlerts.indexOf('"Notification" in window') === -1);
+  ok("showSystemNotification 走真值判断", /const N = typeof window !== "undefined" \? window\.Notification : null/.test(libAppAlerts));
 }
 
 /* Relative-time capture uses the real parser and save path. */
@@ -845,7 +911,7 @@ section("3h. 业务逻辑回归（L01–L08 / D23）");
   ok("L05 会话含两条队列", app.state.ui.reviewQueue.length === 2);
   getNode("#reviewTrigger").value = "";
   app.markReviewTriggerPicked(false);
-  app.reviewConfirm();
+  await app.reviewConfirm();
   const kept = app.state.items.find(x => x.title === "第一条想不清");
   ok("L05 兜底记录确认后顺延到下一个整理窗口",
     !!kept && kept.triggerAt > Date.now() && kept.isFallbackTrigger === true,
@@ -860,7 +926,7 @@ section("3h. 业务逻辑回归（L01–L08 / D23）");
   app.renderReviewCard();
   getNode("#reviewTrigger").value = "2026-10-05T09:00";
   app.markReviewTriggerPicked(true);
-  app.reviewConfirm();
+  await app.reviewConfirm();
   const adopted = app.state.items.find(x => x.title === "第一条想不清");
   ok("L05 明确采用的时间被采纳且解除兜底",
     !!adopted && adopted.triggerAt === new Date(2026, 9, 5, 9, 0, 0).getTime() &&
@@ -1214,19 +1280,23 @@ section("10. D43 提醒台账与 H-07 降级恢复");
     localStorage.getItem("attention-inbox-v2-pending-replay") === null);
 
   // 源码级守护：降级分支必须留凭据，加载分支必须先重放再回落到 IDB 值
-  const coreCode = src
+  const persistenceCode = libAppPersistence
     .replace(/\/\*[\s\S]*?\*\//g, " ")
     .replace(/^[ \t]*\/\/[^\n]*$/gm, " ");
-  ok("H-07 降级写入留待回放凭据的接线在位", /markPendingReplay\(json\)/.test(coreCode));
-  ok("H-07 加载时先重放再回落到 IDB 旧值",
-    /if \(storage\.backend === "idb" && await replayPendingSnapshot\(\)\) return true;/.test(coreCode));
+  ok("H-07 降级写入留待回放凭据的接线在位", /markPendingReplay\(json\)/.test(persistenceCode));
+  ok("H-07 加载时先重放再回落到 IDB 旧值（P2-C-R 起：重放成功即判定为 loaded）",
+    /storage\.backend === "idb" && await replayPendingSnapshot\(\)/.test(persistenceCode) &&
+    /publishLoadReport\(LOAD_LOADED, "pending-replay"/.test(persistenceCode));
+  ok("H-07 重放**应用失败**不再被折叠成「没有快照」，而是判 failed 并关掉写闸门",
+    /if \(lastReplayFailure\)/.test(persistenceCode) &&
+    /publishLoadReport\(LOAD_FAILED, "pending-replay-failed"/.test(persistenceCode));
   ok("H-07 覆盖「IDB 打不开 → 后端整体降级为 local」这条路径（storageReady 仍为 true）",
-    /authoritativeBackendMissing\(\)\) markPendingReplay\(json\)/.test(coreCode) &&
-    /Lib\.hasIdb\(\) && storage\.backend !== "idb"/.test(coreCode));
+    /authoritativeBackendMissing\(storage\)\) markPendingReplay\(json\)/.test(persistenceCode) &&
+    /storage\.backend !== "idb"/.test(persistenceCode));
   ok("H-07 仍在镜像上跑时不得重放（否则凭据被提前清掉，IDB 恢复后拿不回来）",
-    /storage\.backend === "idb" && await replayPendingSnapshot\(\)/.test(coreCode));
+    /storage\.backend === "idb" && await replayPendingSnapshot\(\)/.test(persistenceCode));
   ok("H-07 待回放键与权威键分离（不会污染镜像）",
-    /PENDING_REPLAY_KEY = KEY \+ \"-pending-replay\"/.test(coreCode));
+    /pendingKey = key \+ "-pending-replay"/.test(persistenceCode));
 }
 
 /* ---------- 11. H-08 投递归因（行为级） ---------- */
@@ -1236,6 +1306,109 @@ section("11. H-08 投递归因：无通知权限必须被直说");
   // 载体、系统不会展示，并失去 NOTIFICATION_SERVICE 的 BAL 豁免 → 直起同样被静默拦。
   // 2026-09-18 vivo：无通知权限 + 息屏 0/4，有权限 2/2，断点每次都在 created 之前。
   const base = { attempted: true, at: Date.now(), screenOn: false, locked: true, title: "演示" };
+  // P2-D：模块求值零副作用 + bind 幂等 + 合同成员（行为级，经真实 VM 加载的模块）。
+  {
+    const AppDiag = sandbox.AttentionLib && sandbox.AttentionLib.AppDiagnostics;
+    ok("P2-D：AttentionLib.AppDiagnostics 已加载且导出工厂",
+      !!AppDiag && typeof AppDiag.createAppDiagnostics === "function");
+    // 求值零副作用：重新在干净 context 求值一次，不得注册监听/定时器/碰 state。
+    const side = { listeners: 0, intervals: 0, timeouts: 0, saves: 0 };
+    const probeRoot = {
+      addEventListener() { side.listeners++; },
+      removeEventListener() {},
+      setInterval() { side.intervals++; return 1; },
+      setTimeout() { side.timeouts++; return 1; },
+      document: { addEventListener() { side.listeners++; } }
+    };
+    probeRoot.self = probeRoot;
+    probeRoot.window = probeRoot;
+    const probeCtx = Object.assign({}, probeRoot, { console, module: undefined, exports: undefined });
+    // 用源码在隔离对象上求值（UMD 走 browser 分支）
+    const vm2 = require("vm");
+    vm2.runInNewContext(libAppDiagnostics, probeCtx, { filename: "lib/app-diagnostics.js" });
+    ok("P2-D：模块求值零副作用（不注册监听、不起定时器）",
+      side.listeners === 0 && side.intervals === 0 && side.timeouts === 0,
+      JSON.stringify(side));
+
+    // bind 幂等：同一实例第二次 bind 不得再绑按钮
+    let bindCalls = 0;
+    const countingQuery = () => ({
+      addEventListener() { bindCalls++; },
+      disabled: false, textContent: "", hidden: false,
+      classList: { contains: () => false, add() {}, remove() {} },
+      style: {}
+    });
+    const inst = AppDiag.createAppDiagnostics({
+      query: countingQuery, queryAll: () => [], openSheet() {}, toast() {},
+      fmtTime: ts => String(ts),
+      getState: () => ({ settings: {}, items: [] }),
+      save() {}, renderMe() {},
+      systemBridge: () => null, appSettingsPlugin: () => null,
+      getNativeReminderStatus: () => ({}), setNativeReminderStatus() {},
+      requestNativeNotificationPermission: async () => ({}),
+      openExactAlarmSettings: async () => {},
+      buildDesired: () => [], syncNativeRemindersNow: async () => ({}),
+      getCapacitor: () => null,
+      getDocument: () => ({ addEventListener() { bindCalls++; }, visibilityState: "visible" })
+    });
+    const afterFirst = (() => { const n0 = bindCalls; inst.bind(); return bindCalls - n0; })();
+    const afterSecond = (() => { const n0 = bindCalls; inst.bind(); return bindCalls - n0; })();
+    ok("P2-D：bind() 第一次绑定诊断按钮与 visibilitychange",
+      afterFirst > 0, "afterFirst=" + afterFirst);
+    ok("P2-D：bind() 幂等 —— 第二次调用不增加任何监听",
+      afterSecond === 0, "afterSecond=" + afterSecond);
+
+    // 依赖缺失必须在工厂入口报错（不是运行期才炸）
+    let threw = null;
+    try { AppDiag.createAppDiagnostics({}); } catch (e) { threw = e; }
+    ok("P2-D：createAppDiagnostics 缺依赖时立刻抛错（不装半套实例）",
+      !!threw && /缺少依赖/.test(String(threw.message || threw)), String(threw && threw.message));
+
+    // hook 转发与模块实例同一路径：describeAlarmDelivery 有算法体在模块，core 只转发
+    const coreSrcOnly = src
+      .replace(/\/\*[\s\S]*?\*\//g, " ")
+      .replace(/^[ \t]*\/\/[^\n]*$/gm, "");
+    ok("P2-D：app-core 不再保留 describeAlarmDelivery 算法体（只转发）",
+      !/function describeAlarmDelivery\(d\)\s*\{[\s\S]{0,80}if \(!d \|\| !d\.attempted\)/.test(coreSrcOnly) &&
+      /diagnostics\.describeAlarmDelivery/.test(coreSrcOnly));
+    ok("P2-D：投递快照优先级逻辑在 lib/app-diagnostics.js",
+      /overlayAtDelivery !== undefined/.test(libAppDiagnostics) &&
+      /fsiAtDelivery !== undefined/.test(libAppDiagnostics));
+
+    // P2-D 永久反例：四类迁出缺陷必须由行为/闭合检查抓住，不能只靠源码形状。
+    const makeDiagFromSource = source => {
+      const ctx = { console, setTimeout, clearTimeout };
+      ctx.self = ctx;
+      vm2.runInNewContext(source, ctx, { filename: "app-diagnostics-mutation.js" });
+      return ctx.AttentionLib.AppDiagnostics.createAppDiagnostics({
+        query: () => ({ textContent: "", className: "", style: {}, disabled: false,
+          hidden: false, classList: { contains: () => false, add() {}, remove() {} },
+          addEventListener() {} }), queryAll: () => [], openSheet() {}, toast() {}, fmtTime: () => "",
+        getState: () => ({ settings: {}, items: [] }), save() {}, renderMe() {},
+        systemBridge: () => null, appSettingsPlugin: () => null,
+        getNativeReminderStatus: () => ({}), setNativeReminderStatus() {},
+        requestNativeNotificationPermission: async () => ({}), openExactAlarmSettings: async () => {},
+        buildDesired: () => [], syncNativeRemindersNow: async () => ({}), getCapacitor: () => null,
+        getDocument: () => ({ addEventListener() {}, visibilityState: "visible" })
+      });
+    };
+    const carrierMutation = libAppDiagnostics.replace(
+      'const carrierKnown = d.carrierSound === "native" || d.carrierSound === "activity";',
+      'const carrierKnown = false;');
+    const carrierMutated = makeDiagFromSource(carrierMutation).describeAlarmDelivery(
+      Object.assign({}, base, { notifyEnabledAtDelivery: false, carrierSound: "native" }));
+    ok("MUT-DIAG-CARRIER 变异必红：删掉 carrier 证据优先级会改变「已响未亮」结论",
+      carrierMutated.label !== "已响未亮", carrierMutated);
+    const snapshotMutation = libAppDiagnostics.replace(
+      'const overlayAt = d.overlayAtDelivery !== undefined ? !!d.overlayAtDelivery : !!d.canDrawOverlays;',
+      'const overlayAt = !!d.canDrawOverlays;');
+    const snapshotMutated = makeDiagFromSource(snapshotMutation).describeAlarmDelivery(
+      Object.assign({}, base, { notifyEnabledAtDelivery: true, locked: false, screenOn: true,
+        overlayAtDelivery: false, canDrawOverlays: true }));
+    ok("MUT-DIAG-SNAPSHOT 变异必红：删掉投递时快照优先级会改变缺权限归因",
+      /界面没有被系统展示/.test(snapshotMutated.text), snapshotMutated.text);
+  }
+
   const noNotify = app.describeAlarmDelivery(Object.assign({}, base, { notifyEnabledAtDelivery: false }));
   ok("H-08 投递时无通知权限 → 归因指向「全屏没有载体」",
     noNotify.label === "无通知权限" && /没有载体/.test(noNotify.text), noNotify.text);

@@ -1,0 +1,59 @@
+45-    Temp exemption list appids: []
+46-    Exempted bucket packages:
+47-      User 0
+48:        space.alliswell.inbox
+49-    
+50-    Restricted packages:
+51-      u0a393 com.autonavi.minimap
+--
+380-      policyWhenElapsed: requester=+31m6s322ms app_standby=-28m40s676ms device_idle=-- battery_saver=-- adjustment=+30m49s198ms
+381-      whenElapsed=+30m49s198ms maxWhenElapsed=+30m49s198ms
+382-      operation=PendingIntent{2133fc: PendingIntentRecord{ad85d4e com.oplus.nhs broadcastIntent}}
+383:    RTC_WAKEUP #45: Alarm{3de468f type 0 origWhen 1789909200006 whenElapsed 237616575 space.alliswell.inbox} uid 10558 whenElapsed 237616575 windowLength 0 maxWhenElapsed 237616575 repeatInterval 0 action space.alliswell.inbox.ACTION_TEST_ALARM component ComponentInfo{space.alliswell.inbox/space.alliswell.inbox.AlarmTestReceiver} flags 0x9 procName space.alliswell.inbox
+384:      tag=*walarm*:space.alliswell.inbox.ACTION_TEST_ALARM
+385-      type=RTC_WAKEUP origWhen=2026-09-20 21:00:00.006 window=0 exactAllowReason=permission repeatInterval=0 count=0 flags=0x9
+386-      policyWhenElapsed: requester=+31m5s773ms app_standby=-1h0m57s909ms device_idle=-- battery_saver=-- adjustment=--
+387-      whenElapsed=+31m5s773ms maxWhenElapsed=+31m5s773ms
+388-      Alarm clock:
+389-        triggerTime=2026-09-20 21:00:00.006
+390:        showIntent=PendingIntent{bdcd1c: PendingIntentRecord{9eda59f space.alliswell.inbox startActivity}}
+391:      operation=PendingIntent{4f70d25: PendingIntentRecord{f323d31 space.alliswell.inbox broadcastIntent}}
+392-      idle-options=Bundle[{android.pendingIntent.backgroundActivityAllowed=2, android:broadcast.temporaryAppAllowlistReasonCode=301, android:broadcast.temporaryAppAllowlistDuration=10000, android:broadcast.temporaryAppAllowlistReason=, android:broadcast.temporaryAppAllowlistType=0, android:broadcast.flags=8}]
+393:    RTC_WAKEUP #46: Alarm{2d00efa type 0 origWhen 1789909200006 whenElapsed 237616575 space.alliswell.inbox} uid 10558 whenElapsed 237616575 windowLength 0 maxWhenElapsed 237616575 repeatInterval 0 action null component ComponentInfo{space.alliswell.inbox/space.alliswell.inbox.AlarmRingService} flags 0x9 procName space.alliswell.inbox
+394:      tag=*walarm*:space.alliswell.inbox/.AlarmRingService
+395-      type=RTC_WAKEUP origWhen=2026-09-20 21:00:00.006 window=0 exactAllowReason=permission repeatInterval=0 count=0 flags=0x9
+396-      policyWhenElapsed: requester=+31m5s773ms app_standby=-1h0m57s906ms device_idle=-- battery_saver=-- adjustment=--
+397-      whenElapsed=+31m5s773ms maxWhenElapsed=+31m5s773ms
+398-      Alarm clock:
+399-        triggerTime=2026-09-20 21:00:00.006
+400:        showIntent=PendingIntent{682bcab: PendingIntentRecord{9eda59f space.alliswell.inbox startActivity}}
+401:      operation=PendingIntent{2689f08: PendingIntentRecord{894aab5 space.alliswell.inbox startForegroundService}}
+402-      idle-options=Bundle[{android.pendingIntent.backgroundActivityAllowed=2, android:broadcast.temporaryAppAllowlistReasonCode=301, android:broadcast.temporaryAppAllowlistDuration=10000, android:broadcast.temporaryAppAllowlistReason=, android:broadcast.temporaryAppAllowlistType=0, android:broadcast.flags=8}]
+403-    ELAPSED_WAKEUP #47: Alarm{bef2c16 type 2 origWhen 237668302 whenElapsed 237668302 android} uid 1000 whenElapsed 237668302 windowLength 0 maxWhenElapsed 237668302 repeatInterval 0 action com.oplus.eyeprotect.report.schedule component null flags 0x9 procName system_server
+404-      tag=*walarm*:com.oplus.eyeprotect.report.schedule
+--
+3293-    u0a558:
+3294-      #1: Reason=alarm_cancelled elapsed=-1h0m8s377ms rtc=2026-09-20 19:28:45.857
+3295-        Snapshot:
+3296:          type=RTC_WAKEUP tag=*walarm*:space.alliswell.inbox/com.capacitorjs.plugins.localnotifications.TimedNotificationPublisher 
+3297-          policyWhenElapsed: requester=+1h1m5s766ms app_standby=-1h26m40s380ms device_idle=-- battery_saver=-1h0m58s545ms adjustment=+1h0m49s198ms
+3298-      #2: Reason=alarm_cancelled elapsed=-1h0m8s381ms rtc=2026-09-20 19:28:45.852
+3299-        Snapshot:
+3300:          type=RTC_WAKEUP tag=*walarm*:space.alliswell.inbox/com.capacitorjs.plugins.localnotifications.TimedNotificationPublisher 
+3301-          policyWhenElapsed: requester=+2h1m5s767ms app_standby=-1h26m40s380ms device_idle=-- battery_saver=-1h0m58s545ms adjustment=+2h0m49s198ms
+3302-    u999a99:
+3303-      #1: Reason=alarm_cancelled elapsed=-6m28s885ms rtc=2026-09-20 20:22:25.349
+--
+3944-  u0a429:com.taobao.idlefish +670ms running, 0 wakeups:
+3945-    +670ms 0 wakes 9 alarms, last -1h23m47s706ms:
+3946-      *alarm*:ALARM_ACTION(12711)
+3947:  u0a558:space.alliswell.inbox +1s669ms running, 23 wakeups:
+3948-    +1s603ms 11 wakes 11 alarms, last -3h35m51s42ms:
+3949:      *walarm*:space.alliswell.inbox.ACTION_TEST_ALARM
+3950-    +532ms 11 wakes 11 alarms, last -3h35m51s42ms:
+3951:      *walarm*:space.alliswell.inbox/.AlarmRingService
+3952-    +41ms 1 wakes 1 alarms, last -19s249ms:
+3953:      *walarm*:space.alliswell.inbox/com.capacitorjs.plugins.localnotifications.TimedNotificationPublisher
+3954-  u999a99:com.google.android.gms +5s655ms running, 0 wakeups:
+3955-    +2s86ms 0 wakes 126 alarms, last -49m20s908ms:
+3956-      *alarm*:com.google.android.gms.auth.authzen.cryptauth.DEVICE_STATE_CHECK_DELAY_COMPLETE

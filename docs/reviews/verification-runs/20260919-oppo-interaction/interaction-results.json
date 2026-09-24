@@ -1,0 +1,99 @@
+{
+  "step": 1789826193,
+  "results": [
+    {
+      "id": "T-01",
+      "title": "新增：自然语言「明天下午3点」→ 建项并落库",
+      "status": "PASS",
+      "detail": {
+        "parsed": {
+          "title": "明天下午3点",
+          "trigger": 1789887600000,
+          "deadline": null,
+          "window": null,
+          "repeat": null,
+          "confidence": "high",
+          "raw": "明天下午3点",
+          "tags": [],
+          "scheduleBasis": "wall-clock"
+        },
+        "id": "itest_add_1789826193",
+        "delivery": "notification",
+        "status": "waiting",
+        "n": 50
+      }
+    },
+    {
+      "id": "T-02",
+      "title": "新增项跨重载持久化",
+      "status": "PASS",
+      "detail": {
+        "found": true,
+        "status": "waiting"
+      }
+    },
+    {
+      "id": "T-03",
+      "title": "完成：归档 + 终态保护（二次完成返回 false）",
+      "status": "PASS",
+      "detail": {
+        "ret": true,
+        "status": "archived",
+        "hasCompletedAt": true,
+        "secondCall": false
+      }
+    },
+    {
+      "id": "T-04",
+      "title": "延后：snooze 1h → status=snoozed 且 triggerAt 更新",
+      "status": "PASS",
+      "detail": {
+        "ret": true,
+        "status": "snoozed",
+        "triggerChanged": true,
+        "triggerAt": 1789829804740,
+        "want": 1789829804740,
+        "basis": "elapsed",
+        "snoozeCount": 1
+      }
+    },
+    {
+      "id": "T-05",
+      "title": "删除：移除 + 二次删除返回 false",
+      "status": "PASS",
+      "detail": {
+        "ret": true,
+        "stillThere": false,
+        "secondDelete": false
+      }
+    },
+    {
+      "id": "T-06",
+      "title": "ACK：进入 acknowledged 且按 ack 语义新建下一期实例",
+      "status": "PASS",
+      "detail": {
+        "ret": true,
+        "parentStatus": "acknowledged",
+        "ackAdv": true,
+        "n0": 51,
+        "n1": 52,
+        "child": {
+          "id": "i_s4oj55wsmu8gb69i",
+          "status": "waiting",
+          "triggerAt": 1791035700000
+        }
+      }
+    },
+    {
+      "id": "T-07",
+      "title": "异常边界：终态（已归档）拒绝 ACK/稍后/完成",
+      "status": "PASS",
+      "detail": {
+        "archivedId": "itest_add_1789826193",
+        "ack": false,
+        "snooze": false,
+        "complete": false
+      }
+    }
+  ]
+}
