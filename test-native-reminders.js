@@ -2,6 +2,7 @@
 "use strict";
 
 const path = require("path");
+const fs = require("fs");
 const { spawnSync } = require("child_process");
 const native = require(path.join(__dirname, "lib/native-reminders.js"));
 const reminderLib = require(path.join(__dirname, "lib/reminder.js"));
@@ -231,6 +232,31 @@ async function run() {
   section("mixed time semantics");
   const wall = { triggerAt: now, scheduleBasis: null, localTrigger: null };
   ok("旧事项迁移为墙钟时间", native.migrateItem(wall) && wall.scheduleBasis === "wall-clock" && !!wall.localTrigger);
+
+  // P2-C-R 独立复验（2026-09-22）：迁移必须**幂等**。
+  // 旧写法是 `if (item.dismissedUntil == null) { item.dismissedUntil = null; changed = true; }` ——
+  // 已经是 null 也会判成「需要迁移」并赋回同一个值 ⇒ `changed` 恒真 ⇒ **每次冷启动都产生
+  // 一次权威提交**，而那次提交写的是内存当时的状态（写闸门一旦漏判就是一次静默覆盖）。
+  // 独立探针的记录：状态字节完全不变，返回值仍是 true。
+  {
+    const local = native.toLocalDateTime(now);
+    const stable = { triggerAt: native.fromLocalDateTime(local), scheduleBasis: "wall-clock", localTrigger: local, dismissedUntil: null };
+    const before = JSON.stringify(stable);
+    const keysBefore = Object.keys(stable).sort().join(",");
+    native.migrateItem(stable);
+    ok("已迁移事项再迁移 ⇒ 报未变更（幂等，不制造每轮冷启动的落地）",
+      native.migrateItem(stable) === false &&
+      JSON.stringify(stable) === before &&
+      Object.keys(stable).sort().join(",") === keysBefore,
+      JSON.stringify({ changed: native.migrateItem(stable), state: JSON.stringify(stable) === before }));
+    const missing = { scheduleBasis: "wall-clock", triggerAt: stable.triggerAt, localTrigger: local };
+    ok("对照：字段确实缺失时仍要迁移一次，且第二次报未变更（幂等不是「永远不迁移」）",
+      native.migrateItem(missing) === true && missing.dismissedUntil === null &&
+      "dismissedUntil" in missing && native.migrateItem(missing) === false,
+      JSON.stringify(missing));
+    ok("幂等是**真的没改动**（不是改了再改回同一个值）", JSON.stringify(stable) === before,
+      JSON.stringify({ before: before, after: JSON.stringify(stable) }));
+  }
   const elapsed = {
     triggerAt: 0,
     scheduleBasis: "elapsed",
@@ -399,6 +425,7 @@ async function run() {
     const activity = readSrc("android/app/src/main/java/space/alliswell/inbox/AlarmActivity.java");
     const plugin = readSrc("android/app/src/main/java/space/alliswell/inbox/SystemBridgePlugin.java");
     const appCoreSrc = readSrc("app-core.js");
+    const diagnosticsSrc = readSrc("lib/app-diagnostics.js");
     const html = readSrc("index.html");
 
     // 解锁亮屏弹全屏的唯一可行途径 = 后台启动 Activity 豁免（BAL）。
@@ -427,13 +454,17 @@ async function run() {
       /MANAGE_APP_USE_FULL_SCREEN_INTENT/.test(plugin) &&
       /public void openAutoStartSettings/.test(plugin));
 
-    // 前端接线：按钮 id 必须同时存在于 HTML 与 app-core（漏一边就是死按钮）
+    // 前端接线：按钮 id 必须同时存在于 HTML 与诊断模块（P2-D 起实现在 lib/app-diagnostics.js）
+    const diagSrc = fs.readFileSync(path.join(__dirname, "lib/app-diagnostics.js"), "utf8");
     ["labOpenOverlay", "labOpenFsi", "labOpenAutoStart", "labFullScreen", "labDelivery"].forEach(id => {
-      ok("自检面板 " + id + " 在 HTML 与 app-core 两侧都接线",
-        html.indexOf('id="' + id + '"') > -1 && appCoreSrc.indexOf('"#' + id + '"') > -1);
+      ok("自检面板 " + id + " 在 HTML 与诊断模块两侧都接线",
+        html.indexOf('id="' + id + '"') > -1 && diagSrc.indexOf('"#' + id + '"') > -1);
     });
     ok("自检面板把投递结局翻成人话（缺这一段就只会说「还是弹通知」）",
-      /lastAlarmDelivery/.test(appCoreSrc) && /describeAlarmDelivery/.test(appCoreSrc));
+      /lastAlarmDelivery/.test(diagSrc) && /describeAlarmDelivery/.test(diagSrc) &&
+      // core 只保留转发，不保留第二份算法体
+      /function describeAlarmDelivery\(d\)/.test(appCoreSrc) &&
+      /diagnostics\.describeAlarmDelivery/.test(appCoreSrc));
 
     // Q5：解锁时不得打断通话 —— 通话中只响铃、不抢屏；锁屏仍可抢屏（闹钟优先）
     ok("receiver 有通话闸门：只有「解锁 + 通话中」才不放行直起全屏",
@@ -471,9 +502,9 @@ async function run() {
       /AudioManager\.MODE_IN_COMMUNICATION/.test(receiver) &&
       !/READ_PHONE_STATE/.test(manifest));
     ok("通话状态随台账落盘并回读",
-      /KEY_DELIVERY_IN_CALL/.test(plugin) && /inCall/.test(appCoreSrc));
+      /KEY_DELIVERY_IN_CALL/.test(plugin) && /inCall/.test(diagSrc));
     ok("通话中被跳过时自检说「按设计」而不是报故障",
-      /通话中 · 不抢全屏；已请求系统横幅并继续声振/.test(appCoreSrc));
+      /通话中 · 不抢全屏；已请求系统横幅并继续声振/.test(diagSrc));
 
     // V1：界面「有没有真的显示出来」必须由窗口自己作证，而不是只看是否获得焦点
     ok("V1 原生按「窗口可见或获得焦点」判定显示，并落盘不可见时刻",
@@ -489,14 +520,14 @@ async function run() {
 
     // V2：自检面板的归因必须靠证据，不能靠猜权限；排程落地也不等于「到点一定看得见」
     ok("V2 不再凭「锁屏」就断言缺「全屏通知」权限",
-      !/if \(d\.locked\) reason = /.test(appCoreSrc) &&
-      /缺「全屏通知」权限 · 锁屏\/息屏只能出横幅/.test(appCoreSrc));
+      !/if \(d\.locked\) reason = /.test(diagnosticsSrc) &&
+      /缺「全屏通知」权限 · 锁屏\/息屏只能出横幅/.test(diagnosticsSrc));
     ok("V2 权限齐备却没弹出时如实说「系统没有展示」，不编原因",
-      /权限齐备，但系统没有展示这次全屏/.test(appCoreSrc) &&
-      /权限齐备，但界面没有被系统展示/.test(appCoreSrc));
+      /权限齐备，但系统没有展示这次全屏/.test(diagnosticsSrc) &&
+      /权限齐备，但界面没有被系统展示/.test(diagnosticsSrc));
     ok("V2 排程落地不再无条件承诺「关掉 App 后仍会按时响」",
-      !/关掉 App 后仍会按时响/.test(appCoreSrc) &&
-      /上一次到点没能把界面弹出来/.test(appCoreSrc));
+      !/关掉 App 后仍会按时响/.test(diagnosticsSrc) &&
+      /上一次到点没能把界面弹出来/.test(diagnosticsSrc));
 
     // F3：休眠态下进程被 vivo 的 fast_freezer 冻进 cgroup，而**广播投递不会解冻它**。
     // 真机取证（vivo V2238A / OriginOS 16，2026-09-17，events 缓冲）：
@@ -656,21 +687,25 @@ async function run() {
 
   section("F6 后台设置引导运行时行为");
   {
-    const fs = require("fs");
-    const vm = require("vm");
-    const source = fs.readFileSync(path.join(__dirname, "app-core.js"), "utf8");
-    const start = source.indexOf("  async function openBackgroundGuide(kind)");
-    const end = source.indexOf("  async function openSystemSetting(kind)", start);
+    const diagnostics = require(path.join(__dirname, "lib/app-diagnostics.js"));
     const nodes = new Map();
     const $ = id => {
       if (!nodes.has(id)) nodes.set(id, { disabled: false, textContent: "" });
       return nodes.get(id);
     };
     let bridge = null, fallback = null, calls = 0, release;
-    const guide = vm.runInNewContext("(" + source.slice(start, end).trim() + ")", {
-      $, systemBridge: () => bridge, appSettingsPlugin: () => fallback,
-      labLog() {}, toast() {}
+    const doc = { addEventListener() {}, visibilityState: "visible" };
+    const instance = diagnostics.createAppDiagnostics({
+      query: $, queryAll: () => [], openSheet() {}, toast() {}, fmtTime: () => "now",
+      getState: () => ({ settings: {} }), save: async () => {}, renderMe() {},
+      systemBridge: () => bridge, appSettingsPlugin: () => fallback,
+      getNativeReminderStatus: () => ({}), setNativeReminderStatus() {},
+      requestNativeNotificationPermission: async () => {},
+      openExactAlarmSettings: async () => {}, buildDesired: () => [],
+      syncNativeRemindersNow: async () => ({}), getCapacitor: () => null,
+      getDocument: () => doc
     });
+    const guide = kind => instance.openBackgroundGuide(kind);
     const feedback = () => $("#labSettingsFeedback").textContent;
     bridge = { openBackgroundSettings: () => { calls++; return new Promise(resolve => { release = resolve; }); } };
     const pending = guide("background");
@@ -729,17 +764,19 @@ async function run() {
       /mediaPlayer\.isPlaying\(\)\)\s*return;/.test(soundBody));
 
     // N-03-a：面板轮询句柄必须留痕，重复初始化不得静默堆定时器
+    const alertsSource = fs.readFileSync(path.join(__dirname, "lib/app-alerts.js"), "utf8");
     ok("N-03 面板轮询保存句柄并在重绑时清理",
-      /let activeAlarmPollTimer = null;/.test(codeOnly) &&
-      /clearInterval\(activeAlarmPollTimer\)/.test(codeOnly));
+      /let activeAlarmPollTimer = null;/.test(alertsSource) &&
+      /clearInterval\(activeAlarmPollTimer\)/.test(alertsSource));
 
     // N-03-b：冷启动基线 —— committedAlarmItems 此前只在 writeSnapshot 里赋值，
     // 「刚启动、还没提交过事务」时恒为 []，旧投递永远等不到自动忽略。
     const applyAt = codeOnly.indexOf("function applyParsedState(parsed)");
     const applyEnd = codeOnly.indexOf("function loadAsync()");
     const applyBody = (applyAt < 0 || applyEnd <= applyAt) ? "" : codeOnly.slice(applyAt, applyEnd);
-    ok("N-03 加载状态时重建 committedAlarmItems 基线（否则旧投递永不被自动忽略）",
-      /committedAlarmItems = JSON\.parse\(JSON\.stringify\(state\.items\)\)/.test(applyBody));
+    const persistenceSource = fs.readFileSync(path.join(__dirname, "lib/app-persistence.js"), "utf8");
+    ok("N-03 加载状态时由持久化实例重建已提交基线（否则旧投递永不被自动忽略）",
+      /establishCommittedBaseline\(deps\.applyRecoveredState\(parsed\)\)/.test(persistenceSource));
 
     // D45-a（2026-09-18 反向选择）：onStop **不再**停止声振。
     // 必须剥注释后再匹配 —— 本轮 onStop 的注释里正解释着 "onDestroy 仍调
@@ -779,6 +816,8 @@ async function run() {
     const fs = require("fs");
     const readSrc = rel => fs.readFileSync(path.join(__dirname, rel), "utf8");
     const appCoreSrc = readSrc("app-core.js");
+    const coordinatorSrc = readSrc("lib/app-native-coordinator.js");
+    const eventsSrc = readSrc("lib/app-events.js");
     const html = readSrc("index.html");
     // Q6-a：被调用的守卫函数必须真的有定义。
     // 现场缺陷：isNativeAndroidRuntime 被 3 处调用却从未定义，
@@ -788,8 +827,9 @@ async function run() {
       /function isNativeAndroidRuntime\s*\(/.test(appCoreSrc));
     ok("waitForNativeBridge 有定义",
       /function waitForNativeBridge\s*\(/.test(appCoreSrc));
+    const diagnosticsSrc = readSrc("lib/app-diagnostics.js");
     ok("renderBackgroundVerdict 有定义",
-      /async function renderBackgroundVerdict\s*\(/.test(appCoreSrc));
+      /async function renderBackgroundVerdict\s*\(/.test(diagnosticsSrc));
 
     // Q6-b：init 不得再 await 原生初始化 —— 它会把 seed / render / 15 秒心跳一起拖住
     ok("init 不再阻塞等待原生初始化（V1 同类：静默中断启动链）",
@@ -798,33 +838,34 @@ async function run() {
 
     // Q6-c：桥未就绪时不得静默 return，必须留下可见记录
     ok("桥未就绪时改为等待 + 留下可见失败记录（不再静默 return）",
-      /const bridged = await waitForNativeBridge\(10000\)/.test(appCoreSrc) &&
-      /bridgeNotReady: true/.test(appCoreSrc));
+      (/const bridged = await waitForNativeBridge\(10000\)/.test(appCoreSrc) || /const bridged = await waitForNativeBridge\(10000\)/.test(coordinatorSrc)) &&
+      (/bridgeNotReady: true/.test(appCoreSrc) || /bridgeNotReady: true/.test(coordinatorSrc)));
 
     // Q6-d：安卓绝不走 Web 通知分支。
     // WebView 的 Notification.requestPermission() 会返回 granted，
     // 于是开关显示「已开启」而系统权限根本没授予 → reconcile 的 enabled 仍为 false → 零排程。
     ok("安卓运行时不走 Web 通知分支（否则造出「开关开着却没权限」的假象）",
-      /else if \(isNativeAndroidRuntime\(\)\) \{/.test(appCoreSrc));
+      /else if \((?:deps\.)?isNativeAndroidRuntime\(\)\) \{/.test(appCoreSrc) ||
+      /else if \((?:deps\.)?isNativeAndroidRuntime\(\)\) \{/.test(eventsSrc));
 
     // Q6-e：界面必须能回答「关掉 App 后会不会响」
     ['labVerdict', 'labBackground', 'labScheduled', 'labResync'].forEach(id => {
-      ok("自检面板 " + id + " 在 HTML 与 app-core 两侧都接线",
-        html.indexOf('id="' + id + '"') > -1 && appCoreSrc.indexOf('"#' + id + '"') > -1);
+      ok("自检面板 " + id + " 在 HTML 与诊断模块两侧都接线",
+        html.indexOf('id="' + id + '"') > -1 && diagnosticsSrc.indexOf('"#' + id + '"') > -1);
     });
     ok("结论区分「总开关未开」与「权限未授予」（此前共用一句「通知未授权」把人带偏）",
-      /总开关未开/.test(appCoreSrc) && /系统通知权限未授予/.test(appCoreSrc));
+      /总开关未开/.test(diagnosticsSrc) && /系统通知权限未授予/.test(diagnosticsSrc));
     ok("能区分「原生对账从未执行」这种静默失败",
-      /s\.enabled === undefined/.test(appCoreSrc) && /原生对账从未执行/.test(appCoreSrc));
+      /s\.enabled === undefined/.test(diagnosticsSrc) && /原生对账从未执行/.test(diagnosticsSrc));
     ok("结论用 getPending 的实数，而不是只报「打算排几条」",
-      /getPending/.test(appCoreSrc) && /pending === 0 && desired > 0/.test(appCoreSrc));
+      /getPending/.test(diagnosticsSrc) && /pending === 0 && desired > 0/.test(diagnosticsSrc));
 
     // Q6-f：通用检查 —— 所有「当成守卫函数调用」的标识符必须真的有定义。
     // 本次真凶 isNativeAndroidRuntime 正是这一类：被 if (!x()) 调用、却从未定义，
     // 只有点到那个按钮才暴露，且表现只是「没反应」。手工断言只能抓已发现的那一个，
     // 这个扫描抓的是**同一类里的下一个**。
     // 注意：必须先剥掉注释，否则注释里举的例子会被当成真调用（第一版就是这么误报的）。
-    const codeOnly = appCoreSrc
+    const codeOnly = (appCoreSrc + "\n" + coordinatorSrc)
       .replace(/\/\*[\s\S]*?\*\//g, " ")
       .replace(/^[ \t]*\/\/[^\n]*$/gm, " ");
     const definedNames = new Set();
@@ -1266,6 +1307,7 @@ async function run() {
     const receiver = readSrc("android/app/src/main/java/space/alliswell/inbox/AlarmTestReceiver.java");
     const bridgeSrc = readSrc("android/app/src/main/java/space/alliswell/inbox/SystemBridgePlugin.java");
     const appCore = readSrc("app-core.js");
+    const appDiagnostics = readSrc("lib/app-diagnostics.js");
     const jCode = s => s
       .replace(/\/\*[\s\S]*?\*\//g, " ")
       .replace(/^[ \t]*\/\/[^\n]*$/gm, " ");
@@ -1294,7 +1336,7 @@ async function run() {
     // JS 侧的归因是**行为**，不在这里做源码级匹配（源码级匹配无法反向验证）：
     // 断言在 test-smoke.js「11. H-08 投递归因」一节，逐条覆盖「无权限 / 同时命中 /
     // 老记录 / 权限齐备 / 界面已显示」五种形态。
-    const coreCodeH8 = jCode(appCore);
+    const coreCodeH8 = jCode(appCore + "\n" + appDiagnostics);
     ok("H-08 归因读取投递台账字段（键名与原生写入一致）",
       /d\.notifyEnabledAtDelivery === false/.test(coreCodeH8) &&
       /notifyEnabledAtDelivery/.test(bridgeSrc));
@@ -1384,6 +1426,7 @@ async function run() {
     const manifestSrc = readSrc2("android/app/src/main/AndroidManifest.xml");
     const htmlSrc = readSrc2("index.html");
     const coreSrc = readSrc2("app-core.js");
+    const diagnosticsSrc2 = readSrc2("lib/app-diagnostics.js");
 
     // ── A-1：闹钟档「响到确认为止」必须有可见的时限 ────────────────────────────
     //
@@ -1442,7 +1485,7 @@ async function run() {
       /id="labOpenFsi"/.test(htmlSrc) &&
       /用于提高锁屏\/息屏或使用其他应用时弹出全屏提醒的机会/.test(htmlSrc) &&
       /以本机 60 秒测试为准/.test(htmlSrc) &&
-      /"#labOpenFsi"/.test(coreSrc));
+      /"#labOpenFsi"/.test(diagnosticsSrc2));
     ok("D68/Q6 旧文案已撤（只讲机制、不讲需求）",
       !/Android 14\+ 锁屏\/息屏弹全屏的必要条件/.test(htmlSrc));
   }

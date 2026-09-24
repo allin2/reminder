@@ -1976,6 +1976,64 @@
   <input type="file" id="importFile" accept="application/json,.json" hidden />
 </div>
 
+<!-- 日历原语：startOfDay / addDays / applyClock / nthWeekdayInMonth 等的唯一来源。
+     必须排在 parse-cn / repeat 之前：这两支在**求值时**就把 DatePrimitives 抓进闭包常量，
+     顺序错了不抛错，只会让它们拿到空实现。由 production-scripts.js 的
+     LOAD_TIME_DEPENDENCIES 与测试组合断言守住。 -->
+<script src="lib/date-utils.js"></script>
+<!-- UI 纯格式化：时间显示 / 转义 / Markdown / 补零 / id。纯函数，依赖 date-utils。 -->
+<script src="lib/ui-format.js"></script>
+<!-- 共用展示能力：$ / $$ / 弹层 / toast / 确认框 / 外链白名单。
+     模块求值不注册监听、不开定时器、不读 AttentionLib 的任何导出（`document` 与 `URL`
+     都在调用时取），所以**没有加载期依赖**；实例由 app-core 顶部统一创建。
+     排在这里只是与其它展示层相邻，便于审阅 —— 不是顺序约束。 -->
+<script src="lib/app-ui.js"></script>
+<!-- AI 智能理解（可选 BYOK，OpenAI 兼容）：请求 / 结果归一 / 设置页 / 表单合并。
+     模块求值不发请求、不注册监听、不读 AttentionLib 的任何导出 —— 所有外部能力
+     都由 `createAppAi(deps)` 注入，因此**没有加载期依赖**；实例由 app-core 顶部
+     统一创建，并进 `APP_AI_INSTANCE_CONTRACT`（缺成员要能被点名，不能静默空壳）。 -->
+<script src="lib/app-ai.js"></script>
+<!-- 数据备份（导出/导入）：原生 saveDocument / Web 分享 / `<a download>` 三通路 +
+     原生「结果未返回」宽限闸门。模块求值不做任何 IO、不注册监听 —— 全部能力由
+     `createAppBackup(deps)` 注入，**没有加载期依赖**；实例由 app-core 统一创建，
+     并进 `APP_BACKUP_INSTANCE_CONTRACT`（空壳实例 = 导出点了没反应，必须点名）。 -->
+<script src="lib/app-backup.js"></script>
+<!-- 通知实验室 / 投递判读 / 闹钟 trace / 系统设置诊断（P2-D）：模块求值零副作用，
+     全部能力由 `createAppDiagnostics(deps)` 注入，**没有加载期依赖**；实例由 app-core
+     统一创建，并进 `APP_DIAGNOSTICS_INSTANCE_CONTRACT`（缺成员要能被点名）。 -->
+<script src="lib/app-diagnostics.js"></script>
+<!-- 首次提醒设置 / 60 秒测试 / 反馈证据；工厂求值零副作用，由 app-core 装配。 -->
+<script src="lib/app-setup.js"></script>
+<!-- 笔记 / 项目 / 搜索（P2-F1）：工厂求值零副作用，由 app-core 统一装配与合同检查。 -->
+<script src="lib/app-content.js"></script>
+<!-- 捕获表单 / 会话（P2-G1）：工厂求值零副作用；保存事务仍在 app-core。 -->
+<script src="lib/app-capture.js"></script>
+<!-- 展示渲染（P2-F2）：只接收具名展示回调；业务推进/事务仍由 app-core 编排。 -->
+<script src="lib/app-views.js"></script>
+<!-- 事项模型与默认状态（P3-A）：工厂求值零副作用，由 app-core 在依赖闸门通过后装配。 -->
+<script src="lib/app-model.js"></script>
+<!-- 权威恢复、提交 FIFO、镜像回放与已提交基线（P3-B）：工厂求值零副作用。 -->
+<script src="lib/app-persistence.js"></script>
+<!-- 用户命令事务与原生动作一致性协调（P3-C）：工厂求值零副作用，无长期 live state。 -->
+<script src="lib/app-transaction.js"></script>
+<!-- 事项命令、周期派生与有限撤销（P3-D）：工厂求值零副作用。 -->
+<script src="lib/app-items.js"></script>
+<!-- 原生提醒协调与事件台账（P3-E）：工厂求值零副作用。 -->
+<script src="lib/app-native-coordinator.js"></script>
+<!-- 待整理窗口规则、会话、卡片与设置（P3-F）：工厂求值零副作用。 -->
+<script src="lib/app-review.js"></script>
+<!-- Web 提醒弹条、到期推进与活动闹钟面板（P3-G）：工厂求值零副作用。 -->
+<script src="lib/app-alerts.js"></script>
+<!-- 平台适配与 PWA 生命周期（P3-H）：工厂求值零副作用。 -->
+<script src="lib/app-platform.js"></script>
+<!-- 保存结果与排程反馈控制器（P3-I）：工厂求值零副作用。 -->
+<script src="lib/app-action-feedback.js"></script>
+<!-- 事件与路由绑定控制器（P3-I）：工厂求值零副作用。 -->
+<script src="lib/app-events.js"></script>
+<!-- 测试接口组装模块（P3-I）：工厂求值零副作用。 -->
+<script src="lib/app-test-api.js"></script>
+<!-- 首页告知条与启动轻摘要（P3-I-R）：工厂求值零副作用。 -->
+<script src="lib/app-notices.js"></script>
 <script src="lib/parse-cn.js"></script>
 <script src="lib/repeat.js"></script>
 <script src="lib/reminder.js"></script>
