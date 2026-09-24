@@ -2223,6 +2223,119 @@ async function run() {
       statusA1.capabilities.exact === true);
   }
 
+  section("陈旧的已送达通知：事项删除 / 终态 / 送达后变化时撤掉");
+  {
+    // 真机契约（2026-09-25 vivo V2238A / Android 16 实测）：getDeliveredNotifications
+    // 只回 id / title / body / data，**不带排程时的 extra**。mock 按这个形态回，不能更宽松。
+    const store = new Map();
+    global.localStorage = {
+      getItem: k => (store.has(k) ? store.get(k) : null),
+      setItem: (k, v) => { store.set(k, String(v)); },
+      removeItem: k => { store.delete(k); }
+    };
+    const setup = async () => {
+      await native._resetForTests();
+      store.clear();
+      const env = createEnvironment();
+      const local = global.Capacitor.Plugins.LocalNotifications;
+      let delivered = [];
+      local.getDeliveredNotifications = async () => ({
+        notifications: delivered.map(n => ({ id: n.id, title: n.title, body: n.body, groupSummary: false, data: {} }))
+      });
+      local.removeDeliveredNotifications = async value => {
+        env.calls.deliveredRemoved.push(value.notifications.slice());
+        const ids = new Set(value.notifications.map(n => n.id));
+        delivered = delivered.filter(n => !ids.has(n.id));
+      };
+      // 模拟系统送达：通知离开 pending，进入通知栏（且丢失 extra）
+      const deliver = () => {
+        const keep = [];
+        env.pending.forEach(n => { if (n.extra && n.extra.managedKind === native.MANAGED_KIND) delivered.push(n); else keep.push(n); });
+        env.pending.length = 0; keep.forEach(n => env.pending.push(n));
+      };
+      return { env, deliver, delivered: () => delivered.map(n => n.id), addForeign: n => delivered.push(n) };
+    };
+    const t0 = Date.now();
+    const base = () => item("sd1", "normal", t0 + 60000, { rev: 1 });
+
+    // A：事项没变（仍到期、rev 不变）⇒ 通知保留
+    {
+      const h = await setup();
+      await native.reconcile([base()], { notify: true }, t0);
+      const scheduledId = h.env.pending[0] && h.env.pending[0].id;
+      h.deliver();
+      // 与真机一致：送达后上层把这个触发点记入单次提醒台账（D43），对账不会再补投同一条
+      const deliveredLedger = {};
+      deliveredLedger[native.reminderKeyOf(0, t0 + 60000)] = { state: "delivered", at: t0 + 60000 };
+      const due = Object.assign(base(), { status: "due", deliveredAt: t0 + 60000, reminderEvents: deliveredLedger });
+      const st = await native.reconcile([due], { notify: true }, t0 + 61000);
+      ok("未处理的到期事项：已送达通知保留在通知栏",
+        h.delivered().indexOf(scheduledId) >= 0 && (st.removedDeliveredIds || []).length === 0,
+        JSON.stringify({ delivered: h.delivered(), removed: (st.removedDeliveredIds || []) }));
+
+      // B：事项被删除 ⇒ 撤掉
+      const st2 = await native.reconcile([], { notify: true }, t0 + 62000);
+      ok("事项删除后：它的已送达通知被撤掉",
+        h.delivered().length === 0 && (st2.removedDeliveredIds || []).indexOf(scheduledId) >= 0,
+        JSON.stringify({ delivered: h.delivered(), removed: (st2.removedDeliveredIds || []) }));
+      ok("撤除成功后归属索引不再保留该 id",
+        !Object.prototype.hasOwnProperty.call(JSON.parse(store.get("attention-inbox-delivered-notif-index") || "{}"), String(scheduledId)));
+    }
+
+    // C：送达后事项版本推进（在应用内 ACK / 稍后 / 改时间）⇒ 撤掉
+    {
+      const h = await setup();
+      await native.reconcile([base()], { notify: true }, t0);
+      h.deliver();
+      const acked = Object.assign(base(), { status: "acknowledged", rev: 2, acknowledgedAt: t0 + 61000 });
+      const st = await native.reconcile([acked], { notify: true }, t0 + 62000);
+      ok("送达后事项 rev 推进（应用内已处理）：旧通知被撤掉",
+        h.delivered().length === 0 && (st.removedDeliveredIds || []).length === 1, JSON.stringify((st.removedDeliveredIds || [])));
+    }
+
+    // D：事项进入终态（rev 未变的异常情况也覆盖）⇒ 撤掉
+    {
+      const h = await setup();
+      await native.reconcile([base()], { notify: true }, t0);
+      h.deliver();
+      const archived = Object.assign(base(), { status: "archived" });
+      await native.reconcile([archived], { notify: true }, t0 + 62000);
+      ok("事项已归档：已送达通知被撤掉", h.delivered().length === 0, JSON.stringify(h.delivered()));
+    }
+
+    // E：不认识的已送达通知（测试闹钟、待整理、其他来源）不动
+    {
+      const h = await setup();
+      h.addForeign({ id: 90003, title: "安心收件箱闹钟测试", body: "x" });
+      const st = await native.reconcile([], { notify: true }, t0);
+      ok("索引里没有的已送达通知不被撤掉（不误删测试闹钟 / 待整理等）",
+        h.delivered().indexOf(90003) >= 0 && (st.removedDeliveredIds || []).length === 0);
+    }
+
+    // F：读取已送达失败 ⇒ 不影响排程结论与可靠性，只单独回报
+    {
+      const h = await setup();
+      await native.reconcile([base()], { notify: true }, t0);
+      global.Capacitor.Plugins.LocalNotifications.getDeliveredNotifications = async () => { throw new Error("boom"); };
+      const st = await native.reconcile([base()], { notify: true }, t0 + 1000);
+      ok("读取已送达失败：errors 与 reliability 不受影响，诊断单独回报",
+        st.errors.length === 0 && st.reliability !== "error" && /boom/.test(st.deliveredCleanupError || ""),
+        JSON.stringify({ errors: st.errors, reliability: st.reliability, cleanup: st.deliveredCleanupError }));
+    }
+
+    // G：没有 localStorage（或读写抛错）也不崩
+    {
+      const h = await setup();
+      global.localStorage = { getItem() { throw new Error("denied"); }, setItem() { throw new Error("denied"); } };
+      await native.reconcile([base()], { notify: true }, t0);
+      h.deliver();
+      const st = await native.reconcile([], { notify: true }, t0 + 62000);
+      ok("localStorage 不可用：对账照常完成，不撤任何通知（无归属依据）",
+        st.errors.length === 0 && (st.removedDeliveredIds || []).length === 0);
+    }
+    delete global.localStorage;
+  }
+
   await native._resetForTests();
   delete global.Capacitor;
 
