@@ -1,0 +1,39 @@
+{
+  "step": "R1",
+  "status": "PASS",
+  "seedItem": {
+    "id": "i_9p2lyykvmufloh4y",
+    "title": "R3P1-220127 安装比对隔离事项",
+    "status": "waiting",
+    "rev": 1,
+    "triggerAt": 1790352060000,
+    "priority": "important",
+    "delivery_mode": "alarm",
+    "scheduleBasis": "wall-clock",
+    "reminderKey": null
+  },
+  "deviceBaseApkBefore": "e14438de38b3ee05d678e15025d09c1adceebb51f67f3f8d954fb26488fe20c1",
+  "deviceBaseApkAfter": "e2dff4efbcd5a27260c2cd1eff1f000caee7b9318fc1152204dbf9c53807d031",
+  "candidateSha": "e2dff4efbcd5a27260c2cd1eff1f000caee7b9318fc1152204dbf9c53807d031",
+  "alarmPreserved": true,
+  "diff": {
+    "storesAdded": [],
+    "storesRemoved": [],
+    "records": {
+      "kv/state": {
+        "change": "modified",
+        "itemsAdded": [],
+        "itemsRemoved": [],
+        "itemsModified": {},
+        "itemsIdentical": 2,
+        "topKeysChanged": [
+          "settings"
+        ]
+      }
+    },
+    "localStorage": {
+      "attention-inbox-v2": "modified"
+    }
+  },
+  "identicalState": false
+}

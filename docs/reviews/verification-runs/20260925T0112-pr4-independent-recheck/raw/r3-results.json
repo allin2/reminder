@@ -1,0 +1,171 @@
+{
+ "baseline": {
+  "dnd": false,
+  "quietStart": "23:00",
+  "quietEnd": "07:30",
+  "defaultDeliveryMode": "alarm"
+ },
+ "modeSet": "notification",
+ "window": {
+  "dnd": true,
+  "quietStart": "05:25",
+  "quietEnd": "05:32"
+ },
+ "A1": {
+  "item": {
+   "id": "i_w5rrkpztmug1kkt2",
+   "title": "RFX 复验勿扰丁",
+   "status": "waiting",
+   "rev": 1,
+   "triggerAt": 1790285298708,
+   "priority": "normal",
+   "review_status": "READY"
+  },
+  "pending": [
+   {
+    "id": 2098440493,
+    "at": "Fri Sep 25 05:32:00 GMT+08:00 2026",
+    "event": "primary"
+   }
+  ],
+  "diffFromQuietEndMs": 0,
+  "notifAtOrigPlus30s": 0,
+  "verdict": "PASS"
+ },
+ "A3": {
+  "deliveredAt": 1790285521870,
+  "afterQuietEndMs": 1870,
+  "verdict": "PASS"
+ },
+ "A4": {
+  "notifId": 2098440493,
+  "stateBefore": {
+   "id": "i_w5rrkpztmug1kkt2",
+   "title": "RFX 复验勿扰丁",
+   "status": "due",
+   "rev": 1,
+   "triggerAt": 1790285520000,
+   "snoozedAt": null,
+   "snoozeCount": 0,
+   "acknowledgedAt": null,
+   "completedAt": null,
+   "archivedAt": null,
+   "priority": "normal",
+   "delivery_mode": "notification",
+   "reminderKey": null,
+   "lastDeliveredAt": null,
+   "deliveredAt": 1790285522629,
+   "seriesId": null
+  },
+  "deleteAt": 1790285525538,
+  "goneAt": 1790285526264,
+  "goneAfterMs": 726,
+  "removedSeen": [
+   2098440493
+  ],
+  "statusAfter": {
+   "removed": [
+    2098440493
+   ],
+   "cleanupError": null,
+   "errors": []
+  },
+  "notifIdInRemoved": true,
+  "verdict": "PASS"
+ },
+ "B5": {
+  "item": {
+   "id": "i_yuvmx1xfmug1s3et",
+   "title": "RFX 复验保留丙",
+   "status": "waiting",
+   "rev": 1,
+   "triggerAt": 1790285649412,
+   "priority": "normal",
+   "review_status": "READY"
+  },
+  "notifId": 701794945,
+  "deliveredAt": 1790285650653,
+  "syncStatus": {
+   "removed": [],
+   "cleanupError": null
+  },
+  "statusAfterResume": {
+   "removed": [],
+   "cleanupError": null,
+   "errors": []
+  },
+  "notifStillPresent": 1,
+  "verdict": "PASS",
+  "notifAfterColdStart": 1
+ },
+ "B1": {
+  "item": {
+   "id": "i_75e35si9mug1s2ej",
+   "title": "RFX 复验删除乙",
+   "status": "waiting",
+   "rev": 1,
+   "triggerAt": 1790285648106,
+   "priority": "normal",
+   "review_status": "READY"
+  },
+  "notifId": 1860032609,
+  "deliveredAt": 1790285650092,
+  "deleteAt": 1790285664162,
+  "goneAt": 1790285664846,
+  "goneAfterMs": 684,
+  "removedSeen": [
+   1860032609
+  ],
+  "statusAfter": {
+   "removed": [
+    1860032609
+   ],
+   "cleanupError": null,
+   "errors": []
+  },
+  "notifIdInRemoved": true,
+  "verdict": "PASS",
+  "b5StillPresentAfterB1Delete": 1,
+  "coldStart": {
+   "oldPid": "23295",
+   "newPid": "27898",
+   "b1NotifAfterCold": 0,
+   "b5NotifAfterCold": 1,
+   "indexAfterCold": {
+    "701794945": {
+     "itemId": "i_yuvmx1xfmug1s3et",
+     "itemRev": 1,
+     "seenAt": 1790285648269
+    },
+    "1167903030": {
+     "itemId": "i_ve90y9vxmufskxvx",
+     "itemRev": 1,
+     "seenAt": 1790285670098
+    },
+    "1700184369": {
+     "itemId": "i_t6t8kjrbmufskit9",
+     "itemRev": 1,
+     "seenAt": 1790285670098
+    }
+   }
+  }
+ },
+ "cleanupB5": {
+  "deleteAt": 1790285678498,
+  "goneAt": 1790285679250,
+  "goneAfterMs": 752,
+  "removedSeen": [
+   701794945
+  ],
+  "statusAfter": {
+   "removed": [
+    701794945
+   ],
+   "cleanupError": null,
+   "errors": []
+  },
+  "notifIdInRemoved": true,
+  "verdict": "PASS"
+ },
+ "modeRestored": "alarm"
+}

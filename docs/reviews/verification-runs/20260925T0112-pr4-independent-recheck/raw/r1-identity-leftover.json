@@ -1,0 +1,109 @@
+{
+ "candidateSha": "83be4ea9a847d0d9d87dcd7856c6b27c23d0b096dd29f64e298e2cddf8dfb579",
+ "deviceBaseSha": "83be4ea9a847d0d9d87dcd7856c6b27c23d0b096dd29f64e298e2cddf8dfb579",
+ "match": true,
+ "stateBefore": {
+  "now": 1790284414169,
+  "items": [
+   {
+    "id": "i_24rm31samufjri6d",
+    "rfx": false,
+    "status": "archived",
+    "triggerAt": 1790255278802,
+    "title": null
+   },
+   {
+    "id": "i_81ttgndmmufsiqo6",
+    "rfx": true,
+    "status": "waiting",
+    "triggerAt": 1790292600000,
+    "title": "RFX 复验勿扰甲"
+   },
+   {
+    "id": "i_t6t8kjrbmufskit9",
+    "rfx": false,
+    "status": "waiting",
+    "triggerAt": 1790292600000,
+    "title": null
+   },
+   {
+    "id": "i_ve90y9vxmufskxvx",
+    "rfx": false,
+    "status": "waiting",
+    "triggerAt": 1790292600000,
+    "title": null
+   },
+   {
+    "id": "i_ksgrct0wmufslps2",
+    "rfx": false,
+    "status": "waiting",
+    "triggerAt": 1790343000000,
+    "title": null
+   },
+   {
+    "id": "i_32p3og4nmufsly70",
+    "rfx": false,
+    "status": "archived",
+    "triggerAt": 1790270129172,
+    "title": null
+   },
+   {
+    "id": "i_jaggipg8mufsmipq",
+    "rfx": false,
+    "status": "acknowledged",
+    "triggerAt": 1790270157765,
+    "title": null
+   }
+  ],
+  "dnd": false,
+  "quietStart": "23:00",
+  "quietEnd": "07:30",
+  "index": "{\"722310209\":{\"itemId\":\"i_81ttgndmmufsiqo6\",\"itemRev\":1,\"seenAt\":1790270170603},\"1167903030\":{\"itemId\":\"i_ve90y9vxmufskxvx\",\"itemRev\":1,\"seenAt\":1790270170603},\"1700184369\":{\"itemId\":\"i_t6t8kjrbmufskit9\",\"itemRev\":1,\"seenAt\":1790270170603}}",
+  "pending": [
+   {
+    "id": 1384418989,
+    "at": "Fri Sep 25 21:30:00 GMT+08:00 2026",
+    "itemId": "review-session",
+    "event": "review"
+   },
+   {
+    "id": 1167903030,
+    "at": "Fri Sep 25 07:30:00 GMT+08:00 2026",
+    "itemId": "i_ve90y9vxmufskxvx",
+    "event": "primary"
+   },
+   {
+    "id": 1376612475,
+    "at": "Fri Sep 25 22:30:00 GMT+08:00 2026",
+    "itemId": "review-session",
+    "event": "review"
+   },
+   {
+    "id": 722310209,
+    "at": "Fri Sep 25 07:30:00 GMT+08:00 2026",
+    "itemId": "i_81ttgndmmufsiqo6",
+    "event": "primary"
+   },
+   {
+    "id": 1700184369,
+    "at": "Fri Sep 25 07:30:00 GMT+08:00 2026",
+    "itemId": "i_t6t8kjrbmufskit9",
+    "event": "primary"
+   }
+  ]
+ },
+ "rfxNotifBefore": 0,
+ "leftoverDeleted": [
+  {
+   "id": "i_81ttgndmmufsiqo6",
+   "ok": true,
+   "pendingAfter": [],
+   "state": null,
+   "idb": {
+    "found": false,
+    "count": 6
+   }
+  }
+ ],
+ "rfxNotifAfter": 0
+}

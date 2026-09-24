@@ -1,0 +1,28 @@
+{
+  "step": "R6",
+  "status": "PASS",
+  "part1_normal": {
+    "token": "R3N1-221319",
+    "id": "i_0a7mzsv5mufm3qif",
+    "posted": true,
+    "tappedAction": "我知道了",
+    "notificationRemoved": true,
+    "memStatus": "acknowledged",
+    "idbStatus": "acknowledged",
+    "acknowledgedAt": 1790259314458,
+    "screenshot": null
+  },
+  "part2_important": {
+    "token": "R3A1-221626",
+    "id": "i_2vgcuabcmufm7rd2",
+    "alarmActivitySeen": true,
+    "alarmFocus": "space.alliswell.inbox/space.alliswell.inbox.AlarmActivity",
+    "tappedAction": "完成",
+    "notificationRemoved": true,
+    "completedAt": 1790259486516,
+    "memStatus": "archived",
+    "idbStatus": "archived",
+    "screenshotAlarm": "/Users/qlyf/Developer/reminder/docs/reviews/verification-runs/20260924T2157-pr3-device-regression/raw/step6-alarm-activity.png",
+    "screenshotCompleted": "/Users/qlyf/Developer/reminder/docs/reviews/verification-runs/20260924T2157-pr3-device-regression/raw/step6-r3a1-completed.png"
+  }
+}

@@ -1,0 +1,40 @@
+22:29:31 == PR3 independent recheck: baseline
+22:29:31 candidate e2dff4efbcd5a27260c2cd1eff1f000caee7b9318fc1152204dbf9c53807d031
+22:29:31 device e2dff4efbcd5a27260c2cd1eff1f000caee7b9318fc1152204dbf9c53807d031  /data/app/~~LyjEPvN_9z6Mux26ZNpu5A==/space.alliswell.inbox-0NgrwTWRhw0SDBc4BjmSFA==/base.apk
+22:29:34 ready {'ready': True, 'status': 'loaded', 'writesAllowed': True, 'native': True}
+22:29:34 state {"items": [{"id": "i_24rm31samufjri6d", "status": "archived", "isR3": false}], "setupPromptStarted": true, "setupDismissed": false, "cache": null}
+22:29:34 baseline kv {"state": {"sha256": "9d166160682d303a509432c45058cfe5b818cc4930eafd49660e31bfdf80cccd", "itemCount": 1}}
+22:29:34 pkg alarms 10
+22:29:46 native status {"desired": 0, "scheduled": 0, "alarmScheduled": 0, "ids": []}
+22:29:46 review settings {"enabled": true, "lastNotifiedAt": 1790258501935, "followupCount": 1}
+22:29:55 total distinct 0
+22:30:31 == R2 ready {'ready': True, 'status': 'loaded', 'writesAllowed': True, 'native': True}
+22:30:31 R2 computed {"status": {"notifications": "granted", "exactAlarm": "granted", "diag": {"o": true, "f": true, "b": false}}, "steps": [["notify", true, true], ["exact", true, true], ["background", false, false], ["overlay", true, true], ["test", false, false]], "next": "background", "missing": 2}
+22:30:35 R2 ui {"setupSub": "还差 2 步 · 检查必要设置 · 60 秒测试", "sheetFirstStep": "允许完全后台运行 (防冻结)", "sheetHasOverlayPrompt": false}
+22:30:35 R2 PASS
+22:30:36 == R3 cold start sampling
+22:30:49 R3 round 1 {"samples": 45, "unknownSamples": 0, "cardShownWhileUnknown": 0, "notifyPromptSamples": 0, "final": [1790260248507, "granted", "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"]}
+22:31:02 R3 round 2 {"samples": 45, "unknownSamples": 0, "cardShownWhileUnknown": 0, "notifyPromptSamples": 0, "final": [1790260261479, "granted", "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"]}
+22:31:15 R3 round 3 {"samples": 43, "unknownSamples": 0, "cardShownWhileUnknown": 0, "notifyPromptSamples": 0, "final": [1790260274410, "granted", "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"]}
+22:31:15 R3 PASS sawUnknown: False
+22:31:46 R3 forced {"before": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›", "afterUnknown": "", "afterGranted": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›", "pass": true}
+22:31:55 restored status granted
+22:32:29 R4 setup {"sheet": "setup", "openedVisible": [["sheetSetup", "visible"]], "captureFocus": null, "leakAfterClose": []}
+22:32:31 R4 capture {"sheet": "capture", "openedVisible": [["sheetItem", "visible"]], "captureFocus": true, "leakAfterClose": []}
+22:32:33 R4 demo {"sheet": "demo", "openedVisible": [["sheetDemo", "visible"]], "captureFocus": null, "leakAfterClose": []}
+22:32:35 R4 guide {"sheet": "guide", "openedVisible": [], "captureFocus": null, "leakAfterClose": []}
+22:32:35 R4 idle leaks {'home': [], 'future': [], 'notes': [], 'me': []} PASS
+22:32:39 R5 created {"id": "i_ghviaxkgmufmskoi", "title": "R3V-223237 角标复验", "status": "waiting", "rev": 1, "triggerAt": 1790260440000, "priority": "normal", "delivery_mode": "notification", "scheduleBasis": "wall-clock", "reminderKey": null}
+22:34:14 R5 {"noDue": {"hidden": true, "display": "none", "text": "0"}, "due": {"hidden": false, "display": "grid", "text": "1"}, "dueCount": 1, "afterDelete": {"hidden": true, "display": "none", "text": "1"}, "pass": true} PASS
+22:34:19 cleanup: R3V notif remaining True items ['i_24rm31samufjri6d']
+22:34:33 t+0s R3V notification present: True
+22:34:44 t+10s R3V notification present: True
+22:34:54 t+20s R3V notification present: True
+22:35:05 t+30s R3V notification present: True
+22:35:15 native status {"desired": 0, "scheduled": 0, "cancelled": 2}
+22:35:20 after explicit native sync, present: True
+22:35:36 removed stale R3V notification via LocalNotifications.removeDeliveredNotifications: True still present: False
+22:36:56 own notification records now: 0
+22:36:57 LocalNotifications {"pending": [], "delivered": []}
+22:37:42 final vs my baseline: items identical True settings changed ['review']
+22:37:42    review {"before": {"enabled": true, "hour": 21, "minute": 30, "windowEndHour": 23, "windowEndMinute": 0, "followupMs": 3600000, "maxFollowups": 2, "lastNotifiedAt": 1790258501935, "followupCount": 1, "snoozedUntil": 0, "skippedUntil": 0, "sessionStatus": "delivered", "lastSessionKey": "W:2026-9-24T21:30"},

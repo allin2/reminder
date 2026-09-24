@@ -1,0 +1,7 @@
+{
+ "before": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›",
+ "afterUnknown": "",
+ "afterGranted": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›",
+ "pass": true,
+ "restoredNotifications": "granted"
+}

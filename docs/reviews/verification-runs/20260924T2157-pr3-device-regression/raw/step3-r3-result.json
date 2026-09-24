@@ -1,0 +1,2189 @@
+{
+  "step": "R3",
+  "status": "PASS",
+  "rounds": [
+    {
+      "round": 1,
+      "sampleCount": 89,
+      "unknownCount": 1,
+      "unknownWithContent": 0,
+      "notifyLeakCount": 0,
+      "finalNotifications": "granted",
+      "finalText": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›",
+      "samples": [
+        {
+          "t_ms": 1036,
+          "notifications": "no_api",
+          "html_empty": true,
+          "has_notify_text": false,
+          "html": "",
+          "text": ""
+        },
+        {
+          "t_ms": 1288,
+          "notifications": "unknown",
+          "html_empty": true,
+          "has_notify_text": false,
+          "html": "",
+          "text": ""
+        },
+        {
+          "t_ms": 1420,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 1528,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 1634,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 1739,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 1847,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 1954,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 2061,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 2168,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 2282,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 2392,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 2502,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 2610,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 2716,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 2826,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 2936,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 3050,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 3162,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 3273,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 3384,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 3493,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 3608,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 3722,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 3833,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 3943,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 4053,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 4165,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 4275,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 4385,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 4497,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 4610,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 4724,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 4835,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 4945,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 5058,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 5169,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 5282,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 5392,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 5503,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 5614,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 5723,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 5835,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 5944,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 6057,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 6169,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 6282,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 6389,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 6501,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 6611,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 6719,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 6832,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 6942,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 7054,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 7166,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 7281,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 7391,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 7499,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 7610,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 7723,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 7835,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 7944,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 8057,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 8170,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 8282,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 8392,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 8504,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 8616,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 8723,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 8836,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 8949,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 9062,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 9170,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 9284,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 9398,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 9510,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 9625,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 9736,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 9849,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 9962,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 10077,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 10188,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 10302,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 10413,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 10526,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 10639,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 10752,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 10861,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 10974,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        }
+      ]
+    },
+    {
+      "round": 2,
+      "sampleCount": 90,
+      "unknownCount": 0,
+      "unknownWithContent": 0,
+      "notifyLeakCount": 0,
+      "finalNotifications": "granted",
+      "finalText": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›",
+      "samples": [
+        {
+          "t_ms": 919,
+          "notifications": "no_api",
+          "html_empty": true,
+          "has_notify_text": false,
+          "html": "",
+          "text": ""
+        },
+        {
+          "t_ms": 1126,
+          "notifications": "no_api",
+          "html_empty": true,
+          "has_notify_text": false,
+          "html": "",
+          "text": ""
+        },
+        {
+          "t_ms": 1258,
+          "notifications": "no_api",
+          "html_empty": true,
+          "has_notify_text": false,
+          "html": "",
+          "text": ""
+        },
+        {
+          "t_ms": 1370,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 1486,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 1590,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 1697,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 1805,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 1910,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 2015,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 2119,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 2226,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 2335,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 2446,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 2556,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 2667,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 2773,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 2883,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 2995,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 3106,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 3218,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 3330,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 3436,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 3549,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 3659,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 3771,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 3884,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 3994,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 4106,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 4216,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 4326,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 4439,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 4550,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 4660,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 4770,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 4884,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 4998,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 5108,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 5219,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 5335,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 5443,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 5553,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 5667,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 5776,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 5886,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 5996,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 6108,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 6220,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 6334,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 6443,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 6557,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 6669,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 6782,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 6893,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 7002,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 7114,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 7223,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 7337,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 7445,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 7558,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 7670,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 7780,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 7892,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 8001,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 8111,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 8222,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 8332,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 8443,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 8553,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 8663,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 8773,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 8886,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 9000,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 9112,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 9223,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 9339,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 9450,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 9563,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 9675,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 9787,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 9900,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 10009,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 10116,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 10226,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 10335,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 10446,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 10553,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 10665,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 10775,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 10884,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        }
+      ]
+    },
+    {
+      "round": 3,
+      "sampleCount": 89,
+      "unknownCount": 1,
+      "unknownWithContent": 0,
+      "notifyLeakCount": 0,
+      "finalNotifications": "granted",
+      "finalText": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›",
+      "samples": [
+        {
+          "t_ms": 1005,
+          "notifications": "no_api",
+          "html_empty": true,
+          "has_notify_text": false,
+          "html": "",
+          "text": ""
+        },
+        {
+          "t_ms": 1246,
+          "notifications": "unknown",
+          "html_empty": true,
+          "has_notify_text": false,
+          "html": "",
+          "text": ""
+        },
+        {
+          "t_ms": 1353,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 1463,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 1571,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 1677,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 1784,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 1890,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 1996,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 2102,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 2208,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 2320,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 2430,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 2539,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 2645,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 2757,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 2869,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 2984,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 3097,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 3207,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 3320,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 3432,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 3541,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 3653,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 3763,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 3878,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 3988,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 4101,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 4213,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 4324,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 4432,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 4546,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 4657,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 4769,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 4881,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 4993,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 5105,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 5217,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 5329,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 5440,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 5552,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 5665,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 5779,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 5892,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 6005,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 6114,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 6226,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 6337,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 6448,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 6562,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 6672,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 6782,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 6895,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 7008,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 7119,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 7228,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 7339,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 7452,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 7567,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 7680,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 7791,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 7903,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 8018,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 8133,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 8246,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 8356,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 8471,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 8582,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 8695,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 8807,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 8921,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 9036,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 9151,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 9263,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 9375,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 9480,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 9593,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 9706,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 9819,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 9932,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 10042,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 10154,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 10266,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 10380,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 10493,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 10606,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 10719,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 10833,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        },
+        {
+          "t_ms": 10945,
+          "notifications": "granted",
+          "html_empty": false,
+          "has_notify_text": false,
+          "html": "<button class=\"soft-entry\" id=\"setupEntry\" style=\"margin-bottom:10px\"><span><strong>提醒还没准备好</strong><br><span style=\"font-size:0.78rem;color:var(--muted)\">还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录</span></span><span style=\"color:var(--muted)\">›</span></button>",
+          "text": "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+        }
+      ]
+    }
+  ],
+  "passCriteria": {
+    "unknownAlwaysEmpty": true,
+    "neverShowsNotifyPrompt": true,
+    "finalStepCountMatchesR2": true
+  },
+  "screenshot": "/Users/qlyf/Developer/reminder/docs/reviews/verification-runs/20260924T2157-pr3-device-regression/raw/step3-home-setup-card.png"
+}

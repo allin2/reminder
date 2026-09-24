@@ -1,0 +1,99 @@
+{
+  "B0": {
+    "status": "PASS",
+    "itemId": "i_ahny4l2kmufrmdkg",
+    "notifId": 351292435,
+    "origTrigger": 1790268586479,
+    "deliveredAt": 1790268597290,
+    "schedAt": 1790268586000,
+    "deliveredOnTime": true
+  },
+  "B1": {
+    "status": "PASS",
+    "itemId": "i_akdcozshmufrp9ek",
+    "notifId": 425461133,
+    "deliveredAt": 1790268732517,
+    "operationAt": 1790268735640,
+    "notificationGoneAt": 1790268737017,
+    "removedDeliveredIds": [
+      425461133
+    ],
+    "deliveredCleanupError": null
+  },
+  "B2": {
+    "status": "PASS",
+    "itemId": "i_l39fqw7zmufrsjgz",
+    "notifId": 1525823664,
+    "deliveredAt": 1790268884898,
+    "operationAt": 1790268888019,
+    "notificationGoneAt": 1790268889389,
+    "removedDeliveredIds": [
+      1525823664
+    ],
+    "deliveredCleanupError": null
+  },
+  "B3": {
+    "status": "PASS",
+    "itemId": "i_pwc22zlmmufrvl0t",
+    "notifId": 1975337971,
+    "deliveredAt": 1790269027843,
+    "operationAt": 1790269030981,
+    "notificationGoneAt": 1790269032364,
+    "removedDeliveredIds": [
+      1975337971
+    ],
+    "deliveredCleanupError": null
+  },
+  "B4": {
+    "status": "PASS",
+    "itemId": "i_ruvubucumufrymrw",
+    "notifId": 1302517500,
+    "deliveredAt": 1790269169481,
+    "operationAt": 1790269172547,
+    "notificationGoneAt": 1790269173931,
+    "newScheduleAt": 1790276372000,
+    "removedDeliveredIds": [
+      1302517500
+    ],
+    "deliveredCleanupError": null
+  },
+  "B5": {
+    "status": "PASS",
+    "itemId": "i_1gj1vh54mufs1qd6",
+    "notifId": 1131758126,
+    "deliveredAt": 1790269314180,
+    "reconcileAt": 1790269317303,
+    "notificationPreserved": true,
+    "removedDeliveredIds": [],
+    "deliveredCleanupError": null
+  },
+  "B6": {
+    "status": "PASS",
+    "itemId": "i_rqb8o2iymufs4spq",
+    "notifId": 1976731281,
+    "deliveredAt": 1790269456805,
+    "operationAt": 1790269464737,
+    "notificationGoneAt": 1790269466072,
+    "removedDeliveredIds": [
+      1976731281
+    ],
+    "deliveredCleanupError": null
+  },
+  "B7": {
+    "status": "PASS",
+    "itemId": "i_1igtspf8mufs7x29",
+    "notifId": 1329038463,
+    "deliveredAt": 1790269602251,
+    "actionInShade": "我知道了",
+    "acknowledgedInMemory": true,
+    "acknowledgedInIdb": true
+  },
+  "B8": {
+    "status": "OBSERVED",
+    "itemId": "i_jv537ki5mufsb8ke",
+    "alarmFiredAt": 1790269748016,
+    "alarmActivityDismissedOnDelete": false,
+    "notificationDismissedOnDelete": false,
+    "observationNotes": "During active ringing, deleteItem(i_jv537ki5mufsb8ke) was executed in webview. AlarmActivity remaining on screen: True; Notification shade record present: True."
+  }
+}

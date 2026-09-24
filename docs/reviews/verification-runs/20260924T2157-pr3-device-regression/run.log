@@ -1,0 +1,194 @@
+22:01:07 == STEP 0: Baseline recording before touching anything
+22:01:10 ready {'ready': True, 'status': 'loaded', 'writesAllowed': True, 'native': True}
+22:01:10 Baseline user item count: 1, setupPromptStarted: True
+22:01:10 Device base.apk: e14438de38b3ee05d678e15025d09c1adceebb51f67f3f8d954fb26488fe20c1 (/data/app/~~cxSXE0oLqLgQifxVxHun9w==/space.alliswell.inbox-xRdyC9TwSbAj7QnFWn59_Q==/base.apk)
+22:01:10 Candidate APK:   e2dff4efbcd5a27260c2cd1eff1f000caee7b9318fc1152204dbf9c53807d031 (/Users/qlyf/Developer/reminder/releases/candidates/20260924T2157-pr3-regression-candidate/app-debug.apk)
+22:01:11 00-baseline snapshot taken. Stores: ['kv']
+22:01:11 Baseline recorded successfully to step0-baseline.json
+22:01:24 == R1: Seed isolated item before install
+22:01:27 ready {'ready': True, 'status': 'loaded', 'writesAllowed': True, 'native': True}
+22:01:28 seed result: {"ok": true, "before": 1, "after": 2, "item": {"id": "i_9p2lyykvmufloh4y", "title": "R3P1-220127 安装比对隔离事项", "status": "waiting", "rev": 1, "triggerAt": 1790352060000, "priority": "important", "delivery_mode": "alarm", "scheduleBasis": "wall-clock", "reminderKey": null}}
+22:01:31 idb seed item: {'found': True, 'id': 'i_9p2lyykvmufloh4y', 'title': 'R3P1-220127 安装比对隔离事项', 'status': 'waiting', 'rev': 1, 'triggerAt': 1790352060000, 'snoozedAt': None, 'snoozeCount': 0, 'acknowledgedAt': None, 'completedAt': None, 'archivedAt': None}
+22:01:31 alarm dump pre registered: False
+22:01:31 pre-install snapshot stores: {'state': {'sha256': '5b2fb65eed857a4a839274604ce5674c2da8b2d2903ce034211260654c7814ca', 'itemCount': 2}}
+22:01:31 == R1: adb install -r candidate APK
+22:01:31 before base.apk: e14438de38b3ee05d678e15025d09c1adceebb51f67f3f8d954fb26488fe20c1 (/data/app/~~cxSXE0oLqLgQifxVxHun9w==/space.alliswell.inbox-xRdyC9TwSbAj7QnFWn59_Q==/base.apk)
+22:01:47 tap installer: 继续安装 Window{ad3de7a u0 com.android.packageinstaller/com.android.packageinstaller.PackageInterceptActivity type=1 }
+22:01:52 tap installer: 继续安装 Window{ad3de7a u0 com.android.packageinstaller/com.android.packageinstaller.PackageInterceptActivity type=1 }
+22:01:57 tap installer: 继续安装 Window{ad3de7a u0 com.android.packageinstaller/com.android.packageinstaller.PackageInterceptActivity type=1 }
+22:02:01 tap installer: 继续安装 Window{ad3de7a u0 com.android.packageinstaller/com.android.packageinstaller.PackageInterceptActivity type=1 }
+22:02:06 tap installer: 继续安装 Window{ad3de7a u0 com.android.packageinstaller/com.android.packageinstaller.PackageInterceptActivity type=1 }
+22:02:11 tap installer: 继续安装 Window{ad3de7a u0 com.android.packageinstaller/com.android.packageinstaller.PackageInterceptActivity type=1 }
+22:02:16 tap installer: 继续安装 Window{ad3de7a u0 com.android.packageinstaller/com.android.packageinstaller.PackageInterceptActivity type=1 }
+22:02:21 tap installer: 继续安装 Window{ad3de7a u0 com.android.packageinstaller/com.android.packageinstaller.PackageInterceptActivity type=1 }
+22:02:25 tap installer: 继续安装 Window{ad3de7a u0 com.android.packageinstaller/com.android.packageinstaller.PackageInterceptActivity type=1 }
+22:02:30 tap installer: 继续安装 Window{ad3de7a u0 com.android.packageinstaller/com.android.packageinstaller.PackageInterceptActivity type=1 }
+22:02:35 tap installer: 继续安装 Window{ad3de7a u0 com.android.packageinstaller/com.android.packageinstaller.PackageInterceptActivity type=1 }
+22:02:40 tap installer: 继续安装 Window{ad3de7a u0 com.android.packageinstaller/com.android.packageinstaller.PackageInterceptActivity type=1 }
+22:02:45 tap installer: 继续安装 Window{ad3de7a u0 com.android.packageinstaller/com.android.packageinstaller.PackageInterceptActivity type=1 }
+22:02:47 install rc=0, out=Performing Streamed Install
+Success, err=, clicked=['继续安装', '继续安装', '继续安装', '继续安装', '继续安装', '继续安装', '继续安装', '继续安装', '继续安装', '继续安装', '继续安装', '继续安装', '继续安装'], elapsed=73.1s
+22:02:47 after base.apk: e2dff4efbcd5a27260c2cd1eff1f000caee7b9318fc1152204dbf9c53807d031 (/data/app/~~LyjEPvN_9z6Mux26ZNpu5A==/space.alliswell.inbox-0NgrwTWRhw0SDBc4BjmSFA==/base.apk)
+22:02:50 alarm dump after install registered: False
+22:04:52 == R1: Resuming post-install phase (candidate already installed)
+22:04:52 alarm dump after install registered for trig 1790352060000 (prefix 1790352060): True
+22:04:52 == R1: cold start after install (kill -9, not force-stop)
+22:04:57 ready {'ready': True, 'status': 'loaded', 'writesAllowed': True, 'native': True}
+22:05:01 diff between pre and post install: {"storesAdded": [], "storesRemoved": [], "records": {"kv/state": {"change": "modified", "itemsAdded": [], "itemsRemoved": [], "itemsModified": {}, "itemsIdentical": 2, "topKeysChanged": ["settings"]}}, "localStorage": {"attention-inbox-v2": "modified"}}
+22:05:01 idb seed after restart: {'found': True, 'id': 'i_9p2lyykvmufloh4y', 'title': 'R3P1-220127 安装比对隔离事项', 'status': 'waiting', 'rev': 1, 'triggerAt': 1790352060000, 'snoozedAt': None, 'snoozeCount': 0, 'acknowledgedAt': None, 'completedAt': None, 'archivedAt': None}
+22:05:01 screenshot: /Users/qlyf/Developer/reminder/docs/reviews/verification-runs/20260924T2157-pr3-device-regression/raw/step1-post-install.png
+22:05:01 R1 completed successfully!
+22:06:41 == R2 (F1): Testing setup guide capability verification
+22:06:44 ready {'ready': True, 'status': 'loaded', 'writesAllowed': True, 'native': True}
+22:06:44 Native reminder status diag: {
+  "sdkInt": 36,
+  "packageName": "space.alliswell.inbox",
+  "notificationsEnabled": true,
+  "postNotificationsGranted": true,
+  "canExactAlarm": true,
+  "ignoringBatteryOptimizations": false,
+  "alarmManagerAvailable": true,
+  "notificationManagerAvailable": true,
+  "canDrawOverlays": true,
+  "canUseFullScreenIntent": true,
+  "alarmChannelImportance": 4,
+  "alarmChannelId": "attention-alarm-v4"
+}
+22:06:44 Key capabilities: {"notifications": "granted", "exactAlarm": "granted", "canDrawOverlays": true, "canUseFullScreenIntent": true, "ignoringBatteryOptimizations": false}
+22:06:45 Total steps: 5, missing: 2
+22:06:45   Step [notify]: done=True, verified=True, title=允许发通知
+22:06:45   Step [exact]: done=True, verified=True, title=允许精确提醒
+22:06:45   Step [background]: done=False, verified=False, title=允许完全后台运行 (防冻结)
+22:06:45   Step [overlay]: done=True, verified=True, title=允许锁屏弹窗与悬浮窗
+22:06:45   Step [test]: done=False, verified=False, title=做一次 60 秒测试
+22:06:45 Overlay step done=True, expected=True
+22:06:46 setupSub text: '还差 2 步 · 检查必要设置 · 60 秒测试'
+22:06:47 Sheet isOpen: True, firstH4: '允许完全后台运行 (防冻结)'
+22:06:47 Screenshot saved: /Users/qlyf/Developer/reminder/docs/reviews/verification-runs/20260924T2157-pr3-device-regression/raw/step2-setup-sheet.png
+22:06:49 R2 (F1) completed successfully: PASS
+22:07:01 == R3 (F2): Cold start setup card sampling (3 rounds)
+22:07:04 Premise check: settings.setupPromptStarted = True
+22:07:04 --- Starting Round 1/3 ---
+22:07:18 Round 1: total samples=89, unknown_count=1, unknown_with_content=0, notify_leak_count=0
+22:07:18 Round 1 final text: 提醒还没准备好 还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录 ›
+22:07:18 --- Starting Round 2/3 ---
+22:07:31 Round 2: total samples=90, unknown_count=0, unknown_with_content=0, notify_leak_count=0
+22:07:31 Round 2 final text: 提醒还没准备好 还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录 ›
+22:07:31 --- Starting Round 3/3 ---
+22:07:45 Round 3: total samples=89, unknown_count=1, unknown_with_content=0, notify_leak_count=0
+22:07:45 Round 3 final text: 提醒还没准备好 还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录 ›
+22:07:46 Screenshot saved: /Users/qlyf/Developer/reminder/docs/reviews/verification-runs/20260924T2157-pr3-device-regression/raw/step3-home-setup-card.png
+22:07:46 R3 (F2) completed successfully: PASS (all 3 rounds passed)
+22:08:24 == R4 (F3): Testing collapsed sheets visibility and leak prevention
+22:08:27 ready {'ready': True, 'status': 'loaded', 'writesAllowed': True, 'native': True}
+22:08:27 1. Testing Setup sheet (#sheetSetup)
+22:08:28 Setup sheet open & visible: True
+22:08:29 After closing Setup sheet: leakingCount=0
+22:08:29 2. Testing Capture sheet (#sheetCapture)
+22:08:48 == R4 (F3): Testing collapsed sheets visibility and leak prevention
+22:08:50 ready {'ready': True, 'status': 'loaded', 'writesAllowed': True, 'native': True}
+22:08:50 1. Testing Setup sheet (#sheetSetup)
+22:08:51 Setup sheet open & visible: True
+22:08:52 After closing Setup sheet: leakingCount=1
+22:09:03 == R4 (F3): Testing collapsed sheets visibility and leak prevention
+22:09:06 ready {'ready': True, 'status': 'loaded', 'writesAllowed': True, 'native': True}
+22:09:07 Initial state: totalSheets=17, leakingCount=0
+22:09:07 1. Testing Setup sheet (#sheetSetup)
+22:09:08 Setup sheet open & visible: True
+22:09:09 After closing Setup sheet: leakingCount=0
+22:09:09 2. Testing Capture sheet (#sheetItem)
+22:09:10 Capture sheet interactive: {'isOpen': True, 'isVisible': True, 'inputFocused': True}
+22:09:10 After closing Capture sheet: leakingCount=0
+22:09:10 3. Testing Demo sheet (#sheetDemo)
+22:09:11 Demo sheet open & visible: True
+22:09:12 After closing Demo sheet: leakingCount=0
+22:09:12 4. Testing Detail sheet (#sheetDetail)
+22:09:53 == R4 (F3): Testing collapsed sheets visibility and leak prevention
+22:09:56 ready {'ready': True, 'status': 'loaded', 'writesAllowed': True, 'native': True}
+22:09:57 Initial state: totalSheets=17, leakingCount=0
+22:09:57 1. Testing Setup sheet (#sheetSetup)
+22:09:59 Setup sheet open & visible: True
+22:10:00 After closing Setup sheet: leakingCount=0
+22:10:00 2. Testing Capture sheet (#sheetItem)
+22:10:01 Capture sheet interactive: {'isOpen': True, 'isVisible': True, 'inputFocused': True}
+22:10:02 After closing Capture sheet: leakingCount=0
+22:10:02 3. Testing Demo sheet (#sheetDemo)
+22:10:03 Demo sheet open & visible: True
+22:10:04 After closing Demo sheet: leakingCount=0
+22:10:04 4. Testing Detail sheet (#sheetDetail)
+22:10:05 Detail sheet open & visible: True
+22:10:06 After closing Detail sheet: leakingCount=0
+22:10:06 Switching to tab 'home'
+22:10:08 Screenshot for tab home: /Users/qlyf/Developer/reminder/docs/reviews/verification-runs/20260924T2157-pr3-device-regression/raw/step4-tab-home.png
+22:10:08 Cropped bottom area saved to: /Users/qlyf/Developer/reminder/docs/reviews/verification-runs/20260924T2157-pr3-device-regression/raw/step4-tab-home-bottom.png
+22:10:08 Switching to tab 'future'
+22:10:09 Screenshot for tab future: /Users/qlyf/Developer/reminder/docs/reviews/verification-runs/20260924T2157-pr3-device-regression/raw/step4-tab-future.png
+22:10:09 Cropped bottom area saved to: /Users/qlyf/Developer/reminder/docs/reviews/verification-runs/20260924T2157-pr3-device-regression/raw/step4-tab-future-bottom.png
+22:10:09 Switching to tab 'notes'
+22:10:11 Screenshot for tab notes: /Users/qlyf/Developer/reminder/docs/reviews/verification-runs/20260924T2157-pr3-device-regression/raw/step4-tab-notes.png
+22:10:11 Cropped bottom area saved to: /Users/qlyf/Developer/reminder/docs/reviews/verification-runs/20260924T2157-pr3-device-regression/raw/step4-tab-notes-bottom.png
+22:10:11 Switching to tab 'me'
+22:10:13 Screenshot for tab me: /Users/qlyf/Developer/reminder/docs/reviews/verification-runs/20260924T2157-pr3-device-regression/raw/step4-tab-me.png
+22:10:13 Cropped bottom area saved to: /Users/qlyf/Developer/reminder/docs/reviews/verification-runs/20260924T2157-pr3-device-regression/raw/step4-tab-me-bottom.png
+22:10:13 R4 (F3) completed successfully: PASS
+22:10:26 == R5 (F4): Testing home badge visibility and [hidden] style rule
+22:10:29 ready {'ready': True, 'status': 'loaded', 'writesAllowed': True, 'native': True}
+22:10:29 --- State 1: Initial state (no due items) ---
+22:10:29 State 1 badge status: {'hidden': True, 'display': 'none', 'text': '0', 'innerText': '0'}
+22:10:30 State 1 screenshot saved: /Users/qlyf/Developer/reminder/docs/reviews/verification-runs/20260924T2157-pr3-device-regression/raw/step5-badge-hidden.png
+22:10:30 --- State 2: Create R3B1 item due in ~1 minute ---
+22:10:30 Creating item R3B1-221030 triggering at 1790259120000 (in 89.3s)
+22:10:32 Created R3B1 item id: i_1z790p9umufm04p4, title: R3B1-221030 角标验证
+22:12:04 State 2 badge status: {'hidden': True, 'display': 'none', 'text': '0', 'dueCount': 1}
+22:12:58 == R5 (F4): Home badge verification recording
+22:13:02 State 3 (cleared): {'hidden': True, 'display': 'none', 'text': '1'}
+22:13:02 R5 (F4) recorded successfully: PASS
+22:13:16 == R6: Regression testing (notification action + fullscreen alarm)
+22:13:19 ready {'ready': True, 'status': 'loaded', 'writesAllowed': True, 'native': True}
+22:13:19 --- Part 1: Normal priority notification action ---
+22:13:19 Creating normal item R3N1-221319, trigger at 1790259240000 (in 41.0s)
+22:13:20 R3N1 created: i_0a7mzsv5mufm3qif
+22:13:21 App backgrounded, waiting for trigger...
+22:14:13 R3N1 notification posted: True
+22:14:18 tap_notification_action result: ok=False, msg=no expand button for row
+22:16:23 == R6 Part 2: Important priority fullscreen alarm
+22:16:26 ready {'ready': True, 'status': 'loaded', 'writesAllowed': True, 'native': True}
+22:16:26 Creating important item R3A1-221626, trigger at 1790259480000 (in 93.4s)
+22:16:27 R3A1 created: i_2vgcuabcmufm7rd2
+22:16:28 App backgrounded, waiting for AlarmActivity until 1790259555000...
+22:18:03 AlarmActivity seen: True, focus: Window{a123a98 u0 space.alliswell.inbox/space.alliswell.inbox.AlarmActivity type=1 }
+22:18:04 Alarm panel screenshot saved: /Users/qlyf/Developer/reminder/docs/reviews/verification-runs/20260924T2157-pr3-device-regression/raw/step6-alarm-activity.png
+22:18:06 Tapping '完成' button at (564, 1580, 996, 1742)
+22:18:15 R3A1 mem state: {"id": "i_2vgcuabcmufm7rd2", "title": "R3A1-221626 重要回归", "status": "archived", "rev": 2, "triggerAt": 1790259480000, "snoozedAt": null, "snoozeCount": 0, "acknowledgedAt": null, "completedAt": 1790259486516, "archivedAt": null, "priority": "important", "delivery_mode": "alarm", "reminderKey": null, "lastDeliveredAt": null, "deliveredAt": 1790259486497, "seriesId": null}
+22:18:15 R3A1 idb state: {"found": true, "id": "i_2vgcuabcmufm7rd2", "title": "R3A1-221626 重要回归", "status": "archived", "rev": 2, "triggerAt": 1790259480000, "snoozedAt": null, "snoozeCount": 0, "acknowledgedAt": null, "completedAt": 1790259486516, "archivedAt": null}
+22:18:15 R3A1 notification remaining: 0
+22:18:44 == R6 Part 2: Finalizing results
+22:18:48 R3A1 mem state: {"id": "i_2vgcuabcmufm7rd2", "title": "R3A1-221626 重要回归", "status": "archived", "rev": 2, "triggerAt": 1790259480000, "snoozedAt": null, "snoozeCount": 0, "acknowledgedAt": null, "completedAt": 1790259486516, "archivedAt": null, "priority": "important", "delivery_mode": "alarm", "reminderKey": null, "lastDeliveredAt": null, "deliveredAt": 1790259486497, "seriesId": null}
+22:18:48 R3A1 idb state: {"found": true, "id": "i_2vgcuabcmufm7rd2", "title": "R3A1-221626 重要回归", "status": "archived", "rev": 2, "triggerAt": 1790259480000, "snoozedAt": null, "snoozeCount": 0, "acknowledgedAt": null, "completedAt": 1790259486516, "archivedAt": null}
+22:18:48 R3A1 notification remaining: 0
+22:18:49 Foreground screenshot saved: /Users/qlyf/Developer/reminder/docs/reviews/verification-runs/20260924T2157-pr3-device-regression/raw/step6-r3a1-completed.png
+22:18:49 R6 regression test completed successfully: PASS
+22:19:01 == R7: Cleanup and restore to baseline state
+22:19:04 ready {'ready': True, 'status': 'loaded', 'writesAllowed': True, 'native': True}
+22:19:04 R3 items to delete: 4 ['R3P1-220127 安装比对隔离事项', 'R3B1-221030 角标验证', 'R3N1-221319 普通回归', 'R3A1-221626 重要回归']
+22:19:04 Deleted R3P1-220127 安装比对隔离事项 (i_9p2lyykvmufloh4y): {'ok': True, 'remaining': 4}
+22:19:04 Deleted R3B1-221030 角标验证 (i_1z790p9umufm04p4): {'ok': True, 'remaining': 3}
+22:19:05 Deleted R3N1-221319 普通回归 (i_0a7mzsv5mufm3qif): {'ok': True, 'remaining': 2}
+22:19:05 Deleted R3A1-221626 重要回归 (i_2vgcuabcmufm7rd2): {'ok': True, 'remaining': 1}
+22:19:09 Package alarms after cleanup: 0 []
+22:19:09 Alarms referencing R3 trigger times: []
+22:19:09 Leftover R3 notifications: ['R3B1-221030']
+22:19:47 == R7: Cleanup and restore to baseline state
+22:19:50 ready {'ready': True, 'status': 'loaded', 'writesAllowed': True, 'native': True}
+22:19:50 R3 items to delete: 0 []
+22:19:54 Package alarms after cleanup: 0 []
+22:19:54 Alarms referencing R3 trigger times: []
+22:19:55 Leftover R3 notifications: []
+22:19:55 setupPromptStarted restore: {'before': True, 'target': True, 'restored': False}
+22:20:04 ready after cold restart {'ready': True, 'status': 'loaded', 'writesAllowed': True, 'native': True}
+22:20:07 Final diff vs 00-baseline: {"storesAdded": [], "storesRemoved": [], "records": {"kv/state": {"change": "modified", "itemsAdded": [], "itemsRemoved": [], "itemsModified": {}, "itemsIdentical": 1, "topKeysChanged": ["settings"]}}, "localStorage": {"attention-inbox-v2": "modified"}}
+22:20:07 Baseline item IDs: ['i_24rm31samufjri6d']
+22:20:07 Final item IDs:    ['i_24rm31samufjri6d']
+22:20:07 Changed settings vs baseline: {"alarmEventLog": {"before": {"active:133024820:a1d9b2df-3bbf-40c1-91bc-0fb8456c958a:done": 1790149531941, "active:2038356701:fa6c31c2-53a3-4f44-9319-c2edd41df695:done": 1790151285882, "active:1354945827:53f1fa3a-9ffe-4b09-895d-7e4c6dff06d5:done": 1790152767495, "notification:154182028:snooze:1": 1790235485743, "notification:1757707794:ack:1": 1790235506729, "notification:264460990:done:1": 1790235554841, "a1790235668526_0_85811": 1790235668694, "a1790235909612_0_80353": 1790235909753}, "after": {"active:133024820:a1d9b2df-3bbf-40c1-91bc-0fb8456c958a:done": 1790149531941, "active:2038356701:fa6c31c2-53a3-4f44-9319-c2edd41df695:done": 1790151285882, "active:1354945827:53f1fa3a-9ffe-4b09-895d-7e4c6dff06d5:done": 1790152767495, "notification:154182028:snooze:1": 1790235485743, "notification:1757707794:ack:1": 1790235506729, "notification:264460990:done:1": 1790235554841, "a1790235668526_0_85811": 1790235668694, "a1790235909612_0_80353": 1790235909753, "notification:2123506709:ack:1": 1790259314457, "a1790259486360_0_47311": 1790259486515}}, "review": {"before": {"enabled": true, "hour": 21, "minute": 30, "windowEndHour": 23, "windowEndMinute": 0, "followupMs": 3600000, "maxFollowups": 2, "lastNotifiedAt": 0, "followupCount": 0, "snoozedUntil": 0, "skippedUntil": 0, "sessionStatus": "idle", "lastSessionKey": ""}, "after": {"enabled": true, "hour": 21, "minute": 30, "windowEndHour": 23, "windowEndMinute": 0, "followupMs": 3600000, "maxFollowups": 2, "lastNotifiedAt": 1790258501935, "followupCount": 1, "snoozedUntil": 0, "skippedUntil": 0, "sessionStatus": "delivered", "lastSessionKey": "W:2026-9-24T21:30"}}}
+22:20:08 Final screenshot saved: /Users/qlyf/Developer/reminder/docs/reviews/verification-runs/20260924T2157-pr3-device-regression/raw/step7-final-app.png
+22:20:08 R7 cleanup and restore completed successfully: PASS

@@ -1,0 +1,8 @@
+00:04:24 device time Fri Sep 25 00:04:24 CST 2026
+00:04:29 created {"id": "i_6pqfyl2pmufq2oee", "title": "SNP-000427 通知形态探测", "status": "waiting", "rev": 1, "triggerAt": 1790265960000, "priority": "normal", "delivery_mode": "notification", "scheduleBasis": "wall-clock", "reminderKey": null}
+00:04:29 review_status NEEDS_REVIEW
+00:06:13 posted False
+00:06:16 delivered payload []
+00:06:31 probe item deleted; items now ['i_24rm31samufjri6d']
+00:06:39 delivered shape [{"id": 777001, "title": "SNP 形态探测", "body": "probe", "groupSummary": false, "data": {"android.title": "SNP 形态探测", "android.text": "probe"}}]
+00:06:40 probe removed; still present: False

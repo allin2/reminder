@@ -1,0 +1,39 @@
+{
+  "A1": {
+    "id": "i_cvqvhqakmufrbxpk",
+    "title": "RFX 勿扰普通甲",
+    "notifId": 1117279029,
+    "origTrigger": 1790268099365,
+    "quietEndTarget": 1790268300000,
+    "scheduleAt": 1790268300000,
+    "deferredToQuietEnd": true,
+    "suppressedAtOrig": true,
+    "deliveredAtQuietEnd": true,
+    "deliveredAt": 1790268319935,
+    "status": "PASS"
+  },
+  "A2": {
+    "id": "i_hegi1b7nmufrc174",
+    "title": "RFX 勿扰重要乙",
+    "alarmPopped": true,
+    "action": "done",
+    "completedInMemory": true,
+    "completedInIdb": true,
+    "completedAt": 1790268108222,
+    "status": "PASS"
+  },
+  "A3": {
+    "deliveredAfterQuietEnd": true,
+    "status": "PASS"
+  },
+  "A4": {
+    "deletedInApp": true,
+    "notificationRemovedWithin10s": true,
+    "inRemovedDeliveredIds": true,
+    "removedDeliveredIds": [
+      1117279029
+    ],
+    "status": "PASS"
+  },
+  "quietWindowRestored": true
+}

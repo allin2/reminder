@@ -1,0 +1,37 @@
+{
+ "dbVersion": 1,
+ "localStorage": {
+  "attention-inbox-delivered-notif-index": {
+   "bytes": 2,
+   "sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a"
+  },
+  "attention-inbox-v2": {
+   "bytes": 2325,
+   "sha256": "17ed2aedbecd14fa266a48fcaebf1275fb5ac8a1973485a259f86c3785c66277"
+  }
+ },
+ "stores": {
+  "kv": {
+   "state": {
+    "bytes": 2325,
+    "itemCount": 1,
+    "items": {
+     "i_24rm31samufjri6d": {
+      "rev": 2,
+      "sha256": "9dcc6f3e668a3bf0721fd638651ab21c67f31e2d2e3cd8e8dcf12d46ce2a1edc",
+      "status": "archived",
+      "triggerAt": 1790255278802
+     }
+    },
+    "sha256": "a3553545f7c690a990d712f810b2efae0383cbc1d8b967a8bd136390c6364584",
+    "topKeys": {
+     "items": "12bb1351537c7b3cdc6a9786e8344918a96460866cb9b7579ce15bbc0feb0a0f",
+     "notes": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+     "projects": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+     "schema": "ef2d127de37b942baad06145e54b0c619a1f22327b2ebbcfbec78f5564afe39d",
+     "settings": "0ae40c9d6e40526991a584bd9934b1acf4f2e6eb0d85b3086431fcb42a249b77"
+    }
+   }
+  }
+ }
+}

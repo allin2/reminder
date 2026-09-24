@@ -1,0 +1,85 @@
+{
+ "R2": {
+  "status": {
+   "notifications": "granted",
+   "exactAlarm": "granted",
+   "diag": {
+    "o": true,
+    "f": true,
+    "b": false
+   }
+  },
+  "steps": [
+   [
+    "notify",
+    true,
+    true
+   ],
+   [
+    "exact",
+    true,
+    true
+   ],
+   [
+    "background",
+    false,
+    false
+   ],
+   [
+    "overlay",
+    true,
+    true
+   ],
+   [
+    "test",
+    false,
+    false
+   ]
+  ],
+  "next": "background",
+  "missing": 2,
+  "setupSub": "还差 2 步 · 检查必要设置 · 60 秒测试",
+  "sheetFirstStep": "允许完全后台运行 (防冻结)",
+  "sheetHasOverlayPrompt": false,
+  "pass": true
+ },
+ "R3": {
+  "rounds": [
+   {
+    "samples": 45,
+    "unknownSamples": 0,
+    "cardShownWhileUnknown": 0,
+    "notifyPromptSamples": 0,
+    "final": [
+     1790260248507,
+     "granted",
+     "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+    ]
+   },
+   {
+    "samples": 45,
+    "unknownSamples": 0,
+    "cardShownWhileUnknown": 0,
+    "notifyPromptSamples": 0,
+    "final": [
+     1790260261479,
+     "granted",
+     "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+    ]
+   },
+   {
+    "samples": 43,
+    "unknownSamples": 0,
+    "cardShownWhileUnknown": 0,
+    "notifyPromptSamples": 0,
+    "final": [
+     1790260274410,
+     "granted",
+     "提醒还没准备好\n还差 2 步：允许完全后台运行 (防冻结) · 可以跳过，跳过也能记录\n›"
+    ]
+   }
+  ],
+  "pass": true,
+  "sawUnknownAtLeastOnce": false
+ }
+}

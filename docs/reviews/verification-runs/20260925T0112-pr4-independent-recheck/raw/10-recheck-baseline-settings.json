@@ -1,0 +1,20 @@
+{
+ "dnd": false,
+ "quietStart": "23:00",
+ "quietEnd": "07:30",
+ "review": {
+  "enabled": true,
+  "hour": 21,
+  "minute": 30,
+  "windowEndHour": 23,
+  "windowEndMinute": 0,
+  "followupMs": 3600000,
+  "maxFollowups": 2,
+  "lastNotifiedAt": 1790258501935,
+  "followupCount": 1,
+  "snoozedUntil": 0,
+  "skippedUntil": 0,
+  "sessionStatus": "idle",
+  "lastSessionKey": "W:2026-9-24T21:30"
+ }
+}

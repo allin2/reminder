@@ -1,0 +1,176 @@
+00:31:56 == STEP 0: Baseline recording before install
+00:31:59 ready {'ready': True, 'status': 'loaded', 'writesAllowed': True, 'native': True}
+00:31:59 Baseline settings: {"dnd": true, "quietStart": "23:00", "quietEnd": "07:30", "review": {"enabled": true, "hour": 21, "minute": 30, "windowEndHour": 23, "windowEndMinute": 0, "followupMs": 3600000, "maxFollowups": 2, "lastNotifiedAt": 1790258501935, "followupCount": 1, "snoozedUntil": 0, "skippedUntil": 0, "sessionStatus": "idle", "lastSessionKey": "W:2026-9-24T21:30"}, "setupPromptStarted": true}
+00:31:59 Baseline user item count: 1
+00:31:59 Device base.apk before: e2dff4efbcd5a27260c2cd1eff1f000caee7b9318fc1152204dbf9c53807d031 (/data/app/~~LyjEPvN_9z6Mux26ZNpu5A==/space.alliswell.inbox-0NgrwTWRhw0SDBc4BjmSFA==/base.apk)
+00:31:59 Candidate APK:          83be4ea9a847d0d9d87dcd7856c6b27c23d0b096dd29f64e298e2cddf8dfb579 (/Users/qlyf/Developer/reminder/releases/candidates/20260925T0030-pr4-candidate/app-debug.apk)
+00:32:00 00-pre-install snapshot taken. Stores: ['kv']
+00:32:00 == Installing PR4 candidate APK (-r)
+00:32:12 tap installer: 继续安装 Window{2dd9003 u0 com.android.packageinstaller/com.android.packageinstaller.PackageInterceptActivity type=1 }
+00:32:17 tap installer: 继续安装 Window{2dd9003 u0 com.android.packageinstaller/com.android.packageinstaller.PackageInterceptActivity type=1 }
+00:32:22 tap installer: 继续安装 Window{2dd9003 u0 com.android.packageinstaller/com.android.packageinstaller.PackageInterceptActivity type=1 }
+00:32:27 tap installer: 继续安装 Window{2dd9003 u0 com.android.packageinstaller/com.android.packageinstaller.PackageInterceptActivity type=1 }
+00:32:32 tap installer: 继续安装 Window{2dd9003 u0 com.android.packageinstaller/com.android.packageinstaller.PackageInterceptActivity type=1 }
+00:32:36 tap installer: 继续安装 Window{2dd9003 u0 com.android.packageinstaller/com.android.packageinstaller.PackageInterceptActivity type=1 }
+00:32:41 tap installer: 继续安装 Window{2dd9003 u0 com.android.packageinstaller/com.android.packageinstaller.PackageInterceptActivity type=1 }
+00:32:46 tap installer: 继续安装 Window{2dd9003 u0 com.android.packageinstaller/com.android.packageinstaller.PackageInterceptActivity type=1 }
+00:32:51 tap installer: 继续安装 Window{2dd9003 u0 com.android.packageinstaller/com.android.packageinstaller.PackageInterceptActivity type=1 }
+00:32:56 tap installer: 继续安装 Window{2dd9003 u0 com.android.packageinstaller/com.android.packageinstaller.PackageInterceptActivity type=1 }
+00:33:01 tap installer: 继续安装 Window{2dd9003 u0 com.android.packageinstaller/com.android.packageinstaller.PackageInterceptActivity type=1 }
+00:33:05 tap installer: 继续安装 Window{2dd9003 u0 com.android.packageinstaller/com.android.packageinstaller.PackageInterceptActivity type=1 }
+00:33:10 tap installer: 继续安装 Window{2dd9003 u0 com.android.packageinstaller/com.android.packageinstaller.PackageInterceptActivity type=1 }
+00:33:15 tap installer: 继续安装 Window{2dd9003 u0 com.android.packageinstaller/com.android.packageinstaller.PackageInterceptActivity type=1 }
+00:33:20 tap installer: 继续安装 Window{2dd9003 u0 com.android.packageinstaller/com.android.packageinstaller.PackageInterceptActivity type=1 }
+00:33:25 tap installer: 继续安装 Window{2dd9003 u0 com.android.packageinstaller/com.android.packageinstaller.PackageInterceptActivity type=1 }
+00:33:30 tap installer: 继续安装 Window{2dd9003 u0 com.android.packageinstaller/com.android.packageinstaller.PackageInterceptActivity type=1 }
+00:33:34 tap installer: 继续安装 Window{2dd9003 u0 com.android.packageinstaller/com.android.packageinstaller.PackageInterceptActivity type=1 }
+00:33:39 tap installer: 继续安装 Window{2dd9003 u0 com.android.packageinstaller/com.android.packageinstaller.PackageInterceptActivity type=1 }
+00:33:44 tap installer: 继续安装 Window{2dd9003 u0 com.android.packageinstaller/com.android.packageinstaller.PackageInterceptActivity type=1 }
+00:33:49 tap installer: 继续安装 Window{2dd9003 u0 com.android.packageinstaller/com.android.packageinstaller.PackageInterceptActivity type=1 }
+00:33:54 tap installer: 继续安装 Window{2dd9003 u0 com.android.packageinstaller/com.android.packageinstaller.PackageInterceptActivity type=1 }
+00:33:59 tap installer: 继续安装 Window{2dd9003 u0 com.android.packageinstaller/com.android.packageinstaller.PackageInterceptActivity type=1 }
+00:34:04 tap installer: 继续安装 Window{2dd9003 u0 com.android.packageinstaller/com.android.packageinstaller.PackageInterceptActivity type=1 }
+00:36:35 Device base.apk after:  83be4ea9a847d0d9d87dcd7856c6b27c23d0b096dd29f64e298e2cddf8dfb579 (/data/app/~~10Whi5h4lI7Nyo9rVRkfgA==/space.alliswell.inbox-IWn8tVj5Jk9rGRcMJABnwg==/base.apk)
+00:36:35 == Cold start after install (kill -9, not force-stop)
+00:36:40 ready {'ready': True, 'status': 'loaded', 'writesAllowed': True, 'native': True}
+00:36:43 Install diff: {"storesAdded": [], "storesRemoved": [], "records": {"kv/state": "identical"}, "localStorage": {"attention-inbox-delivered-notif-index": "added", "attention-inbox-v2": "identical"}}
+00:36:43 Items before: ['i_24rm31samufjri6d'], Items after: ['i_24rm31samufjri6d']
+00:36:44 Post-install screenshot: /Users/qlyf/Developer/reminder/docs/reviews/verification-runs/20260925T0030-pr4-dnd-and-stale-notif/raw/step0-post-install.png
+00:36:44 STEP 0 completed successfully: PASS
+00:39:35 == PHASE A: DND Verification (A1 - A4)
+00:39:38 Ready: {'ready': True, 'status': 'loaded', 'writesAllowed': True, 'native': True}
+00:39:38 Current app time: {'ts': 1790267977709, 'hours': 0, 'minutes': 39, 'seconds': 37}
+00:39:38 Setting quiet window: 00:38 to 00:45, target timestamp: 1790268300000
+00:39:38 Quiet settings after save: {'dnd': True, 'quietStart': '00:38', 'quietEnd': '00:45'}
+00:39:38 Quiet end target timestamp: 1790268300000 (00:45)
+00:39:38 == A1: Creating normal item '2分钟后提醒我 RFX 勿扰普通甲'
+00:39:40 Created item via text: id=i_cvqvhqakmufrbxpk, title='RFX 勿扰普通甲', triggerAt=1790268099365, review_status='READY'
+00:39:40 A1 item created: id=i_cvqvhqakmufrbxpk, orig_trigger=1790268099365
+00:39:43 A1 pending notification: {'id': 1117279029, 'title': '安心收件箱提醒', 'body': 'RFX 勿扰普通甲', 'schedule': {'at': 'Fri Sep 25 00:45:00 GMT+08:00 2026', 'count': 1, 'repeats': False}, 'extra': {'managedKind': 'attention-reminder', 'scheduleVersion': 2, 'itemId': 'i_cvqvhqakmufrbxpk', 'itemRev': 1, 'event': 'primary', 'attempt': 0, 'scheduleKey': '2|i_cvqvhqakmufrbxpk|1|primary|0|1790268300000|安心收件箱提醒|RFX 勿扰普通甲|attention-normal-v2', 'reminderKey': '0@1790268300000'}}
+00:39:43 A1 schedule.at=1790268300000, quiet_end_ts=1790268300000, diff=0ms; diff_from_orig=200635ms
+00:39:43 A1 assertion 1 passed: notification schedule.at deferred to quietEnd!
+00:39:43 == A2: Creating important item '2分钟后提醒我 RFX 勿扰重要乙'
+00:39:45 Created item via text: id=i_hegi1b7nmufrc174, title='RFX 勿扰重要乙', triggerAt=1790268103886, review_status='READY'
+00:39:45 A2 item created: id=i_hegi1b7nmufrc174, orig_trigger=1790268103886
+00:39:46 Waiting 112.4s until 5s before A2 alarm trigger...
+00:41:38 Waiting for A2 AlarmActivity to pop up...
+00:41:45 AlarmActivity is focused! Window{75e5722 u0 space.alliswell.inbox/space.alliswell.inbox.AlarmActivity type=1 }
+00:41:46 AlarmActivity popped up successfully! Screenshot: /Users/qlyf/Developer/reminder/docs/reviews/verification-runs/20260925T0030-pr4-dnd-and-stale-notif/raw/stepA-a2-alarm.png
+00:41:46 Tapping '完成' on AlarmActivity...
+00:41:55 A2 state in memory: status=archived, completedAt=1790268108222
+00:41:55 A2 state in IDB: status=archived, completedAt=1790268108222
+00:44:04 == Resuming Phase A: waiting for quietEnd (00:45:00)...
+00:44:05 Waiting 69.4s until quietEnd + 15s...
+00:45:21 A1 notification delivered in shade: {'text': 'RFX 勿扰普通甲', 'desc': '', 'rid': 'android:id/text', 'pkg': 'com.android.systemui', 'cls': 'android.widget.TextView', 'clickable': False, 'cx': 609, 'cy': 614, 'bounds': (228, 588, 990, 640)}
+00:45:21 A1 delivered to notification shade successfully!
+00:45:24 A1 state in app: {'id': 'i_cvqvhqakmufrbxpk', 'title': 'RFX 勿扰普通甲', 'status': 'due', 'rev': 1, 'triggerAt': 1790268300000, 'snoozedAt': None, 'snoozeCount': 0, 'acknowledgedAt': None, 'completedAt': None, 'archivedAt': None, 'priority': 'normal', 'delivery_mode': 'notification', 'reminderKey': None, 'lastDeliveredAt': None, 'deliveredAt': 1790268319935, 'seriesId': None, 'review_status': 'READY'}
+00:45:24 A3 assertion passed: A1 delivered after quietEnd and item is due!
+00:45:24 == A4: Deleting A1 inside app via deleteItem...
+00:45:25 Delete result: {'itemsCount': 2}
+00:46:23 Quiet settings restored: {'dnd': True, 'quietStart': '23:00', 'quietEnd': '07:30'}
+00:46:23 PHASE A FULLY RECORDED AND COMPLETED: ALL PASS!
+00:47:42 == PHASE B: PR #4 Stale Delivered Notification Removal Verification (B0 - B8)
+00:47:45 Ready: {'ready': True, 'status': 'loaded', 'writesAllowed': True, 'native': True}
+00:47:45 Turning off DND switch via UI (#swDnd)...
+00:47:45 DND after toggle: {'dnd': False}
+00:47:45 
+== B0: Normal item during quiet hours with DND OFF
+00:47:46 Current time in original quiet hours (23:00-07:30): True
+00:47:47 Created item via text: id=i_ahny4l2kmufrmdkg, title='RFX 关勿扰直投零', triggerAt=1790268586479, review_status='READY'
+00:47:49 B0 sched_ms=1790268586000, orig=1790268586479, diff=479ms
+00:47:50 Waiting 121.1s until trigger + 5s for 关勿扰直投零...
+00:49:57 Notification 关勿扰直投零 delivered in shade at 1790268597290: {'text': 'RFX 关勿扰直投零', 'desc': '', 'rid': 'android:id/text', 'pkg': 'com.android.systemui', 'cls': 'android.widget.TextView', 'clickable': False, 'cx': 609, 'cy': 614, 'bounds': (228, 588, 990, 640)}
+00:49:57 B0 delivered on time at 1790268597290
+00:50:00 
+== B1: Delete item in app after delivery
+00:50:02 Created item via text: id=i_akdcozshmufrp9ek, title='RFX 撤除删除丙', triggerAt=1790268721050, review_status='READY'
+00:50:04 Waiting 121.2s until trigger + 5s for 撤除删除丙...
+00:52:12 Notification 撤除删除丙 delivered in shade at 1790268732517: {'text': 'RFX 撤除删除丙', 'desc': '', 'rid': 'android:id/text', 'pkg': 'com.android.systemui', 'cls': 'android.widget.TextView', 'clickable': False, 'cx': 609, 'cy': 614, 'bounds': (228, 588, 990, 640)}
+00:52:15 B1 operation at 1790268735640: calling deleteItem(i_akdcozshmufrp9ek)
+00:52:17 B1 removedDeliveredIds contains notif 425461133 / item i_akdcozshmufrp9ek after 1s: [425461133]
+00:52:21 B1 notification disappeared from shade within 10s!
+00:52:21 B1: Verifying notification remains gone after cold start...
+00:52:33 B1 cold start check passed!
+00:52:33 
+== B2: Acknowledge item in app after delivery
+00:52:35 Created item via text: id=i_l39fqw7zmufrsjgz, title='RFX 确认撤除丁', triggerAt=1790268874066, review_status='READY'
+00:52:37 Waiting 121.2s until trigger + 5s for 确认撤除丁...
+00:54:44 Notification 确认撤除丁 delivered in shade at 1790268884898: {'text': 'RFX 确认撤除丁', 'desc': '', 'rid': 'android:id/text', 'pkg': 'com.android.systemui', 'cls': 'android.widget.TextView', 'clickable': False, 'cx': 609, 'cy': 614, 'bounds': (228, 588, 990, 640)}
+00:54:48 B2 operation at 1790268888019: calling ackItem(i_l39fqw7zmufrsjgz)
+00:54:49 B2 removedDeliveredIds contains notif 1525823664 / item i_l39fqw7zmufrsjgz after 1s: [1525823664]
+00:54:55 B2 state: mem=acknowledged, idb=acknowledged
+00:54:55 B2 passed: ackItem removed notification and updated memory & IDB!
+00:54:55 
+== B3: Complete item in app after delivery
+00:54:57 Created item via text: id=i_pwc22zlmmufrvl0t, title='RFX 完成撤除戊', triggerAt=1790269016043, review_status='READY'
+00:54:59 Waiting 121.2s until trigger + 5s for 完成撤除戊...
+00:57:07 Notification 完成撤除戊 delivered in shade at 1790269027843: {'text': 'RFX 完成撤除戊', 'desc': '', 'rid': 'android:id/text', 'pkg': 'com.android.systemui', 'cls': 'android.widget.TextView', 'clickable': False, 'cx': 609, 'cy': 614, 'bounds': (228, 588, 990, 640)}
+00:57:10 B3 operation at 1790269030981: calling completeItem(i_pwc22zlmmufrvl0t)
+00:57:12 B3 removedDeliveredIds contains notif 1975337971 / item i_pwc22zlmmufrvl0t after 1s: [1975337971]
+00:57:17 B3 state: mem=archived, idb=archived, completedAt=1790269030445
+00:57:17 B3 passed: completeItem removed notification and updated memory & IDB!
+00:57:17 
+== B4: Snooze item (2 hours) in app after delivery
+00:57:19 Created item via text: id=i_ruvubucumufrymrw, title='RFX 稍后撤除己', triggerAt=1790269158282, review_status='READY'
+00:57:22 Waiting 121.2s until trigger + 5s for 稍后撤除己...
+00:59:29 Notification 稍后撤除己 delivered in shade at 1790269169481: {'text': 'RFX 稍后撤除己', 'desc': '', 'rid': 'android:id/text', 'pkg': 'com.android.systemui', 'cls': 'android.widget.TextView', 'clickable': False, 'cx': 609, 'cy': 614, 'bounds': (228, 588, 990, 640)}
+00:59:32 B4 operation at 1790269172547: calling snoozeItem(i_ruvubucumufrymrw, +2h)
+00:59:33 B4 removedDeliveredIds contains notif 1302517500 / item i_ruvubucumufrymrw after 1s: [1302517500]
+00:59:42 B4 new pending notification: {'id': 389999977, 'title': '安心收件箱提醒', 'body': 'RFX 稍后撤除己', 'schedule': {'at': 'Fri Sep 25 02:59:32 GMT+08:00 2026', 'count': 1, 'repeats': False}, 'extra': {'managedKind': 'attention-reminder', 'scheduleVersion': 2, 'itemId': 'i_ruvubucumufrymrw', 'itemRev': 2, 'event': 'primary', 'attempt': 0, 'scheduleKey': '2|i_ruvubucumufrymrw|2|primary|0|1790276372547|安心收件箱提醒|RFX 稍后撤除己|attention-normal-v2', 'reminderKey': '0@1790276372547'}}
+00:59:42 B4 new schedule at 1790276372000, target 1790276372547, diff=547ms
+00:59:42 B4 passed: old notification removed and new +2h schedule created!
+00:59:42 
+== B5: Unhandled item notification must NOT be removed during reconcile
+00:59:44 Created item via text: id=i_1gj1vh54mufs1qd6, title='RFX 保留未动庚', triggerAt=1790269302905, review_status='READY'
+00:59:46 Waiting 121.2s until trigger + 5s for 保留未动庚...
+01:01:54 Notification 保留未动庚 delivered in shade at 1790269314180: {'text': 'RFX 保留未动庚', 'desc': '', 'rid': 'android:id/text', 'pkg': 'com.android.systemui', 'cls': 'android.widget.TextView', 'clickable': False, 'cx': 609, 'cy': 614, 'bounds': (228, 588, 990, 640)}
+01:01:57 B5: Triggering manual reconcile syncNativeRemindersNow('b5') at 1790269317303...
+01:01:57 B5 reconcile status removedDeliveredIds: []
+01:02:03 B5 node in shade after sync: {'text': 'RFX 保留未动庚', 'desc': '', 'rid': 'android:id/text', 'pkg': 'com.android.systemui', 'cls': 'android.widget.TextView', 'clickable': False, 'cx': 609, 'cy': 614, 'bounds': (228, 588, 990, 640)}
+01:02:03 B5 passed: unhandled delivered notification safely preserved in shade!
+01:02:05 
+== B6: Delivered notification index persists across kill -9 restart
+01:02:07 Created item via text: id=i_rqb8o2iymufs4spq, title='RFX 重启删除辛', triggerAt=1790269445916, review_status='READY'
+01:02:09 Waiting 121.2s until trigger + 5s for 重启删除辛...
+01:04:16 Notification 重启删除辛 delivered in shade at 1790269456805: {'text': 'RFX 重启删除辛', 'desc': '', 'rid': 'android:id/text', 'pkg': 'com.android.systemui', 'cls': 'android.widget.TextView', 'clickable': False, 'cx': 609, 'cy': 614, 'bounds': (228, 588, 990, 640)}
+01:04:16 B6: Killing app process (kill -9) and cold restarting...
+01:04:24 B6 delivered-notif-index in localStorage after restart: {"1976731281":{"itemId":"i_rqb8o2iymufs4spq","itemRev":1,"seenAt":1790269326020}}
+01:04:24 B6 operation at 1790269464737: calling deleteItem(i_rqb8o2iymufs4spq) after cold restart
+01:04:26 B6 removedDeliveredIds contains notif 1976731281 / item i_rqb8o2iymufs4spq after 1s: [1976731281]
+01:04:31 B6 passed: index survived process restart and notification was successfully removed!
+01:04:31 
+== B7: Regression - tap '我知道了' directly in notification shade
+01:04:33 Created item via text: id=i_1igtspf8mufs7x29, title='RFX 通知栏确认壬', triggerAt=1790269591520, review_status='READY'
+01:04:35 Waiting 121.2s until trigger + 5s for 通知栏确认壬...
+01:06:42 Notification 通知栏确认壬 delivered in shade at 1790269602251: {'text': 'RFX 通知栏确认壬', 'desc': '', 'rid': 'android:id/text', 'pkg': 'com.android.systemui', 'cls': 'android.widget.TextView', 'clickable': False, 'cx': 609, 'cy': 614, 'bounds': (228, 588, 990, 640)}
+01:06:42 B7: Tapping '我知道了' action button on notification in shade...
+01:06:52 B7 tap result: True, msg: tapped 我知道了 at (228, 676, 426, 733)
+01:07:05 B7 state after shade action: mem=acknowledged, idb=acknowledged
+01:07:05 B7 passed: notification action acknowledged item and removed notification!
+01:07:05 
+== B8: Observation - delete important item while AlarmActivity is ringing
+01:07:07 Created item via text: id=i_jv537ki5mufsb8ke, title='RFX 响铃删除癸', triggerAt=1790269746397, review_status='READY'
+01:07:08 Waiting 112.5s until 5s before B8 alarm trigger...
+01:09:08 B8 AlarmActivity is focused and ringing! Window{89cbcc8 u0 space.alliswell.inbox/space.alliswell.inbox.AlarmActivity type=1 }
+01:09:08 B8: Calling deleteItem(i_jv537ki5mufsb8ke) while AlarmActivity is ringing...
+01:09:11 B8 focus after deleteItem: Window{89cbcc8 u0 space.alliswell.inbox/space.alliswell.inbox.AlarmActivity type=1 }
+01:09:21 B8 observation: alarm_still_focused=True, notif_present=True
+01:09:21 B8: Dismissing AlarmActivity via '完成' or back button...
+01:09:29 
+PHASE B COMPLETED SUCCESSFULLY!
+01:09:49 == STEP 6: Cleanup and Baseline Restoration
+01:09:52 Ready: {'ready': True, 'status': 'loaded', 'writesAllowed': True, 'native': True}
+01:09:52 RFX cleanup result: {'deletedCount': 0, 'deletedIds': [], 'remainingCount': 1, 'remainingIds': ['i_24rm31samufjri6d']}
+01:09:55 Remaining pending count: 0, RFX pending: 0
+01:09:55 Lingering RFX notification records in dumpsys: 0
+01:09:56 Lingering RFX alarms: 0
+01:09:56 Restoring settings: dnd=True, quietStart=23:00, quietEnd=07:30...
+01:09:56 Settings after UI restore: {'dnd': True, 'quietStart': '23:00', 'quietEnd': '07:30'}
+01:09:56 == Cold start after cleanup (kill -9)
+01:10:07 Cleanup diff vs pre-install: {"storesAdded": [], "storesRemoved": [], "records": {"kv/state": {"change": "modified", "itemsAdded": [], "itemsRemoved": [], "itemsModified": {}, "itemsIdentical": 1, "topKeysChanged": ["settings"]}}, "localStorage": {"attention-inbox-delivered-notif-index": "added", "attention-inbox-v2": "modified"}}
+01:10:07 Items pre-install: ['i_24rm31samufjri6d'], Items final: ['i_24rm31samufjri6d']
+01:10:07 Review settings before: {"enabled": true, "followupCount": 1, "followupMs": 3600000, "hour": 21, "lastNotifiedAt": 1790258501935, "lastSessionKey": "W:2026-9-24T21:30", "maxFollowups": 2, "minute": 30, "sessionStatus": "idle", "skippedUntil": 0, "snoozedUntil": 0, "windowEndHour": 23, "windowEndMinute": 0}
+01:10:07 Review settings final:  {"enabled": true, "followupCount": 1, "followupMs": 3600000, "hour": 21, "lastNotifiedAt": 1790258501935, "lastSessionKey": "W:2026-9-24T21:30", "maxFollowups": 2, "minute": 30, "sessionStatus": "idle", "skippedUntil": 0, "snoozedUntil": 0, "windowEndHour": 23, "windowEndMinute": 0}
+01:10:07 Final delivered index in localStorage: {}
+01:10:08 Final foreground screenshot: /Users/qlyf/Developer/reminder/docs/reviews/verification-runs/20260925T0030-pr4-dnd-and-stale-notif/raw/step6-final-app.png
+01:10:08 STEP 6 CLEANUP & RESTORATION COMPLETED SUCCESSFULLY: PASS!

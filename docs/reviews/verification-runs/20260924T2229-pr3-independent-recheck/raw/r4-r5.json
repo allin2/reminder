@@ -1,0 +1,80 @@
+{
+ "R4": {
+  "idle": {
+   "home": [],
+   "future": [],
+   "notes": [],
+   "me": []
+  },
+  "cycles": [
+   {
+    "sheet": "setup",
+    "openedVisible": [
+     [
+      "sheetSetup",
+      "visible"
+     ]
+    ],
+    "captureFocus": null,
+    "leakAfterClose": []
+   },
+   {
+    "sheet": "capture",
+    "openedVisible": [
+     [
+      "sheetItem",
+      "visible"
+     ]
+    ],
+    "captureFocus": true,
+    "leakAfterClose": []
+   },
+   {
+    "sheet": "demo",
+    "openedVisible": [
+     [
+      "sheetDemo",
+      "visible"
+     ]
+    ],
+    "captureFocus": null,
+    "leakAfterClose": []
+   },
+   {
+    "sheet": "guide",
+    "openedVisible": [],
+    "captureFocus": null,
+    "leakAfterClose": []
+   }
+  ],
+  "pass": true
+ },
+ "R5": {
+  "noDue": {
+   "hidden": true,
+   "display": "none",
+   "text": "0"
+  },
+  "due": {
+   "hidden": false,
+   "display": "grid",
+   "text": "1"
+  },
+  "dueCount": 1,
+  "afterDelete": {
+   "hidden": true,
+   "display": "none",
+   "text": "1"
+  },
+  "pass": true
+ },
+ "notifR3VAfter": true,
+ "itemsAfter": [
+  "i_24rm31samufjri6d"
+ ],
+ "staleNotificationAfterDelete": {
+  "present30s": true,
+  "afterNativeSync": true,
+  "removedByRecheckerViaPluginApi": true
+ }
+}

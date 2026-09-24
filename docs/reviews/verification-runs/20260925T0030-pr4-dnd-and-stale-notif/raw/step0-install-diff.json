@@ -1,0 +1,11 @@
+{
+  "storesAdded": [],
+  "storesRemoved": [],
+  "records": {
+    "kv/state": "identical"
+  },
+  "localStorage": {
+    "attention-inbox-delivered-notif-index": "added",
+    "attention-inbox-v2": "identical"
+  }
+}

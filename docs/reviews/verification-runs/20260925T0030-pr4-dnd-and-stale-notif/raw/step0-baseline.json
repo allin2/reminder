@@ -1,0 +1,32 @@
+{
+  "gitBranch": "fix/remove-stale-delivered-notifications",
+  "gitHead": "c8f4f8f2cb4a05642d7a2d96e7633d4bb1d76baf",
+  "deviceSerial": "10ACBF2D3D000RS",
+  "deviceBaseApkBefore": "e2dff4efbcd5a27260c2cd1eff1f000caee7b9318fc1152204dbf9c53807d031",
+  "candidateApk": "83be4ea9a847d0d9d87dcd7856c6b27c23d0b096dd29f64e298e2cddf8dfb579",
+  "userItemCount": 1,
+  "userItemIds": [
+    "i_24rm31samufjri6d"
+  ],
+  "settingsBefore": {
+    "dnd": true,
+    "quietStart": "23:00",
+    "quietEnd": "07:30",
+    "review": {
+      "enabled": true,
+      "hour": 21,
+      "minute": 30,
+      "windowEndHour": 23,
+      "windowEndMinute": 0,
+      "followupMs": 3600000,
+      "maxFollowups": 2,
+      "lastNotifiedAt": 1790258501935,
+      "followupCount": 1,
+      "snoozedUntil": 0,
+      "skippedUntil": 0,
+      "sessionStatus": "idle",
+      "lastSessionKey": "W:2026-9-24T21:30"
+    },
+    "setupPromptStarted": true
+  }
+}

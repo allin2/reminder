@@ -1,0 +1,12 @@
+{
+  "gitHead": "98fef249c55c49a9ff5b6fdd1bc5b8d861f7a99c",
+  "deviceSerial": "10ACBF2D3D000RS",
+  "deviceBaseApkBefore": "e14438de38b3ee05d678e15025d09c1adceebb51f67f3f8d954fb26488fe20c1",
+  "candidateApk": "e2dff4efbcd5a27260c2cd1eff1f000caee7b9318fc1152204dbf9c53807d031",
+  "userItemCount": 1,
+  "userItemIds": [
+    "i_24rm31samufjri6d"
+  ],
+  "setupPromptStartedBefore": true,
+  "alarmDumpLines": 59
+}

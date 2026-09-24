@@ -1,0 +1,67 @@
+{
+ "dbVersion": 1,
+ "localStorage": {
+  "attention-inbox-delivered-notif-index": {
+   "bytes": 161,
+   "sha256": "a4b35eaa3a346d7e25d1e91d7a0bcd7c6c074be73d5a3c1d29601fc5eba22e7c"
+  },
+  "attention-inbox-v2": {
+   "bytes": 6938,
+   "sha256": "ad01ced12f4dc86224e047c181f833335f7af33483f3be28ae3a77569a6b30e0"
+  }
+ },
+ "stores": {
+  "kv": {
+   "state": {
+    "bytes": 6938,
+    "itemCount": 6,
+    "items": {
+     "i_24rm31samufjri6d": {
+      "rev": 2,
+      "sha256": "9dcc6f3e668a3bf0721fd638651ab21c67f31e2d2e3cd8e8dcf12d46ce2a1edc",
+      "status": "archived",
+      "triggerAt": 1790255278802
+     },
+     "i_32p3og4nmufsly70": {
+      "rev": 2,
+      "sha256": "42fbb67e246dcf144a44362dd4718ac92ce9ddac9987debee8d1f3ea69440cc3",
+      "status": "archived",
+      "triggerAt": 1790270129172
+     },
+     "i_jaggipg8mufsmipq": {
+      "rev": 2,
+      "sha256": "1b9455b0e748e9b0dccf3196d1ae39f2f379873eaf2306217acf36862dcb3515",
+      "status": "acknowledged",
+      "triggerAt": 1790270157765
+     },
+     "i_ksgrct0wmufslps2": {
+      "rev": 1,
+      "sha256": "331256785365a0fdb074c9f13c026f751668fbfaf9112450dd96c6f692e8d2da",
+      "status": "waiting",
+      "triggerAt": 1790343000000
+     },
+     "i_t6t8kjrbmufskit9": {
+      "rev": 1,
+      "sha256": "0d52ae19d34f887ed4cf1fb557e3af09f71dbe0cdb3fd3bb700eef8cd4b7b925",
+      "status": "waiting",
+      "triggerAt": 1790292600000
+     },
+     "i_ve90y9vxmufskxvx": {
+      "rev": 1,
+      "sha256": "116808bd2f5dc45bf67ad77d81d6c5c7a7d0b98e3238ae664733267f1d6efecc",
+      "status": "waiting",
+      "triggerAt": 1790292600000
+     }
+    },
+    "sha256": "9b85084c3355a912beac8a172c9a6a9fbc2796f1c5799980c8b471e41837ad9e",
+    "topKeys": {
+     "items": "5e411ab70fbeaa98516e42d9b3f9706dc17b155fdd5fc5ee9435f3a99efac9be",
+     "notes": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+     "projects": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+     "schema": "ef2d127de37b942baad06145e54b0c619a1f22327b2ebbcfbec78f5564afe39d",
+     "settings": "43cd839c95acf03845c07f1f50980068088aedf495ad5bff93ff3e40463bfad4"
+    }
+   }
+  }
+ }
+}
