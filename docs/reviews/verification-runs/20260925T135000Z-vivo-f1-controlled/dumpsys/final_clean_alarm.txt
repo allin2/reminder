@@ -1,0 +1,32 @@
+# 已脱敏：仅保留 space.alliswell.inbox 相关条目；原件见归档 final_clean_alarm_preredact.txt
+    RTC_WAKEUP #159: Alarm{cc3693e type 0 origWhen 1790429400000 flags 5 windowLength 0 whenElapsed 651456167 maxWhenElapsed 651456167 repeatInterval 0 tag=*walarm*:space.alliswell.inbox/com.capacitorjs.plugins.localnotifications.TimedNotificationPublisher originWhenElapsed 651456167 originWindowLength 0 setAtTime=2026-09-25 14:42:12 policyWhenElapsed:[651456167, 569388370, 0, 569388370, 0] procName=space.alliswell.inbox space.alliswell.inbox}
+      tag=*walarm*:space.alliswell.inbox/com.capacitorjs.plugins.localnotifications.TimedNotificationPublisher
+      type=RTC_WAKEUP origWhen=2026-09-26 21:30:00.000 window=0 exactAllowReason=permission repeatInterval=0 count=0 flags=0x5
+      policyWhenElapsed: requester=+22h47m41s542ms app_standby=-6s255ms device_idle=-- battery_saver=-6s255ms --unknown(4)--=--
+      whenElapsed=+22h47m41s542ms maxWhenElapsed=+22h47m41s542ms
+      operation=PendingIntent{a302e1a: PendingIntentRecord{6abbd4b space.alliswell.inbox broadcastIntent}}
+      idle-options=Bundle[{android.pendingIntent.backgroundActivityAllowed=2, android:broadcast.temporaryAppAllowlistReasonCode=302, android:broadcast.temporaryAppAllowlistDuration=10000, android:broadcast.temporaryAppAllowlistReason=, android:broadcast.temporaryAppAllowlistType=0, android:broadcast.flags=8}]
+    RTC_WAKEUP #162: Alarm{7d21abb type 0 origWhen 1790433000000 flags 5 windowLength 0 whenElapsed 655056167 maxWhenElapsed 655056167 repeatInterval 0 tag=*walarm*:space.alliswell.inbox/com.capacitorjs.plugins.localnotifications.TimedNotificationPublisher originWhenElapsed 655056167 originWindowLength 0 setAtTime=2026-09-25 14:42:12 policyWhenElapsed:[655056167, 569388376, 0, 569388376, 0] procName=space.alliswell.inbox space.alliswell.inbox}
+      tag=*walarm*:space.alliswell.inbox/com.capacitorjs.plugins.localnotifications.TimedNotificationPublisher
+      type=RTC_WAKEUP origWhen=2026-09-26 22:30:00.000 window=0 exactAllowReason=permission repeatInterval=0 count=0 flags=0x5
+      policyWhenElapsed: requester=+23h47m41s542ms app_standby=-6s249ms device_idle=-- battery_saver=-6s249ms --unknown(4)--=--
+      whenElapsed=+23h47m41s542ms maxWhenElapsed=+23h47m41s542ms
+      operation=PendingIntent{dcea328: PendingIntentRecord{fa1d841 space.alliswell.inbox broadcastIntent}}
+      idle-options=Bundle[{android.pendingIntent.backgroundActivityAllowed=2, android:broadcast.temporaryAppAllowlistReasonCode=302, android:broadcast.temporaryAppAllowlistDuration=10000, android:broadcast.temporaryAppAllowlistReason=, android:broadcast.temporaryAppAllowlistType=0, android:broadcast.flags=8}]
+          type=RTC_WAKEUP tag=*walarm*:space.alliswell.inbox/com.capacitorjs.plugins.localnotifications.TimedNotificationPublisher 
+          type=RTC_WAKEUP tag=*walarm*:space.alliswell.inbox/com.capacitorjs.plugins.localnotifications.TimedNotificationPublisher 
+          type=RTC_WAKEUP tag=*walarm*:space.alliswell.inbox/com.capacitorjs.plugins.localnotifications.TimedNotificationPublisher 
+          type=RTC_WAKEUP tag=*walarm*:space.alliswell.inbox/com.capacitorjs.plugins.localnotifications.TimedNotificationPublisher 
+          type=RTC_WAKEUP tag=*walarm*:space.alliswell.inbox/com.capacitorjs.plugins.localnotifications.TimedNotificationPublisher 
+          type=RTC_WAKEUP tag=*walarm*:space.alliswell.inbox/com.capacitorjs.plugins.localnotifications.TimedNotificationPublisher 
+          type=RTC_WAKEUP tag=*walarm*:space.alliswell.inbox/com.capacitorjs.plugins.localnotifications.TimedNotificationPublisher 
+          type=RTC_WAKEUP tag=*walarm*:space.alliswell.inbox/com.capacitorjs.plugins.localnotifications.TimedNotificationPublisher 
+          type=RTC_WAKEUP tag=*walarm*:space.alliswell.inbox/com.capacitorjs.plugins.localnotifications.TimedNotificationPublisher 
+          type=RTC_WAKEUP tag=*walarm*:space.alliswell.inbox/com.capacitorjs.plugins.localnotifications.TimedNotificationPublisher 
+  u0a285:space.alliswell.inbox +582ms running, 13 wakeups:
+    +516ms 6 wakes 6 alarms, last -18s437ms:
+      *walarm*:space.alliswell.inbox.ACTION_TEST_ALARM
+    +101ms 6 wakes 6 alarms, last -18s432ms:
+      *walarm*:space.alliswell.inbox/.AlarmRingService
+    +40ms 1 wakes 1 alarms, last -12m18s459ms:
+      *walarm*:space.alliswell.inbox/com.capacitorjs.plugins.localnotifications.TimedNotificationPublisher
