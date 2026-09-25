@@ -11,12 +11,16 @@ android/app/.cxx/
 android/capacitor-cordova-android-plugins/build/
 *.apk
 *.aab
-!releases/*.apk
 .capacitor/
 
 # apksigner 的签名副产物与手工保留的过期包 —— 是本地构建残留，不是交付物
 *.idsig
-releases/*.stale-*
+
+# 构建产物、候选包与正式包都不入库：正式包发布到 GitHub Releases，其余存放在 ~/Developer/reminder-archive/releases/
+releases/
+
+# 设备脚本的临时输出目录（scripts/oppo-forensics.sh 等写入 $RUN）
+RUN/
 
 # 工作区记忆（~/.workbuddy 的项目侧数据）：属于工具的工作状态，不入库
 .workbuddy/
@@ -89,3 +93,9 @@ docs/reviews/verification-runs/**/*.tar
 /docs/reviews/verification-runs/20260923T1540-p3g-device-verification/scheduled-background.png
 /docs/reviews/verification-runs/20260923T1605-p3gr-delivery-closure/scheduled-background.png
 /docs/reviews/verification-runs/20260924T1526-a15-device-acceptance/raw/step3-A3-alarm-panel.png
+
+# 原始证据（截图、logcat）不入库：放在 ~/Developer/reminder-archive/verification-runs/，
+# 仓库只留结论、摘要 JSON、哈希清单与脚本（见 docs/reviews/verification-runs/ARCHIVED-RAW-2026-09-25.tsv）
+docs/reviews/verification-runs/**/*.png
+docs/reviews/verification-runs/**/*.jpg
+docs/reviews/verification-runs/**/*logcat*.txt
