@@ -2646,6 +2646,29 @@ section("feedback — 动作语义与术语");
   ok("未回答测试反馈不等于失败或成功", fb.testFeedbackVerdict(undefined).ok === null);
   ok("不确定既不算失败也不算成功", fb.testFeedbackVerdict("unsure").ok === null);
   ok("区分「没收到」与「不确定」", fb.testFeedbackVerdict("missed").ok === false);
+
+  // 防冻结是首页必须提示的一步；首页按 homeDone 判断：点进过设置页不算解决
+  ok("防冻结：标记为 essential（首页会提示）", background.essential === true);
+  ok("防冻结：悬浮窗与 60 秒测试仍是可选步骤",
+    stAll.steps.find(s => s.id === "overlay").essential !== true && stAll.steps.find(s => s.id === "test").essential !== true);
+  ok("防冻结：点进过设置页 ⇒ 向导视为完成（done），但首页仍未解决（homeDone=false）",
+    visitedBackground.done === true && visitedBackground.homeDone === false, JSON.stringify(visitedBackground));
+  ok("防冻结：diag 回读到忽略电池优化 ⇒ 首页视为已解决",
+    devPartial.steps.find(s => s.id === "background").homeDone === true);
+  ok("防冻结：diag 回读未忽略电池优化 ⇒ 首页未解决", devBackground.homeDone === false);
+  const bgHeard = fb.setupSteps(
+    { notifications: "granted", exactAlarm: "granted", diag: { ignoringBatteryOptimizations: false } },
+    { backgroundVisited: true, testRun: { startedAt: 1000, feedbackAt: 1100 }, testFeedback: { value: "heard", at: 1100 } }
+  ).steps.find(s => s.id === "background");
+  ok("防冻结：60 秒测试被确认（听到了）⇒ 首页视为已解决（真实效果优先于无法回读的厂商开关）",
+    bgHeard.homeDone === true && bgHeard.verified === false);
+  const bgMissed = fb.setupSteps(
+    { notifications: "granted", exactAlarm: "granted" },
+    { backgroundVisited: true, testRun: { startedAt: 1000, feedbackAt: 1100 }, testFeedback: { value: "missed", at: 1100 } }
+  ).steps.find(s => s.id === "background");
+  ok("防冻结：60 秒测试「没收到」⇒ 首页仍未解决", bgMissed.homeDone === false);
+  ok("除防冻结外，其余步骤不带 homeDone（首页沿用 done）",
+    stAll.steps.filter(s => s.id !== "background").every(s => !Object.prototype.hasOwnProperty.call(s, "homeDone")));
 }
 
 /* ---------- UX-T03：原生送达证据（lib/delivery-evidence.js） ---------- */
@@ -2948,9 +2971,9 @@ section("P2-E AppSetup — 求值、live 注入、60 秒测试与停铃边界");
       TEST_FEEDBACK: [],
       setupSteps: () => ({ steps: [
         { id: "notify", essential: true, done: true, title: "允许发通知" },
-        { id: "background", done: false, title: "允许完全后台运行" },
+        { id: "overlay", done: false, title: "允许锁屏弹窗与悬浮窗" },
         { id: "test", done: false, title: "60 秒测试" }
-      ], next: { id: "background" } }),
+      ], next: { id: "overlay" } }),
       testFeedbackVerdict: () => null
     }
   });
@@ -2967,6 +2990,42 @@ section("P2-E AppSetup — 求值、live 注入、60 秒测试与停铃边界");
   ok("设置入口：关闭（setupDismissed）后首页卡片消失",
     /setupEntry/.test(cardHtml) && dismissable.nodes["#homeSetup"].innerHTML === "",
     dismissable.nodes["#homeSetup"].innerHTML);
+
+  // 防冻结接入真实 Feedback.setupSteps：点进过设置页不关首页卡片；系统回读或测试确认后才消失
+  const realFeedback = { TEST_FEEDBACK: feedbackMod.TEST_FEEDBACK, setupSteps: feedbackMod.setupSteps,
+    testFeedbackVerdict: feedbackMod.testFeedbackVerdict };
+  const bgCard = setupFixture({
+    native: { isNativeAndroid: () => true }, settings: { setupPromptStarted: true, backgroundVisited: true },
+    status: { notifications: "granted", exactAlarm: "granted", scheduledAlarmIds: [],
+      diag: { canDrawOverlays: true, canUseFullScreenIntent: true, ignoringBatteryOptimizations: false } },
+    feedback: realFeedback
+  });
+  bgCard.app.renderSetupEntry();
+  const bgHtml = bgCard.nodes["#homeSetup"].innerHTML;
+  ok("防冻结：通知与精确提醒都已授权、只点进过后台设置页 ⇒ 首页仍出卡片，下一步是防冻结",
+    /还差 1 步/.test(bgHtml) && /允许完全后台运行/.test(bgHtml) && /setupEntryDismiss/.test(bgHtml), bgHtml);
+  bgCard.setStatus({ notifications: "granted", exactAlarm: "granted", scheduledAlarmIds: [],
+    diag: { canDrawOverlays: true, canUseFullScreenIntent: true, ignoringBatteryOptimizations: true } });
+  bgCard.app.renderSetupEntry();
+  ok("防冻结：系统回读到忽略电池优化后首页卡片消失", bgCard.nodes["#homeSetup"].innerHTML === "",
+    bgCard.nodes["#homeSetup"].innerHTML);
+  const bgTested = setupFixture({
+    native: { isNativeAndroid: () => true },
+    settings: { setupPromptStarted: true, backgroundVisited: true,
+      testRun: { startedAt: 1000, feedbackAt: 1100 }, testFeedback: { value: "heard", at: 1100 } },
+    status: { notifications: "granted", exactAlarm: "granted", scheduledAlarmIds: [],
+      diag: { ignoringBatteryOptimizations: false } },
+    feedback: realFeedback
+  });
+  bgTested.app.renderSetupEntry();
+  ok("防冻结：60 秒测试已确认听到 ⇒ 即使厂商开关无法回读，首页也不再提示",
+    bgTested.nodes["#homeSetup"].innerHTML === "", bgTested.nodes["#homeSetup"].innerHTML);
+  bgCard.setStatus({ notifications: "granted", exactAlarm: "granted", scheduledAlarmIds: [],
+    diag: { ignoringBatteryOptimizations: false } });
+  bgCard.app.renderSetupEntry();
+  bgCard.state.settings.setupDismissed = true;
+  bgCard.app.renderSetupEntry();
+  ok("防冻结：用户关掉卡片后不再出现（不会成为关不掉的常驻提示）", bgCard.nodes["#homeSetup"].innerHTML === "");
 
   const doneSetup = beginAsyncSection();
   (async () => {
