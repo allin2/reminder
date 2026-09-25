@@ -1,0 +1,139 @@
+{
+  "logcatEvidence": {
+    "deliver_line": "09-26 01:17:00.118 30422 30422 I AttentionAlarm: deliver path=fsi+direct fullScreen=true screenOn=false locked=true inCall=false canDrawOverlays=true",
+    "deliver_line_no": 8524,
+    "frozen_lines": [
+      [
+        318,
+        "09-25 23:09:43.429  1737  2108 I am_app_frozen: [0,10285,space.alliswell.inbox,from fast_freezer]"
+      ],
+      [
+        821,
+        "09-25 23:29:41.529  1737  2108 I am_app_frozen: [0,10285,space.alliswell.inbox,from fast_freezer]"
+      ],
+      [
+        1250,
+        "09-25 23:35:44.301  1737  2108 I am_app_frozen: [0,10285,space.alliswell.inbox,from fast_freezer]"
+      ],
+      [
+        1696,
+        "09-25 23:38:17.428  1737  2108 I am_app_frozen: [0,10285,space.alliswell.inbox,from fast_freezer]"
+      ],
+      [
+        2066,
+        "09-25 23:41:24.797  1737  2108 I am_app_frozen: [0,10285,space.alliswell.inbox,from fast_freezer]"
+      ],
+      [
+        3551,
+        "09-25 23:52:25.784  1737  2108 I am_app_frozen: [0,10285,space.alliswell.inbox,from fast_freezer]"
+      ]
+    ],
+    "unfrozen_lines": [
+      [
+        682,
+        "09-25 23:29:16.225  1737  2108 I am_app_unfrozen: [0,10285,space.alliswell.inbox,screen on]"
+      ],
+      [
+        1049,
+        "09-25 23:32:04.181  1737  2108 I am_app_unfrozen: [0,10285,space.alliswell.inbox,resume top activity]"
+      ],
+      [
+        1503,
+        "09-25 23:36:53.019  1737  2108 I am_app_unfrozen: [0,10285,space.alliswell.inbox,resume top activity]"
+      ],
+      [
+        1715,
+        "09-25 23:38:45.128  1737  2108 I am_app_unfrozen: [0,10285,space.alliswell.inbox,resume top activity]"
+      ],
+      [
+        2341,
+        "09-25 23:46:21.993  1737  2108 I am_app_unfrozen: [0,10285,space.alliswell.inbox,resume top activity]"
+      ],
+      [
+        4049,
+        "09-25 23:54:08.447  1737  2108 I am_app_unfrozen: [0,10285,space.alliswell.inbox,resume top activity]"
+      ]
+    ],
+    "wake_idle_lines": [
+      [
+        2169,
+        "09-25 23:44:00.052  1737  2442 I device_idle_wake_from_idle: [0,*walarm*:space.alliswell.inbox/.AlarmRingService]"
+      ],
+      [
+        2170,
+        "09-25 23:44:00.052  1737  2442 I device_idle_wake_from_idle: [0,*walarm*:space.alliswell.inbox.ACTION_TEST_ALARM]"
+      ],
+      [
+        2999,
+        "09-25 23:50:00.017  1737  2442 I device_idle_wake_from_idle: [0,*walarm*:space.alliswell.inbox/.AlarmRingService]"
+      ],
+      [
+        3001,
+        "09-25 23:50:00.049  1737  2442 I device_idle_wake_from_idle: [0,*walarm*:space.alliswell.inbox.ACTION_TEST_ALARM]"
+      ],
+      [
+        4277,
+        "09-25 23:57:00.028  1737  2442 I device_idle_wake_from_idle: [0,*walarm*:space.alliswell.inbox.ACTION_TEST_ALARM]"
+      ],
+      [
+        4278,
+        "09-25 23:57:00.046  1737  2442 I device_idle_wake_from_idle: [0,*walarm*:space.alliswell.inbox/.AlarmRingService]"
+      ],
+      [
+        8517,
+        "09-26 01:17:00.020  1737  2442 I device_idle_wake_from_idle: [0,*walarm*:space.alliswell.inbox/.AlarmRingService]"
+      ],
+      [
+        8518,
+        "09-26 01:17:00.021  1737  2442 I device_idle_wake_from_idle: [0,*walarm*:space.alliswell.inbox.ACTION_TEST_ALARM]"
+      ]
+    ]
+  },
+  "title": "SWITCH-B-2",
+  "config": "B",
+  "trial": 2,
+  "itemId": "i_rsnzg0jumuh80fmn",
+  "t0": 1790356462403,
+  "t0_str": "2026-09-26 01:14:22",
+  "triggerAt": 1790356620000,
+  "triggerAt_str": "2026-09-26 01:17:00",
+  "lockTime": 1790356471069,
+  "lockTime_str": "2026-09-26 01:14:31",
+  "alarmScheduledAtT3s": true,
+  "deliveredTime": 1790356626491,
+  "deliveredTime_str": "2026-09-26 01:17:06",
+  "deliveryDelayMs": 6491,
+  "wokeSpontaneous": true,
+  "alarmActivityPresent": true,
+  "alarmActivityTime": 1790356626491,
+  "audioPlaying": false,
+  "postWakeDeliverTime": null,
+  "postWakeDelayMs": null,
+  "frozenEvents": [
+    [
+      318,
+      "09-25 23:09:43.429  1737  2108 I am_app_frozen: [0,10285,space.alliswell.inbox,from fast_freezer]"
+    ],
+    [
+      821,
+      "09-25 23:29:41.529  1737  2108 I am_app_frozen: [0,10285,space.alliswell.inbox,from fast_freezer]"
+    ],
+    [
+      1250,
+      "09-25 23:35:44.301  1737  2108 I am_app_frozen: [0,10285,space.alliswell.inbox,from fast_freezer]"
+    ],
+    [
+      1696,
+      "09-25 23:38:17.428  1737  2108 I am_app_frozen: [0,10285,space.alliswell.inbox,from fast_freezer]"
+    ],
+    [
+      2066,
+      "09-25 23:41:24.797  1737  2108 I am_app_frozen: [0,10285,space.alliswell.inbox,from fast_freezer]"
+    ],
+    [
+      3551,
+      "09-25 23:52:25.784  1737  2108 I am_app_frozen: [0,10285,space.alliswell.inbox,from fast_freezer]"
+    ]
+  ],
+  "result": "PASS"
+}

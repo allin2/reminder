@@ -1,0 +1,28 @@
+{
+  "diag": {
+    "sdkInt": 36,
+    "packageName": "space.alliswell.inbox",
+    "notificationsEnabled": true,
+    "postNotificationsGranted": true,
+    "canExactAlarm": true,
+    "ignoringBatteryOptimizations": false,
+    "alarmManagerAvailable": true,
+    "notificationManagerAvailable": true,
+    "canDrawOverlays": true,
+    "canUseFullScreenIntent": true,
+    "alarmChannelImportance": 4,
+    "alarmChannelId": "attention-alarm-v4"
+  },
+  "backgroundStep": {
+    "id": "background",
+    "essential": true,
+    "done": false,
+    "verified": false,
+    "homeDone": false,
+    "title": "允许完全后台运行 (防冻结)",
+    "why": "部分 Android 厂商可能限制长时间后台运行；实际效果取决于系统设置，并需通过锁屏测试确认。",
+    "denyImpact": "拒绝或跳过可能导致熄屏较长时间后提醒延迟；是否生效以本机测试为准。",
+    "action": "去设置"
+  },
+  "homeSetupHtml": "<div class=\"setup-card\"><button class=\"soft-entry\" id=\"setupEntry\"><span><strong>还差 1 步，提醒才能准时响</strong><br><span class=\"setup-card-sub\">下一步：允许完全后台运行 (防冻结)</span></span><span style=\"color:var(--muted)\">›</span></button><button class=\"setup-card-close\" id=\"setupEntryDismiss\" aria-label=\"不再在首页提示\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><path d=\"M6 6l12 12M18 6L6 18\"></path></svg></button></div>"
+}

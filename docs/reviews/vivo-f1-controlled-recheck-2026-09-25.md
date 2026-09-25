@@ -27,12 +27,20 @@
 >    | S1-2（22:10，唯一 PASS） | **未锁屏**：日志为 `locked=false`，22:08:36 起应用已有活动，屏幕在到点前已被点亮 | 准点 |
 >
 >    第 4.2 节把 S1-1 解释为「Doze 调度延迟 42.9 秒」，但 42.9 秒恰好是脚本唤醒屏幕的时刻，不能归因于 Doze。到点时铃声是否已先单独响起，现有日志（过滤关键词过窄）无法判断。
-> 4. **第 4.2 节引用的 S2-2 系统日志无法核实**：`device_idle_wake_from_idle`、`am_app_unfrozen`、`sysui_fullscreen_notification` 这几行，在仓库与归档的所有证据文件中都找不到；归档的 `full_logcat.txt` 只覆盖 23:01 前后，不含 22:38。这几行引用不作为证据。
+> 4. **第 4.2 节引用的 S2-2 系统日志属实（2026-09-26 更正本条）**：本条初版写作「在证据中找不到，不作为证据」，**这个判断是错的**。本复测自己的证据目录确实不含这几行（归档的 `full_logcat.txt` 只覆盖 23:01 前后），但后续开关矩阵验证的完整 logcat 缓冲区覆盖了该时段，可逐行核实（`~/Developer/reminder-archive/verification-runs/20260925T153500Z-vivo-switch-matrix/logcat/SWITCH-B-1_full_logcat.txt`）：
+>    - 行 1510 `22:35:01.287 am_app_frozen [0,10285,space.alliswell.inbox,from fast_freezer]`：锁屏（22:34:55）约 6 秒后被冻结；
+>    - 行 1590 `22:38:00.024 device_idle_wake_from_idle [...AlarmRingService]`：系统准点派发闹钟；
+>    - 行 1628 `22:38:41.852 am_app_unfrozen [...,screen on]`：直到脚本点亮屏幕才解冻；
+>    - 行 1636 `22:38:42.026 wm_create_activity [...AlarmActivity]`、行 1677 `22:38:42.301 sysui_fullscreen_notification`：解冻后才创建全屏闹钟。
+>
+>    这几行完整印证了「冻结态下投递挂起到解冻」的机理。原报告的问题只在于没有把能证明它们的文件存进本复测的证据目录。
 > 5. **与已知问题一致**：现象符合 2026-09-17 已查明的 vivo `fast_freezer` 冻结问题（[`android-vivo-freezer-rootcause-20260917.md`](android-vivo-freezer-rootcause-20260917.md)、[`android-vivo-r1-validation-20260918.md`](android-vivo-r1-validation-20260918.md)）：进程被冻结后，投递要等到解冻，而恢复准点需要用户开启「允许后台耗电」「锁屏显示」「自启动」。**本次复测没有读取这三个开关的状态**（`step0_vivo_app_settings.png` 停在「应用信息」首页），因此无法判断是设置未开，还是开了仍然失效。
 > 6. **上一轮失败归因**：「上一轮脚本通过 `state.items.push` 直接写内存」是与本次证据相符的**推断**；上一轮脚本未留存，无法证实。
 > 7. **纪律**：脚本临时锁定了屏幕方向（已恢复并落盘），属于设备设置改动，按约定应事先征得用户同意。
 >
 > **更正后结论**：排程写入 PASS；vivo 锁屏熄屏下关键闹钟的准点投递 **FAIL（待定性）**。与本次 UI 改版无关（原生层未改），需要在核实三个 vivo 开关状态后单独复测，见后续「vivo 开关复测」。
+>
+> **后续定性（2026-09-26，见 [`vivo-switch-matrix-2026-09-26.md`](vivo-switch-matrix-2026-09-26.md)）**：本复测时三个开关的状态与开关矩阵中的配置 A 相同（后台耗电 = 智能控制、锁屏显示关、自启动关）。合并两轮数据：开关未开时，锁屏熄屏的尝试中多数在到点前被 `fast_freezer` 冻结（锁屏后 0.5–6 秒），投递挂起到亮屏；只有开关矩阵 A-2 一次未被冻结而准点。三项全开（配置 B）2 次均未被冻结、准点投递（+118 / +120 ms）。结论：锁屏不准点由进程冻结造成，「允许后台耗电」显著降低冻结；属已知 OEM 限制（`android-vivo-freezer-rootcause-20260917.md`），应用侧通过首页「防冻结」提示引导用户开启（`ce0d5b9`，已真机验证）。样本量小，比例不构成概率估计。
 >
 > **隐私处理**：报告中的用户事项标题已替换为占位符；`final_clean_alarm.txt` 只保留本应用条目，`final_clean_notification.txt` 移除了其他应用的通知键；原件均已归档，SHA-256 见 `ARCHIVED-RAW-2026-09-25.tsv`。
 
