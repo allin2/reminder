@@ -1,0 +1,98 @@
+{
+  "tabs": {
+    "home": {
+      "tab": "home",
+      "fabDisplay": "flex",
+      "fabVisibility": "visible",
+      "fabRect": {
+        "top": 559.3333740234375,
+        "bottom": 609.3333740234375,
+        "left": 14,
+        "right": 346,
+        "width": 332,
+        "height": 50
+      },
+      "navRect": {
+        "top": 619.3333740234375,
+        "bottom": 683.3333740234375,
+        "left": 0,
+        "right": 360,
+        "width": 360,
+        "height": 64
+      },
+      "gapToNav": 10
+    },
+    "future": {
+      "tab": "future",
+      "fabDisplay": "flex",
+      "fabVisibility": "visible",
+      "fabRect": {
+        "top": 594.3333740234375,
+        "bottom": 644.3333740234375,
+        "left": 14,
+        "right": 346,
+        "width": 332,
+        "height": 50
+      },
+      "navRect": {
+        "top": 654.3333740234375,
+        "bottom": 718.3333740234375,
+        "left": 0,
+        "right": 360,
+        "width": 360,
+        "height": 64
+      },
+      "gapToNav": 10
+    },
+    "notes": {
+      "tab": "notes",
+      "fabDisplay": "flex",
+      "fabVisibility": "visible",
+      "fabRect": {
+        "top": 594.3333740234375,
+        "bottom": 644.3333740234375,
+        "left": 14,
+        "right": 346,
+        "width": 332,
+        "height": 50
+      },
+      "navRect": {
+        "top": 654.3333740234375,
+        "bottom": 718.3333740234375,
+        "left": 0,
+        "right": 360,
+        "width": 360,
+        "height": 64
+      },
+      "gapToNav": 10
+    },
+    "me": {
+      "tab": "me",
+      "fabDisplay": "none",
+      "fabVisibility": "visible",
+      "fabRect": {
+        "top": 0,
+        "bottom": 0,
+        "left": 0,
+        "right": 0,
+        "width": 0,
+        "height": 0
+      },
+      "navRect": {
+        "top": 654.3333740234375,
+        "bottom": 718.3333740234375,
+        "left": 0,
+        "right": 360,
+        "width": 360,
+        "height": 64
+      },
+      "gapToNav": 654.3333740234375
+    }
+  },
+  "scroll": {
+    "lastCardExists": true,
+    "lastCardBottom": 486.9739685058594,
+    "fabTop": 594.3333740234375,
+    "isBlocked": false
+  }
+}

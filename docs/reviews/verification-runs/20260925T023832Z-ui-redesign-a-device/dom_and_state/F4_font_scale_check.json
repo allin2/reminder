@@ -1,0 +1,38 @@
+{
+  "titleRect": {
+    "top": -55.04166793823242,
+    "bottom": -12.145832061767578,
+    "left": 18,
+    "right": 153.1354217529297,
+    "width": 135.1354217529297,
+    "height": 42.895835876464844
+  },
+  "fabRect": {
+    "top": 512,
+    "bottom": 562,
+    "left": 14,
+    "right": 346,
+    "width": 332,
+    "height": 50
+  },
+  "buttonsOverflow": [
+    {
+      "text": "稍后改到具体时间",
+      "scrollWidth": 87,
+      "clientWidth": 87,
+      "overflow": false
+    },
+    {
+      "text": "我知道了停止本轮 · 仍未完成",
+      "scrollWidth": 106,
+      "clientWidth": 106,
+      "overflow": false
+    },
+    {
+      "text": "完成结束并归档",
+      "scrollWidth": 87,
+      "clientWidth": 87,
+      "overflow": false
+    }
+  ]
+}

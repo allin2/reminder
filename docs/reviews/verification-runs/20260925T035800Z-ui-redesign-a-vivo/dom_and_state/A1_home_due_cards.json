@@ -1,0 +1,12 @@
+{
+  "titleHtml": "有 <em>4 件事</em>需要你看一眼",
+  "titleText": "有 4 件事需要你看一眼",
+  "emColor": "rgb(27, 107, 74)",
+  "subText": "9月25日 周五",
+  "critCardExists": true,
+  "impCardExists": true,
+  "critStripColor": "rgb(143, 58, 58)",
+  "impStripColor": "rgb(154, 107, 18)",
+  "dueSecHeadDisplay": "none",
+  "containsOldTitle": true
+}

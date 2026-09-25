@@ -1,0 +1,7 @@
+{
+  "critStripColor": "rgb(143, 58, 58)",
+  "impStripColor": "rgb(154, 107, 18)",
+  "textOverflow": "ellipsis",
+  "whiteSpace": "nowrap",
+  "overflow": "hidden"
+}

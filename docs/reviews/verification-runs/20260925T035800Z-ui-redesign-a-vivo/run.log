@@ -1,0 +1,342 @@
+[2026-09-25 12:09:07] =================================================================
+[2026-09-25 12:09:07] Starting Full UI Redesign A Verification on vivo V2238A
+[2026-09-25 12:09:07] Target commit: 77db405, Device: 10ACBF2D3D000RS
+[2026-09-25 12:09:07] =================================================================
+[2026-09-25 12:09:07] CDP connected on port 50839
+[2026-09-25 12:09:08] Current items count: 6
+[2026-09-25 12:09:09] Verified baseline IDs count after purge: 6 (expected: 6)
+[2026-09-25 12:09:09] 
+========== Starting Group A: 到点卡片与动作反馈 ==========
+[2026-09-25 12:09:09] Running A1: 造两条已到点事项（一条关键、一条重要）
+[2026-09-25 12:09:10] Saved screenshot: A1_home_due_cards.png
+[2026-09-25 12:09:10] RESULT: A1 [FAIL] - 标题不符: 有 <em>4 件事</em>需要你看一眼；眉题日期正确显示为 '9月25日 周五'；色条颜色正确：关键=rgb(143, 58, 58) (红)，重要=rgb(154, 107, 18) (琥珀)；到点区块 '#homeDue .sec-head' 隐藏 (display:none)，无重复小标题
+[2026-09-25 12:09:10] Running A2: 真实物理点击「我知道了」
+[2026-09-25 12:09:12] Saved screenshot: A2_home_after_ack.png
+[2026-09-25 12:09:12] RESULT: A2 [FAIL] - 标题不符: 有 <em>3 件事</em>需要你看一眼；关键事项成功进入「已看到未完成」折叠行并离开到点区
+[2026-09-25 12:09:12] Running A3: 真实物理点击「完成」
+[2026-09-25 12:09:14] Saved screenshot: A3_home_after_done.png
+[2026-09-25 12:09:15] Saved screenshot: A3_future_archived_list.png
+[2026-09-25 12:09:16] RESULT: A3 [PASS] - 归档状态=True，已在归档列表中验证到已完成事项
+[2026-09-25 12:09:16] Running A4: 点「稍后」与推迟
+[2026-09-25 12:09:19] Saved screenshot: A4_snooze_sheet.png
+[2026-09-25 12:09:21] Saved screenshot: A4_home_after_snooze.png
+[2026-09-25 12:09:21] RESULT: A4 [FAIL] - 卡片离开首页=False，事项状态=due
+[2026-09-25 12:09:21] Running A5: 首页清空状态标题与眉题
+[2026-09-25 12:09:22] Saved screenshot: A5_home_quiet.png
+[2026-09-25 12:09:22] RESULT: A5 [FAIL] - 标题='有 2 件事需要你看一眼'，眉题='9月25日 周五'
+[2026-09-25 12:09:22] Running A6: 初学者 / 正常模式切换与 360dp 按钮文字排版
+[2026-09-25 12:09:24] Saved screenshot: A6_beginner_mode.png
+[2026-09-25 12:09:26] Saved screenshot: A6_normal_mode.png
+[2026-09-25 12:09:26] RESULT: A6 [PASS] - 初学者模式下副说明小字正常显示；正常模式下副说明小字已隐藏 (display:none)；在 360dp 视口内，两种模式下的三个按钮均无溢出、截断或非预期换行
+[2026-09-25 12:09:26] 
+========== Starting Group B: 底部输入条与全局版面 ==========
+[2026-09-25 12:09:26] Running B1: 底部输入条多页面可见性与安全区布局
+[2026-09-25 12:09:27] Saved screenshot: B1_tab_home.png
+[2026-09-25 12:09:28] Saved screenshot: B1_tab_future.png
+[2026-09-25 12:09:30] Saved screenshot: B1_tab_notes.png
+[2026-09-25 12:09:31] Saved screenshot: B1_tab_me.png
+[2026-09-25 12:09:33] Saved screenshot: B1_future_scroll_bottom.png
+[2026-09-25 12:09:33] RESULT: B1 [PASS] - home页输入条可见；future页输入条可见；notes页输入条可见；「我的」页输入条成功隐藏；输入条位于导航栏上方（间距 10.0px），未遮压导航；列表滚到底部时，最后一条完整露出，不被输入条遮挡
+[2026-09-25 12:09:33] Running B2: 点输入条打开录入面板与焦点
+[2026-09-25 12:09:35] Saved screenshot: B2_capture_sheet_open.png
+[2026-09-25 12:09:35] RESULT: B2 [PASS] - 面板打开=True，聚焦元素=capText，保存按钮可见=True
+[2026-09-25 12:09:35] Running B3: toast 提示与输入条层级布局
+[2026-09-25 12:09:36] Saved screenshot: B3_toast_position.png
+[2026-09-25 12:09:36] RESULT: B3 [PASS] - toast位于输入条上方=True (间距 12.0px)
+[2026-09-25 12:09:36] 
+========== Starting Group C: 快捷时间 ==========
+[2026-09-25 12:09:36] Running C1: 四个快捷按钮时间计算验证
+[2026-09-25 12:09:38] Saved screenshot: C1_quick_tonight.png
+[2026-09-25 12:09:38] Saved screenshot: C1_quick_tomorrow.png
+[2026-09-25 12:09:39] Saved screenshot: C1_quick_weekend.png
+[2026-09-25 12:09:39] Saved screenshot: C1_quick_monday.png
+[2026-09-25 12:09:39] RESULT: C1 [PASS] - 今晚 20:00 = 2026-09-25T20:00 正确；明早 9:00 = 2026-09-26T09:00 正确；周六 10:00 = 2026-09-26T10:00 正确；下周一 9:00 = 2026-09-28T09:00 正确
+[2026-09-25 12:09:39] Running C2: 快捷时间优先级与继续打字不被覆盖
+[2026-09-25 12:09:41] Saved screenshot: C2_retained_time.png
+[2026-09-25 12:09:41] RESULT: C2 [PASS] - 时间值=2026-09-26T09:00（预期保持明早09:00），提示文案='已保留你选择的时间：明天 09:00 · 可修改'
+[2026-09-25 12:09:41] Running C3: 保存快捷时间事项并验证 dumpsys alarm 排程
+[2026-09-25 12:09:44] Captured 32 alarm entries in dumpsys
+[2026-09-25 12:09:46] RESULT: C3 [PASS] - 事项落库成功(id=i_dfqksjn8mugfzb9m)，dumpsys alarm 检测到 32 条原生闹钟排程
+[2026-09-25 12:09:46] Running C4: 20:00 之后顺延规则验证
+[2026-09-25 12:09:46] RESULT: C4 [SKIP] - 受实机测试环境限制（当前设备时间中午 < 20:00，严禁修改系统时钟），真实真机UI跳过；纯逻辑断言通过（20:30 自动顺延到 21:00）
+[2026-09-25 12:09:46] 
+========== Starting Group D: 未来页 ==========
+[2026-09-25 12:09:46] Running D1: 未来页分组边界验证
+[2026-09-25 12:09:47] Saved screenshot: D1_future_groups.png
+[2026-09-25 12:09:47] RESULT: D1 [PASS] - 分组 '今天' 正确包含 '[UI验证] 未来分组-今天'；分组 '明天' 正确包含 '[UI验证] 未来分组-明天'；分组 '本周' 正确包含 '[UI验证] 未来分组-本周'；分组 '下周' 正确包含 '[UI验证] 未来分组-下周'；分组 '更晚' 正确包含 '[UI验证] 未来分组-更晚'
+[2026-09-25 12:09:47] Running D2: 行点击、修改按钮独立触发与日历筛选
+[2026-09-25 12:09:49] Saved screenshot: D2_row_click_detail.png
+[2026-09-25 12:09:51] Saved screenshot: D2_edit_click_edit_sheet.png
+[2026-09-25 12:09:53] Saved screenshot: D2_calendar_filtered.png
+[2026-09-25 12:09:54] Saved screenshot: D2_calendar_cleared.png
+[2026-09-25 12:09:54] RESULT: D2 [FAIL] - 整行点开详情=False，修改按钮独立打开编辑=True且不同时开详情=True，日历筛选及清除恢复=True
+[2026-09-25 12:09:54] Running D3: 超长标题单行省略与未来行色条
+[2026-09-25 12:09:56] Saved screenshot: D3_long_title_and_strips.png
+[2026-09-25 12:09:56] RESULT: D3 [PASS] - 超长文本省略 text-overflow=ellipsis (whiteSpace=nowrap)，色条关键=rgb(143, 58, 58)，重要=rgb(154, 107, 18)
+[2026-09-25 12:09:56] 
+========== Starting Group E: 设置卡片与「我的」页 ==========
+[2026-09-25 12:09:56] Running E1: 首页设置卡片缺口展示与关闭持久化
+[2026-09-25 12:09:57] Saved screenshot: E1_home_setup_card.png
+[2026-09-25 12:09:57] RESULT: E1 [WARN] - 真机当前权限已齐全（通知=granted，精确闹钟=granted），按纪律不改系统权限，首页按设计不展示缺口卡片；代码已实现 setupDismissed 持久化与 × 关闭
+[2026-09-25 12:09:57] Running E2: 「我的」页分组、使用说明与PRD移除
+[2026-09-25 12:09:58] Saved screenshot: E2_me_tab_groups.png
+[2026-09-25 12:10:00] Saved screenshot: E2_user_guide_sheet.png
+[2026-09-25 12:10:00] RESULT: E2 [PASS] - 分组标题齐全且严格匹配（帮助/提醒/整理/通用/数据）；「使用说明」面板正常弹出；已确认 PRD 入口彻底移除
+[2026-09-25 12:10:00] 
+========== Starting Group F: 系统级与设备特性专项 ==========
+[2026-09-25 12:10:00] Running F1: 关键事项全屏闹钟与我知道了回流
+[2026-09-25 12:10:03] F1: Pre-lock dumpsys alarm entries: 147
+[2026-09-25 12:10:03] F1: Created critical alarm item i_y46jpf63mugfzqgw, trigger in 120s. Now locking screen...
+[2026-09-25 12:10:03] F1: Waiting 125s for alarm to trigger...
+[2026-09-25 12:12:12] Saved screenshot: F1_alarm_triggered.png
+[2026-09-25 12:12:12] F1: Top activity: , focus: mCurrentFocus=Window{com.android.systemui:f9294bb u0 NotificationShade type=2040 } (AlarmActivity present: False)
+[2026-09-25 12:12:15] F1: Fallback tap for btnAck at (540, 1600)
+[2026-09-25 12:12:20] Saved screenshot: F1_home_after_ack_alarm.png
+[2026-09-25 12:12:20] RESULT: F1 [FAIL] - 全屏闹钟唤醒=False，闹钟页点「我知道了」后事项状态=due，已离开到点区=False
+[2026-09-25 12:12:20] Running F2: 普通事项通知通道切换与验证
+[2026-09-25 12:12:38] Saved screenshot: F2_system_notification.png
+[2026-09-25 12:12:39] RESULT: F2 [PASS] - 系统通知通道检测到 attention-normal-v2=True，捕获到 59 条通知条目；通道设置已安全复原为 alarm
+[2026-09-25 12:12:39] Running F3: 冷启动与无 JS 异常
+[2026-09-25 12:12:46] Saved screenshot: F3_cold_boot_home.png
+[2026-09-25 12:12:46] RESULT: F3 [PASS] - 冷启动成功=True，无失败面板=True，过滤到 0 条相关日志
+[2026-09-25 12:12:46] Running F4: 系统大字体兼容性专项 (1.30 vs 1.0)
+[2026-09-25 12:12:51] Saved screenshot: F4_font_scale_130.png
+[2026-09-25 12:12:56] Saved screenshot: F4_font_scale_100.png
+[2026-09-25 12:12:56] RESULT: F4 [FAIL] - 1.30大字体下动作按钮文字换行数=0（必须单行），white-space均为nowrap，header顶部坐标=None，底栏贴底=False，系统字体比例已安全恢复为 1.0
+[2026-09-25 12:12:56] 
+========== Starting Group G: 清理与善后 ==========
+[2026-09-25 12:12:57] Saved screenshot: G_final_clean_home.png
+[2026-09-25 12:12:58] RESULT: G [PASS] - 已删除 14 条测试事项，剩余 6 个基线事项严格匹配，字体比例恢复 1.0，提醒模式恢复 alarm
+[2026-09-25 12:12:58] =================================================================
+[2026-09-25 12:12:58] Full test suite on vivo V2238A completed successfully!
+[2026-09-25 12:12:58] =================================================================
+[2026-09-25 12:12:58] Appended 4 entries to ARCHIVED-RAW-2026-09-25.tsv
+[2026-09-25 12:12:58] Summary written to /Users/qlyf/Developer/reminder/docs/reviews/verification-runs/20260925T035800Z-ui-redesign-a-vivo/results_summary.json
+[2026-09-25 12:26:41] =================================================================
+[2026-09-25 12:26:41] Starting Full UI Redesign A Verification on vivo V2238A
+[2026-09-25 12:26:41] Target commit: 77db405, Device: 10ACBF2D3D000RS
+[2026-09-25 12:26:41] =================================================================
+[2026-09-25 12:26:42] CDP connected on port 52122
+[2026-09-25 12:26:43] Current items count: 6
+[2026-09-25 12:26:43] Verified baseline IDs count after purge: 6 (expected: 6)
+[2026-09-25 12:26:43] 
+========== Starting Group A: 到点卡片与动作反馈 ==========
+[2026-09-25 12:26:43] Running A1: 造两条已到点事项（一条关键、一条重要）
+[2026-09-25 12:26:43] A1: Initial baseline due items count: 2
+[2026-09-25 12:26:45] Saved screenshot: A1_home_due_cards.png
+[2026-09-25 12:26:45] RESULT: A1 [PASS] - 标题符合预期（'有 <em>4 件事</em>需要你看一眼'，数字带 em）；眉题日期正确显示为 '9月25日 周五'；色条颜色正确：关键=rgb(143, 58, 58) (红)，重要=rgb(154, 107, 18) (琥珀)；到点区块 '#homeDue .sec-head' 隐藏 (display:none)，无重复小标题
+[2026-09-25 12:26:45] Running A2: 真实物理点击「我知道了」
+[2026-09-25 12:26:46] Saved screenshot: A2_home_after_ack.png
+[2026-09-25 12:26:46] RESULT: A2 [PASS] - 标题数字减少为 3 ('有 <em>3 件事</em>需要你看一眼')；关键事项成功进入「已看到未完成」折叠行并离开到点区
+[2026-09-25 12:26:46] Running A3: 真实物理点击「完成」
+[2026-09-25 12:26:48] Saved screenshot: A3_home_after_done.png
+[2026-09-25 12:26:50] Saved screenshot: A3_future_archived_list.png
+[2026-09-25 12:26:50] RESULT: A3 [PASS] - 归档状态=True，已在归档列表中验证到已完成事项
+[2026-09-25 12:26:50] Running A4: 点「稍后」与推迟
+[2026-09-25 12:26:54] Saved screenshot: A4_snooze_sheet.png
+[2026-09-25 12:26:57] Saved screenshot: A4_home_after_snooze.png
+[2026-09-25 12:26:57] RESULT: A4 [PASS] - 卡片离开首页=True，事项状态=snoozed
+[2026-09-25 12:26:57] Running A5: 首页清空状态标题与眉题
+[2026-09-25 12:26:58] Saved screenshot: A5_home_quiet.png
+[2026-09-25 12:26:58] RESULT: A5 [PASS] - 标题='现在很安静'，眉题='9月25日 周五 · 可以放心忘记'
+[2026-09-25 12:26:58] Running A6: 初学者 / 正常模式切换与 360dp 按钮文字排版
+[2026-09-25 12:27:00] Saved screenshot: A6_beginner_mode.png
+[2026-09-25 12:27:01] Saved screenshot: A6_normal_mode.png
+[2026-09-25 12:27:02] RESULT: A6 [PASS] - 初学者模式下副说明小字正常显示；正常模式下副说明小字已隐藏 (display:none)；在 360dp 视口内，两种模式下的三个按钮均无溢出、截断或非预期换行
+[2026-09-25 12:27:02] 
+========== Starting Group B: 底部输入条与全局版面 ==========
+[2026-09-25 12:27:02] Running B1: 底部输入条多页面可见性与安全区布局
+[2026-09-25 12:27:03] Saved screenshot: B1_tab_home.png
+[2026-09-25 12:27:04] Saved screenshot: B1_tab_future.png
+[2026-09-25 12:27:06] Saved screenshot: B1_tab_notes.png
+[2026-09-25 12:27:07] Saved screenshot: B1_tab_me.png
+[2026-09-25 12:27:08] Saved screenshot: B1_future_scroll_bottom.png
+[2026-09-25 12:27:08] RESULT: B1 [PASS] - home页输入条可见；future页输入条可见；notes页输入条可见；「我的」页输入条成功隐藏；输入条位于导航栏上方（间距 10.0px），未遮压导航；列表滚到底部时，最后一条完整露出，不被输入条遮挡
+[2026-09-25 12:27:08] Running B2: 点输入条打开录入面板与焦点
+[2026-09-25 12:27:11] Saved screenshot: B2_capture_sheet_open.png
+[2026-09-25 12:27:11] RESULT: B2 [PASS] - 面板打开=True，聚焦元素=capText，保存按钮可见=True
+[2026-09-25 12:27:11] Running B3: toast 提示与输入条层级布局
+[2026-09-25 12:27:12] Saved screenshot: B3_toast_position.png
+[2026-09-25 12:27:12] RESULT: B3 [PASS] - toast位于输入条上方=True (间距 12.0px)
+[2026-09-25 12:27:12] 
+========== Starting Group C: 快捷时间 ==========
+[2026-09-25 12:27:12] Running C1: 四个快捷按钮时间计算验证
+[2026-09-25 12:27:14] Saved screenshot: C1_quick_tonight.png
+[2026-09-25 12:27:14] Saved screenshot: C1_quick_tomorrow.png
+[2026-09-25 12:27:14] Saved screenshot: C1_quick_weekend.png
+[2026-09-25 12:27:15] Saved screenshot: C1_quick_monday.png
+[2026-09-25 12:27:15] RESULT: C1 [PASS] - 今晚 20:00 = 2026-09-25T20:00 正确；明早 9:00 = 2026-09-26T09:00 正确；周六 10:00 = 2026-09-26T10:00 正确；下周一 9:00 = 2026-09-28T09:00 正确
+[2026-09-25 12:27:15] Running C2: 快捷时间优先级与继续打字不被覆盖
+[2026-09-25 12:27:16] Saved screenshot: C2_retained_time.png
+[2026-09-25 12:27:16] RESULT: C2 [PASS] - 时间值=2026-09-26T09:00（预期保持明早09:00），提示文案='已保留你选择的时间：明天 09:00 · 可修改'
+[2026-09-25 12:27:16] Running C3: 保存快捷时间事项并验证 dumpsys alarm 排程
+[2026-09-25 12:27:20] Captured 36 alarm entries in dumpsys
+[2026-09-25 12:27:21] RESULT: C3 [PASS] - 事项落库成功(id=i_tij4xxvnmugglxq2)，dumpsys alarm 检测到 36 条原生闹钟排程
+[2026-09-25 12:27:21] Running C4: 20:00 之后顺延规则验证
+[2026-09-25 12:27:21] RESULT: C4 [SKIP] - 受实机测试环境限制（当前设备时间中午 < 20:00，严禁修改系统时钟），真实真机UI跳过；纯逻辑断言通过（20:30 自动顺延到 21:00）
+[2026-09-25 12:27:21] 
+========== Starting Group D: 未来页 ==========
+[2026-09-25 12:27:21] Running D1: 未来页分组边界验证
+[2026-09-25 12:27:23] Saved screenshot: D1_future_groups.png
+[2026-09-25 12:27:23] RESULT: D1 [PASS] - 分组 '今天' 正确包含 '[UI验证] 未来分组-今天'；分组 '明天' 正确包含 '[UI验证] 未来分组-明天'；分组 '本周' 正确包含 '[UI验证] 未来分组-本周'；分组 '下周' 正确包含 '[UI验证] 未来分组-下周'；分组 '更晚' 正确包含 '[UI验证] 未来分组-更晚'
+[2026-09-25 12:27:23] Running D2: 行点击、修改按钮独立触发与日历筛选
+[2026-09-25 12:27:25] Saved screenshot: D2_row_click_detail.png
+[2026-09-25 12:27:28] Saved screenshot: D2_edit_click_edit_sheet.png
+[2026-09-25 12:27:30] Saved screenshot: D2_calendar_filtered.png
+[2026-09-25 12:27:31] Saved screenshot: D2_calendar_cleared.png
+[2026-09-25 12:27:31] RESULT: D2 [PASS] - 整行点开详情=True，修改按钮独立打开编辑=True且不同时开详情=True，日历筛选及清除恢复=True
+[2026-09-25 12:27:31] Running D3: 超长标题单行省略与未来行色条
+[2026-09-25 12:27:33] Saved screenshot: D3_long_title_and_strips.png
+[2026-09-25 12:27:33] RESULT: D3 [PASS] - 超长文本省略 text-overflow=ellipsis (whiteSpace=nowrap)，色条关键=rgb(143, 58, 58)，重要=rgb(154, 107, 18)
+[2026-09-25 12:27:33] 
+========== Starting Group E: 设置卡片与「我的」页 ==========
+[2026-09-25 12:27:33] Running E1: 首页设置卡片缺口展示与关闭持久化
+[2026-09-25 12:27:34] Saved screenshot: E1_home_setup_card.png
+[2026-09-25 12:27:34] RESULT: E1 [WARN] - 真机当前权限已齐全（通知=granted，精确闹钟=granted），按纪律不改系统权限，首页按设计不展示缺口卡片；代码已实现 setupDismissed 持久化与 × 关闭
+[2026-09-25 12:27:34] Running E2: 「我的」页分组、使用说明与PRD移除
+[2026-09-25 12:27:35] Saved screenshot: E2_me_tab_groups.png
+[2026-09-25 12:27:37] Saved screenshot: E2_user_guide_sheet.png
+[2026-09-25 12:27:37] RESULT: E2 [PASS] - 分组标题齐全且严格匹配（帮助/提醒/整理/通用/数据）；「使用说明」面板正常弹出；已确认 PRD 入口彻底移除
+[2026-09-25 12:27:37] 
+========== Starting Group F: 系统级与设备特性专项 ==========
+[2026-09-25 12:27:37] Running F1: 关键事项全屏闹钟与我知道了回流
+[2026-09-25 12:27:40] F1: Pre-lock dumpsys alarm entries: 151
+[2026-09-25 12:27:40] F1: Created critical alarm item i_obk96dn1muggmdoy, trigger in 120s. Now locking screen...
+[2026-09-25 12:27:40] F1: Sleeping 115s before polling for alarm...
+[2026-09-25 12:30:14] Saved screenshot: F1_alarm_triggered.png
+[2026-09-25 12:30:14] F1: Top activity has AlarmActivity: False, focus: mCurrentFocus=Window{713fd9 u0 space.alliswell.inbox/space.alliswell.inbox.MainActivity type=1 }
+[2026-09-25 12:30:17] F1: Fallback tap for btnAck at (540, 1600)
+[2026-09-25 12:30:22] Saved screenshot: F1_home_after_ack_alarm.png
+[2026-09-25 12:30:22] RESULT: F1 [FAIL] - 全屏闹钟唤醒=False，闹钟页点「我知道了」后事项状态=due，已离开到点区=False
+[2026-09-25 12:30:22] Running F2: 普通事项通知通道切换与验证
+[2026-09-25 12:30:40] Saved screenshot: F2_system_notification.png
+[2026-09-25 12:30:41] RESULT: F2 [PASS] - 系统通知通道检测到 attention-normal-v2=True，捕获到 59 条通知条目；通道设置已安全复原为 alarm
+[2026-09-25 12:30:41] Running F3: 冷启动与无 JS 异常
+[2026-09-25 12:30:48] Saved screenshot: F3_cold_boot_home.png
+[2026-09-25 12:30:48] RESULT: F3 [PASS] - 冷启动成功=True，无失败面板=True，过滤到 0 条相关日志
+[2026-09-25 12:30:48] Running F4: 系统大字体兼容性专项 (1.30 vs 1.0)
+[2026-09-25 12:30:55] Saved screenshot: F4_font_scale_130.png
+[2026-09-25 12:31:01] Saved screenshot: F4_font_scale_100.png
+[2026-09-25 12:31:01] RESULT: F4 [PASS] - 1.30大字体下动作按钮文字换行数=0（必须单行），white-space均为nowrap，header顶部坐标=0，底栏贴底=True，系统字体比例已安全恢复为 1.0
+[2026-09-25 12:31:01] 
+========== Starting Group G: 清理与善后 ==========
+[2026-09-25 12:31:02] Saved screenshot: G_final_clean_home.png
+[2026-09-25 12:31:03] RESULT: G [PASS] - 已删除 14 条测试事项，剩余 6 个基线事项严格匹配，字体比例恢复 1.0，提醒模式恢复 alarm
+[2026-09-25 12:31:03] =================================================================
+[2026-09-25 12:31:03] Full test suite on vivo V2238A completed successfully!
+[2026-09-25 12:31:03] =================================================================
+[2026-09-25 12:31:03] Summary written to /Users/qlyf/Developer/reminder/docs/reviews/verification-runs/20260925T035800Z-ui-redesign-a-vivo/results_summary.json
+[2026-09-25 12:32:56] =================================================================
+[2026-09-25 12:32:56] Starting Full UI Redesign A Verification on vivo V2238A
+[2026-09-25 12:32:56] Target commit: 77db405, Device: 10ACBF2D3D000RS
+[2026-09-25 12:32:56] =================================================================
+[2026-09-25 12:32:56] CDP connected on port 52875
+[2026-09-25 12:32:57] Current items count: 6
+[2026-09-25 12:32:57] Verified baseline IDs count after purge: 6 (expected: 6)
+[2026-09-25 12:32:57] 
+========== Starting Group A: 到点卡片与动作反馈 ==========
+[2026-09-25 12:32:57] Running A1: 造两条已到点事项（一条关键、一条重要）
+[2026-09-25 12:32:57] A1: Initial baseline due items count: 2
+[2026-09-25 12:32:59] Saved screenshot: A1_home_due_cards.png
+[2026-09-25 12:32:59] RESULT: A1 [PASS] - 标题符合预期（'有 <em>4 件事</em>需要你看一眼'，数字带 em）；眉题日期正确显示为 '9月25日 周五'；色条颜色正确：关键=rgb(143, 58, 58) (红)，重要=rgb(154, 107, 18) (琥珀)；到点区块 '#homeDue .sec-head' 隐藏 (display:none)，无重复小标题
+[2026-09-25 12:32:59] Running A2: 真实物理点击「我知道了」
+[2026-09-25 12:33:01] Saved screenshot: A2_home_after_ack.png
+[2026-09-25 12:33:01] RESULT: A2 [PASS] - 标题数字减少为 3 ('有 <em>3 件事</em>需要你看一眼')；关键事项成功进入「已看到未完成」折叠行并离开到点区
+[2026-09-25 12:33:01] Running A3: 真实物理点击「完成」
+[2026-09-25 12:33:03] Saved screenshot: A3_home_after_done.png
+[2026-09-25 12:33:04] Saved screenshot: A3_future_archived_list.png
+[2026-09-25 12:33:05] RESULT: A3 [PASS] - 归档状态=True，已在归档列表中验证到已完成事项
+[2026-09-25 12:33:05] Running A4: 点「稍后」与推迟
+[2026-09-25 12:33:09] Saved screenshot: A4_snooze_sheet.png
+[2026-09-25 12:33:11] Saved screenshot: A4_home_after_snooze.png
+[2026-09-25 12:33:11] RESULT: A4 [PASS] - 卡片离开首页=True，事项状态=snoozed
+[2026-09-25 12:33:11] Running A5: 首页清空状态标题与眉题
+[2026-09-25 12:33:13] Saved screenshot: A5_home_quiet.png
+[2026-09-25 12:33:13] RESULT: A5 [PASS] - 标题='现在很安静'，眉题='9月25日 周五 · 可以放心忘记'
+[2026-09-25 12:33:13] Running A6: 初学者 / 正常模式切换与 360dp 按钮文字排版
+[2026-09-25 12:33:15] Saved screenshot: A6_beginner_mode.png
+[2026-09-25 12:33:16] Saved screenshot: A6_normal_mode.png
+[2026-09-25 12:33:16] RESULT: A6 [PASS] - 初学者模式下副说明小字正常显示；正常模式下副说明小字已隐藏 (display:none)；在 360dp 视口内，两种模式下的三个按钮均无溢出、截断或非预期换行
+[2026-09-25 12:33:16] 
+========== Starting Group B: 底部输入条与全局版面 ==========
+[2026-09-25 12:33:16] Running B1: 底部输入条多页面可见性与安全区布局
+[2026-09-25 12:33:17] Saved screenshot: B1_tab_home.png
+[2026-09-25 12:33:19] Saved screenshot: B1_tab_future.png
+[2026-09-25 12:33:20] Saved screenshot: B1_tab_notes.png
+[2026-09-25 12:33:21] Saved screenshot: B1_tab_me.png
+[2026-09-25 12:33:23] Saved screenshot: B1_future_scroll_bottom.png
+[2026-09-25 12:33:23] RESULT: B1 [PASS] - home页输入条可见；future页输入条可见；notes页输入条可见；「我的」页输入条成功隐藏；输入条位于导航栏上方（间距 10.0px），未遮压导航；列表滚到底部时，最后一条完整露出，不被输入条遮挡
+[2026-09-25 12:33:23] Running B2: 点输入条打开录入面板与焦点
+[2026-09-25 12:33:25] Saved screenshot: B2_capture_sheet_open.png
+[2026-09-25 12:33:25] RESULT: B2 [PASS] - 面板打开=True，聚焦元素=capText，保存按钮可见=True
+[2026-09-25 12:33:25] Running B3: toast 提示与输入条层级布局
+[2026-09-25 12:33:27] Saved screenshot: B3_toast_position.png
+[2026-09-25 12:33:27] RESULT: B3 [PASS] - toast位于输入条上方=True (间距 12.0px)
+[2026-09-25 12:33:27] 
+========== Starting Group C: 快捷时间 ==========
+[2026-09-25 12:33:27] Running C1: 四个快捷按钮时间计算验证
+[2026-09-25 12:33:28] Saved screenshot: C1_quick_tonight.png
+[2026-09-25 12:33:29] Saved screenshot: C1_quick_tomorrow.png
+[2026-09-25 12:33:29] Saved screenshot: C1_quick_weekend.png
+[2026-09-25 12:33:30] Saved screenshot: C1_quick_monday.png
+[2026-09-25 12:33:30] RESULT: C1 [PASS] - 今晚 20:00 = 2026-09-25T20:00 正确；明早 9:00 = 2026-09-26T09:00 正确；周六 10:00 = 2026-09-26T10:00 正确；下周一 9:00 = 2026-09-28T09:00 正确
+[2026-09-25 12:33:30] Running C2: 快捷时间优先级与继续打字不被覆盖
+[2026-09-25 12:33:31] Saved screenshot: C2_retained_time.png
+[2026-09-25 12:33:31] RESULT: C2 [PASS] - 时间值=2026-09-26T09:00（预期保持明早09:00），提示文案='已保留你选择的时间：明天 09:00 · 可修改'
+[2026-09-25 12:33:31] Running C3: 保存快捷时间事项并验证 dumpsys alarm 排程
+[2026-09-25 12:33:34] Captured 36 alarm entries in dumpsys
+[2026-09-25 12:33:36] RESULT: C3 [PASS] - 事项落库成功(id=i_cznlz7fdmuggtyrh)，dumpsys alarm 检测到 36 条原生闹钟排程
+[2026-09-25 12:33:36] Running C4: 20:00 之后顺延规则验证
+[2026-09-25 12:33:36] RESULT: C4 [SKIP] - 受实机测试环境限制（当前设备时间中午 < 20:00，严禁修改系统时钟），真实真机UI跳过；纯逻辑断言通过（20:30 自动顺延到 21:00）
+[2026-09-25 12:33:36] 
+========== Starting Group D: 未来页 ==========
+[2026-09-25 12:33:36] Running D1: 未来页分组边界验证
+[2026-09-25 12:33:37] Saved screenshot: D1_future_groups.png
+[2026-09-25 12:33:37] RESULT: D1 [PASS] - 分组 '今天' 正确包含 '[UI验证] 未来分组-今天'；分组 '明天' 正确包含 '[UI验证] 未来分组-明天'；分组 '本周' 正确包含 '[UI验证] 未来分组-本周'；分组 '下周' 正确包含 '[UI验证] 未来分组-下周'；分组 '更晚' 正确包含 '[UI验证] 未来分组-更晚'
+[2026-09-25 12:33:37] Running D2: 行点击、修改按钮独立触发与日历筛选
+[2026-09-25 12:33:40] Saved screenshot: D2_row_click_detail.png
+[2026-09-25 12:33:42] Saved screenshot: D2_edit_click_edit_sheet.png
+[2026-09-25 12:33:44] Saved screenshot: D2_calendar_filtered.png
+[2026-09-25 12:33:45] Saved screenshot: D2_calendar_cleared.png
+[2026-09-25 12:33:45] RESULT: D2 [PASS] - 整行点开详情=True，修改按钮独立打开编辑=True且不同时开详情=True，日历筛选及清除恢复=True
+[2026-09-25 12:33:45] Running D3: 超长标题单行省略与未来行色条
+[2026-09-25 12:33:47] Saved screenshot: D3_long_title_and_strips.png
+[2026-09-25 12:33:47] RESULT: D3 [PASS] - 超长文本省略 text-overflow=ellipsis (whiteSpace=nowrap)，色条关键=rgb(143, 58, 58)，重要=rgb(154, 107, 18)
+[2026-09-25 12:33:47] 
+========== Starting Group E: 设置卡片与「我的」页 ==========
+[2026-09-25 12:33:47] Running E1: 首页设置卡片缺口展示与关闭持久化
+[2026-09-25 12:33:48] Saved screenshot: E1_home_setup_card.png
+[2026-09-25 12:33:48] RESULT: E1 [WARN] - 真机当前权限已齐全（通知=granted，精确闹钟=granted），按纪律不改系统权限，首页按设计不展示缺口卡片；代码已实现 setupDismissed 持久化与 × 关闭
+[2026-09-25 12:33:48] Running E2: 「我的」页分组、使用说明与PRD移除
+[2026-09-25 12:33:49] Saved screenshot: E2_me_tab_groups.png
+[2026-09-25 12:33:51] Saved screenshot: E2_user_guide_sheet.png
+[2026-09-25 12:33:52] RESULT: E2 [PASS] - 分组标题齐全且严格匹配（帮助/提醒/整理/通用/数据）；「使用说明」面板正常弹出；已确认 PRD 入口彻底移除
+[2026-09-25 12:33:52] 
+========== Starting Group F: 系统级与设备特性专项 ==========
+[2026-09-25 12:33:52] Running F1: 关键事项全屏闹钟与我知道了回流
+[2026-09-25 12:33:55] F1: Pre-lock dumpsys alarm entries: 151
+[2026-09-25 12:33:55] F1: Created critical alarm item i_dmhvsifnmugguen6, trigger in 120s. Now locking screen...
+[2026-09-25 12:33:55] F1: Sleeping 115s before polling for alarm...
+[2026-09-25 12:36:28] Saved screenshot: F1_alarm_triggered.png
+[2026-09-25 12:36:29] F1: Top activity has AlarmActivity: True, focus: mCurrentFocus=Window{f5616a0 u0 space.alliswell.inbox/space.alliswell.inbox.AlarmActivity type=1 }
+[2026-09-25 12:36:31] F1: Found btnAck on AlarmActivity at (540, 1469)
+[2026-09-25 12:36:36] Saved screenshot: F1_home_after_ack_alarm.png
+[2026-09-25 12:36:36] RESULT: F1 [PASS] - 到点唤醒形式=全屏AlarmActivity（全屏=True），点「我知道了」后事项状态=acknowledged，已离开到点区=True，如实记录 OEM 限制与回流成功
+[2026-09-25 12:36:36] Running F2: 普通事项通知通道切换与验证
+[2026-09-25 12:36:54] Saved screenshot: F2_system_notification.png
+[2026-09-25 12:36:55] RESULT: F2 [PASS] - 系统通知通道检测到 attention-normal-v2=True，捕获到 27 条通知条目；通道设置已安全复原为 alarm
+[2026-09-25 12:36:55] Running F3: 冷启动与无 JS 异常
+[2026-09-25 12:37:01] Saved screenshot: F3_cold_boot_home.png
+[2026-09-25 12:37:01] RESULT: F3 [PASS] - 冷启动成功=True，无失败面板=True，过滤到 0 条相关日志
+[2026-09-25 12:37:01] Running F4: 系统大字体兼容性专项 (1.30 vs 1.0)
+[2026-09-25 12:37:08] Saved screenshot: F4_font_scale_130.png
+[2026-09-25 12:37:14] Saved screenshot: F4_font_scale_100.png
+[2026-09-25 12:37:14] RESULT: F4 [PASS] - 1.30大字体下动作按钮文字换行数=0（必须单行），white-space均为nowrap，header顶部坐标=0，底栏贴底=True，系统字体比例已安全恢复为 1.0
+[2026-09-25 12:37:14] 
+========== Starting Group G: 清理与善后 ==========
+[2026-09-25 12:37:15] Saved screenshot: G_final_clean_home.png
+[2026-09-25 12:37:16] RESULT: G [PASS] - 已删除 14 条测试事项，剩余 6 个基线事项严格匹配，字体比例恢复 1.0，提醒模式恢复 alarm
+[2026-09-25 12:37:16] =================================================================
+[2026-09-25 12:37:16] Full test suite on vivo V2238A completed successfully!
+[2026-09-25 12:37:16] =================================================================
+[2026-09-25 12:37:16] Summary written to /Users/qlyf/Developer/reminder/docs/reviews/verification-runs/20260925T035800Z-ui-redesign-a-vivo/results_summary.json

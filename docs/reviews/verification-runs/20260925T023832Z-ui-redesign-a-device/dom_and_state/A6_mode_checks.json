@@ -1,0 +1,60 @@
+{
+  "beginner": {
+    "bodyClass": "mode-beginner",
+    "subCount": 3,
+    "subDisplays": [
+      "block",
+      "block",
+      "block"
+    ],
+    "btnOverflow": [
+      {
+        "text": "稍后改到具体时间",
+        "scrollWidth": 87,
+        "clientWidth": 87,
+        "overflow": false
+      },
+      {
+        "text": "我知道了停止本轮 · 仍未完成",
+        "scrollWidth": 106,
+        "clientWidth": 106,
+        "overflow": false
+      },
+      {
+        "text": "完成结束并归档",
+        "scrollWidth": 87,
+        "clientWidth": 87,
+        "overflow": false
+      }
+    ]
+  },
+  "normal": {
+    "bodyClass": "mode-normal",
+    "subCount": 3,
+    "subDisplays": [
+      "none",
+      "none",
+      "none"
+    ],
+    "btnOverflow": [
+      {
+        "text": "稍后改到具体时间",
+        "scrollWidth": 87,
+        "clientWidth": 87,
+        "overflow": false
+      },
+      {
+        "text": "我知道了停止本轮 · 仍未完成",
+        "scrollWidth": 106,
+        "clientWidth": 106,
+        "overflow": false
+      },
+      {
+        "text": "完成结束并归档",
+        "scrollWidth": 87,
+        "clientWidth": 87,
+        "overflow": false
+      }
+    ]
+  }
+}

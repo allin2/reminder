@@ -1,0 +1,186 @@
+[2026-09-25 11:10:59] === Starting Step 1: Pre-install alarm residue audit ===
+[2026-09-25 11:11:00] Current items count in app: 18
+[2026-09-25 11:11:00] Saved raw items to /Users/qlyf/Developer/reminder-archive/verification-runs/20260925T031005Z-ui-redesign-a-recheck/dom_and_state/step1_initial_items_raw.json (SHA256: 7bdca54e70a62f4b8fbd6acaa45d80200f18bb6d4fbb93fb3ebd06a5f26aa67f)
+[2026-09-25 11:11:07] === Starting Step 1: Pre-install alarm residue audit ===
+[2026-09-25 11:11:07] Current items count in app: 18
+[2026-09-25 11:11:07] Saved raw items to /Users/qlyf/Developer/reminder-archive/verification-runs/20260925T031005Z-ui-redesign-a-recheck/dom_and_state/step1_initial_items_raw.json (SHA256: 7bdca54e70a62f4b8fbd6acaa45d80200f18bb6d4fbb93fb3ebd06a5f26aa67f)
+[2026-09-25 11:11:07] Saved sanitized items to /Users/qlyf/Developer/reminder/docs/reviews/verification-runs/20260925T031005Z-ui-redesign-a-recheck/dom_and_state/step1_initial_items_sanitized.json
+[2026-09-25 11:11:07] Saved raw dumpsys alarm to /Users/qlyf/Developer/reminder-archive/verification-runs/20260925T031005Z-ui-redesign-a-recheck/dumpsys/step1_pre_install_alarm_raw.txt (SHA256: 1f29f256b7fe5eb302e3b09a053d00ec116358fd839d4ba5ecee6c36f1105cb5)
+[2026-09-25 11:11:07] Found 1 active alarm entries for space.alliswell.inbox
+[2026-09-25 11:11:07] Known item times in app: {'2026-09-20 21:00:00': 'i_3fwdj70zmu9k7ua8', '2026-09-20 16:36:42': 'i_rol9ozwwmu9kb8qo', '2026-09-20 16:43:55': 'i_jnbigldqmu9kjgar', '2026-09-20 16:53:00': 'i_1fp8trjkmu9kjm36', '2026-09-21 03:30:00': 'i_r2g1xjfimu9yj9h5', '2026-09-21 07:30:00': 'i_yywnt1gvmua9uyqi', '2026-09-21 06:06:11': 'i_8lb1300amuaciqbw', '2026-09-21 17:00:00': 'i_m2jw81bumuavp0p8', '2026-09-21 18:20:59': 'i_xb8z7o3gmub3h6wp', '2026-09-22 10:40:00': 'i_2ekct109muc1euc5', '2026-09-22 10:11:09': 'i_60sr60u7muc1f4oi', '2026-09-22 10:30:00': 'i_yfqsth9dmuc1hqam', '2026-09-29 10:45:00': 'i_314z6c08mudvq0tq', '2026-09-23 21:30:00': 'i_4xcvuy1nmudxo3xl', '2026-09-28 10:00:00': 'i_2vc0m2eimuf6updj', '2026-09-25 09:46:54': 'i_tcjfuvt0mugavmzv', '2026-09-25 09:50:42': 'i_ww0y84d8mugb0jft'}
+[2026-09-25 11:11:07] Alarm at 2026-09-25 21:30:00 DOES NOT MATCH any existing item! Entry:
+    [已移除：step1 原始 dumpsys alarm 共 1065 行，含其他应用条目；原件见归档 run_raw.log，SHA-256 登记于 ARCHIVED-RAW-2026-09-25.tsv]
+[2026-09-25 11:11:07] WARNING: 1 unmatched alarms detected! Triggering reconciliation...
+[2026-09-25 11:11:39] Reconciliation triggered: {'native': True, 'notifications': 'granted', 'exactAlarm': 'granted', 'reliability': 'exact', 'source': 'SystemBridge', 'diag': {'sdkInt': 36, 'packageName': 'space.alliswell.inbox', 'notificationsEnabled': True, 'postNotificationsGranted': True, 'canExactAlarm': True, 'ignoringBatteryOptimizations': True, 'alarmManagerAvailable': True, 'notificationManagerAvailable': True, 'canDrawOverlays': True, 'canUseFullScreenIntent': True, 'alarmChannelImportance': 4, 'alarmChannelId': 'attention-alarm-v4'}, 'enabled': True, 'notifySwitchOn': True, 'notificationsGranted': True, 'capabilities': {'sound': True, 'notifications': True, 'screen': True, 'exact': True}, 'desired': 4, 'scheduled': 2, 'cancelled': 12, 'alarmCount': 2, 'alarmScheduled': 0, 'alarmCancelled': 9, 'scheduledAlarmIds': [498068061, 1799922133], 'scheduledAlarmSignatures': {'498068061': '498068061|1790649900000|i_314z6c08mudvq0tq|2|安心收件箱提醒|<用户事项 13>|提醒', '1799922133': '1799922133|1790560800000|i_2vc0m2eimuf6updj|1|安心收件箱提醒|<用户事项 10>|提醒'}, 'deadlineEvents': [], 'cancelledDeadlineEvents': [], 'reminderEvents': [{'itemId': 'i_2vc0m2eimuf6updj', 'key': '0@1790560800000', 'at': 1790560800000}, {'itemId': 'i_314z6c08mudvq0tq', 'key': '0@1790649900000', 'at': 1790649900000}], 'cancelledReminderEvents': [{'itemId': 'i_vn1oejgmmugdbofc', 'key': '4@1790564400000', 'at': 1790564400000}, {'itemId': 'i_yeskqnihmugdbofc', 'key': '3@1790566200000', 'at': 1790566200000}, {'itemId': 'i_vn1oejgmmugdbofc', 'key': '1@1790561700000', 'at': 1790561700000}, {'itemId': 'i_vn1oejgmmugdbofc', 'key': '7@1790567100000', 'at': 1790567100000}, {'itemId': 'i_vn1oejgmmugdbofc', 'key': '5@1790565300000', 'at': 1790565300000}, {'itemId': 'i_yeskqnihmugdbofc', 'key': '1@1790562600000', 'at': 1790562600000}, {'itemId': 'i_vn1oejgmmugdbofc', 'key': '6@1790566200000', 'at': 1790566200000}, {'itemId': 'i_vn1oejgmmugdbofc', 'key': '2@1790562600000', 'at': 1790562600000}, {'itemId': 'i_yeskqnihmugdbofc', 'key': '2@1790564400000', 'at': 1790564400000}, {'itemId': 'i_vn1oejgmmugdbofc', 'key': '3@1790563500000', 'at': 1790563500000}], 'errors': [], 'removedDeliveredIds': [], 'deliveredCleanupError': None}
+[2026-09-25 11:11:41] Post-reconcile active alarms: 1
+[2026-09-25 11:11:41] FAIL: 1 unmatched alarms still remain after reconciliation!
+[2026-09-25 11:12:32] === Starting Step 1: Pre-install alarm residue audit ===
+[2026-09-25 11:12:32] Current items count in app: 18
+[2026-09-25 11:12:32] Saved raw items to /Users/qlyf/Developer/reminder-archive/verification-runs/20260925T031005Z-ui-redesign-a-recheck/dom_and_state/step1_initial_items_raw.json (SHA256: 7bdca54e70a62f4b8fbd6acaa45d80200f18bb6d4fbb93fb3ebd06a5f26aa67f)
+[2026-09-25 11:12:32] Saved sanitized items to /Users/qlyf/Developer/reminder/docs/reviews/verification-runs/20260925T031005Z-ui-redesign-a-recheck/dom_and_state/step1_initial_items_sanitized.json
+[2026-09-25 11:12:32] Saved raw dumpsys alarm to /Users/qlyf/Developer/reminder-archive/verification-runs/20260925T031005Z-ui-redesign-a-recheck/dumpsys/step1_pre_install_alarm_raw.txt (SHA256: a5c64d34c4f277c317b19332816d2229287b296b5ca485dff36851a8b764216e)
+[2026-09-25 11:12:32] Found 6 active alarm entries for space.alliswell.inbox
+[2026-09-25 11:12:32] Known item times in app: {'2026-09-20 21:00:00': 'Item i_3fwdj70zmu9k7ua8 (triggerAt)', '2026-09-20 16:36:42': 'Item i_rol9ozwwmu9kb8qo (triggerAt)', '2026-09-20 16:43:55': 'Item i_jnbigldqmu9kjgar (triggerAt)', '2026-09-20 16:53:00': 'Item i_1fp8trjkmu9kjm36 (triggerAt)', '2026-09-21 03:30:00': 'Item i_r2g1xjfimu9yj9h5 (triggerAt)', '2026-09-21 07:30:00': 'Item i_yywnt1gvmua9uyqi (triggerAt)', '2026-09-21 06:06:11': 'Item i_8lb1300amuaciqbw (triggerAt)', '2026-09-21 17:00:00': 'Item i_m2jw81bumuavp0p8 (triggerAt)', '2026-09-21 18:20:59': 'Item i_xb8z7o3gmub3h6wp (triggerAt)', '2026-09-22 10:40:00': 'Item i_2ekct109muc1euc5 (triggerAt)', '2026-09-22 10:11:09': 'Item i_60sr60u7muc1f4oi (triggerAt)', '2026-09-22 10:30:00': 'Item i_yfqsth9dmuc1hqam (triggerAt)', '2026-09-29 10:45:00': 'Item i_314z6c08mudvq0tq (triggerAt)', '2026-09-23 21:30:00': 'Item i_4xcvuy1nmudxo3xl (triggerAt)', '2026-09-28 10:00:00': 'Item i_2vc0m2eimuf6updj (triggerAt)', '2026-09-25 09:46:54': 'Item i_tcjfuvt0mugavmzv (triggerAt)', '2026-09-25 09:50:42': 'Item i_ww0y84d8mugb0jft (triggerAt)', '2026-09-25 21:30:00': 'ReviewSession:Main', '2026-09-25 22:30:00': 'ReviewSession:Followup'}
+[2026-09-25 11:12:32] Alarm at 2026-09-25 21:30:00 MATCHES item ReviewSession:Main
+[2026-09-25 11:12:32] Alarm at 2026-09-25 22:30:00 MATCHES item ReviewSession:Followup
+[2026-09-25 11:12:32] Alarm at 2026-09-28 10:00:00 MATCHES item Item i_2vc0m2eimuf6updj (triggerAt)
+[2026-09-25 11:12:32] Alarm at 2026-09-28 10:00:00 MATCHES item Item i_2vc0m2eimuf6updj (triggerAt)
+[2026-09-25 11:12:32] Alarm at 2026-09-29 10:45:00 MATCHES item Item i_314z6c08mudvq0tq (triggerAt)
+[2026-09-25 11:12:32] Alarm at 2026-09-29 10:45:00 MATCHES item Item i_314z6c08mudvq0tq (triggerAt)
+[2026-09-25 11:12:32] SUCCESS: All active alarms match existing items in app! No residue.
+[2026-09-25 11:12:32] === Step 1 finished successfully ===
+Baseline settings recorded: font_scale=1.0, defaultDeliveryMode=alarm
+[2026-09-25 11:15:58] =================================================================
+[2026-09-25 11:15:58] Starting Targeted Recheck Suite for commit 77db405
+[2026-09-25 11:15:58] =================================================================
+[2026-09-25 11:15:58] Cleanup performed: deleted 0 items, remaining 18
+[2026-09-25 11:15:58] 
+========== Starting R1: 大字体 (1.30 vs 1.0) ==========
+[2026-09-25 11:16:00] R1: font_scale changed to 1.30. Without restart, document font-size = 20.8px
+[2026-09-25 11:16:00] R1: Cold restarting app with font_scale 1.30...
+[2026-09-25 11:16:04] R1: Cold restart completed. font-size at 1.30 = 20.8px
+[2026-09-25 11:16:04] R1: Created due items ['i_j0i51jvdmuge2dvx', 'i_oolyuxs9muge2dvx']
+[2026-09-25 11:16:07] Saved screenshot: R1_font130_beginner.png
+[2026-09-25 11:16:08] Saved screenshot: R1_font130_normal.png
+[2026-09-25 11:16:08] R1: Restoring font_scale to 1.0 for control measurement...
+[2026-09-25 11:16:12] R1: Control cold restart. font-size at 1.0 = 16px
+[2026-09-25 11:16:14] Saved screenshot: R1_font100_beginner.png
+[2026-09-25 11:16:15] Saved screenshot: R1_font100_normal.png
+[2026-09-25 11:16:15] RESULT: R1 [PASS] - 1.30下折行主按钮数=0；标题top=0 (>=0: True)；导航底边=736/736；字体缩放已恢复为 1.0
+[2026-09-25 11:16:15] Cleanup performed: deleted 2 items, remaining 18
+[2026-09-25 11:16:15] 
+========== Starting R2: 普通通知 ==========
+[2026-09-25 11:16:15] R2: Initial defaultDeliveryMode = alarm
+[2026-09-25 11:16:15] R2: Switching defaultDeliveryMode to 'notification' in '我的' tab...
+[2026-09-25 11:16:17] R2: Switched defaultDeliveryMode in state = notification
+[2026-09-25 11:16:17] R2: Created normal item info: {'id': 'i_1lncao7bmuge2o4p', 'priority': 'normal'}
+[2026-09-25 11:16:17] R2: Waiting 70s for system notification...
+[2026-09-25 11:17:29] Saved screenshot: R2_system_notification.png
+[2026-09-25 11:17:30] R2: Notification channels detected: []
+[2026-09-25 11:17:30] R2: Restoring defaultDeliveryMode to 'alarm'...
+[2026-09-25 11:17:31] R2: Restored defaultDeliveryMode = alarm
+[2026-09-25 11:17:31] RESULT: R2 [FAIL] - 普通事项投递渠道=[] (非闹钟渠道=False)；默认提醒方式已恢复为 alarm
+[2026-09-25 11:17:31] Cleanup performed: deleted 1 items, remaining 18
+[2026-09-25 11:17:31] 
+========== Starting R3: 按钮改动回归 (真实点击 input tap) ==========
+[2026-09-25 11:20:04] =================================================================
+[2026-09-25 11:20:04] Starting Targeted Recheck Suite for commit 77db405
+[2026-09-25 11:20:04] =================================================================
+[2026-09-25 11:20:05] Cleanup performed: deleted 2 items, remaining 18
+[2026-09-25 11:20:05] 
+========== Starting R1: 大字体 (1.30 vs 1.0) ==========
+[2026-09-25 11:20:07] R1: font_scale changed to 1.30. Without restart, document font-size = 20.8px
+[2026-09-25 11:20:07] R1: Cold restarting app with font_scale 1.30...
+[2026-09-25 11:20:11] R1: Cold restart completed. font-size at 1.30 = 20.8px
+[2026-09-25 11:20:11] R1: Created due items ['i_r8wldcammuge7oaw', 'i_8iuo77lfmuge7oaw']
+[2026-09-25 11:20:13] Saved screenshot: R1_font130_beginner.png
+[2026-09-25 11:20:15] Saved screenshot: R1_font130_normal.png
+[2026-09-25 11:20:15] R1: Restoring font_scale to 1.0 for control measurement...
+[2026-09-25 11:20:19] R1: Control cold restart. font-size at 1.0 = 16px
+[2026-09-25 11:20:20] Saved screenshot: R1_font100_beginner.png
+[2026-09-25 11:20:22] Saved screenshot: R1_font100_normal.png
+[2026-09-25 11:20:22] RESULT: R1 [PASS] - 1.30下折行主按钮数=0；标题top=0 (>=0: True)；导航底边=736/736；字体缩放已恢复为 1.0
+[2026-09-25 11:20:22] Cleanup performed: deleted 2 items, remaining 18
+[2026-09-25 11:20:22] 
+========== Starting R2: 普通通知 ==========
+[2026-09-25 11:20:22] R2: Initial defaultDeliveryMode = notification
+[2026-09-25 11:20:22] R2: Switching defaultDeliveryMode to 'notification' in '我的' tab...
+[2026-09-25 11:20:24] R2: Switched defaultDeliveryMode in state = notification
+[2026-09-25 11:20:24] R2: Created normal item info: {'id': 'i_0bbs8i9vmuge7ycn', 'delivery_mode': 'notification', 'priority': 'normal', 'triggerAt': 1790306484000, 'pendingNotif': {'id': 1666615611, 'title': '安心收件箱提醒', 'body': '[UI复测] 普通通知到点验证', 'schedule': {'at': 'Fri Sep 25 11:21:24 GMT+08:00 2026', 'count': 1, 'repeats': False}, 'extra': {'managedKind': 'attention-reminder', 'scheduleVersion': 2, 'itemId': 'i_0bbs8i9vmuge7ycn', 'itemRev': 1, 'event': 'primary', 'attempt': 0, 'scheduleKey': '2|i_0bbs8i9vmuge7ycn|1|primary|0|1790306484000|安心收件箱提醒|[UI复测] 普通通知到点验证|attention-normal-v2', 'reminderKey': '0@1790306484000'}}}
+[2026-09-25 11:20:24] R2: Waiting 65s for system notification trigger...
+[2026-09-25 11:22:03] Saved screenshot: R2_system_notification.png
+[2026-09-25 11:22:04] R2: Restoring defaultDeliveryMode to 'notification'...
+[2026-09-25 11:22:05] R2: Restored defaultDeliveryMode = notification
+[2026-09-25 11:22:05] RESULT: R2 [FAIL] - 普通事项计划渠道=None，实机投递渠道=[] (非闹钟渠道=False)；默认提醒方式已恢复为 notification
+[2026-09-25 11:22:05] Cleanup performed: deleted 1 items, remaining 18
+[2026-09-25 11:22:05] 
+========== Starting R3: 按钮改动回归 (真实点击 input tap) ==========
+[2026-09-25 11:22:07] Saved screenshot: R3_A1_cards.png
+[2026-09-25 11:22:07] R3 A1: {'title': '有 2 件事需要你看一眼', 'eyebrow': '9月25日 周五', 'critStrip': None, 'impStrip': None}
+[2026-09-25 11:22:07] R3 A2: Real tapping 'ack' button...
+[2026-09-25 11:22:07] real_tap on #homeDue .card[data-id="i_xjbhvlusmugea53q"] [data-act="ack"] -> physical coords (540, 1104)
+[2026-09-25 11:22:10] Saved screenshot: R3_A2_after_ack.png
+[2026-09-25 11:22:10] R3 A2: {'status': 'waiting', 'inDue': True, 'inActive': False, 'title': '有 2 件事需要你看一眼'}
+[2026-09-25 11:22:10] R3 A3: Real tapping 'done' button...
+[2026-09-25 11:22:10] real_tap on #homeDue .card[data-id="i_r5v74xjomugea53q"] [data-act="done"] -> physical coords (859, 1104)
+[2026-09-25 11:22:13] Saved screenshot: R3_A3_after_done.png
+[2026-09-25 11:22:13] R3 A3: {'status': 'waiting', 'inDue': True, 'title': '有 2 件事需要你看一眼'}
+[2026-09-25 11:22:13] R3 A4: Real tapping 'snooze' button...
+[2026-09-25 11:22:14] real_tap on #homeDue .card[data-id="i_ct5d7auvmugeaayc"] [data-act="snooze"] -> physical coords (221, 1104)
+[2026-09-25 11:22:17] Saved screenshot: R3_A4_snooze_sheet.png
+[2026-09-25 11:32:06] =================================================================
+[2026-09-25 11:32:06] Starting Targeted Recheck Suite for commit 77db405
+[2026-09-25 11:32:06] =================================================================
+[2026-09-25 11:32:07] Cleanup performed: deleted 0 items, remaining 18
+[2026-09-25 11:32:07] 
+========== Starting R1: 大字体 (1.30 vs 1.0) ==========
+[2026-09-25 11:32:09] R1: font_scale changed to 1.30. Without restart, document font-size = 20.8px
+[2026-09-25 11:32:09] R1: Cold restarting app with font_scale 1.30...
+[2026-09-25 11:32:13] R1: Cold restart completed. font-size at 1.30 = 20.8px
+[2026-09-25 11:32:13] R1: Created due items ['i_1htdr7aqmugen5jf', 'i_mvlmsek9mugen5jf']
+[2026-09-25 11:32:15] Saved screenshot: R1_font130_beginner.png
+[2026-09-25 11:32:17] Saved screenshot: R1_font130_normal.png
+[2026-09-25 11:32:17] R1: Restoring font_scale to 1.0 for control measurement...
+[2026-09-25 11:32:21] R1: Control cold restart. font-size at 1.0 = 16px
+[2026-09-25 11:32:22] Saved screenshot: R1_font100_beginner.png
+[2026-09-25 11:32:24] Saved screenshot: R1_font100_normal.png
+[2026-09-25 11:32:24] RESULT: R1 [PASS] - 1.30下折行主按钮数=0；标题top=0 (>=0: True)；导航底边=736/736；字体缩放已恢复为 1.0
+[2026-09-25 11:32:24] Cleanup performed: deleted 2 items, remaining 18
+[2026-09-25 11:32:24] 
+========== Starting R2: 普通通知 ==========
+[2026-09-25 11:32:24] R2: Initial defaultDeliveryMode = alarm
+[2026-09-25 11:32:24] R2: Switching defaultDeliveryMode to 'notification' in '我的' tab...
+[2026-09-25 11:32:26] R2: Switched defaultDeliveryMode in state = notification
+[2026-09-25 11:32:26] R2: Created normal item info: {'id': 'i_tfk5wpz1mugenfha', 'delivery_mode': 'notification', 'priority': 'normal', 'triggerAt': 1790307166000, 'pendingNotif': {'id': 1462916666, 'title': '安心收件箱提醒', 'body': '[UI复测] 普通通知到点验证', 'schedule': {'at': 'Fri Sep 25 11:32:46 GMT+08:00 2026', 'count': 1, 'repeats': False}, 'extra': {'managedKind': 'attention-reminder', 'scheduleVersion': 2, 'itemId': 'i_tfk5wpz1mugenfha', 'itemRev': 1, 'event': 'primary', 'attempt': 0, 'scheduleKey': '2|i_tfk5wpz1mugenfha|1|primary|0|1790307166000|安心收件箱提醒|[UI复测] 普通通知到点验证|attention-normal-v2', 'reminderKey': '0@1790307166000'}}}
+[2026-09-25 11:32:26] R2: Waiting 22s for system notification trigger...
+[2026-09-25 11:33:23] Saved screenshot: R2_system_notification.png
+[2026-09-25 11:33:23] R2: Restoring defaultDeliveryMode to 'alarm'...
+[2026-09-25 11:33:24] R2: Restored defaultDeliveryMode = alarm
+[2026-09-25 11:33:24] RESULT: R2 [FAIL] - 普通事项计划渠道=None，实机投递渠道=[] (非闹钟渠道=False)；默认提醒方式已恢复为 alarm
+[2026-09-25 11:33:24] Cleanup performed: deleted 1 items, remaining 18
+[2026-09-25 11:33:24] 
+========== Starting R3: 按钮改动回归 (真实点击 input tap) ==========
+[2026-09-25 11:33:27] Saved screenshot: R3_A1_cards.png
+[2026-09-25 11:33:27] R3 A1: {'title': '有 2 件事需要你看一眼', 'eyebrow': '9月25日 周五', 'critStrip': None, 'impStrip': None}
+[2026-09-25 11:33:27] R3 A2: Real tapping 'ack' button...
+[2026-09-25 11:33:27] real_tap on #homeDue .card[data-id="i_vw5rqay5mugeopdo"] [data-act="ack"] -> physical coords (540, 817)
+[2026-09-25 11:33:30] Saved screenshot: R3_A2_after_ack.png
+[2026-09-25 11:33:30] R3 A2: {'status': 'acknowledged', 'inDue': False, 'inActive': False, 'title': '有 1 件事需要你看一眼'}
+[2026-09-25 11:33:30] R3 A3: Real tapping 'done' button...
+[2026-09-25 11:33:30] real_tap on #homeDue .card[data-id="i_qbbrwx66mugeopdo"] [data-act="done"] -> physical coords (859, 817)
+[2026-09-25 11:33:33] Saved screenshot: R3_A3_after_done.png
+[2026-09-25 11:33:33] R3 A3: {'status': 'archived', 'inDue': False, 'title': '暂时没有新的提醒'}
+[2026-09-25 11:33:33] R3 A4: Real tapping 'snooze' button...
+[2026-09-25 11:33:34] real_tap on #homeDue .card[data-id="i_8vnq9uzhmugeov2k"] [data-act="snooze"] -> physical coords (221, 817)
+[2026-09-25 11:33:36] Saved screenshot: R3_A4_snooze_sheet.png
+[2026-09-25 11:33:36] real_tap on #snoozeChips button[data-min="30"] -> physical coords (183, 1542)
+[2026-09-25 11:33:38] real_tap on #btnApplySnooze -> physical coords (792, 2201)
+[2026-09-25 11:33:41] Saved screenshot: R3_A4_after_snooze.png
+[2026-09-25 11:33:41] R3 A4: {'status': 'snoozed', 'inDue': False}
+[2026-09-25 11:33:41] RESULT: R3 [PASS] - 真机input tap触控正常：我知道了离开到点=True，完成归档=True，稍后离开首页=True
+[2026-09-25 11:33:41] Cleanup performed: deleted 3 items, remaining 18
+[2026-09-25 11:33:41] 
+========== Starting R4: 关键闹钟冒烟 ==========
+[2026-09-25 11:33:41] R4: Created critical alarm item i_m9tcyn6umugep1fb, trigger in 120s. Now locking screen...
+[2026-09-25 11:33:41] R4: Waiting 125s for alarm to trigger...
+[2026-09-25 11:35:48] Saved screenshot: R4_alarm_triggered.png
+[2026-09-25 11:35:48] R4: AlarmActivity detected on top: True
+[2026-09-25 11:35:51] R4: Found btnAck at (540, 1461)
+[2026-09-25 11:35:56] Saved screenshot: R4_home_after_ack.png
+[2026-09-25 11:35:56] RESULT: R4 [PASS] - 全屏闹钟唤醒=True，点我知道了后状态=acknowledged，已离开到点区=True
+[2026-09-25 11:35:56] 
+========== Starting R5: 清理与善后 ==========
+[2026-09-25 11:35:56] Cleanup performed: deleted 1 items, remaining 18
+[2026-09-25 11:35:56] R5: Remaining items count: 18 (Expected: 18), all match: True
+[2026-09-25 11:35:57] R5: AlarmManager final entries count: 29, test item residue: 0
+[2026-09-25 11:35:57] R5: Notification final test residue: 0
+[2026-09-25 11:35:57] RESULT: R5 [PASS] - 事项数=18 (严格匹配原18条=True)；闹钟残留=0；通知残留=0；font_scale=1.0；提醒方式=alarm
+[2026-09-25 11:35:57] Targeted Recheck Suite finished.
+[2026-09-25 11:35:57] Results summary saved to /Users/qlyf/Developer/reminder/docs/reviews/verification-runs/20260925T031005Z-ui-redesign-a-recheck/results_summary.json
+[2026-09-25 11:46:25] R2 Standalone re-execution completed:
+[2026-09-25 11:46:25] Switched defaultDeliveryMode to notification
+[2026-09-25 11:46:25] Triggered normal item; detected NotificationRecord with channel attention-normal-v2
+[2026-09-25 11:46:25] Saved screenshots/R2_system_notification.png
+[2026-09-25 11:46:25] Restored defaultDeliveryMode to alarm
+[2026-09-25 11:46:25] Cleaned up test items; remaining items count = 18
+[2026-09-25 11:46:25] RESULT: R2 [PASS] - 普通事项实机投递渠道=attention-normal-v2，非闹钟渠道=True，设置已恢复

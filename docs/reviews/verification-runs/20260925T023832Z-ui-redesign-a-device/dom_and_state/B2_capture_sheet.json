@@ -1,0 +1,21 @@
+{
+  "sheetOpen": true,
+  "activeElementId": "capText",
+  "btnSaveVisible": true,
+  "sheetRect": {
+    "top": 44.4375,
+    "bottom": 444.3333435058594,
+    "left": 0,
+    "right": 360,
+    "width": 360,
+    "height": 399.8958435058594
+  },
+  "btnSaveRect": {
+    "top": 375.5364685058594,
+    "bottom": 428.3333435058594,
+    "left": 186,
+    "right": 342,
+    "width": 156,
+    "height": 52.796875
+  }
+}
