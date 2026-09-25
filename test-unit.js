@@ -2809,7 +2809,10 @@ section("P2-E AppSetup — 求值、live 注入、60 秒测试与停铃边界");
     let status = options.status || { notifications: "granted", notificationsGranted: true, exactAlarm: "granted", scheduledAlarmIds: [] };
     let feedback = options.feedback || {
       TEST_FEEDBACK: [{ value: "heard", label: "我听到了" }, { value: "missed", label: "没收到" }],
-      setupSteps: () => ({ steps: [{ id: "test", title: "60 秒测试", why: "验证", denyImpact: "不影响记录", done: false }], next: { id: "test" } }),
+      setupSteps: () => ({ steps: [
+        { id: "notify", essential: true, title: "允许发通知", why: "通知", denyImpact: "看不到提醒", action: "去授权", done: false },
+        { id: "test", title: "60 秒测试", why: "验证", denyImpact: "不影响记录", done: false }
+      ], next: { id: "notify" } }),
       testFeedbackVerdict: value => value ? { text: value } : null
     };
     const calls = { saves: 0, schedules: [], cancels: [], stops: [], toasts: [], openSheets: 0, writes: 0, logs: [] };
@@ -2877,6 +2880,33 @@ section("P2-E AppSetup — 求值、live 注入、60 秒测试与停铃边界");
   cold.app.renderSetupEntry();
   ok("设置入口：状态读回后重绘才出现卡片",
     /setupEntry/.test(cold.nodes["#homeSetup"].innerHTML), cold.nodes["#homeSetup"].innerHTML);
+
+  // 首页卡片只为关键缺口（essential）出现；只剩可选步骤 / 测试时不再常驻首页
+  const optionalOnly = setupFixture({
+    native: { isNativeAndroid: () => true }, settings: { setupPromptStarted: true },
+    feedback: {
+      TEST_FEEDBACK: [],
+      setupSteps: () => ({ steps: [
+        { id: "notify", essential: true, done: true, title: "允许发通知" },
+        { id: "background", done: false, title: "允许完全后台运行" },
+        { id: "test", done: false, title: "60 秒测试" }
+      ], next: { id: "background" } }),
+      testFeedbackVerdict: () => null
+    }
+  });
+  optionalOnly.app.renderSetupEntry();
+  ok("设置入口：关键权限齐了、只剩可选步骤时首页不出卡片",
+    optionalOnly.nodes["#homeSetup"].innerHTML === "", optionalOnly.nodes["#homeSetup"].innerHTML);
+
+  const dismissable = setupFixture({ native: { isNativeAndroid: () => true }, settings: { setupPromptStarted: true } });
+  dismissable.app.renderSetupEntry();
+  ok("设置入口：卡片带关闭按钮", /setupEntryDismiss/.test(dismissable.nodes["#homeSetup"].innerHTML));
+  const cardHtml = dismissable.nodes["#homeSetup"].innerHTML;
+  dismissable.state.settings.setupDismissed = true;
+  dismissable.app.renderSetupEntry();
+  ok("设置入口：关闭（setupDismissed）后首页卡片消失",
+    /setupEntry/.test(cardHtml) && dismissable.nodes["#homeSetup"].innerHTML === "",
+    dismissable.nodes["#homeSetup"].innerHTML);
 
   const doneSetup = beginAsyncSection();
   (async () => {
