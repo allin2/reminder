@@ -127,9 +127,11 @@ section("P2-G1 AppCapture — 表单会话、live 状态与幂等绑定");
     return nodes[id];
   }
   const chips = ["normal", "important", "critical"].map(p => { const n = node("chip-" + p); n.dataset.p = p; return n; });
+  const quickChips = ["tonight", "tomorrow", "weekend", "monday"].map(k => { const n = node("quick-" + k); n.dataset.quick = k; return n; });
   let lowConf = false; const calls = { refresh: 0, opens: [], details: [], timers: 0 };
   const capture = appCaptureMod.createAppCapture({
-    query: node, queryAll: sel => sel === "#capPriority .chip" || sel === "#capPriority .chip.on"
+    query: node, queryAll: sel => sel === "#capQuick [data-quick]" ? quickChips
+      : sel === "#capPriority .chip" || sel === "#capPriority .chip.on"
       ? (sel.endsWith(".on") ? chips.filter(c => c.classList.contains("on")) : chips) : [],
     getDocument: () => ({ addEventListener: (name, fn) => documentListeners.push({ name, fn }) }), getState: () => state,
     openSheet: id => calls.opens.push(id), refreshProjectSelects: () => { calls.refresh++; }, openDetail: id => calls.details.push(id),
@@ -168,6 +170,64 @@ section("P2-G1 AppCapture — 表单会话、live 状态与幂等绑定");
   ok("P2-G1 capture bind 对输入、重复、时间和更多选项幂等", node("#capText").listeners.length === 3 &&
     node("#capTrigger").listeners.length === 2 && node("#btnCapMore").listeners.length === 1 && documentListeners.length === 1,
     JSON.stringify({ text: node("#capText").listeners.length, trigger: node("#capTrigger").listeners.length, more: node("#btnCapMore").listeners.length, delegated: documentListeners.length }));
+
+  // 方案 A 快捷时间：点胶囊 = 手选时间（写入时间框、置 triggerPicked、提示「已保留」），且绑定幂等
+  ok("快捷时间 bind 幂等：每个胶囊只挂 1 个 click", quickChips.every(c => c.listeners.length === 1 && c.listeners[0].name === "click"),
+    JSON.stringify(quickChips.map(c => c.listeners.length)));
+  capture.resetItemSheet();
+  node("#capText").value = "交周报";
+  node("#capHint").textContent = "";
+  node("#capSummary").textContent = "";
+  const beforeQuick = capture.snapshotItemForm();
+  quickChips[1].listeners[0].fn({});
+  const afterQuick = capture.snapshotItemForm();
+  ok("快捷时间点击：写入时间框并视同手选（triggerPicked=true）",
+    beforeQuick.triggerPicked === false && afterQuick.triggerPicked === true && node("#capTrigger").value === "2026-09-22T09:30",
+    JSON.stringify({ beforeQuick, afterQuick }));
+  ok("快捷时间点击：提示「已保留你选择的时间」且摘要同步刷新",
+    /^已保留你选择的时间：T\d+ · 可修改$/.test(node("#capHint").textContent) && node("#capSummary").textContent === "摘要",
+    JSON.stringify({ hint: node("#capHint").textContent, summary: node("#capSummary").textContent }));
+  node("#capText").value = "后天下午3点交周报"; capture.updateParseHint();
+  ok("快捷时间点击后继续打字：时间框不被解析结果覆盖", node("#capTrigger").value === "2026-09-22T09:30",
+    node("#capTrigger").value);
+}
+
+section("快捷时间 quickTimeAt — 纯函数边界");
+{
+  const q = appCaptureMod.quickTimeAt;
+  // 全部用本地时间构造，结果与运行机器时区无关
+  const at = (y, mo, d, h, mi, s) => new Date(y, mo - 1, d, h, mi || 0, s || 0);
+  const same = (kind, now, expect) => q(kind, now) === expect.getTime();
+  const show = (kind, now) => { const v = q(kind, now); return v == null ? String(v) : new Date(v).toString(); };
+  ok("quickTimeAt 已导出为函数", typeof q === "function");
+
+  const fri = at(2026, 9, 25, 10, 50, 37);   // 周五上午（真机验证当天）
+  ok("周五 10:50 · 今晚 → 当天 20:00", same("tonight", fri, at(2026, 9, 25, 20, 0)), show("tonight", fri));
+  ok("周五 10:50 · 明早 → 周六 09:00", same("tomorrow", fri, at(2026, 9, 26, 9, 0)), show("tomorrow", fri));
+  ok("周五 10:50 · 周六 → 次日周六 10:00", same("weekend", fri, at(2026, 9, 26, 10, 0)), show("weekend", fri));
+  ok("周五 10:50 · 下周一 → 9月28日 09:00", same("monday", fri, at(2026, 9, 28, 9, 0)), show("monday", fri));
+  ok("结果秒与毫秒归零", q("tomorrow", fri) % 60000 === 0);
+
+  ok("今晚：恰好 20:00 视为已过 → 21:00", same("tonight", at(2026, 9, 25, 20, 0), at(2026, 9, 25, 21, 0)), show("tonight", at(2026, 9, 25, 20, 0)));
+  ok("今晚：20:30 已过 → 顺延到 21:00（不改成明天 20:00）", same("tonight", at(2026, 9, 25, 20, 30), at(2026, 9, 25, 21, 0)), show("tonight", at(2026, 9, 25, 20, 30)));
+  ok("今晚：19:59 未过 → 当天 20:00", same("tonight", at(2026, 9, 25, 19, 59), at(2026, 9, 25, 20, 0)), show("tonight", at(2026, 9, 25, 19, 59)));
+  ok("今晚：23:40 → 次日 00:00（跨日由摘要如实展示）", same("tonight", at(2026, 9, 25, 23, 40), at(2026, 9, 26, 0, 0)), show("tonight", at(2026, 9, 25, 23, 40)));
+
+  ok("周六：周六 09:00 → 当天 10:00", same("weekend", at(2026, 9, 26, 9, 0), at(2026, 9, 26, 10, 0)), show("weekend", at(2026, 9, 26, 9, 0)));
+  ok("周六：周六恰好 10:00 → 下周六", same("weekend", at(2026, 9, 26, 10, 0), at(2026, 10, 3, 10, 0)), show("weekend", at(2026, 9, 26, 10, 0)));
+  ok("周六：周日 → 6 天后的周六", same("weekend", at(2026, 9, 27, 12, 0), at(2026, 10, 3, 10, 0)), show("weekend", at(2026, 9, 27, 12, 0)));
+
+  ok("下周一：周日 → 次日周一", same("monday", at(2026, 9, 27, 12, 0), at(2026, 9, 28, 9, 0)), show("monday", at(2026, 9, 27, 12, 0)));
+  ok("下周一：周一早上 08:00 仍取下周一（不取当天）", same("monday", at(2026, 9, 28, 8, 0), at(2026, 10, 5, 9, 0)), show("monday", at(2026, 9, 28, 8, 0)));
+
+  ok("跨月：9月30日 · 明早 → 10月1日 09:00", same("tomorrow", at(2026, 9, 30, 22, 0), at(2026, 10, 1, 9, 0)), show("tomorrow", at(2026, 9, 30, 22, 0)));
+  ok("跨年：12月31日 · 下周一 → 次年 1月4日", same("monday", at(2026, 12, 31, 10, 0), at(2027, 1, 4, 9, 0)), show("monday", at(2026, 12, 31, 10, 0)));
+
+  const frozen = at(2026, 9, 25, 10, 50);
+  const frozenTs = frozen.getTime();
+  ["tonight", "tomorrow", "weekend", "monday"].forEach(k => q(k, frozen));
+  ok("不修改传入的 now", frozen.getTime() === frozenTs);
+  ok("未知 kind → null", q("nextYear", fri) === null && q("", fri) === null);
 }
 
 /* parse */

@@ -198,12 +198,16 @@
     .card-actions button.primary:active { background: var(--signal-press); }
     .card-actions button.line { background: transparent; color: var(--signal); box-shadow: inset 0 0 0 1.5px var(--signal); }
     .card-actions button.ghost { color: var(--ink-2); }
-    .card-actions button.primary { flex: 1.25; }
-    .card-actions .act-sub { white-space: nowrap; font-size: 0.64rem; }
+    .card-actions button { min-width: 0; padding-left: 4px; padding-right: 4px; }
+    .card-actions button.primary { flex: 1.4; }
+    /* 主文字（含图标）永不折行：系统大字体下「我知道了」曾被拆成「我知道 / 了」。
+       副说明允许折行 —— 它是辅助信息，大字体下宁可两行也不能把按钮撑破。 */
+    .card-actions .act-label { white-space: nowrap; }
+    .card-actions .act-sub { font-size: 0.64rem; text-align: center; text-wrap: balance; }
     /* 首页大标题已经说了「有 N 件事」，到点区块的小标题不再重复 */
     #homeDue .sec-head { display: none; }
-    .act-label { display: inline-flex; align-items: center; gap: 5px; }
-    .act-label svg { width: 16px; height: 16px; flex-shrink: 0; }
+    .act-label { display: inline-flex; align-items: center; gap: 4px; }
+    .act-label svg { width: 1.1em; height: 1.1em; flex-shrink: 0; }
     /* UX-A01：动作按钮的短副说明 —— 不要求用户记住缩写 */
     .act-sub {
       display: block;
