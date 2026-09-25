@@ -1845,6 +1845,12 @@
             renderHomeNotice();
             // 设置入口依赖原生能力状态：状态读回或变化后重绘（未读回前入口不渲染）
             if (state && state.ui && state.ui.tab === "home") renderSetupEntry();
+            // 设置面板开着时同步刷新：用户从系统设置页返回、回前台补读到新状态后，
+            // 面板里各步骤的状态要跟着变（「精确提醒」一步的提示就承诺了「回到应用后自动更新」）
+            try {
+              const setupSheet = $("#sheetSetup");
+              if (setupSheet && setupSheet.classList && setupSheet.classList.contains("open")) renderSetupSheetBody();
+            } catch (_) {}
             if (origin === "reconcile") {
               if (undoNativeCheckPending) {
                 undoNativeCheckPending = false;

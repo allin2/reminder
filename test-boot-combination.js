@@ -4761,6 +4761,19 @@ ok("收口：N6/N7 的补丁同样只差那几行（N6 改 1 行、N7 删 4 条�
     appN.setNativeReminderStatus({ notifications: "granted" }, "permission");
     ok("清空之后再次到达同一结论 ⇒ 仍然不重写",
       (n.writesNow()["#homeNotice"] || 0) === noticeWrites2 + 1);
+
+    // 设置面板：开着时原生状态变化要同步重绘（从系统设置页返回、回前台补读后步骤状态要跟上）；
+    // 关着时不碰它，避免每读一次权限就白写一次面板
+    const setupBodyWrites0 = n.writesNow()["#setupBody"] || 0;
+    appN.setNativeReminderStatus({ exactAlarm: "denied" }, "resume-recheck");
+    ok("设置面板关着 ⇒ 原生状态变化不重绘面板",
+      (n.writesNow()["#setupBody"] || 0) === setupBodyWrites0, JSON.stringify(n.writesNow()));
+    n.node("#sheetSetup").classList.add("open");
+    appN.setNativeReminderStatus({ exactAlarm: "granted" }, "resume-recheck");
+    ok("设置面板开着 ⇒ 原生状态变化后面板立即重绘",
+      (n.writesNow()["#setupBody"] || 0) > setupBodyWrites0 && /允许精确提醒/.test(n.node("#setupBody").innerHTML),
+      (n.writesNow()["#setupBody"] || 0) + " / " + n.node("#setupBody").innerHTML.slice(0, 80));
+    n.node("#sheetSetup").classList.remove("open");
   }
 
   /* ---------- G2. O6：结构化签名没有分隔符碰撞 ---------- */
