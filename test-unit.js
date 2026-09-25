@@ -127,9 +127,11 @@ section("P2-G1 AppCapture — 表单会话、live 状态与幂等绑定");
     return nodes[id];
   }
   const chips = ["normal", "important", "critical"].map(p => { const n = node("chip-" + p); n.dataset.p = p; return n; });
+  const quickChips = ["tonight", "tomorrow", "weekend", "monday"].map(k => { const n = node("quick-" + k); n.dataset.quick = k; return n; });
   let lowConf = false; const calls = { refresh: 0, opens: [], details: [], timers: 0 };
   const capture = appCaptureMod.createAppCapture({
-    query: node, queryAll: sel => sel === "#capPriority .chip" || sel === "#capPriority .chip.on"
+    query: node, queryAll: sel => sel === "#capQuick [data-quick]" ? quickChips
+      : sel === "#capPriority .chip" || sel === "#capPriority .chip.on"
       ? (sel.endsWith(".on") ? chips.filter(c => c.classList.contains("on")) : chips) : [],
     getDocument: () => ({ addEventListener: (name, fn) => documentListeners.push({ name, fn }) }), getState: () => state,
     openSheet: id => calls.opens.push(id), refreshProjectSelects: () => { calls.refresh++; }, openDetail: id => calls.details.push(id),
@@ -168,6 +170,64 @@ section("P2-G1 AppCapture — 表单会话、live 状态与幂等绑定");
   ok("P2-G1 capture bind 对输入、重复、时间和更多选项幂等", node("#capText").listeners.length === 3 &&
     node("#capTrigger").listeners.length === 2 && node("#btnCapMore").listeners.length === 1 && documentListeners.length === 1,
     JSON.stringify({ text: node("#capText").listeners.length, trigger: node("#capTrigger").listeners.length, more: node("#btnCapMore").listeners.length, delegated: documentListeners.length }));
+
+  // 方案 A 快捷时间：点胶囊 = 手选时间（写入时间框、置 triggerPicked、提示「已保留」），且绑定幂等
+  ok("快捷时间 bind 幂等：每个胶囊只挂 1 个 click", quickChips.every(c => c.listeners.length === 1 && c.listeners[0].name === "click"),
+    JSON.stringify(quickChips.map(c => c.listeners.length)));
+  capture.resetItemSheet();
+  node("#capText").value = "交周报";
+  node("#capHint").textContent = "";
+  node("#capSummary").textContent = "";
+  const beforeQuick = capture.snapshotItemForm();
+  quickChips[1].listeners[0].fn({});
+  const afterQuick = capture.snapshotItemForm();
+  ok("快捷时间点击：写入时间框并视同手选（triggerPicked=true）",
+    beforeQuick.triggerPicked === false && afterQuick.triggerPicked === true && node("#capTrigger").value === "2026-09-22T09:30",
+    JSON.stringify({ beforeQuick, afterQuick }));
+  ok("快捷时间点击：提示「已保留你选择的时间」且摘要同步刷新",
+    /^已保留你选择的时间：T\d+ · 可修改$/.test(node("#capHint").textContent) && node("#capSummary").textContent === "摘要",
+    JSON.stringify({ hint: node("#capHint").textContent, summary: node("#capSummary").textContent }));
+  node("#capText").value = "后天下午3点交周报"; capture.updateParseHint();
+  ok("快捷时间点击后继续打字：时间框不被解析结果覆盖", node("#capTrigger").value === "2026-09-22T09:30",
+    node("#capTrigger").value);
+}
+
+section("快捷时间 quickTimeAt — 纯函数边界");
+{
+  const q = appCaptureMod.quickTimeAt;
+  // 全部用本地时间构造，结果与运行机器时区无关
+  const at = (y, mo, d, h, mi, s) => new Date(y, mo - 1, d, h, mi || 0, s || 0);
+  const same = (kind, now, expect) => q(kind, now) === expect.getTime();
+  const show = (kind, now) => { const v = q(kind, now); return v == null ? String(v) : new Date(v).toString(); };
+  ok("quickTimeAt 已导出为函数", typeof q === "function");
+
+  const fri = at(2026, 9, 25, 10, 50, 37);   // 周五上午（真机验证当天）
+  ok("周五 10:50 · 今晚 → 当天 20:00", same("tonight", fri, at(2026, 9, 25, 20, 0)), show("tonight", fri));
+  ok("周五 10:50 · 明早 → 周六 09:00", same("tomorrow", fri, at(2026, 9, 26, 9, 0)), show("tomorrow", fri));
+  ok("周五 10:50 · 周六 → 次日周六 10:00", same("weekend", fri, at(2026, 9, 26, 10, 0)), show("weekend", fri));
+  ok("周五 10:50 · 下周一 → 9月28日 09:00", same("monday", fri, at(2026, 9, 28, 9, 0)), show("monday", fri));
+  ok("结果秒与毫秒归零", q("tomorrow", fri) % 60000 === 0);
+
+  ok("今晚：恰好 20:00 视为已过 → 21:00", same("tonight", at(2026, 9, 25, 20, 0), at(2026, 9, 25, 21, 0)), show("tonight", at(2026, 9, 25, 20, 0)));
+  ok("今晚：20:30 已过 → 顺延到 21:00（不改成明天 20:00）", same("tonight", at(2026, 9, 25, 20, 30), at(2026, 9, 25, 21, 0)), show("tonight", at(2026, 9, 25, 20, 30)));
+  ok("今晚：19:59 未过 → 当天 20:00", same("tonight", at(2026, 9, 25, 19, 59), at(2026, 9, 25, 20, 0)), show("tonight", at(2026, 9, 25, 19, 59)));
+  ok("今晚：23:40 → 次日 00:00（跨日由摘要如实展示）", same("tonight", at(2026, 9, 25, 23, 40), at(2026, 9, 26, 0, 0)), show("tonight", at(2026, 9, 25, 23, 40)));
+
+  ok("周六：周六 09:00 → 当天 10:00", same("weekend", at(2026, 9, 26, 9, 0), at(2026, 9, 26, 10, 0)), show("weekend", at(2026, 9, 26, 9, 0)));
+  ok("周六：周六恰好 10:00 → 下周六", same("weekend", at(2026, 9, 26, 10, 0), at(2026, 10, 3, 10, 0)), show("weekend", at(2026, 9, 26, 10, 0)));
+  ok("周六：周日 → 6 天后的周六", same("weekend", at(2026, 9, 27, 12, 0), at(2026, 10, 3, 10, 0)), show("weekend", at(2026, 9, 27, 12, 0)));
+
+  ok("下周一：周日 → 次日周一", same("monday", at(2026, 9, 27, 12, 0), at(2026, 9, 28, 9, 0)), show("monday", at(2026, 9, 27, 12, 0)));
+  ok("下周一：周一早上 08:00 仍取下周一（不取当天）", same("monday", at(2026, 9, 28, 8, 0), at(2026, 10, 5, 9, 0)), show("monday", at(2026, 9, 28, 8, 0)));
+
+  ok("跨月：9月30日 · 明早 → 10月1日 09:00", same("tomorrow", at(2026, 9, 30, 22, 0), at(2026, 10, 1, 9, 0)), show("tomorrow", at(2026, 9, 30, 22, 0)));
+  ok("跨年：12月31日 · 下周一 → 次年 1月4日", same("monday", at(2026, 12, 31, 10, 0), at(2027, 1, 4, 9, 0)), show("monday", at(2026, 12, 31, 10, 0)));
+
+  const frozen = at(2026, 9, 25, 10, 50);
+  const frozenTs = frozen.getTime();
+  ["tonight", "tomorrow", "weekend", "monday"].forEach(k => q(k, frozen));
+  ok("不修改传入的 now", frozen.getTime() === frozenTs);
+  ok("未知 kind → null", q("nextYear", fri) === null && q("", fri) === null);
 }
 
 /* parse */
@@ -2586,6 +2646,29 @@ section("feedback — 动作语义与术语");
   ok("未回答测试反馈不等于失败或成功", fb.testFeedbackVerdict(undefined).ok === null);
   ok("不确定既不算失败也不算成功", fb.testFeedbackVerdict("unsure").ok === null);
   ok("区分「没收到」与「不确定」", fb.testFeedbackVerdict("missed").ok === false);
+
+  // 防冻结是首页必须提示的一步；首页按 homeDone 判断：点进过设置页不算解决
+  ok("防冻结：标记为 essential（首页会提示）", background.essential === true);
+  ok("防冻结：悬浮窗与 60 秒测试仍是可选步骤",
+    stAll.steps.find(s => s.id === "overlay").essential !== true && stAll.steps.find(s => s.id === "test").essential !== true);
+  ok("防冻结：点进过设置页 ⇒ 向导视为完成（done），但首页仍未解决（homeDone=false）",
+    visitedBackground.done === true && visitedBackground.homeDone === false, JSON.stringify(visitedBackground));
+  ok("防冻结：diag 回读到忽略电池优化 ⇒ 首页视为已解决",
+    devPartial.steps.find(s => s.id === "background").homeDone === true);
+  ok("防冻结：diag 回读未忽略电池优化 ⇒ 首页未解决", devBackground.homeDone === false);
+  const bgHeard = fb.setupSteps(
+    { notifications: "granted", exactAlarm: "granted", diag: { ignoringBatteryOptimizations: false } },
+    { backgroundVisited: true, testRun: { startedAt: 1000, feedbackAt: 1100 }, testFeedback: { value: "heard", at: 1100 } }
+  ).steps.find(s => s.id === "background");
+  ok("防冻结：60 秒测试被确认（听到了）⇒ 首页视为已解决（真实效果优先于无法回读的厂商开关）",
+    bgHeard.homeDone === true && bgHeard.verified === false);
+  const bgMissed = fb.setupSteps(
+    { notifications: "granted", exactAlarm: "granted" },
+    { backgroundVisited: true, testRun: { startedAt: 1000, feedbackAt: 1100 }, testFeedback: { value: "missed", at: 1100 } }
+  ).steps.find(s => s.id === "background");
+  ok("防冻结：60 秒测试「没收到」⇒ 首页仍未解决", bgMissed.homeDone === false);
+  ok("除防冻结外，其余步骤不带 homeDone（首页沿用 done）",
+    stAll.steps.filter(s => s.id !== "background").every(s => !Object.prototype.hasOwnProperty.call(s, "homeDone")));
 }
 
 /* ---------- UX-T03：原生送达证据（lib/delivery-evidence.js） ---------- */
@@ -2809,7 +2892,10 @@ section("P2-E AppSetup — 求值、live 注入、60 秒测试与停铃边界");
     let status = options.status || { notifications: "granted", notificationsGranted: true, exactAlarm: "granted", scheduledAlarmIds: [] };
     let feedback = options.feedback || {
       TEST_FEEDBACK: [{ value: "heard", label: "我听到了" }, { value: "missed", label: "没收到" }],
-      setupSteps: () => ({ steps: [{ id: "test", title: "60 秒测试", why: "验证", denyImpact: "不影响记录", done: false }], next: { id: "test" } }),
+      setupSteps: () => ({ steps: [
+        { id: "notify", essential: true, title: "允许发通知", why: "通知", denyImpact: "看不到提醒", action: "去授权", done: false },
+        { id: "test", title: "60 秒测试", why: "验证", denyImpact: "不影响记录", done: false }
+      ], next: { id: "notify" } }),
       testFeedbackVerdict: value => value ? { text: value } : null
     };
     const calls = { saves: 0, schedules: [], cancels: [], stops: [], toasts: [], openSheets: 0, writes: 0, logs: [] };
@@ -2877,6 +2963,69 @@ section("P2-E AppSetup — 求值、live 注入、60 秒测试与停铃边界");
   cold.app.renderSetupEntry();
   ok("设置入口：状态读回后重绘才出现卡片",
     /setupEntry/.test(cold.nodes["#homeSetup"].innerHTML), cold.nodes["#homeSetup"].innerHTML);
+
+  // 首页卡片只为关键缺口（essential）出现；只剩可选步骤 / 测试时不再常驻首页
+  const optionalOnly = setupFixture({
+    native: { isNativeAndroid: () => true }, settings: { setupPromptStarted: true },
+    feedback: {
+      TEST_FEEDBACK: [],
+      setupSteps: () => ({ steps: [
+        { id: "notify", essential: true, done: true, title: "允许发通知" },
+        { id: "overlay", done: false, title: "允许锁屏弹窗与悬浮窗" },
+        { id: "test", done: false, title: "60 秒测试" }
+      ], next: { id: "overlay" } }),
+      testFeedbackVerdict: () => null
+    }
+  });
+  optionalOnly.app.renderSetupEntry();
+  ok("设置入口：关键权限齐了、只剩可选步骤时首页不出卡片",
+    optionalOnly.nodes["#homeSetup"].innerHTML === "", optionalOnly.nodes["#homeSetup"].innerHTML);
+
+  const dismissable = setupFixture({ native: { isNativeAndroid: () => true }, settings: { setupPromptStarted: true } });
+  dismissable.app.renderSetupEntry();
+  ok("设置入口：卡片带关闭按钮", /setupEntryDismiss/.test(dismissable.nodes["#homeSetup"].innerHTML));
+  const cardHtml = dismissable.nodes["#homeSetup"].innerHTML;
+  dismissable.state.settings.setupDismissed = true;
+  dismissable.app.renderSetupEntry();
+  ok("设置入口：关闭（setupDismissed）后首页卡片消失",
+    /setupEntry/.test(cardHtml) && dismissable.nodes["#homeSetup"].innerHTML === "",
+    dismissable.nodes["#homeSetup"].innerHTML);
+
+  // 防冻结接入真实 Feedback.setupSteps：点进过设置页不关首页卡片；系统回读或测试确认后才消失
+  const realFeedback = { TEST_FEEDBACK: feedbackMod.TEST_FEEDBACK, setupSteps: feedbackMod.setupSteps,
+    testFeedbackVerdict: feedbackMod.testFeedbackVerdict };
+  const bgCard = setupFixture({
+    native: { isNativeAndroid: () => true }, settings: { setupPromptStarted: true, backgroundVisited: true },
+    status: { notifications: "granted", exactAlarm: "granted", scheduledAlarmIds: [],
+      diag: { canDrawOverlays: true, canUseFullScreenIntent: true, ignoringBatteryOptimizations: false } },
+    feedback: realFeedback
+  });
+  bgCard.app.renderSetupEntry();
+  const bgHtml = bgCard.nodes["#homeSetup"].innerHTML;
+  ok("防冻结：通知与精确提醒都已授权、只点进过后台设置页 ⇒ 首页仍出卡片，下一步是防冻结",
+    /还差 1 步/.test(bgHtml) && /允许完全后台运行/.test(bgHtml) && /setupEntryDismiss/.test(bgHtml), bgHtml);
+  bgCard.setStatus({ notifications: "granted", exactAlarm: "granted", scheduledAlarmIds: [],
+    diag: { canDrawOverlays: true, canUseFullScreenIntent: true, ignoringBatteryOptimizations: true } });
+  bgCard.app.renderSetupEntry();
+  ok("防冻结：系统回读到忽略电池优化后首页卡片消失", bgCard.nodes["#homeSetup"].innerHTML === "",
+    bgCard.nodes["#homeSetup"].innerHTML);
+  const bgTested = setupFixture({
+    native: { isNativeAndroid: () => true },
+    settings: { setupPromptStarted: true, backgroundVisited: true,
+      testRun: { startedAt: 1000, feedbackAt: 1100 }, testFeedback: { value: "heard", at: 1100 } },
+    status: { notifications: "granted", exactAlarm: "granted", scheduledAlarmIds: [],
+      diag: { ignoringBatteryOptimizations: false } },
+    feedback: realFeedback
+  });
+  bgTested.app.renderSetupEntry();
+  ok("防冻结：60 秒测试已确认听到 ⇒ 即使厂商开关无法回读，首页也不再提示",
+    bgTested.nodes["#homeSetup"].innerHTML === "", bgTested.nodes["#homeSetup"].innerHTML);
+  bgCard.setStatus({ notifications: "granted", exactAlarm: "granted", scheduledAlarmIds: [],
+    diag: { ignoringBatteryOptimizations: false } });
+  bgCard.app.renderSetupEntry();
+  bgCard.state.settings.setupDismissed = true;
+  bgCard.app.renderSetupEntry();
+  ok("防冻结：用户关掉卡片后不再出现（不会成为关不掉的常驻提示）", bgCard.nodes["#homeSetup"].innerHTML === "");
 
   const doneSetup = beginAsyncSection();
   (async () => {

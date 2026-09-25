@@ -328,7 +328,7 @@
       "lib/feedback.js 未加载（或整个模块是 null）—— 动作语义与撤销窗口缺失，撤销会退化成兜底时长"],
     ["Feedback.actionSpec", "function", "lib/feedback.js 导出被破坏（动作语义）"],
     ["Feedback.setupSteps", "function",
-      "lib/feedback.js 导出被破坏 —— 「提醒还没准备好」的设置向导会整块消失（不报错，只是少几步）"],
+      "lib/feedback.js 导出被破坏 —— 首页的提醒设置卡片与设置清单会整块消失（不报错，只是少几步）"],
     ["Feedback.testFeedbackVerdict", "function", "lib/feedback.js 导出被破坏（测试反馈判定）"],
     ["Feedback.saveFeedback", "function", "lib/feedback.js 导出被破坏（反馈落库）"],
     /* --- 下面两条是**别名改制后才浮出来**的真实依赖（2026-09-21 第三轮）---
