@@ -1,0 +1,14 @@
+{
+  "groups": {
+    "titles": [
+      "帮助",
+      "提醒",
+      "整理",
+      "通用",
+      "数据"
+    ],
+    "hasGuideBtn": true,
+    "hasPrdBtn": false
+  },
+  "guideOpen": true
+}

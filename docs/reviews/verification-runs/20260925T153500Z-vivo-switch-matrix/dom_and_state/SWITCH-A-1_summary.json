@@ -1,0 +1,27 @@
+{
+  "title": "SWITCH-A-1",
+  "config": "A",
+  "trial": 1,
+  "itemId": "i_srbzyaqwmuh4oo5m",
+  "t0": 1790350874740,
+  "t0_str": "2026-09-25 23:41:14",
+  "triggerAt": 1790351040000,
+  "triggerAt_str": "2026-09-25 23:44:00",
+  "lockTime": 1790350883230,
+  "lockTime_str": "2026-09-25 23:41:23",
+  "alarmScheduledAtT3s": true,
+  "deliveredInWindow": false,
+  "wokeSpontaneous": false,
+  "alarmActivityPresentInWindow": false,
+  "audioPlayingInWindow": false,
+  "postWakeDeliverTime": 1790351162811,
+  "postWakeDelayMs": 2080,
+  "frozenLines": [
+    "Line 11004: 09-25 23:41:24.797  1737  2108 I am_app_frozen: [0,10285,space.alliswell.inbox,from fast_freezer]"
+  ],
+  "wakeIdleLines": [
+    "Line 11839: 09-25 23:44:00.052  1737  2442 I device_idle_wake_from_idle: [0,*walarm*:space.alliswell.inbox/.AlarmRingService]",
+    "Line 11840: 09-25 23:44:00.052  1737  2442 I device_idle_wake_from_idle: [0,*walarm*:space.alliswell.inbox.ACTION_TEST_ALARM]"
+  ],
+  "result": "FAIL (fast_freezer frozen, delivered 2080ms after manual wakeup)"
+}

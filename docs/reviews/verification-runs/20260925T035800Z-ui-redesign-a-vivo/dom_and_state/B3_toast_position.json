@@ -1,0 +1,22 @@
+{
+  "toastText": "已保存你的提醒\n    前往归档\n    撤销",
+  "toastClass": "toast show",
+  "tRect": {
+    "top": 502.21875,
+    "bottom": 547.3333358764648,
+    "left": 16,
+    "right": 344,
+    "width": 328,
+    "height": 45.114585876464844
+  },
+  "fRect": {
+    "top": 559.3333740234375,
+    "bottom": 609.3333740234375,
+    "left": 14,
+    "right": 346,
+    "width": 332,
+    "height": 50
+  },
+  "isAboveFab": true,
+  "gap": 12.000038146972656
+}

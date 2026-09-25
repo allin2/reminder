@@ -1,0 +1,144 @@
+{
+  "beginner": {
+    "bodyClass": "mode-beginner",
+    "subCount": 9,
+    "subDisplays": [
+      "block",
+      "block",
+      "block",
+      "block",
+      "block",
+      "block",
+      "block",
+      "block",
+      "block"
+    ],
+    "btnOverflow": [
+      {
+        "text": "稍后改到具体时间",
+        "scrollWidth": 83,
+        "clientWidth": 83,
+        "overflow": false
+      },
+      {
+        "text": "我知道了停止本轮 · 仍未完成",
+        "scrollWidth": 113,
+        "clientWidth": 113,
+        "overflow": false
+      },
+      {
+        "text": "完成结束并归档",
+        "scrollWidth": 83,
+        "clientWidth": 83,
+        "overflow": false
+      },
+      {
+        "text": "稍后改到具体时间",
+        "scrollWidth": 83,
+        "clientWidth": 83,
+        "overflow": false
+      },
+      {
+        "text": "我知道了停止本轮 · 仍未完成",
+        "scrollWidth": 113,
+        "clientWidth": 113,
+        "overflow": false
+      },
+      {
+        "text": "完成结束并归档",
+        "scrollWidth": 83,
+        "clientWidth": 83,
+        "overflow": false
+      },
+      {
+        "text": "稍后改到具体时间",
+        "scrollWidth": 83,
+        "clientWidth": 83,
+        "overflow": false
+      },
+      {
+        "text": "我知道了停止本轮 · 仍未完成",
+        "scrollWidth": 113,
+        "clientWidth": 113,
+        "overflow": false
+      },
+      {
+        "text": "完成结束并归档",
+        "scrollWidth": 83,
+        "clientWidth": 83,
+        "overflow": false
+      }
+    ]
+  },
+  "normal": {
+    "bodyClass": "mode-normal",
+    "subCount": 9,
+    "subDisplays": [
+      "none",
+      "none",
+      "none",
+      "none",
+      "none",
+      "none",
+      "none",
+      "none",
+      "none"
+    ],
+    "btnOverflow": [
+      {
+        "text": "稍后改到具体时间",
+        "scrollWidth": 83,
+        "clientWidth": 83,
+        "overflow": false
+      },
+      {
+        "text": "我知道了停止本轮 · 仍未完成",
+        "scrollWidth": 113,
+        "clientWidth": 113,
+        "overflow": false
+      },
+      {
+        "text": "完成结束并归档",
+        "scrollWidth": 83,
+        "clientWidth": 83,
+        "overflow": false
+      },
+      {
+        "text": "稍后改到具体时间",
+        "scrollWidth": 83,
+        "clientWidth": 83,
+        "overflow": false
+      },
+      {
+        "text": "我知道了停止本轮 · 仍未完成",
+        "scrollWidth": 113,
+        "clientWidth": 113,
+        "overflow": false
+      },
+      {
+        "text": "完成结束并归档",
+        "scrollWidth": 83,
+        "clientWidth": 83,
+        "overflow": false
+      },
+      {
+        "text": "稍后改到具体时间",
+        "scrollWidth": 83,
+        "clientWidth": 83,
+        "overflow": false
+      },
+      {
+        "text": "我知道了停止本轮 · 仍未完成",
+        "scrollWidth": 113,
+        "clientWidth": 113,
+        "overflow": false
+      },
+      {
+        "text": "完成结束并归档",
+        "scrollWidth": 83,
+        "clientWidth": 83,
+        "overflow": false
+      }
+    ]
+  }
+}

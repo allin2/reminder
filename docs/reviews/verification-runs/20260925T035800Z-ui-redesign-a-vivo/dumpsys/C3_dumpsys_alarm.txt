@@ -1,0 +1,36 @@
+    RTC_WAKEUP #25: Alarm{f351ba2 type 0 origWhen 1790312588703 flags 3 windowLength 0 whenElapsed 534644870 maxWhenElapsed 534644870 repeatInterval 0 tag=*walarm*:space.alliswell.inbox.ACTION_TEST_ALARM originWhenElapsed 534644870 originWindowLength 0 setAtTime=2026-09-25 04:33:09 policyWhenElapsed:[534644870, 532845647, 0, 0, 0] procName=space.alliswell.inbox space.alliswell.inbox}
+      tag=*walarm*:space.alliswell.inbox.ACTION_TEST_ALARM
+        showIntent=PendingIntent{bbee198: PendingIntentRecord{c928df1 space.alliswell.inbox startActivity}}
+      operation=PendingIntent{b0c0dd6: PendingIntentRecord{9dd4857 space.alliswell.inbox broadcastIntent}}
+    RTC_WAKEUP #26: Alarm{5f5a969 type 0 origWhen 1790312588703 flags 3 windowLength 0 whenElapsed 534644870 maxWhenElapsed 534644870 repeatInterval 0 tag=*walarm*:space.alliswell.inbox/.AlarmRingService originWhenElapsed 534644870 originWindowLength 0 setAtTime=2026-09-25 04:33:09 policyWhenElapsed:[534644870, 532845650, 0, 0, 0] procName=space.alliswell.inbox space.alliswell.inbox}
+      tag=*walarm*:space.alliswell.inbox/.AlarmRingService
+        showIntent=PendingIntent{98c7f44: PendingIntentRecord{c928df1 space.alliswell.inbox startActivity}}
+      operation=PendingIntent{231182d: PendingIntentRecord{4133162 space.alliswell.inbox startForegroundService}}
+    RTC_WAKEUP #72: Alarm{759f663 type 0 origWhen 1790343000000 flags 5 windowLength 0 whenElapsed 565056167 maxWhenElapsed 565056167 repeatInterval 0 tag=*walarm*:space.alliswell.inbox/com.capacitorjs.plugins.localnotifications.TimedNotificationPublisher originWhenElapsed 565056167 originWindowLength 0 setAtTime=2026-09-25 04:33:31 policyWhenElapsed:[565056167, 532867429, 0, 532867429, 0] procName=space.alliswell.inbox space.alliswell.inbox}
+      tag=*walarm*:space.alliswell.inbox/com.capacitorjs.plugins.localnotifications.TimedNotificationPublisher
+      operation=PendingIntent{4ca72dc: PendingIntentRecord{b5a1fe5 space.alliswell.inbox broadcastIntent}}
+    RTC_WAKEUP #78: Alarm{1d04bea type 0 origWhen 1790346600000 flags 5 windowLength 0 whenElapsed 568656167 maxWhenElapsed 568656167 repeatInterval 0 tag=*walarm*:space.alliswell.inbox/com.capacitorjs.plugins.localnotifications.TimedNotificationPublisher originWhenElapsed 568656167 originWindowLength 0 setAtTime=2026-09-25 04:33:31 policyWhenElapsed:[568656167, 532867434, 0, 532867434, 0] procName=space.alliswell.inbox space.alliswell.inbox}
+      tag=*walarm*:space.alliswell.inbox/com.capacitorjs.plugins.localnotifications.TimedNotificationPublisher
+      operation=PendingIntent{beced6b: PendingIntentRecord{ff9e0c8 space.alliswell.inbox broadcastIntent}}
+    RTC_WAKEUP #167: Alarm{71c652a type 0 origWhen 1790384400012 flags 3 windowLength 0 whenElapsed 606456179 maxWhenElapsed 606456179 repeatInterval 0 tag=*walarm*:space.alliswell.inbox.ACTION_TEST_ALARM originWhenElapsed 606456179 originWindowLength 0 setAtTime=2026-09-25 04:33:31 policyWhenElapsed:[606456179, 532867363, 0, 0, 0] procName=space.alliswell.inbox space.alliswell.inbox}
+      tag=*walarm*:space.alliswell.inbox.ACTION_TEST_ALARM
+        showIntent=PendingIntent{bca00e0: PendingIntentRecord{e86cf99 space.alliswell.inbox startActivity}}
+      operation=PendingIntent{bfd325e: PendingIntentRecord{2db463f space.alliswell.inbox broadcastIntent}}
+    RTC_WAKEUP #168: Alarm{bf0d8b8 type 0 origWhen 1790384400012 flags 3 windowLength 0 whenElapsed 606456179 maxWhenElapsed 606456179 repeatInterval 0 tag=*walarm*:space.alliswell.inbox/.AlarmRingService originWhenElapsed 606456179 originWindowLength 0 setAtTime=2026-09-25 04:33:31 policyWhenElapsed:[606456179, 532867364, 0, 0, 0] procName=space.alliswell.inbox space.alliswell.inbox}
+      tag=*walarm*:space.alliswell.inbox/.AlarmRingService
+        showIntent=PendingIntent{a7e4b0c: PendingIntentRecord{e86cf99 space.alliswell.inbox startActivity}}
+      operation=PendingIntent{9ebcc55: PendingIntentRecord{66166a space.alliswell.inbox startForegroundService}}
+  Next wake from idle: Alarm{f351ba2 type 0 origWhen 1790312588703 flags 3 windowLength 0 whenElapsed 534644870 maxWhenElapsed 534644870 repeatInterval 0 tag=*walarm*:space.alliswell.inbox.ACTION_TEST_ALARM originWhenElapsed 534644870 originWindowLength 0 setAtTime=2026-09-25 04:33:09 policyWhenElapsed:[534644870, 532845647, 0, 0, 0] procName=space.alliswell.inbox space.alliswell.inbox}
+    tag=*walarm*:space.alliswell.inbox.ACTION_TEST_ALARM
+      showIntent=PendingIntent{bbee198: PendingIntentRecord{c928df1 space.alliswell.inbox startActivity}}
+    operation=PendingIntent{b0c0dd6: PendingIntentRecord{9dd4857 space.alliswell.inbox broadcastIntent}}
+          type=RTC_WAKEUP tag=*walarm*:space.alliswell.inbox/com.capacitorjs.plugins.localnotifications.TimedNotificationPublisher 
+          type=RTC_WAKEUP tag=*walarm*:space.alliswell.inbox/com.capacitorjs.plugins.localnotifications.TimedNotificationPublisher 
+          type=RTC_WAKEUP tag=*walarm*:space.alliswell.inbox/com.capacitorjs.plugins.localnotifications.TimedNotificationPublisher 
+          type=RTC_WAKEUP tag=*walarm*:space.alliswell.inbox/com.capacitorjs.plugins.localnotifications.TimedNotificationPublisher 
+          type=RTC_WAKEUP tag=*walarm*:space.alliswell.inbox/com.capacitorjs.plugins.localnotifications.TimedNotificationPublisher 
+          type=RTC_WAKEUP tag=*walarm*:space.alliswell.inbox/com.capacitorjs.plugins.localnotifications.TimedNotificationPublisher 
+          type=RTC_WAKEUP tag=*walarm*:space.alliswell.inbox/com.capacitorjs.plugins.localnotifications.TimedNotificationPublisher 
+          type=RTC_WAKEUP tag=*walarm*:space.alliswell.inbox/com.capacitorjs.plugins.localnotifications.TimedNotificationPublisher 
+          type=RTC_WAKEUP tag=*walarm*:space.alliswell.inbox/com.capacitorjs.plugins.localnotifications.TimedNotificationPublisher 
+          type=RTC_WAKEUP tag=*walarm*:space.alliswell.inbox/com.capacitorjs.plugins.localnotifications.TimedNotificationPublisher 

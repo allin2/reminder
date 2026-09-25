@@ -1,0 +1,62 @@
+[
+  {
+    "id": "i_24rm31samufjri6d",
+    "pseudo_title": "REDACTED_USER_ITEM_1",
+    "status": "archived",
+    "rev": 2,
+    "triggerAt": 1790255278802,
+    "snoozedAt": null,
+    "snoozeCount": 0,
+    "acknowledgedAt": null
+  },
+  {
+    "id": "i_t6t8kjrbmufskit9",
+    "pseudo_title": "REDACTED_USER_ITEM_2",
+    "status": "due",
+    "rev": 1,
+    "triggerAt": 1790292600000,
+    "snoozedAt": null,
+    "snoozeCount": 0,
+    "acknowledgedAt": null
+  },
+  {
+    "id": "i_ve90y9vxmufskxvx",
+    "pseudo_title": "REDACTED_USER_ITEM_3",
+    "status": "due",
+    "rev": 1,
+    "triggerAt": 1790292600000,
+    "snoozedAt": null,
+    "snoozeCount": 0,
+    "acknowledgedAt": null
+  },
+  {
+    "id": "i_ksgrct0wmufslps2",
+    "pseudo_title": "REDACTED_USER_ITEM_4",
+    "status": "waiting",
+    "rev": 1,
+    "triggerAt": 1790343000000,
+    "snoozedAt": null,
+    "snoozeCount": 0,
+    "acknowledgedAt": null
+  },
+  {
+    "id": "i_32p3og4nmufsly70",
+    "pseudo_title": "REDACTED_USER_ITEM_5",
+    "status": "archived",
+    "rev": 2,
+    "triggerAt": 1790270129172,
+    "snoozedAt": null,
+    "snoozeCount": 0,
+    "acknowledgedAt": null
+  },
+  {
+    "id": "i_jaggipg8mufsmipq",
+    "pseudo_title": "REDACTED_USER_ITEM_6",
+    "status": "acknowledged",
+    "rev": 2,
+    "triggerAt": 1790270157765,
+    "snoozedAt": null,
+    "snoozeCount": 0,
+    "acknowledgedAt": 1790270170462
+  }
+]

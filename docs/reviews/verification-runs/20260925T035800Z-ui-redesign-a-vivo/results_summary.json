@@ -1,0 +1,223 @@
+{
+  "A1": {
+    "title": "首页到点标题、眉题与色条",
+    "status": "PASS",
+    "explanation": "标题符合预期（'有 <em>4 件事</em>需要你看一眼'，数字带 em）；眉题日期正确显示为 '9月25日 周五'；色条颜色正确：关键=rgb(143, 58, 58) (红)，重要=rgb(154, 107, 18) (琥珀)；到点区块 '#homeDue .sec-head' 隐藏 (display:none)，无重复小标题",
+    "evidence_files": [
+      "screenshots/A1_home_due_cards.png",
+      "dom_and_state/A1_home_due_cards.json"
+    ]
+  },
+  "A2": {
+    "title": "点「我知道了」进入已看到未完成且数字减1",
+    "status": "PASS",
+    "explanation": "标题数字减少为 3 ('有 <em>3 件事</em>需要你看一眼')；关键事项成功进入「已看到未完成」折叠行并离开到点区",
+    "evidence_files": [
+      "screenshots/A2_home_after_ack.png",
+      "dom_and_state/A2_home_after_ack.json"
+    ]
+  },
+  "A3": {
+    "title": "点「完成」归档并在「未来 → 已归档」可见",
+    "status": "PASS",
+    "explanation": "归档状态=True，已在归档列表中验证到已完成事项",
+    "evidence_files": [
+      "screenshots/A3_home_after_done.png",
+      "screenshots/A3_future_archived_list.png",
+      "dom_and_state/A3_future_archived.json"
+    ]
+  },
+  "A4": {
+    "title": "点「稍后」弹出面板并选时间后离开首页",
+    "status": "PASS",
+    "explanation": "卡片离开首页=True，事项状态=snoozed",
+    "evidence_files": [
+      "screenshots/A4_snooze_sheet.png",
+      "screenshots/A4_home_after_snooze.png",
+      "dom_and_state/A4_snooze_result.json"
+    ]
+  },
+  "A5": {
+    "title": "首页清空后标题「现在很安静」与眉题「· 可以放心忘记」",
+    "status": "PASS",
+    "explanation": "标题='现在很安静'，眉题='9月25日 周五 · 可以放心忘记'",
+    "evidence_files": [
+      "screenshots/A5_home_quiet.png",
+      "dom_and_state/A5_home_quiet.json"
+    ]
+  },
+  "A6": {
+    "title": "初学者/正常模式切换与360dp按钮文字排版",
+    "status": "PASS",
+    "explanation": "初学者模式下副说明小字正常显示；正常模式下副说明小字已隐藏 (display:none)；在 360dp 视口内，两种模式下的三个按钮均无溢出、截断或非预期换行",
+    "evidence_files": [
+      "screenshots/A6_beginner_mode.png",
+      "screenshots/A6_normal_mode.png",
+      "dom_and_state/A6_mode_checks.json"
+    ]
+  },
+  "B1": {
+    "title": "底部输入条多页面可见性与安全区布局",
+    "status": "PASS",
+    "explanation": "home页输入条可见；future页输入条可见；notes页输入条可见；「我的」页输入条成功隐藏；输入条位于导航栏上方（间距 10.0px），未遮压导航；列表滚到底部时，最后一条完整露出，不被输入条遮挡",
+    "evidence_files": [
+      "screenshots/B1_tab_home.png",
+      "screenshots/B1_tab_future.png",
+      "screenshots/B1_tab_notes.png",
+      "screenshots/B1_tab_me.png",
+      "screenshots/B1_future_scroll_bottom.png",
+      "dom_and_state/B1_fab_layout.json"
+    ]
+  },
+  "B2": {
+    "title": "点输入条打开录入面板且自动获得焦点",
+    "status": "PASS",
+    "explanation": "面板打开=True，聚焦元素=capText，保存按钮可见=True",
+    "evidence_files": [
+      "screenshots/B2_capture_sheet_open.png",
+      "dom_and_state/B2_capture_sheet.json"
+    ]
+  },
+  "B3": {
+    "title": "toast 提示出现在输入条上方不被遮挡",
+    "status": "PASS",
+    "explanation": "toast位于输入条上方=True (间距 12.0px)",
+    "evidence_files": [
+      "screenshots/B3_toast_position.png",
+      "dom_and_state/B3_toast_position.json"
+    ]
+  },
+  "C1": {
+    "title": "四个快捷时间按钮计算与填入",
+    "status": "PASS",
+    "explanation": "今晚 20:00 = 2026-09-25T20:00 正确；明早 9:00 = 2026-09-26T09:00 正确；周六 10:00 = 2026-09-26T10:00 正确；下周一 9:00 = 2026-09-28T09:00 正确",
+    "evidence_files": [
+      "screenshots/C1_quick_tonight.png",
+      "screenshots/C1_quick_tomorrow.png",
+      "screenshots/C1_quick_weekend.png",
+      "screenshots/C1_quick_monday.png",
+      "dom_and_state/C1_quick_times.json"
+    ]
+  },
+  "C2": {
+    "title": "快捷时间锁定后输入文本不被覆盖",
+    "status": "PASS",
+    "explanation": "时间值=2026-09-26T09:00（预期保持明早09:00），提示文案='已保留你选择的时间：明天 09:00 · 可修改'",
+    "evidence_files": [
+      "screenshots/C2_retained_time.png",
+      "dom_and_state/C2_retained_time.json"
+    ]
+  },
+  "C3": {
+    "title": "快捷时间保存落库与系统闹钟排程写入",
+    "status": "PASS",
+    "explanation": "事项落库成功(id=i_cznlz7fdmuggtyrh)，dumpsys alarm 检测到 36 条原生闹钟排程",
+    "evidence_files": [
+      "dumpsys/C3_dumpsys_alarm.txt"
+    ]
+  },
+  "C4": {
+    "title": "今晚20:00已过顺延至下一个整点",
+    "status": "SKIP",
+    "explanation": "受实机测试环境限制（当前设备时间中午 < 20:00，严禁修改系统时钟），真实真机UI跳过；纯逻辑断言通过（20:30 自动顺延到 21:00）",
+    "evidence_files": [
+      "dom_and_state/C4_unit_rollover.json"
+    ]
+  },
+  "D1": {
+    "title": "未来页按今天/明天/本周/下周/更晚正确分组",
+    "status": "PASS",
+    "explanation": "分组 '今天' 正确包含 '[UI验证] 未来分组-今天'；分组 '明天' 正确包含 '[UI验证] 未来分组-明天'；分组 '本周' 正确包含 '[UI验证] 未来分组-本周'；分组 '下周' 正确包含 '[UI验证] 未来分组-下周'；分组 '更晚' 正确包含 '[UI验证] 未来分组-更晚'",
+    "evidence_files": [
+      "screenshots/D1_future_groups.png",
+      "dom_and_state/D1_future_groups.json"
+    ]
+  },
+  "D2": {
+    "title": "未来页行详情、修改独立触发与日历筛选清除",
+    "status": "PASS",
+    "explanation": "整行点开详情=True，修改按钮独立打开编辑=True且不同时开详情=True，日历筛选及清除恢复=True",
+    "evidence_files": [
+      "screenshots/D2_row_click_detail.png",
+      "screenshots/D2_edit_click_edit_sheet.png",
+      "screenshots/D2_calendar_filtered.png",
+      "screenshots/D2_calendar_cleared.png",
+      "dom_and_state/D2_interaction_checks.json"
+    ]
+  },
+  "D3": {
+    "title": "未来行超长标题单行省略与左侧色条",
+    "status": "PASS",
+    "explanation": "超长文本省略 text-overflow=ellipsis (whiteSpace=nowrap)，色条关键=rgb(143, 58, 58)，重要=rgb(154, 107, 18)",
+    "evidence_files": [
+      "screenshots/D3_long_title_and_strips.png",
+      "dom_and_state/D3_row_styles.json"
+    ]
+  },
+  "E1": {
+    "title": "缺权限时首页设置卡片展示与关闭持久化",
+    "status": "WARN",
+    "explanation": "真机当前权限已齐全（通知=granted，精确闹钟=granted），按纪律不改系统权限，首页按设计不展示缺口卡片；代码已实现 setupDismissed 持久化与 × 关闭",
+    "evidence_files": [
+      "screenshots/E1_home_setup_card.png",
+      "dom_and_state/E1_setup_status.json"
+    ]
+  },
+  "E2": {
+    "title": "「我的」页分组、使用说明与PRD移除",
+    "status": "PASS",
+    "explanation": "分组标题齐全且严格匹配（帮助/提醒/整理/通用/数据）；「使用说明」面板正常弹出；已确认 PRD 入口彻底移除",
+    "evidence_files": [
+      "screenshots/E2_me_tab_groups.png",
+      "screenshots/E2_user_guide_sheet.png",
+      "dom_and_state/E2_me_checks.json"
+    ]
+  },
+  "F1": {
+    "title": "关键事项全屏闹钟触发与我知道了回流",
+    "status": "PASS",
+    "explanation": "到点唤醒形式=全屏AlarmActivity（全屏=True），点「我知道了」后事项状态=acknowledged，已离开到点区=True，如实记录 OEM 限制与回流成功",
+    "evidence_files": [
+      "screenshots/F1_alarm_triggered.png",
+      "screenshots/F1_home_after_ack_alarm.png",
+      "dom_and_state/F1_alarm_result.json"
+    ]
+  },
+  "F2": {
+    "title": "普通事项切换至通知模式与投递渠道",
+    "status": "PASS",
+    "explanation": "系统通知通道检测到 attention-normal-v2=True，捕获到 27 条通知条目；通道设置已安全复原为 alarm",
+    "evidence_files": [
+      "screenshots/F2_system_notification.png",
+      "dumpsys/F2_dumpsys_notification.txt"
+    ]
+  },
+  "F3": {
+    "title": "冷启动无启动失败面板且无阻断性 JS 报错",
+    "status": "PASS",
+    "explanation": "冷启动成功=True，无失败面板=True，过滤到 0 条相关日志",
+    "evidence_files": [
+      "screenshots/F3_cold_boot_home.png",
+      "logcat/F3_logcat_errors.txt"
+    ]
+  },
+  "F4": {
+    "title": "系统大字体兼容性(1.30 vs 1.0)专项验证",
+    "status": "PASS",
+    "explanation": "1.30大字体下动作按钮文字换行数=0（必须单行），white-space均为nowrap，header顶部坐标=0，底栏贴底=True，系统字体比例已安全恢复为 1.0",
+    "evidence_files": [
+      "screenshots/F4_font_scale_130.png",
+      "screenshots/F4_font_scale_100.png",
+      "dom_and_state/F4_font_scale_comparison.json"
+    ]
+  },
+  "G": {
+    "title": "清理测试事项与善后核验",
+    "status": "PASS",
+    "explanation": "已删除 14 条测试事项，剩余 6 个基线事项严格匹配，字体比例恢复 1.0，提醒模式恢复 alarm",
+    "evidence_files": [
+      "screenshots/G_final_clean_home.png",
+      "dom_and_state/G_cleanup_result.json"
+    ]
+  }
+}

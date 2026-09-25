@@ -1,0 +1,23 @@
+{
+  "a1": {
+    "title": "有 2 件事需要你看一眼",
+    "eyebrow": "9月25日 周五",
+    "critStrip": null,
+    "impStrip": null
+  },
+  "a2": {
+    "status": "acknowledged",
+    "inDue": false,
+    "inActive": false,
+    "title": "有 1 件事需要你看一眼"
+  },
+  "a3": {
+    "status": "archived",
+    "inDue": false,
+    "title": "暂时没有新的提醒"
+  },
+  "a4": {
+    "status": "snoozed",
+    "inDue": false
+  }
+}

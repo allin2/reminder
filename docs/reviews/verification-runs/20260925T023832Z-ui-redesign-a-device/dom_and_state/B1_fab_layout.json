@@ -1,0 +1,98 @@
+{
+  "tabs": {
+    "home": {
+      "tab": "home",
+      "fabDisplay": "flex",
+      "fabVisibility": "visible",
+      "fabRect": {
+        "top": 612,
+        "bottom": 662,
+        "left": 14,
+        "right": 346,
+        "width": 332,
+        "height": 50
+      },
+      "navRect": {
+        "top": 672,
+        "bottom": 736,
+        "left": 0,
+        "right": 360,
+        "width": 360,
+        "height": 64
+      },
+      "gapToNav": 10
+    },
+    "future": {
+      "tab": "future",
+      "fabDisplay": "flex",
+      "fabVisibility": "visible",
+      "fabRect": {
+        "top": 612,
+        "bottom": 662,
+        "left": 14,
+        "right": 346,
+        "width": 332,
+        "height": 50
+      },
+      "navRect": {
+        "top": 672,
+        "bottom": 736,
+        "left": 0,
+        "right": 360,
+        "width": 360,
+        "height": 64
+      },
+      "gapToNav": 10
+    },
+    "notes": {
+      "tab": "notes",
+      "fabDisplay": "flex",
+      "fabVisibility": "visible",
+      "fabRect": {
+        "top": 612,
+        "bottom": 662,
+        "left": 14,
+        "right": 346,
+        "width": 332,
+        "height": 50
+      },
+      "navRect": {
+        "top": 672,
+        "bottom": 736,
+        "left": 0,
+        "right": 360,
+        "width": 360,
+        "height": 64
+      },
+      "gapToNav": 10
+    },
+    "me": {
+      "tab": "me",
+      "fabDisplay": "none",
+      "fabVisibility": "visible",
+      "fabRect": {
+        "top": 0,
+        "bottom": 0,
+        "left": 0,
+        "right": 0,
+        "width": 0,
+        "height": 0
+      },
+      "navRect": {
+        "top": 672,
+        "bottom": 736,
+        "left": 0,
+        "right": 360,
+        "width": 360,
+        "height": 64
+      },
+      "gapToNav": 672
+    }
+  },
+  "scroll": {
+    "lastCardExists": true,
+    "lastCardBottom": 504.6458435058594,
+    "fabTop": 612,
+    "isBlocked": false
+  }
+}

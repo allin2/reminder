@@ -1,0 +1,352 @@
+[1790350688428] === Starting Step 1: Guide & Setup Card Verification ===
+[1790350688987] Initial homeSetup HTML: <div class="setup-card"><button class="soft-entry" id="setupEntry"><span><strong>还差 1 步，提醒才能准时响</strong><br><span class="setup-card-sub">下一步：允许完全后台运行 (防冻结)</span></span><span style="color:var(--muted)">›</span></button><button class="setup-card-close" id="setupEntryDismiss" aria-label="不再在首页提示"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"></path></svg></button></div>
+[1790350689517] Saved screenshot: step1_01_home_setup_card.png
+[1790350689564] Clicking #setupEntry to open setup sheet...
+[1790350691152] Saved screenshot: step1_02_setup_sheet_open.png
+[1790350691204] Clicking "去设置" for background step in setup sheet...
+[1790350693360] Background landing topResumedActivity: ['topResumedActivity=ActivityRecord{72365565 u0 com.iqoo.powersaving/.BackgroundHighUsageActivity t43 d0}']
+[1790350693877] Saved screenshot: step1_03_background_settings_landing.png
+[1790350693932] Pressing KEYCODE_BACK to return to app without modifying switches...
+[1790350695628] state.settings.backgroundVisited after return: True
+[1790350695672] SetupSteps background status after visit: {"bgStep": {"id": "background", "essential": true, "done": true, "verified": false, "homeDone": false, "title": "允许完全后台运行 (防冻结)", "why": "部分 Android 厂商可能限制长时间后台运行；实际效果取决于系统设置，并需通过锁屏测试确认。", "denyImpact": "拒绝或跳过可能导致熄屏较长时间后提醒延迟；是否生效以本机测试为准。", "action": "去设置"}, "nextId": "test"}
+[1790350695727] homeSetup HTML after returning: <div class="setup-card"><button class="soft-entry" id="setupEntry"><span><strong>还差 1 步，提醒才能准时响</strong><br><span class="setup-card-sub">下一步：允许完全后台运行 (防冻结)</span></span><span style="color:var(--muted)">›</span></button><button class="setup-card-close" id="setupEntryDismiss" aria-label="不再在首页提示"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"></path></svg></button></div>
+[1790350696264] Saved screenshot: step1_04_home_card_still_present.png
+[1790350735933] Navigating to "我的" tab...
+[1790350736992] Opening reminder settings sheet from "我的"...
+[1790350738524] Saved screenshot: step1_05_me_reminder_settings_sheet.png
+[1790350738594] Overlay row text in reminder settings: None
+[1790350738649] Clicking overlay step action button...
+[1790350740768] Overlay settings landing topResumedActivity: ['topResumedActivity=ActivityRecord{224653346 u0 space.alliswell.inbox/.MainActivity t145 d0}']
+[1790350741302] Saved screenshot: step1_06_overlay_settings_landing.png
+[1790350741366] Bringing app back to front...
+[1790350743532] Home card HTML after overlay check: <div class="setup-card"><button class="soft-entry" id="setupEntry"><span><strong>还差 1 步，提醒才能准时响</strong><br><span class="setup-card-sub">下一步：允许完全后台运行 (防冻结)</span></span><span style="color:var(--muted)">›</span></button><button class="setup-card-close" id="setupEntryDismiss" aria-label="不再在首页提示"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"></path></svg></button></div>
+[1790350744025] Saved screenshot: step1_07_home_card_after_overlay_check.png
+[1790350744079] Clicking #setupEntryDismiss (× button)...
+[1790350744649] Toast after dismiss: 好的，之后可在「我的 → 提醒设置」里继续
+[1790350745116] Saved screenshot: step1_08_card_dismissed_toast.png
+[1790350745164] homeSetup HTML after dismiss: 
+[1790350745210] state.settings.setupDismissed after dismiss: True
+[1790350745267] Killing app via am force-stop for cold start test...
+[1790350747513] Starting app again for cold start...
+[1790350752435] Cold start homeSetup HTML: 
+[1790350752490] Cold start setupDismissed: True
+[1790350752977] Saved screenshot: step1_09_cold_start_card_absent.png
+[1790350753032] Restoring setupDismissed to false and backgroundVisited to null...
+[1790350754114] Restored settings: setupDismissed=False, backgroundVisited=None
+[1790350754153] Restored homeSetup HTML: <div class="setup-card"><button class="soft-entry" id="setupEntry"><span><strong>还差 1 步，提醒才能准时响</strong><br><span class="setup-card-sub">下一步：允许完全后台运行 (防冻结)</span></span><span style="color:var(--muted)">›</span></button><button class="setup-card-close" id="setupEntryDismiss" aria-label="不再在首页提示"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"></path></svg></button></div>
+[1790350754705] Saved screenshot: step1_10_restored_home_setup_card.png
+[1790350754747] === Step 1 Verification Complete ===
+[2026-09-25 23:41:09] [1790350869079] ==================================================
+[2026-09-25 23:41:09] [1790350869112] Starting Trial: Config A #1 (Title: SWITCH-A-1)
+[2026-09-25 23:41:09] [1790350869159] ==================================================
+[2026-09-25 23:41:11] [1790350871523] Tapping FAB at physical (540, 2049) (attempt 1/3)...
+[2026-09-25 23:41:12] [1790350872674] Setting #capText value: SWITCH-A-1
+[2026-09-25 23:41:12] [1790350872709] Setting #capTrigger value: 2026-09-25T23:44
+[2026-09-25 23:41:13] [1790350873314] Tapping '更多选项' at physical (540, 1967)
+[2026-09-25 23:41:13] [1790350873968] Tapping '🚨 关键' at physical (584, 2105)
+[2026-09-25 23:41:14] [1790350874518] Critical chip selected: True
+[2026-09-25 23:41:14] [1790350874584] Tapping '安心交给系统' at physical (792, 2218)
+[2026-09-25 23:41:14] [1790350874782] T0 recorded: 1790350874740 (2026-09-25 23:41:14)
+[2026-09-25 23:41:15] [1790350875351] Created item info: {"id": "i_srbzyaqwmuh4oo5m", "title": "SWITCH-A-1", "status": "waiting", "priority": "critical", "triggerAt": 1790351040000, "delivery_mode": "alarm", "createdAt": 1790350874698}
+[2026-09-25 23:41:18] [1790350878041] T0+3s Alarm scheduled: True, details: entries=3, comps=['AlarmRingService'], sample=RTC_WAKEUP #9: Alarm{e3c9193 type 0 origWhen 1790351040052 flags 3 windowLength 0 whenElapsed 573096218 maxWhenElapsed 573096218 repeatInterval 0 tag=*walarm*:space.alliswell.inbox.ACTION_TEST_ALARM originWhenElapsed 573096218 originWindowLength 0 setAtTime=2026-09-25 15:41:14 policyWhenElapsed:[573096218, 572931134, 0, 0, 0] procName=space.alliswell.inbox space.alliswell.inbox}
+[2026-09-25 23:41:18] [1790350878084] Pressing HOME keyevent 3 to background app...
+[2026-09-25 23:41:23] [1790350883199] Started background logcat logging to /Users/qlyf/Developer/reminder-archive/verification-runs/20260925T153500Z-vivo-switch-matrix/logcat/SWITCH-A-1_full_logcat.txt (PID=57515)
+[2026-09-25 23:41:23] [1790350883230] Pressing POWER keyevent 26 to lock screen...
+[2026-09-25 23:41:24] [1790350884908] Lock confirmed: wake=mWakefulness=Asleep, lock_info=mShowingDream=false mDreamingLockscreen=true; isKeyguardShowing=true; 
+[2026-09-25 23:41:24] [1790350884962] Entering read-only observation window until triggerAt+90s (2026-09-25 23:45:30)...
+[2026-09-25 23:41:26] [1790350886287] *** AlarmActivity detected active at 2026-09-25 23:41:25! focus=mCurrentFocus=Window{com.android.systemui:f9294bb u0 NotificationShade type=2040 } ***
+[2026-09-25 23:45:31] [1790351131566] Observation window ended at 2026-09-25 23:45:31.
+[2026-09-25 23:45:32] [1790351132134] Stopped logcat recording. Log saved to /Users/qlyf/Developer/reminder-archive/verification-runs/20260925T153500Z-vivo-switch-matrix/logcat/SWITCH-A-1_full_logcat.txt
+[2026-09-25 23:46:46] [1790351206342] ==================================================
+[2026-09-25 23:46:46] [1790351206376] Starting Trial: Config A #2 (Title: SWITCH-A-2)
+[2026-09-25 23:46:46] [1790351206419] ==================================================
+[2026-09-25 23:46:48] [1790351208632] Tapping FAB at physical (540, 2049) (attempt 1/3)...
+[2026-09-25 23:46:49] [1790351209754] Setting #capText value: SWITCH-A-2
+[2026-09-25 23:46:49] [1790351209792] Setting #capTrigger value: 2026-09-25T23:50
+[2026-09-25 23:46:50] [1790351210369] Tapping '更多选项' at physical (540, 1967)
+[2026-09-25 23:46:51] [1790351211021] Tapping '🚨 关键' at physical (584, 2105)
+[2026-09-25 23:46:51] [1790351211541] Critical chip selected: True
+[2026-09-25 23:46:51] [1790351211586] Tapping '安心交给系统' at physical (792, 2218)
+[2026-09-25 23:46:51] [1790351211713] T0 recorded: 1790351211676 (2026-09-25 23:46:51)
+[2026-09-25 23:46:52] [1790351212277] Created item info: {"id": "i_8vjoxxuamuh4vw58", "title": "SWITCH-A-2", "status": "waiting", "priority": "critical", "triggerAt": 1790351400000, "delivery_mode": "alarm", "createdAt": 1790351211644}
+[2026-09-25 23:46:54] [1790351214956] T0+3s Alarm scheduled: True, details: entries=4, comps=['AlarmRingService'], sample=RTC_WAKEUP #8: Alarm{bd10193 type 0 origWhen 1790351400017 flags 3 windowLength 0 whenElapsed 573456183 maxWhenElapsed 573456183 repeatInterval 0 tag=*walarm*:space.alliswell.inbox/.AlarmRingService originWhenElapsed 573456183 originWindowLength 0 setAtTime=2026-09-25 15:46:51 policyWhenElapsed:[573456183, 573267997, 0, 0, 0] procName=space.alliswell.inbox space.alliswell.inbox}
+[2026-09-25 23:46:55] [1790351215016] Pressing HOME keyevent 3 to background app...
+[2026-09-25 23:47:00] [1790351220142] Started background logcat logging to /Users/qlyf/Developer/reminder-archive/verification-runs/20260925T153500Z-vivo-switch-matrix/logcat/SWITCH-A-2_full_logcat.txt (PID=63071)
+[2026-09-25 23:47:00] [1790351220183] Pressing POWER keyevent 26 to lock screen...
+[2026-09-25 23:47:01] [1790351221725] Lock confirmed: wake=mWakefulness=Asleep, lock_info=mShowingDream=false mDreamingLockscreen=true; isKeyguardShowing=true; 
+[2026-09-25 23:47:01] [1790351221777] Entering read-only observation window until triggerAt+90s (2026-09-25 23:51:30)...
+[2026-09-25 23:47:02] [1790351222948] *** AlarmActivity detected active at 2026-09-25 23:47:01! focus=mCurrentFocus=Window{com.android.systemui:f9294bb u0 NotificationShade type=2040 } ***
+[2026-09-25 23:50:08] [1790351408291] *** Screen SPONTANEOUSLY woke up at 2026-09-25 23:50:05 (wake=mWakefulness=Awake)! ***
+[2026-09-25 23:51:35] [1790351495532] Observation window ended at 2026-09-25 23:51:35.
+[2026-09-25 23:51:36] [1790351496102] Stopped logcat recording. Log saved to /Users/qlyf/Developer/reminder-archive/verification-runs/20260925T153500Z-vivo-switch-matrix/logcat/SWITCH-A-2_full_logcat.txt
+[2026-09-25 23:51:36] [1790351496179] Logcat analysis: first deliver=None, frozen_events=[(809, '09-25 21:49:15.599  1737  2108 I am_app_frozen: [0,10285,space.alliswell.inbox,from fast_freezer]'), (1389, '09-25 21:55:01.132  1737  2108 I am_app_frozen: [0,10285,space.alliswell.inbox,from fast_freezer]'), (1820, '09-25 22:02:51.148  1737  2108 I am_app_frozen: [0,10285,space.alliswell.inbox,from fast_freezer]'), (3189, '09-25 22:19:55.087  1737  2108 I am_app_frozen: [0,10285,space.alliswell.inbox,from fast_freezer]'), (3773, '09-25 22:35:01.287  1737  2108 I am_app_frozen: [0,10285,space.alliswell.inbox,from fast_freezer]'), (5147, '09-25 23:09:43.429  1737  2108 I am_app_frozen: [0,10285,space.alliswell.inbox,from fast_freezer]'), (5650, '09-25 23:29:41.529  1737  2108 I am_app_frozen: [0,10285,space.alliswell.inbox,from fast_freezer]'), (6079, '09-25 23:35:44.301  1737  2108 I am_app_frozen: [0,10285,space.alliswell.inbox,from fast_freezer]'), (6630, '09-25 23:38:17.428  1737  2108 I am_app_frozen: [0,10285,space.alliswell.inbox,from fast_freezer]'), (8085, '09-25 23:41:24.797  1737  2108 I am_app_frozen: [0,10285,space.alliswell.inbox,from fast_freezer]')]
+[2026-09-25 23:54:26] [1790351666010] ==================================================
+[2026-09-25 23:54:26] [1790351666053] Starting Trial: Config B #1 (Title: SWITCH-B-1)
+[2026-09-25 23:54:26] [1790351666095] ==================================================
+[2026-09-25 23:54:28] [1790351668476] Tapping FAB at physical (540, 2049) (attempt 1/3)...
+[2026-09-25 23:54:29] [1790351669608] Setting #capText value: SWITCH-B-1
+[2026-09-25 23:54:29] [1790351669651] Setting #capTrigger value: 2026-09-25T23:57
+[2026-09-25 23:54:30] [1790351670232] Tapping '更多选项' at physical (540, 1967)
+[2026-09-25 23:54:30] [1790351670870] Tapping '🚨 关键' at physical (584, 2105)
+[2026-09-25 23:54:31] [1790351671443] Critical chip selected: True
+[2026-09-25 23:54:31] [1790351671498] Tapping '安心交给系统' at physical (792, 2218)
+[2026-09-25 23:54:31] [1790351671701] T0 recorded: 1790351671645 (2026-09-25 23:54:31)
+[2026-09-25 23:54:32] [1790351672280] Created item info: {"id": "i_apx69fqhmuh55r15", "title": "SWITCH-B-1", "status": "waiting", "priority": "critical", "triggerAt": 1790351820000, "delivery_mode": "alarm", "createdAt": 1790351671577}
+[2026-09-25 23:54:34] [1790351674991] T0+3s Alarm scheduled: True, details: entries=4, comps=['AlarmRingService'], sample=RTC_WAKEUP #11: Alarm{6209d36 type 0 origWhen 1790351820028 flags 3 windowLength 0 whenElapsed 573876194 maxWhenElapsed 573876194 repeatInterval 0 tag=*walarm*:space.alliswell.inbox.ACTION_TEST_ALARM originWhenElapsed 573876194 originWindowLength 0 setAtTime=2026-09-25 15:54:31 policyWhenElapsed:[573876194, 573727978, 0, 0, 0] procName=space.alliswell.inbox space.alliswell.inbox}
+[2026-09-25 23:54:35] [1790351675037] Pressing HOME keyevent 3 to background app...
+[2026-09-25 23:54:40] [1790351680188] Started background logcat logging to /Users/qlyf/Developer/reminder-archive/verification-runs/20260925T153500Z-vivo-switch-matrix/logcat/SWITCH-B-1_full_logcat.txt (PID=89307)
+[2026-09-25 23:54:40] [1790351680237] Pressing POWER keyevent 26 to lock screen...
+[2026-09-25 23:54:42] [1790351682027] Lock confirmed: wake=mWakefulness=Asleep, lock_info=mShowingDream=false mDreamingLockscreen=true; isKeyguardShowing=true; 
+[2026-09-25 23:54:42] [1790351682077] Entering read-only observation window until triggerAt+90s (2026-09-25 23:58:30)...
+[2026-09-25 23:54:43] [1790351683424] *** AlarmActivity detected active at 2026-09-25 23:54:42! focus=mCurrentFocus=Window{com.android.systemui:f9294bb u0 NotificationShade type=2040 } ***
+[2026-09-25 23:57:03] [1790351823396] *** Screen SPONTANEOUSLY woke up at 2026-09-25 23:57:02 (wake=mWakefulness=Awake)! ***
+[2026-09-25 23:58:35] [1790351915333] Observation window ended at 2026-09-25 23:58:35.
+[2026-09-25 23:58:35] [1790351915837] Stopped logcat recording. Log saved to /Users/qlyf/Developer/reminder-archive/verification-runs/20260925T153500Z-vivo-switch-matrix/logcat/SWITCH-B-1_full_logcat.txt
+[2026-09-25 23:58:35] [1790351915924] Logcat analysis: first deliver=None, frozen_events=[(926, '09-25 22:19:55.087  1737  2108 I am_app_frozen: [0,10285,space.alliswell.inbox,from fast_freezer]'), (1510, '09-25 22:35:01.287  1737  2108 I am_app_frozen: [0,10285,space.alliswell.inbox,from fast_freezer]'), (2884, '09-25 23:09:43.429  1737  2108 I am_app_frozen: [0,10285,space.alliswell.inbox,from fast_freezer]'), (3387, '09-25 23:29:41.529  1737  2108 I am_app_frozen: [0,10285,space.alliswell.inbox,from fast_freezer]'), (3816, '09-25 23:35:44.301  1737  2108 I am_app_frozen: [0,10285,space.alliswell.inbox,from fast_freezer]'), (4262, '09-25 23:38:17.428  1737  2108 I am_app_frozen: [0,10285,space.alliswell.inbox,from fast_freezer]'), (4632, '09-25 23:41:24.797  1737  2108 I am_app_frozen: [0,10285,space.alliswell.inbox,from fast_freezer]'), (10946, '09-25 23:52:25.784  1737  2108 I am_app_frozen: [0,10285,space.alliswell.inbox,from fast_freezer]')]
+[2026-09-26 00:13:19] [1790352799118] [RESUME-INSPECT] === resume: read-only site inspection start ===
+[2026-09-26 00:13:19] [1790352799410] [RESUME-INSPECT] wake: mWakefulness=Awake
+[2026-09-26 00:13:19] [1790352799645] [RESUME-INSPECT] focus: mCurrentFocus=Window{d4efaae u0 space.alliswell.inbox/space.alliswell.inbox.MainActivity type=1 }
+[2026-09-26 00:13:40] [1790352820399] [RESUME-INSPECT] === resume: read-only site inspection start ===
+[2026-09-26 00:13:40] [1790352820629] [RESUME-INSPECT] wake: mWakefulness=Awake
+[2026-09-26 00:13:40] [1790352820818] [RESUME-INSPECT] focus: mCurrentFocus=Window{d4efaae u0 space.alliswell.inbox/space.alliswell.inbox.MainActivity type=1 }
+[2026-09-26 00:13:41] [1790352821384] [RESUME-INSPECT] items snapshot: [{"id": "i_24rm31samufjri6d", "title": "REDACTED_USER_ITEM_1", "status": "archived", "rev": 2, "triggerAt": 1790255278802, "snoozedAt": null, "snoozeCount": 0, "acknowledgedAt": null, "priority": "normal", "delivery_mode": "notification"}, {"id": "i_t6t8kjrbmufskit9", "title": "REDACTED_USER_ITEM_2", "status": "due", "rev": 1, "triggerAt": 1790292600000, "snoozedAt": null, "snoozeCount": 0, "acknowledgedAt": null, "priority": "normal", "delivery_mode": "notification"}, {"id": "i_ve90y9vxmufskxvx", "title": "REDACTED_USER_ITEM_2", "status": "due", "rev": 1, "triggerAt": 1790292600000, "snoozedAt": null, "snoozeCount": 0, "acknowledgedAt": null, "priority": "normal", "delivery_mode": "notification"}, {"id": "i_ksgrct0wmufslps2", "title": "REDACTED_USER_ITEM_4", "status": "waiting", "rev": 1, "triggerAt": 1790343000000, "snoozedAt": null, "snoozeCount": 0, "acknowledgedAt": null, "priority": "normal", "delivery_mode": "notification"}, {"id": "i_32p3og4nmufsly70", "title": "REDACTED_USER_ITEM_5", "status": "archived", "rev": 2, "triggerAt": 1790270129172, "snoozedAt": null, "snoozeCount": 0, "acknowledgedAt": null, "priority": "normal", "delivery_mode": "notification"}, {"id": "i_jaggipg8mufsmipq", "title": "REDACTED_USER_ITEM_6", "status": "acknowledged", "rev": 2, "triggerAt": 1790270157765, "snoozedAt": null, "snoozeCount": 0, "acknowledgedAt": 1790270170462, "priority": "normal", "delivery_mode": "alarm"}]
+[2026-09-26 00:13:41] [1790352821427] [RESUME-INSPECT] leftover SWITCH-* items: []
+[2026-09-26 00:13:41] [1790352821976] [RESUME-INSPECT] settings subset: {"setupPromptStarted": true, "setupDismissed": false, "backgroundVisited": null, "overlayVisited": null, "testRun": null, "testFeedback": null, "defaultDeliveryMode": "alarm"}
+[2026-09-26 00:13:42] [1790352822546] [RESUME-INSPECT] diag: null
+[2026-09-26 00:13:43] [1790352823113] [RESUME-INSPECT] cache keys: []
+[2026-09-26 00:13:43] [1790352823689] [RESUME-INSPECT] setupSteps: "N/A"
+[2026-09-26 00:13:44] [1790352824267] [RESUME-INSPECT] saved screenshots/resume_inspect_home.png
+[2026-09-26 00:13:44] [1790352824326] [RESUME-INSPECT] === resume: read-only site inspection end ===
+[2026-09-26 00:15:09] [1790352909063] [RESUME-INSPECT2] === resume: SW/version/interface inspection start ===
+[2026-09-26 00:15:09] [1790352909635] [RESUME-INSPECT2] target=https://localhost/ => {"href": "https://localhost/", "ua": "Mozilla/5.0 (Linux; Android 16; V2238A Build/BP2A.250605.031.A3; wv) AppleWebKit", "inboxKeys": ["parseChineseTime", "makeItem", "nextRepeatTrigger", "nthWeekdayOfNextMonthByInstant", "nthWeekdayOfNextMonthByDay", "nthWeekdayInMonth", "lastDayOfMonth", "repeatLabel", "findSimilarItems", "isDue", "inQuietHours", "quietEnd", "promoteDue", "ackItem", "completeItem", "snoozeItem", "reopenItem", "restoreItem", "deleteItem", "seed", "hasSpecificTimeWord", "fallbackTriggerAt", "resolveDeliveryMode", "ensureReviewSettings", "inReviewHighlight", "renderHome", "homeRenderStats", "resetHomeRenderStats", "nativeSyncStats", "resetNativeSyncStats", "renderReviewEntry", "renderReviewCard", "openReviewSession", "maybeReviewSession", "needsReviewItems", "detectNeedsReview", "reviewConfirm", "reviewSaveEdit", "reviewKeepCurrent", "resolveReviewTrigger", "markReviewDone", "markReviewTriggerPicked", "stopRepeat", "resumeDeadlineProtection", "applyDeadlineEvents", "markDeadlineDelivered", "applyReminderEvents", "replayPendingSnapshot", "showAlert", "hideAlert", "dismissAlert", "describeAlarmDelivery", "homeNoticeVerdict", "renderHomeNotice", "renderPwaStatus", "setNativeReminderStatus", "handleAlarmAction", "completeActiveAlarm", "deliveryHandledByCommittedItem", "alarmEventSeen", "transaction", "items", "nativeCoordinator", "getNativeReminderStatus", "getNativeSyncVersion", "refreshNativeScheduleBasis", "syncNativeRemindersNow", "queueNativeReminderSync", "runUserOp", "wrapUserOp", "itemConflictsWithActiveAction", "isItemActionPending", "rejectPendingItemCommand", "takeReplayCreatedId", "inflightDepth", "isFeedbackSuppressed", "shouldSuppressInnerSave", "ready", "handleNativeNotificationAction", "saveItemFromForm", "openDemoPreview", "demoPreviewRows", "undoNewItem", "undoLastComplete", "lastCompleteUndo", "startSetupTestRun", "stopSetupTestRun", "setupEvidenceHtml", "setupStepsContext", "readDeliveryEvidence", "applyNativeDeliveryEvidence", "applyReminderDelivered", "detailReminderStatusRow", "itemScheduleEvidence", "deliveryEvidenceReadable", "deliveryEvidenceState", "markTriggerPicked", "openCapture", "openEditItem", "resetItemSheet", "closeAllSheets", "formSession", "clearAlert", "alerts", "APP_ALERTS_INSTANCE_CONTRACT", "platform", "APP_PLATFORM_INSTANCE_CONTRACT", "actionFeedback", "APP_ACTION_FEEDBACK_INSTANCE_CONTRACT", "events", "APP_EVENTS_INSTANCE_CONTRACT", "notices", "maybeDailySummary", "APP_NOTICES_INSTANCE_CONTRACT", "testApi", "APP_TEST_API_INSTANCE_CONTRACT", "state", "setUserMode", "syncUserMode", "save", "saveAsync", "load", "loadAsync", "exportData", "buildLegacyBackupPayload", "noteExportAppVisibility", "normalizeAiResult", "extractJson", "ai", "aiBusy", "renderMarkdown", "uid", "startOfDay", "addDays", "sameDay", "applyClock", "storage", "assertRuntimeDependencies", "renderStartupFailure", "REQUIRED_RUNTIME_EXPORTS", "collectRuntimeBindings", "bindRuntime", "RUNTIME_BINDING_PATHS", "APP_UI_INSTANCE_CONTRACT", "APP_AI_INSTANCE_CONTRACT", "APP_BACKUP_INSTANCE_CONTRACT", "APP_DIAGNOSTICS_INSTANCE_CONTRACT", "APP_CAPTURE_INSTANCE_CONTRACT", "APP_VIEWS_INSTANCE_CONTRACT", "APP_NATIVE_COORDINATOR_INSTANCE_CONTRACT", "APP_REVIEW_INSTANCE_CONTRACT", "startApp", "diagnostics", "setup", "content", "views", "review", "reviewSurface", "platformSurface", "viewsSurface", "contentSurface", "captureSurface", "setupSurface", "diagnosticsSurface", "runtimeBindings", "startupFailure", "stateAuthority", "retryRestore", "uiSurface", "aiSurface"], "hasAttentionLib": ["DatePrimitives", "UiFormat", "AppUi", "AppAi", "AppBackup", "AppDiagnostics", "AppSetup", "AppContent", "AppCapture", "AppViews", "AppModel", "AppPersistence", "AppTransaction", "AppItems", "AppNativeCoordinator", "AppReview", "AppAlerts", "AppPlatform", "AppActionFeedback", "AppEvents", "AppTestApi", "AppNotices", "parseChineseTime", "hasSpecificTimeWord", "cnInt", "nextWeekend", "startOfDay", "endOfDay", "addDays", "lastDayOfMonth", "nthWeekdayInMonth", "nthWeekdayOfNextMonthByInstant", "applyClock", "nextRepeatTrigger", "repeatLabel", "nextRepeatPreview", "nthWeekdayOfNextMonthByDay", "parseHHMM", "inQuietHours", "quietEnd", "applyWindowTrigger", "shouldRealert", "markReminded", "REALERT", "deadlineStage", "deadlineStageKey", "deadlineStagePoints", "DEADLINE_FINAL_MS", "DEADLINE_LEAD_MS", "DEADLINE_GRACE_MS", "createStorage", "DB_NAME", "STORE", "STATE_KEY", "LS_KEY", "hasIdb", "Feedback", "DeliveryEvidence"], "hasFeedbackGlobal": false, "caches": [], "swRegs": [], "swController": null}
+[2026-09-26 00:15:09] [1790352909689] [RESUME-INSPECT2] === resume: SW/version/interface inspection end ===
+[2026-09-26 00:19:19] [1790353159745] [RESUME-INSPECT3] === resume: diag + setupSteps re-read start ===
+[2026-09-26 00:19:20] [1790353160339] [RESUME-INSPECT3] diag=null
+[2026-09-26 00:19:20] [1790353160392] [RESUME-INSPECT3] steps={"steps": [{"id": "notify", "essential": true, "done": false, "verified": false, "title": "允许发通知", "why": "没有通知权限，提醒不会出现在通知栏，屏幕也不会亮。", "denyImpact": "拒绝后仍可以记录事项，但关掉应用后看不到提醒。", "action": "去授权"}, {"id": "exact", "essential": true, "done": false, "verified": false, "title": "允许精确提醒", "why": "没有它，系统会把提醒推迟到它觉得合适的时候。", "denyImpact": "拒绝后提醒可能晚几分钟到几十分钟。", "action": "去授权"}, {"id": "background", "essential": true, "done": false, "verified": false, "homeDone": false, "title": "允许完全后台运行 (防冻结)", "why": "部分 Android 厂商可能限制长时间后台运行；实际效果取决于系统设置，并需通过锁屏测试确认。", "denyImpact": "拒绝或跳过可能导致熄屏较长时间后提醒延迟；是否生效以本机测试为准。", "action": "去设置"}, {"id": "overlay", "done": false, "verified": false, "title": "允许锁屏弹窗与悬浮窗", "why": "用于提高锁屏或使用其他应用时亮屏弹出全屏提醒界面的机会。", "denyImpact": "拒绝后可能只显示通知、延迟显示或不弹全屏；以本机 60 秒测试为准。", "action": "去开启"}, {"id": "test", "done": false, "verified": false, "title": "做一次 60 秒测试", "why": "确认这台设备上声音、屏幕、通知各自落在哪里。", "denyImpact": "跳过也能用，只是不知道实际效果。", "action": "开始测试"}], "next": {"id": "notify", "essential": true, "done": false, "verified": false, "title": "允许发通知", "why": "没有通知权限，提醒不会出现在通知栏，屏幕也不会亮。", "denyImpact": "拒绝后仍可以记录事项，但关掉应用后看不到提醒。", "action": "去授权"}, "allDone": false}
+[2026-09-26 00:19:20] [1790353160440] [RESUME-INSPECT3] homeCard=""
+[2026-09-26 00:19:20] [1790353160485] [RESUME-INSPECT3] === resume: diag + setupSteps re-read end ===
+[2026-09-26 00:20:08] [1790353208137] [RESUME-INSPECT3] === resume: diag + setupSteps re-read start ===
+[2026-09-26 00:20:08] [1790353208713] [RESUME-INSPECT3] diag={"nativeStatus": {"native": true, "notifications": "granted", "exactAlarm": "granted", "reliability": "exact", "source": "SystemBridge", "diag": {"sdkInt": 36, "packageName": "space.alliswell.inbox", "notificationsEnabled": true, "postNotificationsGranted": true, "canExactAlarm": true, "ignoringBatteryOptimizations": true, "alarmManagerAvailable": true, "notificationManagerAvailable": true, "canDrawOverlays": true, "canUseFullScreenIntent": true, "alarmChannelImportance": 4, "alarmChannelId": "attention-alarm-v4"}, "enabled": true, "notifySwitchOn": true, "notificationsGranted": true, "capabilities": {"sound": true, "notifications": true, "screen": true, "exact": true}, "desired": 2, "scheduled": 2, "cancelled": 2, "alarmCount": 0, "alarmScheduled": 0, "alarmCancelled": 0, "scheduledAlarmIds": [], "scheduledAlarmSignatures": {}, "deadlineEvents": [], "cancelledDeadlineEvents": [], "reminderEvents": [], "cancelledReminderEvents": [], "errors": [], "removedDeliveredIds": [], "deliveredCleanupError": null}}
+[2026-09-26 00:20:08] [1790353208765] [RESUME-INSPECT3] steps={"steps": [{"id": "notify", "essential": true, "done": true, "verified": true, "title": "允许发通知", "why": "没有通知权限，提醒不会出现在通知栏，屏幕也不会亮。", "denyImpact": "拒绝后仍可以记录事项，但关掉应用后看不到提醒。", "action": "去授权"}, {"id": "exact", "essential": true, "done": true, "verified": true, "title": "允许精确提醒", "why": "没有它，系统会把提醒推迟到它觉得合适的时候。", "denyImpact": "拒绝后提醒可能晚几分钟到几十分钟。", "action": "去授权"}, {"id": "background", "essential": true, "done": true, "verified": true, "homeDone": true, "title": "允许完全后台运行 (防冻结)", "why": "部分 Android 厂商可能限制长时间后台运行；实际效果取决于系统设置，并需通过锁屏测试确认。", "denyImpact": "拒绝或跳过可能导致熄屏较长时间后提醒延迟；是否生效以本机测试为准。", "action": "去设置"}, {"id": "overlay", "done": true, "verified": true, "title": "允许锁屏弹窗与悬浮窗", "why": "用于提高锁屏或使用其他应用时亮屏弹出全屏提醒界面的机会。", "denyImpact": "拒绝后可能只显示通知、延迟显示或不弹全屏；以本机 60 秒测试为准。", "action": "去开启"}, {"id": "test", "done": false, "verified": false, "title": "做一次 60 秒测试", "why": "确认这台设备上声音、屏幕、通知各自落在哪里。", "denyImpact": "跳过也能用，只是不知道实际效果。", "action": "开始测试"}], "next": {"id": "test", "done": false, "verified": false, "title": "做一次 60 秒测试", "why": "确认这台设备上声音、屏幕、通知各自落在哪里。", "denyImpact": "跳过也能用，只是不知道实际效果。", "action": "开始测试"}, "allDone": false}
+[2026-09-26 00:20:08] [1790353208807] [RESUME-INSPECT3] homeCard=""
+[2026-09-26 00:20:08] [1790353208847] [RESUME-INSPECT3] === resume: diag + setupSteps re-read end ===
+[2026-09-26 00:21:37] [1790353297925] [RESUME-SWITCHES] === resume: read-only switch states start ===
+[2026-09-26 00:21:44] [1790353304827] [RESUME-SWITCHES] tapping 电量 at (150, 992)
+[2026-09-26 00:21:49] [1790353309511] [RESUME-SWITCHES] tapping 后台耗电管理 at (246, 2090)
+[2026-09-26 00:21:54] [1790353314199] [RESUME-SWITCHES] background power mode text for 安心收件箱: None
+[2026-09-26 00:22:00] [1790353320400] [RESUME-SWITCHES] bgpower detail texts: 安心收件箱 | 今日后台耗电时长 | 0分钟 | 智能控制后台耗电 | 智能控制不同类型应用的后台耗电量，更加省电。 | 允许后台耗电 | 不限制应用后台耗电量，可能会比较耗电。 | 后台耗电管理
+[2026-09-26 00:22:05] [1790353325880] [RESUME-SWITCHES] tapping 权限 at (540, 1467)
+[2026-09-26 00:22:13] [1790353333723] [RESUME-SWITCHES] === resume: read-only switch states end ===
+[2026-09-26 00:23:49] [1790353429543] [RESUME-SWITCHES] === resume: read-only switch states start ===
+[2026-09-26 00:23:56] [1790353436416] [RESUME-SWITCHES] tapping 电量 at (150, 992)
+[2026-09-26 00:24:01] [1790353441230] [RESUME-SWITCHES] tapping 后台耗电管理 at (246, 2090)
+[2026-09-26 00:24:05] [1790353445956] [RESUME-SWITCHES] background power mode text for 安心收件箱: None
+[2026-09-26 00:24:12] [1790353452191] [RESUME-SWITCHES] bgpower detail texts: 安心收件箱 | 今日后台耗电时长 | 0分钟 | 智能控制后台耗电 | 智能控制不同类型应用的后台耗电量，更加省电。 | 允许后台耗电 | 不限制应用后台耗电量，可能会比较耗电。 | 后台耗电管理
+[2026-09-26 00:24:17] [1790353457646] [RESUME-SWITCHES] tapping 权限 at (540, 1467)
+[2026-09-26 00:24:25] [1790353465609] [RESUME-SWITCHES] === resume: read-only switch states end ===
+[2026-09-26 00:24:58] [1790353498087] [RESUME-PERM] === resume: permission subpages read start ===
+[2026-09-26 00:25:01] [1790353501263] [RESUME-PERM] tapping 查看所有权限 at (540, 1605)
+[2026-09-26 00:25:06] [1790353506147] [RESUME-PERM] perm_list texts: 设备管理 | 自启动 | 开机启动  后台启动 | 关联启动 | 悬浮窗 | 桌面快捷方式 | 每次使用时询问 | 锁屏显示 | 后台弹出界面 | 传感器 | 访问设备动作与方向 | 允许 | 剪贴板 | 访问剪贴板 | 使用应用时允许 | 写入剪贴板 | 使用应用时允许 | 连接 | 本地网络 | 允许 | 安心收件箱
+[2026-09-26 00:25:08] [1790353508796] [RESUME-PERM] tapping 自启动 at (174, 518)
+[2026-09-26 00:25:14] [1790353514585] [RESUME-PERM] autostart_detail texts: 设备管理 | 自启动 | 开机启动  后台启动 | 关联启动 | 悬浮窗 | 桌面快捷方式 | 每次使用时询问 | 锁屏显示 | 后台弹出界面 | 传感器 | 访问设备动作与方向 | 允许 | 剪贴板 | 访问剪贴板 | 使用应用时允许 | 写入剪贴板 | 使用应用时允许 | 连接 | 本地网络 | 允许 | 安心收件箱
+[2026-09-26 00:25:18] [1790353518539] [RESUME-PERM] WARN 锁屏显示 row not found
+[2026-09-26 00:25:18] [1790353518595] [RESUME-PERM] === resume: permission subpages read end ===
+[2026-09-26 01:14:15] [1790356455594] ==================================================
+[2026-09-26 01:14:15] [1790356455647] Starting Trial: Config B #2 (Title: SWITCH-B-2)
+[2026-09-26 01:14:15] [1790356455704] ==================================================
+[2026-09-26 01:14:19] [1790356459259] Tapping FAB at physical (540, 2049) (attempt 1/3)...
+[2026-09-26 01:14:20] [1790356460390] Setting #capText value: SWITCH-B-2
+[2026-09-26 01:14:20] [1790356460438] Setting #capTrigger value: 2026-09-26T01:17
+[2026-09-26 01:14:21] [1790356461036] Tapping '更多选项' at physical (540, 1967)
+[2026-09-26 01:14:21] [1790356461657] Tapping '🚨 关键' at physical (584, 2105)
+[2026-09-26 01:14:22] [1790356462212] Critical chip selected: True
+[2026-09-26 01:14:22] [1790356462289] Tapping '安心交给系统' at physical (792, 2218)
+[2026-09-26 01:14:22] [1790356462442] T0 recorded: 1790356462403 (2026-09-26 01:14:22)
+[2026-09-26 01:14:22] [1790356462995] Created item info: {"id": "i_rsnzg0jumuh80fmn", "title": "SWITCH-B-2", "status": "waiting", "priority": "critical", "triggerAt": 1790356620000, "delivery_mode": "alarm", "createdAt": 1790356462367}
+[2026-09-26 00:30] [RESUME-CONSENT] 用户同意记录（AskUserQuestion，2026-09-26 00:26–00:30）：
+[2026-09-26 00:30] [RESUME-CONSENT] 1) 续跑原 run（20260925T153500Z），先只读现场检查 —— 已执行（无残留事项/排程，版本=ce0d5b9/v48 经 APK 逐字节比对确认）。
+[2026-09-26 00:30] [RESUME-CONSENT] 2) 同意现在跑配置 B 第 2 次尝试（B-2）：设备已在配置 B，无需改系统开关。
+[2026-09-26 00:30] [RESUME-CONSENT] 3) 不做配置 C / D；跳过步骤 3（60 秒测试）。
+[2026-09-26 00:30] [RESUME-CONSENT] 4) 收尾同意恢复配置 A 原值：后台耗电→智能控制（configB_before XML 证据）、锁屏显示→关、自启动→关（原值依据 configB 切换动作推断，step0 截图已损坏）。
+[2026-09-26 00:30] [RESUME-CONSENT] 5) 证据缺陷声明：本 run 全部 154 张 09-25 截图因 `shell screencap` 输出被 \r\n→\n 替换而损坏（PNG 魔数 0d0a 被改写，不可逆）；00:21 起改用 exec-out 无损截图。文字类证据（logcat/dumpsys/uiautomator XML）不受影响。
+[2026-09-26 00:30] [RESUME-CONSENT] 6) 脚本修复说明：原 run-matrix.py 保留为证据；run-matrix-v2.py 修复 5 处——trial_summary 先于使用初始化（v1 在观察窗口结束后 NameError 中断，导致确认/删除/摘要从未执行）；deliver 匹配补 "AttentionAlarm: deliver"（v1 缺冒号恒不匹配 ⇒ "first deliver=None" 全为假阴性）；AlarmActivity 检测只认 mCurrentFocus/topResumed（v1 被 dumpsys 历史 wm_* 行误触发）；截图改 exec-out；logcat deliver 行可回填投递时刻。
+[2026-09-26 01:14:25] [1790356465695] T0+3s Alarm scheduled: True, details: entries=3, comps=['AlarmRingService'], sample=RTC_WAKEUP #9: Alarm{f37f9e2 type 0 origWhen 1790356620020 flags 3 windowLength 0 whenElapsed 578676186 maxWhenElapsed 578676186 repeatInterval 0 tag=*walarm*:space.alliswell.inbox.ACTION_TEST_ALARM originWhenElapsed 578676186 originWindowLength 0 setAtTime=2026-09-25 17:14:22 policyWhenElapsed:[578676186, 578518753, 0, 0, 0] procName=space.alliswell.inbox space.alliswell.inbox}
+[2026-09-26 01:14:25] [1790356465756] Pressing HOME keyevent 3 to background app...
+[2026-09-26 01:14:30] [1790356470912] Started background logcat logging to /Users/qlyf/Developer/reminder-archive/verification-runs/20260925T153500Z-vivo-switch-matrix/logcat/SWITCH-B-2_full_logcat.txt (PID=84468)
+[2026-09-26 01:14:30] [1790356470959] Pressing POWER keyevent 26 to lock screen...
+[2026-09-26 01:14:32] [1790356472646] Lock confirmed: wake=mWakefulness=Asleep, lock_info=mShowingDream=false mDreamingLockscreen=true; isKeyguardShowing=true; 
+[2026-09-26 01:14:32] [1790356472709] Entering read-only observation window until triggerAt+90s (2026-09-26 01:18:30)...
+[2026-09-26 01:17:07] [1790356627736] *** Screen SPONTANEOUSLY woke up at 2026-09-26 01:17:06 (wake=mWakefulness=Awake)! ***
+[2026-09-26 01:17:07] [1790356627789] *** AlarmActivity detected active at 2026-09-26 01:17:06! focus=mCurrentFocus=Window{4bf6ef4 u0 space.alliswell.inbox/space.alliswell.inbox.AlarmActivity type=1 } ***
+[2026-09-26 01:18:33] [1790356713712] Observation window ended at 2026-09-26 01:18:33.
+[2026-09-26 01:18:34] [1790356714307] Stopped logcat recording. Log saved to /Users/qlyf/Developer/reminder-archive/verification-runs/20260925T153500Z-vivo-switch-matrix/logcat/SWITCH-B-2_full_logcat.txt
+[2026-09-26 01:18:34] [1790356714383] Logcat analysis: first deliver=09-26 01:17:00.118 30422 30422 I AttentionAlarm: deliver path=fsi+direct fullScreen=true screenOn=false locked=true inCall=false canDrawOverlays=true, frozen_events=[(318, '09-25 23:09:43.429  1737  2108 I am_app_frozen: [0,10285,space.alliswell.inbox,from fast_freezer]'), (821, '09-25 23:29:41.529  1737  2108 I am_app_frozen: [0,10285,space.alliswell.inbox,from fast_freezer]'), (1250, '09-25 23:35:44.301  1737  2108 I am_app_frozen: [0,10285,space.alliswell.inbox,from fast_freezer]'), (1696, '09-25 23:38:17.428  1737  2108 I am_app_frozen: [0,10285,space.alliswell.inbox,from fast_freezer]'), (2066, '09-25 23:41:24.797  1737  2108 I am_app_frozen: [0,10285,space.alliswell.inbox,from fast_freezer]'), (3551, '09-25 23:52:25.784  1737  2108 I am_app_frozen: [0,10285,space.alliswell.inbox,from fast_freezer]')]
+[2026-09-26 01:18:34] [1790356714492] Trial SUCCESS in observation window: delivered at 2026-09-26 01:17:06
+[2026-09-26 01:18:34] [1790356714534] Searching for '我知道了' button to acknowledge...
+[2026-09-26 01:18:37] [1790356717208] Tapping '我知道了' at (540, 1469)
+[2026-09-26 01:18:39] [1790356719340] Deleting test item i_rsnzg0jumuh80fmn via API...
+[2026-09-26 01:18:43] [1790356723498] Post-trial alarm scheduled check for i_rsnzg0jumuh80fmn: False (should be False)
+[2026-09-26 01:18:43] [1790356723559] Trial Summary: {
+  "logcatEvidence": {
+    "deliver_line": "09-26 01:17:00.118 30422 30422 I AttentionAlarm: deliver path=fsi+direct fullScreen=true screenOn=false locked=true inCall=false canDrawOverlays=true",
+    "deliver_line_no": 8524,
+    "frozen_lines": [
+      [
+        318,
+        "09-25 23:09:43.429  1737  2108 I am_app_frozen: [0,10285,space.alliswell.inbox,from fast_freezer]"
+      ],
+      [
+        821,
+        "09-25 23:29:41.529  1737  2108 I am_app_frozen: [0,10285,space.alliswell.inbox,from fast_freezer]"
+      ],
+      [
+        1250,
+        "09-25 23:35:44.301  1737  2108 I am_app_frozen: [0,10285,space.alliswell.inbox,from fast_freezer]"
+      ],
+      [
+        1696,
+        "09-25 23:38:17.428  1737  2108 I am_app_frozen: [0,10285,space.alliswell.inbox,from fast_freezer]"
+      ],
+      [
+        2066,
+        "09-25 23:41:24.797  1737  2108 I am_app_frozen: [0,10285,space.alliswell.inbox,from fast_freezer]"
+      ],
+      [
+        3551,
+        "09-25 23:52:25.784  1737  2108 I am_app_frozen: [0,10285,space.alliswell.inbox,from fast_freezer]"
+      ]
+    ],
+    "unfrozen_lines": [
+      [
+        682,
+        "09-25 23:29:16.225  1737  2108 I am_app_unfrozen: [0,10285,space.alliswell.inbox,screen on]"
+      ],
+      [
+        1049,
+        "09-25 23:32:04.181  1737  2108 I am_app_unfrozen: [0,10285,space.alliswell.inbox,resume top activity]"
+      ],
+      [
+        1503,
+        "09-25 23:36:53.019  1737  2108 I am_app_unfrozen: [0,10285,space.alliswell.inbox,resume top activity]"
+      ],
+      [
+        1715,
+        "09-25 23:38:45.128  1737  2108 I am_app_unfrozen: [0,10285,space.alliswell.inbox,resume top activity]"
+      ],
+      [
+        2341,
+        "09-25 23:46:21.993  1737  2108 I am_app_unfrozen: [0,10285,space.alliswell.inbox,resume top activity]"
+      ],
+      [
+        4049,
+        "09-25 23:54:08.447  1737  2108 I am_app_unfrozen: [0,10285,space.alliswell.inbox,resume top activity]"
+      ]
+    ],
+    "wake_idle_lines": [
+      [
+        2169,
+        "09-25 23:44:00.052  1737  2442 I device_idle_wake_from_idle: [0,*walarm*:space.alliswell.inbox/.AlarmRingService]"
+      ],
+      [
+        2170,
+        "09-25 23:44:00.052  1737  2442 I device_idle_wake_from_idle: [0,*walarm*:space.alliswell.inbox.ACTION_TEST_ALARM]"
+      ],
+      [
+        2999,
+        "09-25 23:50:00.017  1737  2442 I device_idle_wake_from_idle: [0,*walarm*:space.alliswell.inbox/.AlarmRingService]"
+      ],
+      [
+        3001,
+        "09-25 23:50:00.049  1737  2442 I device_idle_wake_from_idle: [0,*walarm*:space.alliswell.inbox.ACTION_TEST_ALARM]"
+      ],
+      [
+        4277,
+        "09-25 23:57:00.028  1737  2442 I device_idle_wake_from_idle: [0,*walarm*:space.alliswell.inbox.ACTION_TEST_ALARM]"
+      ],
+      [
+        4278,
+        "09-25 23:57:00.046  1737  2442 I device_idle_wake_from_idle: [0,*walarm*:space.alliswell.inbox/.AlarmRingService]"
+      ],
+      [
+        8517,
+        "09-26 01:17:00.020  1737  2442 I device_idle_wake_from_idle: [0,*walarm*:space.alliswell.inbox/.AlarmRingService]"
+      ],
+      [
+        8518,
+        "09-26 01:17:00.021  1737  2442 I device_idle_wake_from_idle: [0,*walarm*:space.alliswell.inbox.ACTION_TEST_ALARM]"
+      ]
+    ]
+  },
+  "title": "SWITCH-B-2",
+  "config": "B",
+  "trial": 2,
+  "itemId": "i_rsnzg0jumuh80fmn",
+  "t0": 1790356462403,
+  "t0_str": "2026-09-26 01:14:22",
+  "triggerAt": 1790356620000,
+  "triggerAt_str": "2026-09-26 01:17:00",
+  "lockTime": 1790356471069,
+  "lockTime_str": "2026-09-26 01:14:31",
+  "alarmScheduledAtT3s": true,
+  "deliveredTime": 1790356626491,
+  "deliveredTime_str": "2026-09-26 01:17:06",
+  "deliveryDelayMs": 6491,
+  "wokeSpontaneous": true,
+  "alarmActivityPresent": true,
+  "alarmActivityTime": 1790356626491,
+  "audioPlaying": false,
+  "postWakeDeliverTime": null,
+  "postWakeDelayMs": null,
+  "frozenEvents": [
+    [
+      318,
+      "09-25 23:09:43.429  1737  2108 I am_app_frozen: [0,10285,space.alliswell.inbox,from fast_freezer]"
+    ],
+    [
+      821,
+      "09-25 23:29:41.529  1737  2108 I am_app_frozen: [0,10285,space.alliswell.inbox,from fast_freezer]"
+    ],
+    [
+      1250,
+      "09-25 23:35:44.301  1737  2108 I am_app_frozen: [0,10285,space.alliswell.inbox,from fast_freezer]"
+    ],
+    [
+      1696,
+      "09-25 23:38:17.428  1737  2108 I am_app_frozen: [0,10285,space.alliswell.inbox,from fast_freezer]"
+    ],
+    [
+      2066,
+      "09-25 23:41:24.797  1737  2108 I am_app_frozen: [0,10285,space.alliswell.inbox,from fast_freezer]"
+    ],
+    [
+      3551,
+      "09-25 23:52:25.784  1737  2108 I am_app_frozen: [0,10285,space.alliswell.inbox,from fast_freezer]"
+    ]
+  ],
+  "result": "PASS"
+}
+[2026-09-26 01:18:43] [1790356723604] ==================================================
+[2026-09-26 01:18:43] [1790356723660] Finished Trial: SWITCH-B-2 Result=PASS
+[2026-09-26 01:18:43] [1790356723705] ==================================================
+[2026-09-26 01:19:22] [1790356762613] [RESTORE] === restore config A start（用户已同意：后台耗电→智能控制；锁屏显示→关；自启动→关）===
+[2026-09-26 01:19:36] [1790356776232] [RESTORE] tapping 自启动 switch at (76,518)（同意的恢复操作）
+[2026-09-26 01:19:41] [1790356781615] [RESTORE] 自启动 toggled; verify visually in restore_自启动_after.png
+[2026-09-26 01:19:44] [1790356784285] [RESTORE] tapping 锁屏显示 switch at (124,1179)（同意的恢复操作）
+[2026-09-26 01:19:49] [1790356789721] [RESTORE] 锁屏显示 toggled; verify visually in restore_锁屏显示_after.png
+[2026-09-26 01:20:11] [1790356811170] [RESTORE] tapping 智能控制后台耗电 radio at (306,743)（同意的恢复操作）
+[2026-09-26 01:20:17] [1790356817248] [RESTORE] 后台耗电 restored; verify visually in restore_bgpower_detail_after.png
+[2026-09-26 01:20:20] [1790356820047] [RESTORE] === restore config A end ===
+[2026-09-26 01:20:45] [1790356845419] [RESTORE2] not on perm page, navigating...
+[2026-09-26 01:20:56] [1790356856460] [RESTORE2] tapping 自启动 SWITCH at (904,518)
+[2026-09-26 01:20:58] [1790356858707] [RESTORE2] 自启动: before=f9d8a9704e35 after=4e695d505db3 changed=True（视觉核对 restore2_自启动_post2.png）
+[2026-09-26 01:21:01] [1790356861853] [RESTORE2] tapping 锁屏显示 SWITCH at (904,1179)
+[2026-09-26 01:21:04] [1790356864129] [RESTORE2] 锁屏显示: before=2dcbd53d3d30 after=15a13ea27cb0 changed=True（视觉核对 restore2_锁屏显示_post2.png）
+[2026-09-26 01:21:04] [1790356864188] [RESTORE2] done
+[2026-09-26 01:21:28] [1790356888982] [FINAL-CHECK] === final integrity check start ===
+[2026-09-26 01:21:45] [1790356905575] [FINAL-CHECK] === final integrity check start ===
+[2026-09-26 01:21:48] [1790356908361] [FINAL-CHECK] diag.ignoringBatteryOptimizations=False canDrawOverlays=True canUseFullScreenIntent=True
+[2026-09-26 01:21:48] [1790356908427] [FINAL-CHECK] setupSteps.background={"id": "background", "essential": true, "done": false, "verified": false, "homeDone": false, "title": "允许完全后台运行 (防冻结)", "why": "部分 Android 厂商可能限制长时间后台运行；实际效果取决于系统设置，并需通过锁屏测试确认。", "denyImpact": "拒绝或跳过可能导致熄屏较长时间后提醒延迟；是否生效以本机测试为准。", "action": "去设置"} next={"id": "background", "essential": true, "done": false, "verified": false, "homeDone": false, "title": "允许完全后台运行 (防冻结)", "why": "部分 Android 厂商可能限制长时间后台运行；实际效果取决于系统设置，并需通过锁屏测试确认。", "denyImpact": "拒绝或跳过可能导致熄屏较长时间后提醒延迟；是否生效以本机测试为准。", "action": "去设置"}
+[2026-09-26 01:21:48] [1790356908489] [FINAL-CHECK] homeCard="<div class=\"setup-card\"><button class=\"soft-entry\" id=\"setupEntry\"><span><strong>还差 1 步，提醒才能准时响</strong><br><span class=\"setup-card-sub\">下一步：允许完全后台运行 (防冻结)</span></span><span style=\"color:var(--muted)\">›</span></button><button class=\"setup-card-close\" id=\"setupEntryDismiss\" aria-label=\"不再在首页提示\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><pa
+[2026-09-26 01:21:51] [1790356911244] [FINAL-CHECK] items snapshot: [{"id": "i_24rm31samufjri6d", "title": "REDACTED_USER_ITEM_1", "status": "archived", "rev": 2, "triggerAt": 1790255278802, "snoozedAt": null, "snoozeCount": 0, "acknowledgedAt": null}, {"id": "i_t6t8kjrbmufskit9", "title": "REDACTED_USER_ITEM_2", "status": "due", "rev": 1, "triggerAt": 1790292600000, "snoozedAt": null, "snoozeCount": 0, "acknowledgedAt": null}, {"id": "i_ve90y9vxmufskxvx", "title": "REDACTED_USER_ITEM_2", "status": "due", "rev": 1, "triggerAt": 1790292600000, "snoozedAt": null, "snoozeCount": 0, "acknowledgedAt": null}, {"id": "i_ksgrct0wmufslps2", "title": "REDACTED_USER_ITEM_4", "status": "waiting", "rev": 1, "triggerAt": 1790343000000, "snoozedAt": null, "snoozeCount": 0, "acknowledgedAt": null}, {"id": "i_32p3og4nmufsly70", "title": "REDACTED_USER_ITEM_5", "status": "archived", "rev": 2, "triggerAt": 1790270129172, "snoozedAt": null, "snoozeCount": 0, "acknowledgedAt": null}, {"id": "i_jaggipg8mufsmipq", "title": "REDACTED_USER_ITEM_6", "status": "acknowledged", "rev": 2, "triggerAt": 1790270157765, "snoozedAt": null, "snoozeCount": 0, "acknowledgedAt": 1790270170462}]
+[2026-09-26 01:21:51] [1790356911296] [FINAL-CHECK] SWITCH leftovers: []
+[2026-09-26 01:21:51] [1790356911352] [FINAL-CHECK] === final integrity check end (dumpsys alarm/notification 由外部采集) ===

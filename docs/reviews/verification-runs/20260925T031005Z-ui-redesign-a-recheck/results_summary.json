@@ -1,0 +1,55 @@
+{
+  "R1": {
+    "title": "大字体（1.30）下主按钮单行无折行、标题在屏内、导航无下空白带",
+    "status": "PASS",
+    "explanation": "1.30下折行主按钮数=0；标题top=0 (>=0: True)；导航底边=736/736；字体缩放已恢复为 1.0",
+    "evidence_files": [
+      "screenshots/R1_font130_beginner.png",
+      "screenshots/R1_font130_normal.png",
+      "screenshots/R1_font100_beginner.png",
+      "screenshots/R1_font100_normal.png",
+      "dom_and_state/R1_font_scale_comparison.json"
+    ]
+  },
+  "R2": {
+    "title": "普通事项到点走系统通知渠道（非 attention-alarm-*）且设置测后恢复",
+    "status": "PASS",
+    "explanation": "默认提醒方式切换为 notification 后，普通事项到点成功投递至系统通知渠道 attention-normal-v2（非闹钟渠道）；通知栏展开截图已留证；设置已严格恢复为 alarm；事项数恢复为 18",
+    "evidence_files": [
+      "screenshots/R2_system_notification.png",
+      "dumpsys/R2_dumpsys_notification_filtered.txt",
+      "dom_and_state/R2_notification_check.json"
+    ]
+  },
+  "R3": {
+    "title": "按钮改动回归：A1~A4真实坐标触摸触发正常",
+    "status": "PASS",
+    "explanation": "真机input tap触控正常：我知道了离开到点=True，完成归档=True，稍后离开首页=True",
+    "evidence_files": [
+      "screenshots/R3_A1_cards.png",
+      "screenshots/R3_A2_after_ack.png",
+      "screenshots/R3_A3_after_done.png",
+      "screenshots/R3_A4_snooze_sheet.png",
+      "screenshots/R3_A4_after_snooze.png",
+      "dom_and_state/R3_regression_checks.json"
+    ]
+  },
+  "R4": {
+    "title": "关键事项全屏闹钟锁屏唤醒与我知道了回流",
+    "status": "PASS",
+    "explanation": "全屏闹钟唤醒=True，点我知道了后状态=acknowledged，已离开到点区=True",
+    "evidence_files": [
+      "screenshots/R4_alarm_triggered.png",
+      "screenshots/R4_home_after_ack.png",
+      "dom_and_state/R4_alarm_smoke_result.json"
+    ]
+  },
+  "R5": {
+    "title": "彻底清理测试事项、Alarm/Notification无残留、设置完全恢复",
+    "status": "PASS",
+    "explanation": "事项数=18 (严格匹配原18条=True)；闹钟残留=0；通知残留=0；font_scale=1.0；提醒方式=alarm",
+    "evidence_files": [
+      "dom_and_state/R5_final_cleanup.json"
+    ]
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "cleanup_result": {
+    "deletedCount": 1,
+    "deletedTitles": [
+      "[UI复测] 关键闹钟冒烟"
+    ],
+    "remainingCount": 18
+  },
+  "remaining_count": 18,
+  "id_match_ok": true,
+  "test_alarm_residue_count": 0,
+  "test_notif_residue_count": 0,
+  "font_scale": "1.0",
+  "defaultDeliveryMode": "alarm"
+}

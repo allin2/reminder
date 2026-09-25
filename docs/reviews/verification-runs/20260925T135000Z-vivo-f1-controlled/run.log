@@ -1,0 +1,268 @@
+[2026-09-25 21:53:13] [1790344393953] =================================================================
+[2026-09-25 21:53:13] [1790344393992] Starting Controlled F1 Recheck on vivo V2238A
+[2026-09-25 21:53:14] [1790344394041] Device: 10ACBF2D3D000RS, Package: space.alliswell.inbox
+[2026-09-25 21:53:14] [1790344394092] =================================================================
+[2026-09-25 21:53:15] [1790344395701] ========== Starting S1 Run 1: title=UIRECHECK-F1-S1-1 ==========
+[2026-09-25 21:53:16] [1790344396699] Tapping FAB at physical (540, 2049)
+[2026-09-25 21:53:17] [1790344397658] Setting #capText value: UIRECHECK-F1-S1-1
+[2026-09-25 21:53:17] [1790344397708] Setting #capTrigger value: 2026-09-25T21:56
+[2026-09-25 21:53:18] [1790344398295] Tapping '更多选项' at physical (540, 1967)
+[2026-09-25 21:53:18] [1790344398977] ========== Final Verification and Cleanup ==========
+[2026-09-25 21:53:21] [1790344401029] Final items count: 6
+[2026-09-25 21:53:21] [1790344401789] Results summary written to: /Users/qlyf/Developer/reminder/docs/reviews/verification-runs/20260925T135000Z-vivo-f1-controlled/results_summary.json
+[2026-09-25 21:54:08] [1790344448144] =================================================================
+[2026-09-25 21:54:08] [1790344448196] Starting Controlled F1 Recheck on vivo V2238A
+[2026-09-25 21:54:08] [1790344448235] Device: 10ACBF2D3D000RS, Package: space.alliswell.inbox
+[2026-09-25 21:54:08] [1790344448271] =================================================================
+[2026-09-25 21:54:09] [1790344449833] ========== Starting S1 Run 1: title=UIRECHECK-F1-S1-1 ==========
+[2026-09-25 21:54:10] [1790344450764] Tapping FAB at physical (540, 2049)
+[2026-09-25 21:54:11] [1790344451721] Setting #capText value: UIRECHECK-F1-S1-1
+[2026-09-25 21:54:11] [1790344451761] ========== Final Verification and Cleanup ==========
+[2026-09-25 21:54:13] [1790344453754] Final items count: 6
+[2026-09-25 21:54:14] [1790344454375] Results summary written to: /Users/qlyf/Developer/reminder/docs/reviews/verification-runs/20260925T135000Z-vivo-f1-controlled/results_summary.json
+[2026-09-25 21:54:32] [1790344472933] Tapping FAB at physical (540, 2049)
+[2026-09-25 21:54:33] [1790344473878] Setting #capText value: UIRECHECK-F1-TEST-SMOKE
+[2026-09-25 21:54:33] [1790344473924] Setting #capTrigger value: 2026-09-25T21:57
+[2026-09-25 21:54:34] [1790344474528] Tapping '更多选项' at physical (540, 1967)
+[2026-09-25 21:54:35] [1790344475201] Tapping '🚨 关键' at physical (584, 2105)
+[2026-09-25 21:54:35] [1790344475761] Critical chip selected: True
+[2026-09-25 21:54:35] [1790344475814] Tapping '安心交给系统' at physical (792, 2218)
+[2026-09-25 21:54:35] [1790344475993] T0 recorded: 1790344475928 (2026-09-25 21:54:35)
+[2026-09-25 21:54:36] [1790344476559] Created item info: {"id": "i_y0s3ojjbmuh0visy", "title": "UIRECHECK-F1-TEST-SMOKE", "status": "waiting", "priority": "critical", "triggerAt": 1790344620000, "delivery_mode": "alarm", "createdAt": 1790344475890}
+[2026-09-25 21:54:44] [1790344484494] =================================================================
+[2026-09-25 21:54:44] [1790344484541] Starting Controlled F1 Recheck on vivo V2238A
+[2026-09-25 21:54:44] [1790344484579] Device: 10ACBF2D3D000RS, Package: space.alliswell.inbox
+[2026-09-25 21:54:44] [1790344484627] =================================================================
+[2026-09-25 21:54:46] [1790344486161] ========== Starting S1 Run 1: title=UIRECHECK-F1-S1-1 ==========
+[2026-09-25 21:54:47] [1790344487118] Tapping FAB at physical (540, 2049)
+[2026-09-25 21:54:48] [1790344488039] Setting #capText value: UIRECHECK-F1-S1-1
+[2026-09-25 21:54:48] [1790344488082] Setting #capTrigger value: 2026-09-25T21:58
+[2026-09-25 21:54:48] [1790344488663] Tapping '更多选项' at physical (540, 1967)
+[2026-09-25 21:54:49] [1790344489296] Tapping '🚨 关键' at physical (584, 2105)
+[2026-09-25 21:54:49] [1790344489864] Critical chip selected: True
+[2026-09-25 21:54:49] [1790344489932] Tapping '安心交给系统' at physical (792, 2218)
+[2026-09-25 21:54:50] [1790344490105] T0 recorded: 1790344490058 (2026-09-25 21:54:50)
+[2026-09-25 21:54:50] [1790344490668] Created item info: {"id": "i_33p09e7jmuh0vtpf", "title": "UIRECHECK-F1-S1-1", "status": "waiting", "priority": "critical", "triggerAt": 1790344680000, "delivery_mode": "alarm", "createdAt": 1790344490019}
+[2026-09-25 21:54:51] [1790344491361] S1-1 T0+1s alarm scheduled: True, entry: entries=3, comps=['AlarmRingService'], sample=RTC_WAKEUP #11: Alarm{c3e461a type 0 origWhen 1790344680024 flags 3 windowLength 0 whenElapsed 566736191 maxWhenElapsed 566736191 repeatInterval 0 tag=*walarm*:space.alliswell.inbox.ACTION_TEST_ALARM originWhenElapsed 566736191 originWindowLength 0 setAtTime=2026-09-25 13:54:50 policyWhenElapsed:[566736191, 566546389, 0, 0, 0] procName=space.alliswell.inbox space.alliswell.inbox}
+[2026-09-25 21:54:53] [1790344493336] S1-1 T0+3s alarm scheduled: True, entry: entries=3, comps=['AlarmRingService'], sample=RTC_WAKEUP #11: Alarm{c3e461a type 0 origWhen 1790344680024 flags 3 windowLength 0 whenElapsed 566736191 maxWhenElapsed 566736191 repeatInterval 0 tag=*walarm*:space.alliswell.inbox.ACTION_TEST_ALARM originWhenElapsed 566736191 originWindowLength 0 setAtTime=2026-09-25 13:54:50 policyWhenElapsed:[566736191, 566546389, 0, 0, 0] procName=space.alliswell.inbox space.alliswell.inbox}
+[2026-09-25 21:54:55] [1790344495160] S1-1 Locking screen with KEYCODE_POWER...
+[2026-09-25 21:54:56] [1790344496895] S1-1 Lock screen confirmed: mShowingDream=false mDreamingLockscreen=true; isKeyguardShowing=true; , wake: mWakefulness=Asleep
+[2026-09-25 21:55:20] [1790344520338] S1-1 T0+30s alarm scheduled: True, entry: entries=3, comps=['AlarmRingService'], sample=RTC_WAKEUP #12: Alarm{c3e461a type 0 origWhen 1790344680024 flags 3 windowLength 0 whenElapsed 566736191 maxWhenElapsed 566736191 repeatInterval 0 tag=*walarm*:space.alliswell.inbox.ACTION_TEST_ALARM originWhenElapsed 566736191 originWindowLength 0 setAtTime=2026-09-25 13:54:50 policyWhenElapsed:[566736191, 566546389, 0, 0, 0] procName=space.alliswell.inbox space.alliswell.inbox}
+[2026-09-25 21:55:20] [1790344520459] S1-1 Sleeping 169.6s until triggerAt+10s (2026-09-25 21:58:10)...
+[2026-09-25 21:58:10] [1790344690753] S1-1 At trigger+10s: focus=mCurrentFocus=Window{com.android.systemui:f9294bb u0 NotificationShade type=2040 }, wake=mWakefulness=Asleep
+[2026-09-25 21:58:10] [1790344690821] S1-1 Top activities: []
+[2026-09-25 21:58:11] [1790344691360] S1-1 Saved screenshot: screenshots/S1_1_alarm_triggered.png
+[2026-09-25 21:58:15] [1790344695469] S1-1 Saved filtered logcat to: /Users/qlyf/Developer/reminder/docs/reviews/verification-runs/20260925T135000Z-vivo-f1-controlled/logcat/S1_1_logcat.txt
+[2026-09-25 21:58:15] [1790344695543] S1-1 AlarmActivity NOT present! Direct evidence captured.
+[2026-09-25 21:58:17] [1790344697989] S1-1 Cleaning up test item i_33p09e7jmuh0vtpf...
+[2026-09-25 21:58:20] [1790344700078] ========== Finished S1 Run 1: Result=WARN ==========
+[2026-09-25 21:58:20] [1790344700134] Waiting 65s before S1-2...
+[2026-09-25 21:59:25] [1790344765211] ========== Starting S1 Run 2: title=UIRECHECK-F1-S1-2 ==========
+[2026-09-25 21:59:26] [1790344766256] Tapping FAB at physical (540, 1697)
+[2026-09-25 21:59:27] [1790344767213] SheetItem not open after tap, retrying tap...
+[2026-09-25 21:59:28] [1790344768163] Setting #capText value: UIRECHECK-F1-S1-2
+[2026-09-25 21:59:28] [1790344768234] Setting #capTrigger value: 2026-09-25T22:02
+[2026-09-25 21:59:28] [1790344768838] Tapping '更多选项' at physical (540, 3433)
+[2026-09-25 21:59:29] [1790344769488] Tapping '🚨 关键' at physical (0, 120)
+[2026-09-25 21:59:30] [1790344770045] Critical chip selected: False
+[2026-09-25 21:59:30] [1790344770102] Tapping '安心交给系统' at physical (792, 3684)
+[2026-09-25 21:59:30] [1790344770245] T0 recorded: 1790344770200 (2026-09-25 21:59:30)
+[2026-09-25 21:59:30] [1790344770812] Created item info: null
+[2026-09-25 21:59:30] [1790344770866] ========== Final Verification and Cleanup ==========
+[2026-09-25 21:59:32] [1790344772911] Final items count: 6
+[2026-09-25 21:59:33] [1790344773679] Results summary written to: /Users/qlyf/Developer/reminder/docs/reviews/verification-runs/20260925T135000Z-vivo-f1-controlled/results_summary.json
+[2026-09-25 22:02:32] [1790344952521] =================================================================
+[2026-09-25 22:02:32] [1790344952558] Starting Controlled F1 Recheck on vivo V2238A
+[2026-09-25 22:02:32] [1790344952603] Device: 10ACBF2D3D000RS, Package: space.alliswell.inbox
+[2026-09-25 22:02:32] [1790344952639] =================================================================
+[2026-09-25 22:02:35] [1790344955738] ========== Starting S1 Run 1: title=UIRECHECK-F1-S1-1 ==========
+[2026-09-25 22:02:37] [1790344957074] Tapping FAB at physical (540, 2049) (attempt 1/3)...
+[2026-09-25 22:02:38] [1790344958202] Setting #capText value: UIRECHECK-F1-S1-1
+[2026-09-25 22:02:38] [1790344958238] Setting #capTrigger value: 2026-09-25T22:05
+[2026-09-25 22:02:38] [1790344958824] Tapping '更多选项' at physical (540, 1967)
+[2026-09-25 22:02:39] [1790344959468] Tapping '🚨 关键' at physical (584, 2105)
+[2026-09-25 22:02:40] [1790344960005] Critical chip selected: True
+[2026-09-25 22:02:40] [1790344960051] Tapping '安心交给系统' at physical (792, 2218)
+[2026-09-25 22:02:40] [1790344960219] T0 recorded: 1790344960174 (2026-09-25 22:02:40)
+[2026-09-25 22:02:40] [1790344960789] Created item info: {"id": "i_9mq6jrb3muh15wg3", "title": "UIRECHECK-F1-S1-1", "status": "waiting", "priority": "critical", "triggerAt": 1790345100000, "delivery_mode": "alarm", "createdAt": 1790344960131}
+[2026-09-25 22:02:41] [1790344961501] S1-1 T0+1s alarm scheduled: True, entry: entries=3, comps=['AlarmRingService'], sample=RTC_WAKEUP #8: Alarm{e66d1cf type 0 origWhen 1790345100041 flags 3 windowLength 0 whenElapsed 567156207 maxWhenElapsed 567156207 repeatInterval 0 tag=*walarm*:space.alliswell.inbox.ACTION_TEST_ALARM originWhenElapsed 567156207 originWindowLength 0 setAtTime=2026-09-25 14:02:40 policyWhenElapsed:[567156207, 567016557, 0, 0, 0] procName=space.alliswell.inbox space.alliswell.inbox}
+[2026-09-25 22:02:43] [1790344963384] S1-1 T0+3s alarm scheduled: True, entry: entries=3, comps=['AlarmRingService'], sample=RTC_WAKEUP #8: Alarm{e66d1cf type 0 origWhen 1790345100041 flags 3 windowLength 0 whenElapsed 567156207 maxWhenElapsed 567156207 repeatInterval 0 tag=*walarm*:space.alliswell.inbox.ACTION_TEST_ALARM originWhenElapsed 567156207 originWindowLength 0 setAtTime=2026-09-25 14:02:40 policyWhenElapsed:[567156207, 567016557, 0, 0, 0] procName=space.alliswell.inbox space.alliswell.inbox}
+[2026-09-25 22:02:45] [1790344965231] S1-1 Locking screen with KEYCODE_POWER...
+[2026-09-25 22:02:46] [1790344966890] S1-1 Lock screen confirmed: mShowingDream=false mDreamingLockscreen=true; isKeyguardShowing=true; , wake: mWakefulness=Asleep
+[2026-09-25 22:03:10] [1790344990423] S1-1 T0+30s alarm scheduled: True, entry: entries=3, comps=['AlarmRingService'], sample=RTC_WAKEUP #6: Alarm{e66d1cf type 0 origWhen 1790345100041 flags 3 windowLength 0 whenElapsed 567156207 maxWhenElapsed 567156207 repeatInterval 0 tag=*walarm*:space.alliswell.inbox.ACTION_TEST_ALARM originWhenElapsed 567156207 originWindowLength 0 setAtTime=2026-09-25 14:02:40 policyWhenElapsed:[567156207, 567016557, 0, 0, 0] procName=space.alliswell.inbox space.alliswell.inbox}
+[2026-09-25 22:03:10] [1790344990523] S1-1 Sleeping 119.5s until triggerAt+10s (2026-09-25 22:05:10)...
+[2026-09-25 22:05:10] [1790345110690] S1-1 At trigger+10s snapshot: focus=mCurrentFocus=Window{com.android.systemui:f9294bb u0 NotificationShade type=2040 }, wake=mWakefulness=Asleep, topActivities=[]
+[2026-09-25 22:05:38] [1790345138003] S1-1 Saved screenshot: screenshots/S1_1_alarm_triggered.png
+[2026-09-25 22:05:42] [1790345142063] S1-1 Saved filtered logcat to: /Users/qlyf/Developer/reminder/docs/reviews/verification-runs/20260925T135000Z-vivo-f1-controlled/logcat/S1_1_logcat.txt
+[2026-09-25 22:05:42] [1790345142109] S1-1 AlarmActivity NOT present after 35s! Direct evidence captured.
+[2026-09-25 22:05:44] [1790345144853] S1-1 Cleaning up test item i_9mq6jrb3muh15wg3...
+[2026-09-25 22:05:46] [1790345146933] ========== Finished S1 Run 1: Result=WARN ==========
+[2026-09-25 22:05:46] [1790345146978] Waiting 65s before S1-2...
+[2026-09-25 22:06:53] [1790345213050] ========== Starting S1 Run 2: title=UIRECHECK-F1-S1-2 ==========
+[2026-09-25 22:06:54] [1790345214526] Tapping FAB at physical (540, 2049) (attempt 1/3)...
+[2026-09-25 22:06:55] [1790345215669] Setting #capText value: UIRECHECK-F1-S1-2
+[2026-09-25 22:06:55] [1790345215707] Setting #capTrigger value: 2026-09-25T22:10
+[2026-09-25 22:06:56] [1790345216310] Tapping '更多选项' at physical (540, 1967)
+[2026-09-25 22:06:56] [1790345216958] Tapping '🚨 关键' at physical (584, 2105)
+[2026-09-25 22:06:57] [1790345217516] Critical chip selected: True
+[2026-09-25 22:06:57] [1790345217564] Tapping '安心交给系统' at physical (792, 2218)
+[2026-09-25 22:06:57] [1790345217753] T0 recorded: 1790345217703 (2026-09-25 22:06:57)
+[2026-09-25 22:06:58] [1790345218340] Created item info: {"id": "i_4s6zseoomuh1bf5d", "title": "UIRECHECK-F1-S1-2", "status": "waiting", "priority": "critical", "triggerAt": 1790345400000, "delivery_mode": "alarm", "createdAt": 1790345217649}
+[2026-09-25 22:06:58] [1790345218888] S1-2 T0+1s alarm scheduled: True, entry: entries=3, comps=['AlarmRingService'], sample=RTC_WAKEUP #8: Alarm{94f722c type 0 origWhen 1790345400016 flags 3 windowLength 0 whenElapsed 567456182 maxWhenElapsed 567456182 repeatInterval 0 tag=*walarm*:space.alliswell.inbox/.AlarmRingService originWhenElapsed 567456182 originWindowLength 0 setAtTime=2026-09-25 14:06:57 policyWhenElapsed:[567456182, 567273997, 0, 0, 0] procName=space.alliswell.inbox space.alliswell.inbox}
+[2026-09-25 22:07:00] [1790345220971] S1-2 T0+3s alarm scheduled: True, entry: entries=3, comps=['AlarmRingService'], sample=RTC_WAKEUP #8: Alarm{94f722c type 0 origWhen 1790345400016 flags 3 windowLength 0 whenElapsed 567456182 maxWhenElapsed 567456182 repeatInterval 0 tag=*walarm*:space.alliswell.inbox/.AlarmRingService originWhenElapsed 567456182 originWindowLength 0 setAtTime=2026-09-25 14:06:57 policyWhenElapsed:[567456182, 567273997, 0, 0, 0] procName=space.alliswell.inbox space.alliswell.inbox}
+[2026-09-25 22:07:02] [1790345222805] S1-2 Locking screen with KEYCODE_POWER...
+[2026-09-25 22:07:04] [1790345224484] S1-2 Lock screen confirmed: mShowingDream=false mDreamingLockscreen=true; isKeyguardShowing=true; , wake: mWakefulness=Asleep
+[2026-09-25 22:07:27] [1790345247989] S1-2 T0+30s alarm scheduled: True, entry: entries=3, comps=['AlarmRingService'], sample=RTC_WAKEUP #8: Alarm{94f722c type 0 origWhen 1790345400016 flags 3 windowLength 0 whenElapsed 567456182 maxWhenElapsed 567456182 repeatInterval 0 tag=*walarm*:space.alliswell.inbox/.AlarmRingService originWhenElapsed 567456182 originWindowLength 0 setAtTime=2026-09-25 14:06:57 policyWhenElapsed:[567456182, 567273997, 0, 0, 0] procName=space.alliswell.inbox space.alliswell.inbox}
+[2026-09-25 22:07:28] [1790345248097] S1-2 Sleeping 162.0s until triggerAt+10s (2026-09-25 22:10:10)...
+[2026-09-25 22:10:10] [1790345410585] S1-2 At trigger+10s snapshot: focus=mCurrentFocus=Window{d72a996 u0 space.alliswell.inbox/space.alliswell.inbox.AlarmActivity type=1 }, wake=mWakefulness=Awake, topActivities=['topResumedActivity=ActivityRecord{53035001 u0 space.alliswell.inbox/.AlarmActivity t138 d0}', '* Hist  #0: ActivityRecord{53035001 u0 space.alliswell.inbox/.AlarmActivity t138 d0}', 'Intent { flg=0x34840000 xflg=0x4 cmp=space.alliswell.inbox/.AlarmActivity (has extras) }', 'mActivityComponent=space.alliswell.inbox/.AlarmActivity', 'windows=[Window{d72a996 u0 space.alliswell.inbox/space.alliswell.inbox.AlarmActivity type=1 }]', 'Resumed: ActivityRecord{53035001 u0 space.alliswell.inbox/.AlarmActivity t138 d0}', 'ResumedActivity: ActivityRecord{53035001 u0 space.alliswell.inbox/.AlarmActivity t138 d0}', 'mTopApp: ProcessRecord{21e5136 6105:space.alliswell.inbox/u0a285} ,mTopActivityRecord:ActivityRecord{53035001 u0 space.alliswell.inbox/.AlarmActivity t138 d0}', 'deepestLastOrientationSource=ActivityRecord{53035001 u0 space.alliswell.inbox/.AlarmActivity t138 d0}', 'mCurrentFocus=Window{d72a996 u0 space.alliswell.inbox/space.alliswell.inbox.AlarmActivity type=1 }', 'mFocusedApp=ActivityRecord{53035001 u0 space.alliswell.inbox/.AlarmActivity t138 d0}', 'mHoldScreenWindow=Window{d72a996 u0 space.alliswell.inbox/space.alliswell.inbox.AlarmActivity type=1 }', 'mLastWakeLockHoldingWindow=Window{d72a996 u0 space.alliswell.inbox/space.alliswell.inbox.AlarmActivity type=1 }', '* ActivityRecord{53035001 u0 space.alliswell.inbox/.AlarmActivity t138 d0}', 'mFocusedWindow=Window{d72a996 u0 space.alliswell.inbox/space.alliswell.inbox.AlarmActivity type=1 }', 'mTopFullscreenOpaqueWindowState=Window{d72a996 u0 space.alliswell.inbox/space.alliswell.inbox.AlarmActivity type=1 }', 'mSystemBarColorApps={ActivityRecord{53035001 u0 space.alliswell.inbox/.AlarmActivity t138 d0}}', 'mNavBarColorWindowCandidate=Window{d72a996 u0 space.alliswell.inbox/space.alliswell.inbox.AlarmActivity type=1 }', 'mNavBarBackgroundWindowCandidate=Window{d72a996 u0 space.alliswell.inbox/space.alliswell.inbox.AlarmActivity type=1 }', 'Window{d72a996 u0 space.alliswell.inbox/space.alliswell.inbox.AlarmActivity type=1 }', 'source=ActivityRecord{53035001 u0 space.alliswell.inbox/.AlarmActivity t138 d0} SCREEN_ORIENTATION_UNSPECIFIED', 'Window{d72a996 u0 space.alliswell.inbox/space.alliswell.inbox.AlarmActivity type=1 }:', 'mControlTarget=Window{d72a996 u0 space.alliswell.inbox/space.alliswell.inbox.AlarmActivity type=1 }', 'mControlTarget=Window{d72a996 u0 space.alliswell.inbox/space.alliswell.inbox.AlarmActivity type=1 }', 'mControlTarget=Window{d72a996 u0 space.alliswell.inbox/space.alliswell.inbox.AlarmActivity type=1 }', 'KeyguardShowing=false AodShowing=false KeyguardGoingAway=false DismissalRequested=false  Occluded=false DismissingKeyguardActivity=ActivityRecord{53035001 u0 space.alliswell.inbox/.AlarmActivity t138 d0} TurnScreenOnActivity=null at display=0']
+[2026-09-25 22:10:11] [1790345411631] S1-2 Saved screenshot: screenshots/S1_2_alarm_triggered.png
+[2026-09-25 22:10:15] [1790345415794] S1-2 Saved filtered logcat to: /Users/qlyf/Developer/reminder/docs/reviews/verification-runs/20260925T135000Z-vivo-f1-controlled/logcat/S1_2_logcat.txt
+[2026-09-25 22:10:15] [1790345415837] S1-2 AlarmActivity detected! Looking for '我知道了' button...
+[2026-09-25 22:10:18] [1790345418524] S1-2 Tapping '我知道了' at (540, 1469)
+[2026-09-25 22:10:22] [1790345422084] S1-2 Item status after ack: due
+[2026-09-25 22:10:22] [1790345422124] S1-2 Cleaning up test item i_4s6zseoomuh1bf5d...
+[2026-09-25 22:10:24] [1790345424210] ========== Finished S1 Run 2: Result=WARN ==========
+[2026-09-25 22:10:24] [1790345424257] Waiting 65s before S2-1...
+[2026-09-25 22:11:30] [1790345490342] ========== Starting S2 Run 1: title=UIRECHECK-F1-S2-1 ==========
+[2026-09-25 22:11:31] [1790345491806] Tapping FAB at physical (540, 2049) (attempt 1/3)...
+[2026-09-25 22:11:32] [1790345492954] SheetItem not open, retrying scroll and tap...
+[2026-09-25 22:11:33] [1790345493551] Tapping FAB at physical (540, 2049) (attempt 2/3)...
+[2026-09-25 22:11:34] [1790345494694] SheetItem not open, retrying scroll and tap...
+[2026-09-25 22:11:35] [1790345495271] Tapping FAB at physical (540, 2049) (attempt 3/3)...
+[2026-09-25 22:11:36] [1790345496410] SheetItem not open, retrying scroll and tap...
+[2026-09-25 22:11:36] [1790345496973] Exception during run_s2_iteration (1,): Failed to open #sheetItem after 3 attempts
+[2026-09-25 22:11:38] [1790345498296] Waiting 65s before S2-2...
+[2026-09-25 22:12:44] [1790345564360] ========== Starting S2 Run 2: title=UIRECHECK-F1-S2-2 ==========
+[2026-09-25 22:12:45] [1790345565730] Tapping FAB at physical (540, 2049) (attempt 1/3)...
+[2026-09-25 22:12:46] [1790345566872] SheetItem not open, retrying scroll and tap...
+[2026-09-25 22:12:47] [1790345567444] Tapping FAB at physical (540, 2049) (attempt 2/3)...
+[2026-09-25 22:12:48] [1790345568601] SheetItem not open, retrying scroll and tap...
+[2026-09-25 22:12:49] [1790345569198] Tapping FAB at physical (540, 2049) (attempt 3/3)...
+[2026-09-25 22:12:50] [1790345570337] SheetItem not open, retrying scroll and tap...
+[2026-09-25 22:12:50] [1790345570905] Exception during run_s2_iteration (2,): Failed to open #sheetItem after 3 attempts
+[2026-09-25 22:12:52] [1790345572361] Waiting 65s before S3-1...
+[2026-09-25 22:13:58] [1790345638442] ========== Starting S3 (Foreground Control): title=UIRECHECK-F1-S3-1 ==========
+[2026-09-25 22:13:59] [1790345639943] Tapping FAB at physical (540, 2049) (attempt 1/3)...
+[2026-09-25 22:14:01] [1790345641100] SheetItem not open, retrying scroll and tap...
+[2026-09-25 22:14:01] [1790345641681] Tapping FAB at physical (540, 2049) (attempt 2/3)...
+[2026-09-25 22:14:02] [1790345642826] SheetItem not open, retrying scroll and tap...
+[2026-09-25 22:14:03] [1790345643399] Tapping FAB at physical (540, 2049) (attempt 3/3)...
+[2026-09-25 22:14:04] [1790345644544] SheetItem not open, retrying scroll and tap...
+[2026-09-25 22:14:05] [1790345645131] Exception during run_s3_iteration (): Failed to open #sheetItem after 3 attempts
+[2026-09-25 22:14:06] [1790345646605] ========== Final Verification and Cleanup ==========
+[2026-09-25 22:14:09] [1790345649089] Final items count: 6
+[2026-09-25 22:14:09] [1790345649806] Results summary written to: /Users/qlyf/Developer/reminder/docs/reviews/verification-runs/20260925T135000Z-vivo-f1-controlled/results_summary.json
+[2026-09-25 22:14:09] [1790345649853] =================================================================
+[2026-09-25 22:14:09] [1790345649890] Controlled F1 Recheck Completed Successfully!
+[2026-09-25 22:14:09] [1790345649936] =================================================================
+[2026-09-25 22:19:40] [1790345980614] =================================================================
+[2026-09-25 22:19:40] [1790345980651] Starting Controlled F1 Recheck on vivo V2238A
+[2026-09-25 22:19:40] [1790345980697] Device: 10ACBF2D3D000RS, Package: space.alliswell.inbox
+[2026-09-25 22:19:40] [1790345980748] =================================================================
+[2026-09-25 22:19:42] [1790345982866] Starting S2-1 (Immediately lock screen)...
+[2026-09-25 22:19:43] [1790345983929] ========== Starting S2 Run 1: title=UIRECHECK-F1-S2-1 ==========
+[2026-09-25 22:19:45] [1790345985346] Tapping FAB at physical (540, 2049) (attempt 1/3)...
+[2026-09-25 22:19:46] [1790345986488] Setting #capText value: UIRECHECK-F1-S2-1
+[2026-09-25 22:19:46] [1790345986531] Setting #capTrigger value: 2026-09-25T22:23
+[2026-09-25 22:19:47] [1790345987113] Tapping '更多选项' at physical (540, 1967)
+[2026-09-25 22:19:47] [1790345987794] Tapping '🚨 关键' at physical (584, 2105)
+[2026-09-25 22:19:48] [1790345988332] Critical chip selected: True
+[2026-09-25 22:19:48] [1790345988374] Tapping '安心交给系统' at physical (792, 2218)
+[2026-09-25 22:19:48] [1790345988534] T0 recorded: 1790345988493 (2026-09-25 22:19:48)
+[2026-09-25 22:19:49] [1790345989098] Created item info: {"id": "i_u5ufqyammuh1rxwi", "title": "UIRECHECK-F1-S2-1", "status": "waiting", "priority": "critical", "triggerAt": 1790346180000, "delivery_mode": "alarm", "createdAt": 1790345988450}
+[2026-09-25 22:19:49] [1790345989153] S2-1 Immediately locking screen within 1s...
+[2026-09-25 22:19:50] [1790345990889] S2-1 Immediate lock screen confirmed: mShowingDream=false mDreamingLockscreen=true; isKeyguardShowing=true; , wake: mWakefulness=Asleep
+[2026-09-25 22:19:53] [1790345993756] S2-1 T0+5s post-lock alarm scheduled: True, entry: entries=3, comps=['AlarmRingService'], sample=RTC_WAKEUP #8: Alarm{4e1bd84 type 0 origWhen 1790346180031 flags 3 windowLength 0 whenElapsed 568236197 maxWhenElapsed 568236197 repeatInterval 0 tag=*walarm*:space.alliswell.inbox.ACTION_TEST_ALARM originWhenElapsed 568236197 originWindowLength 0 setAtTime=2026-09-25 14:19:48 policyWhenElapsed:[568236197, 568044798, 0, 0, 0] procName=space.alliswell.inbox space.alliswell.inbox}
+[2026-09-25 22:20:18] [1790346018775] S2-1 T0+30s post-lock alarm scheduled: True, entry: entries=3, comps=['AlarmRingService'], sample=RTC_WAKEUP #7: Alarm{4e1bd84 type 0 origWhen 1790346180031 flags 3 windowLength 0 whenElapsed 568236197 maxWhenElapsed 568236197 repeatInterval 0 tag=*walarm*:space.alliswell.inbox.ACTION_TEST_ALARM originWhenElapsed 568236197 originWindowLength 0 setAtTime=2026-09-25 14:19:48 policyWhenElapsed:[568236197, 568044798, 0, 0, 0] procName=space.alliswell.inbox space.alliswell.inbox}
+[2026-09-25 22:20:18] [1790346018886] S2-1 Sleeping 171.2s until triggerAt+10s (2026-09-25 22:23:10)...
+[2026-09-25 22:23:10] [1790346190737] S2-1 At trigger+10s snapshot: focus=mCurrentFocus=Window{com.android.systemui:f9294bb u0 NotificationShade type=2040 }, wake=mWakefulness=Asleep, topActivities=['source=ActivityRecord{53035001 u0 space.alliswell.inbox/.AlarmActivity t138 d0} SCREEN_ORIENTATION_UNSPECIFIED', 'source=ActivityRecord{53035001 u0 space.alliswell.inbox/.AlarmActivity t138 d0} SCREEN_ORIENTATION_UNSPECIFIED', 'source=ActivityRecord{53035001 u0 space.alliswell.inbox/.AlarmActivity t138 d0} SCREEN_ORIENTATION_UNSPECIFIED', 'source=ActivityRecord{53035001 u0 space.alliswell.inbox/.AlarmActivity t138 d0} SCREEN_ORIENTATION_UNSPECIFIED']
+[2026-09-25 22:23:11] [1790346191884] S2-1 Saved screenshot: screenshots/S2_1_alarm_triggered.png
+[2026-09-25 22:23:15] [1790346195836] S2-1 Saved filtered logcat to: /Users/qlyf/Developer/reminder/docs/reviews/verification-runs/20260925T135000Z-vivo-f1-controlled/logcat/S2_1_logcat.txt
+[2026-09-25 22:23:15] [1790346195884] S2-1 AlarmActivity detected! Looking for '我知道了' button...
+[2026-09-25 22:23:18] [1790346198724] S2-1 Tapping '我知道了' at (540, 1469)
+[2026-09-25 22:23:23] [1790346203450] S2-1 Item status after ack: due
+[2026-09-25 22:23:23] [1790346203513] S2-1 Cleaning up test item i_u5ufqyammuh1rxwi...
+[2026-09-25 22:23:25] [1790346205603] ========== Finished S2 Run 1: Result=WARN ==========
+[2026-09-25 22:23:25] [1790346205649] Waiting 65s before S2-2...
+[2026-09-25 22:24:30] [1790346270722] Starting S2-2 (Immediately lock screen)...
+[2026-09-25 22:24:31] [1790346271802] ========== Starting S2 Run 2: title=UIRECHECK-F1-S2-2 ==========
+[2026-09-25 22:24:33] [1790346273278] Tapping FAB at physical (540, 2049) (attempt 1/3)...
+[2026-09-25 22:24:34] [1790346274425] SheetItem not open, retrying scroll and tap...
+[2026-09-25 22:24:35] [1790346275003] Tapping FAB at physical (540, 2049) (attempt 2/3)...
+[2026-09-25 22:24:36] [1790346276167] SheetItem not open, retrying scroll and tap...
+[2026-09-25 22:24:36] [1790346276752] Tapping FAB at physical (540, 2049) (attempt 3/3)...
+[2026-09-25 22:24:37] [1790346277884] SheetItem not open, retrying scroll and tap...
+[2026-09-25 22:24:38] [1790346278458] Exception during run_s2_iteration (2,): Failed to open #sheetItem after 3 attempts
+[2026-09-25 22:24:39] [1790346279935] Waiting 65s before S3-1...
+[2026-09-25 22:25:44] [1790346344997] Starting S3-1 (Foreground control)...
+[2026-09-25 22:25:46] [1790346346065] ========== Starting S3 (Foreground Control): title=UIRECHECK-F1-S3-1 ==========
+[2026-09-25 22:25:47] [1790346347425] Tapping FAB at physical (540, 2049) (attempt 1/3)...
+[2026-09-25 22:25:48] [1790346348573] SheetItem not open, retrying scroll and tap...
+[2026-09-25 22:25:49] [1790346349169] Tapping FAB at physical (540, 2049) (attempt 2/3)...
+[2026-09-25 22:25:50] [1790346350305] SheetItem not open, retrying scroll and tap...
+[2026-09-25 22:25:50] [1790346350895] Tapping FAB at physical (540, 2049) (attempt 3/3)...
+[2026-09-25 22:25:52] [1790346352059] SheetItem not open, retrying scroll and tap...
+[2026-09-25 22:25:52] [1790346352633] Exception during run_s3_iteration (): Failed to open #sheetItem after 3 attempts
+[2026-09-25 22:25:54] [1790346354037] ========== Final Verification and Cleanup ==========
+[2026-09-25 22:25:56] [1790346356468] Final items count: 6
+[2026-09-25 22:25:56] [1790346356508] Restoring system rotation settings...
+[2026-09-25 22:25:57] [1790346357323] Rotation settings restored: accelerometer_rotation=1
+user_rotation=0
+[2026-09-25 22:25:58] [1790346358004] Results summary written to: /Users/qlyf/Developer/reminder/docs/reviews/verification-runs/20260925T135000Z-vivo-f1-controlled/results_summary.json
+[2026-09-25 22:25:58] [1790346358046] =================================================================
+[2026-09-25 22:25:58] [1790346358082] Controlled F1 Recheck Completed Successfully!
+[2026-09-25 22:25:58] [1790346358119] =================================================================
+[2026-09-25 22:34:46] [1790346886255] =================================================================
+[2026-09-25 22:34:46] [1790346886291] Starting Controlled F1 Recheck on vivo V2238A
+[2026-09-25 22:34:46] [1790346886344] Device: 10ACBF2D3D000RS, Package: space.alliswell.inbox
+[2026-09-25 22:34:46] [1790346886395] =================================================================
+[2026-09-25 22:34:48] [1790346888520] Temporarily locking rotation to portrait...
+[2026-09-25 22:34:48] [1790346888712] Starting S2-2 (Immediately lock screen)...
+[2026-09-25 22:34:49] [1790346889780] ========== Starting S2 Run 2: title=UIRECHECK-F1-S2-2 ==========
+[2026-09-25 22:34:51] [1790346891491] Tapping FAB at physical (540, 2049) (attempt 1/3)...
+[2026-09-25 22:34:52] [1790346892627] Setting #capText value: UIRECHECK-F1-S2-2
+[2026-09-25 22:34:52] [1790346892679] Setting #capTrigger value: 2026-09-25T22:38
+[2026-09-25 22:34:53] [1790346893280] Tapping '更多选项' at physical (540, 1967)
+[2026-09-25 22:34:53] [1790346893949] Tapping '🚨 关键' at physical (584, 2105)
+[2026-09-25 22:34:54] [1790346894506] Critical chip selected: True
+[2026-09-25 22:34:54] [1790346894567] Tapping '安心交给系统' at physical (792, 2218)
+[2026-09-25 22:34:54] [1790346894722] T0 recorded: 1790346894681 (2026-09-25 22:34:54)
+[2026-09-25 22:34:55] [1790346895303] Created item info: {"id": "i_xy5i9cjxmuh2bd4c", "title": "UIRECHECK-F1-S2-2", "status": "waiting", "priority": "critical", "triggerAt": 1790347080000, "delivery_mode": "alarm", "createdAt": 1790346894636}
+[2026-09-25 22:34:55] [1790346895361] S2-2 Immediately locking screen within 1s...
+[2026-09-25 22:34:56] [1790346896997] S2-2 Immediate lock screen confirmed: mShowingDream=false mDreamingLockscreen=true; isKeyguardShowing=true; , wake: mWakefulness=Asleep
+[2026-09-25 22:34:59] [1790346899911] S2-2 T0+5s post-lock alarm scheduled: True, entry: entries=3, comps=['AlarmRingService'], sample=RTC_WAKEUP #15: Alarm{2b3eddf type 0 origWhen 1790347080025 flags 3 windowLength 0 whenElapsed 569136191 maxWhenElapsed 569136191 repeatInterval 0 tag=*walarm*:space.alliswell.inbox/.AlarmRingService originWhenElapsed 569136191 originWindowLength 0 setAtTime=2026-09-25 14:34:54 policyWhenElapsed:[569136191, 568951027, 0, 0, 0] procName=space.alliswell.inbox space.alliswell.inbox}
+[2026-09-25 22:35:24] [1790346924986] S2-2 T0+30s post-lock alarm scheduled: True, entry: entries=3, comps=['AlarmRingService'], sample=RTC_WAKEUP #15: Alarm{2b3eddf type 0 origWhen 1790347080025 flags 3 windowLength 0 whenElapsed 569136191 maxWhenElapsed 569136191 repeatInterval 0 tag=*walarm*:space.alliswell.inbox/.AlarmRingService originWhenElapsed 569136191 originWindowLength 0 setAtTime=2026-09-25 14:34:54 policyWhenElapsed:[569136191, 568951027, 0, 0, 0] procName=space.alliswell.inbox space.alliswell.inbox}
+[2026-09-25 22:35:25] [1790346925088] S2-2 Sleeping 165.0s until triggerAt+10s (2026-09-25 22:38:10)...
+[2026-09-25 22:38:10] [1790347090936] S2-2 At trigger+10s snapshot: active=False, focus=mCurrentFocus=Window{com.android.systemui:f9294bb u0 NotificationShade type=2040 }, wake=mWakefulness=Asleep, act=mCurrentFocus=Window{com.android.systemui:f9294bb u0 NotificationShade type=2040 }
+[2026-09-25 22:38:37] [1790347117123] S2-2 Saved screenshot: screenshots/S2_2_alarm_triggered.png
+[2026-09-25 22:38:41] [1790347121241] S2-2 Saved filtered logcat to: /Users/qlyf/Developer/reminder/docs/reviews/verification-runs/20260925T135000Z-vivo-f1-controlled/logcat/S2_2_logcat.txt
+[2026-09-25 22:38:41] [1790347121302] S2-2 AlarmActivity NOT present after 35s! Direct evidence captured.
+[2026-09-25 22:38:44] [1790347124162] S2-2 Cleaning up test item i_xy5i9cjxmuh2bd4c...
+[2026-09-25 22:38:46] [1790347126255] ========== Finished S2 Run 2: Result=WARN ==========
+[2026-09-25 22:38:46] [1790347126299] Waiting 30s before S3-1...
+[2026-09-25 22:39:16] [1790347156357] Starting S3-1 (Foreground control)...
+[2026-09-25 22:39:17] [1790347157428] ========== Starting S3 (Foreground Control): title=UIRECHECK-F1-S3-1 ==========
+[2026-09-25 22:39:19] [1790347159147] Tapping FAB at physical (540, 2049) (attempt 1/3)...
+[2026-09-25 22:39:20] [1790347160311] Setting #capText value: UIRECHECK-F1-S3-1
+[2026-09-25 22:39:20] [1790347160368] Setting #capTrigger value: 2026-09-25T22:42
+[2026-09-25 22:39:20] [1790347160951] Tapping '更多选项' at physical (540, 1967)
+[2026-09-25 22:39:21] [1790347161609] Tapping '🚨 关键' at physical (584, 2105)
+[2026-09-25 22:39:22] [1790347162173] Critical chip selected: True
+[2026-09-25 22:39:22] [1790347162227] Tapping '安心交给系统' at physical (792, 2218)
+[2026-09-25 22:39:22] [1790347162459] T0 recorded: 1790347162369 (2026-09-25 22:39:22)
+[2026-09-25 22:39:23] [1790347163028] Created item info: {"id": "i_jla0uypbmuh2h3nl", "title": "UIRECHECK-F1-S3-1", "status": "waiting", "priority": "critical", "triggerAt": 1790347320000, "delivery_mode": "alarm", "createdAt": 1790347162305}
+[2026-09-25 22:39:23] [1790347163129] S3-1 Sleeping 166.9s until triggerAt+10s (2026-09-25 22:42:10), staying foreground...
+[2026-09-25 22:42:11] [1790347331113] S3-1 Saved screenshot: screenshots/S3_1_foreground_triggered.png
+[2026-09-25 22:42:11] [1790347331350] S3-1 At trigger+10s: AlarmActivity=True, inAppAlertPanel=True (banner=False, activePanel=True), focus=mCurrentFocus=Window{ba2ebb u0 space.alliswell.inbox/space.alliswell.inbox.AlarmActivity type=1 }
+[2026-09-25 22:42:11] [1790347331403] S3-1 Cleaning up test item i_jla0uypbmuh2h3nl...
+[2026-09-25 22:42:13] [1790347333497] ========== Finished S3-1: Result=PASS ==========
+[2026-09-25 22:42:13] [1790347333545] ========== Final Verification and Cleanup ==========
+[2026-09-25 22:42:13] [1790347333999] ensure_app_awake_and_front: Dismissing AlarmActivity via KEYCODE_BACK (mCurrentFocus=Window{ba2ebb u0 space.alliswell.inbox/space.alliswell.inbox.AlarmActivity type=1 })...
+[2026-09-25 22:42:17] [1790347337506] Final items count: 6
+[2026-09-25 22:42:17] [1790347337572] Restoring system rotation settings...
+[2026-09-25 22:42:18] [1790347338413] Rotation settings restored: accelerometer_rotation=1
+user_rotation=0
+[2026-09-25 22:42:19] [1790347339107] Results summary written to: /Users/qlyf/Developer/reminder/docs/reviews/verification-runs/20260925T135000Z-vivo-f1-controlled/results_summary.json
+[2026-09-25 22:42:19] [1790347339147] =================================================================
+[2026-09-25 22:42:19] [1790347339204] Controlled F1 Recheck Completed Successfully!
+[2026-09-25 22:42:19] [1790347339260] =================================================================

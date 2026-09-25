@@ -1,0 +1,20 @@
+    RTC_WAKEUP #78: Alarm{2236afd type 0 origWhen 1790343000000 flags 5 windowLength 0 whenElapsed 565056167 maxWhenElapsed 565056167 repeatInterval 0 tag=*walarm*:space.alliswell.inbox/com.capacitorjs.plugins.localnotifications.TimedNotificationPublisher originWhenElapsed 565056167 originWindowLength 0 setAtTime=2026-09-25 03:49:09 policyWhenElapsed:[565056167, 530205929, 0, 530205967, 0] procName=space.alliswell.inbox space.alliswell.inbox}
+      tag=*walarm*:space.alliswell.inbox/com.capacitorjs.plugins.localnotifications.TimedNotificationPublisher
+      operation=PendingIntent{782daec: PendingIntentRecord{ff34eb5 space.alliswell.inbox broadcastIntent}}
+    RTC_WAKEUP #84: Alarm{e8b448d type 0 origWhen 1790346600000 flags 5 windowLength 0 whenElapsed 568656166 maxWhenElapsed 568656166 repeatInterval 0 tag=*walarm*:space.alliswell.inbox/com.capacitorjs.plugins.localnotifications.TimedNotificationPublisher originWhenElapsed 568656166 originWindowLength 0 setAtTime=2026-09-25 03:49:09 policyWhenElapsed:[568656166, 530205917, 0, 530205967, 0] procName=space.alliswell.inbox space.alliswell.inbox}
+      tag=*walarm*:space.alliswell.inbox/com.capacitorjs.plugins.localnotifications.TimedNotificationPublisher
+      operation=PendingIntent{48a40bb: PendingIntentRecord{a38b9d8 space.alliswell.inbox broadcastIntent}}
+          type=RTC_WAKEUP tag=*walarm*:space.alliswell.inbox/com.capacitorjs.plugins.localnotifications.TimedNotificationPublisher 
+          type=RTC_WAKEUP tag=*walarm*:space.alliswell.inbox/com.capacitorjs.plugins.localnotifications.TimedNotificationPublisher 
+          type=RTC_WAKEUP tag=*walarm*:space.alliswell.inbox/com.capacitorjs.plugins.localnotifications.TimedNotificationPublisher 
+          type=RTC_WAKEUP tag=*walarm*:space.alliswell.inbox/com.capacitorjs.plugins.localnotifications.TimedNotificationPublisher 
+          type=RTC_WAKEUP tag=*walarm*:space.alliswell.inbox/com.capacitorjs.plugins.localnotifications.TimedNotificationPublisher 
+          type=RTC_WAKEUP tag=*walarm*:space.alliswell.inbox/com.capacitorjs.plugins.localnotifications.TimedNotificationPublisher 
+          type=RTC_WAKEUP tag=*walarm*:space.alliswell.inbox/com.capacitorjs.plugins.localnotifications.TimedNotificationPublisher 
+          type=RTC_WAKEUP tag=*walarm*:space.alliswell.inbox/com.capacitorjs.plugins.localnotifications.TimedNotificationPublisher 
+          type=RTC_WAKEUP tag=*walarm*:space.alliswell.inbox/com.capacitorjs.plugins.localnotifications.TimedNotificationPublisher 
+          type=RTC_WAKEUP tag=*walarm*:space.alliswell.inbox/com.capacitorjs.plugins.localnotifications.TimedNotificationPublisher 
+  u0a285:space.alliswell.inbox +3s735ms running, 39 wakeups:
+      *walarm*:space.alliswell.inbox.ACTION_TEST_ALARM
+      *walarm*:space.alliswell.inbox/com.capacitorjs.plugins.localnotifications.TimedNotificationPublisher
+      *walarm*:space.alliswell.inbox/.AlarmRingService

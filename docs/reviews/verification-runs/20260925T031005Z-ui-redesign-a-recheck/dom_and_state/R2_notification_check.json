@@ -1,0 +1,16 @@
+{
+  "initial_delivery_mode": "alarm",
+  "switched_mode": "notification",
+  "restored_mode": "alarm",
+  "item_info": {
+    "id": "i_ckdyo2fcmugf4ymz",
+    "mode": "notification",
+    "priority": "normal",
+    "triggerAt": 1790307974000
+  },
+  "posted_channels": [
+    "attention-normal-v2"
+  ],
+  "is_non_alarm_channel": true,
+  "remaining_items_count": 18
+}
