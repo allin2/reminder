@@ -1,0 +1,30 @@
+[2026-09-26 09:33:07] [1790386386708] [ATTEMPT R2-a] === attempt R2-a start ===
+[2026-09-26 09:33:07] [1790386386841] [ATTEMPT R2-a] mResumed: topResumedActivity=ActivityRecord{257007346 u0 space.alliswell.inbox/.MainActivity t152 d0}
+[2026-09-26 09:33:07] [1790386387494] [ATTEMPT R2-a] pre: {"t": 1790386387448, "homeEmpty": false, "homeText": "还差 1 步，提醒才能准时响下一步：允许完全后台运行 (防冻结)›", "sheetOpen": false, "bgDone": true, "ignoring": false, "rr": {"c": 40, "last": 1790386310457}}
+[2026-09-26 09:33:08] [1790386387564] [ATTEMPT R2-a] sampler started (250ms)
+[2026-09-26 09:33:09] [1790386388894] [ATTEMPT R2-a] switched to 我的 tab
+[2026-09-26 09:33:10] [1790386390220] [ATTEMPT R2-a] sheet opened from 我的
+[2026-09-26 09:33:10] [1790386390291] [ATTEMPT R2-a] mutation observer: already
+[2026-09-26 09:33:10] [1790386390348] [ATTEMPT R2-a] tapping background step chip
+[2026-09-26 09:33:13] [1790386393093] [ATTEMPT R2-a] after chip tap: mResumed=topResumedActivity=ActivityRecord{132916930 u0 com.iqoo.powersaving/.BackgroundHighUsageActivity t43 d0}
+[2026-09-26 09:33:14] [1790386393753] [ATTEMPT R2-a] screenshot landing png_ok=True
+[2026-09-26 09:33:18] [1790386397833] [ATTEMPT R2-a] landing step 0: mResumed=topResumedActivity=ActivityRecord{132916930 u0 com.iqoo.powersaving/.BackgroundHighUsageActivity t43 d0}
+[2026-09-26 09:33:18] [1790386397885] [ATTEMPT R2-a] tapping 安心收件箱 at (348, 410)
+[2026-09-26 09:33:24] [1790386403919] [ATTEMPT R2-a] landing step 1: mResumed=topResumedActivity=ActivityRecord{196508623 u0 com.iqoo.powersaving/.activity.ExcessivePowerDescriptionActivity t43 d0}
+[2026-09-26 09:33:24] [1790386403982] [ATTEMPT R2-a] reached radio options page
+[2026-09-26 09:33:27] [1790386406629] [ATTEMPT R2-a] before toggle checked=智能控制后台耗电
+[2026-09-26 09:33:27] [1790386406740] [ATTEMPT R2-a] Tswitch=1790386406691 tapping 允许后台耗电 at (258, 988)
+[2026-09-26 09:33:31] [1790386411465] [ATTEMPT R2-a] after toggle checked=允许后台耗电
+[2026-09-26 09:33:32] [1790386411989] [ATTEMPT R2-a] screenshot after-toggle png_ok=True
+[2026-09-26 09:33:36] [1790386416275] [ATTEMPT R2-a] BACK #1: not app yet, mResumed=topResumedActivity=ActivityRecord{132916930 u0 com.iqoo.powersaving/.BackgroundHighUsageActivity t43 d0}
+[2026-09-26 09:33:41] [1790386420629] [ATTEMPT R2-a] BACK #2: not app yet, mResumed=topResumedActivity=ActivityRecord{257786618 u0 com.iqoo.powersaving/.activity.ExcessivePowerDescriptionActivit
+[2026-09-26 09:33:45] [1790386424971] [ATTEMPT R2-a] BACK #3: not app yet, mResumed=topResumedActivity=ActivityRecord{248840519 u0 com.iqoo.powersaving/.fuelgauge.PowerUsageSummaryActivity t43 d
+[2026-09-26 09:33:49] [1790386429273] [ATTEMPT R2-a] BACK #4: not app yet, mResumed=topResumedActivity=ActivityRecord{187094981 u0 com.android.settings/.applications.InstalledAppDetails t43 d0}
+[2026-09-26 09:33:51] [1790386431398] [ATTEMPT R2-a] relaunched from home, t_resume=1790386431349, topResumedActivity=ActivityRecord{257007346 u0 space.alliswell.inbox/.MainActivity t152 d0}
+[2026-09-26 09:33:51] [1790386431453] [ATTEMPT R2-a] return-to-app method: home+relaunch
+[2026-09-26 09:33:51] [1790386431493] [ATTEMPT R2-a] observation window 15s starts, t_resume=1790386431349
+[2026-09-26 09:34:07] [1790386446649] [ATTEMPT R2-a] observation window end
+[2026-09-26 09:34:07] [1790386447344] [ATTEMPT R2-a] analysis: {"t_resume": 1790386431349, "first_sample_after_resume": {"t": 1790386431398, "homeEmpty": false, "homeText": "还差 1 步，提醒才能准时响下一步：允许完全后台运行 (防冻结)›", "sheetOpen": true, "bgDone": true, "ignoring": true, "rr": {"c": 50, "last": 1790386431210}}, "ignoring_first_true": 1790386431398, "ignoring_delay_ms": 49, "bgDone_first_true": 1790386431398, "bgDone_delay_ms": 49, "homeEmpty_first_true_after_resume": null}
+[2026-09-26 09:34:08] [1790386448466] [ATTEMPT R2-a] final after closing sheet: {"t": 1790386448422, "homeEmpty": false, "homeText": "还差 1 步，提醒才能准时响下一步：允许完全后台运行 (防冻结)›", "sheetOpen": false, "bgDone": true, "ignoring": true, "rr": {"c": 54, "last": 1790386431492}}
+[2026-09-26 09:34:09] [1790386449026] [ATTEMPT R2-a] screenshot final-home png_ok=True
+[2026-09-26 09:34:09] [1790386449073] [ATTEMPT R2-a] === attempt R2-a end ===

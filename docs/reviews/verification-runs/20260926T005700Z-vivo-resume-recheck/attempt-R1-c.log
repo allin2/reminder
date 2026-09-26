@@ -1,0 +1,30 @@
+[2026-09-26 09:31:06] [1790386266118] [ATTEMPT R1-c] === attempt R1-c start ===
+[2026-09-26 09:31:06] [1790386266239] [ATTEMPT R1-c] mResumed: topResumedActivity=ActivityRecord{257007346 u0 space.alliswell.inbox/.MainActivity t152 d0}
+[2026-09-26 09:31:07] [1790386266955] [ATTEMPT R1-c] pre: {"t": 1790386266897, "homeEmpty": false, "homeText": "还差 1 步，提醒才能准时响下一步：允许完全后台运行 (防冻结)›", "sheetOpen": false, "bgDone": true, "ignoring": false, "rr": {"c": 26, "last": 1790386063583}}
+[2026-09-26 09:31:07] [1790386267013] [ATTEMPT R1-c] sampler started (250ms)
+[2026-09-26 09:31:07] [1790386267068] [ATTEMPT R1-c] tapping home card #setupEntry
+[2026-09-26 09:31:08] [1790386268375] [ATTEMPT R1-c] sheet opened
+[2026-09-26 09:31:08] [1790386268443] [ATTEMPT R1-c] mutation observer: already
+[2026-09-26 09:31:08] [1790386268501] [ATTEMPT R1-c] tapping background step chip
+[2026-09-26 09:31:11] [1790386271217] [ATTEMPT R1-c] after chip tap: mResumed=topResumedActivity=ActivityRecord{236274792 u0 com.iqoo.powersaving/.BackgroundHighUsageActivity t43 d0}
+[2026-09-26 09:31:12] [1790386271819] [ATTEMPT R1-c] screenshot landing png_ok=True
+[2026-09-26 09:31:16] [1790386275923] [ATTEMPT R1-c] landing step 0: mResumed=topResumedActivity=ActivityRecord{236274792 u0 com.iqoo.powersaving/.BackgroundHighUsageActivity t43 d0}
+[2026-09-26 09:31:16] [1790386275988] [ATTEMPT R1-c] tapping 安心收件箱 at (348, 410)
+[2026-09-26 09:31:22] [1790386281948] [ATTEMPT R1-c] landing step 1: mResumed=topResumedActivity=ActivityRecord{34865808 u0 com.iqoo.powersaving/.activity.ExcessivePowerDescriptionActivity t43 d0}
+[2026-09-26 09:31:22] [1790386282007] [ATTEMPT R1-c] reached radio options page
+[2026-09-26 09:31:25] [1790386284622] [ATTEMPT R1-c] before toggle checked=智能控制后台耗电
+[2026-09-26 09:31:25] [1790386284724] [ATTEMPT R1-c] Tswitch=1790386284673 tapping 允许后台耗电 at (258, 988)
+[2026-09-26 09:31:29] [1790386289414] [ATTEMPT R1-c] after toggle checked=允许后台耗电
+[2026-09-26 09:31:30] [1790386289960] [ATTEMPT R1-c] screenshot after-toggle png_ok=True
+[2026-09-26 09:31:35] [1790386294590] [ATTEMPT R1-c] BACK #1: not app yet, mResumed=topResumedActivity=ActivityRecord{236274792 u0 com.iqoo.powersaving/.BackgroundHighUsageActivity t43 d0}
+[2026-09-26 09:31:39] [1790386299169] [ATTEMPT R1-c] BACK #2: not app yet, mResumed=topResumedActivity=ActivityRecord{103457976 u0 com.iqoo.powersaving/.activity.ExcessivePowerDescriptionActivit
+[2026-09-26 09:31:44] [1790386303836] [ATTEMPT R1-c] BACK #3: not app yet, mResumed=topResumedActivity=ActivityRecord{190831499 u0 com.iqoo.powersaving/.fuelgauge.PowerUsageSummaryActivity t43 d
+[2026-09-26 09:31:48] [1790386308416] [ATTEMPT R1-c] BACK #4: not app yet, mResumed=topResumedActivity=ActivityRecord{64489245 u0 com.android.settings/.applications.InstalledAppDetails t43 d0}
+[2026-09-26 09:31:50] [1790386310341] [ATTEMPT R1-c] relaunched from home, t_resume=1790386310296, topResumedActivity=ActivityRecord{257007346 u0 space.alliswell.inbox/.MainActivity t152 d0}
+[2026-09-26 09:31:50] [1790386310385] [ATTEMPT R1-c] return-to-app method: home+relaunch
+[2026-09-26 09:31:50] [1790386310438] [ATTEMPT R1-c] observation window 15s starts, t_resume=1790386310296
+[2026-09-26 09:32:06] [1790386325605] [ATTEMPT R1-c] observation window end
+[2026-09-26 09:32:06] [1790386326289] [ATTEMPT R1-c] analysis: {"t_resume": 1790386310296, "first_sample_after_resume": {"t": 1790386310318, "homeEmpty": true, "homeText": "", "sheetOpen": true, "bgDone": true, "ignoring": true, "rr": {"c": 36, "last": 1790386310318}}, "ignoring_first_true": 1790386310318, "ignoring_delay_ms": 22, "bgDone_first_true": 1790386310318, "bgDone_delay_ms": 22, "homeEmpty_first_true_after_resume": 1790386310318}
+[2026-09-26 09:32:07] [1790386327436] [ATTEMPT R1-c] final after closing sheet: {"t": 1790386327377, "homeEmpty": true, "homeText": "", "sheetOpen": false, "bgDone": true, "ignoring": true, "rr": {"c": 40, "last": 1790386310457}}
+[2026-09-26 09:32:08] [1790386327993] [ATTEMPT R1-c] screenshot final-home png_ok=True
+[2026-09-26 09:32:08] [1790386328037] [ATTEMPT R1-c] === attempt R1-c end ===
