@@ -1,0 +1,38 @@
+[2026-09-26 09:18:23] [1790385503248] [ATTEMPT R1-a] === attempt R1-a start ===
+[2026-09-26 09:18:33] [1790385512973] [ATTEMPT R1-a] === attempt R1-a start ===
+[2026-09-26 09:18:33] [1790385513107] [ATTEMPT R1-a] mResumed: topResumedActivity=ActivityRecord{257007346 u0 space.alliswell.inbox/.MainActivity t152 d0}
+[2026-09-26 09:18:34] [1790385513775] [ATTEMPT R1-a] pre: {"t": 1790385513728, "homeEmpty": false, "homeText": "还差 1 步，提醒才能准时响下一步：允许完全后台运行 (防冻结)›", "sheetOpen": false, "bgDone": null, "ignoring": false}
+[2026-09-26 09:18:34] [1790385513839] [ATTEMPT R1-a] FATAL: 防冻结卡片不在首页（homeEmpty != True），前置条件不满足
+[2026-09-26 09:18:49] [1790385529150] [ATTEMPT R1-a] === attempt R1-a start ===
+[2026-09-26 09:18:49] [1790385529293] [ATTEMPT R1-a] mResumed: topResumedActivity=ActivityRecord{257007346 u0 space.alliswell.inbox/.MainActivity t152 d0}
+[2026-09-26 09:18:50] [1790385529952] [ATTEMPT R1-a] pre: {"t": 1790385529910, "homeEmpty": false, "homeText": "还差 1 步，提醒才能准时响下一步：允许完全后台运行 (防冻结)›", "sheetOpen": false, "bgDone": null, "ignoring": false}
+[2026-09-26 09:18:50] [1790385530021] [ATTEMPT R1-a] sampler started (250ms)
+[2026-09-26 09:18:50] [1790385530088] [ATTEMPT R1-a] tapping home card #setupEntry
+[2026-09-26 09:18:51] [1790385531431] [ATTEMPT R1-a] sheet opened
+[2026-09-26 09:18:51] [1790385531501] [ATTEMPT R1-a] tapping background step chip
+[2026-09-26 09:18:54] [1790385534184] [ATTEMPT R1-a] after chip tap: mResumed=topResumedActivity=ActivityRecord{133317815 u0 com.iqoo.powersaving/.BackgroundHighUsageActivity t43 d0}
+[2026-09-26 09:18:55] [1790385534812] [ATTEMPT R1-a] screenshot landing png_ok=True
+[2026-09-26 09:18:59] [1790385538799] [ATTEMPT R1-a] landing step 0: mResumed=topResumedActivity=ActivityRecord{133317815 u0 com.iqoo.powersaving/.BackgroundHighUsageActivity t43 d0}
+[2026-09-26 09:18:59] [1790385538864] [ATTEMPT R1-a] tapping 安心收件箱 at (348, 410)
+[2026-09-26 09:19:05] [1790385544792] [ATTEMPT R1-a] landing step 1: mResumed=topResumedActivity=ActivityRecord{63403987 u0 com.iqoo.powersaving/.activity.ExcessivePowerDescriptionActivity t43 d0}
+[2026-09-26 09:19:05] [1790385544855] [ATTEMPT R1-a] tapping 安心收件箱 at (324, 363)
+[2026-09-26 09:19:11] [1790385550807] [ATTEMPT R1-a] landing step 2: mResumed=topResumedActivity=ActivityRecord{63403987 u0 com.iqoo.powersaving/.activity.ExcessivePowerDescriptionActivity t43 d0}
+[2026-09-26 09:19:11] [1790385550870] [ATTEMPT R1-a] tapping 安心收件箱 at (324, 363)
+[2026-09-26 09:19:17] [1790385556819] [ATTEMPT R1-a] landing step 3: mResumed=topResumedActivity=ActivityRecord{63403987 u0 com.iqoo.powersaving/.activity.ExcessivePowerDescriptionActivity t43 d0}
+[2026-09-26 09:19:17] [1790385556880] [ATTEMPT R1-a] tapping 安心收件箱 at (324, 363)
+[2026-09-26 09:19:23] [1790385562860] [ATTEMPT R1-a] landing step 4: mResumed=topResumedActivity=ActivityRecord{63403987 u0 com.iqoo.powersaving/.activity.ExcessivePowerDescriptionActivity t43 d0}
+[2026-09-26 09:19:23] [1790385562915] [ATTEMPT R1-a] tapping 安心收件箱 at (324, 363)
+[2026-09-26 09:19:29] [1790385568935] [ATTEMPT R1-a] landing step 5: mResumed=topResumedActivity=ActivityRecord{63403987 u0 com.iqoo.powersaving/.activity.ExcessivePowerDescriptionActivity t43 d0}
+[2026-09-26 09:19:29] [1790385568996] [ATTEMPT R1-a] tapping 安心收件箱 at (324, 363)
+[2026-09-26 09:19:34] [1790385573727] [ATTEMPT R1-a] before toggle checked=智能控制后台耗电
+[2026-09-26 09:19:34] [1790385573836] [ATTEMPT R1-a] Tswitch=1790385573800 tapping 允许后台耗电 at (258, 988)
+[2026-09-26 09:19:39] [1790385578595] [ATTEMPT R1-a] after toggle checked=允许后台耗电
+[2026-09-26 09:19:39] [1790385579163] [ATTEMPT R1-a] screenshot after-toggle png_ok=True
+[2026-09-26 09:19:41] [1790385580676] [ATTEMPT R1-a] pressed BACK, device_ms=1790385580533, mResumed=topResumedActivity=ActivityRecord{133317815 u0 com.iqoo.powersaving/.BackgroundHighUsageActivity t43 d0}
+[2026-09-26 09:19:41] [1790385580723] [ATTEMPT R1-a] observation window 15s starts, t_resume=1790385580533
+[2026-09-26 09:19:56] [1790385595862] [ATTEMPT R1-a] observation window end
+[2026-09-26 09:19:56] [1790385596545] [ATTEMPT R1-a] analysis: {"t_resume": 1790385580533, "first_sample_after_resume": {"t": 1790385584701, "homeEmpty": false, "homeText": "还差 1 步，提醒才能准时响下一步：允许完全后台运行 (防冻结)›", "sheetOpen": true, "bgDone": true, "ignoring": false}, "ignoring_first_true": null, "ignoring_delay_ms": null, "bgDone_first_true": 1790385584701, "bgDone_delay_ms": 4168, "homeEmpty_first_true_after_resume": null}
+[2026-09-26 09:20:27] [1790385626654] [ATTEMPT R1-a] close sheet failed: Connection timed out
+[2026-09-26 09:20:27] [1790385626744] [ATTEMPT R1-a] final after closing sheet: {"t": 1790385626687, "homeEmpty": false, "homeText": "还差 1 步，提醒才能准时响下一步：允许完全后台运行 (防冻结)›", "sheetOpen": true, "bgDone": true, "ignoring": false}
+[2026-09-26 09:20:27] [1790385627312] [ATTEMPT R1-a] screenshot final-home png_ok=True
+[2026-09-26 09:20:27] [1790385627371] [ATTEMPT R1-a] === attempt R1-a end ===

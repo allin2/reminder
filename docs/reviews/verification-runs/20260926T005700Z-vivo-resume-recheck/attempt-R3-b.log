@@ -1,0 +1,24 @@
+[2026-09-26 09:52:45] [1790387565344] [ATTEMPT R3-b] === attempt R3-b start ===
+[2026-09-26 09:52:45] [1790387565495] [ATTEMPT R3-b] mResumed: topResumedActivity=ActivityRecord{257007346 u0 space.alliswell.inbox/.MainActivity t152 d0}
+[2026-09-26 09:52:46] [1790387566170] [ATTEMPT R3-b] pre: {"t": 1790387566129, "homeEmpty": false, "homeText": "还差 1 步，提醒才能准时响下一步：允许完全后台运行 (防冻结)›", "sheetOpen": false, "bgDone": true, "ignoring": false, "rr": {"c": 68, "last": 1790386891814}}
+[2026-09-26 09:52:46] [1790387566225] [ATTEMPT R3-b] sampler started (250ms)
+[2026-09-26 09:52:48] [1790387567891] [ATTEMPT R3-b] pressed HOME
+[2026-09-26 09:53:07] [1790387587276] [ATTEMPT R3-b] Tswitch=1790387587242 tapping 允许后台耗电 at (258, 988)
+[2026-09-26 09:53:12] [1790387592038] [ATTEMPT R3-b] after toggle checked=允许后台耗电
+[2026-09-26 09:53:17] [1790387596968] [ATTEMPT R3-b] tapping recents card container at (540, 389)
+[2026-09-26 09:53:23] [1790387603452] [ATTEMPT R3-b] FATAL: recents did not return to app
+[2026-09-26 09:54:42] [1790387682258] [ATTEMPT R3-b] === attempt R3-b start ===
+[2026-09-26 09:54:42] [1790387682416] [ATTEMPT R3-b] mResumed: topResumedActivity=ActivityRecord{257007346 u0 space.alliswell.inbox/.MainActivity t152 d0}
+[2026-09-26 09:54:43] [1790387683090] [ATTEMPT R3-b] pre: {"t": 1790387683035, "homeEmpty": false, "homeText": "还差 1 步，提醒才能准时响下一步：允许完全后台运行 (防冻结)›", "sheetOpen": false, "bgDone": true, "ignoring": false, "rr": {"c": 68, "last": 1790386891814}}
+[2026-09-26 09:54:43] [1790387683151] [ATTEMPT R3-b] sampler started (250ms)
+[2026-09-26 09:54:45] [1790387684808] [ATTEMPT R3-b] pressed HOME
+[2026-09-26 09:55:04] [1790387704370] [ATTEMPT R3-b] Tswitch=1790387704314 tapping 允许后台耗电 at (258, 988)
+[2026-09-26 09:55:09] [1790387709168] [ATTEMPT R3-b] after toggle checked=允许后台耗电
+[2026-09-26 09:55:14] [1790387714104] [ATTEMPT R3-b] tapping recents card container at (540, 1200)
+[2026-09-26 09:55:14] [1790387714430] [ATTEMPT R3-b] app resumed via recents, t_resume=1790387714375, topResumedActivity=ActivityRecord{257007346 u0 space.alliswell.inbox/.MainActivity t152 d0}
+[2026-09-26 09:55:14] [1790387714494] [ATTEMPT R3-b] observation window 15s starts, t_resume=1790387714375
+[2026-09-26 09:55:30] [1790387729643] [ATTEMPT R3-b] observation window end
+[2026-09-26 09:55:30] [1790387730343] [ATTEMPT R3-b] analysis: {"t_resume": 1790387714375, "first_sample_after_resume": {"t": 1790387714520, "homeEmpty": true, "homeText": "", "sheetOpen": false, "bgDone": true, "ignoring": true, "rr": {"c": 68, "last": 1790386891814}}, "ignoring_first_true": 1790387714520, "ignoring_delay_ms": 145, "bgDone_first_true": 1790387714520, "bgDone_delay_ms": 145, "homeEmpty_first_true_after_resume": 1790387714520}
+[2026-09-26 09:55:30] [1790387730406] [ATTEMPT R3-b] final home: {"t": 1790387730367, "homeEmpty": true, "homeText": "", "sheetOpen": false, "bgDone": true, "ignoring": true, "rr": {"c": 68, "last": 1790386891814}}
+[2026-09-26 09:55:31] [1790387731003] [ATTEMPT R3-b] screenshot final-home png_ok=True
+[2026-09-26 09:55:31] [1790387731064] [ATTEMPT R3-b] === attempt R3-b end ===

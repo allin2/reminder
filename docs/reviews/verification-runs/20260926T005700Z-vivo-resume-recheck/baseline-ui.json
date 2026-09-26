@@ -1,0 +1,11 @@
+{
+ "homeSetup": {
+  "exists": true,
+  "isEmpty": false,
+  "text": "还差 1 步，提醒才能准时响下一步：允许完全后台运行 (防冻结)›"
+ },
+ "sheetSetup": {
+  "exists": true,
+  "open": false
+ }
+}

@@ -101,6 +101,15 @@ function fixture(api, options) {
     },
     migrateItem: (it) => false
   };
+  let permissionReads = 0;
+  if (options.permissionStates) {
+    mockNativeReminders.getPermissionState = async () => {
+      const list = options.permissionStates;
+      const next = list[Math.min(permissionReads, list.length - 1)];
+      permissionReads++;
+      return JSON.parse(JSON.stringify(next));
+    };
+  }
 
   const mockEvidenceLib = {
     normalizeEvidence: (rows, source) => {
@@ -165,6 +174,10 @@ function fixture(api, options) {
       getPlatform: () => platform
     })
   };
+  if (options.timers) {
+    deps.setTimeout = options.timers.set;
+    deps.clearTimeout = options.timers.clear;
+  }
 
   const coordinator = api.createAppNativeCoordinator(deps);
 
@@ -183,7 +196,29 @@ function fixture(api, options) {
     getSettings: () => settings,
     getAlarmActions: () => alarmActions,
     getNotificationActions: () => notificationActions,
-    getHooks: () => hooks
+    getHooks: () => hooks,
+    getPermissionReads: () => permissionReads
+  };
+}
+
+/** 手动推进的假定时器：记录每个定时器的延迟，按需逐个触发。 */
+function fakeTimers() {
+  let seq = 0;
+  const pending = new Map();
+  const cleared = [];
+  return {
+    set: (fn, ms) => { const id = ++seq; pending.set(id, { fn, ms }); return id; },
+    clear: id => { if (pending.delete(id)) cleared.push(id); },
+    delays: () => Array.from(pending.values()).map(t => t.ms),
+    pendingCount: () => pending.size,
+    cleared: () => cleared.slice(),
+    runNext: async () => {
+      const first = Array.from(pending.entries()).sort((a, b) => a[1].ms - b[1].ms)[0];
+      if (!first) return false;
+      pending.delete(first[0]);
+      await first[1].fn();
+      return true;
+    }
   };
 }
 
@@ -438,6 +473,47 @@ async function healthy(api) {
     assert.strictEqual(f.getAlarmActions().length, 2, "subsequent onResume retries queued action");
   }
 
+  // 12. 回前台后状态补读：厂商开关异步生效时，稍后补读到新值才回写；状态不变不重复回写
+  {
+    const unverified = { native: true, notifications: "granted", exactAlarm: "granted", reliability: "exact", source: "SystemBridge",
+      diag: { ignoringBatteryOptimizations: false, canDrawOverlays: true, canUseFullScreenIntent: true } };
+    const verified = JSON.parse(JSON.stringify(unverified));
+    verified.diag.ignoringBatteryOptimizations = true;
+    const timers = fakeTimers();
+    const f = fixture(api, { permissionStates: [unverified, verified, verified, verified], timers });
+    await f.coordinator.initializeNativeReminders();
+    const before = f.getStatusChanges().length;
+    await f.getHooks().onResume();
+    assert.strictEqual(f.getPermissionReads(), 1, "onResume reads permission state once immediately");
+    assert.deepStrictEqual(timers.delays().filter(ms => ms === 1500 || ms === 5000).sort((a, b) => a - b), [1500, 5000],
+      "unverified capability schedules rechecks at 1.5s and 5s");
+    const afterResume = f.getStatusChanges().length;
+    assert.ok(afterResume > before, "immediate read is applied");
+    // 按延迟从短到长依次触发全部定时器（含同步防抖），有上限防止意外的无限重排
+    for (let i = 0; i < 20 && timers.pendingCount(); i++) await timers.runNext();
+    const rechecks = f.getStatusChanges().filter(c => c.origin === "resume-recheck");
+    assert.strictEqual(rechecks.length, 1, "only the recheck that saw a changed value writes back (unchanged second read is skipped)");
+    assert.strictEqual(rechecks[0].status.diag.ignoringBatteryOptimizations, true, "recheck writes the fresh capability value");
+    assert.strictEqual(f.getPermissionReads(), 3, "both rechecks actually re-read native state");
+
+    // 能力都已验证 ⇒ 回前台不再安排补读
+    const verifiedTimers = fakeTimers();
+    const g = fixture(api, { permissionStates: [verified], timers: verifiedTimers });
+    await g.coordinator.initializeNativeReminders();
+    await g.getHooks().onResume();
+    assert.ok(!verifiedTimers.delays().some(ms => ms === 1500 || ms === 5000), "fully verified status schedules no rechecks");
+
+    // 连续两次回前台 ⇒ 上一轮未执行的补读被取消，不叠加
+    const againTimers = fakeTimers();
+    const h = fixture(api, { permissionStates: [unverified], timers: againTimers });
+    await h.coordinator.initializeNativeReminders();
+    await h.getHooks().onResume();
+    await h.getHooks().onResume();
+    assert.strictEqual(againTimers.delays().filter(ms => ms === 1500 || ms === 5000).length, 2,
+      "second resume replaces pending rechecks instead of stacking them");
+    assert.ok(againTimers.cleared().length >= 2, "previous rechecks are cleared");
+  }
+
   return "healthy coordinator behavior: PASS";
 }
 
@@ -523,6 +599,26 @@ async function mutant(name, transform) {
       "            if (!nativeSyncPending) {\n              break;\n            }\n          }",
       "          }\n          if (!nativeSyncPending) {\n            break;\n          }"
     );
+  }));
+
+  // 变异 12：回前台后不再安排补读
+  out.push(await mutant("resume status rechecks not scheduled", s => {
+    return s.replace("                scheduleResumeStatusRechecks(nr);\n", "");
+  }));
+
+  // 变异 13：补读结果不做比较，状态不变也回写
+  out.push(await mutant("resume recheck writes back unchanged status", s => {
+    return s.replace("if (JSON.stringify(merged) === JSON.stringify(nativeReminderStatus)) return;", "");
+  }));
+
+  // 变异 14：再次回前台不取消上一轮补读
+  out.push(await mutant("pending resume rechecks not cleared on next resume", s => {
+    return s.replace("      resumeRecheckTimers.forEach(t => timerClear(t));\n      resumeRecheckTimers = [];\n", "");
+  }));
+
+  // 变异 15：能力已全部验证仍安排补读
+  out.push(await mutant("rechecks scheduled even when fully verified", s => {
+    return s.replace(" || nativeStatusFullyVerified(nativeReminderStatus)) return;", ") return;");
   }));
 
   const hashAfter = crypto.createHash("sha256").update(fs.readFileSync(targetPath)).digest("hex");

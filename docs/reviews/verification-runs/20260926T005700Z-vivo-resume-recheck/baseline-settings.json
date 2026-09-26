@@ -1,0 +1,9 @@
+{
+ "setupPromptStarted": true,
+ "setupDismissed": false,
+ "backgroundVisited": true,
+ "overlayVisited": null,
+ "testRun": null,
+ "testFeedback": null,
+ "defaultDeliveryMode": "alarm"
+}

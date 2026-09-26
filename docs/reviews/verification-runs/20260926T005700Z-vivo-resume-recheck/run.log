@@ -1,0 +1,361 @@
+=== run.log · vivo-resume-recheck · 全部时刻用设备时间 ===
+UTC_TS=20260926T005700Z branch=fix/refresh-native-status-on-resume HEAD=7852ea2 sw=attention-inbox-v49
+device_base_apk_sha256=19247c739156d51ef9d346253a6c5f205968506b808b134eaab753c6a5412053
+1. 00:57:11Z 版本身份：三文件逐字节 MATCH（sw.js/app-core.js/app-native-coordinator.js）
+2. 00:57:11Z 安装：adb install -r 首次 Incremental 报 INSTALL_PARSE_FAILED_NOT_APK，vivo PackageInterceptActivity 提示已安装相同版本 → 点「重新安装」→ 安装完成 08:56:11(设备时间) → 点完成
+3. 00:58:48Z 失误登记：误执行上轮 read_switches.py（本意只查看源码），其 resume_* 截图/dump 写入了上轮 run 目录 20260925T153500Z-vivo-switch-matrix（只读导航，无开关变更）；已在 dirs 复核并将其作为基线参考，正式基线用本轮目录重跑版本
+[2026-09-26 08:58:54] [1790384334818] [BASELINE-SWITCHES] === resume: read-only switch states start ===
+[2026-09-26 08:59:01] [1790384341741] [BASELINE-SWITCHES] tapping 电量 at (150, 992)
+[2026-09-26 08:59:06] [1790384346533] [BASELINE-SWITCHES] tapping 后台耗电管理 at (246, 2090)
+[2026-09-26 08:59:11] [1790384351292] [BASELINE-SWITCHES] background power mode text for 安心收件箱: None
+[2026-09-26 08:59:17] [1790384357558] [BASELINE-SWITCHES] bgpower detail texts: 安心收件箱 | 今日后台耗电时长 | 1分钟 | 智能控制后台耗电 | 智能控制不同类型应用的后台耗电量，更加省电。 | 允许后台耗电 | 不限制应用后台耗电量，可能会比较耗电。 | 后台耗电管理
+[2026-09-26 08:59:22] [1790384362912] [BASELINE-SWITCHES] tapping 权限 at (540, 1467)
+[2026-09-26 08:59:30] [1790384370719] [BASELINE-SWITCHES] === resume: read-only switch states end ===
+[2026-09-26 09:01:39] [1790384499418] [BASELINE-APP] === baseline: app-side read-only start ===
+[2026-09-26 09:01:39] [1790384499674] [BASELINE-APP] focus: mCurrentFocus=Window{4e21e21 u0 space.alliswell.inbox/space.alliswell.inbox.MainActivity type=1 }
+[2026-09-26 09:01:40] [1790384500279] [BASELINE-APP] items count: 7
+[2026-09-26 09:01:40] [1790384500339] [BASELINE-APP] item id set: ["i_24rm31samufjri6d", "i_32p3og4nmufsly70", "i_jaggipg8mufsmipq", "i_ksgrct0wmufslps2", "i_ptgwa35tmuh97dfu", "i_t6t8kjrbmufskit9", "i_ve90y9vxmufskxvx"]
+[2026-09-26 09:01:40] [1790384500912] [BASELINE-APP] settings subset: {"setupPromptStarted": true, "setupDismissed": false, "backgroundVisited": true, "overlayVisited": null, "testRun": null, "testFeedback": null, "defaultDeliveryMode": "alarm"}
+[2026-09-26 09:01:41] [1790384501503] [BASELINE-APP] diag: null
+[2026-09-26 09:01:42] [1790384502600] [BASELINE-APP] homeSetup: {"exists": true, "isEmpty": true, "text": ""}
+[2026-09-26 09:01:42] [1790384502659] [BASELINE-APP] sheetSetup: {"exists": true, "open": false}
+[2026-09-26 09:01:43] [1790384503216] [BASELINE-APP] screenshot baseline_home saved png_magic_ok=True
+[2026-09-26 09:01:43] [1790384503263] [BASELINE-APP] === baseline: app-side read-only end ===
+[2026-09-26 09:10:29] [1790385029610] [BGPOWER] === set bgpower target=智能控制后台耗电 tag=restore-smart-pretest start ===
+[2026-09-26 09:10:50] [1790385050802] [BGPOWER] before mode(checked radio): 允许后台耗电 png_ok=True
+[2026-09-26 09:10:50] [1790385050852] [BGPOWER] tapping target row at (306, 743)
+[2026-09-26 09:10:56] [1790385056041] [BGPOWER] after mode(checked radio): 智能控制后台耗电 png_ok=True
+[2026-09-26 09:10:56] [1790385056152] [BGPOWER] deviceidle whitelist entry: 'user,space.alliswell.inbox,10285'
+[2026-09-26 09:10:56] [1790385056199] [BGPOWER] === set bgpower target=智能控制后台耗电 tag=restore-smart-pretest end ===
+[2026-09-26 09:18:23] [1790385503248] [ATTEMPT R1-a] === attempt R1-a start ===
+[2026-09-26 09:18:33] [1790385512973] [ATTEMPT R1-a] === attempt R1-a start ===
+[2026-09-26 09:18:33] [1790385513107] [ATTEMPT R1-a] mResumed: topResumedActivity=ActivityRecord{257007346 u0 space.alliswell.inbox/.MainActivity t152 d0}
+[2026-09-26 09:18:34] [1790385513775] [ATTEMPT R1-a] pre: {"t": 1790385513728, "homeEmpty": false, "homeText": "还差 1 步，提醒才能准时响下一步：允许完全后台运行 (防冻结)›", "sheetOpen": false, "bgDone": null, "ignoring": false}
+[2026-09-26 09:18:34] [1790385513839] [ATTEMPT R1-a] FATAL: 防冻结卡片不在首页（homeEmpty != True），前置条件不满足
+[2026-09-26 09:18:49] [1790385529150] [ATTEMPT R1-a] === attempt R1-a start ===
+[2026-09-26 09:18:49] [1790385529293] [ATTEMPT R1-a] mResumed: topResumedActivity=ActivityRecord{257007346 u0 space.alliswell.inbox/.MainActivity t152 d0}
+[2026-09-26 09:18:50] [1790385529952] [ATTEMPT R1-a] pre: {"t": 1790385529910, "homeEmpty": false, "homeText": "还差 1 步，提醒才能准时响下一步：允许完全后台运行 (防冻结)›", "sheetOpen": false, "bgDone": null, "ignoring": false}
+[2026-09-26 09:18:50] [1790385530021] [ATTEMPT R1-a] sampler started (250ms)
+[2026-09-26 09:18:50] [1790385530088] [ATTEMPT R1-a] tapping home card #setupEntry
+[2026-09-26 09:18:51] [1790385531431] [ATTEMPT R1-a] sheet opened
+[2026-09-26 09:18:51] [1790385531501] [ATTEMPT R1-a] tapping background step chip
+[2026-09-26 09:18:54] [1790385534184] [ATTEMPT R1-a] after chip tap: mResumed=topResumedActivity=ActivityRecord{133317815 u0 com.iqoo.powersaving/.BackgroundHighUsageActivity t43 d0}
+[2026-09-26 09:18:55] [1790385534812] [ATTEMPT R1-a] screenshot landing png_ok=True
+[2026-09-26 09:18:59] [1790385538799] [ATTEMPT R1-a] landing step 0: mResumed=topResumedActivity=ActivityRecord{133317815 u0 com.iqoo.powersaving/.BackgroundHighUsageActivity t43 d0}
+[2026-09-26 09:18:59] [1790385538864] [ATTEMPT R1-a] tapping 安心收件箱 at (348, 410)
+[2026-09-26 09:19:05] [1790385544792] [ATTEMPT R1-a] landing step 1: mResumed=topResumedActivity=ActivityRecord{63403987 u0 com.iqoo.powersaving/.activity.ExcessivePowerDescriptionActivity t43 d0}
+[2026-09-26 09:19:05] [1790385544855] [ATTEMPT R1-a] tapping 安心收件箱 at (324, 363)
+[2026-09-26 09:19:11] [1790385550807] [ATTEMPT R1-a] landing step 2: mResumed=topResumedActivity=ActivityRecord{63403987 u0 com.iqoo.powersaving/.activity.ExcessivePowerDescriptionActivity t43 d0}
+[2026-09-26 09:19:11] [1790385550870] [ATTEMPT R1-a] tapping 安心收件箱 at (324, 363)
+[2026-09-26 09:19:17] [1790385556819] [ATTEMPT R1-a] landing step 3: mResumed=topResumedActivity=ActivityRecord{63403987 u0 com.iqoo.powersaving/.activity.ExcessivePowerDescriptionActivity t43 d0}
+[2026-09-26 09:19:17] [1790385556880] [ATTEMPT R1-a] tapping 安心收件箱 at (324, 363)
+[2026-09-26 09:19:23] [1790385562860] [ATTEMPT R1-a] landing step 4: mResumed=topResumedActivity=ActivityRecord{63403987 u0 com.iqoo.powersaving/.activity.ExcessivePowerDescriptionActivity t43 d0}
+[2026-09-26 09:19:23] [1790385562915] [ATTEMPT R1-a] tapping 安心收件箱 at (324, 363)
+[2026-09-26 09:19:29] [1790385568935] [ATTEMPT R1-a] landing step 5: mResumed=topResumedActivity=ActivityRecord{63403987 u0 com.iqoo.powersaving/.activity.ExcessivePowerDescriptionActivity t43 d0}
+[2026-09-26 09:19:29] [1790385568996] [ATTEMPT R1-a] tapping 安心收件箱 at (324, 363)
+[2026-09-26 09:19:34] [1790385573727] [ATTEMPT R1-a] before toggle checked=智能控制后台耗电
+[2026-09-26 09:19:34] [1790385573836] [ATTEMPT R1-a] Tswitch=1790385573800 tapping 允许后台耗电 at (258, 988)
+[2026-09-26 09:19:39] [1790385578595] [ATTEMPT R1-a] after toggle checked=允许后台耗电
+[2026-09-26 09:19:39] [1790385579163] [ATTEMPT R1-a] screenshot after-toggle png_ok=True
+[2026-09-26 09:19:41] [1790385580676] [ATTEMPT R1-a] pressed BACK, device_ms=1790385580533, mResumed=topResumedActivity=ActivityRecord{133317815 u0 com.iqoo.powersaving/.BackgroundHighUsageActivity t43 d0}
+[2026-09-26 09:19:41] [1790385580723] [ATTEMPT R1-a] observation window 15s starts, t_resume=1790385580533
+[2026-09-26 09:19:56] [1790385595862] [ATTEMPT R1-a] observation window end
+[2026-09-26 09:19:56] [1790385596545] [ATTEMPT R1-a] analysis: {"t_resume": 1790385580533, "first_sample_after_resume": {"t": 1790385584701, "homeEmpty": false, "homeText": "还差 1 步，提醒才能准时响下一步：允许完全后台运行 (防冻结)›", "sheetOpen": true, "bgDone": true, "ignoring": false}, "ignoring_first_true": null, "ignoring_delay_ms": null, "bgDone_first_true": 1790385584701, "bgDone_delay_ms": 4168, "homeEmpty_first_true_after_resume": null}
+[2026-09-26 09:20:27] [1790385626654] [ATTEMPT R1-a] close sheet failed: Connection timed out
+[2026-09-26 09:20:27] [1790385626744] [ATTEMPT R1-a] final after closing sheet: {"t": 1790385626687, "homeEmpty": false, "homeText": "还差 1 步，提醒才能准时响下一步：允许完全后台运行 (防冻结)›", "sheetOpen": true, "bgDone": true, "ignoring": false}
+[2026-09-26 09:20:27] [1790385627312] [ATTEMPT R1-a] screenshot final-home png_ok=True
+[2026-09-26 09:20:27] [1790385627371] [ATTEMPT R1-a] === attempt R1-a end ===
+[2026-09-26 09:22:30] [1790385750477] [BGPOWER] === set bgpower target=智能控制后台耗电 tag=restore-after-R1a-invalid start ===
+[2026-09-26 09:22:51] [1790385771622] [BGPOWER] before mode(checked radio): 允许后台耗电 png_ok=True
+[2026-09-26 09:22:51] [1790385771680] [BGPOWER] tapping target row at (306, 743)
+[2026-09-26 09:22:56] [1790385776894] [BGPOWER] after mode(checked radio): 智能控制后台耗电 png_ok=True
+[2026-09-26 09:22:57] [1790385777008] [BGPOWER] deviceidle whitelist entry: 'user,space.alliswell.inbox,10285'
+[2026-09-26 09:22:57] [1790385777064] [BGPOWER] === set bgpower target=智能控制后台耗电 tag=restore-after-R1a-invalid end ===
+[2026-09-26 09:24:12] [1790385851837] [ATTEMPT R1-b] === attempt R1-b start ===
+[2026-09-26 09:24:12] [1790385851975] [ATTEMPT R1-b] mResumed: topResumedActivity=ActivityRecord{257007346 u0 space.alliswell.inbox/.MainActivity t152 d0}
+[2026-09-26 09:24:34] [1790385873836] [ATTEMPT R1-b] === attempt R1-b start ===
+[2026-09-26 09:24:34] [1790385873986] [ATTEMPT R1-b] mResumed: topResumedActivity=ActivityRecord{257007346 u0 space.alliswell.inbox/.MainActivity t152 d0}
+[2026-09-26 09:24:35] [1790385874673] [ATTEMPT R1-b] pre: {"t": 1790385874617, "homeEmpty": false, "homeText": "还差 1 步，提醒才能准时响下一步：允许完全后台运行 (防冻结)›", "sheetOpen": false, "bgDone": true, "ignoring": false, "rr": null}
+[2026-09-26 09:24:35] [1790385874743] [ATTEMPT R1-b] sampler started (250ms)
+[2026-09-26 09:24:35] [1790385874807] [ATTEMPT R1-b] tapping home card #setupEntry
+[2026-09-26 09:24:36] [1790385876145] [ATTEMPT R1-b] sheet opened
+[2026-09-26 09:24:36] [1790385876205] [ATTEMPT R1-b] mutation observer: installed
+[2026-09-26 09:24:36] [1790385876246] [ATTEMPT R1-b] tapping background step chip
+[2026-09-26 09:24:39] [1790385879234] [ATTEMPT R1-b] after chip tap: mResumed=topResumedActivity=ActivityRecord{200253981 u0 com.iqoo.powersaving/.BackgroundHighUsageActivity t43 d0}
+[2026-09-26 09:24:40] [1790385879861] [ATTEMPT R1-b] screenshot landing png_ok=True
+[2026-09-26 09:24:44] [1790385883944] [ATTEMPT R1-b] landing step 0: mResumed=topResumedActivity=ActivityRecord{200253981 u0 com.iqoo.powersaving/.BackgroundHighUsageActivity t43 d0}
+[2026-09-26 09:24:44] [1790385884011] [ATTEMPT R1-b] tapping 安心收件箱 at (348, 410)
+[2026-09-26 09:24:50] [1790385890039] [ATTEMPT R1-b] landing step 1: mResumed=topResumedActivity=ActivityRecord{248663575 u0 com.iqoo.powersaving/.activity.ExcessivePowerDescriptionActivity t43 d0}
+[2026-09-26 09:24:50] [1790385890089] [ATTEMPT R1-b] reached radio options page
+[2026-09-26 09:24:53] [1790385892663] [ATTEMPT R1-b] before toggle checked=智能控制后台耗电
+[2026-09-26 09:24:53] [1790385892743] [ATTEMPT R1-b] Tswitch=1790385892707 tapping 允许后台耗电 at (258, 988)
+[2026-09-26 09:24:57] [1790385897411] [ATTEMPT R1-b] after toggle checked=允许后台耗电
+[2026-09-26 09:24:58] [1790385898033] [ATTEMPT R1-b] screenshot after-toggle png_ok=True
+[2026-09-26 09:25:03] [1790385902595] [ATTEMPT R1-b] BACK #1: not app yet, mResumed=topResumedActivity=ActivityRecord{200253981 u0 com.iqoo.powersaving/.BackgroundHighUsageActivity t43 d0}
+[2026-09-26 09:25:07] [1790385907047] [ATTEMPT R1-b] BACK #2: not app yet, mResumed=topResumedActivity=ActivityRecord{2832222 u0 com.iqoo.powersaving/.activity.ExcessivePowerDescriptionActivity 
+[2026-09-26 09:25:11] [1790385911516] [ATTEMPT R1-b] BACK #3: not app yet, mResumed=topResumedActivity=ActivityRecord{170380007 u0 com.iqoo.powersaving/.fuelgauge.PowerUsageSummaryActivity t43 d
+[2026-09-26 09:25:16] [1790385916001] [ATTEMPT R1-b] BACK #4: not app yet, mResumed=topResumedActivity=ActivityRecord{169112466 u0 com.android.settings/.applications.InstalledAppDetails t43 d0}
+[2026-09-26 09:25:16] [1790385916080] [ATTEMPT R1-b] FATAL: BACK did not return to app
+[2026-09-26 09:25:50] [1790385950256] [BGPOWER] === set bgpower target=智能控制后台耗电 tag=restore-after-R1b-fatal start ===
+[2026-09-26 09:26:11] [1790385971382] [BGPOWER] before mode(checked radio): 允许后台耗电 png_ok=True
+[2026-09-26 09:26:11] [1790385971431] [BGPOWER] tapping target row at (306, 743)
+[2026-09-26 09:26:16] [1790385976627] [BGPOWER] after mode(checked radio): 智能控制后台耗电 png_ok=True
+[2026-09-26 09:26:16] [1790385976734] [BGPOWER] deviceidle whitelist entry: 'user,space.alliswell.inbox,10285'
+[2026-09-26 09:26:16] [1790385976791] [BGPOWER] === set bgpower target=智能控制后台耗电 tag=restore-after-R1b-fatal end ===
+[2026-09-26 09:27:00] [1790386019682] [ATTEMPT R1-b] === attempt R1-b start ===
+[2026-09-26 09:27:00] [1790386019804] [ATTEMPT R1-b] mResumed: topResumedActivity=ActivityRecord{257007346 u0 space.alliswell.inbox/.MainActivity t152 d0}
+[2026-09-26 09:27:00] [1790386020473] [ATTEMPT R1-b] pre: {"t": 1790386020428, "homeEmpty": false, "homeText": "还差 1 步，提醒才能准时响下一步：允许完全后台运行 (防冻结)›", "sheetOpen": false, "bgDone": true, "ignoring": false, "rr": {"c": 12, "last": 1790385988260}}
+[2026-09-26 09:27:00] [1790386020542] [ATTEMPT R1-b] sampler started (250ms)
+[2026-09-26 09:27:01] [1790386020614] [ATTEMPT R1-b] tapping home card #setupEntry
+[2026-09-26 09:27:02] [1790386021937] [ATTEMPT R1-b] sheet opened
+[2026-09-26 09:27:02] [1790386022003] [ATTEMPT R1-b] mutation observer: already
+[2026-09-26 09:27:02] [1790386022052] [ATTEMPT R1-b] tapping background step chip
+[2026-09-26 09:27:05] [1790386024761] [ATTEMPT R1-b] after chip tap: mResumed=topResumedActivity=ActivityRecord{203450014 u0 com.iqoo.powersaving/.BackgroundHighUsageActivity t43 d0}
+[2026-09-26 09:27:05] [1790386025331] [ATTEMPT R1-b] screenshot landing png_ok=True
+[2026-09-26 09:27:09] [1790386029429] [ATTEMPT R1-b] landing step 0: mResumed=topResumedActivity=ActivityRecord{203450014 u0 com.iqoo.powersaving/.BackgroundHighUsageActivity t43 d0}
+[2026-09-26 09:27:09] [1790386029493] [ATTEMPT R1-b] tapping 安心收件箱 at (348, 410)
+[2026-09-26 09:27:15] [1790386035402] [ATTEMPT R1-b] landing step 1: mResumed=topResumedActivity=ActivityRecord{68875538 u0 com.iqoo.powersaving/.activity.ExcessivePowerDescriptionActivity t43 d0}
+[2026-09-26 09:27:15] [1790386035469] [ATTEMPT R1-b] reached radio options page
+[2026-09-26 09:27:18] [1790386038007] [ATTEMPT R1-b] before toggle checked=智能控制后台耗电
+[2026-09-26 09:27:18] [1790386038088] [ATTEMPT R1-b] Tswitch=1790386038055 tapping 允许后台耗电 at (258, 988)
+[2026-09-26 09:27:23] [1790386042688] [ATTEMPT R1-b] after toggle checked=允许后台耗电
+[2026-09-26 09:27:23] [1790386043171] [ATTEMPT R1-b] screenshot after-toggle png_ok=True
+[2026-09-26 09:27:28] [1790386047765] [ATTEMPT R1-b] BACK #1: not app yet, mResumed=topResumedActivity=ActivityRecord{203450014 u0 com.iqoo.powersaving/.BackgroundHighUsageActivity t43 d0}
+[2026-09-26 09:27:32] [1790386052350] [ATTEMPT R1-b] BACK #2: not app yet, mResumed=topResumedActivity=ActivityRecord{244634898 u0 com.iqoo.powersaving/.activity.ExcessivePowerDescriptionActivit
+[2026-09-26 09:27:37] [1790386056967] [ATTEMPT R1-b] BACK #3: not app yet, mResumed=topResumedActivity=ActivityRecord{239808860 u0 com.iqoo.powersaving/.fuelgauge.PowerUsageSummaryActivity t43 d
+[2026-09-26 09:27:41] [1790386061530] [ATTEMPT R1-b] BACK #4: not app yet, mResumed=topResumedActivity=ActivityRecord{14047247 u0 com.android.settings/.applications.InstalledAppDetails t43 d0}
+[2026-09-26 09:27:43] [1790386063556] [ATTEMPT R1-b] relaunched from home, t_resume=1790386063490, topResumedActivity=ActivityRecord{257007346 u0 space.alliswell.inbox/.MainActivity t152 d0}
+[2026-09-26 09:27:44] [1790386063611] [ATTEMPT R1-b] return-to-app method: home+relaunch
+[2026-09-26 09:27:44] [1790386063656] [ATTEMPT R1-b] observation window 15s starts, t_resume=1790386063490
+[2026-09-26 09:27:59] [1790386078854] [ATTEMPT R1-b] observation window end
+[2026-09-26 09:27:59] [1790386079539] [ATTEMPT R1-b] analysis: {"t_resume": 1790386063490, "first_sample_after_resume": {"t": 1790386063533, "homeEmpty": true, "homeText": "", "sheetOpen": true, "bgDone": true, "ignoring": true, "rr": {"c": 22, "last": 1790386063411}}, "ignoring_first_true": 1790386063533, "ignoring_delay_ms": 43, "bgDone_first_true": 1790386063533, "bgDone_delay_ms": 43, "homeEmpty_first_true_after_resume": 1790386063533}
+[2026-09-26 09:28:01] [1790386080684] [ATTEMPT R1-b] final after closing sheet: {"t": 1790386080624, "homeEmpty": true, "homeText": "", "sheetOpen": false, "bgDone": true, "ignoring": true, "rr": {"c": 26, "last": 1790386063583}}
+[2026-09-26 09:28:01] [1790386081248] [ATTEMPT R1-b] screenshot final-home png_ok=True
+[2026-09-26 09:28:01] [1790386081311] [ATTEMPT R1-b] === attempt R1-b end ===
+[2026-09-26 09:28:31] [1790386111127] [BGPOWER] === set bgpower target=智能控制后台耗电 tag=restore-after-R1b start ===
+[2026-09-26 09:28:52] [1790386132313] [BGPOWER] before mode(checked radio): 允许后台耗电 png_ok=True
+[2026-09-26 09:28:52] [1790386132376] [BGPOWER] tapping target row at (306, 743)
+[2026-09-26 09:28:57] [1790386137544] [BGPOWER] after mode(checked radio): 智能控制后台耗电 png_ok=True
+[2026-09-26 09:28:57] [1790386137645] [BGPOWER] deviceidle whitelist entry: 'user,space.alliswell.inbox,10285'
+[2026-09-26 09:28:57] [1790386137688] [BGPOWER] === set bgpower target=智能控制后台耗电 tag=restore-after-R1b end ===
+[2026-09-26 09:31:06] [1790386266118] [ATTEMPT R1-c] === attempt R1-c start ===
+[2026-09-26 09:31:06] [1790386266239] [ATTEMPT R1-c] mResumed: topResumedActivity=ActivityRecord{257007346 u0 space.alliswell.inbox/.MainActivity t152 d0}
+[2026-09-26 09:31:07] [1790386266955] [ATTEMPT R1-c] pre: {"t": 1790386266897, "homeEmpty": false, "homeText": "还差 1 步，提醒才能准时响下一步：允许完全后台运行 (防冻结)›", "sheetOpen": false, "bgDone": true, "ignoring": false, "rr": {"c": 26, "last": 1790386063583}}
+[2026-09-26 09:31:07] [1790386267013] [ATTEMPT R1-c] sampler started (250ms)
+[2026-09-26 09:31:07] [1790386267068] [ATTEMPT R1-c] tapping home card #setupEntry
+[2026-09-26 09:31:08] [1790386268375] [ATTEMPT R1-c] sheet opened
+[2026-09-26 09:31:08] [1790386268443] [ATTEMPT R1-c] mutation observer: already
+[2026-09-26 09:31:08] [1790386268501] [ATTEMPT R1-c] tapping background step chip
+[2026-09-26 09:31:11] [1790386271217] [ATTEMPT R1-c] after chip tap: mResumed=topResumedActivity=ActivityRecord{236274792 u0 com.iqoo.powersaving/.BackgroundHighUsageActivity t43 d0}
+[2026-09-26 09:31:12] [1790386271819] [ATTEMPT R1-c] screenshot landing png_ok=True
+[2026-09-26 09:31:16] [1790386275923] [ATTEMPT R1-c] landing step 0: mResumed=topResumedActivity=ActivityRecord{236274792 u0 com.iqoo.powersaving/.BackgroundHighUsageActivity t43 d0}
+[2026-09-26 09:31:16] [1790386275988] [ATTEMPT R1-c] tapping 安心收件箱 at (348, 410)
+[2026-09-26 09:31:22] [1790386281948] [ATTEMPT R1-c] landing step 1: mResumed=topResumedActivity=ActivityRecord{34865808 u0 com.iqoo.powersaving/.activity.ExcessivePowerDescriptionActivity t43 d0}
+[2026-09-26 09:31:22] [1790386282007] [ATTEMPT R1-c] reached radio options page
+[2026-09-26 09:31:25] [1790386284622] [ATTEMPT R1-c] before toggle checked=智能控制后台耗电
+[2026-09-26 09:31:25] [1790386284724] [ATTEMPT R1-c] Tswitch=1790386284673 tapping 允许后台耗电 at (258, 988)
+[2026-09-26 09:31:29] [1790386289414] [ATTEMPT R1-c] after toggle checked=允许后台耗电
+[2026-09-26 09:31:30] [1790386289960] [ATTEMPT R1-c] screenshot after-toggle png_ok=True
+[2026-09-26 09:31:35] [1790386294590] [ATTEMPT R1-c] BACK #1: not app yet, mResumed=topResumedActivity=ActivityRecord{236274792 u0 com.iqoo.powersaving/.BackgroundHighUsageActivity t43 d0}
+[2026-09-26 09:31:39] [1790386299169] [ATTEMPT R1-c] BACK #2: not app yet, mResumed=topResumedActivity=ActivityRecord{103457976 u0 com.iqoo.powersaving/.activity.ExcessivePowerDescriptionActivit
+[2026-09-26 09:31:44] [1790386303836] [ATTEMPT R1-c] BACK #3: not app yet, mResumed=topResumedActivity=ActivityRecord{190831499 u0 com.iqoo.powersaving/.fuelgauge.PowerUsageSummaryActivity t43 d
+[2026-09-26 09:31:48] [1790386308416] [ATTEMPT R1-c] BACK #4: not app yet, mResumed=topResumedActivity=ActivityRecord{64489245 u0 com.android.settings/.applications.InstalledAppDetails t43 d0}
+[2026-09-26 09:31:50] [1790386310341] [ATTEMPT R1-c] relaunched from home, t_resume=1790386310296, topResumedActivity=ActivityRecord{257007346 u0 space.alliswell.inbox/.MainActivity t152 d0}
+[2026-09-26 09:31:50] [1790386310385] [ATTEMPT R1-c] return-to-app method: home+relaunch
+[2026-09-26 09:31:50] [1790386310438] [ATTEMPT R1-c] observation window 15s starts, t_resume=1790386310296
+[2026-09-26 09:32:06] [1790386325605] [ATTEMPT R1-c] observation window end
+[2026-09-26 09:32:06] [1790386326289] [ATTEMPT R1-c] analysis: {"t_resume": 1790386310296, "first_sample_after_resume": {"t": 1790386310318, "homeEmpty": true, "homeText": "", "sheetOpen": true, "bgDone": true, "ignoring": true, "rr": {"c": 36, "last": 1790386310318}}, "ignoring_first_true": 1790386310318, "ignoring_delay_ms": 22, "bgDone_first_true": 1790386310318, "bgDone_delay_ms": 22, "homeEmpty_first_true_after_resume": 1790386310318}
+[2026-09-26 09:32:07] [1790386327436] [ATTEMPT R1-c] final after closing sheet: {"t": 1790386327377, "homeEmpty": true, "homeText": "", "sheetOpen": false, "bgDone": true, "ignoring": true, "rr": {"c": 40, "last": 1790386310457}}
+[2026-09-26 09:32:08] [1790386327993] [ATTEMPT R1-c] screenshot final-home png_ok=True
+[2026-09-26 09:32:08] [1790386328037] [ATTEMPT R1-c] === attempt R1-c end ===
+[2026-09-26 09:32:22] [1790386342352] [BGPOWER] === set bgpower target=智能控制后台耗电 tag=restore-after-R1c start ===
+[2026-09-26 09:32:43] [1790386363606] [BGPOWER] before mode(checked radio): 允许后台耗电 png_ok=True
+[2026-09-26 09:32:43] [1790386363647] [BGPOWER] tapping target row at (306, 743)
+[2026-09-26 09:32:48] [1790386368801] [BGPOWER] after mode(checked radio): 智能控制后台耗电 png_ok=True
+[2026-09-26 09:32:48] [1790386368896] [BGPOWER] deviceidle whitelist entry: 'user,space.alliswell.inbox,10285'
+[2026-09-26 09:32:48] [1790386368953] [BGPOWER] === set bgpower target=智能控制后台耗电 tag=restore-after-R1c end ===
+[2026-09-26 09:33:07] [1790386386708] [ATTEMPT R2-a] === attempt R2-a start ===
+[2026-09-26 09:33:07] [1790386386841] [ATTEMPT R2-a] mResumed: topResumedActivity=ActivityRecord{257007346 u0 space.alliswell.inbox/.MainActivity t152 d0}
+[2026-09-26 09:33:07] [1790386387494] [ATTEMPT R2-a] pre: {"t": 1790386387448, "homeEmpty": false, "homeText": "还差 1 步，提醒才能准时响下一步：允许完全后台运行 (防冻结)›", "sheetOpen": false, "bgDone": true, "ignoring": false, "rr": {"c": 40, "last": 1790386310457}}
+[2026-09-26 09:33:08] [1790386387564] [ATTEMPT R2-a] sampler started (250ms)
+[2026-09-26 09:33:09] [1790386388894] [ATTEMPT R2-a] switched to 我的 tab
+[2026-09-26 09:33:10] [1790386390220] [ATTEMPT R2-a] sheet opened from 我的
+[2026-09-26 09:33:10] [1790386390291] [ATTEMPT R2-a] mutation observer: already
+[2026-09-26 09:33:10] [1790386390348] [ATTEMPT R2-a] tapping background step chip
+[2026-09-26 09:33:13] [1790386393093] [ATTEMPT R2-a] after chip tap: mResumed=topResumedActivity=ActivityRecord{132916930 u0 com.iqoo.powersaving/.BackgroundHighUsageActivity t43 d0}
+[2026-09-26 09:33:14] [1790386393753] [ATTEMPT R2-a] screenshot landing png_ok=True
+[2026-09-26 09:33:18] [1790386397833] [ATTEMPT R2-a] landing step 0: mResumed=topResumedActivity=ActivityRecord{132916930 u0 com.iqoo.powersaving/.BackgroundHighUsageActivity t43 d0}
+[2026-09-26 09:33:18] [1790386397885] [ATTEMPT R2-a] tapping 安心收件箱 at (348, 410)
+[2026-09-26 09:33:24] [1790386403919] [ATTEMPT R2-a] landing step 1: mResumed=topResumedActivity=ActivityRecord{196508623 u0 com.iqoo.powersaving/.activity.ExcessivePowerDescriptionActivity t43 d0}
+[2026-09-26 09:33:24] [1790386403982] [ATTEMPT R2-a] reached radio options page
+[2026-09-26 09:33:27] [1790386406629] [ATTEMPT R2-a] before toggle checked=智能控制后台耗电
+[2026-09-26 09:33:27] [1790386406740] [ATTEMPT R2-a] Tswitch=1790386406691 tapping 允许后台耗电 at (258, 988)
+[2026-09-26 09:33:31] [1790386411465] [ATTEMPT R2-a] after toggle checked=允许后台耗电
+[2026-09-26 09:33:32] [1790386411989] [ATTEMPT R2-a] screenshot after-toggle png_ok=True
+[2026-09-26 09:33:36] [1790386416275] [ATTEMPT R2-a] BACK #1: not app yet, mResumed=topResumedActivity=ActivityRecord{132916930 u0 com.iqoo.powersaving/.BackgroundHighUsageActivity t43 d0}
+[2026-09-26 09:33:41] [1790386420629] [ATTEMPT R2-a] BACK #2: not app yet, mResumed=topResumedActivity=ActivityRecord{257786618 u0 com.iqoo.powersaving/.activity.ExcessivePowerDescriptionActivit
+[2026-09-26 09:33:45] [1790386424971] [ATTEMPT R2-a] BACK #3: not app yet, mResumed=topResumedActivity=ActivityRecord{248840519 u0 com.iqoo.powersaving/.fuelgauge.PowerUsageSummaryActivity t43 d
+[2026-09-26 09:33:49] [1790386429273] [ATTEMPT R2-a] BACK #4: not app yet, mResumed=topResumedActivity=ActivityRecord{187094981 u0 com.android.settings/.applications.InstalledAppDetails t43 d0}
+[2026-09-26 09:33:51] [1790386431398] [ATTEMPT R2-a] relaunched from home, t_resume=1790386431349, topResumedActivity=ActivityRecord{257007346 u0 space.alliswell.inbox/.MainActivity t152 d0}
+[2026-09-26 09:33:51] [1790386431453] [ATTEMPT R2-a] return-to-app method: home+relaunch
+[2026-09-26 09:33:51] [1790386431493] [ATTEMPT R2-a] observation window 15s starts, t_resume=1790386431349
+[2026-09-26 09:34:07] [1790386446649] [ATTEMPT R2-a] observation window end
+[2026-09-26 09:34:07] [1790386447344] [ATTEMPT R2-a] analysis: {"t_resume": 1790386431349, "first_sample_after_resume": {"t": 1790386431398, "homeEmpty": false, "homeText": "还差 1 步，提醒才能准时响下一步：允许完全后台运行 (防冻结)›", "sheetOpen": true, "bgDone": true, "ignoring": true, "rr": {"c": 50, "last": 1790386431210}}, "ignoring_first_true": 1790386431398, "ignoring_delay_ms": 49, "bgDone_first_true": 1790386431398, "bgDone_delay_ms": 49, "homeEmpty_first_true_after_resume": null}
+[2026-09-26 09:34:08] [1790386448466] [ATTEMPT R2-a] final after closing sheet: {"t": 1790386448422, "homeEmpty": false, "homeText": "还差 1 步，提醒才能准时响下一步：允许完全后台运行 (防冻结)›", "sheetOpen": false, "bgDone": true, "ignoring": true, "rr": {"c": 54, "last": 1790386431492}}
+[2026-09-26 09:34:09] [1790386449026] [ATTEMPT R2-a] screenshot final-home png_ok=True
+[2026-09-26 09:34:09] [1790386449073] [ATTEMPT R2-a] === attempt R2-a end ===
+[2026-09-26 09:35:04] [1790386504226] [BGPOWER] === set bgpower target=智能控制后台耗电 tag=restore-after-R2a start ===
+[2026-09-26 09:35:25] [1790386525266] [BGPOWER] before mode(checked radio): 允许后台耗电 png_ok=True
+[2026-09-26 09:35:25] [1790386525304] [BGPOWER] tapping target row at (306, 743)
+[2026-09-26 09:35:30] [1790386530524] [BGPOWER] after mode(checked radio): 智能控制后台耗电 png_ok=True
+[2026-09-26 09:35:30] [1790386530646] [BGPOWER] deviceidle whitelist entry: 'user,space.alliswell.inbox,10285'
+[2026-09-26 09:35:30] [1790386530707] [BGPOWER] === set bgpower target=智能控制后台耗电 tag=restore-after-R2a end ===
+[2026-09-26 09:40:47] [1790386847102] [ATTEMPT R2-b] === attempt R2-b start ===
+[2026-09-26 09:40:47] [1790386847240] [ATTEMPT R2-b] mResumed: topResumedActivity=ActivityRecord{257007346 u0 space.alliswell.inbox/.MainActivity t152 d0}
+[2026-09-26 09:40:48] [1790386847910] [ATTEMPT R2-b] pre: {"t": 1790386847864, "homeEmpty": false, "homeText": "还差 1 步，提醒才能准时响下一步：允许完全后台运行 (防冻结)›", "sheetOpen": false, "bgDone": true, "ignoring": false, "rr": {"c": 54, "last": 1790386431492}}
+[2026-09-26 09:40:48] [1790386847972] [ATTEMPT R2-b] sampler started (250ms)
+[2026-09-26 09:40:49] [1790386849299] [ATTEMPT R2-b] switched to 我的 tab
+[2026-09-26 09:40:51] [1790386850664] [ATTEMPT R2-b] sheet opened from 我的
+[2026-09-26 09:40:51] [1790386850741] [ATTEMPT R2-b] mutation observer: already
+[2026-09-26 09:40:51] [1790386850788] [ATTEMPT R2-b] tapping background step chip
+[2026-09-26 09:40:53] [1790386853511] [ATTEMPT R2-b] after chip tap: mResumed=topResumedActivity=ActivityRecord{264187472 u0 com.iqoo.powersaving/.BackgroundHighUsageActivity t43 d0}
+[2026-09-26 09:40:54] [1790386854136] [ATTEMPT R2-b] screenshot landing png_ok=True
+[2026-09-26 09:40:58] [1790386858245] [ATTEMPT R2-b] landing step 0: mResumed=topResumedActivity=ActivityRecord{264187472 u0 com.iqoo.powersaving/.BackgroundHighUsageActivity t43 d0}
+[2026-09-26 09:40:58] [1790386858300] [ATTEMPT R2-b] tapping 安心收件箱 at (348, 410)
+[2026-09-26 09:41:04] [1790386864313] [ATTEMPT R2-b] landing step 1: mResumed=topResumedActivity=ActivityRecord{130596560 u0 com.iqoo.powersaving/.activity.ExcessivePowerDescriptionActivity t43 d0}
+[2026-09-26 09:41:04] [1790386864369] [ATTEMPT R2-b] reached radio options page
+[2026-09-26 09:41:07] [1790386867079] [ATTEMPT R2-b] before toggle checked=智能控制后台耗电
+[2026-09-26 09:41:07] [1790386867159] [ATTEMPT R2-b] Tswitch=1790386867125 tapping 允许后台耗电 at (258, 988)
+[2026-09-26 09:41:12] [1790386871911] [ATTEMPT R2-b] after toggle checked=允许后台耗电
+[2026-09-26 09:41:12] [1790386872479] [ATTEMPT R2-b] screenshot after-toggle png_ok=True
+[2026-09-26 09:41:17] [1790386876823] [ATTEMPT R2-b] BACK #1: not app yet, mResumed=topResumedActivity=ActivityRecord{264187472 u0 com.iqoo.powersaving/.BackgroundHighUsageActivity t43 d0}
+[2026-09-26 09:41:21] [1790386881122] [ATTEMPT R2-b] BACK #2: not app yet, mResumed=topResumedActivity=ActivityRecord{115309760 u0 com.iqoo.powersaving/.activity.ExcessivePowerDescriptionActivit
+[2026-09-26 09:41:25] [1790386885439] [ATTEMPT R2-b] BACK #3: not app yet, mResumed=topResumedActivity=ActivityRecord{153197843 u0 com.iqoo.powersaving/.fuelgauge.PowerUsageSummaryActivity t43 d
+[2026-09-26 09:41:30] [1790386889718] [ATTEMPT R2-b] BACK #4: not app yet, mResumed=topResumedActivity=ActivityRecord{213512320 u0 com.android.settings/.applications.InstalledAppDetails t43 d0}
+[2026-09-26 09:41:32] [1790386891828] [ATTEMPT R2-b] relaunched from home, t_resume=1790386891753, topResumedActivity=ActivityRecord{257007346 u0 space.alliswell.inbox/.MainActivity t152 d0}
+[2026-09-26 09:41:32] [1790386891884] [ATTEMPT R2-b] return-to-app method: home+relaunch
+[2026-09-26 09:41:32] [1790386891923] [ATTEMPT R2-b] observation window 15s starts, t_resume=1790386891753
+[2026-09-26 09:41:47] [1790386907084] [ATTEMPT R2-b] observation window end
+[2026-09-26 09:41:48] [1790386907781] [ATTEMPT R2-b] analysis: {"t_resume": 1790386891753, "first_sample_after_resume": {"t": 1790386891728, "homeEmpty": false, "homeText": "还差 1 步，提醒才能准时响下一步：允许完全后台运行 (防冻结)›", "sheetOpen": true, "bgDone": true, "ignoring": true, "rr": {"c": 64, "last": 1790386891583}}, "ignoring_first_true": 1790386891728, "ignoring_delay_ms": -25, "bgDone_first_true": 1790386891728, "bgDone_delay_ms": -25, "homeEmpty_first_true_after_resume": null}
+[2026-09-26 09:41:49] [1790386908913] [ATTEMPT R2-b] final after closing sheet: {"t": 1790386908861, "homeEmpty": false, "homeText": "还差 1 步，提醒才能准时响下一步：允许完全后台运行 (防冻结)›", "sheetOpen": false, "bgDone": true, "ignoring": true, "rr": {"c": 68, "last": 1790386891814}}
+[2026-09-26 09:41:49] [1790386909506] [ATTEMPT R2-b] screenshot final-home png_ok=True
+[2026-09-26 09:41:50] [1790386909571] [ATTEMPT R2-b] === attempt R2-b end ===
+[2026-09-26 09:42:18] [1790386938749] [BGPOWER] === set bgpower target=智能控制后台耗电 tag=restore-after-R2b start ===
+[2026-09-26 09:42:40] [1790386960099] [BGPOWER] before mode(checked radio): 允许后台耗电 png_ok=True
+[2026-09-26 09:42:40] [1790386960157] [BGPOWER] tapping target row at (306, 743)
+[2026-09-26 09:42:45] [1790386965330] [BGPOWER] after mode(checked radio): 智能控制后台耗电 png_ok=True
+[2026-09-26 09:42:45] [1790386965459] [BGPOWER] deviceidle whitelist entry: 'user,space.alliswell.inbox,10285'
+[2026-09-26 09:42:45] [1790386965507] [BGPOWER] === set bgpower target=智能控制后台耗电 tag=restore-after-R2b end ===
+[2026-09-26 09:44:37] [1790387077543] [ATTEMPT R3-a] === attempt R3-a start ===
+[2026-09-26 09:44:38] [1790387077684] [ATTEMPT R3-a] mResumed: topResumedActivity=ActivityRecord{257007346 u0 space.alliswell.inbox/.MainActivity t152 d0}
+[2026-09-26 09:44:38] [1790387078349] [ATTEMPT R3-a] pre: {"t": 1790387078310, "homeEmpty": false, "homeText": "还差 1 步，提醒才能准时响下一步：允许完全后台运行 (防冻结)›", "sheetOpen": false, "bgDone": true, "ignoring": false, "rr": {"c": 68, "last": 1790386891814}}
+[2026-09-26 09:44:38] [1790387078418] [ATTEMPT R3-a] sampler started (250ms)
+[2026-09-26 09:44:40] [1790387080075] [ATTEMPT R3-a] pressed HOME
+[2026-09-26 09:44:59] [1790387099570] [ATTEMPT R3-a] Tswitch=1790387099534 tapping 允许后台耗电 at (258, 988)
+[2026-09-26 09:45:04] [1790387104287] [ATTEMPT R3-a] after toggle checked=允许后台耗电
+[2026-09-26 09:45:09] [1790387109195] [ATTEMPT R3-a] tapping recents card at (604, 388)
+[2026-09-26 09:45:15] [1790387115524] [ATTEMPT R3-a] FATAL: recents did not return to app
+[2026-09-26 09:45:52] [1790387152779] [BGPOWER] === set bgpower target=智能控制后台耗电 tag=restore-after-R3a-fatal start ===
+[2026-09-26 09:46:14] [1790387174249] [BGPOWER] before mode(checked radio): 允许后台耗电 png_ok=True
+[2026-09-26 09:46:14] [1790387174292] [BGPOWER] tapping target row at (306, 743)
+[2026-09-26 09:46:19] [1790387179579] [BGPOWER] after mode(checked radio): 智能控制后台耗电 png_ok=True
+[2026-09-26 09:46:19] [1790387179665] [BGPOWER] deviceidle whitelist entry: 'user,space.alliswell.inbox,10285'
+[2026-09-26 09:46:19] [1790387179709] [BGPOWER] === set bgpower target=智能控制后台耗电 tag=restore-after-R3a-fatal end ===
+[2026-09-26 09:48:19] [1790387299341] [ATTEMPT R3-a] === attempt R3-a start ===
+[2026-09-26 09:48:19] [1790387299471] [ATTEMPT R3-a] mResumed: topResumedActivity=ActivityRecord{257007346 u0 space.alliswell.inbox/.MainActivity t152 d0}
+[2026-09-26 09:48:20] [1790387300136] [ATTEMPT R3-a] pre: {"t": 1790387300086, "homeEmpty": false, "homeText": "还差 1 步，提醒才能准时响下一步：允许完全后台运行 (防冻结)›", "sheetOpen": false, "bgDone": true, "ignoring": false, "rr": {"c": 68, "last": 1790386891814}}
+[2026-09-26 09:48:20] [1790387300199] [ATTEMPT R3-a] sampler started (250ms)
+[2026-09-26 09:48:22] [1790387301841] [ATTEMPT R3-a] pressed HOME
+[2026-09-26 09:48:41] [1790387321140] [ATTEMPT R3-a] Tswitch=1790387321091 tapping 允许后台耗电 at (258, 988)
+[2026-09-26 09:48:46] [1790387325883] [ATTEMPT R3-a] after toggle checked=允许后台耗电
+[2026-09-26 09:48:51] [1790387330845] [ATTEMPT R3-a] tapping recents card snapshot at (604, 258)
+[2026-09-26 09:48:57] [1790387337257] [ATTEMPT R3-a] FATAL: recents did not return to app
+[2026-09-26 09:49:45] [1790387385059] [BGPOWER] === set bgpower target=智能控制后台耗电 tag=restore-after-R3a-fatal2 start ===
+[2026-09-26 09:50:06] [1790387406432] [BGPOWER] before mode(checked radio): 允许后台耗电 png_ok=True
+[2026-09-26 09:50:06] [1790387406483] [BGPOWER] tapping target row at (306, 743)
+[2026-09-26 09:50:11] [1790387411775] [BGPOWER] after mode(checked radio): 智能控制后台耗电 png_ok=True
+[2026-09-26 09:50:11] [1790387411899] [BGPOWER] deviceidle whitelist entry: 'user,space.alliswell.inbox,10285'
+[2026-09-26 09:50:11] [1790387411961] [BGPOWER] === set bgpower target=智能控制后台耗电 tag=restore-after-R3a-fatal2 end ===
+[2026-09-26 09:50:43] [1790387443019] [ATTEMPT R3-a] === attempt R3-a start ===
+[2026-09-26 09:50:43] [1790387443163] [ATTEMPT R3-a] mResumed: topResumedActivity=ActivityRecord{257007346 u0 space.alliswell.inbox/.MainActivity t152 d0}
+[2026-09-26 09:50:44] [1790387443853] [ATTEMPT R3-a] pre: {"t": 1790387443811, "homeEmpty": false, "homeText": "还差 1 步，提醒才能准时响下一步：允许完全后台运行 (防冻结)›", "sheetOpen": false, "bgDone": true, "ignoring": false, "rr": {"c": 68, "last": 1790386891814}}
+[2026-09-26 09:50:44] [1790387443905] [ATTEMPT R3-a] sampler started (250ms)
+[2026-09-26 09:50:45] [1790387445556] [ATTEMPT R3-a] pressed HOME
+[2026-09-26 09:51:05] [1790387464897] [ATTEMPT R3-a] Tswitch=1790387464860 tapping 允许后台耗电 at (258, 988)
+[2026-09-26 09:51:10] [1790387469674] [ATTEMPT R3-a] after toggle checked=允许后台耗电
+[2026-09-26 09:51:14] [1790387474519] [ATTEMPT R3-a] tapping recents card container at (540, 1133)
+[2026-09-26 09:51:15] [1790387474854] [ATTEMPT R3-a] app resumed via recents, t_resume=1790387474780, topResumedActivity=ActivityRecord{257007346 u0 space.alliswell.inbox/.MainActivity t152 d0}
+[2026-09-26 09:51:15] [1790387474897] [ATTEMPT R3-a] observation window 15s starts, t_resume=1790387474780
+[2026-09-26 09:51:30] [1790387490050] [ATTEMPT R3-a] observation window end
+[2026-09-26 09:51:31] [1790387490734] [ATTEMPT R3-a] analysis: {"t_resume": 1790387474780, "first_sample_after_resume": {"t": 1790387474724, "homeEmpty": false, "homeText": "还差 1 步，提醒才能准时响下一步：允许完全后台运行 (防冻结)›", "sheetOpen": false, "bgDone": true, "ignoring": false, "rr": {"c": 68, "last": 1790386891814}}, "ignoring_first_true": 1790387475062, "ignoring_delay_ms": 282, "bgDone_first_true": 1790387474724, "bgDone_delay_ms": -56, "homeEmpty_first_true_after_resume": 1790387475062}
+[2026-09-26 09:51:31] [1790387490798] [ATTEMPT R3-a] final home: {"t": 1790387490758, "homeEmpty": true, "homeText": "", "sheetOpen": false, "bgDone": true, "ignoring": true, "rr": {"c": 68, "last": 1790386891814}}
+[2026-09-26 09:51:31] [1790387491343] [ATTEMPT R3-a] screenshot final-home png_ok=True
+[2026-09-26 09:51:31] [1790387491402] [ATTEMPT R3-a] === attempt R3-a end ===
+[2026-09-26 09:51:51] [1790387511404] [BGPOWER] === set bgpower target=智能控制后台耗电 tag=restore-after-R3a start ===
+[2026-09-26 09:52:12] [1790387532898] [BGPOWER] before mode(checked radio): 允许后台耗电 png_ok=True
+[2026-09-26 09:52:12] [1790387532945] [BGPOWER] tapping target row at (306, 743)
+[2026-09-26 09:52:18] [1790387538241] [BGPOWER] after mode(checked radio): 智能控制后台耗电 png_ok=True
+[2026-09-26 09:52:18] [1790387538355] [BGPOWER] deviceidle whitelist entry: 'user,space.alliswell.inbox,10285'
+[2026-09-26 09:52:18] [1790387538405] [BGPOWER] === set bgpower target=智能控制后台耗电 tag=restore-after-R3a end ===
+[2026-09-26 09:52:45] [1790387565344] [ATTEMPT R3-b] === attempt R3-b start ===
+[2026-09-26 09:52:45] [1790387565495] [ATTEMPT R3-b] mResumed: topResumedActivity=ActivityRecord{257007346 u0 space.alliswell.inbox/.MainActivity t152 d0}
+[2026-09-26 09:52:46] [1790387566170] [ATTEMPT R3-b] pre: {"t": 1790387566129, "homeEmpty": false, "homeText": "还差 1 步，提醒才能准时响下一步：允许完全后台运行 (防冻结)›", "sheetOpen": false, "bgDone": true, "ignoring": false, "rr": {"c": 68, "last": 1790386891814}}
+[2026-09-26 09:52:46] [1790387566225] [ATTEMPT R3-b] sampler started (250ms)
+[2026-09-26 09:52:48] [1790387567891] [ATTEMPT R3-b] pressed HOME
+[2026-09-26 09:53:07] [1790387587276] [ATTEMPT R3-b] Tswitch=1790387587242 tapping 允许后台耗电 at (258, 988)
+[2026-09-26 09:53:12] [1790387592038] [ATTEMPT R3-b] after toggle checked=允许后台耗电
+[2026-09-26 09:53:17] [1790387596968] [ATTEMPT R3-b] tapping recents card container at (540, 389)
+[2026-09-26 09:53:23] [1790387603452] [ATTEMPT R3-b] FATAL: recents did not return to app
+[2026-09-26 09:53:48] [1790387628356] [BGPOWER] === set bgpower target=智能控制后台耗电 tag=restore-after-R3b-fatal start ===
+[2026-09-26 09:54:09] [1790387649775] [BGPOWER] before mode(checked radio): 允许后台耗电 png_ok=True
+[2026-09-26 09:54:09] [1790387649818] [BGPOWER] tapping target row at (306, 743)
+[2026-09-26 09:54:15] [1790387655080] [BGPOWER] after mode(checked radio): 智能控制后台耗电 png_ok=True
+[2026-09-26 09:54:15] [1790387655175] [BGPOWER] deviceidle whitelist entry: 'user,space.alliswell.inbox,10285'
+[2026-09-26 09:54:15] [1790387655236] [BGPOWER] === set bgpower target=智能控制后台耗电 tag=restore-after-R3b-fatal end ===
+[2026-09-26 09:54:42] [1790387682258] [ATTEMPT R3-b] === attempt R3-b start ===
+[2026-09-26 09:54:42] [1790387682416] [ATTEMPT R3-b] mResumed: topResumedActivity=ActivityRecord{257007346 u0 space.alliswell.inbox/.MainActivity t152 d0}
+[2026-09-26 09:54:43] [1790387683090] [ATTEMPT R3-b] pre: {"t": 1790387683035, "homeEmpty": false, "homeText": "还差 1 步，提醒才能准时响下一步：允许完全后台运行 (防冻结)›", "sheetOpen": false, "bgDone": true, "ignoring": false, "rr": {"c": 68, "last": 1790386891814}}
+[2026-09-26 09:54:43] [1790387683151] [ATTEMPT R3-b] sampler started (250ms)
+[2026-09-26 09:54:45] [1790387684808] [ATTEMPT R3-b] pressed HOME
+[2026-09-26 09:55:04] [1790387704370] [ATTEMPT R3-b] Tswitch=1790387704314 tapping 允许后台耗电 at (258, 988)
+[2026-09-26 09:55:09] [1790387709168] [ATTEMPT R3-b] after toggle checked=允许后台耗电
+[2026-09-26 09:55:14] [1790387714104] [ATTEMPT R3-b] tapping recents card container at (540, 1200)
+[2026-09-26 09:55:14] [1790387714430] [ATTEMPT R3-b] app resumed via recents, t_resume=1790387714375, topResumedActivity=ActivityRecord{257007346 u0 space.alliswell.inbox/.MainActivity t152 d0}
+[2026-09-26 09:55:14] [1790387714494] [ATTEMPT R3-b] observation window 15s starts, t_resume=1790387714375
+[2026-09-26 09:55:30] [1790387729643] [ATTEMPT R3-b] observation window end
+[2026-09-26 09:55:30] [1790387730343] [ATTEMPT R3-b] analysis: {"t_resume": 1790387714375, "first_sample_after_resume": {"t": 1790387714520, "homeEmpty": true, "homeText": "", "sheetOpen": false, "bgDone": true, "ignoring": true, "rr": {"c": 68, "last": 1790386891814}}, "ignoring_first_true": 1790387714520, "ignoring_delay_ms": 145, "bgDone_first_true": 1790387714520, "bgDone_delay_ms": 145, "homeEmpty_first_true_after_resume": 1790387714520}
+[2026-09-26 09:55:30] [1790387730406] [ATTEMPT R3-b] final home: {"t": 1790387730367, "homeEmpty": true, "homeText": "", "sheetOpen": false, "bgDone": true, "ignoring": true, "rr": {"c": 68, "last": 1790386891814}}
+[2026-09-26 09:55:31] [1790387731003] [ATTEMPT R3-b] screenshot final-home png_ok=True
+[2026-09-26 09:55:31] [1790387731064] [ATTEMPT R3-b] === attempt R3-b end ===
+[2026-09-26 09:55:45] [1790387745270] [BGPOWER] === set bgpower target=智能控制后台耗电 tag=final-restore start ===
+[2026-09-26 09:56:06] [1790387766545] [BGPOWER] before mode(checked radio): 允许后台耗电 png_ok=True
+[2026-09-26 09:56:06] [1790387766593] [BGPOWER] tapping target row at (306, 743)
+[2026-09-26 09:56:11] [1790387771920] [BGPOWER] after mode(checked radio): 智能控制后台耗电 png_ok=True
+[2026-09-26 09:56:12] [1790387772045] [BGPOWER] deviceidle whitelist entry: 'user,space.alliswell.inbox,10285'
+[2026-09-26 09:56:12] [1790387772116] [BGPOWER] === set bgpower target=智能控制后台耗电 tag=final-restore end ===
+[2026-09-26 09:56:43] [1790387803212] [BASELINE-APP] === baseline: app-side read-only start ===
+[2026-09-26 09:56:43] [1790387803585] [BASELINE-APP] focus: mCurrentFocus=Window{4e21e21 u0 space.alliswell.inbox/space.alliswell.inbox.MainActivity type=1 }
+[2026-09-26 09:56:44] [1790387804178] [BASELINE-APP] items count: 7
+[2026-09-26 09:56:44] [1790387804250] [BASELINE-APP] item id set: ["i_24rm31samufjri6d", "i_32p3og4nmufsly70", "i_jaggipg8mufsmipq", "i_ksgrct0wmufslps2", "i_ptgwa35tmuh97dfu", "i_t6t8kjrbmufskit9", "i_ve90y9vxmufskxvx"]
+[2026-09-26 09:56:44] [1790387804841] [BASELINE-APP] settings subset: {"setupPromptStarted": true, "setupDismissed": false, "backgroundVisited": true, "overlayVisited": null, "testRun": null, "testFeedback": null, "defaultDeliveryMode": "alarm"}
+[2026-09-26 09:56:45] [1790387805445] [BASELINE-APP] diag: null
+[2026-09-26 09:56:46] [1790387806591] [BASELINE-APP] homeSetup: {"exists": true, "isEmpty": false, "text": "还差 1 步，提醒才能准时响下一步：允许完全后台运行 (防冻结)›"}
+[2026-09-26 09:56:46] [1790387806657] [BASELINE-APP] sheetSetup: {"exists": true, "open": false}
+[2026-09-26 09:56:47] [1790387807257] [BASELINE-APP] screenshot baseline_home saved png_magic_ok=True
+[2026-09-26 09:56:47] [1790387807300] [BASELINE-APP] === baseline: app-side read-only end ===
+17. 01:57:22Z 脱敏：仓库 screenshots-sanitized/ 移除 8 张含用户事项标题的应用首页截图（baseline_home + 7 张 final-home；归档目录 screenshots/ 原样保留）。设置页截图无用户内容，保留
+4. 01:17:55Z logcat 缺口登记：首个 nohup logcat 于 08:57:22 后死亡（nohup 未存活），09:17:47 起以受控后台任务重启（追加模式）。缺口期事件：基线 diag 读取、恢复智能控制切换(09:10:50)、两次 am start。该期间无场景尝试
+5. 01:22:24Z R1-a 判 INVALID：应用入口落地页为 com.iqoo.powersaving/.BackgroundHighUsageActivity（列表）→ 点安心收件箱进 ExcessivePowerDescriptionActivity（含单选项），切换成功；但 BACK 一次只回到列表页，观察窗在应用未回前台时跑完，结果不作数。已修复执行器（BACK-until-app / ws 锁 / MutationObserver）。系统侧现为「允许后台耗电」（R1-a 切的），先恢复智能控制再跑 R1-b
+6. 01:24:34Z R1-b 第一次启动因执行器语法错误中止（未触任何操作）；修复后重跑
+7. 01:25:50Z R1-b 第二次因 BACK 不跨任务失败（切换已生效=允许），执行器改为 BACK-到桌面-重拉；恢复智能控制后重跑 R1-b
+8. 01:28:31Z R1-b 有效完成：Tswitch=1790386038055, 回前台方式=home+relaunch(vivo 设置独立任务栈), Tresume=1790386063490, 首读 ignoring=true(新值,无滞后), 卡片消失≈resume+100ms, 面板重绘 mutations 22→26
+9. 01:32:22Z R1-c 有效完成：Tswitch=1790386284673, Tresume=1790386310296, 首读=true(新值,无滞后), 卡片消失+22ms, 面板重绘 36→40。R1 有效样本=b,c 两例，均无滞后复现
+10. 01:35:04Z R2-a 有效完成：Tswitch=1790386406691, Tresume=1790386431349, 首读=true(新值), 面板重绘 50→54；home 卡片在 me-tab 不重绘（renderSetupEntry 仅 home tab，PR 既有守卫），切回首页 tab 后消失。开始 R2-b 前恢复流程
+11. 01:42:19Z R2-b 有效完成：Tswitch≈1790386866xxx(见 attempt log), Tresume=1790386891753, 首读=true, 面板重绘 64→68, 切回首页后卡片消失。开始 R3 恢复流程
+12. 01:45:53Z R3-a 第一次失败：最近任务点在卡片文字标签(604,388)回落到桌面，未进应用；已改为点标签上方快照区。恢复智能控制后重跑 R3-a
+13. 01:49:45Z R3-a 第二次失败：快照坐标(604,258)仍在卡片[210,332][870,1935]之外回落桌面；改为点包含标签的最小 clickable 容器中心。恢复智能控制→屏幕周期→重跑
+14. 01:51:51Z R3-a 有效完成：Tswitch=1790387464860, Tresume=1790387474780, 回前台首读=false(旧值,滞后复现), +282ms 内变 true, 卡片 +282ms 消失, 面板未开故无重绘(mutations 不变=68)。恢复后跑 R3-b
+15. 01:53:48Z R3-b 第一次失败：recents 最小 clickable=标题栏(540,389)无效；改为最大容器。系统现为允许（切换已生效），恢复智能控制→屏幕周期→converge→重跑 R3-b
+16. 01:55:45Z R3-b 有效完成：Tswitch=1790387704314, Tresume=1790387714375, 首样本即 true(+145ms), 卡片消失。6 次有效尝试全部完成（R1: b,c; R2: a,b; R3: a,b）。进入收尾恢复
+18. 02:00:31Z 收尾完成：后台耗电=智能控制(radio 验证)，锁屏显示/自启动/悬浮窗未动，setupDismissed 等与基线一致，事项 ID 集合与基线一致；logcat 采集停止（60108 行）；报告 docs/reviews/vivo-resume-recheck-2026-09-26.md；TSV +132 条；未 commit 未 push
+19. 02:01:53Z 勘误：条目 4-16、18 因当时未 cd 落在仓库根 run.log，已合并入本 run.log 并删除游离文件（内容未丢失，编号连续）
