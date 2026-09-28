@@ -571,7 +571,8 @@
       "applyNativeDeliveryEvidence", "initializeNativeReminders", "getNativeReminderStatus",
       "setNativeReminderStatus", "isNativeReady", "getNativeSyncMetrics",
       "getNativeSyncVersion", "bumpNativeSyncVersion", "deliveryEvidenceReadable",
-      "getDeliveryEvidenceState", "isNativeAndroidRuntime", "waitForNativeBridge"
+      "getDeliveryEvidenceState", "isNativeAndroidRuntime", "waitForNativeBridge",
+      "refreshNativeStatus"
     ],
     instanceWhy: "lib/app-native-coordinator.js 的 createAppNativeCoordinator 返回的实例缺少原生协调 API —— 原生同步、事件台账或通道状态无法保证",
     factoryThrowWhy: "lib/app-native-coordinator.js 的 createAppNativeCoordinator 抛了异常 —— 原生提醒协调能力无法装配"
@@ -909,7 +910,8 @@
       labCancelAlarms: (opts) => labCancelAlarms(opts),
       describeAlarmDelivery: (d) => describeAlarmDelivery(d),
       openBackgroundGuide: (k) => openBackgroundGuide(k), openSystemSetting: (k) => openSystemSetting(k),
-      isNativeAndroidRuntime: () => isNativeAndroidRuntime()
+      isNativeAndroidRuntime: () => isNativeAndroidRuntime(),
+      refreshNativeStatus: (origin) => refreshNativeStatus(origin)
     };
   }
 
@@ -1196,7 +1198,8 @@
       escapeHtml: (s) => escapeHtml(s),
       hideAlert: () => hideAlert(),
       makeItem: (opts) => makeItem(opts),
-      getNativeReminders: () => NativeReminders
+      getNativeReminders: () => NativeReminders,
+      refreshNativeStatus: (origin) => refreshNativeStatus(origin)
     };
   }
 
@@ -3320,6 +3323,13 @@
 
   function queueNativeReminderSync(source) {
     if (appNativeCoordinator) return appNativeCoordinator.queueNativeReminderSync(source);
+  }
+
+  function refreshNativeStatus(origin) {
+    if (appNativeCoordinator && typeof appNativeCoordinator.refreshNativeStatus === "function") {
+      return appNativeCoordinator.refreshNativeStatus(origin);
+    }
+    return Promise.resolve();
   }
 
   async function handleNativeNotificationAction(event) {

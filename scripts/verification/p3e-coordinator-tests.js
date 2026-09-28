@@ -496,12 +496,19 @@ async function healthy(api) {
     assert.strictEqual(rechecks[0].status.diag.ignoringBatteryOptimizations, true, "recheck writes the fresh capability value");
     assert.strictEqual(f.getPermissionReads(), 3, "both rechecks actually re-read native state");
 
-    // 能力都已验证 ⇒ 回前台不再安排补读
+    // 撤销方向：全部已开启后回前台 → 安排了补读，补读读到 ignoringBatteryOptimizations=false → 回写
     const verifiedTimers = fakeTimers();
-    const g = fixture(api, { permissionStates: [verified], timers: verifiedTimers });
+    const revoked = JSON.parse(JSON.stringify(verified));
+    revoked.diag.ignoringBatteryOptimizations = false;
+    const g = fixture(api, { permissionStates: [verified, verified, revoked, revoked], timers: verifiedTimers });
     await g.coordinator.initializeNativeReminders();
     await g.getHooks().onResume();
-    assert.ok(!verifiedTimers.delays().some(ms => ms === 1500 || ms === 5000), "fully verified status schedules no rechecks");
+    assert.deepStrictEqual(verifiedTimers.delays().filter(ms => ms === 1500 || ms === 5000).sort((a, b) => a - b), [1500, 5000],
+      "even fully verified status schedules rechecks at 1.5s and 5s (revocation direction)");
+    for (let i = 0; i < 20 && verifiedTimers.pendingCount(); i++) await verifiedTimers.runNext();
+    const revokeRechecks = g.getStatusChanges().filter(c => c.origin === "resume-recheck");
+    assert.strictEqual(revokeRechecks.length, 1, "revocation seen during recheck writes back");
+    assert.strictEqual(revokeRechecks[0].status.diag.ignoringBatteryOptimizations, false, "recheck writes revoked capability value");
 
     // 连续两次回前台 ⇒ 上一轮未执行的补读被取消，不叠加
     const againTimers = fakeTimers();
@@ -512,6 +519,68 @@ async function healthy(api) {
     assert.strictEqual(againTimers.delays().filter(ms => ms === 1500 || ms === 5000).length, 2,
       "second resume replaces pending rechecks instead of stacking them");
     assert.ok(againTimers.cleared().length >= 2, "previous rechecks are cleared");
+  }
+
+  // 13. 主动状态补读 refreshNativeStatus：
+  // 状态变化 → 回写，origin 正确；状态不变 → 不回写；读取进行中再次调用 → 只发一次请求；非原生 / 未就绪 → 什么都不做
+  {
+    const initial = { native: true, notifications: "granted", exactAlarm: "granted", reliability: "exact", source: "SystemBridge",
+      diag: { ignoringBatteryOptimizations: false, canDrawOverlays: true, canUseFullScreenIntent: true } };
+    const changed = JSON.parse(JSON.stringify(initial));
+    changed.diag.ignoringBatteryOptimizations = true;
+    let renderMeCalls = 0;
+    const f = fixture(api, { permissionStates: [changed, changed] });
+    f.deps.renderMe = () => { renderMeCalls++; };
+    await f.coordinator.initializeNativeReminders();
+    f.coordinator.setNativeReminderStatus(initial);
+    const beforeChanges = f.getStatusChanges().length;
+    const beforeRenders = renderMeCalls;
+
+    // 状态变化 → 回写，origin 正确
+    await f.coordinator.refreshNativeStatus("setup-open");
+    const afterFirst = f.getStatusChanges();
+    assert.strictEqual(afterFirst.length, beforeChanges + 1, "status change writes back");
+    assert.strictEqual(afterFirst[afterFirst.length - 1].origin, "setup-open", "origin is setup-open");
+    assert.strictEqual(afterFirst[afterFirst.length - 1].status.diag.ignoringBatteryOptimizations, true, "new status is reflected");
+    assert.strictEqual(renderMeCalls, beforeRenders + 1, "renderMe called on status change");
+
+    // 状态不变 → 不回写
+    const readsBefore = f.getPermissionReads();
+    await f.coordinator.refreshNativeStatus("tab-home");
+    assert.strictEqual(f.getPermissionReads(), readsBefore + 1, "permission was read again");
+    assert.strictEqual(f.getStatusChanges().length, afterFirst.length, "unchanged status does not write back");
+    assert.strictEqual(renderMeCalls, beforeRenders + 1, "renderMe not called when status unchanged");
+
+    // 读取进行中再次调用 → 只发一次请求
+    let resolveRead;
+    const slowReadPromise = new Promise(r => { resolveRead = r; });
+    let permCalls = 0;
+    f.mockNativeReminders.getPermissionState = async () => {
+      permCalls++;
+      await slowReadPromise;
+      return JSON.parse(JSON.stringify(changed));
+    };
+    const p1 = f.coordinator.refreshNativeStatus("concurrent-1");
+    const p2 = f.coordinator.refreshNativeStatus("concurrent-2");
+    assert.strictEqual(p1, p2, "concurrent calls return the exact same promise");
+    resolveRead();
+    await Promise.all([p1, p2]);
+    assert.strictEqual(permCalls, 1, "only one read was dispatched during in-flight call");
+
+    // 非原生 / 未就绪 → 什么都不做
+    let webReads = 0;
+    const webF = fixture(api, { platform: "web" });
+    webF.mockNativeReminders.getPermissionState = async () => { webReads++; return changed; };
+    await webF.coordinator.refreshNativeStatus("web-call");
+    assert.strictEqual(webReads, 0, "non-native runtime does not read permission state");
+    assert.strictEqual(webF.getStatusChanges().length, 0, "non-native does not write status");
+
+    let unreadyReads = 0;
+    const unreadyF = fixture(api, { platform: "android" });
+    unreadyF.mockNativeReminders.getPermissionState = async () => { unreadyReads++; return changed; };
+    await unreadyF.coordinator.refreshNativeStatus("unready-call");
+    assert.strictEqual(unreadyReads, 0, "unready coordinator does not read permission state");
+    assert.strictEqual(unreadyF.getStatusChanges().length, 0, "unready coordinator does not write status");
   }
 
   return "healthy coordinator behavior: PASS";
@@ -616,9 +685,32 @@ async function mutant(name, transform) {
     return s.replace("      resumeRecheckTimers.forEach(t => timerClear(t));\n      resumeRecheckTimers = [];\n", "");
   }));
 
-  // 变异 15：能力已全部验证仍安排补读
-  out.push(await mutant("rechecks scheduled even when fully verified", s => {
-    return s.replace(" || nativeStatusFullyVerified(nativeReminderStatus)) return;", ") return;");
+  // 变异 15：能力全部已开启后回前台跳过补读（撤销方向失效）
+  out.push(await mutant("scheduleResumeStatusRechecks skips when fully verified", s => {
+    return s.replace(
+      "if (!nr || !nr.getPermissionState) return;",
+      "if (!nr || !nr.getPermissionState || nativeStatusFullyVerified(nativeReminderStatus)) return;"
+    );
+  }));
+
+  // 变异 16：refreshNativeStatus 回写时丢失或传递错误 origin
+  out.push(await mutant("refreshNativeStatus passes wrong origin on writeback", s => {
+    return s.replace("applyPermissionStateIfChanged(next, origin);", "applyPermissionStateIfChanged(next, 'wrong-origin');");
+  }));
+
+  // 变异 17：refreshNativeStatus 未做状态比对直接回写
+  out.push(await mutant("refreshNativeStatus writes back without comparing status", s => {
+    return s.replace("applyPermissionStateIfChanged(next, origin);", "setNativeReminderStatus(next, origin); deps.renderMe();");
+  }));
+
+  // 变异 18：refreshNativeStatus 并发调用未做复用
+  out.push(await mutant("refreshNativeStatus does not deduplicate concurrent calls", s => {
+    return s.replace("      if (nativeStatusRefreshPromise) return nativeStatusRefreshPromise;\n", "");
+  }));
+
+  // 变异 19：refreshNativeStatus 缺少非原生与就绪检查
+  out.push(await mutant("refreshNativeStatus skips native and ready checks", s => {
+    return s.replace("      if (!isNativeAndroidRuntime() || !nativeReady) return Promise.resolve(false);\n", "");
   }));
 
   const hashAfter = crypto.createHash("sha256").update(fs.readFileSync(targetPath)).digest("hex");

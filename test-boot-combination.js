@@ -136,6 +136,7 @@ async function driveBusinessSave(b, tag) {
  */
 function makeNode(id) {
   let html = "";
+  const listeners = {};
   const node = {
     id,
     hidden: false,
@@ -156,10 +157,17 @@ function makeNode(id) {
       },
       contains(c) { return this._s.has(c); }
     },
-    addEventListener() {}, removeEventListener() {},
+    addEventListener(name, fn) { (listeners[name] = listeners[name] || []).push(fn); },
+    removeEventListener(name, fn) {
+      if (!listeners[name]) return;
+      listeners[name] = listeners[name].filter(f => f !== fn);
+    },
     setAttribute() {}, getAttribute() { return null; },
     querySelector() { return null; }, querySelectorAll() { return []; },
-    closest() { return null; }, focus() {}, click() {},
+    closest() { return null; }, focus() {},
+    click() {
+      if (listeners["click"]) listeners["click"].forEach(fn => fn({ target: node, currentTarget: node }));
+    },
     appendChild(child) { INSERTIONS.push(id); if (child) child.parentNode = node; return child; },
     remove() { if (node.parentNode) node.parentNode = null; },
     insertBefore(child) { INSERTIONS.push(id); if (child) child.parentNode = node; return child; },
@@ -435,7 +443,16 @@ function loadCombination(options) {
     // 否则「面板插进了哪个容器」会被一个假的差异骗过去。
     getElementById(sel) { return getNode("#" + sel); },
     querySelector(sel) { return getNode(sel); },
-    querySelectorAll() { return []; },
+    querySelectorAll(sel) {
+      if (sel === ".nav-item") {
+        return ["home", "future", "notes", "me"].map(tab => {
+          const btn = getNode(".nav-item-" + tab);
+          btn.dataset.tab = tab;
+          return btn;
+        });
+      }
+      return [];
+    },
     createElement(tag) {
       // 「失败面板里没有可编辑控件」「面板上真的写了哪一支没起来」只能靠**建了哪些标签 +
       // 写了哪些文字**来证 —— 面板走 createElement + textContent，全程不碰 innerHTML，
@@ -1037,7 +1054,7 @@ async function run() {
     const coordinatorCov = prod.coordinatorInstanceCoverage(ROOT);
     ok("P3-E 原生协调实例 API 双向闭合（core 转发与实例合同逐项对齐）",
       coordinatorCov.missingInContract.length === 0 && coordinatorCov.unusedInContract.length === 0 &&
-      coordinatorCov.used.length === 21 && coordinatorCov.declared.length === 21, JSON.stringify(coordinatorCov));
+      coordinatorCov.used.length === 22 && coordinatorCov.declared.length === 22, JSON.stringify(coordinatorCov));
     const coordinatorContractRemoved = baseSource.replace('"getDeliveryEvidenceState", "isNativeAndroidRuntime", "waitForNativeBridge"',
       '"getDeliveryEvidenceState", "isNativeAndroidRuntime"');
     const coordinatorContractGap = prod.coordinatorInstanceCoverage(ROOT, { source: coordinatorContractRemoved });
@@ -4774,6 +4791,30 @@ ok("收口：N6/N7 的补丁同样只差那几行（N6 改 1 行、N7 删 4 条�
       (n.writesNow()["#setupBody"] || 0) > setupBodyWrites0 && /允许精确提醒/.test(n.node("#setupBody").innerHTML),
       (n.writesNow()["#setupBody"] || 0) + " / " + n.node("#setupBody").innerHTML.slice(0, 80));
     n.node("#sheetSetup").classList.remove("open");
+
+    // 打开设置面板与切到首页主动补读原生状态
+    const refreshOrigins = [];
+    const origRefresh = appN.nativeCoordinator.refreshNativeStatus;
+    appN.nativeCoordinator.refreshNativeStatus = function(origin) {
+      refreshOrigins.push(origin);
+      return origRefresh ? origRefresh.apply(this, arguments) : Promise.resolve();
+    };
+    appN.setup.openSetupSheet();
+    ok("打开设置面板 ⇒ 异步触发一次补读 (origin=setup-open)",
+      refreshOrigins.length === 1 && refreshOrigins[0] === "setup-open",
+      JSON.stringify(refreshOrigins));
+
+    refreshOrigins.length = 0;
+    n.node(".nav-item-me").click();
+    ok("切到 me tab ⇒ 不触发 home 补读",
+      refreshOrigins.length === 0, JSON.stringify(refreshOrigins));
+    n.node(".nav-item-home").click();
+    ok("从别的 tab 切到 home ⇒ 触发一次补读 (origin=tab-home)",
+      refreshOrigins.length === 1 && refreshOrigins[0] === "tab-home",
+      JSON.stringify(refreshOrigins));
+    n.node(".nav-item-home").click();
+    ok("已经在 home 时重复点击 ⇒ 不触发补读",
+      refreshOrigins.length === 1, JSON.stringify(refreshOrigins));
   }
 
   /* ---------- G2. O6：结构化签名没有分隔符碰撞 ---------- */
