@@ -677,7 +677,7 @@ async function mutant(name, transform) {
 
   // 变异 13：补读结果不做比较，状态不变也回写
   out.push(await mutant("resume recheck writes back unchanged status", s => {
-    return s.replace("if (JSON.stringify(merged) === JSON.stringify(nativeReminderStatus)) return;", "");
+    return s.replace("if (JSON.stringify(merged) === JSON.stringify(nativeReminderStatus)) return false;", "");
   }));
 
   // 变异 14：再次回前台不取消上一轮补读
@@ -685,11 +685,11 @@ async function mutant(name, transform) {
     return s.replace("      resumeRecheckTimers.forEach(t => timerClear(t));\n      resumeRecheckTimers = [];\n", "");
   }));
 
-  // 变异 15：能力全部已开启后回前台跳过补读（撤销方向失效）
-  out.push(await mutant("scheduleResumeStatusRechecks skips when fully verified", s => {
+  // 变异 15：回前台完全不安排补读
+  out.push(await mutant("scheduleResumeStatusRechecks returns early", s => {
     return s.replace(
-      "if (!nr || !nr.getPermissionState) return;",
-      "if (!nr || !nr.getPermissionState || nativeStatusFullyVerified(nativeReminderStatus)) return;"
+      "    function scheduleResumeStatusRechecks(nr) {\n",
+      "    function scheduleResumeStatusRechecks(nr) {\n      return;\n"
     );
   }));
 

@@ -4815,6 +4815,11 @@ ok("收口：N6/N7 的补丁同样只差那几行（N6 改 1 行、N7 删 4 条�
     n.node(".nav-item-home").click();
     ok("已经在 home 时重复点击 ⇒ 不触发补读",
       refreshOrigins.length === 1, JSON.stringify(refreshOrigins));
+    n.node(".nav-item-me").click();
+    const countBeforeFuture = refreshOrigins.length;
+    n.node(".nav-item-future").click();
+    ok("从 me 切到 future ⇒ refreshOrigins 不增加",
+      refreshOrigins.length === countBeforeFuture, JSON.stringify(refreshOrigins));
   }
 
   /* ---------- G2. O6：结构化签名没有分隔符碰撞 ---------- */
