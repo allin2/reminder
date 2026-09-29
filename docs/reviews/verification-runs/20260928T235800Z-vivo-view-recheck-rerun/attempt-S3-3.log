@@ -1,0 +1,17 @@
+[2026-09-29 08:21:06] [1790641266754] [S3-3] === S3: 撤销方向 · 切回首页 [S3-3] start ===
+[2026-09-29 08:21:08] [1790641268520] [S3-3] Baseline check: in_wl=False, ignoring=False. Restoring 允许后台耗电...
+[2026-09-29 08:21:24] [1790641284177] [S3-3] BACK #3: app resumed, t_resume=1790641284145
+[2026-09-29 08:21:26] [1790641286854] [S3-3] Baseline restored and verified: in_wl=True, ignoring=True
+[2026-09-29 08:21:43] [1790641303182] [S3-3] BACK #3: app resumed, t_resume=1790641303144
+[2026-09-29 08:21:43] [1790641303214] [S3-3] Tswitch=1790641296860, Tresume=1790641303144
+[2026-09-29 08:21:43] [1790641303244] [S3-3] Waiting 12s on '我的' tab (>=10s)...
+[2026-09-29 08:21:55] [1790641315304] [S3-3] Cached ignoring before tapping home tab: False
+[2026-09-29 08:21:55] [1790641315399] [S3-3] Ttab_action=1790641315363, tapping home tab...
+[2026-09-29 08:22:01] [1790641321163] [S3-3] Diagnose calls during tab-home: 2
+[2026-09-29 08:22:01] [1790641321198] [S3-3]   Call #1: t=1790641315413 (+-0.043s from tab) caller=other coordLine=None ignoring=False
+[2026-09-29 08:22:01] [1790641321244] [S3-3]   Call #2: t=1790641315411 (+-0.045s from tab) caller=refreshNativeStatus (L406) coordLine=406 ignoring=False
+[2026-09-29 08:22:01] [1790641321295] [S3-3] tab-home log entries: [{'t': 1790641315411, 'origin': 'tab-home', 'beforeIgn': False, 'endT': 1790641315450, 'afterIgn': False, 'changed': False}]
+[2026-09-29 08:22:01] [1790641321348] [S3-3] Cached ignoring after tab-home: False
+[2026-09-29 08:22:01] [1790641321392] [S3-3] Home card appearance: t=1790641315326 (+-0.130s from tab)
+[2026-09-29 08:22:01] [1790641321434] [S3-3] Classification: (b) 前序读取已拿到新值，新入口值不变不回写
+[2026-09-29 08:22:01] [1790641321480] [S3-3] === S3: 撤销方向 · 切回首页 [S3-3] end ===

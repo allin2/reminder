@@ -1,0 +1,17 @@
+[2026-09-29 08:15:59] [1790640959087] [S2-1] === S2: 撤销方向 · 打开设置面板 [S2-1] start ===
+[2026-09-29 08:16:00] [1790640960883] [S2-1] Baseline check: in_wl=False, ignoring=False. Restoring 允许后台耗电...
+[2026-09-29 08:16:16] [1790640976620] [S2-1] BACK #3: app resumed, t_resume=1790640976583
+[2026-09-29 08:16:19] [1790640979298] [S2-1] Baseline restored and verified: in_wl=True, ignoring=True
+[2026-09-29 08:16:35] [1790640995550] [S2-1] BACK #3: app resumed, t_resume=1790640995515
+[2026-09-29 08:16:35] [1790640995581] [S2-1] Tswitch=1790640989224, Tresume=1790640995515
+[2026-09-29 08:16:35] [1790640995616] [S2-1] Waiting 8s on '我的' tab for system lag convergence...
+[2026-09-29 08:16:43] [1790641003687] [S2-1] Cached ignoring before opening panel: False
+[2026-09-29 08:16:43] [1790641003810] [S2-1] Topen_action=1790641003764, tapping #btnSetup...
+[2026-09-29 08:16:48] [1790641008596] [S2-1] MutationObserver count: before=0, after=0, diff=0
+[2026-09-29 08:16:48] [1790641008673] [S2-1] Diagnose calls during setup-open: 2
+[2026-09-29 08:16:48] [1790641008718] [S2-1]   Call #1: t=1790641003839 (+-0.046s from open) caller=other coordLine=None ignoring=False
+[2026-09-29 08:16:48] [1790641008758] [S2-1]   Call #2: t=1790641003838 (+-0.047s from open) caller=refreshNativeStatus (L406) coordLine=406 ignoring=False
+[2026-09-29 08:16:48] [1790641008826] [S2-1] setup-open log entries: [{'t': 1790641003838, 'origin': 'setup-open', 'beforeIgn': False, 'endT': 1790641003868, 'afterIgn': False, 'changed': False}]
+[2026-09-29 08:16:48] [1790641008872] [S2-1] Cached ignoring after setup-open: False
+[2026-09-29 08:16:48] [1790641008917] [S2-1] Classification: (b) 前序读取已拿到新值，新入口值不变不回写
+[2026-09-29 08:16:49] [1790641009492] [S2-1] === S2: 撤销方向 · 打开设置面板 [S2-1] end ===

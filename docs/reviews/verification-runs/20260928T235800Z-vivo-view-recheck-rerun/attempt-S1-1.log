@@ -1,0 +1,16 @@
+[2026-09-29 08:13:45] [1790640825488] [S1-1] === S1: 撤销方向 · 回前台 [S1-1] start ===
+[2026-09-29 08:13:47] [1790640827247] [S1-1] Baseline check: in_wl=False, ignoring=False. Restoring 允许后台耗电...
+[2026-09-29 08:14:02] [1790640842849] [S1-1] BACK #3: app resumed, t_resume=1790640842815
+[2026-09-29 08:14:05] [1790640845500] [S1-1] Baseline restored and verified: in_wl=True, ignoring=True
+[2026-09-29 08:14:05] [1790640845553] [S1-1] Pre-state: ignoring=True, homeEmpty=True
+[2026-09-29 08:14:21] [1790640861179] [S1-1] BACK #3: app resumed, t_resume=1790640861143
+[2026-09-29 08:14:21] [1790640861209] [S1-1] Tswitch=1790640854902, Tresume=1790640861143
+[2026-09-29 08:14:28] [1790640868316] [S1-1] Total diagnose calls in window: 6
+[2026-09-29 08:14:28] [1790640868365] [S1-1]   Call #1: t=1790640860906 (+-0.237s from resume) caller=other coordLine=None ignoring=True
+[2026-09-29 08:14:28] [1790640868400] [S1-1]   Call #2: t=1790640860906 (+-0.237s from resume) caller=app-native-coordinator.js:L319 coordLine=319 ignoring=True
+[2026-09-29 08:14:28] [1790640868459] [S1-1]   Call #3: t=1790640862294 (+1.151s from resume) caller=other coordLine=None ignoring=False
+[2026-09-29 08:14:28] [1790640868513] [S1-1]   Call #4: t=1790640862293 (+1.150s from resume) caller=resume-recheck (L423) coordLine=423 ignoring=False
+[2026-09-29 08:14:28] [1790640868559] [S1-1]   Call #5: t=1790640865794 (+4.651s from resume) caller=other coordLine=None ignoring=False
+[2026-09-29 08:14:28] [1790640868617] [S1-1]   Call #6: t=1790640865794 (+4.651s from resume) caller=resume-recheck (L423) coordLine=423 ignoring=False
+[2026-09-29 08:14:28] [1790640868667] [S1-1] Home card appearance: t=1790640862375 (+1.232s from resume)
+[2026-09-29 08:14:28] [1790640868720] [S1-1] === S1: 撤销方向 · 回前台 [S1-1] end ===
