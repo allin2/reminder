@@ -1,0 +1,38 @@
+[2026-09-29 09:46:09] [1790646369459] [T2-2] === T2 基线下锁屏投递 [T2-2] start ===
+[2026-09-29 09:46:10] [1790646370899] [T2-2] Tapping #setupTestStart at css=(59.2, 606.6) -> phys=(177, 1939)
+[2026-09-29 09:46:12] [1790646372210] [T2-2] Test started: t_start=1790646371637, triggerAt=1790646430984
+[2026-09-29 09:46:12] [1790646372262] [T2-2] Locking screen within 10s...
+[2026-09-29 09:46:14] [1790646374466] [T2-2] Pre-trigger lock check: mWakefulness=Asleep, keyguard=True, focus=mCurrentFocus=Window{com.android.systemui:f9294bb u0 NotificationShade type=2040 }
+[2026-09-29 09:46:14] [1790646374541] [T2-2] Waiting for alarm delivery at ~1790646430984 without touching device...
+[2026-09-29 09:47:11] [1790646431214] [T2-2] Deliver check result: found=True, line='09-29 09:47:11.048 15858 15858 I AttentionAlarm: deliver path=fsi+direct fullScreen=true screenOn=false locked=true inCall=false canDrawOverlays=true'
+[2026-09-29 09:47:12] [1790646432137] [T2-2] Post-deliver status: mWakefulness=Asleep, keyguard=True, focus=mCurrentFocus=Window{com.android.systemui:f9294bb u0 NotificationShade type=2040 }
+[2026-09-29 09:47:12] [1790646432270] [T2-2] AlarmRingService active: True
+[2026-09-29 09:47:12] [1790646432377] [T2-2] appops VIBRATE: VIBRATE: allow; time=+1s117ms ago (running)
+[2026-09-29 09:47:12] [1790646432415] [T2-2] Waking up device after recording deliver...
+[2026-09-29 09:47:17] [1790646437859] [T2-2] Evidence text: 系统侧：已排 0 条闹钟 · 通知可用 · 精确排程可用
+本次测试：今天 09:46 开始 · 计划 今天 09:47
+本次测试投递：[object Object]
+你的反馈：还没有你的反馈（未回答不等于失败）（这是上一次的回答，本次还没有）
+[2026-09-29 09:47:17] [1790646437906] [T2-2] testRun.seenAt: 1790646431811
+[2026-09-29 09:47:17] [1790646437957] [T2-2] btnTestStart text: 再测一次, testStep: {"id": "test", "done": true, "verified": true, "title": "60 秒测试已有结果", "why": "确认这台设备上声音、屏幕、通知各自落在哪里。", "denyImpact": "跳过也能用，只是不知道实际效果。", "action": "再测一次"}
+[2026-09-29 09:47:18] [1790646438565] [T2-2] Tapping #setupTestStop at css=(178.6, 524.2) -> phys=(535, 1692)
+[2026-09-29 09:47:20] [1790646440339] [T2-2] === T2 基线下锁屏投递 [T2-2] end ===
+[2026-09-29 09:56:45] [1790647005007] [T2-2] === T2 基线下锁屏投递 [T2-2] start ===
+[2026-09-29 09:56:46] [1790647006468] [T2-2] Tapping #setupTestStart at css=(59.2, 362.9) -> phys=(177, 1208)
+[2026-09-29 09:56:47] [1790647007783] [T2-2] Test started: t_start=1790647007208, triggerAt=1790647066578
+[2026-09-29 09:56:47] [1790647007832] [T2-2] Locking screen within 10s...
+[2026-09-29 09:56:50] [1790647010039] [T2-2] Pre-trigger lock check: mWakefulness=Asleep, keyguard=True, focus=mCurrentFocus=Window{com.android.systemui:f9294bb u0 NotificationShade type=2040 }
+[2026-09-29 09:56:50] [1790647010123] [T2-2] Waiting for alarm delivery at ~1790647066578 without touching device...
+[2026-09-29 09:57:47] [1790647067800] [T2-2] Deliver check result: found=True, line='09-29 09:57:46.790 15858 15858 I AttentionAlarm: deliver path=fsi+direct fullScreen=true screenOn=false locked=true inCall=false canDrawOverlays=true'
+[2026-09-29 09:57:48] [1790647068264] [T2-2] Post-deliver status: mWakefulness=Awake, keyguard=True, focus=mCurrentFocus=Window{com.android.systemui:f9294bb u0 NotificationShade type=2040 }
+[2026-09-29 09:57:48] [1790647068358] [T2-2] AlarmRingService active: True
+[2026-09-29 09:57:48] [1790647068460] [T2-2] appops VIBRATE: VIBRATE: allow; time=+1s660ms ago (running)
+[2026-09-29 09:57:48] [1790647068498] [T2-2] Waking up device after recording deliver...
+[2026-09-29 09:57:53] [1790647073904] [T2-2] Evidence text: 系统侧：已排 0 条闹钟 · 通知可用 · 精确排程可用
+本次测试：今天 09:56 开始 · 计划 今天 09:57
+本次测试投递：[object Object]
+你的反馈：还没有你的反馈（未回答不等于失败）（这是上一次的回答，本次还没有）
+[2026-09-29 09:57:53] [1790647073961] [T2-2] testRun.seenAt: 1790647067558
+[2026-09-29 09:57:54] [1790647074026] [T2-2] btnTestStart text: 再测一次, testStep: {"id": "test", "done": true, "verified": true, "title": "60 秒测试已有结果", "why": "确认这台设备上声音、屏幕、通知各自落在哪里。", "denyImpact": "跳过也能用，只是不知道实际效果。", "action": "再测一次"}
+[2026-09-29 09:57:54] [1790647074558] [T2-2] Tapping #setupTestStop at css=(178.6, 280.6) -> phys=(535, 961)
+[2026-09-29 09:57:56] [1790647076362] [T2-2] === T2 基线下锁屏投递 [T2-2] end ===

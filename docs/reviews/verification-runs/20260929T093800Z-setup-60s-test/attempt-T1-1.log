@@ -1,0 +1,53 @@
+[2026-09-29 09:42:09] [1790646129484] [T1-1] === T1 排程 [T1-1] start ===
+[2026-09-29 09:42:10] [1790646130875] [T1-1] Tapping [data-tab="me"] at css=(309.0, 702.1) -> phys=(927, 2226)
+[2026-09-29 09:42:12] [1790646132236] [T1-1] Tapping #btnSetup at css=(180.0, 425.9) -> phys=(540, 1397)
+[2026-09-29 09:42:13] [1790646133788] [T1-1] Before tap evidence: 系统侧：已排 0 条闹钟 · 通知可用 · 精确排程可用
+本次测试：还没有开始过。点上面的按钮排一次，再锁屏等一分钟。
+最近一次投递：有历史记录，但它不属于任何一次测试（仅供参考）
+你的反馈：还没有你的反馈（未回答不等于失败）（这是上一次的回答，本次还没有）
+[2026-09-29 09:42:13] [1790646133851] [T1-1] Tapping #setupTestStart at css=(77.4, 606.6) -> phys=(232, 1939)
+[2026-09-29 09:42:15] [1790646135591] [T1-1] Toast text: 已排 60 秒测试 · 可以锁屏了
+[2026-09-29 09:42:15] [1790646135646] [T1-1] state.settings.testRun: {"id": 90003, "startedAt": 1790646133930, "triggerAt": 1790646193951, "stoppedAt": null, "seenAt": null, "feedbackAt": null}
+[2026-09-29 09:42:15] [1790646135830] [T1-1] dumpsys alarm 90003 entry: RTC_WAKEUP #9: Alarm{d624e33 type 0 origWhen 1790646193951 flags 3 windowLength 0 whenElapsed 868250118 maxWhenElapsed 868250118 repeatInterval 0 tag=*walarm*:space.alliswell.inbox.ACTION_TEST_ALARM originWhenElapsed 868250118 originWindowLength 0 setAtTime=2026-09-29 01:42:13 policyWhenElapsed:[868250118, 868190121, 0, 0, 0] procName=space.alliswell.inbox space.alliswell.inbox}
+[2026-09-29 09:42:15] [1790646135884] [T1-1] Alarm origWhen=1790646193951, testRun.triggerAt=1790646193951, diff_ms=0
+[2026-09-29 09:42:15] [1790646135945] [T1-1] After tap evidence: 系统侧：已排 0 条闹钟 · 通知可用 · 精确排程可用
+本次测试：今天 09:42 开始 · 计划 今天 09:43
+本次测试投递：还没有记录（没记录不等于没响；上一次的结果不计入本次）
+你的反馈：还没有你的反馈（未回答不等于失败）（这是上一次的回答，本次还没有）
+[2026-09-29 09:42:16] [1790646136401] [T1-1] Tapping #setupTestStop at css=(214.8, 606.6) -> phys=(644, 1939)
+[2026-09-29 09:42:18] [1790646138290] [T1-1] After stop dumpsys alarm 90003 entry: type=RTC_WAKEUP tag=*walarm*:space.alliswell.inbox.ACTION_TEST_ALARM
+[2026-09-29 09:42:18] [1790646138362] [T1-1] === T1 排程 [T1-1] end ===
+[2026-09-29 09:44:32] [1790646272399] [T1-1] === T1 排程 [T1-1] start ===
+[2026-09-29 09:44:33] [1790646273821] [T1-1] Before tap evidence: 系统侧：已排 0 条闹钟 · 通知可用 · 精确排程可用
+本次测试：今天 09:42 开始 · 计划 今天 09:43 · 你已手动停止
+本次测试投递：[object Object]
+你的反馈：还没有你的反馈（未回答不等于失败）（这是上一次的回答，本次还没有）
+[2026-09-29 09:44:33] [1790646273887] [T1-1] Tapping #setupTestStart at css=(59.2, 606.6) -> phys=(177, 1939)
+[2026-09-29 09:44:35] [1790646275650] [T1-1] Toast text: 已排 60 秒测试 · 可以锁屏了
+[2026-09-29 09:44:35] [1790646275712] [T1-1] state.settings.testRun: {"id": 90003, "startedAt": 1790646273980, "triggerAt": 1790646334007, "stoppedAt": null, "seenAt": null, "feedbackAt": null}
+[2026-09-29 09:44:35] [1790646275884] [T1-1] dumpsys alarm 90003 entry: RTC_WAKEUP #9: Alarm{dd0a11c type 0 origWhen 1790646334007 flags 3 windowLength 0 whenElapsed 868390174 maxWhenElapsed 868390174 repeatInterval 0 tag=*walarm*:space.alliswell.inbox.ACTION_TEST_ALARM originWhenElapsed 868390174 originWindowLength 0 setAtTime=2026-09-29 01:44:34 policyWhenElapsed:[868390174, 868330177, 0, 0, 0] procName=space.alliswell.inbox space.alliswell.inbox}
+[2026-09-29 09:44:35] [1790646275939] [T1-1] Alarm origWhen=1790646334007, testRun.triggerAt=1790646334007, diff_ms=0
+[2026-09-29 09:44:35] [1790646275987] [T1-1] After tap evidence: 系统侧：已排 0 条闹钟 · 通知可用 · 精确排程可用
+本次测试：今天 09:44 开始 · 计划 今天 09:45
+本次测试投递：还没有记录（没记录不等于没响；上一次的结果不计入本次）
+你的反馈：还没有你的反馈（未回答不等于失败）（这是上一次的回答，本次还没有）
+[2026-09-29 09:44:36] [1790646276554] [T1-1] Tapping #setupTestStop at css=(214.8, 606.6) -> phys=(644, 1939)
+[2026-09-29 09:44:38] [1790646278430] [T1-1] After stop dumpsys alarm 90003 entry: None
+[2026-09-29 09:44:38] [1790646278550] [T1-1] === T1 排程 [T1-1] end ===
+[2026-09-29 09:55:07] [1790646907793] [T1-1] === T1 排程 [T1-1] start ===
+[2026-09-29 09:55:09] [1790646909233] [T1-1] Before tap evidence: 系统侧：已排 0 条闹钟 · 通知可用 · 精确排程可用
+本次测试：今天 09:52 开始 · 计划 今天 09:53 · 你已手动停止
+本次测试投递：还没有记录（没记录不等于没响；上一次的结果不计入本次）
+你的反馈：这次听到了
+[2026-09-29 09:55:09] [1790646909274] [T1-1] Tapping #setupTestStart at css=(59.2, 342.6) -> phys=(177, 1147)
+[2026-09-29 09:55:11] [1790646911004] [T1-1] Toast text: 已排 60 秒测试 · 可以锁屏了
+[2026-09-29 09:55:11] [1790646911083] [T1-1] state.settings.testRun: {"id": 90003, "startedAt": 1790646909330, "triggerAt": 1790646969346, "stoppedAt": null, "seenAt": null, "feedbackAt": null}
+[2026-09-29 09:55:11] [1790646911252] [T1-1] dumpsys alarm 90003 entry: RTC_WAKEUP #8: Alarm{83ccee2 type 0 origWhen 1790646969346 flags 3 windowLength 0 whenElapsed 869025512 maxWhenElapsed 869025512 repeatInterval 0 tag=*walarm*:space.alliswell.inbox.ACTION_TEST_ALARM originWhenElapsed 869025512 originWindowLength 0 setAtTime=2026-09-29 01:55:09 policyWhenElapsed:[869025512, 868965518, 0, 0, 0] procName=space.alliswell.inbox space.alliswell.inbox}
+[2026-09-29 09:55:11] [1790646911290] [T1-1] Alarm origWhen=1790646969346, testRun.triggerAt=1790646969346, diff_ms=0
+[2026-09-29 09:55:11] [1790646911344] [T1-1] After tap evidence: 系统侧：已排 0 条闹钟 · 通知可用 · 精确排程可用
+本次测试：今天 09:55 开始 · 计划 今天 09:56
+本次测试投递：还没有记录（没记录不等于没响；上一次的结果不计入本次）
+你的反馈：还没有你的反馈（未回答不等于失败）（这是上一次的回答，本次还没有）
+[2026-09-29 09:55:11] [1790646911928] [T1-1] Tapping #setupTestStop at css=(214.8, 342.6) -> phys=(644, 1147)
+[2026-09-29 09:55:13] [1790646913801] [T1-1] After stop dumpsys alarm 90003 entry: None
+[2026-09-29 09:55:13] [1790646913991] [T1-1] === T1 排程 [T1-1] end ===

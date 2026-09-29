@@ -1,0 +1,644 @@
+[2026-09-29 09:38:13] [1790645893045] [STEP0-BASELINE] === Step 0 baseline switch verification start ===
+[2026-09-29 09:38:18] [1790645898842] [STEP0-BASELINE] tapping 电量 at (150, 992)
+[2026-09-29 09:38:23] [1790645903545] [STEP0-BASELINE] tapping 后台耗电管理 at (246, 2090)
+[2026-09-29 09:38:28] [1790645908167] [STEP0-BASELINE] bgpower detail checked radio: 允许后台耗电
+[2026-09-29 09:38:29] [1790645909395] [STEP0-BASELINE] tapping 查看所有权限 at (540, 1605)
+[2026-09-29 09:38:34] [1790645914185] [STEP0-BASELINE] switches check: autostart_off=False, lockscreen_off=False, overlay_on=False
+[2026-09-29 09:38:35] [1790645915946] [STEP0-BASELINE] deviceidle whitelist has inbox: True
+[2026-09-29 09:38:35] [1790645915992] [STEP0-BASELINE] Baseline check verdict: bgpower_ok=True, autostart_ok=False, lockscreen_ok=False, overlay_ok=False, in_wl=True
+[2026-09-29 09:38:36] [1790645916044] [STEP0-BASELINE] === Step 0 baseline switch verification end ===
+[2026-09-29 09:39:02] [1790645942591] [BASELINE-APP] === baseline: app-side read-only start ===
+[2026-09-29 09:39:04] [1790645944404] [BASELINE-APP] focus: mCurrentFocus=Window{53c7fca u0 space.alliswell.inbox/space.alliswell.inbox.MainActivity type=1 }
+[2026-09-29 09:39:04] [1790645944998] [BASELINE-APP] items count: 11
+[2026-09-29 09:39:05] [1790645945057] [BASELINE-APP] item id set: ["i_1o0uh3ymmuhsorvc", "i_24rm31samufjri6d", "i_32p3og4nmufsly70", "i_jaggipg8mufsmipq", "i_jah2kf2imuhsqfti", "i_ksgrct0wmufslps2", "i_ol7c2k4nmuhsphmr", "i_ptgwa35tmuh97dfu", "i_soswvdwamuhsr6kq", "i_t6t8kjrbmufskit9", "i_ve90y9vxmufskxvx"]
+[2026-09-29 09:39:05] [1790645945624] [BASELINE-APP] settings subset: {"setupPromptStarted": true, "setupDismissed": false, "backgroundVisited": true, "overlayVisited": null, "testRun": null, "testFeedback": null, "defaultDeliveryMode": "alarm"}
+[2026-09-29 09:39:06] [1790645946205] [BASELINE-APP] diag: null
+[2026-09-29 09:39:07] [1790645947305] [BASELINE-APP] homeSetup: {"exists": true, "isEmpty": true, "text": ""}
+[2026-09-29 09:39:07] [1790645947342] [BASELINE-APP] sheetSetup: {"exists": true, "open": false}
+[2026-09-29 09:39:07] [1790645947910] [BASELINE-APP] screenshot baseline_home saved png_magic_ok=True
+[2026-09-29 09:39:07] [1790645947962] [BASELINE-APP] === baseline: app-side read-only end ===
+[2026-09-29 09:42:09] [1790646129484] [T1-1] === T1 排程 [T1-1] start ===
+[2026-09-29 09:42:10] [1790646130875] [T1-1] Tapping [data-tab="me"] at css=(309.0, 702.1) -> phys=(927, 2226)
+[2026-09-29 09:42:12] [1790646132236] [T1-1] Tapping #btnSetup at css=(180.0, 425.9) -> phys=(540, 1397)
+[2026-09-29 09:42:13] [1790646133788] [T1-1] Before tap evidence: 系统侧：已排 0 条闹钟 · 通知可用 · 精确排程可用
+本次测试：还没有开始过。点上面的按钮排一次，再锁屏等一分钟。
+最近一次投递：有历史记录，但它不属于任何一次测试（仅供参考）
+你的反馈：还没有你的反馈（未回答不等于失败）（这是上一次的回答，本次还没有）
+[2026-09-29 09:42:13] [1790646133851] [T1-1] Tapping #setupTestStart at css=(77.4, 606.6) -> phys=(232, 1939)
+[2026-09-29 09:42:15] [1790646135591] [T1-1] Toast text: 已排 60 秒测试 · 可以锁屏了
+[2026-09-29 09:42:15] [1790646135646] [T1-1] state.settings.testRun: {"id": 90003, "startedAt": 1790646133930, "triggerAt": 1790646193951, "stoppedAt": null, "seenAt": null, "feedbackAt": null}
+[2026-09-29 09:42:15] [1790646135830] [T1-1] dumpsys alarm 90003 entry: RTC_WAKEUP #9: Alarm{d624e33 type 0 origWhen 1790646193951 flags 3 windowLength 0 whenElapsed 868250118 maxWhenElapsed 868250118 repeatInterval 0 tag=*walarm*:space.alliswell.inbox.ACTION_TEST_ALARM originWhenElapsed 868250118 originWindowLength 0 setAtTime=2026-09-29 01:42:13 policyWhenElapsed:[868250118, 868190121, 0, 0, 0] procName=space.alliswell.inbox space.alliswell.inbox}
+[2026-09-29 09:42:15] [1790646135884] [T1-1] Alarm origWhen=1790646193951, testRun.triggerAt=1790646193951, diff_ms=0
+[2026-09-29 09:42:15] [1790646135945] [T1-1] After tap evidence: 系统侧：已排 0 条闹钟 · 通知可用 · 精确排程可用
+本次测试：今天 09:42 开始 · 计划 今天 09:43
+本次测试投递：还没有记录（没记录不等于没响；上一次的结果不计入本次）
+你的反馈：还没有你的反馈（未回答不等于失败）（这是上一次的回答，本次还没有）
+[2026-09-29 09:42:16] [1790646136401] [T1-1] Tapping #setupTestStop at css=(214.8, 606.6) -> phys=(644, 1939)
+[2026-09-29 09:42:18] [1790646138290] [T1-1] After stop dumpsys alarm 90003 entry: type=RTC_WAKEUP tag=*walarm*:space.alliswell.inbox.ACTION_TEST_ALARM
+[2026-09-29 09:42:18] [1790646138362] [T1-1] === T1 排程 [T1-1] end ===
+[2026-09-29 09:42:30] [1790646150992] [T2-1] === T2 基线下锁屏投递 [T2-1] start ===
+[2026-09-29 09:42:32] [1790646152427] [T2-1] Tapping #setupTestStart at css=(59.2, 606.6) -> phys=(177, 1939)
+[2026-09-29 09:42:33] [1790646153745] [T2-1] Test started: t_start=1790646153175, triggerAt=1790646212538
+[2026-09-29 09:42:33] [1790646153791] [T2-1] Locking screen within 10s...
+[2026-09-29 09:42:35] [1790646155968] [T2-1] Pre-trigger lock check: mWakefulness=Asleep, keyguard=True, focus=mCurrentFocus=Window{com.android.systemui:f9294bb u0 NotificationShade type=2040 }
+[2026-09-29 09:42:36] [1790646156017] [T2-1] Waiting for alarm delivery at ~1790646212538 without touching device...
+[2026-09-29 09:43:32] [1790646212771] [T2-1] Deliver check result: found=True, line='09-29 09:43:32.601 15858 15858 I AttentionAlarm: deliver path=fsi+direct fullScreen=true screenOn=false locked=true inCall=false canDrawOverlays=true'
+[2026-09-29 09:43:33] [1790646213566] [T2-1] Post-deliver status: mWakefulness=Asleep, keyguard=True, focus=mCurrentFocus=Window{com.android.systemui:f9294bb u0 NotificationShade type=2040 }
+[2026-09-29 09:43:33] [1790646213721] [T2-1] AlarmRingService active: True
+[2026-09-29 09:43:33] [1790646213797] [T2-1] appops VIBRATE: VIBRATE: allow; time=+893ms ago (running)
+[2026-09-29 09:43:33] [1790646213825] [T2-1] Waking up device after recording deliver...
+[2026-09-29 09:43:39] [1790646219209] [T2-1] Evidence text: 系统侧：已排 0 条闹钟 · 通知可用 · 精确排程可用
+本次测试：今天 09:42 开始 · 计划 今天 09:43
+本次测试投递：[object Object]
+你的反馈：还没有你的反馈（未回答不等于失败）（这是上一次的回答，本次还没有）
+[2026-09-29 09:43:39] [1790646219253] [T2-1] testRun.seenAt: 1790646213734
+[2026-09-29 09:43:39] [1790646219303] [T2-1] btnTestStart text: 再测一次, testStep: {"id": "test", "done": true, "verified": true, "title": "60 秒测试已有结果", "why": "确认这台设备上声音、屏幕、通知各自落在哪里。", "denyImpact": "跳过也能用，只是不知道实际效果。", "action": "再测一次"}
+[2026-09-29 09:43:39] [1790646219856] [T2-1] Tapping #setupTestStop at css=(178.6, 524.2) -> phys=(535, 1692)
+[2026-09-29 09:43:41] [1790646221795] [T2-1] === T2 基线下锁屏投递 [T2-1] end ===
+[2026-09-29 09:44:32] [1790646272289] [MAIN] === 60s 测试完整真机验证开始 ===
+[2026-09-29 09:44:32] [1790646272357] [MAIN] >>> 开始场景 T1 排程 (3 次)
+[2026-09-29 09:44:32] [1790646272399] [T1-1] === T1 排程 [T1-1] start ===
+[2026-09-29 09:44:33] [1790646273821] [T1-1] Before tap evidence: 系统侧：已排 0 条闹钟 · 通知可用 · 精确排程可用
+本次测试：今天 09:42 开始 · 计划 今天 09:43 · 你已手动停止
+本次测试投递：[object Object]
+你的反馈：还没有你的反馈（未回答不等于失败）（这是上一次的回答，本次还没有）
+[2026-09-29 09:44:33] [1790646273887] [T1-1] Tapping #setupTestStart at css=(59.2, 606.6) -> phys=(177, 1939)
+[2026-09-29 09:44:35] [1790646275650] [T1-1] Toast text: 已排 60 秒测试 · 可以锁屏了
+[2026-09-29 09:44:35] [1790646275712] [T1-1] state.settings.testRun: {"id": 90003, "startedAt": 1790646273980, "triggerAt": 1790646334007, "stoppedAt": null, "seenAt": null, "feedbackAt": null}
+[2026-09-29 09:44:35] [1790646275884] [T1-1] dumpsys alarm 90003 entry: RTC_WAKEUP #9: Alarm{dd0a11c type 0 origWhen 1790646334007 flags 3 windowLength 0 whenElapsed 868390174 maxWhenElapsed 868390174 repeatInterval 0 tag=*walarm*:space.alliswell.inbox.ACTION_TEST_ALARM originWhenElapsed 868390174 originWindowLength 0 setAtTime=2026-09-29 01:44:34 policyWhenElapsed:[868390174, 868330177, 0, 0, 0] procName=space.alliswell.inbox space.alliswell.inbox}
+[2026-09-29 09:44:35] [1790646275939] [T1-1] Alarm origWhen=1790646334007, testRun.triggerAt=1790646334007, diff_ms=0
+[2026-09-29 09:44:35] [1790646275987] [T1-1] After tap evidence: 系统侧：已排 0 条闹钟 · 通知可用 · 精确排程可用
+本次测试：今天 09:44 开始 · 计划 今天 09:45
+本次测试投递：还没有记录（没记录不等于没响；上一次的结果不计入本次）
+你的反馈：还没有你的反馈（未回答不等于失败）（这是上一次的回答，本次还没有）
+[2026-09-29 09:44:36] [1790646276554] [T1-1] Tapping #setupTestStop at css=(214.8, 606.6) -> phys=(644, 1939)
+[2026-09-29 09:44:38] [1790646278430] [T1-1] After stop dumpsys alarm 90003 entry: None
+[2026-09-29 09:44:38] [1790646278550] [T1-1] === T1 排程 [T1-1] end ===
+[2026-09-29 09:44:40] [1790646280100] [T1-2] === T1 排程 [T1-2] start ===
+[2026-09-29 09:44:41] [1790646281488] [T1-2] Before tap evidence: 系统侧：已排 0 条闹钟 · 通知可用 · 精确排程可用
+本次测试：今天 09:44 开始 · 计划 今天 09:45 · 你已手动停止
+本次测试投递：还没有记录（没记录不等于没响；上一次的结果不计入本次）
+你的反馈：还没有你的反馈（未回答不等于失败）（这是上一次的回答，本次还没有）
+[2026-09-29 09:44:41] [1790646281549] [T1-2] Tapping #setupTestStart at css=(59.2, 606.6) -> phys=(177, 1939)
+[2026-09-29 09:44:43] [1790646283306] [T1-2] Toast text: 已排 60 秒测试 · 可以锁屏了
+[2026-09-29 09:44:43] [1790646283375] [T1-2] state.settings.testRun: {"id": 90003, "startedAt": 1790646281641, "triggerAt": 1790646341668, "stoppedAt": null, "seenAt": null, "feedbackAt": null}
+[2026-09-29 09:44:43] [1790646283574] [T1-2] dumpsys alarm 90003 entry: RTC_WAKEUP #9: Alarm{e4b6b55 type 0 origWhen 1790646341668 flags 3 windowLength 0 whenElapsed 868397835 maxWhenElapsed 868397835 repeatInterval 0 tag=*walarm*:space.alliswell.inbox.ACTION_TEST_ALARM originWhenElapsed 868397835 originWindowLength 0 setAtTime=2026-09-29 01:44:41 policyWhenElapsed:[868397835, 868337838, 0, 0, 0] procName=space.alliswell.inbox space.alliswell.inbox}
+[2026-09-29 09:44:43] [1790646283619] [T1-2] Alarm origWhen=1790646341668, testRun.triggerAt=1790646341668, diff_ms=0
+[2026-09-29 09:44:43] [1790646283666] [T1-2] After tap evidence: 系统侧：已排 0 条闹钟 · 通知可用 · 精确排程可用
+本次测试：今天 09:44 开始 · 计划 今天 09:45
+本次测试投递：还没有记录（没记录不等于没响；上一次的结果不计入本次）
+你的反馈：还没有你的反馈（未回答不等于失败）（这是上一次的回答，本次还没有）
+[2026-09-29 09:44:44] [1790646284197] [T1-2] Tapping #setupTestStop at css=(214.8, 606.6) -> phys=(644, 1939)
+[2026-09-29 09:44:46] [1790646286104] [T1-2] After stop dumpsys alarm 90003 entry: None
+[2026-09-29 09:44:46] [1790646286294] [T1-2] === T1 排程 [T1-2] end ===
+[2026-09-29 09:44:47] [1790646287863] [T1-3] === T1 排程 [T1-3] start ===
+[2026-09-29 09:44:49] [1790646289306] [T1-3] Before tap evidence: 系统侧：已排 0 条闹钟 · 通知可用 · 精确排程可用
+本次测试：今天 09:44 开始 · 计划 今天 09:45 · 你已手动停止
+本次测试投递：还没有记录（没记录不等于没响；上一次的结果不计入本次）
+你的反馈：还没有你的反馈（未回答不等于失败）（这是上一次的回答，本次还没有）
+[2026-09-29 09:44:49] [1790646289355] [T1-3] Tapping #setupTestStart at css=(59.2, 606.6) -> phys=(177, 1939)
+[2026-09-29 09:44:51] [1790646291132] [T1-3] Toast text: 已排 60 秒测试 · 可以锁屏了
+[2026-09-29 09:44:51] [1790646291183] [T1-3] state.settings.testRun: {"id": 90003, "startedAt": 1790646289452, "triggerAt": 1790646349473, "stoppedAt": null, "seenAt": null, "feedbackAt": null}
+[2026-09-29 09:44:51] [1790646291387] [T1-3] dumpsys alarm 90003 entry: RTC_WAKEUP #8: Alarm{8c14f89 type 0 origWhen 1790646349473 flags 3 windowLength 0 whenElapsed 868405640 maxWhenElapsed 868405640 repeatInterval 0 tag=*walarm*:space.alliswell.inbox.ACTION_TEST_ALARM originWhenElapsed 868405640 originWindowLength 0 setAtTime=2026-09-29 01:44:49 policyWhenElapsed:[868405640, 868345643, 0, 0, 0] procName=space.alliswell.inbox space.alliswell.inbox}
+[2026-09-29 09:44:51] [1790646291433] [T1-3] Alarm origWhen=1790646349473, testRun.triggerAt=1790646349473, diff_ms=0
+[2026-09-29 09:44:51] [1790646291479] [T1-3] After tap evidence: 系统侧：已排 0 条闹钟 · 通知可用 · 精确排程可用
+本次测试：今天 09:44 开始 · 计划 今天 09:45
+本次测试投递：还没有记录（没记录不等于没响；上一次的结果不计入本次）
+你的反馈：还没有你的反馈（未回答不等于失败）（这是上一次的回答，本次还没有）
+[2026-09-29 09:44:52] [1790646292089] [T1-3] Tapping #setupTestStop at css=(214.8, 606.6) -> phys=(644, 1939)
+[2026-09-29 09:44:53] [1790646293970] [T1-3] After stop dumpsys alarm 90003 entry: None
+[2026-09-29 09:44:54] [1790646294197] [T1-3] === T1 排程 [T1-3] end ===
+[2026-09-29 09:44:55] [1790646295760] [MAIN] >>> 开始场景 T2 基线下锁屏投递 (3 次)
+[2026-09-29 09:44:55] [1790646295804] [T2-1] === T2 基线下锁屏投递 [T2-1] start ===
+[2026-09-29 09:44:57] [1790646297186] [T2-1] Tapping #setupTestStart at css=(59.2, 606.6) -> phys=(177, 1939)
+[2026-09-29 09:44:58] [1790646298506] [T2-1] Test started: t_start=1790646297930, triggerAt=1790646357288
+[2026-09-29 09:44:58] [1790646298554] [T2-1] Locking screen within 10s...
+[2026-09-29 09:45:00] [1790646300776] [T2-1] Pre-trigger lock check: mWakefulness=Asleep, keyguard=True, focus=mCurrentFocus=Window{com.android.systemui:f9294bb u0 NotificationShade type=2040 }
+[2026-09-29 09:45:00] [1790646300842] [T2-1] Waiting for alarm delivery at ~1790646357288 without touching device...
+[2026-09-29 09:45:58] [1790646358660] [T2-1] Deliver check result: found=True, line='09-29 09:45:57.518 15858 15858 I AttentionAlarm: deliver path=fsi+direct fullScreen=true screenOn=false locked=true inCall=false canDrawOverlays=true'
+[2026-09-29 09:45:59] [1790646359126] [T2-1] Post-deliver status: mWakefulness=Awake, keyguard=True, focus=mCurrentFocus=Window{com.android.systemui:f9294bb u0 NotificationShade type=2040 }
+[2026-09-29 09:45:59] [1790646359218] [T2-1] AlarmRingService active: True
+[2026-09-29 09:45:59] [1790646359313] [T2-1] appops VIBRATE: VIBRATE: allow; time=+1s796ms ago (running)
+[2026-09-29 09:45:59] [1790646359367] [T2-1] Waking up device after recording deliver...
+[2026-09-29 09:46:04] [1790646364786] [T2-1] Evidence text: 系统侧：已排 0 条闹钟 · 通知可用 · 精确排程可用
+本次测试：今天 09:44 开始 · 计划 今天 09:45
+本次测试投递：[object Object]
+你的反馈：还没有你的反馈（未回答不等于失败）（这是上一次的回答，本次还没有）
+[2026-09-29 09:46:04] [1790646364848] [T2-1] testRun.seenAt: 1790646358371
+[2026-09-29 09:46:04] [1790646364908] [T2-1] btnTestStart text: 再测一次, testStep: {"id": "test", "done": true, "verified": true, "title": "60 秒测试已有结果", "why": "确认这台设备上声音、屏幕、通知各自落在哪里。", "denyImpact": "跳过也能用，只是不知道实际效果。", "action": "再测一次"}
+[2026-09-29 09:46:05] [1790646365487] [T2-1] Tapping #setupTestStop at css=(178.6, 524.2) -> phys=(535, 1692)
+[2026-09-29 09:46:07] [1790646367399] [T2-1] === T2 基线下锁屏投递 [T2-1] end ===
+[2026-09-29 09:46:09] [1790646369459] [T2-2] === T2 基线下锁屏投递 [T2-2] start ===
+[2026-09-29 09:46:10] [1790646370899] [T2-2] Tapping #setupTestStart at css=(59.2, 606.6) -> phys=(177, 1939)
+[2026-09-29 09:46:12] [1790646372210] [T2-2] Test started: t_start=1790646371637, triggerAt=1790646430984
+[2026-09-29 09:46:12] [1790646372262] [T2-2] Locking screen within 10s...
+[2026-09-29 09:46:14] [1790646374466] [T2-2] Pre-trigger lock check: mWakefulness=Asleep, keyguard=True, focus=mCurrentFocus=Window{com.android.systemui:f9294bb u0 NotificationShade type=2040 }
+[2026-09-29 09:46:14] [1790646374541] [T2-2] Waiting for alarm delivery at ~1790646430984 without touching device...
+[2026-09-29 09:47:11] [1790646431214] [T2-2] Deliver check result: found=True, line='09-29 09:47:11.048 15858 15858 I AttentionAlarm: deliver path=fsi+direct fullScreen=true screenOn=false locked=true inCall=false canDrawOverlays=true'
+[2026-09-29 09:47:12] [1790646432137] [T2-2] Post-deliver status: mWakefulness=Asleep, keyguard=True, focus=mCurrentFocus=Window{com.android.systemui:f9294bb u0 NotificationShade type=2040 }
+[2026-09-29 09:47:12] [1790646432270] [T2-2] AlarmRingService active: True
+[2026-09-29 09:47:12] [1790646432377] [T2-2] appops VIBRATE: VIBRATE: allow; time=+1s117ms ago (running)
+[2026-09-29 09:47:12] [1790646432415] [T2-2] Waking up device after recording deliver...
+[2026-09-29 09:47:17] [1790646437859] [T2-2] Evidence text: 系统侧：已排 0 条闹钟 · 通知可用 · 精确排程可用
+本次测试：今天 09:46 开始 · 计划 今天 09:47
+本次测试投递：[object Object]
+你的反馈：还没有你的反馈（未回答不等于失败）（这是上一次的回答，本次还没有）
+[2026-09-29 09:47:17] [1790646437906] [T2-2] testRun.seenAt: 1790646431811
+[2026-09-29 09:47:17] [1790646437957] [T2-2] btnTestStart text: 再测一次, testStep: {"id": "test", "done": true, "verified": true, "title": "60 秒测试已有结果", "why": "确认这台设备上声音、屏幕、通知各自落在哪里。", "denyImpact": "跳过也能用，只是不知道实际效果。", "action": "再测一次"}
+[2026-09-29 09:47:18] [1790646438565] [T2-2] Tapping #setupTestStop at css=(178.6, 524.2) -> phys=(535, 1692)
+[2026-09-29 09:47:20] [1790646440339] [T2-2] === T2 基线下锁屏投递 [T2-2] end ===
+[2026-09-29 09:47:22] [1790646442415] [T2-3] === T2 基线下锁屏投递 [T2-3] start ===
+[2026-09-29 09:47:23] [1790646443854] [T2-3] Tapping #setupTestStart at css=(59.2, 606.6) -> phys=(177, 1939)
+[2026-09-29 09:47:25] [1790646445194] [T2-3] Test started: t_start=1790646444620, triggerAt=1790646503967
+[2026-09-29 09:47:25] [1790646445254] [T2-3] Locking screen within 10s...
+[2026-09-29 09:47:27] [1790646447448] [T2-3] Pre-trigger lock check: mWakefulness=Asleep, keyguard=True, focus=mCurrentFocus=Window{com.android.systemui:f9294bb u0 NotificationShade type=2040 }
+[2026-09-29 09:47:27] [1790646447501] [T2-3] Waiting for alarm delivery at ~1790646503967 without touching device...
+[2026-09-29 09:48:25] [1790646505163] [T2-3] Deliver check result: found=True, line='09-29 09:48:24.151 15858 15858 I AttentionAlarm: deliver path=fsi+direct fullScreen=true screenOn=false locked=true inCall=false canDrawOverlays=true'
+[2026-09-29 09:48:25] [1790646505515] [T2-3] Post-deliver status: mWakefulness=Awake, keyguard=True, focus=mCurrentFocus=Window{com.android.systemui:f9294bb u0 NotificationShade type=2040 }
+[2026-09-29 09:48:25] [1790646505625] [T2-3] AlarmRingService active: True
+[2026-09-29 09:48:25] [1790646505715] [T2-3] appops VIBRATE: VIBRATE: allow; time=+1s556ms ago (running)
+[2026-09-29 09:48:25] [1790646505758] [T2-3] Waking up device after recording deliver...
+[2026-09-29 09:48:31] [1790646511167] [T2-3] Evidence text: 系统侧：已排 0 条闹钟 · 通知可用 · 精确排程可用
+本次测试：今天 09:47 开始 · 计划 今天 09:48
+本次测试投递：[object Object]
+你的反馈：还没有你的反馈（未回答不等于失败）（这是上一次的回答，本次还没有）
+[2026-09-29 09:48:31] [1790646511212] [T2-3] testRun.seenAt: 1790646504900
+[2026-09-29 09:48:31] [1790646511266] [T2-3] btnTestStart text: 再测一次, testStep: {"id": "test", "done": true, "verified": true, "title": "60 秒测试已有结果", "why": "确认这台设备上声音、屏幕、通知各自落在哪里。", "denyImpact": "跳过也能用，只是不知道实际效果。", "action": "再测一次"}
+[2026-09-29 09:48:31] [1790646511826] [T2-3] Tapping #setupTestStop at css=(178.6, 524.2) -> phys=(535, 1692)
+[2026-09-29 09:48:33] [1790646513724] [T2-3] === T2 基线下锁屏投递 [T2-3] end ===
+[2026-09-29 09:48:35] [1790646515795] [MAIN] >>> 开始场景 T3a 铃声正在响时停止 (3 次)
+[2026-09-29 09:48:35] [1790646515847] [T3a-1] === T3a 正在响时停止 [T3a-1] start ===
+[2026-09-29 09:48:37] [1790646517293] [T3a-1] Tapping #setupTestStart at css=(59.2, 606.6) -> phys=(177, 1939)
+[2026-09-29 09:48:38] [1790646518637] [T3a-1] Test started: triggerAt=1790646577412
+[2026-09-29 09:48:40] [1790646520835] [T3a-1] Pre-trigger lock check: mWakefulness=Asleep, keyguard=True
+[2026-09-29 09:49:38] [1790646578386] [T3a-1] Alarm delivered, deliver_found=True. Waiting 2s for ring...
+[2026-09-29 09:49:44] [1790646584173] [T3a-1] Before stop ring active: True
+[2026-09-29 09:49:44] [1790646584228] [T3a-1] Tapping #setupTestStop at css=(178.6, 524.2) -> phys=(535, 1692)
+[2026-09-29 09:49:45] [1790646585783] [T3a-1] Toast text: 已停止本次测试的铃声
+[2026-09-29 09:49:45] [1790646585876] [T3a-1] After stop ring active: True
+[2026-09-29 09:49:45] [1790646585936] [T3a-1] testRun.stoppedAt: 1790646584426
+[2026-09-29 09:49:45] [1790646585996] [T3a-1] Evidence text: 系统侧：已排 0 条闹钟 · 通知可用 · 精确排程可用
+本次测试：今天 09:48 开始 · 计划 今天 09:49 · 你已手动停止
+本次测试投递：[object Object]
+你的反馈：还没有你的反馈（未回答不等于失败）（这是上一次的回答，本次还没有）
+[2026-09-29 09:49:46] [1790646586638] [T3a-1] === T3a 正在响时停止 [T3a-1] end ===
+[2026-09-29 09:49:48] [1790646588711] [T3a-2] === T3a 正在响时停止 [T3a-2] start ===
+[2026-09-29 09:49:50] [1790646590179] [T3a-2] Tapping #setupTestStart at css=(59.2, 606.6) -> phys=(177, 1939)
+[2026-09-29 09:49:51] [1790646591483] [T3a-2] Test started: triggerAt=1790646650278
+[2026-09-29 09:49:53] [1790646593659] [T3a-2] Pre-trigger lock check: mWakefulness=Asleep, keyguard=True
+[2026-09-29 09:50:51] [1790646651091] [T3a-2] Alarm delivered, deliver_found=True. Waiting 2s for ring...
+[2026-09-29 09:50:56] [1790646656745] [T3a-2] Before stop ring active: True
+[2026-09-29 09:50:56] [1790646656807] [T3a-2] Tapping #setupTestStop at css=(178.6, 524.2) -> phys=(535, 1692)
+[2026-09-29 09:50:58] [1790646658350] [T3a-2] Toast text: 已停止本次测试的铃声
+[2026-09-29 09:50:58] [1790646658434] [T3a-2] After stop ring active: True
+[2026-09-29 09:50:58] [1790646658498] [T3a-2] testRun.stoppedAt: 1790646656986
+[2026-09-29 09:50:58] [1790646658550] [T3a-2] Evidence text: 系统侧：已排 0 条闹钟 · 通知可用 · 精确排程可用
+本次测试：今天 09:49 开始 · 计划 今天 09:50 · 你已手动停止
+本次测试投递：[object Object]
+你的反馈：还没有你的反馈（未回答不等于失败）（这是上一次的回答，本次还没有）
+[2026-09-29 09:50:59] [1790646659106] [T3a-2] === T3a 正在响时停止 [T3a-2] end ===
+[2026-09-29 09:51:01] [1790646661160] [T3a-3] === T3a 正在响时停止 [T3a-3] start ===
+[2026-09-29 09:51:02] [1790646662563] [T3a-3] Tapping #setupTestStart at css=(59.2, 606.6) -> phys=(177, 1939)
+[2026-09-29 09:51:03] [1790646663878] [T3a-3] Test started: triggerAt=1790646722679
+[2026-09-29 09:51:06] [1790646666028] [T3a-3] Pre-trigger lock check: mWakefulness=Asleep, keyguard=True
+[2026-09-29 09:52:03] [1790646723618] [T3a-3] Alarm delivered, deliver_found=True. Waiting 2s for ring...
+[2026-09-29 09:52:09] [1790646729350] [T3a-3] Before stop ring active: True
+[2026-09-29 09:52:09] [1790646729387] [T3a-3] Tapping #setupTestStop at css=(178.6, 524.2) -> phys=(535, 1692)
+[2026-09-29 09:52:10] [1790646730930] [T3a-3] Toast text: 已停止本次测试的铃声
+[2026-09-29 09:52:11] [1790646731041] [T3a-3] After stop ring active: True
+[2026-09-29 09:52:11] [1790646731096] [T3a-3] testRun.stoppedAt: 1790646729558
+[2026-09-29 09:52:11] [1790646731145] [T3a-3] Evidence text: 系统侧：已排 0 条闹钟 · 通知可用 · 精确排程可用
+本次测试：今天 09:51 开始 · 计划 今天 09:52 · 你已手动停止
+本次测试投递：[object Object]
+你的反馈：还没有你的反馈（未回答不等于失败）（这是上一次的回答，本次还没有）
+[2026-09-29 09:52:11] [1790646731678] [T3a-3] === T3a 正在响时停止 [T3a-3] end ===
+[2026-09-29 09:52:13] [1790646733752] [MAIN] >>> 开始场景 T3b 未到点时停止 (3 次)
+[2026-09-29 09:52:13] [1790646733812] [T3b-1] === T3b 未到点时停止 [T3b-1] start ===
+[2026-09-29 09:52:15] [1790646735239] [T3b-1] Tapping #setupTestStart at css=(59.2, 606.6) -> phys=(177, 1939)
+[2026-09-29 09:52:17] [1790646737177] [T3b-1] dumpsys alarm 90003 before stop: RTC_WAKEUP #11: Alarm{bc49f22 type 0 origWhen 1790646795341 flags 3 windowLength 0 whenElapsed 868851508 maxWhenElapsed 868851508 repeatInterval 0 tag=*walarm*:space.alliswell.inbox.ACTION_TEST_ALARM originWhenElapsed 868851508 originWindowLength 0 setAtTime=2026-09-29 01:52:15 policyWhenElapsed:[868851508, 868791515, 0, 0, 0] procName=space.alliswell.inbox space.alliswell.inbox}
+[2026-09-29 09:52:18] [1790646738760] [T3b-1] Tapping #setupTestStop at css=(214.8, 606.6) -> phys=(644, 1939)
+[2026-09-29 09:52:20] [1790646740293] [T3b-1] Toast text: 没有正在响的测试铃声 · 已取消未触发的测试
+[2026-09-29 09:52:20] [1790646740474] [T3b-1] dumpsys alarm 90003 after stop: None
+[2026-09-29 09:52:20] [1790646740543] [T3b-1] Other alarms count before=25, after=14, unchanged=False
+[2026-09-29 09:52:20] [1790646740599] [T3b-1] testRun.stoppedAt: 1790646738883
+[2026-09-29 09:52:21] [1790646741263] [T3b-1] === T3b 未到点时停止 [T3b-1] end ===
+[2026-09-29 09:52:22] [1790646742821] [T3b-2] === T3b 未到点时停止 [T3b-2] start ===
+[2026-09-29 09:52:24] [1790646744229] [T3b-2] Tapping #setupTestStart at css=(59.2, 606.6) -> phys=(177, 1939)
+[2026-09-29 09:52:26] [1790646746135] [T3b-2] dumpsys alarm 90003 before stop: RTC_WAKEUP #10: Alarm{94ef7e2 type 0 origWhen 1790646804333 flags 3 windowLength 0 whenElapsed 868860499 maxWhenElapsed 868860499 repeatInterval 0 tag=*walarm*:space.alliswell.inbox.ACTION_TEST_ALARM originWhenElapsed 868860499 originWindowLength 0 setAtTime=2026-09-29 01:52:24 policyWhenElapsed:[868860499, 868800503, 0, 0, 0] procName=space.alliswell.inbox space.alliswell.inbox}
+[2026-09-29 09:52:27] [1790646747708] [T3b-2] Tapping #setupTestStop at css=(214.8, 606.6) -> phys=(644, 1939)
+[2026-09-29 09:52:29] [1790646749295] [T3b-2] Toast text: 没有正在响的测试铃声 · 已取消未触发的测试
+[2026-09-29 09:52:29] [1790646749489] [T3b-2] dumpsys alarm 90003 after stop: None
+[2026-09-29 09:52:29] [1790646749531] [T3b-2] Other alarms count before=22, after=14, unchanged=False
+[2026-09-29 09:52:29] [1790646749581] [T3b-2] testRun.stoppedAt: 1790646747875
+[2026-09-29 09:52:30] [1790646750134] [T3b-2] === T3b 未到点时停止 [T3b-2] end ===
+[2026-09-29 09:52:31] [1790646751689] [T3b-3] === T3b 未到点时停止 [T3b-3] start ===
+[2026-09-29 09:52:33] [1790646753137] [T3b-3] Tapping #setupTestStart at css=(59.2, 606.6) -> phys=(177, 1939)
+[2026-09-29 09:52:35] [1790646755004] [T3b-3] dumpsys alarm 90003 before stop: RTC_WAKEUP #10: Alarm{825dfb9 type 0 origWhen 1790646813234 flags 3 windowLength 0 whenElapsed 868869401 maxWhenElapsed 868869401 repeatInterval 0 tag=*walarm*:space.alliswell.inbox.ACTION_TEST_ALARM originWhenElapsed 868869401 originWindowLength 0 setAtTime=2026-09-29 01:52:33 policyWhenElapsed:[868869401, 868809405, 0, 0, 0] procName=space.alliswell.inbox space.alliswell.inbox}
+[2026-09-29 09:52:36] [1790646756577] [T3b-3] Tapping #setupTestStop at css=(214.8, 606.6) -> phys=(644, 1939)
+[2026-09-29 09:52:38] [1790646758154] [T3b-3] Toast text: 没有正在响的测试铃声 · 已取消未触发的测试
+[2026-09-29 09:52:38] [1790646758347] [T3b-3] dumpsys alarm 90003 after stop: None
+[2026-09-29 09:52:38] [1790646758384] [T3b-3] Other alarms count before=22, after=14, unchanged=False
+[2026-09-29 09:52:38] [1790646758439] [T3b-3] testRun.stoppedAt: 1790646756751
+[2026-09-29 09:52:39] [1790646759130] [T3b-3] === T3b 未到点时停止 [T3b-3] end ===
+[2026-09-29 09:52:40] [1790646760702] [MAIN] >>> 开始场景 T3c 四个反馈按钮与新测试重置 (3 次)
+[2026-09-29 09:52:40] [1790646760755] [T3c-1] === T3c 四个反馈按钮与新测试重置 [T3c-1] start ===
+[2026-09-29 09:52:42] [1790646762168] [T3c-1] Tapping #setupTestFeedback [data-testfb="heard"] at css=(59.2, 728.4) -> phys=(177, 2305)
+[2026-09-29 09:55:07] [1790646907699] [MAIN] === 60s 测试完整真机验证开始 ===
+[2026-09-29 09:55:07] [1790646907753] [MAIN] >>> 开始场景 T1 排程 (3 次)
+[2026-09-29 09:55:07] [1790646907793] [T1-1] === T1 排程 [T1-1] start ===
+[2026-09-29 09:55:09] [1790646909233] [T1-1] Before tap evidence: 系统侧：已排 0 条闹钟 · 通知可用 · 精确排程可用
+本次测试：今天 09:52 开始 · 计划 今天 09:53 · 你已手动停止
+本次测试投递：还没有记录（没记录不等于没响；上一次的结果不计入本次）
+你的反馈：这次听到了
+[2026-09-29 09:55:09] [1790646909274] [T1-1] Tapping #setupTestStart at css=(59.2, 342.6) -> phys=(177, 1147)
+[2026-09-29 09:55:11] [1790646911004] [T1-1] Toast text: 已排 60 秒测试 · 可以锁屏了
+[2026-09-29 09:55:11] [1790646911083] [T1-1] state.settings.testRun: {"id": 90003, "startedAt": 1790646909330, "triggerAt": 1790646969346, "stoppedAt": null, "seenAt": null, "feedbackAt": null}
+[2026-09-29 09:55:11] [1790646911252] [T1-1] dumpsys alarm 90003 entry: RTC_WAKEUP #8: Alarm{83ccee2 type 0 origWhen 1790646969346 flags 3 windowLength 0 whenElapsed 869025512 maxWhenElapsed 869025512 repeatInterval 0 tag=*walarm*:space.alliswell.inbox.ACTION_TEST_ALARM originWhenElapsed 869025512 originWindowLength 0 setAtTime=2026-09-29 01:55:09 policyWhenElapsed:[869025512, 868965518, 0, 0, 0] procName=space.alliswell.inbox space.alliswell.inbox}
+[2026-09-29 09:55:11] [1790646911290] [T1-1] Alarm origWhen=1790646969346, testRun.triggerAt=1790646969346, diff_ms=0
+[2026-09-29 09:55:11] [1790646911344] [T1-1] After tap evidence: 系统侧：已排 0 条闹钟 · 通知可用 · 精确排程可用
+本次测试：今天 09:55 开始 · 计划 今天 09:56
+本次测试投递：还没有记录（没记录不等于没响；上一次的结果不计入本次）
+你的反馈：还没有你的反馈（未回答不等于失败）（这是上一次的回答，本次还没有）
+[2026-09-29 09:55:11] [1790646911928] [T1-1] Tapping #setupTestStop at css=(214.8, 342.6) -> phys=(644, 1147)
+[2026-09-29 09:55:13] [1790646913801] [T1-1] After stop dumpsys alarm 90003 entry: None
+[2026-09-29 09:55:13] [1790646913991] [T1-1] === T1 排程 [T1-1] end ===
+[2026-09-29 09:55:15] [1790646915545] [T1-2] === T1 排程 [T1-2] start ===
+[2026-09-29 09:55:16] [1790646916987] [T1-2] Before tap evidence: 系统侧：已排 0 条闹钟 · 通知可用 · 精确排程可用
+本次测试：今天 09:55 开始 · 计划 今天 09:56 · 你已手动停止
+本次测试投递：还没有记录（没记录不等于没响；上一次的结果不计入本次）
+你的反馈：还没有你的反馈（未回答不等于失败）（这是上一次的回答，本次还没有）
+[2026-09-29 09:55:17] [1790646917048] [T1-2] Tapping #setupTestStart at css=(59.2, 342.6) -> phys=(177, 1147)
+[2026-09-29 09:55:18] [1790646918791] [T1-2] Toast text: 已排 60 秒测试 · 可以锁屏了
+[2026-09-29 09:55:18] [1790646918840] [T1-2] state.settings.testRun: {"id": 90003, "startedAt": 1790646917113, "triggerAt": 1790646977131, "stoppedAt": null, "seenAt": null, "feedbackAt": null}
+[2026-09-29 09:55:19] [1790646919022] [T1-2] dumpsys alarm 90003 entry: RTC_WAKEUP #9: Alarm{a8e02f type 0 origWhen 1790646977131 flags 3 windowLength 0 whenElapsed 869033298 maxWhenElapsed 869033298 repeatInterval 0 tag=*walarm*:space.alliswell.inbox.ACTION_TEST_ALARM originWhenElapsed 869033298 originWindowLength 0 setAtTime=2026-09-29 01:55:17 policyWhenElapsed:[869033298, 868973300, 0, 0, 0] procName=space.alliswell.inbox space.alliswell.inbox}
+[2026-09-29 09:55:19] [1790646919075] [T1-2] Alarm origWhen=1790646977131, testRun.triggerAt=1790646977131, diff_ms=0
+[2026-09-29 09:55:19] [1790646919133] [T1-2] After tap evidence: 系统侧：已排 0 条闹钟 · 通知可用 · 精确排程可用
+本次测试：今天 09:55 开始 · 计划 今天 09:56
+本次测试投递：还没有记录（没记录不等于没响；上一次的结果不计入本次）
+你的反馈：还没有你的反馈（未回答不等于失败）（这是上一次的回答，本次还没有）
+[2026-09-29 09:55:19] [1790646919757] [T1-2] Tapping #setupTestStop at css=(214.8, 342.6) -> phys=(644, 1147)
+[2026-09-29 09:55:21] [1790646921617] [T1-2] After stop dumpsys alarm 90003 entry: None
+[2026-09-29 09:55:21] [1790646921829] [T1-2] === T1 排程 [T1-2] end ===
+[2026-09-29 09:55:23] [1790646923381] [T1-3] === T1 排程 [T1-3] start ===
+[2026-09-29 09:55:24] [1790646924846] [T1-3] Before tap evidence: 系统侧：已排 0 条闹钟 · 通知可用 · 精确排程可用
+本次测试：今天 09:55 开始 · 计划 今天 09:56 · 你已手动停止
+本次测试投递：还没有记录（没记录不等于没响；上一次的结果不计入本次）
+你的反馈：还没有你的反馈（未回答不等于失败）（这是上一次的回答，本次还没有）
+[2026-09-29 09:55:24] [1790646924916] [T1-3] Tapping #setupTestStart at css=(59.2, 342.6) -> phys=(177, 1147)
+[2026-09-29 09:55:26] [1790646926651] [T1-3] Toast text: 已排 60 秒测试 · 可以锁屏了
+[2026-09-29 09:55:26] [1790646926714] [T1-3] state.settings.testRun: {"id": 90003, "startedAt": 1790646924980, "triggerAt": 1790646985000, "stoppedAt": null, "seenAt": null, "feedbackAt": null}
+[2026-09-29 09:55:26] [1790646926916] [T1-3] dumpsys alarm 90003 entry: RTC_WAKEUP #9: Alarm{b7e552e type 0 origWhen 1790646985000 flags 3 windowLength 0 whenElapsed 869041167 maxWhenElapsed 869041167 repeatInterval 0 tag=*walarm*:space.alliswell.inbox.ACTION_TEST_ALARM originWhenElapsed 869041167 originWindowLength 0 setAtTime=2026-09-29 01:55:25 policyWhenElapsed:[869041167, 868981170, 0, 0, 0] procName=space.alliswell.inbox space.alliswell.inbox}
+[2026-09-29 09:55:26] [1790646926972] [T1-3] Alarm origWhen=1790646985000, testRun.triggerAt=1790646985000, diff_ms=0
+[2026-09-29 09:55:27] [1790646927037] [T1-3] After tap evidence: 系统侧：已排 0 条闹钟 · 通知可用 · 精确排程可用
+本次测试：今天 09:55 开始 · 计划 今天 09:56
+本次测试投递：还没有记录（没记录不等于没响；上一次的结果不计入本次）
+你的反馈：还没有你的反馈（未回答不等于失败）（这是上一次的回答，本次还没有）
+[2026-09-29 09:55:27] [1790646927705] [T1-3] Tapping #setupTestStop at css=(214.8, 342.6) -> phys=(644, 1147)
+[2026-09-29 09:55:29] [1790646929599] [T1-3] After stop dumpsys alarm 90003 entry: None
+[2026-09-29 09:55:29] [1790646929819] [T1-3] === T1 排程 [T1-3] end ===
+[2026-09-29 09:55:31] [1790646931383] [MAIN] >>> 开始场景 T2 基线下锁屏投递 (3 次)
+[2026-09-29 09:55:31] [1790646931429] [T2-1] === T2 基线下锁屏投递 [T2-1] start ===
+[2026-09-29 09:55:32] [1790646932861] [T2-1] Tapping #setupTestStart at css=(59.2, 342.6) -> phys=(177, 1147)
+[2026-09-29 09:55:34] [1790646934148] [T2-1] Test started: t_start=1790646933585, triggerAt=1790646992943
+[2026-09-29 09:55:34] [1790646934209] [T2-1] Locking screen within 10s...
+[2026-09-29 09:55:36] [1790646936389] [T2-1] Pre-trigger lock check: mWakefulness=Asleep, keyguard=True, focus=mCurrentFocus=Window{com.android.systemui:f9294bb u0 NotificationShade type=2040 }
+[2026-09-29 09:55:36] [1790646936445] [T2-1] Waiting for alarm delivery at ~1790646992943 without touching device...
+[2026-09-29 09:56:34] [1790646994228] [T2-1] Deliver check result: found=True, line='09-29 09:56:33.165 15858 15858 I AttentionAlarm: deliver path=fsi+direct fullScreen=true screenOn=false locked=true inCall=false canDrawOverlays=true'
+[2026-09-29 09:56:34] [1790646994697] [T2-1] Post-deliver status: mWakefulness=Awake, keyguard=True, focus=mCurrentFocus=Window{com.android.systemui:f9294bb u0 NotificationShade type=2040 }
+[2026-09-29 09:56:34] [1790646994824] [T2-1] AlarmRingService active: True
+[2026-09-29 09:56:34] [1790646994932] [T2-1] appops VIBRATE: VIBRATE: allow; time=+1s753ms ago (running)
+[2026-09-29 09:56:34] [1790646994983] [T2-1] Waking up device after recording deliver...
+[2026-09-29 09:56:40] [1790647000390] [T2-1] Evidence text: 系统侧：已排 0 条闹钟 · 通知可用 · 精确排程可用
+本次测试：今天 09:55 开始 · 计划 今天 09:56
+本次测试投递：[object Object]
+你的反馈：还没有你的反馈（未回答不等于失败）（这是上一次的回答，本次还没有）
+[2026-09-29 09:56:40] [1790647000454] [T2-1] testRun.seenAt: 1790646993921
+[2026-09-29 09:56:40] [1790647000501] [T2-1] btnTestStart text: 再测一次, testStep: {"id": "test", "done": true, "verified": true, "title": "60 秒测试已有结果", "why": "确认这台设备上声音、屏幕、通知各自落在哪里。", "denyImpact": "跳过也能用，只是不知道实际效果。", "action": "再测一次"}
+[2026-09-29 09:56:41] [1790647001104] [T2-1] Tapping #setupTestStop at css=(178.6, 280.6) -> phys=(535, 961)
+[2026-09-29 09:56:42] [1790647002933] [T2-1] === T2 基线下锁屏投递 [T2-1] end ===
+[2026-09-29 09:56:45] [1790647005007] [T2-2] === T2 基线下锁屏投递 [T2-2] start ===
+[2026-09-29 09:56:46] [1790647006468] [T2-2] Tapping #setupTestStart at css=(59.2, 362.9) -> phys=(177, 1208)
+[2026-09-29 09:56:47] [1790647007783] [T2-2] Test started: t_start=1790647007208, triggerAt=1790647066578
+[2026-09-29 09:56:47] [1790647007832] [T2-2] Locking screen within 10s...
+[2026-09-29 09:56:50] [1790647010039] [T2-2] Pre-trigger lock check: mWakefulness=Asleep, keyguard=True, focus=mCurrentFocus=Window{com.android.systemui:f9294bb u0 NotificationShade type=2040 }
+[2026-09-29 09:56:50] [1790647010123] [T2-2] Waiting for alarm delivery at ~1790647066578 without touching device...
+[2026-09-29 09:57:47] [1790647067800] [T2-2] Deliver check result: found=True, line='09-29 09:57:46.790 15858 15858 I AttentionAlarm: deliver path=fsi+direct fullScreen=true screenOn=false locked=true inCall=false canDrawOverlays=true'
+[2026-09-29 09:57:48] [1790647068264] [T2-2] Post-deliver status: mWakefulness=Awake, keyguard=True, focus=mCurrentFocus=Window{com.android.systemui:f9294bb u0 NotificationShade type=2040 }
+[2026-09-29 09:57:48] [1790647068358] [T2-2] AlarmRingService active: True
+[2026-09-29 09:57:48] [1790647068460] [T2-2] appops VIBRATE: VIBRATE: allow; time=+1s660ms ago (running)
+[2026-09-29 09:57:48] [1790647068498] [T2-2] Waking up device after recording deliver...
+[2026-09-29 09:57:53] [1790647073904] [T2-2] Evidence text: 系统侧：已排 0 条闹钟 · 通知可用 · 精确排程可用
+本次测试：今天 09:56 开始 · 计划 今天 09:57
+本次测试投递：[object Object]
+你的反馈：还没有你的反馈（未回答不等于失败）（这是上一次的回答，本次还没有）
+[2026-09-29 09:57:53] [1790647073961] [T2-2] testRun.seenAt: 1790647067558
+[2026-09-29 09:57:54] [1790647074026] [T2-2] btnTestStart text: 再测一次, testStep: {"id": "test", "done": true, "verified": true, "title": "60 秒测试已有结果", "why": "确认这台设备上声音、屏幕、通知各自落在哪里。", "denyImpact": "跳过也能用，只是不知道实际效果。", "action": "再测一次"}
+[2026-09-29 09:57:54] [1790647074558] [T2-2] Tapping #setupTestStop at css=(178.6, 280.6) -> phys=(535, 961)
+[2026-09-29 09:57:56] [1790647076362] [T2-2] === T2 基线下锁屏投递 [T2-2] end ===
+[2026-09-29 09:57:58] [1790647078420] [T2-3] === T2 基线下锁屏投递 [T2-3] start ===
+[2026-09-29 09:57:59] [1790647079883] [T2-3] Tapping #setupTestStart at css=(59.2, 362.9) -> phys=(177, 1208)
+[2026-09-29 09:58:01] [1790647081195] [T2-3] Test started: t_start=1790647080637, triggerAt=1790647139994
+[2026-09-29 09:58:01] [1790647081255] [T2-3] Locking screen within 10s...
+[2026-09-29 09:58:03] [1790647083459] [T2-3] Pre-trigger lock check: mWakefulness=Asleep, keyguard=True, focus=mCurrentFocus=Window{com.android.systemui:f9294bb u0 NotificationShade type=2040 }
+[2026-09-29 09:58:03] [1790647083511] [T2-3] Waiting for alarm delivery at ~1790647139994 without touching device...
+[2026-09-29 09:59:01] [1790647141216] [T2-3] Deliver check result: found=True, line='09-29 09:59:00.199 15858 15858 I AttentionAlarm: deliver path=fsi+direct fullScreen=true screenOn=false locked=true inCall=false canDrawOverlays=true'
+[2026-09-29 09:59:01] [1790647141702] [T2-3] Post-deliver status: mWakefulness=Awake, keyguard=True, focus=mCurrentFocus=Window{com.android.systemui:f9294bb u0 NotificationShade type=2040 }
+[2026-09-29 09:59:01] [1790647141822] [T2-3] AlarmRingService active: True
+[2026-09-29 09:59:01] [1790647141922] [T2-3] appops VIBRATE: VIBRATE: allow; time=+1s722ms ago (running)
+[2026-09-29 09:59:01] [1790647141962] [T2-3] Waking up device after recording deliver...
+[2026-09-29 09:59:07] [1790647147372] [T2-3] Evidence text: 系统侧：已排 0 条闹钟 · 通知可用 · 精确排程可用
+本次测试：今天 09:57 开始 · 计划 今天 09:58
+本次测试投递：[object Object]
+你的反馈：还没有你的反馈（未回答不等于失败）（这是上一次的回答，本次还没有）
+[2026-09-29 09:59:07] [1790647147437] [T2-3] testRun.seenAt: 1790647140971
+[2026-09-29 09:59:07] [1790647147501] [T2-3] btnTestStart text: 再测一次, testStep: {"id": "test", "done": true, "verified": true, "title": "60 秒测试已有结果", "why": "确认这台设备上声音、屏幕、通知各自落在哪里。", "denyImpact": "跳过也能用，只是不知道实际效果。", "action": "再测一次"}
+[2026-09-29 09:59:08] [1790647148066] [T2-3] Tapping #setupTestStop at css=(178.6, 280.6) -> phys=(535, 961)
+[2026-09-29 09:59:09] [1790647149935] [T2-3] === T2 基线下锁屏投递 [T2-3] end ===
+[2026-09-29 09:59:11] [1790647151990] [MAIN] >>> 开始场景 T3a 铃声正在响时停止 (3 次)
+[2026-09-29 09:59:12] [1790647152045] [T3a-1] === T3a 正在响时停止 [T3a-1] start ===
+[2026-09-29 09:59:13] [1790647153476] [T3a-1] Tapping #setupTestStart at css=(59.2, 362.9) -> phys=(177, 1208)
+[2026-09-29 09:59:14] [1790647154791] [T3a-1] Test started: triggerAt=1790647213583
+[2026-09-29 09:59:16] [1790647156998] [T3a-1] Pre-trigger lock check: mWakefulness=Asleep, keyguard=True
+[2026-09-29 10:00:14] [1790647214622] [T3a-1] Alarm delivered, deliver_found=True. Waiting 2s for ring...
+[2026-09-29 10:00:20] [1790647220320] [T3a-1] Before stop ring active: True
+[2026-09-29 10:00:20] [1790647220386] [T3a-1] Tapping #setupTestStop at css=(178.6, 280.6) -> phys=(535, 961)
+[2026-09-29 10:00:21] [1790647221961] [T3a-1] Toast text: 已停止本次测试的铃声
+[2026-09-29 10:00:22] [1790647222064] [T3a-1] After stop ring active: True
+[2026-09-29 10:00:22] [1790647222109] [T3a-1] testRun.stoppedAt: 1790647220599
+[2026-09-29 10:00:22] [1790647222182] [T3a-1] Evidence text: 系统侧：已排 0 条闹钟 · 通知可用 · 精确排程可用
+本次测试：今天 09:59 开始 · 计划 今天 10:00 · 你已手动停止
+本次测试投递：[object Object]
+你的反馈：还没有你的反馈（未回答不等于失败）（这是上一次的回答，本次还没有）
+[2026-09-29 10:00:22] [1790647222898] [T3a-1] === T3a 正在响时停止 [T3a-1] end ===
+[2026-09-29 10:00:24] [1790647224974] [T3a-2] === T3a 正在响时停止 [T3a-2] start ===
+[2026-09-29 10:00:26] [1790647226434] [T3a-2] Tapping #setupTestStart at css=(59.2, 362.9) -> phys=(177, 1208)
+[2026-09-29 10:00:27] [1790647227775] [T3a-2] Test started: triggerAt=1790647286569
+[2026-09-29 10:00:30] [1790647230023] [T3a-2] Pre-trigger lock check: mWakefulness=Asleep, keyguard=True
+[2026-09-29 10:01:27] [1790647287723] [T3a-2] Alarm delivered, deliver_found=True. Waiting 2s for ring...
+[2026-09-29 10:01:33] [1790647293451] [T3a-2] Before stop ring active: True
+[2026-09-29 10:01:33] [1790647293502] [T3a-2] Tapping #setupTestStop at css=(178.6, 280.6) -> phys=(535, 961)
+[2026-09-29 10:01:35] [1790647295100] [T3a-2] Toast text: 已停止本次测试的铃声
+[2026-09-29 10:01:35] [1790647295225] [T3a-2] After stop ring active: True
+[2026-09-29 10:01:35] [1790647295271] [T3a-2] testRun.stoppedAt: 1790647293734
+[2026-09-29 10:01:35] [1790647295310] [T3a-2] Evidence text: 系统侧：已排 0 条闹钟 · 通知可用 · 精确排程可用
+本次测试：今天 10:00 开始 · 计划 今天 10:01 · 你已手动停止
+本次测试投递：[object Object]
+你的反馈：还没有你的反馈（未回答不等于失败）（这是上一次的回答，本次还没有）
+[2026-09-29 10:01:36] [1790647296038] [T3a-2] === T3a 正在响时停止 [T3a-2] end ===
+[2026-09-29 10:01:38] [1790647298105] [T3a-3] === T3a 正在响时停止 [T3a-3] start ===
+[2026-09-29 10:01:39] [1790647299523] [T3a-3] Tapping #setupTestStart at css=(59.2, 362.9) -> phys=(177, 1208)
+[2026-09-29 10:01:40] [1790647300827] [T3a-3] Test started: triggerAt=1790647359621
+[2026-09-29 10:01:43] [1790647303059] [T3a-3] Pre-trigger lock check: mWakefulness=Asleep, keyguard=True
+[2026-09-29 10:02:40] [1790647360677] [T3a-3] Alarm delivered, deliver_found=True. Waiting 2s for ring...
+[2026-09-29 10:02:46] [1790647366450] [T3a-3] Before stop ring active: True
+[2026-09-29 10:02:46] [1790647366498] [T3a-3] Tapping #setupTestStop at css=(178.6, 280.6) -> phys=(535, 961)
+[2026-09-29 10:02:48] [1790647368074] [T3a-3] Toast text: 已停止本次测试的铃声
+[2026-09-29 10:02:48] [1790647368174] [T3a-3] After stop ring active: True
+[2026-09-29 10:02:48] [1790647368252] [T3a-3] testRun.stoppedAt: 1790647366693
+[2026-09-29 10:02:48] [1790647368300] [T3a-3] Evidence text: 系统侧：已排 0 条闹钟 · 通知可用 · 精确排程可用
+本次测试：今天 10:01 开始 · 计划 今天 10:02 · 你已手动停止
+本次测试投递：[object Object]
+你的反馈：还没有你的反馈（未回答不等于失败）（这是上一次的回答，本次还没有）
+[2026-09-29 10:02:48] [1790647368906] [T3a-3] === T3a 正在响时停止 [T3a-3] end ===
+[2026-09-29 10:02:50] [1790647370976] [MAIN] >>> 开始场景 T3b 未到点时停止 (3 次)
+[2026-09-29 10:02:51] [1790647371023] [T3b-1] === T3b 未到点时停止 [T3b-1] start ===
+[2026-09-29 10:02:52] [1790647372420] [T3b-1] Tapping #setupTestStart at css=(59.2, 362.9) -> phys=(177, 1208)
+[2026-09-29 10:02:54] [1790647374339] [T3b-1] dumpsys alarm 90003 before stop: RTC_WAKEUP #12: Alarm{8a3d44e type 0 origWhen 1790647432523 flags 3 windowLength 0 whenElapsed 869488690 maxWhenElapsed 869488690 repeatInterval 0 tag=*walarm*:space.alliswell.inbox.ACTION_TEST_ALARM originWhenElapsed 869488690 originWindowLength 0 setAtTime=2026-09-29 02:02:52 policyWhenElapsed:[869488690, 869428692, 0, 0, 0] procName=space.alliswell.inbox space.alliswell.inbox}
+[2026-09-29 10:02:55] [1790647375911] [T3b-1] Tapping #setupTestStop at css=(214.8, 362.9) -> phys=(644, 1208)
+[2026-09-29 10:02:57] [1790647377479] [T3b-1] Toast text: 没有正在响的测试铃声 · 已取消未触发的测试
+[2026-09-29 10:02:57] [1790647377650] [T3b-1] dumpsys alarm 90003 after stop: None
+[2026-09-29 10:02:57] [1790647377694] [T3b-1] User alarms count before=4, after=2, unchanged=False
+[2026-09-29 10:02:57] [1790647377753] [T3b-1] testRun.stoppedAt: 1790647376052
+[2026-09-29 10:02:58] [1790647378465] [T3b-1] === T3b 未到点时停止 [T3b-1] end ===
+[2026-09-29 10:03:00] [1790647380038] [T3b-2] === T3b 未到点时停止 [T3b-2] start ===
+[2026-09-29 10:03:01] [1790647381520] [T3b-2] Tapping #setupTestStart at css=(59.2, 362.9) -> phys=(177, 1208)
+[2026-09-29 10:03:03] [1790647383402] [T3b-2] dumpsys alarm 90003 before stop: RTC_WAKEUP #11: Alarm{7ba7b62 type 0 origWhen 1790647441619 flags 3 windowLength 0 whenElapsed 869497786 maxWhenElapsed 869497786 repeatInterval 0 tag=*walarm*:space.alliswell.inbox.ACTION_TEST_ALARM originWhenElapsed 869497786 originWindowLength 0 setAtTime=2026-09-29 02:03:01 policyWhenElapsed:[869497786, 869437790, 0, 0, 0] procName=space.alliswell.inbox space.alliswell.inbox}
+[2026-09-29 10:03:04] [1790647384967] [T3b-2] Tapping #setupTestStop at css=(214.8, 362.9) -> phys=(644, 1208)
+[2026-09-29 10:03:06] [1790647386519] [T3b-2] Toast text: 没有正在响的测试铃声 · 已取消未触发的测试
+[2026-09-29 10:03:06] [1790647386706] [T3b-2] dumpsys alarm 90003 after stop: None
+[2026-09-29 10:03:06] [1790647386749] [T3b-2] User alarms count before=3, after=2, unchanged=False
+[2026-09-29 10:03:06] [1790647386796] [T3b-2] testRun.stoppedAt: 1790647385119
+[2026-09-29 10:03:07] [1790647387504] [T3b-2] === T3b 未到点时停止 [T3b-2] end ===
+[2026-09-29 10:03:09] [1790647389075] [T3b-3] === T3b 未到点时停止 [T3b-3] start ===
+[2026-09-29 10:03:10] [1790647390526] [T3b-3] Tapping #setupTestStart at css=(59.2, 362.9) -> phys=(177, 1208)
+[2026-09-29 10:03:12] [1790647392414] [T3b-3] dumpsys alarm 90003 before stop: RTC_WAKEUP #10: Alarm{d638375 type 0 origWhen 1790647450621 flags 3 windowLength 0 whenElapsed 869506787 maxWhenElapsed 869506787 repeatInterval 0 tag=*walarm*:space.alliswell.inbox.ACTION_TEST_ALARM originWhenElapsed 869506787 originWindowLength 0 setAtTime=2026-09-29 02:03:10 policyWhenElapsed:[869506787, 869446790, 0, 0, 0] procName=space.alliswell.inbox space.alliswell.inbox}
+[2026-09-29 10:03:13] [1790647393985] [T3b-3] Tapping #setupTestStop at css=(214.8, 362.9) -> phys=(644, 1208)
+[2026-09-29 10:03:15] [1790647395561] [T3b-3] Toast text: 没有正在响的测试铃声 · 已取消未触发的测试
+[2026-09-29 10:03:15] [1790647395766] [T3b-3] dumpsys alarm 90003 after stop: None
+[2026-09-29 10:03:15] [1790647395813] [T3b-3] User alarms count before=3, after=2, unchanged=False
+[2026-09-29 10:03:15] [1790647395860] [T3b-3] testRun.stoppedAt: 1790647394145
+[2026-09-29 10:03:16] [1790647396547] [T3b-3] === T3b 未到点时停止 [T3b-3] end ===
+[2026-09-29 10:03:18] [1790647398104] [MAIN] >>> 开始场景 T3c 四个反馈按钮与新测试重置 (3 次)
+[2026-09-29 10:03:18] [1790647398152] [T3c-1] === T3c 四个反馈按钮与新测试重置 [T3c-1] start ===
+[2026-09-29 10:03:19] [1790647399570] [T3c-1] Tapping #setupTestFeedback [data-testfb="heard"] at css=(59.2, 484.8) -> phys=(177, 1574)
+[2026-09-29 10:03:20] [1790647400962] [T3c-1] Feedback 'heard': activeChip=heard, toast='这次听到了', testFeedback={"value": "heard", "at": 1790647399664}
+[2026-09-29 10:03:21] [1790647401018] [T3c-1] Tapping #setupTestFeedback [data-testfb="seen"] at css=(145.7, 484.8) -> phys=(437, 1574)
+[2026-09-29 10:03:22] [1790647402370] [T3c-1] Feedback 'seen': activeChip=seen, toast='这次看到了', testFeedback={"value": "seen", "at": 1790647401076}
+[2026-09-29 10:03:22] [1790647402445] [T3c-1] Tapping #setupTestFeedback [data-testfb="missed"] at css=(225.6, 484.8) -> phys=(676, 1574)
+[2026-09-29 10:03:23] [1790647403840] [T3c-1] Feedback 'missed': activeChip=missed, toast='这次没有收到 · 按下面步骤再看一次', testFeedback={"value": "missed", "at": 1790647402543}
+[2026-09-29 10:03:23] [1790647403906] [T3c-1] Tapping #setupTestFeedback [data-testfb="unsure"] at css=(299.0, 484.8) -> phys=(896, 1574)
+[2026-09-29 10:03:25] [1790647405281] [T3c-1] Feedback 'unsure': activeChip=unsure, toast='这次结果不确定 · 不算失败，可以再测一次', testFeedback={"value": "unsure", "at": 1790647403996}
+[2026-09-29 10:03:25] [1790647405328] [T3c-1] Tapping #setupTestStart at css=(59.2, 362.9) -> phys=(177, 1208)
+[2026-09-29 10:03:26] [1790647406890] [T3c-1] New test started: activeChips=[] (should be []), hasStaleNotice=True
+[2026-09-29 10:03:26] [1790647406934] [T3c-1] Evidence text: 系统侧：已排 0 条闹钟 · 通知可用 · 精确排程可用
+本次测试：今天 10:03 开始 · 计划 今天 10:04
+本次测试投递：还没有记录（没记录不等于没响；上一次的结果不计入本次）
+你的反馈：还没有你的反馈（未回答不等于失败）（这是上一次的回答，本次还没有）
+[2026-09-29 10:03:27] [1790647407536] [T3c-1] Tapping #setupTestStop at css=(214.8, 362.9) -> phys=(644, 1208)
+[2026-09-29 10:03:28] [1790647408970] [T3c-1] === T3c 四个反馈按钮与新测试重置 [T3c-1] end ===
+[2026-09-29 10:03:30] [1790647410552] [T3c-2] === T3c 四个反馈按钮与新测试重置 [T3c-2] start ===
+[2026-09-29 10:03:32] [1790647412008] [T3c-2] Tapping #setupTestFeedback [data-testfb="heard"] at css=(59.2, 484.8) -> phys=(177, 1574)
+[2026-09-29 10:03:33] [1790647413374] [T3c-2] Feedback 'heard': activeChip=heard, toast='这次听到了', testFeedback={"value": "heard", "at": 1790647412086}
+[2026-09-29 10:03:33] [1790647413439] [T3c-2] Tapping #setupTestFeedback [data-testfb="seen"] at css=(145.7, 484.8) -> phys=(437, 1574)
+[2026-09-29 10:03:34] [1790647414827] [T3c-2] Feedback 'seen': activeChip=seen, toast='这次看到了', testFeedback={"value": "seen", "at": 1790647413534}
+[2026-09-29 10:03:34] [1790647414877] [T3c-2] Tapping #setupTestFeedback [data-testfb="missed"] at css=(225.6, 484.8) -> phys=(676, 1574)
+[2026-09-29 10:03:36] [1790647416258] [T3c-2] Feedback 'missed': activeChip=missed, toast='这次没有收到 · 按下面步骤再看一次', testFeedback={"value": "missed", "at": 1790647414942}
+[2026-09-29 10:03:36] [1790647416311] [T3c-2] Tapping #setupTestFeedback [data-testfb="unsure"] at css=(299.0, 484.8) -> phys=(896, 1574)
+[2026-09-29 10:03:37] [1790647417700] [T3c-2] Feedback 'unsure': activeChip=unsure, toast='这次结果不确定 · 不算失败，可以再测一次', testFeedback={"value": "unsure", "at": 1790647416403}
+[2026-09-29 10:03:37] [1790647417747] [T3c-2] Tapping #setupTestStart at css=(59.2, 362.9) -> phys=(177, 1208)
+[2026-09-29 10:03:39] [1790647419291] [T3c-2] New test started: activeChips=[] (should be []), hasStaleNotice=True
+[2026-09-29 10:03:39] [1790647419334] [T3c-2] Evidence text: 系统侧：已排 0 条闹钟 · 通知可用 · 精确排程可用
+本次测试：今天 10:03 开始 · 计划 今天 10:04
+本次测试投递：还没有记录（没记录不等于没响；上一次的结果不计入本次）
+你的反馈：还没有你的反馈（未回答不等于失败）（这是上一次的回答，本次还没有）
+[2026-09-29 10:03:39] [1790647419897] [T3c-2] Tapping #setupTestStop at css=(214.8, 362.9) -> phys=(644, 1208)
+[2026-09-29 10:03:41] [1790647421302] [T3c-2] === T3c 四个反馈按钮与新测试重置 [T3c-2] end ===
+[2026-09-29 10:03:42] [1790647422866] [T3c-3] === T3c 四个反馈按钮与新测试重置 [T3c-3] start ===
+[2026-09-29 10:03:44] [1790647424311] [T3c-3] Tapping #setupTestFeedback [data-testfb="heard"] at css=(59.2, 484.8) -> phys=(177, 1574)
+[2026-09-29 10:03:45] [1790647425675] [T3c-3] Feedback 'heard': activeChip=heard, toast='这次听到了', testFeedback={"value": "heard", "at": 1790647424388}
+[2026-09-29 10:03:45] [1790647425746] [T3c-3] Tapping #setupTestFeedback [data-testfb="seen"] at css=(145.7, 484.8) -> phys=(437, 1574)
+[2026-09-29 10:03:47] [1790647427122] [T3c-3] Feedback 'seen': activeChip=seen, toast='这次看到了', testFeedback={"value": "seen", "at": 1790647425838}
+[2026-09-29 10:03:47] [1790647427191] [T3c-3] Tapping #setupTestFeedback [data-testfb="missed"] at css=(225.6, 484.8) -> phys=(676, 1574)
+[2026-09-29 10:03:48] [1790647428555] [T3c-3] Feedback 'missed': activeChip=missed, toast='这次没有收到 · 按下面步骤再看一次', testFeedback={"value": "missed", "at": 1790647427256}
+[2026-09-29 10:03:48] [1790647428611] [T3c-3] Tapping #setupTestFeedback [data-testfb="unsure"] at css=(299.0, 484.8) -> phys=(896, 1574)
+[2026-09-29 10:03:50] [1790647430012] [T3c-3] Feedback 'unsure': activeChip=unsure, toast='这次结果不确定 · 不算失败，可以再测一次', testFeedback={"value": "unsure", "at": 1790647428714}
+[2026-09-29 10:03:50] [1790647430069] [T3c-3] Tapping #setupTestStart at css=(59.2, 362.9) -> phys=(177, 1208)
+[2026-09-29 10:03:51] [1790647431637] [T3c-3] New test started: activeChips=[] (should be []), hasStaleNotice=True
+[2026-09-29 10:03:51] [1790647431697] [T3c-3] Evidence text: 系统侧：已排 0 条闹钟 · 通知可用 · 精确排程可用
+本次测试：今天 10:03 开始 · 计划 今天 10:04
+本次测试投递：还没有记录（没记录不等于没响；上一次的结果不计入本次）
+你的反馈：还没有你的反馈（未回答不等于失败）（这是上一次的回答，本次还没有）
+[2026-09-29 10:03:52] [1790647432278] [T3c-3] Tapping #setupTestStop at css=(214.8, 362.9) -> phys=(644, 1208)
+[2026-09-29 10:03:53] [1790647433704] [T3c-3] === T3c 四个反馈按钮与新测试重置 [T3c-3] end ===
+[2026-09-29 10:03:55] [1790647435274] [MAIN] >>> 开始场景 T4 冻结下迟到投递验证
+[2026-09-29 10:03:55] [1790647435320] [T4-1] === T4 冻结下迟到投递验证 [T4-1] start ===
+[2026-09-29 10:03:56] [1790647436758] [T4-1] Tapping #setupTestStart at css=(59.2, 362.9) -> phys=(177, 1208)
+[2026-09-29 10:03:57] [1790647437904] [T4-1] Tapping #setupTestStop at css=(214.8, 362.9) -> phys=(644, 1208)
+[2026-09-29 10:04:08] [1790647448880] [T4-1-prep] Tswitch=1790647448841 tapping 智能控制后台耗电 at (306, 743)
+[2026-09-29 10:04:13] [1790647453544] [T4-1-prep] after mode: None (expected: 智能控制后台耗电)
+[2026-09-29 10:04:16] [1790647456193] [T4-1] Switched to 智能控制后台耗电: checked=None
+[2026-09-29 10:04:17] [1790647457629] [T4-1] Tapping #sheetSetup .icon-btn at css=(322.0, 120.2) -> phys=(966, 480)
+[2026-09-29 10:04:19] [1790647459702] [T4-1] Tapping [data-tab="home"] at css=(51.0, 702.1) -> phys=(153, 2226)
+[2026-09-29 10:04:22] [1790647462585] [T4-1] Home card before test: exists=False, text=''
+[2026-09-29 10:04:25] [1790647465330] [T4-1] Tapping [data-tab="home"] at css=(51.0, 702.1) -> phys=(153, 2226)
+[2026-09-29 10:04:27] [1790647467345] [T4-1] Tapping [data-tab="me"] at css=(309.0, 702.1) -> phys=(927, 2226)
+[2026-09-29 10:04:28] [1790647468597] [T4-1] Tapping #btnSetup at css=(180.0, 414.6) -> phys=(540, 1363)
+[2026-09-29 10:04:32] [1790647472712] [T4-1] Tapping #setupTestStart at css=(59.2, 362.9) -> phys=(177, 1208)
+[2026-09-29 10:04:34] [1790647474018] [T4-1] Test started: t_start=1790647473438, triggerAt=1790647532793
+[2026-09-29 10:04:34] [1790647474081] [T4-1] Locking screen within 10s...
+[2026-09-29 10:04:36] [1790647476283] [T4-1] Pre-trigger lock check: mWakefulness=Asleep, keyguard=True, focus=mCurrentFocus=Window{com.android.systemui:f9294bb u0 NotificationShade type=2040 }
+[2026-09-29 10:04:36] [1790647476333] [T4-1] Sleeping until target_wake_time=1790647712793 (+180s after triggerAt)...
+[2026-09-29 10:08:34] [1790647714399] [T4-1] Wait completed (+3m after triggerAt). Deliver during sleep: 09-29 10:05:32.988 15858 15858 I AttentionAlarm: deliver path=fsi+direct fullScreen=true screenOn=false locked=true inCall=false canDrawOverlays=true
+[2026-09-29 10:08:34] [1790647714457] [T4-1] am_app_frozen during sleep count: 0
+[2026-09-29 10:08:34] [1790647714573] [T4-1] Waking up device at t_wake=1790647714518...
+[2026-09-29 10:08:37] [1790647717369] [T4-1] Final deliver line: 09-29 10:05:32.988 15858 15858 I AttentionAlarm: deliver path=fsi+direct fullScreen=true screenOn=false locked=true inCall=false canDrawOverlays=true
+[2026-09-29 10:08:37] [1790647717426] [T4-1] am_app_unfrozen count: 0
+[2026-09-29 10:08:40] [1790647720873] [T4-1] Evidence text: 系统侧：已排 0 条闹钟 · 通知可用 · 精确排程可用
+本次测试：今天 10:04 开始 · 计划 今天 10:05
+本次测试投递：[object Object]
+你的反馈：还没有你的反馈（未回答不等于失败）（这是上一次的回答，本次还没有）
+[2026-09-29 10:08:40] [1790647720930] [T4-1] seenAt: 1790647533932
+[2026-09-29 10:08:40] [1790647720979] [T4-1] Step status: {"testStep": {"id": "test", "done": true, "verified": true, "title": "60 秒测试已有结果", "why": "确认这台设备上声音、屏幕、通知各自落在哪里。", "denyImpact": "跳过也能用，只是不知道实际效果。", "action": "再测一次"}, "bgStep": {"id": "background", "essential": true, "done": true, "verified": true, "homeDone": true, "title": "允许完全后台运行 (防冻结)", "why": "部分 Android 厂商可能限制长时间后台运行；实际效果取决于系统设置，并需通过锁屏测试确认。", "denyImpact": "拒绝或跳过可能导致熄屏较长时间后提醒延迟；是否生效以本机测试为准。", "action": "去设置"}}
+[2026-09-29 10:08:43] [1790647723672] [T4-1] Tapping #sheetSetup .icon-btn at css=(322.0, 37.9) -> phys=(966, 233)
+[2026-09-29 10:08:44] [1790647724927] [T4-1] Tapping [data-tab="home"] at css=(51.0, 619.8) -> phys=(153, 1979)
+[2026-09-29 10:08:47] [1790647727292] [T4-1] Home card after test: exists=False, cardDismissed=False, text=''
+[2026-09-29 10:08:47] [1790647727877] [T4-1] VERDICT: PASS (is_late=False, delay_ms=1139, card_cleared=True)
+[2026-09-29 10:08:49] [1790647729310] [T4-1] Tapping [data-tab="home"] at css=(51.0, 617.8) -> phys=(153, 1973)
+[2026-09-29 10:08:50] [1790647730555] [T4-1] Tapping [data-tab="me"] at css=(309.0, 584.8) -> phys=(927, 1874)
+[2026-09-29 10:08:51] [1790647731803] [T4-1] Tapping #btnSetup at css=(180.0, 530.4) -> phys=(540, 1711)
+[2026-09-29 10:08:53] [1790647733547] [T4-1] Tapping #setupTestStop at css=(178.6, 524.2) -> phys=(535, 1692)
+[2026-09-29 10:08:55] [1790647735214] [T4-1] === T4 冻结下迟到投递验证 [T4-1] end ===
+[2026-09-29 10:08:57] [1790647737292] [T4-2] === T4 冻结下迟到投递验证 [T4-2] start ===
+[2026-09-29 10:08:58] [1790647738698] [T4-2] Tapping #setupTestStart at css=(59.2, 606.6) -> phys=(177, 1939)
+[2026-09-29 10:08:59] [1790647739856] [T4-2] Tapping #setupTestStop at css=(214.8, 606.6) -> phys=(644, 1939)
+[2026-09-29 10:09:10] [1790647750931] [T4-2-prep] Tswitch=1790647750868 tapping 智能控制后台耗电 at (306, 743)
+[2026-09-29 10:09:15] [1790647755495] [T4-2-prep] after mode: 智能控制后台耗电 (expected: 智能控制后台耗电)
+[2026-09-29 10:09:18] [1790647758138] [T4-2] Switched to 智能控制后台耗电: checked=智能控制后台耗电
+[2026-09-29 10:09:19] [1790647759611] [T4-2] Tapping #sheetSetup .icon-btn at css=(322.0, 120.2) -> phys=(966, 480)
+[2026-09-29 10:09:21] [1790647761662] [T4-2] Tapping [data-tab="home"] at css=(51.0, 702.1) -> phys=(153, 2226)
+[2026-09-29 10:09:24] [1790647764541] [T4-2] Home card before test: exists=True, text='还差 1 步，提醒才能准时响
+下一步：允许完全后台运行 (防冻结)
+›'
+[2026-09-29 10:09:25] [1790647765935] [T4-2] Tapping #setupEntry at css=(180.0, 158.3) -> phys=(540, 594)
+[2026-09-29 10:09:29] [1790647769100] [T4-2] Tapping #setupTestStart at css=(59.2, 606.6) -> phys=(177, 1939)
+[2026-09-29 10:09:30] [1790647770431] [T4-2] Test started: t_start=1790647769857, triggerAt=1790647829207
+[2026-09-29 10:09:30] [1790647770485] [T4-2] Locking screen within 10s...
+[2026-09-29 10:09:32] [1790647772677] [T4-2] Pre-trigger lock check: mWakefulness=Asleep, keyguard=True, focus=mCurrentFocus=Window{com.android.systemui:f9294bb u0 NotificationShade type=2040 }
+[2026-09-29 10:09:32] [1790647772734] [T4-2] Sleeping until target_wake_time=1790648009207 (+180s after triggerAt)...
+[2026-09-29 10:13:30] [1790648010456] [T4-2] Wait completed (+3m after triggerAt). Deliver during sleep: None
+[2026-09-29 10:13:30] [1790648010511] [T4-2] am_app_frozen during sleep count: 1
+[2026-09-29 10:13:30] [1790648010569] [T4-2]   Frozen log: 09-29 10:09:36.170  1737  2108 I am_app_frozen: [0,10285,space.alliswell.inbox,from fast_freezer]
+[2026-09-29 10:13:30] [1790648010664] [T4-2] Waking up device at t_wake=1790648010617...
+[2026-09-29 10:13:33] [1790648013467] [T4-2] Final deliver line: 09-29 10:13:31.187 15858 15858 I AttentionAlarm: deliver path=fsi+direct fullScreen=true screenOn=true locked=true inCall=false canDrawOverlays=true
+[2026-09-29 10:13:33] [1790648013509] [T4-2] am_app_unfrozen count: 1
+[2026-09-29 10:13:33] [1790648013546] [T4-2]   Unfrozen log: 09-29 10:13:30.961  1737  2108 I am_app_unfrozen: [0,10285,space.alliswell.inbox,screen on]
+[2026-09-29 10:22:20] [1790648540494] [MAIN] === 60s 测试完整真机验证继续（断点续跑） ===
+[2026-09-29 10:22:20] [1790648540551] [MAIN] >>> 载入已完成的 T4-1 与 T4-2 结果
+[2026-09-29 10:22:20] [1790648540588] [MAIN] >>> 开始场景 T4 冻结下迟到投递验证 [T4-3]
+[2026-09-29 10:22:20] [1790648540628] [T4-3] === T4 冻结下迟到投递验证 [T4-3] start ===
+[2026-09-29 10:22:21] [1790648541369] [T4-3] AlarmActivity detected on top, sending BACK to dismiss...
+[2026-09-29 10:22:23] [1790648543633] [T4-3] AlarmActivity detected on top, sending BACK to dismiss...
+[2026-09-29 10:22:24] [1790648544809] [T4-3] Tapping #setupTestStart at css=(59.2, 522.2) -> phys=(177, 1686)
+[2026-09-29 10:22:26] [1790648546154] [T4-3] AlarmActivity detected on top, sending BACK to dismiss...
+[2026-09-29 10:22:27] [1790648547344] [T4-3] Tapping #setupTestStop at css=(214.8, 522.2) -> phys=(644, 1686)
+[2026-09-29 10:22:38] [1790648558624] [T4-3-prep] Tswitch=1790648558580 tapping 智能控制后台耗电 at (306, 743)
+[2026-09-29 10:22:43] [1790648563291] [T4-3-prep] after mode: 智能控制后台耗电 (expected: 智能控制后台耗电)
+[2026-09-29 10:22:45] [1790648565988] [T4-3] Switched to 智能控制后台耗电: checked=智能控制后台耗电
+[2026-09-29 10:22:46] [1790648566632] [T4-3] AlarmActivity detected on top, sending BACK to dismiss...
+[2026-09-29 10:22:48] [1790648568883] [T4-3] AlarmActivity detected on top, sending BACK to dismiss...
+[2026-09-29 10:22:50] [1790648570817] [T4-3] Tapping #sheetSetup .icon-btn at css=(322.0, 2.9) -> phys=(966, 128)
+[2026-09-29 10:22:53] [1790648573599] [T4-3] Home card before test: exists=True, text='还差 1 步，提醒才能准时响
+下一步：允许完全后台运行 (防冻结)
+›'
+[2026-09-29 10:22:54] [1790648574321] [T4-3] AlarmActivity detected on top, sending BACK to dismiss...
+[2026-09-29 10:22:55] [1790648575463] [T4-3] Tapping #setupEntry at css=(180.0, 227.7) -> phys=(540, 803)
+[2026-09-29 10:22:57] [1790648577824] [T4-3] AlarmActivity detected on top, sending BACK to dismiss...
+[2026-09-29 10:23:00] [1790648580011] [T4-3] AlarmActivity detected on top, sending BACK to dismiss...
+[2026-09-29 10:23:01] [1790648581147] [T4-3] Tapping #setupTestStart at css=(59.2, 522.2) -> phys=(177, 1686)
+[2026-09-29 10:23:02] [1790648582462] [T4-3] Test started: t_start=1790648581878, triggerAt=1790648641244
+[2026-09-29 10:23:02] [1790648582522] [T4-3] Locking screen within 10s...
+[2026-09-29 10:23:04] [1790648584676] [T4-3] Pre-trigger lock check: mWakefulness=Asleep, keyguard=True, focus=mCurrentFocus=Window{com.android.systemui:f9294bb u0 NotificationShade type=2040 }
+[2026-09-29 10:23:04] [1790648584742] [T4-3] Sleeping until target_wake_time=1790648821244 (+180s after triggerAt)...
+[2026-09-29 10:27:02] [1790648822770] [T4-3] Wait completed (+3m after triggerAt). Deliver during sleep: 09-29 10:25:35.034 15858 15858 I AttentionAlarm: deliver path=fsi+direct fullScreen=true screenOn=false locked=true inCall=false canDrawOverlays=true
+[2026-09-29 10:27:02] [1790648822831] [T4-3] am_app_frozen during sleep count: 2
+[2026-09-29 10:27:02] [1790648822876] [T4-3]   Frozen log: 09-29 10:22:35.337  1737  2108 I am_app_frozen: [0,10285,space.alliswell.inbox,from fast_freezer]
+[2026-09-29 10:27:02] [1790648822920] [T4-3]   Frozen log: 09-29 10:23:08.249  1737  2108 I am_app_frozen: [0,10285,space.alliswell.inbox,from fast_freezer]
+[2026-09-29 10:27:03] [1790648823021] [T4-3] Waking up device at t_wake=1790648822975...
+[2026-09-29 10:27:04] [1790648824938] [T4-3] AlarmActivity detected on top, sending BACK to dismiss...
+[2026-09-29 10:27:08] [1790648828385] [T4-3] AlarmActivity detected on top, sending BACK to dismiss...
+[2026-09-29 10:27:09] [1790648829525] [T4-3] Final deliver line: 09-29 10:25:35.034 15858 15858 I AttentionAlarm: deliver path=fsi+direct fullScreen=true screenOn=false locked=true inCall=false canDrawOverlays=true
+[2026-09-29 10:27:09] [1790648829566] [T4-3] am_app_unfrozen count: 2
+[2026-09-29 10:27:09] [1790648829600] [T4-3]   Unfrozen log: 09-29 10:22:44.406  1737  2108 I am_app_unfrozen: [0,10285,space.alliswell.inbox,resume top activity]
+[2026-09-29 10:27:09] [1790648829634] [T4-3]   Unfrozen log: 09-29 10:25:34.952  1737  2108 I am_app_unfrozen: [0,10285,space.alliswell.inbox,resume top activity]
+[2026-09-29 10:27:10] [1790648830325] [T4-3] AlarmActivity detected on top, sending BACK to dismiss...
+[2026-09-29 10:27:14] [1790648834361] [T4-3] Evidence text: {'t': 1790648831752, 'sheetOpen': True, 'activeTab': 'home', 'homeCardText': '', 'homeCardExists': False, 'toastText': None, 'evidenceText': '系统侧：已排 0 条闹钟 · 通知可用 · 精确排程可用\n本次测试：今天 10:23 开始 · 计划 今天 10:24\n本次测试投递：[object Object]\n你的反馈：还没有你的反馈（未回答不等于失败）（这是上一次的回答，本次还没有）', 'btnStartText': '再测一次', 'activeFeedbackChips': [], 'testRun': {'id': 90003, 'startedAt': 1790648581224, 'triggerAt': 1790648641244, 'stoppedAt': None, 'seenAt': 1790648823887, 'feedbackAt': None}, 'testFeedback': {'value': 'unsure', 'at': 1790647428714}, 'testStep': {'id': 'test', 'done': True, 'verified': True, 'title': '60 秒测试已有结果', 'why': '确认这台设备上声音、屏幕、通知各自落在哪里。', 'denyImpact': '跳过也能用，只是不知道实际效果。', 'action': '再测一次'}, 'bgStep': {'id': 'background', 'essential': True, 'done': True, 'verified': False, 'homeDone': True, 'title': '允许完全后台运行 (防冻结)', 'why': '部分 Android 厂商可能限制长时间后台运行；实际效果取决于系统设置，并需通过锁屏测试确认。', 'denyImpact': '拒绝或跳过可能导致熄屏较长时间后提醒延迟；是否生效以本机测试为准。', 'action': '去设置'}}
+[2026-09-29 10:27:14] [1790648834417] [T4-3] seenAt: None
+[2026-09-29 10:27:14] [1790648834467] [T4-3] Step status: {"t": 1790648832168, "sheetOpen": true, "activeTab": "home", "homeCardText": "", "homeCardExists": false, "toastText": null, "evidenceText": "系统侧：已排 0 条闹钟 · 通知可用 · 精确排程可用\n本次测试：今天 10:23 开始 · 计划 今天 10:24\n本次测试投递：[object Object]\n你的反馈：还没有你的反馈（未回答不等于失败）（这是上一次的回答，本次还没有）", "btnStartText": "再测一次", "activeFeedbackChips": [], "testRun": {"id": 90003, "startedAt": 1790648581224, "triggerAt": 1790648641244, "stoppedAt": null, "seenAt": 1790648823887, "feedbackAt": null}, "testFeedback": {"value": "unsure", "at": 1790647428714}, "testStep": {"id": "test", "done": true, "verified": true, "title": "60 秒测试已有结果", "why": "确认这台设备上声音、屏幕、通知各自落在哪里。", "denyImpact": "跳过也能用，只是不知道实际效果。", "action": "再测一次"}, "bgStep": {"id": "background", "essential": true, "done": true, "verified": false, "homeDone": true, "title": "允许完全后台运行 (防冻结)", "why": "部分 Android 厂商可能限制长时间后台运行；实际效果取决于系统设置，并需通过锁屏测试确认。", "denyImpact": "拒绝或跳过可能导致熄屏较长时间后提醒延迟；是否生效以本机测试为准。", "action": "去设置"}}
+[2026-09-29 10:27:15] [1790648835596] [T4-3] AlarmActivity detected on top, sending BACK to dismiss...
+[2026-09-29 10:27:17] [1790648837838] [T4-3] AlarmActivity detected on top, sending BACK to dismiss...
+[2026-09-29 10:30:12] [1790649012712] [MAIN] === 60s 测试完整真机验证继续（断点续跑） ===
+[2026-09-29 10:30:12] [1790649012774] [MAIN] >>> 载入已完成的 T4-1 与 T4-2 结果
+[2026-09-29 10:30:12] [1790649012818] [MAIN] >>> T4 完成，恢复后台耗电管理为「允许后台耗电」
+[2026-09-29 10:30:22] [1790649022222] [RESTORE-FINAL] Tswitch=1790649022173 tapping 允许后台耗电 at (306, 988)
+[2026-09-29 10:30:26] [1790649026858] [RESTORE-FINAL] after mode: 允许后台耗电 (expected: 允许后台耗电)
+[2026-09-29 10:30:29] [1790649029480] [MAIN] >>> 开始场景 T5 应用退到后台再锁屏 (2 次)
+[2026-09-29 10:30:29] [1790649029542] [T5-1] === T5 退到后台再锁屏投递 [T5-1] start ===
+[2026-09-29 10:30:30] [1790649030232] [T5-1] AlarmActivity detected on top, sending BACK to dismiss...
+[2026-09-29 10:30:32] [1790649032443] [T5-1] AlarmActivity detected on top, sending BACK to dismiss...
+[2026-09-29 10:30:33] [1790649033595] [T5-1] Tapping #setupTestStart at css=(59.2, 522.2) -> phys=(177, 1686)
+[2026-09-29 10:30:34] [1790649034910] [T5-1] Test started: triggerAt=1790649093692
+[2026-09-29 10:30:34] [1790649034966] [T5-1] Pressing HOME key then SLEEP key within 10s...
+[2026-09-29 10:30:38] [1790649038106] [T5-1] Pre-trigger lock check: mWakefulness=Asleep, keyguard=True, focus=mCurrentFocus=Window{com.android.systemui:f9294bb u0 NotificationShade type=2040 }
+[2026-09-29 10:30:38] [1790649038163] [T5-1] Waiting for alarm delivery at ~1790649093692...
+[2026-09-29 10:31:34] [1790649094085] [T5-1] Deliver check result: found=True, line='09-29 10:31:33.949 15858 15858 I AttentionAlarm: deliver path=fsi+direct fullScreen=true screenOn=false locked=true inCall=false canDrawOverlays=true'
+[2026-09-29 10:31:34] [1790649094710] [T5-1] Post-deliver status: mWakefulness=Asleep, keyguard=True, focus=mCurrentFocus=Window{com.android.systemui:f9294bb u0 NotificationShade type=2040 }
+[2026-09-29 10:31:34] [1790649094836] [T5-1] AlarmRingService active: True
+[2026-09-29 10:31:36] [1790649096982] [T5-1] AlarmActivity detected on top, sending BACK to dismiss...
+[2026-09-29 10:31:39] [1790649099938] [T5-1] AlarmActivity detected on top, sending BACK to dismiss...
+[2026-09-29 10:31:41] [1790649101707] [T5-1] AlarmActivity detected on top, sending BACK to dismiss...
+[2026-09-29 10:31:45] [1790649105612] [T5-1] Evidence text: 系统侧：已排 0 条闹钟 · 通知可用 · 精确排程可用
+本次测试：今天 10:30 开始 · 计划 今天 10:31
+本次测试投递：[object Object]
+你的反馈：还没有你的反馈（未回答不等于失败）（这是上一次的回答，本次还没有）
+[2026-09-29 10:31:45] [1790649105677] [T5-1] seenAt: 1790649098327, btnText: 再测一次, testStep: {"id": "test", "done": true, "verified": true, "title": "60 秒测试已有结果", "why": "确认这台设备上声音、屏幕、通知各自落在哪里。", "denyImpact": "跳过也能用，只是不知道实际效果。", "action": "再测一次"}
+[2026-09-29 10:31:46] [1790649106379] [T5-1] AlarmActivity detected on top, sending BACK to dismiss...
+[2026-09-29 10:31:47] [1790649107530] [T5-1] Tapping #setupTestStop at css=(178.6, 522.2) -> phys=(535, 1686)
+[2026-09-29 10:31:49] [1790649109374] [T5-1] === T5 退到后台再锁屏投递 [T5-1] end ===
+[2026-09-29 10:31:51] [1790649111441] [T5-2] === T5 退到后台再锁屏投递 [T5-2] start ===
+[2026-09-29 10:31:52] [1790649112123] [T5-2] AlarmActivity detected on top, sending BACK to dismiss...
+[2026-09-29 10:31:54] [1790649114335] [T5-2] AlarmActivity detected on top, sending BACK to dismiss...
+[2026-09-29 10:31:55] [1790649115482] [T5-2] Tapping #setupTestStart at css=(59.2, 606.6) -> phys=(177, 1939)
+[2026-09-29 10:31:56] [1790649116819] [T5-2] Test started: triggerAt=1790649175604
+[2026-09-29 10:31:56] [1790649116886] [T5-2] Pressing HOME key then SLEEP key within 10s...
+[2026-09-29 10:31:59] [1790649119970] [T5-2] Pre-trigger lock check: mWakefulness=Asleep, keyguard=True, focus=mCurrentFocus=Window{com.android.systemui:f9294bb u0 NotificationShade type=2040 }
+[2026-09-29 10:32:00] [1790649120025] [T5-2] Waiting for alarm delivery at ~1790649175604...
+[2026-09-29 10:32:56] [1790649176659] [T5-2] Deliver check result: found=True, line='09-29 10:32:55.781 15858 15858 I AttentionAlarm: deliver path=fsi+direct fullScreen=true screenOn=false locked=true inCall=false canDrawOverlays=true'
+[2026-09-29 10:32:57] [1790649177138] [T5-2] Post-deliver status: mWakefulness=Awake, keyguard=True, focus=mCurrentFocus=Window{com.android.systemui:f9294bb u0 NotificationShade type=2040 }
+[2026-09-29 10:32:57] [1790649177239] [T5-2] AlarmRingService active: True
+[2026-09-29 10:32:59] [1790649179062] [T5-2] AlarmActivity detected on top, sending BACK to dismiss...
+[2026-09-29 10:33:02] [1790649182120] [T5-2] AlarmActivity detected on top, sending BACK to dismiss...
+[2026-09-29 10:33:03] [1790649183934] [T5-2] AlarmActivity detected on top, sending BACK to dismiss...
+[2026-09-29 10:33:07] [1790649187850] [T5-2] Evidence text: 系统侧：已排 0 条闹钟 · 通知可用 · 精确排程可用
+本次测试：今天 10:31 开始 · 计划 今天 10:32
+本次测试投递：[object Object]
+你的反馈：还没有你的反馈（未回答不等于失败）（这是上一次的回答，本次还没有）
+[2026-09-29 10:33:07] [1790649187913] [T5-2] seenAt: 1790649179415, btnText: 再测一次, testStep: {"id": "test", "done": true, "verified": true, "title": "60 秒测试已有结果", "why": "确认这台设备上声音、屏幕、通知各自落在哪里。", "denyImpact": "跳过也能用，只是不知道实际效果。", "action": "再测一次"}
+[2026-09-29 10:33:08] [1790649188704] [T5-2] AlarmActivity detected on top, sending BACK to dismiss...
+[2026-09-29 10:33:09] [1790649189870] [T5-2] Tapping #setupTestStop at css=(178.6, 606.6) -> phys=(535, 1939)
+[2026-09-29 10:33:11] [1790649191709] [T5-2] === T5 退到后台再锁屏投递 [T5-2] end ===
+[2026-09-29 10:33:13] [1790649193787] [MAIN] >>> 开始测后恢复与完整性校验
+[2026-09-29 10:33:13] [1790649193908] [MAIN] Final whitelist check: True
+[2026-09-29 10:33:13] [1790649193960] [MAIN] Final items count: 11
+[2026-09-29 10:33:14] [1790649194001] [MAIN] Items match baseline exactly: True
+[2026-09-29 10:33:14] [1790649194167] [MAIN] Final user alarms count: 2
+[2026-09-29 10:33:14] [1790649194231] [MAIN] === 60s 测试完整真机验证成功完成 ===

@@ -1,0 +1,35 @@
+[2026-09-29 10:03:55] [1790647435320] [T4-1] === T4 冻结下迟到投递验证 [T4-1] start ===
+[2026-09-29 10:03:56] [1790647436758] [T4-1] Tapping #setupTestStart at css=(59.2, 362.9) -> phys=(177, 1208)
+[2026-09-29 10:03:57] [1790647437904] [T4-1] Tapping #setupTestStop at css=(214.8, 362.9) -> phys=(644, 1208)
+[2026-09-29 10:04:16] [1790647456193] [T4-1] Switched to 智能控制后台耗电: checked=None
+[2026-09-29 10:04:17] [1790647457629] [T4-1] Tapping #sheetSetup .icon-btn at css=(322.0, 120.2) -> phys=(966, 480)
+[2026-09-29 10:04:19] [1790647459702] [T4-1] Tapping [data-tab="home"] at css=(51.0, 702.1) -> phys=(153, 2226)
+[2026-09-29 10:04:22] [1790647462585] [T4-1] Home card before test: exists=False, text=''
+[2026-09-29 10:04:25] [1790647465330] [T4-1] Tapping [data-tab="home"] at css=(51.0, 702.1) -> phys=(153, 2226)
+[2026-09-29 10:04:27] [1790647467345] [T4-1] Tapping [data-tab="me"] at css=(309.0, 702.1) -> phys=(927, 2226)
+[2026-09-29 10:04:28] [1790647468597] [T4-1] Tapping #btnSetup at css=(180.0, 414.6) -> phys=(540, 1363)
+[2026-09-29 10:04:32] [1790647472712] [T4-1] Tapping #setupTestStart at css=(59.2, 362.9) -> phys=(177, 1208)
+[2026-09-29 10:04:34] [1790647474018] [T4-1] Test started: t_start=1790647473438, triggerAt=1790647532793
+[2026-09-29 10:04:34] [1790647474081] [T4-1] Locking screen within 10s...
+[2026-09-29 10:04:36] [1790647476283] [T4-1] Pre-trigger lock check: mWakefulness=Asleep, keyguard=True, focus=mCurrentFocus=Window{com.android.systemui:f9294bb u0 NotificationShade type=2040 }
+[2026-09-29 10:04:36] [1790647476333] [T4-1] Sleeping until target_wake_time=1790647712793 (+180s after triggerAt)...
+[2026-09-29 10:08:34] [1790647714399] [T4-1] Wait completed (+3m after triggerAt). Deliver during sleep: 09-29 10:05:32.988 15858 15858 I AttentionAlarm: deliver path=fsi+direct fullScreen=true screenOn=false locked=true inCall=false canDrawOverlays=true
+[2026-09-29 10:08:34] [1790647714457] [T4-1] am_app_frozen during sleep count: 0
+[2026-09-29 10:08:34] [1790647714573] [T4-1] Waking up device at t_wake=1790647714518...
+[2026-09-29 10:08:37] [1790647717369] [T4-1] Final deliver line: 09-29 10:05:32.988 15858 15858 I AttentionAlarm: deliver path=fsi+direct fullScreen=true screenOn=false locked=true inCall=false canDrawOverlays=true
+[2026-09-29 10:08:37] [1790647717426] [T4-1] am_app_unfrozen count: 0
+[2026-09-29 10:08:40] [1790647720873] [T4-1] Evidence text: 系统侧：已排 0 条闹钟 · 通知可用 · 精确排程可用
+本次测试：今天 10:04 开始 · 计划 今天 10:05
+本次测试投递：[object Object]
+你的反馈：还没有你的反馈（未回答不等于失败）（这是上一次的回答，本次还没有）
+[2026-09-29 10:08:40] [1790647720930] [T4-1] seenAt: 1790647533932
+[2026-09-29 10:08:40] [1790647720979] [T4-1] Step status: {"testStep": {"id": "test", "done": true, "verified": true, "title": "60 秒测试已有结果", "why": "确认这台设备上声音、屏幕、通知各自落在哪里。", "denyImpact": "跳过也能用，只是不知道实际效果。", "action": "再测一次"}, "bgStep": {"id": "background", "essential": true, "done": true, "verified": true, "homeDone": true, "title": "允许完全后台运行 (防冻结)", "why": "部分 Android 厂商可能限制长时间后台运行；实际效果取决于系统设置，并需通过锁屏测试确认。", "denyImpact": "拒绝或跳过可能导致熄屏较长时间后提醒延迟；是否生效以本机测试为准。", "action": "去设置"}}
+[2026-09-29 10:08:43] [1790647723672] [T4-1] Tapping #sheetSetup .icon-btn at css=(322.0, 37.9) -> phys=(966, 233)
+[2026-09-29 10:08:44] [1790647724927] [T4-1] Tapping [data-tab="home"] at css=(51.0, 619.8) -> phys=(153, 1979)
+[2026-09-29 10:08:47] [1790647727292] [T4-1] Home card after test: exists=False, cardDismissed=False, text=''
+[2026-09-29 10:08:47] [1790647727877] [T4-1] VERDICT: PASS (is_late=False, delay_ms=1139, card_cleared=True)
+[2026-09-29 10:08:49] [1790647729310] [T4-1] Tapping [data-tab="home"] at css=(51.0, 617.8) -> phys=(153, 1973)
+[2026-09-29 10:08:50] [1790647730555] [T4-1] Tapping [data-tab="me"] at css=(309.0, 584.8) -> phys=(927, 1874)
+[2026-09-29 10:08:51] [1790647731803] [T4-1] Tapping #btnSetup at css=(180.0, 530.4) -> phys=(540, 1711)
+[2026-09-29 10:08:53] [1790647733547] [T4-1] Tapping #setupTestStop at css=(178.6, 524.2) -> phys=(535, 1692)
+[2026-09-29 10:08:55] [1790647735214] [T4-1] === T4 冻结下迟到投递验证 [T4-1] end ===

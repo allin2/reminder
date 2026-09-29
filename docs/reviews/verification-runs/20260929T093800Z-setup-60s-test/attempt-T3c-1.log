@@ -1,0 +1,19 @@
+[2026-09-29 09:52:40] [1790646760755] [T3c-1] === T3c 四个反馈按钮与新测试重置 [T3c-1] start ===
+[2026-09-29 09:52:42] [1790646762168] [T3c-1] Tapping #setupTestFeedback [data-testfb="heard"] at css=(59.2, 728.4) -> phys=(177, 2305)
+[2026-09-29 10:03:18] [1790647398152] [T3c-1] === T3c 四个反馈按钮与新测试重置 [T3c-1] start ===
+[2026-09-29 10:03:19] [1790647399570] [T3c-1] Tapping #setupTestFeedback [data-testfb="heard"] at css=(59.2, 484.8) -> phys=(177, 1574)
+[2026-09-29 10:03:20] [1790647400962] [T3c-1] Feedback 'heard': activeChip=heard, toast='这次听到了', testFeedback={"value": "heard", "at": 1790647399664}
+[2026-09-29 10:03:21] [1790647401018] [T3c-1] Tapping #setupTestFeedback [data-testfb="seen"] at css=(145.7, 484.8) -> phys=(437, 1574)
+[2026-09-29 10:03:22] [1790647402370] [T3c-1] Feedback 'seen': activeChip=seen, toast='这次看到了', testFeedback={"value": "seen", "at": 1790647401076}
+[2026-09-29 10:03:22] [1790647402445] [T3c-1] Tapping #setupTestFeedback [data-testfb="missed"] at css=(225.6, 484.8) -> phys=(676, 1574)
+[2026-09-29 10:03:23] [1790647403840] [T3c-1] Feedback 'missed': activeChip=missed, toast='这次没有收到 · 按下面步骤再看一次', testFeedback={"value": "missed", "at": 1790647402543}
+[2026-09-29 10:03:23] [1790647403906] [T3c-1] Tapping #setupTestFeedback [data-testfb="unsure"] at css=(299.0, 484.8) -> phys=(896, 1574)
+[2026-09-29 10:03:25] [1790647405281] [T3c-1] Feedback 'unsure': activeChip=unsure, toast='这次结果不确定 · 不算失败，可以再测一次', testFeedback={"value": "unsure", "at": 1790647403996}
+[2026-09-29 10:03:25] [1790647405328] [T3c-1] Tapping #setupTestStart at css=(59.2, 362.9) -> phys=(177, 1208)
+[2026-09-29 10:03:26] [1790647406890] [T3c-1] New test started: activeChips=[] (should be []), hasStaleNotice=True
+[2026-09-29 10:03:26] [1790647406934] [T3c-1] Evidence text: 系统侧：已排 0 条闹钟 · 通知可用 · 精确排程可用
+本次测试：今天 10:03 开始 · 计划 今天 10:04
+本次测试投递：还没有记录（没记录不等于没响；上一次的结果不计入本次）
+你的反馈：还没有你的反馈（未回答不等于失败）（这是上一次的回答，本次还没有）
+[2026-09-29 10:03:27] [1790647407536] [T3c-1] Tapping #setupTestStop at css=(214.8, 362.9) -> phys=(644, 1208)
+[2026-09-29 10:03:28] [1790647408970] [T3c-1] === T3c 四个反馈按钮与新测试重置 [T3c-1] end ===

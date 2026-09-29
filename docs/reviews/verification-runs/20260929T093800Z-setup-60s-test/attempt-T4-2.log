@@ -1,0 +1,31 @@
+[2026-09-29 10:08:57] [1790647737292] [T4-2] === T4 冻结下迟到投递验证 [T4-2] start ===
+[2026-09-29 10:08:58] [1790647738698] [T4-2] Tapping #setupTestStart at css=(59.2, 606.6) -> phys=(177, 1939)
+[2026-09-29 10:08:59] [1790647739856] [T4-2] Tapping #setupTestStop at css=(214.8, 606.6) -> phys=(644, 1939)
+[2026-09-29 10:09:18] [1790647758138] [T4-2] Switched to 智能控制后台耗电: checked=智能控制后台耗电
+[2026-09-29 10:09:19] [1790647759611] [T4-2] Tapping #sheetSetup .icon-btn at css=(322.0, 120.2) -> phys=(966, 480)
+[2026-09-29 10:09:21] [1790647761662] [T4-2] Tapping [data-tab="home"] at css=(51.0, 702.1) -> phys=(153, 2226)
+[2026-09-29 10:09:24] [1790647764541] [T4-2] Home card before test: exists=True, text='还差 1 步，提醒才能准时响
+下一步：允许完全后台运行 (防冻结)
+›'
+[2026-09-29 10:09:25] [1790647765935] [T4-2] Tapping #setupEntry at css=(180.0, 158.3) -> phys=(540, 594)
+[2026-09-29 10:09:29] [1790647769100] [T4-2] Tapping #setupTestStart at css=(59.2, 606.6) -> phys=(177, 1939)
+[2026-09-29 10:09:30] [1790647770431] [T4-2] Test started: t_start=1790647769857, triggerAt=1790647829207
+[2026-09-29 10:09:30] [1790647770485] [T4-2] Locking screen within 10s...
+[2026-09-29 10:09:32] [1790647772677] [T4-2] Pre-trigger lock check: mWakefulness=Asleep, keyguard=True, focus=mCurrentFocus=Window{com.android.systemui:f9294bb u0 NotificationShade type=2040 }
+[2026-09-29 10:09:32] [1790647772734] [T4-2] Sleeping until target_wake_time=1790648009207 (+180s after triggerAt)...
+[2026-09-29 10:13:30] [1790648010456] [T4-2] Wait completed (+3m after triggerAt). Deliver during sleep: None
+[2026-09-29 10:13:30] [1790648010511] [T4-2] am_app_frozen during sleep count: 1
+[2026-09-29 10:13:30] [1790648010569] [T4-2]   Frozen log: 09-29 10:09:36.170  1737  2108 I am_app_frozen: [0,10285,space.alliswell.inbox,from fast_freezer]
+[2026-09-29 10:13:30] [1790648010664] [T4-2] Waking up device at t_wake=1790648010617...
+[2026-09-29 10:13:33] [1790648013467] [T4-2] Final deliver line: 09-29 10:13:31.187 15858 15858 I AttentionAlarm: deliver path=fsi+direct fullScreen=true screenOn=true locked=true inCall=false canDrawOverlays=true
+[2026-09-29 10:13:33] [1790648013509] [T4-2] am_app_unfrozen count: 1
+[2026-09-29 10:13:33] [1790648013546] [T4-2]   Unfrozen log: 09-29 10:13:30.961  1737  2108 I am_app_unfrozen: [0,10285,space.alliswell.inbox,screen on]
+[2026-09-29 10:13:34] [1790648014000] [T4-2] Evidence text: 系统侧：已排 0 条闹钟 · 通知可用 · 精确排程可用
+本次测试：今天 10:09 开始 · 计划 今天 10:10
+本次测试投递：[object Object]
+你的反馈：还没有你的反馈（未回答不等于失败）（这是上一次的回答，本次还没有）
+[2026-09-29 10:13:34] [1790648014050] [T4-2] seenAt: 1790648011524
+[2026-09-29 10:13:34] [1790648014100] [T4-2] Step status: {"testStep": {"id": "test", "done": true, "verified": true, "title": "60 秒测试已有结果", "why": "确认这台设备上声音、屏幕、通知各自落在哪里。", "denyImpact": "跳过也能用，只是不知道实际效果。", "action": "再测一次"}, "bgStep": {"id": "background", "essential": true, "done": true, "verified": true, "homeDone": true, "title": "允许完全后台运行 (防冻结)", "why": "部分 Android 厂商可能限制长时间后台运行；实际效果取决于系统设置，并需通过锁屏测试确认。", "denyImpact": "拒绝或跳过可能导致熄屏较长时间后提醒延迟；是否生效以本机测试为准。", "action": "去设置"}}
+[2026-09-29 10:13:35] [1790648015000] [T4-2] Home card after test: exists=False, cardDismissed=True, text=''
+[2026-09-29 10:13:35] [1790648015100] [T4-2] VERDICT: FAIL (is_late=True, delay_ms=182317, card_cleared=True)
+[2026-09-29 10:13:35] [1790648015200] [T4-2] === T4 冻结下迟到投递验证 [T4-2] end ===

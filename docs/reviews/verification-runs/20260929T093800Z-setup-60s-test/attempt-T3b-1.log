@@ -1,0 +1,18 @@
+[2026-09-29 09:52:13] [1790646733812] [T3b-1] === T3b 未到点时停止 [T3b-1] start ===
+[2026-09-29 09:52:15] [1790646735239] [T3b-1] Tapping #setupTestStart at css=(59.2, 606.6) -> phys=(177, 1939)
+[2026-09-29 09:52:17] [1790646737177] [T3b-1] dumpsys alarm 90003 before stop: RTC_WAKEUP #11: Alarm{bc49f22 type 0 origWhen 1790646795341 flags 3 windowLength 0 whenElapsed 868851508 maxWhenElapsed 868851508 repeatInterval 0 tag=*walarm*:space.alliswell.inbox.ACTION_TEST_ALARM originWhenElapsed 868851508 originWindowLength 0 setAtTime=2026-09-29 01:52:15 policyWhenElapsed:[868851508, 868791515, 0, 0, 0] procName=space.alliswell.inbox space.alliswell.inbox}
+[2026-09-29 09:52:18] [1790646738760] [T3b-1] Tapping #setupTestStop at css=(214.8, 606.6) -> phys=(644, 1939)
+[2026-09-29 09:52:20] [1790646740293] [T3b-1] Toast text: 没有正在响的测试铃声 · 已取消未触发的测试
+[2026-09-29 09:52:20] [1790646740474] [T3b-1] dumpsys alarm 90003 after stop: None
+[2026-09-29 09:52:20] [1790646740543] [T3b-1] Other alarms count before=25, after=14, unchanged=False
+[2026-09-29 09:52:20] [1790646740599] [T3b-1] testRun.stoppedAt: 1790646738883
+[2026-09-29 09:52:21] [1790646741263] [T3b-1] === T3b 未到点时停止 [T3b-1] end ===
+[2026-09-29 10:02:51] [1790647371023] [T3b-1] === T3b 未到点时停止 [T3b-1] start ===
+[2026-09-29 10:02:52] [1790647372420] [T3b-1] Tapping #setupTestStart at css=(59.2, 362.9) -> phys=(177, 1208)
+[2026-09-29 10:02:54] [1790647374339] [T3b-1] dumpsys alarm 90003 before stop: RTC_WAKEUP #12: Alarm{8a3d44e type 0 origWhen 1790647432523 flags 3 windowLength 0 whenElapsed 869488690 maxWhenElapsed 869488690 repeatInterval 0 tag=*walarm*:space.alliswell.inbox.ACTION_TEST_ALARM originWhenElapsed 869488690 originWindowLength 0 setAtTime=2026-09-29 02:02:52 policyWhenElapsed:[869488690, 869428692, 0, 0, 0] procName=space.alliswell.inbox space.alliswell.inbox}
+[2026-09-29 10:02:55] [1790647375911] [T3b-1] Tapping #setupTestStop at css=(214.8, 362.9) -> phys=(644, 1208)
+[2026-09-29 10:02:57] [1790647377479] [T3b-1] Toast text: 没有正在响的测试铃声 · 已取消未触发的测试
+[2026-09-29 10:02:57] [1790647377650] [T3b-1] dumpsys alarm 90003 after stop: None
+[2026-09-29 10:02:57] [1790647377694] [T3b-1] User alarms count before=4, after=2, unchanged=False
+[2026-09-29 10:02:57] [1790647377753] [T3b-1] testRun.stoppedAt: 1790647376052
+[2026-09-29 10:02:58] [1790647378465] [T3b-1] === T3b 未到点时停止 [T3b-1] end ===

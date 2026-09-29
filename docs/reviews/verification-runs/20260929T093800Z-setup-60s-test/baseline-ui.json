@@ -1,0 +1,11 @@
+{
+ "homeSetup": {
+  "exists": true,
+  "isEmpty": true,
+  "text": ""
+ },
+ "sheetSetup": {
+  "exists": true,
+  "open": false
+ }
+}

@@ -1,0 +1,274 @@
+{
+  "runId": "20260929T093800Z-setup-60s-test",
+  "device": "vivo V2238A",
+  "serial": "10ACBF2D3D000RS",
+  "package": "space.alliswell.inbox",
+  "results": {
+    "T1": [
+      {
+        "tag": "T1-1",
+        "toast": "已排 60 秒测试 · 可以锁屏了",
+        "testRun": {
+          "id": 90003,
+          "startedAt": 1790646909330,
+          "triggerAt": 1790646969346,
+          "stoppedAt": null,
+          "seenAt": null,
+          "feedbackAt": null
+        },
+        "origWhen": 1790646969346,
+        "triggerDiffMs": 0,
+        "alarmCancelled": true
+      },
+      {
+        "tag": "T1-2",
+        "toast": "已排 60 秒测试 · 可以锁屏了",
+        "testRun": {
+          "id": 90003,
+          "startedAt": 1790646917113,
+          "triggerAt": 1790646977131,
+          "stoppedAt": null,
+          "seenAt": null,
+          "feedbackAt": null
+        },
+        "origWhen": 1790646977131,
+        "triggerDiffMs": 0,
+        "alarmCancelled": true
+      },
+      {
+        "tag": "T1-3",
+        "toast": "已排 60 秒测试 · 可以锁屏了",
+        "testRun": {
+          "id": 90003,
+          "startedAt": 1790646924980,
+          "triggerAt": 1790646985000,
+          "stoppedAt": null,
+          "seenAt": null,
+          "feedbackAt": null
+        },
+        "origWhen": 1790646985000,
+        "triggerDiffMs": 0,
+        "alarmCancelled": true
+      }
+    ],
+    "T2": [
+      {
+        "tag": "T2-1",
+        "triggerAt": 1790646992943,
+        "deliverLine": "09-29 09:56:33.165 15858 15858 I AttentionAlarm: deliver path=fsi+direct fullScreen=true screenOn=false locked=true inCall=false canDrawOverlays=true",
+        "wakefulnessBefore": "Asleep",
+        "wakefulnessAfter": "Asleep",
+        "keyguardBefore": true,
+        "keyguardAfter": true,
+        "hasRingService": true,
+        "vibrateRunning": true,
+        "seenAt": 1790646993921
+      },
+      {
+        "tag": "T2-2",
+        "triggerAt": 1790647066578,
+        "deliverLine": "09-29 09:57:46.790 15858 15858 I AttentionAlarm: deliver path=fsi+direct fullScreen=true screenOn=false locked=true inCall=false canDrawOverlays=true",
+        "wakefulnessBefore": "Asleep",
+        "wakefulnessAfter": "Asleep",
+        "keyguardBefore": true,
+        "keyguardAfter": true,
+        "hasRingService": true,
+        "vibrateRunning": true,
+        "seenAt": 1790647067558
+      },
+      {
+        "tag": "T2-3",
+        "triggerAt": 1790647139994,
+        "deliverLine": "09-29 09:59:00.199 15858 15858 I AttentionAlarm: deliver path=fsi+direct fullScreen=true screenOn=false locked=true inCall=false canDrawOverlays=true",
+        "wakefulnessBefore": "Asleep",
+        "wakefulnessAfter": "Asleep",
+        "keyguardBefore": true,
+        "keyguardAfter": true,
+        "hasRingService": true,
+        "vibrateRunning": true,
+        "seenAt": 1790647140971
+      }
+    ],
+    "T3a": [
+      {
+        "tag": "T3a-1",
+        "triggerAt": 1790647213583,
+        "deliverFound": true,
+        "toastText": "已停止本次测试的铃声",
+        "stoppedAt": 1790647220599
+      },
+      {
+        "tag": "T3a-2",
+        "triggerAt": 1790647286569,
+        "deliverFound": true,
+        "toastText": "已停止本次测试的铃声",
+        "stoppedAt": 1790647293734
+      },
+      {
+        "tag": "T3a-3",
+        "triggerAt": 1790647359621,
+        "deliverFound": true,
+        "toastText": "已停止本次测试的铃声",
+        "stoppedAt": 1790647366693
+      }
+    ],
+    "T3b": [
+      {
+        "tag": "T3b-1",
+        "origWhen": 1790647432523,
+        "stoppedAt": 1790647376052,
+        "toastText": "没有正在响的测试铃声 · 已取消未触发的测试",
+        "alarmCancelled": true
+      },
+      {
+        "tag": "T3b-2",
+        "origWhen": 1790647441619,
+        "stoppedAt": 1790647385119,
+        "toastText": "没有正在响的测试铃声 · 已取消未触发的测试",
+        "alarmCancelled": true
+      },
+      {
+        "tag": "T3b-3",
+        "origWhen": 1790647450621,
+        "stoppedAt": 1790647394145,
+        "toastText": "没有正在响的测试铃声 · 已取消未触发的测试",
+        "alarmCancelled": true
+      }
+    ],
+    "T3c": [
+      {
+        "tag": "T3c-1",
+        "chips": [
+          "heard",
+          "seen",
+          "missed",
+          "unsure"
+        ],
+        "newTestReset": true
+      },
+      {
+        "tag": "T3c-2",
+        "chips": [
+          "heard",
+          "seen",
+          "missed",
+          "unsure"
+        ],
+        "newTestReset": true
+      },
+      {
+        "tag": "T3c-3",
+        "chips": [
+          "heard",
+          "seen",
+          "missed",
+          "unsure"
+        ],
+        "newTestReset": true
+      }
+    ],
+    "T4": [
+      {
+        "tag": "T4-1",
+        "frozenCount": 0,
+        "unfrozenCount": 0,
+        "deliverDuringSleep": "09-29 10:05:32.988 15858 15858 I AttentionAlarm: deliver path=fsi+direct fullScreen=true screenOn=false locked=true inCall=false canDrawOverlays=true",
+        "deliverFinal": "09-29 10:05:32.988 15858 15858 I AttentionAlarm: deliver path=fsi+direct fullScreen=true screenOn=false locked=true inCall=false canDrawOverlays=true",
+        "triggerAt": 1790647532793,
+        "seenAt": 1790647533932,
+        "delayMs": 1139,
+        "isLate": false,
+        "cardBeforeExists": false,
+        "cardAfterExists": false,
+        "cardDismissed": false,
+        "verdict": "PASS"
+      },
+      {
+        "tag": "T4-2",
+        "frozenCount": 1,
+        "unfrozenCount": 1,
+        "frozenLogs": [
+          "09-29 10:09:36.170  1737  2108 I am_app_frozen: [0,10285,space.alliswell.inbox,from fast_freezer]"
+        ],
+        "unfrozenLogs": [
+          "09-29 10:13:30.961  1737  2108 I am_app_unfrozen: [0,10285,space.alliswell.inbox,screen on]"
+        ],
+        "deliverDuringSleep": null,
+        "deliverFinal": "09-29 10:13:31.187 15858 15858 I AttentionAlarm: deliver path=fsi+direct fullScreen=true screenOn=true locked=true inCall=false canDrawOverlays=true",
+        "triggerAt": 1790647829207,
+        "seenAt": 1790648011524,
+        "delayMs": 182317,
+        "isLate": true,
+        "cardBeforeExists": true,
+        "cardAfterExists": false,
+        "cardDismissed": true,
+        "verdict": "FAIL"
+      },
+      {
+        "tag": "T4-3",
+        "frozenCount": 2,
+        "unfrozenCount": 2,
+        "frozenLogs": [
+          "09-29 10:22:35.337  1737  2108 I am_app_frozen: [0,10285,space.alliswell.inbox,from fast_freezer]",
+          "09-29 10:23:08.249  1737  2108 I am_app_frozen: [0,10285,space.alliswell.inbox,from fast_freezer]"
+        ],
+        "unfrozenLogs": [
+          "09-29 10:22:44.406  1737  2108 I am_app_unfrozen: [0,10285,space.alliswell.inbox,resume top activity]",
+          "09-29 10:25:34.952  1737  2108 I am_app_unfrozen: [0,10285,space.alliswell.inbox,resume top activity]"
+        ],
+        "deliverDuringSleep": "09-29 10:25:35.034 15858 15858 I AttentionAlarm: deliver path=fsi+direct fullScreen=true screenOn=false locked=true inCall=false canDrawOverlays=true",
+        "deliverFinal": "09-29 10:25:35.034 15858 15858 I AttentionAlarm: deliver path=fsi+direct fullScreen=true screenOn=false locked=true inCall=false canDrawOverlays=true",
+        "triggerAt": 1790648641244,
+        "seenAt": 1790648823887,
+        "delayMs": 93790,
+        "isLate": true,
+        "cardBeforeExists": true,
+        "cardAfterExists": false,
+        "cardDismissed": true,
+        "verdict": "FAIL"
+      }
+    ],
+    "T5": [
+      {
+        "tag": "T5-1",
+        "triggerAt": 1790649093692,
+        "deliverLine": "09-29 10:31:33.949 15858 15858 I AttentionAlarm: deliver path=fsi+direct fullScreen=true screenOn=false locked=true inCall=false canDrawOverlays=true",
+        "wakefulnessAfterDeliver": "Asleep",
+        "hasRingService": true,
+        "seenAt": 1790649098327,
+        "btnText": "再测一次",
+        "testStep": {
+          "id": "test",
+          "done": true,
+          "verified": true,
+          "title": "60 秒测试已有结果",
+          "why": "确认这台设备上声音、屏幕、通知各自落在哪里。",
+          "denyImpact": "跳过也能用，只是不知道实际效果。",
+          "action": "再测一次"
+        },
+        "evidence": "系统侧：已排 0 条闹钟 · 通知可用 · 精确排程可用\n本次测试：今天 10:30 开始 · 计划 今天 10:31\n本次测试投递：[object Object]\n你的反馈：还没有你的反馈（未回答不等于失败）（这是上一次的回答，本次还没有）"
+      },
+      {
+        "tag": "T5-2",
+        "triggerAt": 1790649175604,
+        "deliverLine": "09-29 10:32:55.781 15858 15858 I AttentionAlarm: deliver path=fsi+direct fullScreen=true screenOn=false locked=true inCall=false canDrawOverlays=true",
+        "wakefulnessAfterDeliver": "Awake",
+        "hasRingService": true,
+        "seenAt": 1790649179415,
+        "btnText": "再测一次",
+        "testStep": {
+          "id": "test",
+          "done": true,
+          "verified": true,
+          "title": "60 秒测试已有结果",
+          "why": "确认这台设备上声音、屏幕、通知各自落在哪里。",
+          "denyImpact": "跳过也能用，只是不知道实际效果。",
+          "action": "再测一次"
+        },
+        "evidence": "系统侧：已排 0 条闹钟 · 通知可用 · 精确排程可用\n本次测试：今天 10:31 开始 · 计划 今天 10:32\n本次测试投递：[object Object]\n你的反馈：还没有你的反馈（未回答不等于失败）（这是上一次的回答，本次还没有）"
+      }
+    ]
+  },
+  "itemsMatchBaseline": true,
+  "userAlarmsCount": 2
+}

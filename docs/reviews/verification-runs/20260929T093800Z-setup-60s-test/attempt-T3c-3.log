@@ -1,0 +1,17 @@
+[2026-09-29 10:03:42] [1790647422866] [T3c-3] === T3c 四个反馈按钮与新测试重置 [T3c-3] start ===
+[2026-09-29 10:03:44] [1790647424311] [T3c-3] Tapping #setupTestFeedback [data-testfb="heard"] at css=(59.2, 484.8) -> phys=(177, 1574)
+[2026-09-29 10:03:45] [1790647425675] [T3c-3] Feedback 'heard': activeChip=heard, toast='这次听到了', testFeedback={"value": "heard", "at": 1790647424388}
+[2026-09-29 10:03:45] [1790647425746] [T3c-3] Tapping #setupTestFeedback [data-testfb="seen"] at css=(145.7, 484.8) -> phys=(437, 1574)
+[2026-09-29 10:03:47] [1790647427122] [T3c-3] Feedback 'seen': activeChip=seen, toast='这次看到了', testFeedback={"value": "seen", "at": 1790647425838}
+[2026-09-29 10:03:47] [1790647427191] [T3c-3] Tapping #setupTestFeedback [data-testfb="missed"] at css=(225.6, 484.8) -> phys=(676, 1574)
+[2026-09-29 10:03:48] [1790647428555] [T3c-3] Feedback 'missed': activeChip=missed, toast='这次没有收到 · 按下面步骤再看一次', testFeedback={"value": "missed", "at": 1790647427256}
+[2026-09-29 10:03:48] [1790647428611] [T3c-3] Tapping #setupTestFeedback [data-testfb="unsure"] at css=(299.0, 484.8) -> phys=(896, 1574)
+[2026-09-29 10:03:50] [1790647430012] [T3c-3] Feedback 'unsure': activeChip=unsure, toast='这次结果不确定 · 不算失败，可以再测一次', testFeedback={"value": "unsure", "at": 1790647428714}
+[2026-09-29 10:03:50] [1790647430069] [T3c-3] Tapping #setupTestStart at css=(59.2, 362.9) -> phys=(177, 1208)
+[2026-09-29 10:03:51] [1790647431637] [T3c-3] New test started: activeChips=[] (should be []), hasStaleNotice=True
+[2026-09-29 10:03:51] [1790647431697] [T3c-3] Evidence text: 系统侧：已排 0 条闹钟 · 通知可用 · 精确排程可用
+本次测试：今天 10:03 开始 · 计划 今天 10:04
+本次测试投递：还没有记录（没记录不等于没响；上一次的结果不计入本次）
+你的反馈：还没有你的反馈（未回答不等于失败）（这是上一次的回答，本次还没有）
+[2026-09-29 10:03:52] [1790647432278] [T3c-3] Tapping #setupTestStop at css=(214.8, 362.9) -> phys=(644, 1208)
+[2026-09-29 10:03:53] [1790647433704] [T3c-3] === T3c 四个反馈按钮与新测试重置 [T3c-3] end ===
