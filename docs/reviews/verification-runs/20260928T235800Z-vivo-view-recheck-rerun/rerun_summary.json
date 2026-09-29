@@ -1,0 +1,303 @@
+{
+  "S1": [
+    {
+      "tag": "S1-1",
+      "t_switch": 1790640854902,
+      "t_resume": 1790640861143,
+      "card_t": 1790640862375,
+      "card_delta": 1.232,
+      "calls": [
+        {
+          "t": 1790640860906,
+          "delta": -0.237,
+          "caller": "other",
+          "coordLine": null,
+          "ignoring": true
+        },
+        {
+          "t": 1790640860906,
+          "delta": -0.237,
+          "caller": "app-native-coordinator.js:L319",
+          "coordLine": 319,
+          "ignoring": true
+        },
+        {
+          "t": 1790640862294,
+          "delta": 1.151,
+          "caller": "other",
+          "coordLine": null,
+          "ignoring": false
+        },
+        {
+          "t": 1790640865794,
+          "delta": 4.651,
+          "caller": "other",
+          "coordLine": null,
+          "ignoring": false
+        }
+      ]
+    },
+    {
+      "tag": "S1-2",
+      "t_switch": 1790640899372,
+      "t_resume": 1790640905637,
+      "card_t": 1790640906899,
+      "card_delta": 1.262,
+      "calls": [
+        {
+          "t": 1790640905382,
+          "delta": -0.255,
+          "caller": "other",
+          "coordLine": null,
+          "ignoring": true
+        },
+        {
+          "t": 1790640905382,
+          "delta": -0.255,
+          "caller": "app-native-coordinator.js:L319",
+          "coordLine": 319,
+          "ignoring": true
+        },
+        {
+          "t": 1790640906779,
+          "delta": 1.142,
+          "caller": "other",
+          "coordLine": null,
+          "ignoring": false
+        },
+        {
+          "t": 1790640910280,
+          "delta": 4.643,
+          "caller": "other",
+          "coordLine": null,
+          "ignoring": false
+        }
+      ]
+    },
+    {
+      "tag": "S1-3",
+      "t_switch": 1790640944163,
+      "t_resume": 1790640950450,
+      "card_t": 1790640951646,
+      "card_delta": 1.196,
+      "calls": [
+        {
+          "t": 1790640950177,
+          "delta": -0.273,
+          "caller": "other",
+          "coordLine": null,
+          "ignoring": true
+        },
+        {
+          "t": 1790640950177,
+          "delta": -0.273,
+          "caller": "app-native-coordinator.js:L319",
+          "coordLine": 319,
+          "ignoring": true
+        },
+        {
+          "t": 1790640951580,
+          "delta": 1.13,
+          "caller": "other",
+          "coordLine": null,
+          "ignoring": false
+        },
+        {
+          "t": 1790640955079,
+          "delta": 4.629,
+          "caller": "other",
+          "coordLine": null,
+          "ignoring": false
+        }
+      ]
+    }
+  ],
+  "S2": [
+    {
+      "tag": "S2-1",
+      "t_switch": 1790640989224,
+      "t_resume": 1790640995515,
+      "t_open": 1790641003764,
+      "cached_before": false,
+      "cached_after": false,
+      "category": "(b) 前序读取已拿到新值，新入口值不变不回写",
+      "calls": [
+        {
+          "t": 1790641003839,
+          "delta": -0.046,
+          "caller": "other",
+          "coordLine": null,
+          "ignoring": false
+        }
+      ]
+    },
+    {
+      "tag": "S2-2",
+      "t_switch": 1790641040515,
+      "t_resume": 1790641046765,
+      "t_open": 1790641054988,
+      "cached_before": false,
+      "cached_after": false,
+      "category": "(b) 前序读取已拿到新值，新入口值不变不回写",
+      "calls": [
+        {
+          "t": 1790641055059,
+          "delta": -0.04,
+          "caller": "other",
+          "coordLine": null,
+          "ignoring": false
+        }
+      ]
+    },
+    {
+      "tag": "S2-3",
+      "t_switch": 1790641091741,
+      "t_resume": 1790641098056,
+      "t_open": 1790641106326,
+      "cached_before": false,
+      "cached_after": false,
+      "category": "(b) 前序读取已拿到新值，新入口值不变不回写",
+      "calls": [
+        {
+          "t": 1790641106398,
+          "delta": -0.049,
+          "caller": "other",
+          "coordLine": null,
+          "ignoring": false
+        }
+      ]
+    },
+    {
+      "tag": "S2-v1",
+      "t_switch": 1790641143245,
+      "t_resume": 1790641149410,
+      "t_open": 1790641149853,
+      "cached_before": true,
+      "cached_after": false,
+      "category": "(a) 新入口补读纠正状态并回写",
+      "calls": [
+        {
+          "t": 1790641149912,
+          "delta": -0.053,
+          "caller": "other",
+          "coordLine": null,
+          "ignoring": false
+        },
+        {
+          "t": 1790641150575,
+          "delta": 0.61,
+          "caller": "other",
+          "coordLine": null,
+          "ignoring": false
+        },
+        {
+          "t": 1790641154075,
+          "delta": 4.11,
+          "caller": "other",
+          "coordLine": null,
+          "ignoring": false
+        }
+      ]
+    }
+  ],
+  "S3": [
+    {
+      "tag": "S3-1",
+      "t_switch": 1790641185351,
+      "t_resume": 1790641191701,
+      "t_tab": 1790641203953,
+      "cached_before": false,
+      "cached_after": false,
+      "card_t": 1790641203918,
+      "card_delta": -0.145,
+      "category": "(b) 前序读取已拿到新值，新入口值不变不回写",
+      "calls": [
+        {
+          "t": 1790641204013,
+          "delta": -0.05,
+          "caller": "other",
+          "coordLine": null,
+          "ignoring": false
+        }
+      ]
+    },
+    {
+      "tag": "S3-2",
+      "t_switch": 1790641241077,
+      "t_resume": 1790641247341,
+      "t_tab": 1790641259577,
+      "cached_before": false,
+      "cached_after": false,
+      "card_t": 1790641259532,
+      "card_delta": -0.157,
+      "category": "(b) 前序读取已拿到新值，新入口值不变不回写",
+      "calls": [
+        {
+          "t": 1790641259633,
+          "delta": -0.056,
+          "caller": "other",
+          "coordLine": null,
+          "ignoring": false
+        }
+      ]
+    },
+    {
+      "tag": "S3-3",
+      "t_switch": 1790641296860,
+      "t_resume": 1790641303144,
+      "t_tab": 1790641315363,
+      "cached_before": false,
+      "cached_after": false,
+      "card_t": 1790641315326,
+      "card_delta": -0.13,
+      "category": "(b) 前序读取已拿到新值，新入口值不变不回写",
+      "calls": [
+        {
+          "t": 1790641315413,
+          "delta": -0.043,
+          "caller": "other",
+          "coordLine": null,
+          "ignoring": false
+        }
+      ]
+    },
+    {
+      "tag": "S3-v1",
+      "t_switch": 1790641352494,
+      "t_resume": 1790641358749,
+      "t_tab": 1790641359185,
+      "cached_before": true,
+      "cached_after": false,
+      "card_t": 1790641359146,
+      "card_delta": -0.14,
+      "category": "(a) 新入口补读纠正状态并回写",
+      "calls": [
+        {
+          "t": 1790641359240,
+          "delta": -0.046,
+          "caller": "other",
+          "coordLine": null,
+          "ignoring": false
+        },
+        {
+          "t": 1790641359872,
+          "delta": 0.586,
+          "caller": "other",
+          "coordLine": null,
+          "ignoring": false
+        },
+        {
+          "t": 1790641363373,
+          "delta": 4.087,
+          "caller": "other",
+          "coordLine": null,
+          "ignoring": false
+        }
+      ]
+    }
+  ],
+  "restore": {
+    "in_wl": true,
+    "items_count": 11
+  }
+}

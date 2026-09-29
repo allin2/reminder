@@ -1,0 +1,21 @@
+[2026-09-29 08:22:02] [1790641322586] [S3-v1] === S3: 撤销方向 · 切回首页 [S3-v1] start ===
+[2026-09-29 08:22:04] [1790641324345] [S3-v1] Baseline check: in_wl=False, ignoring=False. Restoring 允许后台耗电...
+[2026-09-29 08:22:20] [1790641340000] [S3-v1] BACK #3: app resumed, t_resume=1790641339964
+[2026-09-29 08:22:22] [1790641342661] [S3-v1] Baseline restored and verified: in_wl=True, ignoring=True
+[2026-09-29 08:22:38] [1790641358782] [S3-v1] BACK #3: app resumed, t_resume=1790641358749
+[2026-09-29 08:22:38] [1790641358816] [S3-v1] Tswitch=1790641352494, Tresume=1790641358749
+[2026-09-29 08:22:38] [1790641358846] [S3-v1] Fast variant: switching to home tab immediately after resume without waiting 12s...
+[2026-09-29 08:22:39] [1790641359125] [S3-v1] Cached ignoring before tapping home tab: True
+[2026-09-29 08:22:39] [1790641359224] [S3-v1] Ttab_action=1790641359185, tapping home tab...
+[2026-09-29 08:22:44] [1790641364973] [S3-v1] Diagnose calls during tab-home: 6
+[2026-09-29 08:22:45] [1790641365011] [S3-v1]   Call #1: t=1790641359240 (+-0.046s from tab) caller=other coordLine=None ignoring=False
+[2026-09-29 08:22:45] [1790641365056] [S3-v1]   Call #2: t=1790641359237 (+-0.049s from tab) caller=refreshNativeStatus (L406) coordLine=406 ignoring=False
+[2026-09-29 08:22:45] [1790641365098] [S3-v1]   Call #3: t=1790641359872 (+0.586s from tab) caller=other coordLine=None ignoring=False
+[2026-09-29 08:22:45] [1790641365141] [S3-v1]   Call #4: t=1790641359872 (+0.586s from tab) caller=resume-recheck (L423) coordLine=423 ignoring=False
+[2026-09-29 08:22:45] [1790641365171] [S3-v1]   Call #5: t=1790641363373 (+4.087s from tab) caller=other coordLine=None ignoring=False
+[2026-09-29 08:22:45] [1790641365213] [S3-v1]   Call #6: t=1790641363373 (+4.087s from tab) caller=resume-recheck (L423) coordLine=423 ignoring=False
+[2026-09-29 08:22:45] [1790641365251] [S3-v1] tab-home log entries: [{'t': 1790641359237, 'origin': 'tab-home', 'beforeIgn': True, 'endT': 1790641359273, 'afterIgn': False, 'changed': True}]
+[2026-09-29 08:22:45] [1790641365287] [S3-v1] Cached ignoring after tab-home: False
+[2026-09-29 08:22:45] [1790641365337] [S3-v1] Home card appearance: t=1790641359146 (+-0.140s from tab)
+[2026-09-29 08:22:45] [1790641365370] [S3-v1] Classification: (a) 新入口补读纠正状态并回写
+[2026-09-29 08:22:45] [1790641365402] [S3-v1] === S3: 撤销方向 · 切回首页 [S3-v1] end ===

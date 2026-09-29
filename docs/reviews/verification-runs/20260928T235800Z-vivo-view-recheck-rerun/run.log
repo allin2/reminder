@@ -1,0 +1,245 @@
+[2026-09-29 08:13:45] [1790640825488] [S1-1] === S1: 撤销方向 · 回前台 [S1-1] start ===
+[2026-09-29 08:13:47] [1790640827247] [S1-1] Baseline check: in_wl=False, ignoring=False. Restoring 允许后台耗电...
+[2026-09-29 08:13:56] [1790640836673] [S1-1-prep] Tswitch=1790640836630 tapping 允许后台耗电 at (306, 988)
+[2026-09-29 08:14:01] [1790640841318] [S1-1-prep] after mode: 允许后台耗电 (expected: 允许后台耗电)
+[2026-09-29 08:14:02] [1790640842849] [S1-1] BACK #3: app resumed, t_resume=1790640842815
+[2026-09-29 08:14:05] [1790640845500] [S1-1] Baseline restored and verified: in_wl=True, ignoring=True
+[2026-09-29 08:14:05] [1790640845553] [S1-1] Pre-state: ignoring=True, homeEmpty=True
+[2026-09-29 08:14:14] [1790640854957] [S1-1-toggle] Tswitch=1790640854902 tapping 智能控制后台耗电 at (306, 743)
+[2026-09-29 08:14:19] [1790640859597] [S1-1-toggle] after mode: 智能控制后台耗电 (expected: 智能控制后台耗电)
+[2026-09-29 08:14:21] [1790640861179] [S1-1] BACK #3: app resumed, t_resume=1790640861143
+[2026-09-29 08:14:21] [1790640861209] [S1-1] Tswitch=1790640854902, Tresume=1790640861143
+[2026-09-29 08:14:28] [1790640868316] [S1-1] Total diagnose calls in window: 6
+[2026-09-29 08:14:28] [1790640868365] [S1-1]   Call #1: t=1790640860906 (+-0.237s from resume) caller=other coordLine=None ignoring=True
+[2026-09-29 08:14:28] [1790640868400] [S1-1]   Call #2: t=1790640860906 (+-0.237s from resume) caller=app-native-coordinator.js:L319 coordLine=319 ignoring=True
+[2026-09-29 08:14:28] [1790640868459] [S1-1]   Call #3: t=1790640862294 (+1.151s from resume) caller=other coordLine=None ignoring=False
+[2026-09-29 08:14:28] [1790640868513] [S1-1]   Call #4: t=1790640862293 (+1.150s from resume) caller=resume-recheck (L423) coordLine=423 ignoring=False
+[2026-09-29 08:14:28] [1790640868559] [S1-1]   Call #5: t=1790640865794 (+4.651s from resume) caller=other coordLine=None ignoring=False
+[2026-09-29 08:14:28] [1790640868617] [S1-1]   Call #6: t=1790640865794 (+4.651s from resume) caller=resume-recheck (L423) coordLine=423 ignoring=False
+[2026-09-29 08:14:28] [1790640868667] [S1-1] Home card appearance: t=1790640862375 (+1.232s from resume)
+[2026-09-29 08:14:28] [1790640868720] [S1-1] === S1: 撤销方向 · 回前台 [S1-1] end ===
+[2026-09-29 08:14:29] [1790640869798] [S1-2] === S1: 撤销方向 · 回前台 [S1-2] start ===
+[2026-09-29 08:14:31] [1790640871518] [S1-2] Baseline check: in_wl=False, ignoring=False. Restoring 允许后台耗电...
+[2026-09-29 08:14:41] [1790640881021] [S1-2-prep] Tswitch=1790640880975 tapping 允许后台耗电 at (306, 988)
+[2026-09-29 08:14:45] [1790640885751] [S1-2-prep] after mode: 允许后台耗电 (expected: 允许后台耗电)
+[2026-09-29 08:14:47] [1790640887376] [S1-2] BACK #3: app resumed, t_resume=1790640887342
+[2026-09-29 08:14:50] [1790640890041] [S1-2] Baseline restored and verified: in_wl=True, ignoring=True
+[2026-09-29 08:14:50] [1790640890098] [S1-2] Pre-state: ignoring=True, homeEmpty=True
+[2026-09-29 08:14:59] [1790640899436] [S1-2-toggle] Tswitch=1790640899372 tapping 智能控制后台耗电 at (306, 743)
+[2026-09-29 08:15:04] [1790640904093] [S1-2-toggle] after mode: 智能控制后台耗电 (expected: 智能控制后台耗电)
+[2026-09-29 08:15:05] [1790640905679] [S1-2] BACK #3: app resumed, t_resume=1790640905637
+[2026-09-29 08:15:05] [1790640905713] [S1-2] Tswitch=1790640899372, Tresume=1790640905637
+[2026-09-29 08:15:12] [1790640912933] [S1-2] Total diagnose calls in window: 6
+[2026-09-29 08:15:12] [1790640912992] [S1-2]   Call #1: t=1790640905382 (+-0.255s from resume) caller=other coordLine=None ignoring=True
+[2026-09-29 08:15:13] [1790640913031] [S1-2]   Call #2: t=1790640905382 (+-0.255s from resume) caller=app-native-coordinator.js:L319 coordLine=319 ignoring=True
+[2026-09-29 08:15:13] [1790640913089] [S1-2]   Call #3: t=1790640906779 (+1.142s from resume) caller=other coordLine=None ignoring=False
+[2026-09-29 08:15:13] [1790640913138] [S1-2]   Call #4: t=1790640906779 (+1.142s from resume) caller=resume-recheck (L423) coordLine=423 ignoring=False
+[2026-09-29 08:15:13] [1790640913189] [S1-2]   Call #5: t=1790640910280 (+4.643s from resume) caller=other coordLine=None ignoring=False
+[2026-09-29 08:15:13] [1790640913242] [S1-2]   Call #6: t=1790640910279 (+4.642s from resume) caller=resume-recheck (L423) coordLine=423 ignoring=False
+[2026-09-29 08:15:13] [1790640913297] [S1-2] Home card appearance: t=1790640906899 (+1.262s from resume)
+[2026-09-29 08:15:13] [1790640913355] [S1-2] === S1: 撤销方向 · 回前台 [S1-2] end ===
+[2026-09-29 08:15:14] [1790640914421] [S1-3] === S1: 撤销方向 · 回前台 [S1-3] start ===
+[2026-09-29 08:15:16] [1790640916173] [S1-3] Baseline check: in_wl=False, ignoring=False. Restoring 允许后台耗电...
+[2026-09-29 08:15:25] [1790640925801] [S1-3-prep] Tswitch=1790640925730 tapping 允许后台耗电 at (306, 988)
+[2026-09-29 08:15:30] [1790640930513] [S1-3-prep] after mode: 允许后台耗电 (expected: 允许后台耗电)
+[2026-09-29 08:15:32] [1790640932118] [S1-3] BACK #3: app resumed, t_resume=1790640932083
+[2026-09-29 08:15:34] [1790640934780] [S1-3] Baseline restored and verified: in_wl=True, ignoring=True
+[2026-09-29 08:15:34] [1790640934851] [S1-3] Pre-state: ignoring=True, homeEmpty=True
+[2026-09-29 08:15:44] [1790640944209] [S1-3-toggle] Tswitch=1790640944163 tapping 智能控制后台耗电 at (306, 743)
+[2026-09-29 08:15:48] [1790640948854] [S1-3-toggle] after mode: 智能控制后台耗电 (expected: 智能控制后台耗电)
+[2026-09-29 08:15:50] [1790640950487] [S1-3] BACK #3: app resumed, t_resume=1790640950450
+[2026-09-29 08:15:50] [1790640950517] [S1-3] Tswitch=1790640944163, Tresume=1790640950450
+[2026-09-29 08:15:57] [1790640957658] [S1-3] Total diagnose calls in window: 6
+[2026-09-29 08:15:57] [1790640957713] [S1-3]   Call #1: t=1790640950177 (+-0.273s from resume) caller=other coordLine=None ignoring=True
+[2026-09-29 08:15:57] [1790640957747] [S1-3]   Call #2: t=1790640950177 (+-0.273s from resume) caller=app-native-coordinator.js:L319 coordLine=319 ignoring=True
+[2026-09-29 08:15:57] [1790640957780] [S1-3]   Call #3: t=1790640951580 (+1.130s from resume) caller=other coordLine=None ignoring=False
+[2026-09-29 08:15:57] [1790640957831] [S1-3]   Call #4: t=1790640951580 (+1.130s from resume) caller=resume-recheck (L423) coordLine=423 ignoring=False
+[2026-09-29 08:15:57] [1790640957868] [S1-3]   Call #5: t=1790640955079 (+4.629s from resume) caller=other coordLine=None ignoring=False
+[2026-09-29 08:15:57] [1790640957917] [S1-3]   Call #6: t=1790640955079 (+4.629s from resume) caller=resume-recheck (L423) coordLine=423 ignoring=False
+[2026-09-29 08:15:57] [1790640957962] [S1-3] Home card appearance: t=1790640951646 (+1.196s from resume)
+[2026-09-29 08:15:58] [1790640958010] [S1-3] === S1: 撤销方向 · 回前台 [S1-3] end ===
+[2026-09-29 08:15:59] [1790640959087] [S2-1] === S2: 撤销方向 · 打开设置面板 [S2-1] start ===
+[2026-09-29 08:16:00] [1790640960883] [S2-1] Baseline check: in_wl=False, ignoring=False. Restoring 允许后台耗电...
+[2026-09-29 08:16:10] [1790640970266] [S2-1-prep] Tswitch=1790640970213 tapping 允许后台耗电 at (306, 988)
+[2026-09-29 08:16:14] [1790640974973] [S2-1-prep] after mode: 允许后台耗电 (expected: 允许后台耗电)
+[2026-09-29 08:16:16] [1790640976620] [S2-1] BACK #3: app resumed, t_resume=1790640976583
+[2026-09-29 08:16:19] [1790640979298] [S2-1] Baseline restored and verified: in_wl=True, ignoring=True
+[2026-09-29 08:16:29] [1790640989279] [S2-1-toggle] Tswitch=1790640989224 tapping 智能控制后台耗电 at (306, 743)
+[2026-09-29 08:16:33] [1790640993910] [S2-1-toggle] after mode: 智能控制后台耗电 (expected: 智能控制后台耗电)
+[2026-09-29 08:16:35] [1790640995550] [S2-1] BACK #3: app resumed, t_resume=1790640995515
+[2026-09-29 08:16:35] [1790640995581] [S2-1] Tswitch=1790640989224, Tresume=1790640995515
+[2026-09-29 08:16:35] [1790640995616] [S2-1] Waiting 8s on '我的' tab for system lag convergence...
+[2026-09-29 08:16:43] [1790641003687] [S2-1] Cached ignoring before opening panel: False
+[2026-09-29 08:16:43] [1790641003810] [S2-1] Topen_action=1790641003764, tapping #btnSetup...
+[2026-09-29 08:16:48] [1790641008596] [S2-1] MutationObserver count: before=0, after=0, diff=0
+[2026-09-29 08:16:48] [1790641008673] [S2-1] Diagnose calls during setup-open: 2
+[2026-09-29 08:16:48] [1790641008718] [S2-1]   Call #1: t=1790641003839 (+-0.046s from open) caller=other coordLine=None ignoring=False
+[2026-09-29 08:16:48] [1790641008758] [S2-1]   Call #2: t=1790641003838 (+-0.047s from open) caller=refreshNativeStatus (L406) coordLine=406 ignoring=False
+[2026-09-29 08:16:48] [1790641008826] [S2-1] setup-open log entries: [{'t': 1790641003838, 'origin': 'setup-open', 'beforeIgn': False, 'endT': 1790641003868, 'afterIgn': False, 'changed': False}]
+[2026-09-29 08:16:48] [1790641008872] [S2-1] Cached ignoring after setup-open: False
+[2026-09-29 08:16:48] [1790641008917] [S2-1] Classification: (b) 前序读取已拿到新值，新入口值不变不回写
+[2026-09-29 08:16:49] [1790641009492] [S2-1] === S2: 撤销方向 · 打开设置面板 [S2-1] end ===
+[2026-09-29 08:16:50] [1790641010561] [S2-2] === S2: 撤销方向 · 打开设置面板 [S2-2] start ===
+[2026-09-29 08:16:52] [1790641012278] [S2-2] Baseline check: in_wl=False, ignoring=False. Restoring 允许后台耗电...
+[2026-09-29 08:17:01] [1790641021680] [S2-2-prep] Tswitch=1790641021616 tapping 允许后台耗电 at (306, 988)
+[2026-09-29 08:17:06] [1790641026313] [S2-2-prep] after mode: 允许后台耗电 (expected: 允许后台耗电)
+[2026-09-29 08:17:07] [1790641027929] [S2-2] BACK #3: app resumed, t_resume=1790641027892
+[2026-09-29 08:17:10] [1790641030628] [S2-2] Baseline restored and verified: in_wl=True, ignoring=True
+[2026-09-29 08:17:20] [1790641040564] [S2-2-toggle] Tswitch=1790641040515 tapping 智能控制后台耗电 at (306, 743)
+[2026-09-29 08:17:25] [1790641045227] [S2-2-toggle] after mode: 智能控制后台耗电 (expected: 智能控制后台耗电)
+[2026-09-29 08:17:26] [1790641046802] [S2-2] BACK #3: app resumed, t_resume=1790641046765
+[2026-09-29 08:17:26] [1790641046836] [S2-2] Tswitch=1790641040515, Tresume=1790641046765
+[2026-09-29 08:17:26] [1790641046866] [S2-2] Waiting 8s on '我的' tab for system lag convergence...
+[2026-09-29 08:17:34] [1790641054929] [S2-2] Cached ignoring before opening panel: False
+[2026-09-29 08:17:35] [1790641055041] [S2-2] Topen_action=1790641054988, tapping #btnSetup...
+[2026-09-29 08:17:39] [1790641059870] [S2-2] MutationObserver count: before=0, after=0, diff=0
+[2026-09-29 08:17:39] [1790641059975] [S2-2] Diagnose calls during setup-open: 2
+[2026-09-29 08:17:40] [1790641060029] [S2-2]   Call #1: t=1790641055059 (+-0.040s from open) caller=other coordLine=None ignoring=False
+[2026-09-29 08:17:40] [1790641060066] [S2-2]   Call #2: t=1790641055057 (+-0.042s from open) caller=refreshNativeStatus (L406) coordLine=406 ignoring=False
+[2026-09-29 08:17:40] [1790641060129] [S2-2] setup-open log entries: [{'t': 1790641055056, 'origin': 'setup-open', 'beforeIgn': False, 'endT': 1790641055082, 'afterIgn': False, 'changed': False}]
+[2026-09-29 08:17:40] [1790641060186] [S2-2] Cached ignoring after setup-open: False
+[2026-09-29 08:17:40] [1790641060224] [S2-2] Classification: (b) 前序读取已拿到新值，新入口值不变不回写
+[2026-09-29 08:17:40] [1790641060795] [S2-2] === S2: 撤销方向 · 打开设置面板 [S2-2] end ===
+[2026-09-29 08:17:41] [1790641061858] [S2-3] === S2: 撤销方向 · 打开设置面板 [S2-3] start ===
+[2026-09-29 08:17:43] [1790641063599] [S2-3] Baseline check: in_wl=False, ignoring=False. Restoring 允许后台耗电...
+[2026-09-29 08:17:52] [1790641072953] [S2-3-prep] Tswitch=1790641072886 tapping 允许后台耗电 at (306, 988)
+[2026-09-29 08:17:57] [1790641077660] [S2-3-prep] after mode: 允许后台耗电 (expected: 允许后台耗电)
+[2026-09-29 08:17:59] [1790641079282] [S2-3] BACK #3: app resumed, t_resume=1790641079252
+[2026-09-29 08:18:01] [1790641081947] [S2-3] Baseline restored and verified: in_wl=True, ignoring=True
+[2026-09-29 08:18:11] [1790641091802] [S2-3-toggle] Tswitch=1790641091741 tapping 智能控制后台耗电 at (306, 743)
+[2026-09-29 08:18:16] [1790641096482] [S2-3-toggle] after mode: 智能控制后台耗电 (expected: 智能控制后台耗电)
+[2026-09-29 08:18:18] [1790641098098] [S2-3] BACK #3: app resumed, t_resume=1790641098056
+[2026-09-29 08:18:18] [1790641098131] [S2-3] Tswitch=1790641091741, Tresume=1790641098056
+[2026-09-29 08:18:18] [1790641098163] [S2-3] Waiting 8s on '我的' tab for system lag convergence...
+[2026-09-29 08:18:26] [1790641106257] [S2-3] Cached ignoring before opening panel: False
+[2026-09-29 08:18:26] [1790641106378] [S2-3] Topen_action=1790641106326, tapping #btnSetup...
+[2026-09-29 08:18:31] [1790641111273] [S2-3] MutationObserver count: before=0, after=0, diff=0
+[2026-09-29 08:18:31] [1790641111366] [S2-3] Diagnose calls during setup-open: 2
+[2026-09-29 08:18:31] [1790641111425] [S2-3]   Call #1: t=1790641106398 (+-0.049s from open) caller=other coordLine=None ignoring=False
+[2026-09-29 08:18:31] [1790641111459] [S2-3]   Call #2: t=1790641106395 (+-0.052s from open) caller=refreshNativeStatus (L406) coordLine=406 ignoring=False
+[2026-09-29 08:18:31] [1790641111512] [S2-3] setup-open log entries: [{'t': 1790641106395, 'origin': 'setup-open', 'beforeIgn': False, 'endT': 1790641106425, 'afterIgn': False, 'changed': False}]
+[2026-09-29 08:18:31] [1790641111552] [S2-3] Cached ignoring after setup-open: False
+[2026-09-29 08:18:31] [1790641111587] [S2-3] Classification: (b) 前序读取已拿到新值，新入口值不变不回写
+[2026-09-29 08:18:32] [1790641112157] [S2-3] === S2: 撤销方向 · 打开设置面板 [S2-3] end ===
+[2026-09-29 08:18:33] [1790641113218] [S2-var] Notice: Standard S2 attempts had no (a), adding fast-open variant S2-v1...
+[2026-09-29 08:18:33] [1790641113276] [S2-v1] === S2: 撤销方向 · 打开设置面板 [S2-v1] start ===
+[2026-09-29 08:18:35] [1790641115031] [S2-v1] Baseline check: in_wl=False, ignoring=False. Restoring 允许后台耗电...
+[2026-09-29 08:18:44] [1790641124386] [S2-v1-prep] Tswitch=1790641124338 tapping 允许后台耗电 at (306, 988)
+[2026-09-29 08:18:49] [1790641129075] [S2-v1-prep] after mode: 允许后台耗电 (expected: 允许后台耗电)
+[2026-09-29 08:18:50] [1790641130703] [S2-v1] BACK #3: app resumed, t_resume=1790641130676
+[2026-09-29 08:18:53] [1790641133346] [S2-v1] Baseline restored and verified: in_wl=True, ignoring=True
+[2026-09-29 08:19:03] [1790641143299] [S2-v1-toggle] Tswitch=1790641143245 tapping 智能控制后台耗电 at (306, 743)
+[2026-09-29 08:19:07] [1790641147888] [S2-v1-toggle] after mode: 智能控制后台耗电 (expected: 智能控制后台耗电)
+[2026-09-29 08:19:09] [1790641149438] [S2-v1] BACK #3: app resumed, t_resume=1790641149410
+[2026-09-29 08:19:09] [1790641149474] [S2-v1] Tswitch=1790641143245, Tresume=1790641149410
+[2026-09-29 08:19:09] [1790641149504] [S2-v1] Fast variant: opening #btnSetup immediately after resume without waiting 8s...
+[2026-09-29 08:19:09] [1790641149773] [S2-v1] Cached ignoring before opening panel: True
+[2026-09-29 08:19:09] [1790641149892] [S2-v1] Topen_action=1790641149853, tapping #btnSetup...
+[2026-09-29 08:19:14] [1790641154643] [S2-v1] MutationObserver count: before=0, after=0, diff=0
+[2026-09-29 08:19:14] [1790641154724] [S2-v1] Diagnose calls during setup-open: 6
+[2026-09-29 08:19:14] [1790641154760] [S2-v1]   Call #1: t=1790641149912 (+-0.053s from open) caller=other coordLine=None ignoring=False
+[2026-09-29 08:19:14] [1790641154806] [S2-v1]   Call #2: t=1790641149910 (+-0.055s from open) caller=refreshNativeStatus (L406) coordLine=406 ignoring=False
+[2026-09-29 08:19:14] [1790641154843] [S2-v1]   Call #3: t=1790641150575 (+0.610s from open) caller=other coordLine=None ignoring=False
+[2026-09-29 08:19:14] [1790641154888] [S2-v1]   Call #4: t=1790641150575 (+0.610s from open) caller=resume-recheck (L423) coordLine=423 ignoring=False
+[2026-09-29 08:19:14] [1790641154935] [S2-v1]   Call #5: t=1790641154075 (+4.110s from open) caller=other coordLine=None ignoring=False
+[2026-09-29 08:19:14] [1790641154979] [S2-v1]   Call #6: t=1790641154075 (+4.110s from open) caller=resume-recheck (L423) coordLine=423 ignoring=False
+[2026-09-29 08:19:15] [1790641155033] [S2-v1] setup-open log entries: [{'t': 1790641149910, 'origin': 'setup-open', 'beforeIgn': True, 'endT': 1790641149943, 'afterIgn': False, 'changed': True}]
+[2026-09-29 08:19:15] [1790641155085] [S2-v1] Cached ignoring after setup-open: False
+[2026-09-29 08:19:15] [1790641155120] [S2-v1] Classification: (a) 新入口补读纠正状态并回写
+[2026-09-29 08:19:15] [1790641155670] [S2-v1] === S2: 撤销方向 · 打开设置面板 [S2-v1] end ===
+[2026-09-29 08:19:15] [1790641155714] [S3-1] === S3: 撤销方向 · 切回首页 [S3-1] start ===
+[2026-09-29 08:19:17] [1790641157443] [S3-1] Baseline check: in_wl=False, ignoring=False. Restoring 允许后台耗电...
+[2026-09-29 08:19:26] [1790641166723] [S3-1-prep] Tswitch=1790641166677 tapping 允许后台耗电 at (306, 988)
+[2026-09-29 08:19:31] [1790641171252] [S3-1-prep] after mode: 允许后台耗电 (expected: 允许后台耗电)
+[2026-09-29 08:19:32] [1790641172861] [S3-1] BACK #3: app resumed, t_resume=1790641172826
+[2026-09-29 08:19:35] [1790641175522] [S3-1] Baseline restored and verified: in_wl=True, ignoring=True
+[2026-09-29 08:19:45] [1790641185409] [S3-1-toggle] Tswitch=1790641185351 tapping 智能控制后台耗电 at (306, 743)
+[2026-09-29 08:19:50] [1790641190117] [S3-1-toggle] after mode: 智能控制后台耗电 (expected: 智能控制后台耗电)
+[2026-09-29 08:19:51] [1790641191742] [S3-1] BACK #3: app resumed, t_resume=1790641191701
+[2026-09-29 08:19:51] [1790641191778] [S3-1] Tswitch=1790641185351, Tresume=1790641191701
+[2026-09-29 08:19:51] [1790641191811] [S3-1] Waiting 12s on '我的' tab (>=10s)...
+[2026-09-29 08:20:03] [1790641203892] [S3-1] Cached ignoring before tapping home tab: False
+[2026-09-29 08:20:03] [1790641203996] [S3-1] Ttab_action=1790641203953, tapping home tab...
+[2026-09-29 08:20:09] [1790641209765] [S3-1] Diagnose calls during tab-home: 2
+[2026-09-29 08:20:09] [1790641209832] [S3-1]   Call #1: t=1790641204013 (+-0.050s from tab) caller=other coordLine=None ignoring=False
+[2026-09-29 08:20:09] [1790641209888] [S3-1]   Call #2: t=1790641204012 (+-0.051s from tab) caller=refreshNativeStatus (L406) coordLine=406 ignoring=False
+[2026-09-29 08:20:09] [1790641209945] [S3-1] tab-home log entries: [{'t': 1790641204012, 'origin': 'tab-home', 'beforeIgn': False, 'endT': 1790641204040, 'afterIgn': False, 'changed': False}]
+[2026-09-29 08:20:09] [1790641209988] [S3-1] Cached ignoring after tab-home: False
+[2026-09-29 08:20:10] [1790641210023] [S3-1] Home card appearance: t=1790641203918 (+-0.145s from tab)
+[2026-09-29 08:20:10] [1790641210075] [S3-1] Classification: (b) 前序读取已拿到新值，新入口值不变不回写
+[2026-09-29 08:20:10] [1790641210129] [S3-1] === S3: 撤销方向 · 切回首页 [S3-1] end ===
+[2026-09-29 08:20:11] [1790641211194] [S3-2] === S3: 撤销方向 · 切回首页 [S3-2] start ===
+[2026-09-29 08:20:12] [1790641212931] [S3-2] Baseline check: in_wl=False, ignoring=False. Restoring 允许后台耗电...
+[2026-09-29 08:20:22] [1790641222373] [S3-2-prep] Tswitch=1790641222320 tapping 允许后台耗电 at (306, 988)
+[2026-09-29 08:20:26] [1790641226993] [S3-2-prep] after mode: 允许后台耗电 (expected: 允许后台耗电)
+[2026-09-29 08:20:28] [1790641228575] [S3-2] BACK #3: app resumed, t_resume=1790641228539
+[2026-09-29 08:20:31] [1790641231240] [S3-2] Baseline restored and verified: in_wl=True, ignoring=True
+[2026-09-29 08:20:41] [1790641241125] [S3-2-toggle] Tswitch=1790641241077 tapping 智能控制后台耗电 at (306, 743)
+[2026-09-29 08:20:45] [1790641245765] [S3-2-toggle] after mode: 智能控制后台耗电 (expected: 智能控制后台耗电)
+[2026-09-29 08:20:47] [1790641247371] [S3-2] BACK #3: app resumed, t_resume=1790641247341
+[2026-09-29 08:20:47] [1790641247404] [S3-2] Tswitch=1790641241077, Tresume=1790641247341
+[2026-09-29 08:20:47] [1790641247433] [S3-2] Waiting 12s on '我的' tab (>=10s)...
+[2026-09-29 08:20:59] [1790641259505] [S3-2] Cached ignoring before tapping home tab: False
+[2026-09-29 08:20:59] [1790641259620] [S3-2] Ttab_action=1790641259577, tapping home tab...
+[2026-09-29 08:21:05] [1790641265335] [S3-2] Diagnose calls during tab-home: 2
+[2026-09-29 08:21:05] [1790641265388] [S3-2]   Call #1: t=1790641259633 (+-0.056s from tab) caller=other coordLine=None ignoring=False
+[2026-09-29 08:21:05] [1790641265425] [S3-2]   Call #2: t=1790641259632 (+-0.057s from tab) caller=refreshNativeStatus (L406) coordLine=406 ignoring=False
+[2026-09-29 08:21:05] [1790641265482] [S3-2] tab-home log entries: [{'t': 1790641259631, 'origin': 'tab-home', 'beforeIgn': False, 'endT': 1790641259660, 'afterIgn': False, 'changed': False}]
+[2026-09-29 08:21:05] [1790641265524] [S3-2] Cached ignoring after tab-home: False
+[2026-09-29 08:21:05] [1790641265576] [S3-2] Home card appearance: t=1790641259532 (+-0.157s from tab)
+[2026-09-29 08:21:05] [1790641265625] [S3-2] Classification: (b) 前序读取已拿到新值，新入口值不变不回写
+[2026-09-29 08:21:05] [1790641265677] [S3-2] === S3: 撤销方向 · 切回首页 [S3-2] end ===
+[2026-09-29 08:21:06] [1790641266754] [S3-3] === S3: 撤销方向 · 切回首页 [S3-3] start ===
+[2026-09-29 08:21:08] [1790641268520] [S3-3] Baseline check: in_wl=False, ignoring=False. Restoring 允许后台耗电...
+[2026-09-29 08:21:17] [1790641277946] [S3-3-prep] Tswitch=1790641277909 tapping 允许后台耗电 at (306, 988)
+[2026-09-29 08:21:22] [1790641282582] [S3-3-prep] after mode: 允许后台耗电 (expected: 允许后台耗电)
+[2026-09-29 08:21:24] [1790641284177] [S3-3] BACK #3: app resumed, t_resume=1790641284145
+[2026-09-29 08:21:26] [1790641286854] [S3-3] Baseline restored and verified: in_wl=True, ignoring=True
+[2026-09-29 08:21:36] [1790641296917] [S3-3-toggle] Tswitch=1790641296860 tapping 智能控制后台耗电 at (306, 743)
+[2026-09-29 08:21:41] [1790641301541] [S3-3-toggle] after mode: 智能控制后台耗电 (expected: 智能控制后台耗电)
+[2026-09-29 08:21:43] [1790641303182] [S3-3] BACK #3: app resumed, t_resume=1790641303144
+[2026-09-29 08:21:43] [1790641303214] [S3-3] Tswitch=1790641296860, Tresume=1790641303144
+[2026-09-29 08:21:43] [1790641303244] [S3-3] Waiting 12s on '我的' tab (>=10s)...
+[2026-09-29 08:21:55] [1790641315304] [S3-3] Cached ignoring before tapping home tab: False
+[2026-09-29 08:21:55] [1790641315399] [S3-3] Ttab_action=1790641315363, tapping home tab...
+[2026-09-29 08:22:01] [1790641321163] [S3-3] Diagnose calls during tab-home: 2
+[2026-09-29 08:22:01] [1790641321198] [S3-3]   Call #1: t=1790641315413 (+-0.043s from tab) caller=other coordLine=None ignoring=False
+[2026-09-29 08:22:01] [1790641321244] [S3-3]   Call #2: t=1790641315411 (+-0.045s from tab) caller=refreshNativeStatus (L406) coordLine=406 ignoring=False
+[2026-09-29 08:22:01] [1790641321295] [S3-3] tab-home log entries: [{'t': 1790641315411, 'origin': 'tab-home', 'beforeIgn': False, 'endT': 1790641315450, 'afterIgn': False, 'changed': False}]
+[2026-09-29 08:22:01] [1790641321348] [S3-3] Cached ignoring after tab-home: False
+[2026-09-29 08:22:01] [1790641321392] [S3-3] Home card appearance: t=1790641315326 (+-0.130s from tab)
+[2026-09-29 08:22:01] [1790641321434] [S3-3] Classification: (b) 前序读取已拿到新值，新入口值不变不回写
+[2026-09-29 08:22:01] [1790641321480] [S3-3] === S3: 撤销方向 · 切回首页 [S3-3] end ===
+[2026-09-29 08:22:02] [1790641322546] [S3-var] Notice: Standard S3 attempts had no (a), adding fast-tab variant S3-v1...
+[2026-09-29 08:22:02] [1790641322586] [S3-v1] === S3: 撤销方向 · 切回首页 [S3-v1] start ===
+[2026-09-29 08:22:04] [1790641324345] [S3-v1] Baseline check: in_wl=False, ignoring=False. Restoring 允许后台耗电...
+[2026-09-29 08:22:13] [1790641333799] [S3-v1-prep] Tswitch=1790641333743 tapping 允许后台耗电 at (306, 988)
+[2026-09-29 08:22:18] [1790641338411] [S3-v1-prep] after mode: 允许后台耗电 (expected: 允许后台耗电)
+[2026-09-29 08:22:20] [1790641340000] [S3-v1] BACK #3: app resumed, t_resume=1790641339964
+[2026-09-29 08:22:22] [1790641342661] [S3-v1] Baseline restored and verified: in_wl=True, ignoring=True
+[2026-09-29 08:22:32] [1790641352558] [S3-v1-toggle] Tswitch=1790641352494 tapping 智能控制后台耗电 at (306, 743)
+[2026-09-29 08:22:37] [1790641357196] [S3-v1-toggle] after mode: 智能控制后台耗电 (expected: 智能控制后台耗电)
+[2026-09-29 08:22:38] [1790641358782] [S3-v1] BACK #3: app resumed, t_resume=1790641358749
+[2026-09-29 08:22:38] [1790641358816] [S3-v1] Tswitch=1790641352494, Tresume=1790641358749
+[2026-09-29 08:22:38] [1790641358846] [S3-v1] Fast variant: switching to home tab immediately after resume without waiting 12s...
+[2026-09-29 08:22:39] [1790641359125] [S3-v1] Cached ignoring before tapping home tab: True
+[2026-09-29 08:22:39] [1790641359224] [S3-v1] Ttab_action=1790641359185, tapping home tab...
+[2026-09-29 08:22:44] [1790641364973] [S3-v1] Diagnose calls during tab-home: 6
+[2026-09-29 08:22:45] [1790641365011] [S3-v1]   Call #1: t=1790641359240 (+-0.046s from tab) caller=other coordLine=None ignoring=False
+[2026-09-29 08:22:45] [1790641365056] [S3-v1]   Call #2: t=1790641359237 (+-0.049s from tab) caller=refreshNativeStatus (L406) coordLine=406 ignoring=False
+[2026-09-29 08:22:45] [1790641365098] [S3-v1]   Call #3: t=1790641359872 (+0.586s from tab) caller=other coordLine=None ignoring=False
+[2026-09-29 08:22:45] [1790641365141] [S3-v1]   Call #4: t=1790641359872 (+0.586s from tab) caller=resume-recheck (L423) coordLine=423 ignoring=False
+[2026-09-29 08:22:45] [1790641365171] [S3-v1]   Call #5: t=1790641363373 (+4.087s from tab) caller=other coordLine=None ignoring=False
+[2026-09-29 08:22:45] [1790641365213] [S3-v1]   Call #6: t=1790641363373 (+4.087s from tab) caller=resume-recheck (L423) coordLine=423 ignoring=False
+[2026-09-29 08:22:45] [1790641365251] [S3-v1] tab-home log entries: [{'t': 1790641359237, 'origin': 'tab-home', 'beforeIgn': True, 'endT': 1790641359273, 'afterIgn': False, 'changed': True}]
+[2026-09-29 08:22:45] [1790641365287] [S3-v1] Cached ignoring after tab-home: False
+[2026-09-29 08:22:45] [1790641365337] [S3-v1] Home card appearance: t=1790641359146 (+-0.140s from tab)
+[2026-09-29 08:22:45] [1790641365370] [S3-v1] Classification: (a) 新入口补读纠正状态并回写
+[2026-09-29 08:22:45] [1790641365402] [S3-v1] === S3: 撤销方向 · 切回首页 [S3-v1] end ===
+[2026-09-29 08:22:45] [1790641365446] [RESTORE] === Final restore verification start ===
+[2026-09-29 08:22:45] [1790641365517] [RESTORE] Baseline check: in_wl=False, ignoring=False. Restoring 允许后台耗电...
+[2026-09-29 08:22:54] [1790641374945] [RESTORE-prep] Tswitch=1790641374887 tapping 允许后台耗电 at (306, 988)
+[2026-09-29 08:22:59] [1790641379645] [RESTORE-prep] after mode: 允许后台耗电 (expected: 允许后台耗电)
+[2026-09-29 08:23:01] [1790641381286] [RESTORE] BACK #3: app resumed, t_resume=1790641381254
+[2026-09-29 08:23:03] [1790641383962] [RESTORE] Baseline restored and verified: in_wl=True, ignoring=True
+[2026-09-29 08:23:07] [1790641387426] [RESTORE] Final whitelist has inbox: True

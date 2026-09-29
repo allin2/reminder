@@ -1,0 +1,4 @@
+[2026-09-29 01:00:48] [1790614848198] [S4-2] === S4: 开启方向回归 [S4-2] start ===
+[2026-09-29 01:00:48] [1790614848267] [S4-2] Setting 智能控制后台耗电 to establish pre-condition...
+[2026-09-29 01:01:19] [1790614879229] [S4-2] BACK #3: app resumed, t_resume=1790614879189, topResumedActivity=ActivityRecord{211475866 u0 space.alliswell.inbox/.MainActivity t162 d0}
+[2026-09-29 01:01:23] [1790614883170] [S4-2] Pre-state: ignoring=False, homeEmpty=False

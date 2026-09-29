@@ -1,0 +1,21 @@
+[2026-09-29 08:18:33] [1790641113276] [S2-v1] === S2: 撤销方向 · 打开设置面板 [S2-v1] start ===
+[2026-09-29 08:18:35] [1790641115031] [S2-v1] Baseline check: in_wl=False, ignoring=False. Restoring 允许后台耗电...
+[2026-09-29 08:18:50] [1790641130703] [S2-v1] BACK #3: app resumed, t_resume=1790641130676
+[2026-09-29 08:18:53] [1790641133346] [S2-v1] Baseline restored and verified: in_wl=True, ignoring=True
+[2026-09-29 08:19:09] [1790641149438] [S2-v1] BACK #3: app resumed, t_resume=1790641149410
+[2026-09-29 08:19:09] [1790641149474] [S2-v1] Tswitch=1790641143245, Tresume=1790641149410
+[2026-09-29 08:19:09] [1790641149504] [S2-v1] Fast variant: opening #btnSetup immediately after resume without waiting 8s...
+[2026-09-29 08:19:09] [1790641149773] [S2-v1] Cached ignoring before opening panel: True
+[2026-09-29 08:19:09] [1790641149892] [S2-v1] Topen_action=1790641149853, tapping #btnSetup...
+[2026-09-29 08:19:14] [1790641154643] [S2-v1] MutationObserver count: before=0, after=0, diff=0
+[2026-09-29 08:19:14] [1790641154724] [S2-v1] Diagnose calls during setup-open: 6
+[2026-09-29 08:19:14] [1790641154760] [S2-v1]   Call #1: t=1790641149912 (+-0.053s from open) caller=other coordLine=None ignoring=False
+[2026-09-29 08:19:14] [1790641154806] [S2-v1]   Call #2: t=1790641149910 (+-0.055s from open) caller=refreshNativeStatus (L406) coordLine=406 ignoring=False
+[2026-09-29 08:19:14] [1790641154843] [S2-v1]   Call #3: t=1790641150575 (+0.610s from open) caller=other coordLine=None ignoring=False
+[2026-09-29 08:19:14] [1790641154888] [S2-v1]   Call #4: t=1790641150575 (+0.610s from open) caller=resume-recheck (L423) coordLine=423 ignoring=False
+[2026-09-29 08:19:14] [1790641154935] [S2-v1]   Call #5: t=1790641154075 (+4.110s from open) caller=other coordLine=None ignoring=False
+[2026-09-29 08:19:14] [1790641154979] [S2-v1]   Call #6: t=1790641154075 (+4.110s from open) caller=resume-recheck (L423) coordLine=423 ignoring=False
+[2026-09-29 08:19:15] [1790641155033] [S2-v1] setup-open log entries: [{'t': 1790641149910, 'origin': 'setup-open', 'beforeIgn': True, 'endT': 1790641149943, 'afterIgn': False, 'changed': True}]
+[2026-09-29 08:19:15] [1790641155085] [S2-v1] Cached ignoring after setup-open: False
+[2026-09-29 08:19:15] [1790641155120] [S2-v1] Classification: (a) 新入口补读纠正状态并回写
+[2026-09-29 08:19:15] [1790641155670] [S2-v1] === S2: 撤销方向 · 打开设置面板 [S2-v1] end ===

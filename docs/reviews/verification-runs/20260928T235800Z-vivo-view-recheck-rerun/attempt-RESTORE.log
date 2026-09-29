@@ -1,0 +1,5 @@
+[2026-09-29 08:22:45] [1790641365446] [RESTORE] === Final restore verification start ===
+[2026-09-29 08:22:45] [1790641365517] [RESTORE] Baseline check: in_wl=False, ignoring=False. Restoring 允许后台耗电...
+[2026-09-29 08:23:01] [1790641381286] [RESTORE] BACK #3: app resumed, t_resume=1790641381254
+[2026-09-29 08:23:03] [1790641383962] [RESTORE] Baseline restored and verified: in_wl=True, ignoring=True
+[2026-09-29 08:23:07] [1790641387426] [RESTORE] Final whitelist has inbox: True
