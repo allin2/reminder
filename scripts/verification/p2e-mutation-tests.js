@@ -28,18 +28,26 @@ function fixture(factory, bridge) {
     getState: () => state, save: () => { state.saves = (state.saves || 0) + 1; }, renderMe: () => {},
     systemBridge: () => bridge, getNativeReminders: () => ({ isNativeAndroid: () => true }),
     getNativeReminderStatus: () => ({ notificationsGranted: true, notifications: "granted", scheduledAlarmIds: [], exactAlarm: "granted" }),
-    setNativeReminderStatus: () => {}, getFeedback: () => ({ TEST_FEEDBACK: [], setupSteps: () => ({ steps: [], next: null }), testFeedbackVerdict: () => null }),
-    labLog: () => {}, labCancelAlarms: async () => ({ ok: true }), describeAlarmDelivery: d => d.title || "delivery",
+    setNativeReminderStatus: () => {}, getFeedback: () => require("../../lib/feedback.js"),
+    labLog: () => {}, labCancelAlarms: async () => ({ ok: true }), describeAlarmDelivery: d => ({ text: d.title || "delivery" }),
     openBackgroundGuide: async () => false, openSystemSetting: async () => false, isNativeAndroidRuntime: () => true
   });
   return { app, state, nodes, toasts };
 }
 
 async function oldDeliveryIsIgnored(factory) {
-  const h = fixture(factory, { lastAlarmDelivery: async () => ({ at: 1000, title: "安心收件箱闹钟测试" }) });
-  h.state.settings.testRun = { id: 90003, startedAt: 2000, triggerAt: 62000, seenAt: null };
+  const h = fixture(factory, { lastAlarmDelivery: async () => ({ at: 1000, trace: "current-test", title: "安心收件箱闹钟测试" }) });
+  h.state.settings.testRun = { id: 90003, startedAt: 2000, triggerAt: 62000, trace: "current-test", seenAt: null };
   const html = await h.app.setupEvidenceHtml();
   return !h.state.settings.testRun.seenAt && /还没有记录/.test(html);
+}
+
+async function wrongTraceIsIgnored(factory) {
+  const h = fixture(factory, { lastAlarmDelivery: async () => ({ at: 62200, shownAt: 62700,
+    visible: true, locked: true, trace: "previous-test", title: "安心收件箱闹钟测试" }) });
+  h.state.settings.testRun = { id: 90003, startedAt: 2000, triggerAt: 62000, trace: "current-test", seenAt: null };
+  const html = await h.app.setupEvidenceHtml();
+  return !h.state.settings.testRun.delivery && /还没有记录/.test(html);
 }
 
 async function readFailureIsNotEmpty(factory) {
@@ -68,6 +76,11 @@ async function main() {
   const deliveryMutant = setupSource.replace(deliveryAnchor, "if (!(at > 0)) return false;");
   add("M1-delivery-attribution", { text: deliveryAnchor, ok: setupSource.includes(deliveryAnchor) },
     await oldDeliveryIsIgnored(factoryFrom(setupSource)), await oldDeliveryIsIgnored(factoryFrom(deliveryMutant)));
+
+  const traceAnchor = "return !!run.trace && d.trace === run.trace && d.title === SETUP_TEST_TITLE;";
+  add("M5-test-trace-attribution", { text: traceAnchor, ok: setupSource.includes(traceAnchor) },
+    await wrongTraceIsIgnored(factoryFrom(setupSource)),
+    await wrongTraceIsIgnored(factoryFrom(setupSource.replace(traceAnchor, "return d.title === SETUP_TEST_TITLE;"))));
 
   const readAnchor = "const confirmedGone = readOk && seen === 0;";
   const readMutant = setupSource.replace(readAnchor, "const confirmedGone = seen === 0;");

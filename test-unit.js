@@ -2642,7 +2642,30 @@ section("feedback — 动作语义与术语");
     testRun: { startedAt: 1000, feedbackAt: 1100 },
     testFeedback: { value: "heard", at: 1100 }
   }).steps.find(s => s.id === "test");
-  ok("本次测试明确听到后才可标记为验证通过", heardRun.done === true && heardRun.verified === true);
+  ok("本次测试只确认听到不能冒充锁屏展示通过", heardRun.done === true && heardRun.verified === false);
+  const displayRun = { startedAt: 1000, triggerAt: 61000, trace: "current-test",
+    delivery: { trace: "current-test", at: 61200, shownAt: 61700, visible: true, locked: true, screenOn: false } };
+  const displayVerified = run => fb.setupSteps({}, { testRun: run }).steps.find(s => s.id === "test").verified;
+  ok("同次测试在锁屏时准时显示界面才验证通过", displayVerified(displayRun) === true);
+  for (const [name, changes] of [
+    ["只响铃", { visible: false, shownAt: 0 }],
+    ["旧测试令牌", { trace: "previous-test" }],
+    ["解锁状态", { locked: false, screenOn: true }],
+    ["晚亮屏才显示", { shownAt: 81000 }],
+    ["提前的历史投递", { at: 2000, shownAt: 2300 }],
+    ["没有展示时间", { shownAt: 0 }]
+  ]) {
+    ok("锁屏展示反例：" + name + "不能验证通过",
+      displayVerified(Object.assign({}, displayRun, { delivery: Object.assign({}, displayRun.delivery, changes) })) === false);
+  }
+  ok("旧版 seenAt 和用户看到了均不能替代锁屏证据", displayVerified({ startedAt: 1000, seenAt: 1100,
+    feedbackAt: 1100, feedback: "seen" }) === false);
+  const manufacturer = verified.steps.find(s => s.id === "lockscreen");
+  ok("通用权限全开仍保留厂商锁屏检查，且说明三个关键开关", manufacturer.essential === true &&
+    manufacturer.done === false && manufacturer.verified === false &&
+    ["锁屏显示", "锁屏通知", "悬浮通知"].every(x => manufacturer.why.includes(x)));
+  const manual = fb.setupSteps({}, { lockscreenChecked: true }).steps.find(s => s.id === "lockscreen");
+  ok("手动检查可推进向导但不会冒充系统回读", manual.done === true && manual.verified === false);
   ok("未回答测试反馈不等于失败或成功", fb.testFeedbackVerdict(undefined).ok === null);
   ok("不确定既不算失败也不算成功", fb.testFeedbackVerdict("unsure").ok === null);
   ok("区分「没收到」与「不确定」", fb.testFeedbackVerdict("missed").ok === false);
@@ -2660,8 +2683,8 @@ section("feedback — 动作语义与术语");
     { notifications: "granted", exactAlarm: "granted", diag: { ignoringBatteryOptimizations: false } },
     { backgroundVisited: true, testRun: { startedAt: 1000, feedbackAt: 1100 }, testFeedback: { value: "heard", at: 1100 } }
   ).steps.find(s => s.id === "background");
-  ok("防冻结：60 秒测试被确认（听到了）⇒ 首页视为已解决（真实效果优先于无法回读的厂商开关）",
-    bgHeard.homeDone === true && bgHeard.verified === false);
+  ok("防冻结：短测试听到响铃不能取消后台未确认提示",
+    bgHeard.homeDone === false && bgHeard.verified === false);
   const bgMissed = fb.setupSteps(
     { notifications: "granted", exactAlarm: "granted" },
     { backgroundVisited: true, testRun: { startedAt: 1000, feedbackAt: 1100 }, testFeedback: { value: "missed", at: 1100 } }
@@ -2900,7 +2923,7 @@ section("P2-E AppSetup — 求值、live 注入、60 秒测试与停铃边界");
     };
     const calls = { saves: 0, schedules: [], cancels: [], stops: [], toasts: [], openSheets: 0, writes: 0, logs: [] };
     let bridge = options.bridge || {
-      scheduleAlarm: async value => { calls.schedules.push(value); return { triggerAt: Date.now() + value.delayMs, mode: "alarmClock" }; },
+      scheduleAlarm: async value => { calls.schedules.push(value); return { triggerAt: Date.now() + value.delayMs, mode: "alarmClock", trace: "test-" + calls.schedules.length }; },
       activeAlarmDeliveries: async () => ({ alarms: [] }),
       stopAlarmDelivery: async value => { calls.stops.push(value); return { stopped: true }; },
       lastAlarmDelivery: async () => null
@@ -2921,7 +2944,7 @@ section("P2-E AppSetup — 求值、live 注入、60 秒测试与停铃边界");
       systemBridge: () => bridge, getNativeReminders: () => native, getNativeReminderStatus: () => status,
       setNativeReminderStatus: value => { status = value; }, getFeedback: () => feedback,
       labLog: msg => { calls.logs.push(msg); }, labCancelAlarms: async value => { calls.cancels.push(value); return { ok: true }; },
-      describeAlarmDelivery: d => d.title || "delivery", openBackgroundGuide: async () => false,
+      describeAlarmDelivery: d => ({ text: d.visible ? "界面已显示" : "已响铃，未确认界面显示" }), openBackgroundGuide: async () => false,
       openSystemSetting: async () => false, isNativeAndroidRuntime: () => !!(native.isNativeAndroid && native.isNativeAndroid())
     };
     return {
@@ -2991,11 +3014,11 @@ section("P2-E AppSetup — 求值、live 注入、60 秒测试与停铃边界");
     /setupEntry/.test(cardHtml) && dismissable.nodes["#homeSetup"].innerHTML === "",
     dismissable.nodes["#homeSetup"].innerHTML);
 
-  // 防冻结接入真实 Feedback.setupSteps：点进过设置页不关首页卡片；系统回读或测试确认后才消失
+  // 防冻结接入真实 Feedback.setupSteps：点进过设置页或短测试响铃不关闭未确认提示
   const realFeedback = { TEST_FEEDBACK: feedbackMod.TEST_FEEDBACK, setupSteps: feedbackMod.setupSteps,
     testFeedbackVerdict: feedbackMod.testFeedbackVerdict };
   const bgCard = setupFixture({
-    native: { isNativeAndroid: () => true }, settings: { setupPromptStarted: true, backgroundVisited: true },
+    native: { isNativeAndroid: () => true }, settings: { setupPromptStarted: true, backgroundVisited: true, lockscreenChecked: true },
     status: { notifications: "granted", exactAlarm: "granted", scheduledAlarmIds: [],
       diag: { canDrawOverlays: true, canUseFullScreenIntent: true, ignoringBatteryOptimizations: false } },
     feedback: realFeedback
@@ -3003,7 +3026,7 @@ section("P2-E AppSetup — 求值、live 注入、60 秒测试与停铃边界");
   bgCard.app.renderSetupEntry();
   const bgHtml = bgCard.nodes["#homeSetup"].innerHTML;
   ok("防冻结：通知与精确提醒都已授权、只点进过后台设置页 ⇒ 首页仍出卡片，下一步是防冻结",
-    /还差 1 步/.test(bgHtml) && /允许完全后台运行/.test(bgHtml) && /setupEntryDismiss/.test(bgHtml), bgHtml);
+    /还有 1 项/.test(bgHtml) && /允许完全后台运行/.test(bgHtml) && /setupEntryDismiss/.test(bgHtml), bgHtml);
   bgCard.setStatus({ notifications: "granted", exactAlarm: "granted", scheduledAlarmIds: [],
     diag: { canDrawOverlays: true, canUseFullScreenIntent: true, ignoringBatteryOptimizations: true } });
   bgCard.app.renderSetupEntry();
@@ -3011,15 +3034,26 @@ section("P2-E AppSetup — 求值、live 注入、60 秒测试与停铃边界");
     bgCard.nodes["#homeSetup"].innerHTML);
   const bgTested = setupFixture({
     native: { isNativeAndroid: () => true },
-    settings: { setupPromptStarted: true, backgroundVisited: true,
+    settings: { setupPromptStarted: true, backgroundVisited: true, lockscreenChecked: true,
       testRun: { startedAt: 1000, feedbackAt: 1100 }, testFeedback: { value: "heard", at: 1100 } },
     status: { notifications: "granted", exactAlarm: "granted", scheduledAlarmIds: [],
       diag: { ignoringBatteryOptimizations: false } },
     feedback: realFeedback
   });
   bgTested.app.renderSetupEntry();
-  ok("防冻结：60 秒测试已确认听到 ⇒ 即使厂商开关无法回读，首页也不再提示",
-    bgTested.nodes["#homeSetup"].innerHTML === "", bgTested.nodes["#homeSetup"].innerHTML);
+  ok("防冻结：60 秒测试已确认听到仍保留后台检查提示",
+    /允许完全后台运行/.test(bgTested.nodes["#homeSetup"].innerHTML), bgTested.nodes["#homeSetup"].innerHTML);
+  const upgrade = setupFixture({ native: { isNativeAndroid: () => true },
+    settings: { setupPromptStarted: true, setupDone: true }, feedback: realFeedback,
+    status: { notifications: "granted", exactAlarm: "granted", diag: { ignoringBatteryOptimizations: true,
+      canDrawOverlays: true, canUseFullScreenIntent: true } } });
+  upgrade.app.renderSetupEntry();
+  upgrade.app.renderSetupSheetBody();
+  ok("升级后旧版 setupDone 不掩盖厂商锁屏检查", /检查锁屏显示与通知/.test(upgrade.nodes["#homeSetup"].innerHTML));
+  ok("厂商指导持续可见且包含两个设置入口与手动确认", /锁屏显示/.test(upgrade.nodes["#setupBody"].innerHTML) &&
+    /data-setup-setting="appDetails"/.test(upgrade.nodes["#setupBody"].innerHTML) &&
+    /data-setup-setting="notify"/.test(upgrade.nodes["#setupBody"].innerHTML) &&
+    /data-setup-check="lockscreen"/.test(upgrade.nodes["#setupBody"].innerHTML));
   bgCard.setStatus({ notifications: "granted", exactAlarm: "granted", scheduledAlarmIds: [],
     diag: { ignoringBatteryOptimizations: false } });
   bgCard.app.renderSetupEntry();
@@ -3029,7 +3063,7 @@ section("P2-E AppSetup — 求值、live 注入、60 秒测试与停铃边界");
 
   const doneSetup = beginAsyncSection();
   (async () => {
-    const h = setupFixture({ native: { isNativeAndroid: () => true }, settings: { setupPromptStarted: true } });
+    const h = setupFixture({ native: { isNativeAndroid: () => true }, settings: { setupPromptStarted: true }, feedback: realFeedback });
     const started = await h.app.startSetupTestRun();
     const firstRun = h.state.settings.testRun;
     ok("P2-E 60 秒测试只排独立 90003 闹钟，参数固定为 60000ms",
@@ -3048,16 +3082,37 @@ section("P2-E AppSetup — 求值、live 注入、60 秒测试与停铃边界");
       JSON.stringify({ failedStart: failedStart, toasts: h.calls.toasts }));
 
     const run = h.state.settings.testRun;
-    run.startedAt = 5000; run.seenAt = null;
-    h.setBridge({ lastAlarmDelivery: async () => ({ at: 4000, title: "安心收件箱闹钟测试" }) });
+    run.startedAt = 5000; run.triggerAt = 6000; run.seenAt = null;
+    h.setBridge({ lastAlarmDelivery: async () => ({ at: 4000, trace: run.trace, title: "安心收件箱闹钟测试" }) });
     const oldEvidence = await h.app.setupEvidenceHtml();
     ok("P2-E 旧时间投递不算本次测试", /还没有记录/.test(oldEvidence) && !run.seenAt, oldEvidence);
-    h.setBridge({ lastAlarmDelivery: async () => ({ at: 6000, title: "业务提醒" }) });
+    h.setBridge({ lastAlarmDelivery: async () => ({ at: 6000, trace: run.trace, title: "业务提醒" }) });
     const wrongTitleEvidence = await h.app.setupEvidenceHtml();
     ok("P2-E 错标题投递不算本次测试", /还没有记录/.test(wrongTitleEvidence) && !run.seenAt, wrongTitleEvidence);
-    h.setBridge({ lastAlarmDelivery: async () => ({ at: 6000, title: "安心收件箱闹钟测试" }) });
+    h.setBridge({ lastAlarmDelivery: async () => ({ at: 6000, trace: "old-test", title: "安心收件箱闹钟测试" }) });
+    const wrongTrace = await h.app.setupEvidenceHtml();
+    ok("P2-E 晚到的旧测试即使标题相同也不能污染本次", /还没有记录/.test(wrongTrace) && !run.delivery, wrongTrace);
+    const delivery = { at: 6000, trace: run.trace, title: "安心收件箱闹钟测试", visible: false,
+      shownAt: 0, locked: true, screenOn: false, notificationPosted: true };
+    h.setBridge({ lastAlarmDelivery: async () => delivery });
+    const soundOnly = await h.app.setupEvidenceHtml();
+    ok("P2-E 只投递或提交通知不会写 seenAt，且显示具体修复提示", !run.seenAt &&
+      /尚未验证/.test(soundOnly) && /锁屏显示/.test(soundOnly) && !/\[object Object\]/.test(soundOnly), soundOnly);
+    delivery.visible = true; delivery.shownAt = 6100;
     const currentEvidence = await h.app.setupEvidenceHtml();
-    ok("P2-E 同次且测试标题的投递才更新 seenAt", /本次测试投递/.test(currentEvidence) && !!run.seenAt, currentEvidence);
+    ok("P2-E 同次准时锁屏显示才更新 seenAt 并确认本次展示", run.seenAt === 6100 &&
+      /本次展示已验证/.test(currentEvidence) && /不代表长时间待机/.test(currentEvidence), currentEvidence);
+    delivery.shownAt = 26000;
+    const lateEvidence = await h.app.setupEvidenceHtml();
+    ok("P2-E 到达准时但亮屏后才显示不能验证通过", /尚未验证/.test(lateEvidence) &&
+      !/本次展示已验证/.test(lateEvidence), lateEvidence);
+    let resolveDelivery;
+    h.setBridge({ lastAlarmDelivery: () => new Promise(resolve => { resolveDelivery = resolve; }) });
+    const pendingEvidence = h.app.setupEvidenceHtml();
+    const nextRun = { startedAt: 30000, triggerAt: 90000, trace: "next-test" };
+    h.state.settings.testRun = nextRun;
+    resolveDelivery(delivery);
+    ok("P2-E 异步读回期间重测不会写旧结果", await pendingEvidence === "" && !nextRun.delivery);
 
     h.setBridge({
       scheduleAlarm: async value => ({ triggerAt: Date.now() + value.delayMs, mode: "alarmClock" }),

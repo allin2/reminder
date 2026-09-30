@@ -49,7 +49,8 @@
 // v42：P4 修复 SW install 链吞掉 cache.addAll 失败后跳过等待激活残缺版本的缺陷；预缓存失败时回滚删除残缺缓存并中止安装，保留旧版 SW 与完整旧缓存。
 // v41：P3-I-Q2 把 detailReminderStatusRow(it) 实现迁入 lib/app-views.js；更新运行时脚本缓存。
 // v40：U1 修复稍后面板入口 ReferenceError 与选时状态上收。
-const CACHE = "attention-inbox-v50";
+// v51：补齐锁屏显示与通知手动检查入口，按本次投递身份和可见性判断锁屏测试结果。
+const CACHE = "attention-inbox-v51";
 /**
  * 预缓存清单必须**逐条等于** `index.html` 里真正加载的运行时脚本。
  *

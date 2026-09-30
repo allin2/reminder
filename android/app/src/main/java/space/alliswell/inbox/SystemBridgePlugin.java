@@ -1563,6 +1563,7 @@ public class SystemBridgePlugin extends Plugin {
       // （见 AlarmScheduler.scheduleUnfreezer），谁先派发不确定。用「谁更新」判断，
       // 会在「服务先跑」时把本次结果误判成上一次的陈旧值。trace 相同才算本次上报。
       String deliveryTrace = sp.getString(AlarmTestReceiver.KEY_DELIVERY_TRACE, "");
+      r.put("trace", deliveryTrace);
       String carrierTrace = sp.getString(AlarmTestReceiver.KEY_CARRIER_TRACE, "");
       boolean carrierFresh = !deliveryTrace.isEmpty() && deliveryTrace.equals(carrierTrace);
       r.put("carrierSound", carrierFresh
