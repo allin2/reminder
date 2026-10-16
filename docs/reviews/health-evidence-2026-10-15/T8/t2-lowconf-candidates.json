@@ -1,0 +1,102 @@
+[
+  {
+    "s": "月底交房租",
+    "conf": "mid",
+    "spec": true
+  },
+  {
+    "s": "下个月看看",
+    "conf": "mid",
+    "spec": true
+  },
+  {
+    "s": "过两天弄一下",
+    "conf": "high",
+    "spec": true
+  },
+  {
+    "s": "下周三开会",
+    "conf": "high",
+    "spec": true
+  },
+  {
+    "s": "周末聚餐",
+    "conf": "mid",
+    "spec": true
+  },
+  {
+    "s": "明天取快递",
+    "conf": "high",
+    "spec": true
+  },
+  {
+    "s": "3天后付款",
+    "conf": "high",
+    "spec": true
+  },
+  {
+    "s": "12月5号交材料",
+    "conf": "mid",
+    "spec": false
+  },
+  {
+    "s": "下午三点一刻开会",
+    "conf": "mid",
+    "spec": false
+  },
+  {
+    "s": "三点半开会",
+    "conf": "mid",
+    "spec": false
+  },
+  {
+    "s": "三十号前交材料",
+    "conf": "low",
+    "spec": false
+  },
+  {
+    "s": "下下周五汇报",
+    "conf": "high",
+    "spec": true
+  },
+  {
+    "s": "这周五交报告",
+    "conf": "high",
+    "spec": true
+  },
+  {
+    "s": "下月10号体检",
+    "conf": "mid",
+    "spec": true
+  },
+  {
+    "s": "今晚八点看电影",
+    "conf": "high",
+    "spec": true
+  },
+  {
+    "s": "5:30提醒我",
+    "conf": "mid",
+    "spec": true
+  },
+  {
+    "s": "半个月后复查",
+    "conf": "low",
+    "spec": false
+  },
+  {
+    "s": "月底前把报告交了",
+    "conf": "mid",
+    "spec": true
+  },
+  {
+    "s": "还有两天就到期了",
+    "conf": "low",
+    "spec": false
+  },
+  {
+    "s": "明年1月3号回老家",
+    "conf": "mid",
+    "spec": false
+  }
+]

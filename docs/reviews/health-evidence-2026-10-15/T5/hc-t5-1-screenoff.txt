@@ -1,0 +1,20 @@
+HC-T5-1 息屏/锁屏轮 —— 证据（PASS）
+
+触发方式：CDP `SystemBridge.startAlarmTraceTest`（屏幕熄灭且锁屏时触发）
+触发基线时刻：epoch 1792133635807；触发时 `keyguard showing=true`（锁屏）
+注意：第一次到点后系统被全屏闹钟唤醒（screenOn 由 false 变 true），后续两次投递已在亮屏下发生。
+
+三次投递（planned triggerAt -> received）：
+- id -917010：triggerAt=1792133645432 -> received=1792133645717 -> 延迟 285 ms
+  logcat: deliver path=fsi+direct fullScreen=true screenOn=false locked=true ...
+- id -917060：triggerAt=1792133695561 -> received=1792133695579 -> 延迟 18 ms
+  logcat: deliver path=direct+banner fullScreen=true screenOn=true locked=false ...
+- id -917120：triggerAt=1792133755680 -> received=1792133755807 -> 延迟 127 ms
+  logcat: deliver path=direct+banner fullScreen=true screenOn=true locked=false ...
+
+logcat 原文：
+10-16 14:54:05.795 I/AttentionAlarm(18861): deliver path=fsi+direct fullScreen=true screenOn=false locked=true inCall=false canDrawOverlays=true
+10-16 14:54:55.599 I/AttentionAlarm(18861): deliver path=direct+banner fullScreen=true screenOn=true locked=false inCall=false canDrawOverlays=true
+10-16 14:55:55.817 I/AttentionAlarm(18861): deliver path=direct+banner fullScreen=true screenOn=true locked=false inCall=false canDrawOverlays=true
+
+结论：PASS —— 熄屏+锁屏下首次投递延迟 285 ms、走系统全屏意图（fsi+direct），全 3 次 < 1s。

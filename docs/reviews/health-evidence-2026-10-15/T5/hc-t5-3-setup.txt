@@ -1,0 +1,4 @@
+HC-T5-3 setup evidence
+created idle: i_bm6ect6xmvalkg0l triggerAt=1792132870000 priority=important delivery_mode=alarm
+force-stop executed at device epoch: 1792132780251
+pending ACTION_TEST_ALARM count after force-stop: 1

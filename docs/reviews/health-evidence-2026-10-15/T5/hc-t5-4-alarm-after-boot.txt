@@ -1,0 +1,80 @@
+      operation=PendingIntent{a68e66c: PendingIntentRecord{8673435 com.vivo.aiengine broadcastIntent}}
+    RTC_WAKEUP #16: Alarm{df9aeee type 0 origWhen 1792134681016 flags 3 windowLength 0 whenElapsed 368177 maxWhenElapsed 368177 repeatInterval 0 tag=*walarm*:space.alliswell.inbox.ACTION_TEST_ALARM originWhenElapsed 368177 originWindowLength 0 setAtTime=2026-10-16 07:06:14 policyWhenElapsed:[368177, 61835, 0, 0, 0] procName=space.alliswell.inbox space.alliswell.inbox}
+      tag=*walarm*:space.alliswell.inbox.ACTION_TEST_ALARM
+      type=RTC_WAKEUP origWhen=2026-10-16 15:11:21.016 window=0 exactAllowReason=permission repeatInterval=0 count=0 flags=0x3
+      policyWhenElapsed: requester=+4m54s556ms app_standby=-11s786ms device_idle=-- battery_saver=-- --unknown(4)--=--
+      whenElapsed=+4m54s556ms maxWhenElapsed=+4m54s556ms
+--
+        triggerTime=2026-10-16 15:11:21.016
+        showIntent=PendingIntent{f696f22: PendingIntentRecord{60cddb3 space.alliswell.inbox startActivity}}
+      operation=PendingIntent{a791f70: PendingIntentRecord{dc6b2e9 space.alliswell.inbox broadcastIntent}}
+      idle-options=Bundle[{android.pendingIntent.backgroundActivityAllowed=2, android:broadcast.temporaryAppAllowlistReasonCode=301, android:broadcast.temporaryAppAllowlistDuration=10000, android:broadcast.temporaryAppAllowlistReason=, android:broadcast.temporaryAppAllowlistType=0, android:broadcast.flags=8}]
+    RTC_WAKEUP #17: Alarm{f2d248b type 0 origWhen 1792134681016 flags 3 windowLength 0 whenElapsed 368177 maxWhenElapsed 368177 repeatInterval 0 tag=*walarm*:space.alliswell.inbox/.AlarmRingService originWhenElapsed 368177 originWindowLength 0 setAtTime=2026-10-16 07:06:15 policyWhenElapsed:[368177, 62655, 0, 0, 0] procName=space.alliswell.inbox space.alliswell.inbox}
+      tag=*walarm*:space.alliswell.inbox/.AlarmRingService
+      type=RTC_WAKEUP origWhen=2026-10-16 15:11:21.016 window=0 exactAllowReason=permission repeatInterval=0 count=0 flags=0x3
+      policyWhenElapsed: requester=+4m54s556ms app_standby=-10s966ms device_idle=-- battery_saver=-- --unknown(4)--=--
+      whenElapsed=+4m54s556ms maxWhenElapsed=+4m54s556ms
+--
+        triggerTime=2026-10-16 15:11:21.016
+        showIntent=PendingIntent{1535b6e: PendingIntentRecord{60cddb3 space.alliswell.inbox startActivity}}
+      operation=PendingIntent{b6da20f: PendingIntentRecord{ba8c29c space.alliswell.inbox startForegroundService}}
+      idle-options=Bundle[{android.pendingIntent.backgroundActivityAllowed=2, android:broadcast.temporaryAppAllowlistReasonCode=301, android:broadcast.temporaryAppAllowlistDuration=10000, android:broadcast.temporaryAppAllowlistReason=, android:broadcast.temporaryAppAllowlistType=0, android:broadcast.flags=8}]
+    RTC_WAKEUP #18: Alarm{7c173e5 type 0 origWhen 1792134701131 flags 9 windowLength 0 whenElapsed 388292 maxWhenElapsed 388292 repeatInterval 0 tag=*walarm*:intent.action.update_location_alarm originWhenElapsed 388292 originWindowLength 0 setAtTime=2026-10-16 07:05:41 policyWhenElapsed:[388292, 28294, 0, 0, 0] procName=com.android.nfc com.android.nfc}
+      tag=*walarm*:intent.action.update_location_alarm
+--
+      listener=android.app.AlarmManager$ListenerWrapper@d37063a
+    RTC_WAKEUP #30: Alarm{ea10259 type 0 origWhen 1792136481000 flags 9 windowLength 0 whenElapsed 2168161 maxWhenElapsed 2168161 repeatInterval 0 tag=*walarm*:space.alliswell.inbox/com.capacitorjs.plugins.localnotifications.TimedNotificationPublisher originWhenElapsed 2168161 originWindowLength 0 setAtTime=2026-10-16 07:06:11 policyWhenElapsed:[2168161, 58833, 0, 58833, 0] procName=space.alliswell.inbox space.alliswell.inbox}
+      tag=*walarm*:space.alliswell.inbox/com.capacitorjs.plugins.localnotifications.TimedNotificationPublisher
+      type=RTC_WAKEUP origWhen=2026-10-16 15:41:21.000 window=0 exactAllowReason=permission repeatInterval=0 count=0 flags=0x9
+      policyWhenElapsed: requester=+34m54s540ms app_standby=-14s788ms device_idle=-- battery_saver=-14s788ms --unknown(4)--=--
+      whenElapsed=+34m54s540ms maxWhenElapsed=+34m54s540ms
+      operation=PendingIntent{5776a46: PendingIntentRecord{e5dc407 space.alliswell.inbox broadcastIntent}}
+      idle-options=Bundle[{android.pendingIntent.backgroundActivityAllowed=2, android:broadcast.temporaryAppAllowlistReasonCode=302, android:broadcast.temporaryAppAllowlistDuration=10000, android:broadcast.temporaryAppAllowlistReason=, android:broadcast.temporaryAppAllowlistType=0, android:broadcast.flags=8}]
+    ELAPSED_WAKEUP #31: Alarm{24def13 type 2 origWhen 2419861 flags 0 windowLength 1792301 whenElapsed 2419861 maxWhenElapsed 4212162 repeatInterval 0 tag=*walarm*:*job.deadline* originWhenElapsed 2419861 originWindowLength 1792301 setAtTime=2026-10-16 07:05:42 policyWhenElapsed:[2419861, 30554, 0, 0, 0] procName=system android}
+      tag=*walarm*:*job.deadline*
+--
+      operation=PendingIntent{1f16f24: PendingIntentRecord{d817a8d com.vivo.safecenter broadcastIntent}}
+    RTC_WAKEUP #45: Alarm{16a4312 type 0 origWhen 1792138281000 flags 9 windowLength 0 whenElapsed 3968161 maxWhenElapsed 3968161 repeatInterval 0 tag=*walarm*:space.alliswell.inbox/com.capacitorjs.plugins.localnotifications.TimedNotificationPublisher originWhenElapsed 3968161 originWindowLength 0 setAtTime=2026-10-16 07:06:12 policyWhenElapsed:[3968161, 59428, 0, 59428, 0] procName=space.alliswell.inbox space.alliswell.inbox}
+      tag=*walarm*:space.alliswell.inbox/com.capacitorjs.plugins.localnotifications.TimedNotificationPublisher
+      type=RTC_WAKEUP origWhen=2026-10-16 16:11:21.000 window=0 exactAllowReason=permission repeatInterval=0 count=0 flags=0x9
+      policyWhenElapsed: requester=+1h4m54s540ms app_standby=-14s193ms device_idle=-- battery_saver=-14s193ms --unknown(4)--=--
+      whenElapsed=+1h4m54s540ms maxWhenElapsed=+1h4m54s540ms
+      operation=PendingIntent{3f52859: PendingIntentRecord{f837c1e space.alliswell.inbox broadcastIntent}}
+      idle-options=Bundle[{android.pendingIntent.backgroundActivityAllowed=2, android:broadcast.temporaryAppAllowlistReasonCode=302, android:broadcast.temporaryAppAllowlistDuration=10000, android:broadcast.temporaryAppAllowlistReason=, android:broadcast.temporaryAppAllowlistType=0, android:broadcast.flags=8}]
+    RTC_WAKEUP #46: Alarm{595e626 type 0 origWhen 1792140081000 flags 9 windowLength 0 whenElapsed 5768161 maxWhenElapsed 5768161 repeatInterval 0 tag=*walarm*:space.alliswell.inbox/com.capacitorjs.plugins.localnotifications.TimedNotificationPublisher originWhenElapsed 5768161 originWindowLength 0 setAtTime=2026-10-16 07:06:12 policyWhenElapsed:[5768161, 60037, 0, 60037, 0] procName=space.alliswell.inbox space.alliswell.inbox}
+      tag=*walarm*:space.alliswell.inbox/com.capacitorjs.plugins.localnotifications.TimedNotificationPublisher
+      type=RTC_WAKEUP origWhen=2026-10-16 16:41:21.000 window=0 exactAllowReason=permission repeatInterval=0 count=0 flags=0x9
+      policyWhenElapsed: requester=+1h34m54s540ms app_standby=-13s584ms device_idle=-- battery_saver=-13s584ms --unknown(4)--=--
+      whenElapsed=+1h34m54s540ms maxWhenElapsed=+1h34m54s540ms
+      operation=PendingIntent{8012cff: PendingIntentRecord{700acc space.alliswell.inbox broadcastIntent}}
+      idle-options=Bundle[{android.pendingIntent.backgroundActivityAllowed=2, android:broadcast.temporaryAppAllowlistReasonCode=302, android:broadcast.temporaryAppAllowlistDuration=10000, android:broadcast.temporaryAppAllowlistReason=, android:broadcast.temporaryAppAllowlistType=0, android:broadcast.flags=8}]
+    RTC #47: Alarm{17a5002 type 1 origWhen 1792141538449 flags 8 windowLength 2700000 whenElapsed 7225610 maxWhenElapsed 9925610 repeatInterval 3600000 tag=*alarm*:com.vivo.aiengine.intent.action.SMART_SCHEDULER originWhenElapsed 7225610 originWindowLength 2700000 setAtTime=2026-10-16 07:05:38 policyWhenElapsed:[7225610, 25634, 0, 0, 0] procName=com.vivo.aiengine com.vivo.aiengine}
+      tag=*alarm*:com.vivo.aiengine.intent.action.SMART_SCHEDULER
+--
+  
+  Next wake from idle: Alarm{df9aeee type 0 origWhen 1792134681016 flags 3 windowLength 0 whenElapsed 368177 maxWhenElapsed 368177 repeatInterval 0 tag=*walarm*:space.alliswell.inbox.ACTION_TEST_ALARM originWhenElapsed 368177 originWindowLength 0 setAtTime=2026-10-16 07:06:14 policyWhenElapsed:[368177, 61835, 0, 0, 0] procName=space.alliswell.inbox space.alliswell.inbox}
+    tag=*walarm*:space.alliswell.inbox.ACTION_TEST_ALARM
+    type=RTC_WAKEUP origWhen=2026-10-16 15:11:21.016 window=0 exactAllowReason=permission repeatInterval=0 count=0 flags=0x3
+    policyWhenElapsed: requester=+4m54s556ms app_standby=-11s786ms device_idle=-- battery_saver=-- --unknown(4)--=--
+    whenElapsed=+4m54s556ms maxWhenElapsed=+4m54s556ms
+--
+      triggerTime=2026-10-16 15:11:21.016
+      showIntent=PendingIntent{f696f22: PendingIntentRecord{60cddb3 space.alliswell.inbox startActivity}}
+    operation=PendingIntent{a791f70: PendingIntentRecord{dc6b2e9 space.alliswell.inbox broadcastIntent}}
+    idle-options=Bundle[{android.pendingIntent.backgroundActivityAllowed=2, android:broadcast.temporaryAppAllowlistReasonCode=301, android:broadcast.temporaryAppAllowlistDuration=10000, android:broadcast.temporaryAppAllowlistReason=, android:broadcast.temporaryAppAllowlistType=0, android:broadcast.flags=8}]
+  
+  Past-due non-wakeup alarms: (none)
+--
+        Snapshot:
+          type=RTC_WAKEUP tag=*walarm*:space.alliswell.inbox/com.capacitorjs.plugins.localnotifications.TimedNotificationPublisher 
+          policyWhenElapsed: requester=+1h34m54s540ms app_standby=-24s293ms device_idle=-- battery_saver=-24s293ms --unknown(4)--=--
+      #2: Reason=alarm_cancelled elapsed=-14s751ms rtc=2026-10-16 15:06:11.709
+        Snapshot:
+          type=RTC_WAKEUP tag=*walarm*:space.alliswell.inbox/com.capacitorjs.plugins.localnotifications.TimedNotificationPublisher 
+          policyWhenElapsed: requester=+1h4m54s540ms app_standby=-24s850ms device_idle=-- battery_saver=-24s850ms --unknown(4)--=--
+      #3: Reason=alarm_cancelled elapsed=-15s732ms rtc=2026-10-16 15:06:10.728
+        Snapshot:
+          type=RTC_WAKEUP tag=*walarm*:space.alliswell.inbox/com.capacitorjs.plugins.localnotifications.TimedNotificationPublisher 
+          policyWhenElapsed: requester=+34m54s540ms app_standby=-25s84ms device_idle=-- battery_saver=-25s97ms --unknown(4)--=--
+  
+  Top Alarms:

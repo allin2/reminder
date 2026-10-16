@@ -1,0 +1,18 @@
+{
+  "case": "HC-T5-1 锁屏/息屏到点延迟",
+  "tool": "App 内「一键多点后台诊断」(SystemBridge.startAlarmTraceTest)",
+  "triggered_via": "CDP Runtime.evaluate over webview_devtools_remote_4421 (adb forward tcp:9225 -> scripts/android-cdp-eval.py)",
+  "device_state_before": "unlocked, screen on (本轮)；息屏轮见 hc-t5-1-screenoff.txt",
+  "planned_vs_actual": [
+    {"id": -917010, "planned_triggerAt": 1792132402146, "received_at": 1792132402344, "delay_ms": 198},
+    {"id": -917060, "planned_triggerAt": 1792132452174, "received_at": 1792132452315, "delay_ms": 141},
+    {"id": -917120, "planned_triggerAt": 1792132512200, "received_at": 1792132512216, "delay_ms": 16}
+  ],
+  "verdict": "PASS —— 3 次投递延迟 16/141/198 ms，均 < 1s",
+  "ring_started_detail": "carrier=native;foreground=true;sound=true;vibrate=true (每次投递仅一条 ringStarted)",
+  "logcat_deliveries": [
+    "10-16 14:33:22.356 I/AttentionAlarm(4421): deliver path=direct+banner fullScreen=true screenOn=true locked=false inCall=false canDrawOverlays=true",
+    "10-16 14:34:12.331 I/AttentionAlarm(4421): deliver path=direct+banner fullScreen=true screenOn=true locked=false inCall=false canDrawOverlays=true",
+    "10-16 14:35:12.238 I/AttentionAlarm(4421): deliver path=direct+banner fullScreen=true screenOn=true locked=false inCall=false canDrawOverlays=true"
+  ]
+}

@@ -1,0 +1,5 @@
+# HC-T5-4 JS 侧读回（CDP，2026-10-16 15:16:47 设备时间，MainActivity 前台）
+
+{"item":{"id":"i_stq02x43mvamgubk","title":"T5-4 重启恢复","status":"due","triggerAt":1792134681000,"deliveredAt":1792134999686,"remindCount":1,"lastRemindAt":1792134999686,"lastAlertShownAt":1792134999692,"reminderEvents":{"1@1792136481000":{"at":1792136481000,"state":"scheduled","roundBase":1792134681000},"2@1792138281000":{"at":1792138281000,"state":"scheduled","roundBase":1792134681000},"3@1792140081000":{"at":1792140081000,"state":"scheduled","roundBase":1792134681000},"0@1792134681000":{"at":1792134681000,"state":"delivered","roundBase":1792134681000,"receivedAt":1792134682086,"carrier":"alarm","level":"received","source":"native"}}},"lastAlarmDelivery":null,"deliveryEvidence":false,"ts":1792135007707}
+
+# 判读：reminderEvents 0@1792134681000 state=delivered receivedAt=1792134682086（与原生台账 received 1792134681978 一致）；remindCount=1 单次；1/2/3@… scheduled 为重要事项 followup 链（对应 dumpsys 中 15:41/16:11/16:41 的 TimedNotificationPublisher），属设计行为非残留干扰。

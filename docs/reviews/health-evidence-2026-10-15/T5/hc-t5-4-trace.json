@@ -1,0 +1,25 @@
+{
+ "note": "HC-T5-4 AlarmTrace 台账摘录（2026-10-16 reboot 后到点投递）。设备 reboot 15:04:47，开机完成 15:05:39，恢复注册 setAtTime 15:06:14（dumpsys 显示时区偏移，实际设备时钟 15:06:14），plannedAt=1792134681016",
+ "t54_token_events": [
+  {
+   "token": "395984606:491b6fc8-c6e4-4407-ad4d-658bae3c499e",
+   "stage": "received",
+   "at": 1792134681978,
+   "detail": ""
+  },
+  {
+   "token": "395984606:491b6fc8-c6e4-4407-ad4d-658bae3c499e",
+   "stage": "ringStarted",
+   "at": 1792134683240,
+   "detail": "carrier=native;foreground=true;sound=true;vibrate=true"
+  },
+  {
+   "token": "395984606:491b6fc8-c6e4-4407-ad4d-658bae3c499e",
+   "stage": "windowSample",
+   "at": 1792134685079,
+   "detail": "after=1500ms;focus=true;shown=true;visibility=0;playing=false"
+  }
+ ],
+ "post_boot_missed": [],
+ "total_events": 150
+}

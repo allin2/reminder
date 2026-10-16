@@ -1,0 +1,45 @@
+# HC-T5-4 排程证据（实际执行 2026-10-16 15:03-15:05 设备时间，主控时区 America/Los_Angeles）
+# 新事项 i_stq02x43mvamgubk 'T5-4 重启恢复' triggerAt=1792134681000（设备 now=1792134262049，+419s ≈ 7min）
+
+== dumpsys alarm | grep -i alliswell（重启前）==
+        space.alliswell.inbox
+    RTC_WAKEUP #12: Alarm{484b238 type 0 origWhen 1792134681016 flags 3 windowLength 0 whenElapsed 2356737182 maxWhenElapsed 2356737182 repeatInterval 0 tag=*walarm*:space.alliswell.inbox.ACTION_TEST_ALARM originWhenElapsed 2356737182 originWindowLength 0 setAtTime=2026-10-16 07:04:21 policyWhenElapsed:[2356737182, 2356317852, 0, 0, 0] procName=space.alliswell.inbox space.alliswell.inbox}
+      tag=*walarm*:space.alliswell.inbox.ACTION_TEST_ALARM
+        showIntent=PendingIntent{74aac28: PendingIntentRecord{a2fad41 space.alliswell.inbox startActivity}}
+      operation=PendingIntent{e5cc2e6: PendingIntentRecord{4c54027 space.alliswell.inbox broadcastIntent}}
+    RTC_WAKEUP #13: Alarm{a1d2211 type 0 origWhen 1792134681016 flags 3 windowLength 0 whenElapsed 2356737183 maxWhenElapsed 2356737183 repeatInterval 0 tag=*walarm*:space.alliswell.inbox/.AlarmRingService originWhenElapsed 2356737183 originWindowLength 0 setAtTime=2026-10-16 07:04:21 policyWhenElapsed:[2356737183, 2356317855, 0, 0, 0] procName=space.alliswell.inbox space.alliswell.inbox}
+      tag=*walarm*:space.alliswell.inbox/.AlarmRingService
+        showIntent=PendingIntent{808dc7d: PendingIntentRecord{a2fad41 space.alliswell.inbox startActivity}}
+      operation=PendingIntent{4a22772: PendingIntentRecord{53bb7c3 space.alliswell.inbox startForegroundService}}
+    RTC_WAKEUP #21: Alarm{f8d6e9 type 0 origWhen 1792136481000 flags 9 windowLength 0 whenElapsed 2358537166 maxWhenElapsed 2358537166 repeatInterval 0 tag=*walarm*:space.alliswell.inbox/com.capacitorjs.plugins.localnotifications.TimedNotificationPublisher originWhenElapsed 2358537166 originWindowLength 0 setAtTime=2026-10-16 07:04:21 policyWhenElapsed:[2358537166, 2356318132, 0, 2356318132, 0] procName=space.alliswell.inbox space.alliswell.inbox}
+      tag=*walarm*:space.alliswell.inbox/com.capacitorjs.plugins.localnotifications.TimedNotificationPublisher
+      operation=PendingIntent{3cd840: PendingIntentRecord{54bc379 space.alliswell.inbox broadcastIntent}}
+    RTC_WAKEUP #29: Alarm{6d542b type 0 origWhen 1792138281000 flags 9 windowLength 0 whenElapsed 2360337166 maxWhenElapsed 2360337166 repeatInterval 0 tag=*walarm*:space.alliswell.inbox/com.capacitorjs.plugins.localnotifications.TimedNotificationPublisher originWhenElapsed 2360337166 originWindowLength 0 setAtTime=2026-10-16 07:04:21 policyWhenElapsed:[2360337166, 2356318140, 0, 2356318139, 0] procName=space.alliswell.inbox space.alliswell.inbox}
+      tag=*walarm*:space.alliswell.inbox/com.capacitorjs.plugins.localnotifications.TimedNotificationPublisher
+      operation=PendingIntent{8180d1f: PendingIntentRecord{b37386c space.alliswell.inbox broadcastIntent}}
+    RTC_WAKEUP #31: Alarm{a04975d type 0 origWhen 1792140081000 flags 9 windowLength 0 whenElapsed 2362137167 maxWhenElapsed 2362137167 repeatInterval 0 tag=*walarm*:space.alliswell.inbox/com.capacitorjs.plugins.localnotifications.TimedNotificationPublisher originWhenElapsed 2362137167 originWindowLength 0 setAtTime=2026-10-16 07:04:21 policyWhenElapsed:[2362137167, 2356318148, 0, 2356318148, 0] procName=space.alliswell.inbox space.alliswell.inbox}
+      tag=*walarm*:space.alliswell.inbox/com.capacitorjs.plugins.localnotifications.TimedNotificationPublisher
+      operation=PendingIntent{1cb32ca: PendingIntentRecord{f3a5c3b space.alliswell.inbox broadcastIntent}}
+  Next wake from idle: Alarm{484b238 type 0 origWhen 1792134681016 flags 3 windowLength 0 whenElapsed 2356737182 maxWhenElapsed 2356737182 repeatInterval 0 tag=*walarm*:space.alliswell.inbox.ACTION_TEST_ALARM originWhenElapsed 2356737182 originWindowLength 0 setAtTime=2026-10-16 07:04:21 policyWhenElapsed:[2356737182, 2356317852, 0, 0, 0] procName=space.alliswell.inbox space.alliswell.inbox}
+    tag=*walarm*:space.alliswell.inbox.ACTION_TEST_ALARM
+      showIntent=PendingIntent{74aac28: PendingIntentRecord{a2fad41 space.alliswell.inbox startActivity}}
+    operation=PendingIntent{e5cc2e6: PendingIntentRecord{4c54027 space.alliswell.inbox broadcastIntent}}
+          type=RTC_WAKEUP tag=*walarm*:space.alliswell.inbox/com.capacitorjs.plugins.localnotifications.TimedNotificationPublisher 
+          type=RTC_WAKEUP tag=*walarm*:space.alliswell.inbox/com.capacitorjs.plugins.localnotifications.TimedNotificationPublisher 
+          type=RTC_WAKEUP tag=*walarm*:space.alliswell.inbox/com.capacitorjs.plugins.localnotifications.TimedNotificationPublisher 
+          type=RTC_WAKEUP tag=*walarm*:space.alliswell.inbox/com.capacitorjs.plugins.localnotifications.TimedNotificationPublisher 
+          type=RTC_WAKEUP tag=*walarm*:space.alliswell.inbox/com.capacitorjs.plugins.localnotifications.TimedNotificationPublisher 
+          type=RTC_WAKEUP tag=*walarm*:space.alliswell.inbox/com.capacitorjs.plugins.localnotifications.TimedNotificationPublisher 
+          type=RTC_WAKEUP tag=*walarm*:space.alliswell.inbox/com.capacitorjs.plugins.localnotifications.TimedNotificationPublisher 
+          type=RTC_WAKEUP tag=*walarm*:space.alliswell.inbox/com.capacitorjs.plugins.localnotifications.TimedNotificationPublisher 
+          type=RTC_WAKEUP tag=*walarm*:space.alliswell.inbox/com.capacitorjs.plugins.localnotifications.TimedNotificationPublisher 
+          type=RTC_WAKEUP tag=*walarm*:space.alliswell.inbox/com.capacitorjs.plugins.localnotifications.TimedNotificationPublisher 
+  u0a285:space.alliswell.inbox +1s385ms running, 7 wakeups:
+      *walarm*:space.alliswell.inbox.ACTION_TEST_ALARM
+      *walarm*:space.alliswell.inbox/com.capacitorjs.plugins.localnotifications.TimedNotificationPublisher
+      *walarm*:space.alliswell.inbox/.AlarmRingService
+
+== dumpsys notification --noredact | grep attention-alarm（重启前）==
+        NotificationChannel{mId='attention-alarm-guard', mName=闹钟送达护航, mDescription=hasDescription , mImportance=2, mBypassDnd=false, mLockscreenVisibility=-1000, mSound=null, mLights=false, mLightColor=0, mVibrationPattern=null, mVibrationEffect=null, mUserLockedFields=0, mUserVisibleTaskShown=true, mVibrationEnabled=false, mShowBadge=false, mDeleted=false, mDeletedTimeMs=-1, mGroup='null', mAudioAttributes=null, mBlockableSystem=false, mAllowBubbles=-1, mImportanceLockedDefaultApp=false, mOriginalImp=1, mParent=null, mConversationId=null, mDemoted=false, mImportantConvo=false, mEnableClassify=true, mLastNotificationUpdateTimeMs=0, mChannelPriorityBeforeClosure=2}
+        NotificationChannel{mId='attention-alarm-v4', mName=提醒闹钟, mDescription=hasDescription , mImportance=4, mBypassDnd=false, mLockscreenVisibility=-1000, mSound=android.resource://space.alliswell.inbox/2131558400, mLights=false, mLightColor=0, mVibrationPattern=null, mVibrationEffect=null, mUserLockedFields=0, mUserVisibleTaskShown=false, mVibrationEnabled=true, mShowBadge=false, mDeleted=true, mDeletedTimeMs=1792132392094, mGroup='null', mAudioAttributes=AudioAttributes: usage=USAGE_ALARM content=CONTENT_TYPE_SONIFICATION flags=0x800 tags= bundle=null, mBlockableSystem=false, mAllowBubbles=-1, mImportanceLockedDefaultApp=false, mOriginalImp=4, mParent=null, mConversationId=null, mDemoted=false, mImportantConvo=false, mEnableClassify=true, mLastNotificationUpdateTimeMs=1792117387818, mChannelPriorityBeforeClosure=-1000}
+        NotificationChannel{mId='attention-alarm-v5', mName=提醒闹钟, mDescription=hasDescription , mImportance=4, mBypassDnd=false, mLockscreenVisibility=-1000, mSound=null, mLights=false, mLightColor=0, mVibrationPattern=null, mVibrationEffect=null, mUserLockedFields=0, mUserVisibleTaskShown=false, mVibrationEnabled=false, mShowBadge=false, mDeleted=false, mDeletedTimeMs=-1, mGroup='null', mAudioAttributes=null, mBlockableSystem=false, mAllowBubbles=-1, mImportanceLockedDefaultApp=false, mOriginalImp=4, mParent=null, mConversationId=null, mDemoted=false, mImportantConvo=false, mEnableClassify=true, mLastNotificationUpdateTimeMs=0, mChannelPriorityBeforeClosure=-1000}

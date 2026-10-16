@@ -1,0 +1,13 @@
+## 命令: $ADB install -r android/app/build/outputs/apk/debug/app-debug.apk
+## 结果 (锁屏态，自动拒绝)
+
+Performing Streamed Install
+adb: failed to install /Users/qlyf/Developer/reminder/android/app/build/outputs/apk/debug/app-debug.apk: Failure [INSTALL_FAILED_ABORTED: User rejected permissions]
+
+## exit=1
+## logcat 片段 (PackageInstaller 被拉起后自动拒绝)
+10-16 14:14:29.105  1737  1937 I ActivityTaskManager: Displayed com.android.packageinstaller/.PackageInterceptActivity for user 0: +203ms
+10-16 14:14:41.877  1737  1937 I ActivityTaskManager: Displayed com.android.packageinstaller/.PackageInterceptActivity for user 0: +199ms
+10-16 14:14:54.631  1737  1937 I ActivityTaskManager: Displayed com.android.packageinstaller/.PackageInterceptActivity for user 0: +194ms
+10-16 14:15:17.391  1737  1937 I ActivityTaskManager: Displayed com.android.packageinstaller/.PackageInterceptActivity for user 0: +194ms
+10-16 14:18:53.399  1737  1937 I ActivityTaskManager: Displayed com.android.packageinstaller/.PackageInterceptActivity for user 0: +444ms

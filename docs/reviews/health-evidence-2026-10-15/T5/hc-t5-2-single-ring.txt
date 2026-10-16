@@ -1,0 +1,17 @@
+HC-T5-2 到点只一路响铃、不双响 —— 证据
+
+判据来源（代码）：
+- AlarmTestReceiver.java:40  public static final String CHANNEL_ID = "attention-alarm-v5";
+- AlarmTestReceiver.java:278 NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID)
+  => 闹钟通知本身挂在 v5 渠道上，而 v5 实测 mSound=null / mVibrationEnabled=false（见 hc-t5-0-new-package-channels.txt），
+     通知渠道自身不发声、不振动。
+- 声音的唯一来源是 App 自己的 AlarmRingService（trace detail: carrier=native;sound=true;vibrate=true）。
+
+实机观测：
+- 三次诊断投递（10s/60s/120s）在 AlarmTrace 中每次仅出现一条 `ringStarted`，无第二条并存的声音来源。
+- logcat 每次投递仅一条 `AttentionAlarm: deliver ...`，无重复投递。
+- `localFallbackStopped detail=service-owned sound is stopped separately`（-917120）表明声音由 service 持有并被单独停止，
+  未出现「渠道铃声 + service 铃声」叠加的两路信号。
+
+结论：PASS —— 只有 AlarmRingService 一路发声；v5 渠道无声无振动，未复现双响。
+限制：本项以渠道属性 + AlarmTrace/logcat 判定，未做听感确认（无法在自动化环境听音）。

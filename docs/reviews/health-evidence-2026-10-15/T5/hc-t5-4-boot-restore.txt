@@ -1,0 +1,27 @@
+# HC-T5-4 开机恢复证据（设备 2026-10-16，开机完成 15:05:39，自 adb reboot 指令 15:04:47 约 52s）
+
+== events 缓冲：进程由 BOOT 广播拉起（非用户打开 App）==
+10-16 15:05:57.305  1861  2149 I am_proc_start: [0,11839,10285,space.alliswell.inbox,broadcast,{space.alliswell.inbox/com.capacitorjs.plugins.localnotifications.LocalNotificationRestoreReceiver}, {action = android.intent.action.LOCKED_BOOT_COMPLETED}]
+10-16 15:05:57.713  1861  3356 I am_proc_bound: [0,11839,space.alliswell.inbox]
+10-16 15:06:29.992  1861  2165 I am_kill : [0,11839,space.alliswell.inbox,705,low memory,142228]
+10-16 15:06:30.099  1861  4394 I am_proc_died: [0,11839,space.alliswell.inbox,705,19]
+
+== main 缓冲：App 进程启动痕迹 ==
+10-16 15:05:57.340 11839 11839 I alliswell.inbox: Late-enabling -Xcheck:jni
+10-16 15:05:57.407 11839 11839 I alliswell.inbox: Using CollectorTypeCC GC.
+10-16 15:05:57.520 11839 11839 E alliswell.inbox: BBinder_init Processname  space.alliswell.inbox  
+10-16 15:05:57.520 11839 11839 E alliswell.inbox: BBinder_init hasGetProcessName  space.alliswell.inbox
+10-16 15:05:59.358 11839 11839 D nativeloader: Configuring clns-9 for other apk /data/app/~~muERcDmnLyGO8ZLDTDYMXw==/space.alliswell.inbox-1zLl6_0iaw63qqDlK65SWw==/base.apk. target_sdk_version=34, uses_libraries=, library_path=/data/app/~~muERcDmnLyGO8ZLDTDYMXw==/space.alliswell.inbox-1zLl6_0iaw63qqDlK65SWw==/lib/arm64, permitted_path=/data:/mnt/expand:/data/user/0/space.alliswell.inbox
+10-16 15:05:59.498 11839 11839 I alliswell.inbox: AssetManager2(0xb4000072f560cdf8) locale list changing from [] to [zh-CN]
+10-16 15:05:59.662 11839 11839 V GraphicsEnvironment: space.alliswell.inbox is not listed in per-application setting
+10-16 15:05:59.662 11839 11839 V GraphicsEnvironment: space.alliswell.inbox is not listed in ANGLE allowlist or settings, returning default
+10-16 15:06:02.468 11839 14094 W alliswell.inbox: Verification of androidx.appcompat.app.AppCompatActivity com.getcapacitor.Plugin.getActivity() took 132.789ms (52.72 bytecodes/s) (0B arena alloc)
+10-16 15:06:05.247 11839 14796 D ProfileInstaller: Installing profile for space.alliswell.inbox
+
+== dumpsys alarm：恢复注册（setAtTime=07:06:14/15 即开机后广播处理时刻）==
+    RTC_WAKEUP #16: Alarm{df9aeee type 0 origWhen 1792134681016 flags 3 windowLength 0 whenElapsed 368177 maxWhenElapsed 368177 repeatInterval 0 tag=*walarm*:space.alliswell.inbox.ACTION_TEST_ALARM originWhenElapsed 368177 originWindowLength 0 setAtTime=2026-10-16 07:06:14 policyWhenElapsed:[368177, 61835, 0, 0, 0] procName=space.alliswell.inbox space.alliswell.inbox}
+      tag=*walarm*:space.alliswell.inbox.ACTION_TEST_ALARM
+    RTC_WAKEUP #17: Alarm{f2d248b type 0 origWhen 1792134681016 flags 3 windowLength 0 whenElapsed 368177 maxWhenElapsed 368177 repeatInterval 0 tag=*walarm*:space.alliswell.inbox/.AlarmRingService originWhenElapsed 368177 originWindowLength 0 setAtTime=2026-10-16 07:06:15 policyWhenElapsed:[368177, 62655, 0, 0, 0] procName=space.alliswell.inbox space.alliswell.inbox}
+      tag=*walarm*:space.alliswell.inbox/.AlarmRingService
+  Next wake from idle: Alarm{df9aeee type 0 origWhen 1792134681016 flags 3 windowLength 0 whenElapsed 368177 maxWhenElapsed 368177 repeatInterval 0 tag=*walarm*:space.alliswell.inbox.ACTION_TEST_ALARM originWhenElapsed 368177 originWindowLength 0 setAtTime=2026-10-16 07:06:14 policyWhenElapsed:[368177, 61835, 0, 0, 0] procName=space.alliswell.inbox space.alliswell.inbox}
+    tag=*walarm*:space.alliswell.inbox.ACTION_TEST_ALARM

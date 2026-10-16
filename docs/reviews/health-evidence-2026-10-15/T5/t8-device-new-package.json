@@ -1,0 +1,31 @@
+{
+  "case": "T8 真机 WebView 部分（新包 versionCode=4 重装后，web 资源与 HEAD 一致）",
+  "device": "vivo V2238A / Android 16 (API 36)",
+  "webview_target": "webview_devtools_remote_4421 (1080x2226 dev px, dpr=3 -> 360x742 CSS px)",
+  "cdp_transport": "adb forward tcp:9225 -> Runtime.evaluate",
+
+  "HC-T8-1_narrow_overflow": {
+    "metrics_no_keyboard": {"iw": 360, "ih": 742, "sh": 1476, "sy": 0, "appTop": 0, "appOverflow": "visible", "bodyOverflow": "hidden"},
+    "metrics_keyboard_up": {"ih": 433, "vvh": 433, "sh": 861, "sy": 0, "appTop": 0, "sheetTop": 43},
+    "keyboard_actually_shown": true,
+    "programmatic_scroll_reverse_proof": {"before": 0, "after": 323},
+    "struct": "document.scrollHeight ~= 2 x viewport（1476 vs 742；861 vs 433）；#app overflow=visible",
+    "visible_symptom": "未复现可见上移：capture+键盘、detail 两种流程下 #app top 恒为 0、scrollY 恒为 0，顶部首页头部仍在屏内",
+    "historical": "旧包首次连接时曾读到 scrollY=693（未复现，见 report）",
+    "verdict": "结构风险确认（文档 2x 视口 + #app overflow:visible + 可程序化滚动）；可见整体上移症状在真机 WebView 这两条流程下未复现"
+  },
+
+  "HC-T8-3_dark_mode": {"prefersDark": true, "bodyBg": "rgb(244, 243, 239)", "verdict": "FAIL —— 设备处于深色模式但页面仍为亮色"},
+
+  "HC-T8-5_a11y": {"toastAriaLive": null, "roleDialogCount": 0, "verdict": "部分 FAIL —— #toast 无 aria-live；开关 role 未能在真机 DOM 中稳定取样（设置面板未展开）"},
+
+  "HC-T8-2_keyboard": {
+    "note": "通过 adb shell input tap 540 1106 真实点击 capText 输入框，mInputShown=true；视口由 742 缩到 433（adjustResize），输入框/面板仍完整可见，未观察到被顶出屏幕"
+  },
+
+  "screenshots": [
+    "t8-dev-01-capture-before.png",
+    "t8-dev-02-keyboard-up.png",
+    "t8-dev-03-detail-panel.png"
+  ]
+}

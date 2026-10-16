@@ -1,0 +1,260 @@
+{
+  "homeBtns": [
+    {
+      "id": "",
+      "cls": "ghost",
+      "label": "稍后改到具体时间",
+      "w": 92,
+      "h": 51
+    },
+    {
+      "id": "",
+      "cls": "primary",
+      "label": "我知道了停止本轮 · 仍未完成",
+      "w": 126,
+      "h": 51
+    },
+    {
+      "id": "",
+      "cls": "line",
+      "label": "完成结束并归档",
+      "w": 92,
+      "h": 51
+    },
+    {
+      "id": "",
+      "cls": "minor",
+      "label": "修改",
+      "w": 50,
+      "h": 36
+    },
+    {
+      "id": "",
+      "cls": "minor danger",
+      "label": "删除",
+      "w": 50,
+      "h": 36
+    },
+    {
+      "id": "toggleActive",
+      "cls": "soft-entry",
+      "label": "已看到未完成 · 1展开 ›",
+      "w": 358,
+      "h": 52
+    }
+  ],
+  "meBtns": [
+    {
+      "id": "btnUserGuide",
+      "cls": "set-row",
+      "label": "使用说明\n            怎么记",
+      "w": 358,
+      "h": 73
+    },
+    {
+      "id": "btnSeed",
+      "cls": "set-row",
+      "label": "查看演示\n            看几条",
+      "w": 358,
+      "h": 72
+    },
+    {
+      "id": "swNotify",
+      "cls": "switch",
+      "label": "本地通知",
+      "w": 46,
+      "h": 28
+    },
+    {
+      "id": "",
+      "cls": "seg-item on",
+      "label": "系统通知",
+      "w": 157,
+      "h": 40
+    },
+    {
+      "id": "",
+      "cls": "seg-item",
+      "label": "闹钟提醒",
+      "w": 157,
+      "h": 40
+    },
+    {
+      "id": "swImp",
+      "cls": "switch on",
+      "label": "重要提醒",
+      "w": 46,
+      "h": 28
+    },
+    {
+      "id": "btnAlarmDuration",
+      "cls": "set-row",
+      "label": "闹钟持续时间5 分钟后自动止响\n    ",
+      "w": 358,
+      "h": 73
+    },
+    {
+      "id": "btnQuiet",
+      "cls": "set-row-main",
+      "label": "睡眠勿扰\n            23:",
+      "w": 268,
+      "h": 44
+    },
+    {
+      "id": "swDnd",
+      "cls": "switch on",
+      "label": "睡眠勿扰",
+      "w": 46,
+      "h": 28
+    },
+    {
+      "id": "swPrivacy",
+      "cls": "switch",
+      "label": "锁屏隐私",
+      "w": 46,
+      "h": 28
+    },
+    {
+      "id": "btnReviewSettings",
+      "cls": "set-row",
+      "label": "待整理时间\n            每天",
+      "w": 358,
+      "h": 73
+    },
+    {
+      "id": "btnProjects",
+      "cls": "set-row",
+      "label": "项目管理\n            3 个",
+      "w": 358,
+      "h": 73
+    },
+    {
+      "id": "swSummary",
+      "cls": "switch",
+      "label": "当日摘要",
+      "w": 46,
+      "h": 28
+    },
+    {
+      "id": "btnAi",
+      "cls": "set-row",
+      "label": "AI 智能理解\n            ",
+      "w": 358,
+      "h": 72
+    },
+    {
+      "id": "",
+      "cls": "seg-item on",
+      "label": "初学者模式",
+      "w": 157,
+      "h": 40
+    },
+    {
+      "id": "",
+      "cls": "seg-item",
+      "label": "正常模式",
+      "w": 157,
+      "h": 40
+    },
+    {
+      "id": "btnExport",
+      "cls": "set-row",
+      "label": "导出数据\n            JSO",
+      "w": 358,
+      "h": 73
+    },
+    {
+      "id": "btnImport",
+      "cls": "set-row",
+      "label": "导入数据\n            从 J",
+      "w": 358,
+      "h": 73
+    },
+    {
+      "id": "btnClear",
+      "cls": "set-row",
+      "label": "清空全部数据\n            删",
+      "w": 358,
+      "h": 72
+    }
+  ],
+  "small": [
+    {
+      "id": "",
+      "cls": "minor",
+      "label": "修改",
+      "w": 50,
+      "h": 36
+    },
+    {
+      "id": "",
+      "cls": "minor danger",
+      "label": "删除",
+      "w": 50,
+      "h": 36
+    },
+    {
+      "id": "swNotify",
+      "cls": "switch",
+      "label": "本地通知",
+      "w": 46,
+      "h": 28
+    },
+    {
+      "id": "",
+      "cls": "seg-item on",
+      "label": "系统通知",
+      "w": 157,
+      "h": 40
+    },
+    {
+      "id": "",
+      "cls": "seg-item",
+      "label": "闹钟提醒",
+      "w": 157,
+      "h": 40
+    },
+    {
+      "id": "swImp",
+      "cls": "switch on",
+      "label": "重要提醒",
+      "w": 46,
+      "h": 28
+    },
+    {
+      "id": "swDnd",
+      "cls": "switch on",
+      "label": "睡眠勿扰",
+      "w": 46,
+      "h": 28
+    },
+    {
+      "id": "swPrivacy",
+      "cls": "switch",
+      "label": "锁屏隐私",
+      "w": 46,
+      "h": 28
+    },
+    {
+      "id": "swSummary",
+      "cls": "switch",
+      "label": "当日摘要",
+      "w": 46,
+      "h": 28
+    },
+    {
+      "id": "",
+      "cls": "seg-item on",
+      "label": "初学者模式",
+      "w": 157,
+      "h": 40
+    },
+    {
+      "id": "",
+      "cls": "seg-item",
+      "label": "正常模式",
+      "w": 157,
+      "h": 40
+    }
+  ]
+}

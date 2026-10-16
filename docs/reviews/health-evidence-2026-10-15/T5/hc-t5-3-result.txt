@@ -1,0 +1,24 @@
+HC-T5-3 强停后补投（只补一次）—— 结果 PASS
+
+前置（见 hc-t5-3-setup.txt）：
+- 实时事项 id=i_bm6ect6xmvalkg0l，priority=important（delivery_mode=alarm），triggerAt=1792132870000
+- 到点前 force-stop（executed at epoch 1792132780251）；force-stop 后 App 进程=0，
+  ACTION_TEST_ALARM 仍挂起(1) -> 广播不会送达（错过投递）
+- 判丢失窗口：LOST_NO_EVIDENCE_AFTER_MS = 10*60*1000（lib/native-reminders.js:183）
+- 重开 App：epoch 1792133498950（到点后约 629s，已过 10 分钟判定窗）
+
+补投证据：
+- logcat：getMissedAlarms 调用(14:51:43.850) -> LocalNotifications.schedule(14:51:44.181)
+  {"title":"☆ 重要事项","body":"T5-3 强停补投","id":1013457534,"channelId":"attention-important-v2",
+   "extra":{"itemId":"i_bm6ect6xmvalkg0l","event":"primary","attempt":0,"catchUp":true,
+   "scheduleKey":"2|i_bm6ect6xmvalkg0l|1|primary|0|1792132870000|…","reminderKey":"0@1792132870000"}}
+  -> 身份仍是【原定触发点 1792132870000】，不是补投时刻（符合 D43-a）。
+- 只补一次：logcat 全文 `catchUp` 出现 1 次；dumpsys 中 id=1013457534 的 NotificationRecord 仅 1 条。
+- 事项台账（读自 state）：status=due，deliveredAt=1792133503310，remindCount=1；
+  reminderEvents 含 0@1792132870000 及后续 realert 1/2/3（未来时刻 1792134670000/1792136470000/1792138270000）。
+- 首页提示：alertBanner 文本
+  「☆ 重要提醒 T5-3 强停补投 · 稍后提醒 重新安排 我知道了 停止本轮 · 仍未完成 完成 结束并归档 …」
+- 不走全屏（符合 D43-h）：补投经 LocalNotifications 通知 + 首页横幅，未走全屏闹钟。
+
+结论：PASS —— 强停后重开补投一次、身份为原定触发点、首页出现提示、无重复补投。
+限制：截图 t5-3-home-after-redelivery.png 因等待期屏幕熄灭/重锁而只见锁屏（App 提示文字已用 DOM 文本取证）。
