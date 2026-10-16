@@ -15,7 +15,8 @@ const FILES = [
   "manifest.json",
   "icon.svg",
   "icon-192.png",
-  "icon-512.png"
+  "icon-512.png",
+  "icon-maskable-512.png"
 ];
 
 const DIRS = ["lib"];

@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="安心收件箱">
+  <rect width="128" height="128" rx="28" fill="#1b6b4a"/>
+  <path d="M38 30 V58 a26 26 0 0 0 52 0 V44" fill="none" stroke="#ffffff" stroke-opacity=".45" stroke-width="7" stroke-linecap="round"/>
+  <path d="M82 52 L90 42 L98 52" fill="none" stroke="#f2b544" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="90" cy="26" r="8" fill="#f2b544"/>
+  <path d="M26 76 H48 L54 86 H74 L80 76 H102 V92 a10 10 0 0 1 -10 10 H36 a10 10 0 0 1 -10 -10 Z" fill="#ffffff"/>
+</svg>

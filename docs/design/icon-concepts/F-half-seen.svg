@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="安心收件箱">
+  <rect width="128" height="128" rx="28" fill="#f4f1ea"/>
+  <path d="M64 34 A30 30 0 0 0 64 94 Z" fill="#e39b2f"/>
+  <circle cx="64" cy="64" r="30" fill="none" stroke="#14181d" stroke-width="9"/>
+</svg>
