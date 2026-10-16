@@ -139,7 +139,7 @@ public class AlarmRingService extends Service {
   static final long AUTO_SILENCE_MS = 5L * 60L * 1000L;
 
   /**
-   * 测试钩子：允许调用方指定自动静音上限（毫秒）。理由与 `EXTRA_MAX_RING_MS` 完全相同 ——
+   * 用户持续时长 / 测试钩子：允许调用方指定自动静音上限（毫秒）。与 `EXTRA_MAX_RING_MS` 独立 ——
    * 生产值是 5 分钟，真机上不可能为验证等 5 分钟；而「静音到底有没有发生」
    * 必须用**短于生产值**的窗口才测得出。服务不导出，不构成外部攻击面。
    */
@@ -793,7 +793,7 @@ public class AlarmRingService extends Service {
 
   /**
    * 前台身份必须有一张通知。这张是**静音、低优先级**的占位（IMPORTANCE_MIN），
-   * 与闹钟通知（`attention-alarm-v4`）不是同一条 —— D59 之后它不再承载声音与振动，
+   * 与闹钟通知（`attention-alarm-v5`）不是同一条 —— D59 之后它不再承载声音与振动，
    * 只是「服务在跑」的合法凭据。无通知权限时它不显示，服务照常运行。
    */
   private Notification ringNotification(String title) {

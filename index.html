@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1" />
   <meta name="theme-color" content="#1e2a4a" />
+  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#17191d" />
   <meta name="mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="default" />
@@ -25,6 +26,9 @@
       --signal: #24357a;
       --signal-soft: #e6e9f4;
       --signal-press: #1e2a4a;
+      /* 实心主色（按钮底 / 开关开启态 / logo 底，配白字）：亮色下与 --signal 同值，
+         只是给深色主题留一个「文字用浅、底色用深」的分流口，不改变亮色外观。 */
+      --signal-solid: #24357a;
       --amber: #f2a93b;
       --amber-press: #e0952a;
       --amber-ink: #1e2a4a;
@@ -72,6 +76,10 @@
       margin: 0 auto;
       position: relative;
       background: var(--paper);
+      /* 窄屏也剪裁：18 个收起的 .sheet 靠 translateY(110%) 移出，若不剪裁会撑高
+         documentElement.scrollHeight（390×844 下 1680），页面可被整体上移（真机 WebView 同）。
+         宽屏媒体查询里本就有同款 overflow:hidden，这里下沉为基础规则；列表滚动由 .main 自身负责，不受影响。 */
+      overflow: hidden;
     }
     .top {
       padding: calc(14px + var(--safe-t)) 18px 12px;
@@ -179,6 +187,21 @@
     .pill.future { color: var(--future); background: var(--future-soft); border-color: transparent; }
     .pill.tag { color: var(--future); background: var(--future-soft); border-color: transparent; }
     .pill.proj { border-color: transparent; }
+    /* P1-⑧：状态标识 —— 正在被连环催（琥珀描边）/ 我自己推迟的（虚线） */
+    .pill.realert { color: var(--attention); background: var(--attention-soft); border-color: var(--attention); font-weight: 600; }
+    .pill.realert.spent { font-weight: 500; border-color: transparent; }
+    .pill.snoozed { color: var(--future); background: transparent; border: 1px dashed var(--future); }
+    /* P1-④：到点 / 已看到卡片上的次级入口（修改 / 删除），不和三个主动作抢位置 */
+    .card-minor { display: flex; justify-content: flex-end; gap: 4px; margin: 6px -6px -8px 0; }
+    .card-minor .minor, .foot-minor .minor {
+      min-height: 36px; padding: 6px 12px;
+      font-size: 0.82rem; font-weight: 600; color: var(--muted);
+      border-radius: var(--radius-sm); background: transparent;
+    }
+    .card-minor .minor:active, .foot-minor .minor:active { background: var(--paper); }
+    .card-minor .minor.danger, .foot-minor .minor.danger { color: var(--critical); }
+    #detailFoot { flex-wrap: wrap; }
+    #detailFoot .foot-minor { flex: 1 0 100%; display: flex; justify-content: center; gap: 16px; margin-top: -4px; }
     /* 方案 A：三个动作按语义分层 —— 实心 = 主动作，描边 = 次动作，浅底 = 轻动作 */
     .card-actions {
       display: flex; gap: 8px;
@@ -197,7 +220,7 @@
       display: flex; flex-direction: column; align-items: center; justify-content: center;
     }
     .card-actions button:active { filter: brightness(0.96); }
-    .card-actions button.primary { background: var(--signal); color: #fff; }
+    .card-actions button.primary { background: var(--signal-solid); color: #fff; }
     .card-actions button.primary:active { background: var(--signal-press); }
     .card-actions button.line { background: transparent; color: var(--signal); box-shadow: inset 0 0 0 1.5px var(--signal); }
     .card-actions button.ghost { color: var(--ink-2); }
@@ -544,7 +567,7 @@
       font-size: 0.95rem;
       text-align: center;
     }
-    .btn.primary { background: var(--signal); color: #fff; }
+    .btn.primary { background: var(--signal-solid); color: #fff; }
     .btn.primary:active { background: var(--signal-press); }
     .btn.secondary {
       background: var(--card);
@@ -733,7 +756,7 @@
       flex-shrink: 0;
       transition: background 0.15s ease;
     }
-    .switch.on { background: var(--signal); }
+    .switch.on { background: var(--signal-solid); }
     .switch::after {
       content: "";
       position: absolute;
@@ -755,7 +778,7 @@
       width: 56px; height: 56px;
       margin: 0 auto 10px;
       border-radius: 16px;
-      background: var(--signal);
+      background: var(--signal-solid);
       color: #fff;
       display: grid; place-items: center;
       font-size: 1.4rem;
@@ -809,7 +832,7 @@
       background: var(--paper);
       color: var(--ink-2);
     }
-    .alert-actions button.primary { background: var(--signal); color: #fff; }
+    .alert-actions button.primary { background: var(--signal-solid); color: #fff; }
 
     .view { display: none; }
     .view.active { display: block; }
@@ -1077,6 +1100,47 @@
       }
       .alert-banner.show { transform: translate(-50%, 0); }
     }
+
+    /* 深色模式：只重映射颜色变量 + 给少数写死亮色的表面补一层（见块内注释）。
+       亮色规则一律不动 —— 亮色下所有变量值与深色主题上线前完全一致（--signal-solid
+       在亮色下与 --signal 同值），保证浅色外观逐像素不变。 */
+    @media (prefers-color-scheme: dark) {
+      :root {
+        /* color-scheme 让输入框/下拉/滚动条等原生控件跟着变深，不必逐个画深色皮肤 */
+        color-scheme: dark;
+        --paper: #17191d;
+        --paper-elev: #1f2126;
+        --card: #23262c;
+        --ink: #ecebe6;
+        --ink-2: #c6cbd2;
+        --muted: #969ea8;
+        --line: #34383f;
+        --line-strong: #4b515a;
+        /* 主色分流：文字/描边提亮到可读对比，实心底保持深底白字（≥ 4.5:1） */
+        --signal: #aebcf2;
+        --signal-soft: #2a3050;
+        --signal-solid: #4a5fd0;
+        --signal-press: #3d4fb0;
+        --attention: #dcaf66;
+        --attention-soft: #3a2f1c;
+        --attention-bg: #3a2f1c;
+        --critical: #e29a9a;
+        --critical-soft: #3a2525;
+        --future: #9db8dc;
+        --future-soft: #24303f;
+        /* 深底上阴影要更重才可见 */
+        --shadow: 0 8px 28px rgba(0, 0, 0, 0.45);
+        --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3), 0 4px 14px rgba(0, 0, 0, 0.35);
+      }
+      /* 亮色里写死的浅色表面，深色下单独补（亮色规则保持原样） */
+      .toast { background: #343941; }
+      .quick-times .chip { background: #2c2f35; }
+      .alert-banner.crit { border-color: #5a3a3a; background: #342424; }
+      .seg { background: #2a2d33; }
+      .cal-day.muted { color: #5b6169; }
+      /* 徽标底色是 --critical，深色下它已提亮成浅红（为了当文字用），白字会失去对比 */
+      .nav-badge { background: #b05252; }
+    }
   </style>
 </head>
 <body>
@@ -1176,7 +1240,7 @@
             <div>本地通知</div>
             <div class="sub">关掉后只在打开 App 时提醒</div>
           </div>
-          <button class="switch" id="swNotify" aria-label="本地通知"></button>
+          <button class="switch" id="swNotify" role="switch" aria-checked="false" aria-label="本地通知"></button>
         </div>
         <div class="set-row" style="align-items:flex-start;flex-direction:column;gap:10px">
           <div>
@@ -1193,21 +1257,25 @@
             <div>重要事项持续提醒</div>
             <div class="sub">没点「我知道了」时会再次提醒</div>
           </div>
-          <button class="switch on" id="swImp" aria-label="重要提醒"></button>
+          <button class="switch on" id="swImp" role="switch" aria-checked="true" aria-label="重要提醒"></button>
         </div>
+        <button class="set-row" id="btnAlarmDuration">
+          <div><div>闹钟持续时间</div><div class="sub" id="alarmDurationSub">5 分钟后自动止响</div></div>
+          <span aria-hidden="true">›</span>
+        </button>
         <div class="set-row">
           <button class="set-row-main" id="btnQuiet">
             <div>睡眠勿扰</div>
             <div class="sub" id="dndSub">23:00–07:30 普通事项延后</div>
           </button>
-          <button class="switch on" id="swDnd" aria-label="睡眠勿扰"></button>
+          <button class="switch on" id="swDnd" role="switch" aria-checked="true" aria-label="睡眠勿扰"></button>
         </div>
         <div class="set-row">
           <div>
             <div>锁屏隐私</div>
             <div class="sub">系统通知不显示事项内容</div>
           </div>
-          <button class="switch" id="swPrivacy" aria-label="锁屏隐私"></button>
+          <button class="switch" id="swPrivacy" role="switch" aria-checked="false" aria-label="锁屏隐私"></button>
         </div>
       </div>
 
@@ -1232,7 +1300,7 @@
             <div>当日摘要</div>
             <div class="sub" id="summarySub">默认关闭 · 新增较多时给一句小结</div>
           </div>
-          <button class="switch" id="swSummary" aria-label="当日摘要"></button>
+          <button class="switch" id="swSummary" role="switch" aria-checked="false" aria-label="当日摘要"></button>
         </div>
         <button class="set-row" id="btnAi">
           <div>
@@ -1518,7 +1586,7 @@
           <div>置顶</div>
           <div class="sub">优先展示在笔记列表</div>
         </div>
-        <button type="button" class="switch" id="swNotePin" aria-label="置顶"></button>
+        <button type="button" class="switch" id="swNotePin" role="switch" aria-checked="false" aria-label="置顶"></button>
       </div>
       <div id="notePreviewWrap" hidden style="margin-top:14px">
         <label style="display:block;font-size:0.78rem;font-weight:600;color:var(--muted);margin-bottom:6px">预览</label>
@@ -1596,6 +1664,11 @@
           <input id="quietEnd" type="time" />
         </div>
       </div>
+      <div class="field">
+        <label for="quietNotifyAt">统一补发时间</label>
+        <input id="quietNotifyAt" type="time" />
+        <p class="sub">留空则在勿扰结束时补发。每条被延后的普通事项会在指定时间各自提醒；请选择勿扰时段外的时间。</p>
+      </div>
     </div>
     <div class="sheet-foot">
       <button class="btn secondary" data-close="sheetQuiet">取消</button>
@@ -1604,6 +1677,25 @@
   </div>
 
   <!-- AI settings -->
+  <div class="sheet" id="sheetAlarmDuration">
+    <div class="sheet-grip"></div>
+    <div class="sheet-head">
+      <h2>闹钟持续时间</h2>
+      <button class="icon-btn" data-close="sheetAlarmDuration" aria-label="关闭">×</button>
+    </div>
+    <div class="sheet-body">
+      <div class="field">
+        <label for="alarmDurationMinutes">持续时间（分钟）</label>
+        <input id="alarmDurationMinutes" type="number" min="1" max="30" step="1" inputmode="numeric" />
+        <p class="sub">可设置 1–30 分钟，默认 5 分钟。用于 Android 闹钟的铃声和振动，下次响铃生效；到时只止响，不代表已看到或完成。</p>
+      </div>
+    </div>
+    <div class="sheet-foot">
+      <button class="btn secondary" data-close="sheetAlarmDuration">取消</button>
+      <button class="btn primary" id="btnSaveAlarmDuration">保存</button>
+    </div>
+  </div>
+
   <div class="sheet" id="sheetAi">
     <div class="sheet-grip"></div>
     <div class="sheet-head">
@@ -1622,7 +1714,7 @@
           <div>启用 AI</div>
           <div class="sub">关闭后仅用本地规则解析</div>
         </div>
-        <button type="button" class="switch" id="swAi" aria-label="启用 AI"></button>
+        <button type="button" class="switch" id="swAi" role="switch" aria-checked="false" aria-label="启用 AI"></button>
       </div>
       <div class="field">
         <label for="aiBaseUrl">API Base URL（OpenAI 兼容）</label>
@@ -1756,7 +1848,7 @@
           <div>启用待整理提醒</div>
           <div class="sub">有 NEEDS_REVIEW 时才通知</div>
         </div>
-        <button type="button" class="switch" id="swReviewEnabled" aria-label="启用待整理"></button>
+        <button type="button" class="switch" id="swReviewEnabled" role="switch" aria-checked="false" aria-label="启用待整理"></button>
       </div>
       <div class="field" style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
         <div>
@@ -2036,7 +2128,7 @@
       <div class="guide-sec">
         <h4>1. 记一件事</h4>
         <ol>
-          <li>点右下角 <strong>＋</strong>，用一句话写下来，例如「明天下午3点提醒我取快递」「每周一9点交周报」。</li>
+          <li>在底部常驻输入条里用一句话写下来，例如「明天下午3点提醒我取快递」「每周一9点交周报」。</li>
           <li>时间、重复、截止会自动识别，保存前可以在表单里核对和修改。</li>
           <li>没写时间也能保存：它会进「待整理」，等你有空再补时间。</li>
         </ol>
@@ -2082,7 +2174,7 @@
     </div>
   </div>
 
-  <div class="toast" id="toast">
+  <div class="toast" id="toast" role="status" aria-live="polite">
     <span id="toastText"></span>
     <button class="toast-action" id="toastAction" hidden>修改</button>
     <button class="toast-action" id="toastAction2" hidden>撤销</button>

@@ -37,7 +37,7 @@ public class AlarmTestReceiver extends BroadcastReceiver {
    */
   public static final String EXTRA_REMINDER_KEY = "reminderKey";
   public static final String EXTRA_PLANNED_AT = "plannedAt";
-  public static final String CHANNEL_ID = "attention-alarm-v4";
+  public static final String CHANNEL_ID = "attention-alarm-v5";
   public static final String CHANNEL_NAME = "提醒闹钟";
   /**
    * D59：旧渠道必须退役。
@@ -48,8 +48,14 @@ public class AlarmTestReceiver extends BroadcastReceiver {
    * 那条老渠道会继续按老属性播声音，于是「服务自播 + 渠道播音」两路同时响。
    * 这正是 V3「响铃被打断重启」的同一个坑，只是换了个入口。
    * 所以：换新 id，并显式删掉旧的。
+   *
+   * 体检 P0-1（2026-10-15）：`attention-alarm-v4` 同样被污染过 ——
+   * SystemBridgePlugin 曾在每次排程前用「带铃声 + 振动」的属性抢先创建同一个 id，
+   * 新装设备上谁先跑谁定型。现在渠道只由 {@link #ensureAlarmChannel} 一处创建，
+   * 并整体换到 v5、退役 v3 与 v4（同 id 删后重建会恢复旧属性，所以不能原地重建）。
    */
   public static final String LEGACY_CHANNEL_ID = "attention-alarm-v3";
+  public static final String[] LEGACY_CHANNEL_IDS = { LEGACY_CHANNEL_ID, "attention-alarm-v4" };
 
   // Q3：投递结局台账（AlarmActivity 写 shownAt，SystemBridgePlugin.lastAlarmDelivery 回读）
   public static final String KEY_DELIVERY_AT = "deliveryAt";
@@ -245,6 +251,8 @@ public class AlarmTestReceiver extends BroadcastReceiver {
             | Intent.FLAG_ACTIVITY_CLEAR_TOP
             | Intent.FLAG_ACTIVITY_SINGLE_TOP
             | Intent.FLAG_ACTIVITY_NO_USER_ACTION);
+          activity.putExtra(AlarmRingService.EXTRA_AUTO_SILENCE_MS,
+            intent.getLongExtra(AlarmRingService.EXTRA_AUTO_SILENCE_MS, AlarmRingService.AUTO_SILENCE_MS));
           activity.putExtra(AlarmActivity.EXTRA_ID, id);
           activity.putExtra(AlarmActivity.EXTRA_TITLE, title);
           activity.putExtra(AlarmActivity.EXTRA_BODY, body);
@@ -265,7 +273,7 @@ public class AlarmTestReceiver extends BroadcastReceiver {
       Object nmObj = context.getSystemService(Context.NOTIFICATION_SERVICE);
       NotificationManager nm = nmObj instanceof NotificationManager ? (NotificationManager) nmObj : null;
       if (nm == null) return;
-      ensureChannel(context, nm);
+      ensureAlarmChannel(context, nm);
 
       NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID)
         .setSmallIcon(android.R.drawable.ic_lock_idle_alarm)
@@ -294,6 +302,8 @@ public class AlarmTestReceiver extends BroadcastReceiver {
 
       Intent alarmUi = new Intent(context, AlarmActivity.class);
       alarmUi.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+      alarmUi.putExtra(AlarmRingService.EXTRA_AUTO_SILENCE_MS,
+        intent.getLongExtra(AlarmRingService.EXTRA_AUTO_SILENCE_MS, AlarmRingService.AUTO_SILENCE_MS));
       alarmUi.putExtra(AlarmActivity.EXTRA_ID, id);
       alarmUi.putExtra(AlarmActivity.EXTRA_TITLE, title);
       alarmUi.putExtra(AlarmActivity.EXTRA_BODY, body);
@@ -454,6 +464,8 @@ public class AlarmTestReceiver extends BroadcastReceiver {
     }
     out.putExtra(EXTRA_ID, source.getIntExtra(EXTRA_ID, 90002));
     out.putExtra(EXTRA_PLANNED_AT, source.getLongExtra(EXTRA_PLANNED_AT, 0L));
+    out.putExtra(AlarmRingService.EXTRA_AUTO_SILENCE_MS,
+      source.getLongExtra(AlarmRingService.EXTRA_AUTO_SILENCE_MS, AlarmRingService.AUTO_SILENCE_MS));
     out.putExtra(EXTRA_FULL_SCREEN, source.getBooleanExtra(EXTRA_FULL_SCREEN, true));
     out.putExtra(AlarmTrace.TEST, source.getBooleanExtra(AlarmTrace.TEST, false));
     return out;
@@ -553,19 +565,25 @@ public class AlarmTestReceiver extends BroadcastReceiver {
     }
   }
 
-  private static void ensureChannel(Context context, NotificationManager nm) {
-    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) return;
+  /**
+   * 闹钟渠道的**唯一**创建入口（体检 P0-1）。任何其他类都不得自行
+   * `createNotificationChannel(CHANNEL_ID, ...)` —— 渠道属性先建先得、不可再改。
+   */
+  static void ensureAlarmChannel(Context context, NotificationManager nm) {
+    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O || nm == null) return;
     // D59：先退役旧渠道。
     //
     // 通知渠道一旦创建，**除名字与描述外任何属性都不能再改**。`attention-alarm-v3`
     // 带有 `setSound(...)` 与 `enableVibration(true)`，光改代码对已安装的设备无效 ——
     // 那条老渠道会继续按老属性播声音，与 AlarmRingService 的自播叠成两路。
-    // 所以必须换 id + 显式删除，不能指望"改属性"。
-    try {
-      if (nm.getNotificationChannel(LEGACY_CHANNEL_ID) != null) {
-        nm.deleteNotificationChannel(LEGACY_CHANNEL_ID);
-      }
-    } catch (Exception ignored) {}
+    // 所以必须换 id + 显式删除，不能指望"改属性"。v4 同理（见 LEGACY_CHANNEL_IDS）。
+    for (String legacy : LEGACY_CHANNEL_IDS) {
+      try {
+        if (nm.getNotificationChannel(legacy) != null) {
+          nm.deleteNotificationChannel(legacy);
+        }
+      } catch (Exception ignored) {}
+    }
     if (nm.getNotificationChannel(CHANNEL_ID) != null) return;
     NotificationChannel channel = new NotificationChannel(
       CHANNEL_ID,

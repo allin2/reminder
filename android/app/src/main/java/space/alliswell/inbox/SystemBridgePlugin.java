@@ -253,6 +253,14 @@ public class SystemBridgePlugin extends Plugin {
                                         String localTrigger, String scheduleBasis,
                                         String title, String body, String itemId,
                                         String level, String itemRev, String reminderKey) {
+    persistAlarm(context, id, triggerAtMs, localTrigger, scheduleBasis, title, body, itemId,
+      level, itemRev, reminderKey, AlarmRingService.AUTO_SILENCE_MS);
+  }
+
+  static synchronized void persistAlarm(Context context, int id, long triggerAtMs,
+                                        String localTrigger, String scheduleBasis,
+                                        String title, String body, String itemId,
+                                        String level, String itemRev, String reminderKey, long autoSilenceMs) {
     if (context == null) return;
     try {
       SharedPreferences prefs = context.getSharedPreferences(PREFS_SCHEDULES, Context.MODE_PRIVATE);
@@ -293,6 +301,7 @@ public class SystemBridgePlugin extends Plugin {
       entry.put("itemRev", itemRev == null || itemRev.isEmpty() ? "0" : itemRev);
       // UX-T03：提醒键不是隐私内容（只是 `<轮次>@<原定时刻>`），两条镜像都带上
       entry.put("reminderKey", reminderKey == null ? "" : reminderKey);
+      entry.put("autoSilenceMs", autoSilenceMs);
       out.put(entry);
       prefs.edit()
         .putInt(KEY_SCHEMA_VERSION, CURRENT_SCHEMA_VERSION)
@@ -323,6 +332,7 @@ public class SystemBridgePlugin extends Plugin {
           deEntry.put("level", level == null ? "" : level);
           deEntry.put("itemRev", itemRev == null || itemRev.isEmpty() ? "0" : itemRev);
           deEntry.put("reminderKey", reminderKey == null ? "" : reminderKey);
+          deEntry.put("autoSilenceMs", autoSilenceMs);
           deOut.put(deEntry);
           dePrefs.edit()
             .putInt(KEY_SCHEMA_VERSION, CURRENT_SCHEMA_VERSION)
@@ -439,7 +449,8 @@ public class SystemBridgePlugin extends Plugin {
           AlarmScheduler.schedule(deContext, triggerAt, "提醒", "",
             id, o.optString("itemId"), o.optString("level"),
             rev == null || rev.isEmpty() ? "0" : rev, basis, elapsedTriggerAtMs,
-            o.optString("reminderKey", ""), triggerAt);
+            o.optString("reminderKey", ""), triggerAt,
+              o.optLong("autoSilenceMs", AlarmRingService.AUTO_SILENCE_MS));
           kept.put(o);
         } catch (Exception itemError) {
           kept.put(o);
@@ -538,7 +549,8 @@ public class SystemBridgePlugin extends Plugin {
             AlarmScheduler.schedule(context, triggerAt, o.optString("title"), o.optString("body"),
               id, o.optString("itemId"), o.optString("level"),
               rev == null || rev.isEmpty() ? "0" : rev, basis, elapsedTriggerAtMs,
-              o.optString("reminderKey", ""), triggerAt);
+              o.optString("reminderKey", ""), triggerAt,
+              o.optLong("autoSilenceMs", AlarmRingService.AUTO_SILENCE_MS));
           } catch (Exception schedErr) {
             // D3 失败重试：某条 schedule 抛错不代表数据损坏或应永久遗弃，保留在 kept 供后续恢复重试
             AlarmTrace.record(context, "restore:item" + i, "restoreItemFailed", schedErr.toString());
@@ -583,6 +595,8 @@ public class SystemBridgePlugin extends Plugin {
       JSONObject entry = new JSONObject();
       entry.put("id", alarmObj.optInt("id"));
       entry.put("itemId", alarmObj.optString("itemId"));
+      // 体检 P0-2：带上提醒键，JS 才能把这次漏响精确锚到台账里那一轮（而不是整条事项）
+      entry.put("reminderKey", alarmObj.optString("reminderKey", ""));
       entry.put("title", alarmObj.optString("title"));
       entry.put("triggerAt", triggerAt);
       entry.put("missedAt", now);
@@ -686,13 +700,15 @@ public class SystemBridgePlugin extends Plugin {
     NotificationManager nm = notificationManager();
     if (nm == null) return;
     createChannelIfMissing(nm, CHANNEL_ID, CHANNEL_NAME);
-    createChannelIfMissing(nm, AlarmTestReceiver.CHANNEL_ID, AlarmTestReceiver.CHANNEL_NAME);
+    // 体检 P0-1：闹钟渠道只能由 AlarmTestReceiver 按 D59 属性（无声、无振动）创建，
+    // 这里绝不能用下面「带铃声 + 振动」的通用模板抢先建同一个 id。
+    AlarmTestReceiver.ensureAlarmChannel(getContext(), nm);
   }
 
   private void createChannelIfMissing(NotificationManager nm, String id, String name) {
     if (nm.getNotificationChannel(id) != null) return;
     NotificationChannel channel = new NotificationChannel(id, name, NotificationManager.IMPORTANCE_HIGH);
-    channel.setDescription("系统通知与闹钟通道");
+    channel.setDescription("系统通知（测试通知）通道");
     channel.enableVibration(true);
     channel.setLockscreenVisibility(NotificationCompat.VISIBILITY_PUBLIC);
     try {
@@ -965,7 +981,7 @@ public class SystemBridgePlugin extends Plugin {
       int id = intArg(call, "id", 90002);
       String localTrigger = call.getString("localTrigger", null);
       String scheduleBasis = call.getString("scheduleBasis", BASIS_WALL_CLOCK);
-      JSObject r = scheduleAlarmInternal(delayMs, title, body, id, callItemId(call), callLevel(call), callItemRev(call), localTrigger, scheduleBasis, callReminderKey(call));
+      JSObject r = scheduleAlarmInternal(delayMs, title, body, id, callItemId(call), callLevel(call), callItemRev(call), localTrigger, scheduleBasis, callReminderKey(call), longArg(call, "autoSilenceMs", AlarmRingService.AUTO_SILENCE_MS));
       call.resolve(r);
     } catch (Exception e) {
       call.reject("设置闹钟失败: " + e.getMessage(), e);
@@ -982,7 +998,7 @@ public class SystemBridgePlugin extends Plugin {
       long delayMs = Math.max(500L, at - System.currentTimeMillis());
       String localTrigger = call.getString("localTrigger", null);
       String scheduleBasis = call.getString("scheduleBasis", BASIS_WALL_CLOCK);
-      JSObject r = scheduleAlarmInternal(delayMs, title, body, id, callItemId(call), callLevel(call), callItemRev(call), localTrigger, scheduleBasis, callReminderKey(call));
+      JSObject r = scheduleAlarmInternal(delayMs, title, body, id, callItemId(call), callLevel(call), callItemRev(call), localTrigger, scheduleBasis, callReminderKey(call), longArg(call, "autoSilenceMs", AlarmRingService.AUTO_SILENCE_MS));
       call.resolve(r);
     } catch (Exception e) {
       call.reject("设置定时失败: " + e.getMessage(), e);
@@ -1123,7 +1139,7 @@ public class SystemBridgePlugin extends Plugin {
 
   private JSObject scheduleAlarmInternal(long delayMs, String title, String body, int id, String itemId, String level, String itemRev, String localTrigger, String scheduleBasis) throws Exception {
     return scheduleAlarmInternal(delayMs, title, body, id, itemId, level, itemRev, localTrigger,
-      scheduleBasis, "");
+      scheduleBasis, "", AlarmRingService.AUTO_SILENCE_MS);
   }
 
   /**
@@ -1131,7 +1147,8 @@ public class SystemBridgePlugin extends Plugin {
    * 它必须一路带到投递 Intent —— 接收侧要落「系统已接收」证据，而证据的最小身份
    * 就是「事项 + 轮次 + 计划时刻 + 载体」；只带 itemId 说明不了响的是哪一轮。
    */
-  private JSObject scheduleAlarmInternal(long delayMs, String title, String body, int id, String itemId, String level, String itemRev, String localTrigger, String scheduleBasis, String reminderKey) throws Exception {
+  private JSObject scheduleAlarmInternal(long delayMs, String title, String body, int id, String itemId, String level, String itemRev, String localTrigger, String scheduleBasis, String reminderKey, long autoSilenceMs) throws Exception {
+    autoSilenceMs = Math.max(60000L, Math.min(30L * 60000L, autoSilenceMs));
     ensureChannel();
     AlarmTrace.cancel(getContext(), id, "replaced by new schedule");
     String trace = id + ":" + java.util.UUID.randomUUID().toString();
@@ -1167,6 +1184,7 @@ public class SystemBridgePlugin extends Plugin {
       intent.putExtra(AlarmTestReceiver.EXTRA_REMINDER_KEY, reminderKey);
     }
     intent.putExtra(AlarmTestReceiver.EXTRA_PLANNED_AT, triggerAt);
+    intent.putExtra(AlarmRingService.EXTRA_AUTO_SILENCE_MS, autoSilenceMs);
     PendingIntent pi = PendingIntent.getBroadcast(getContext(), id, intent, flags);
 
     String mode = "inexact";
@@ -1259,7 +1277,7 @@ public class SystemBridgePlugin extends Plugin {
     AlarmTrace.record(getContext(), trace, "scheduled", "triggerAt=" + triggerAt + ";mode=" + mode);
     // P1-4 & Phase D：落盘，供开机恢复（带上数据版本、本地表达与基准）
     if (id != -917010 && id != -917060 && id != -917120)
-      persistAlarm(getContext(), id, triggerAt, localTrigger, scheduleBasis, title, body, itemId, level, itemRev, reminderKey);
+      persistAlarm(getContext(), id, triggerAt, localTrigger, scheduleBasis, title, body, itemId, level, itemRev, reminderKey, autoSilenceMs);
     return r;
     } catch (Exception error) {
       AlarmTrace.record(getContext(), trace, "scheduleFailed", error.toString());
@@ -1274,11 +1292,28 @@ public class SystemBridgePlugin extends Plugin {
       // F1：撤闹钟的 PendingIntent 形态与排程时一致，交给 AlarmScheduler 一种实现维护
       // （它同时撤「界面投递」与「旧版广播投递」，避免留下撤不掉的幽灵闹钟）
       AlarmScheduler.cancel(getContext(), id);
+      // A-8：撤销分两种语义——只撤「未来」，还是连带停掉「正在响铃的这一轮」。
+      // JS 对账每轮都会撤掉已送达闹钟的 id（用户没处理前那轮响铃是合法的，
+      // preserveActive 的既有语义），所以**默认不 stop**；只有 JS 显式声明
+      // stopActiveDelivery（事项已删除/终态/版本已推进，那一轮已从台账上撤掉，
+      // 基线 AC-11/AC-12）才停铃。停铃按 id 定向走 ActiveAlarmStore.stop——
+      // 与通知栏「停止声振」（AlarmStopReceiver 的 STOP_DELIVERY）同一收口：
+      // 停 AlarmRingService 声振 + finish AlarmActivity + 出活跃台账 + 撤通知，
+      // 只影响这一个 id 的投递，绝不波及别的轮次。
+      boolean stoppedActive = false;
+      if (Boolean.TRUE.equals(call.getBoolean("stopActiveDelivery", false))) {
+        stoppedActive = ActiveAlarmStore.stop(getContext(), id, null);
+        if (stoppedActive) {
+          AlarmTrace.record(getContext(), "cancel:" + id, "activeDeliveryStopped",
+            "A-8 撤销排程时该轮正在响铃，已同步停止声振并关闭全屏界面");
+        }
+      }
       AlarmTrace.cancel(getContext(), id, "cancel API succeeded");
       // P1-4：同步撤销记录，避免开机后被"复活"
       forgetAlarm(getContext(), id);
       JSObject r = new JSObject();
       r.put("ok", true);
+      r.put("stoppedActive", stoppedActive);
       call.resolve(r);
     } catch (Exception e) {
       call.reject("取消闹钟失败: " + e.getMessage(), e);

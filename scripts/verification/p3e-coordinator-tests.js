@@ -122,6 +122,13 @@ function fixture(api, options) {
         receivedAt: r.receivedAt || Date.now()
       }));
     },
+    // A-2 同步复用真实库的 entryRoundBase 判据，这里镜像最小语义：
+    // roundBase 直接信；旧式条目只有 0@triggerAt 能锚定当前轮。
+    entryRoundBase: (item, entry, key) => {
+      if (entry && entry.roundBase != null) return entry.roundBase;
+      const at = Number(String(key).split("@")[1]);
+      return Number.isFinite(at) && at === Number(item.triggerAt) ? at : null;
+    },
     mergeEvidence: (targetItems, evidences, at) => {
       const it = targetItems[0];
       if (!it) return { changed: false };
@@ -169,6 +176,9 @@ function fixture(api, options) {
     renderMe: () => {},
     isNativeAndroidRuntime: () => platform === "android",
     waitForNativeBridge: async () => bridgeReady,
+    // B-3（JS 侧）：台账回读顺带回读 lastAlarmDelivery（含 notificationPosted）；
+    // 默认 null —— 与「生产环境没桥/能力缺失」同路径。
+    systemBridge: () => (options.systemBridge !== undefined ? options.systemBridge : null),
     getCapacitor: () => ({
       platform: platform,
       getPlatform: () => platform
@@ -398,6 +408,72 @@ async function healthy(api) {
       "roundBase must be preserved as 2000");
   }
 
+  // 7b. A-2：后台追提醒证据回流必须同步推进 remindCount（首页「第 N/M 次」如实）
+  {
+    const dueItem = {
+      id: "it-a2",
+      status: "due",
+      triggerAt: 2000,
+      remindCount: 1,   // promoteDue 首投计数
+      lastRemindAt: 1000,
+      reminderEvents: {
+        "0@2000": { at: 2000, state: "scheduled", roundBase: 2000 },
+        "1@5000": { at: 5000, state: "scheduled", roundBase: 2000 },
+        "9@1500": { at: 1500, state: "delivered", roundBase: 1500 }  // 上一轮的历史投递：不得污染当前轮计数
+      }
+    };
+    const f = fixture(api, {
+      items: [dueItem],
+      deliveryEvidenceResult: {
+        available: true,
+        reason: "ok",
+        retention: { days: 7 },
+        rows: [
+          { itemId: "it-a2", reminderKey: "0@2000", itemRev: 1, carrier: "notification", receivedAt: 2005 },
+          { itemId: "it-a2", reminderKey: "1@5000", itemRev: 1, carrier: "notification", receivedAt: 5005 }
+        ]
+      }
+    });
+    await f.coordinator.initializeNativeReminders();
+
+    const readOk = await f.coordinator.readDeliveryEvidence("manual");
+    assert.strictEqual(readOk, true, "readDeliveryEvidence must succeed");
+    assert.strictEqual(dueItem.remindCount, 2,
+      "remindCount must advance to the latest delivered round (attempt 1 = 2nd reminder), got " + dueItem.remindCount);
+    assert.strictEqual(dueItem.lastRemindAt, 5005,
+      "lastRemindAt must take the latest receivedAt so shouldRealert gates on the real last delivery");
+  }
+
+  // 7c. B-3（JS 侧）：台账回读并带回 lastAlarmDelivery（含 notificationPosted 的已有证据）
+  {
+    const alarmDelivery = { attempted: true, notificationPosted: true, receivedAt: 12345, trace: "token=t-1" };
+    const readItem = () => ({
+      id: "it-1",
+      triggerAt: 2000,
+      reminderEvents: { "rem@2000": { at: 2000, state: "scheduled", roundBase: 2000 } }
+    });
+    const f = fixture(api, {
+      items: [readItem()],
+      systemBridge: { lastAlarmDelivery: () => alarmDelivery }
+    });
+    await f.coordinator.initializeNativeReminders();
+    const readOk = await f.coordinator.readDeliveryEvidence("manual");
+    assert.strictEqual(readOk, true, "readDeliveryEvidence must succeed");
+    const evState = f.coordinator.getDeliveryEvidenceState();
+    assert.strictEqual(evState.lastAlarmDelivery, alarmDelivery,
+      "lastAlarmDelivery (incl. notificationPosted) must be folded into the ledger readback state");
+    assert.strictEqual(evState.lastAlarmDelivery.notificationPosted, true,
+      "notificationPosted evidence must be visible from JS-side readback");
+
+    // 桥/能力缺失：字段为 null，不影响证据主回读判据
+    const fNoBridge = fixture(api, { items: [readItem()] });
+    await fNoBridge.coordinator.initializeNativeReminders();
+    const readOkNoBridge = await fNoBridge.coordinator.readDeliveryEvidence("manual");
+    assert.strictEqual(readOkNoBridge, true, "readDeliveryEvidence must succeed without systemBridge capability");
+    assert.strictEqual(fNoBridge.coordinator.getDeliveryEvidenceState().lastAlarmDelivery, null,
+      "missing bridge capability must leave lastAlarmDelivery null, not break the read");
+  }
+
   // 8. applyReminderEvents 登记新提醒时注入 roundBase 轮次身份
   {
     const item1 = { id: "it-rb", triggerAt: 5000 };
@@ -409,6 +485,21 @@ async function healthy(api) {
     assert.ok(item1.reminderEvents && item1.reminderEvents["rem@5000"], "reminder event must be created");
     assert.strictEqual(item1.reminderEvents["rem@5000"].roundBase, 5000,
       "applyReminderEvents must record roundBase = 5000");
+  }
+
+  // 8b. 体检 P0-2：lost 键补投后重新登记为 scheduled，但 lostAt 必须保留（防止再判丢失 → 补投循环）
+  {
+    const item1 = { id: "it-lost", triggerAt: 5000,
+      reminderEvents: { "0@5000": { at: 5000, state: "lost", roundBase: 5000, lostAt: 9000, lostReason: "reboot_expired" } } };
+    const f = fixture(api, { items: [item1] });
+    f.coordinator.applyReminderEvents(
+      [{ itemId: "it-lost", key: "0@5000", at: 11000 }],
+      Date.now()
+    );
+    const rec = item1.reminderEvents["0@5000"];
+    assert.strictEqual(rec.state, "scheduled", "catch-up must be re-registered as scheduled");
+    assert.strictEqual(rec.lostAt, 9000, "lostAt must survive re-registration");
+    assert.strictEqual(rec.lostReason, "reboot_expired", "lostReason must survive re-registration");
   }
 
   // 9. 工厂依赖校验：缺少 handleAlarmAction 必须抛错
@@ -647,8 +738,8 @@ async function mutant(name, transform) {
 
   // 变异 8：roundBase 属性被丢弃
   out.push(await mutant("roundBase dropped in applyReminderEvents", s => {
-    return s.replace("keep(key, { at: at, state: \"scheduled\", roundBase: base });",
-      "keep(key, { at: at, state: \"scheduled\" });");
+    return s.replace("keep(key, Object.assign({ at: at, state: \"scheduled\", roundBase: base }, lostMark));",
+      "keep(key, Object.assign({ at: at, state: \"scheduled\" }, lostMark));");
   }));
 
   // 变异 9：移除 handleAlarmAction 必需依赖

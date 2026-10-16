@@ -547,6 +547,49 @@ section("3e. 弹条与全屏动作语义 D12/D13/D14");
   // 真实原生链路会携带数据版本（F5：改状态的动作必须有可知且匹配的版本）
   await app.handleAlarmAction({ action: "ack", itemId: it.id, itemRev: it.rev });
   ok("D12 全屏「我知道了」写 ACK 且不归档", it.status === "acknowledged" && it.status !== "archived");
+
+  /* ---- AC-05：提醒级「待整理」—— 一次操作同时落 ACK + NEEDS_REVIEW ---- */
+  const ac05 = app.makeItem({
+    title: "想先收下", priority: "important", status: "due",
+    triggerAt: Date.now() - 60000
+  });
+  ac05.remindCount = 1;
+  app.state.items = [ac05];
+  const ac05Before = app.state.items.length;
+  ok("AC-05 提醒级待整理同时写 ACK 与 NEEDS_REVIEW，不新建条目",
+    app.reviewItem(ac05.id) === true &&
+    ac05.status === "acknowledged" && !!ac05.acknowledgedAt &&
+    ac05.review_status === "NEEDS_REVIEW" &&
+    app.state.items.length === ac05Before);
+  ok("AC-05 收下即清本轮追提醒（不留下追赶起点）", !ac05.lastRemindAt && !ac05.dismissedUntil);
+  ok("AC-05 收下后进入待整理队列",
+    app.needsReviewItems().some(x => x && x.id === ac05.id));
+
+  // 通知动作同款语义：action=review（弹条按钮与 PWA 通知动作共用 deps.reviewItem；
+  // 原生通知动作集在 lib/native-reminders.js 注册，本轮不动那个文件）
+  const ac05b = app.makeItem({
+    title: "通知里收下", priority: "important", status: "due",
+    triggerAt: Date.now() - 60000
+  });
+  app.state.items = [ac05b];
+  ok("AC-05 通知动作「待整理」同语义（ACK + NEEDS_REVIEW，不新建条目）",
+    app.alerts.handleNotificationAction({ action: "review", itemId: ac05b.id }) === true &&
+    ac05b.status === "acknowledged" && ac05b.review_status === "NEEDS_REVIEW" &&
+    app.state.items.length === 1);
+
+  // 终态保护：已完成事项不接受待整理动作
+  const ac05c = app.makeItem({
+    title: "已完成的", priority: "important", status: "due",
+    triggerAt: Date.now() - 60000
+  });
+  app.state.items = [ac05c];
+  app.completeItem(ac05c.id);
+  const ac05cRev = ac05c.status;
+  // normalizeItem 默认 review_status="READY"，终态保护断言应是「没被改写成 NEEDS_REVIEW」而非空值
+  const ac05cReviewBefore = ac05c.review_status;
+  ok("AC-05 终态事项不接受待整理动作",
+    app.reviewItem(ac05c.id) === false && ac05c.status === ac05cRev &&
+    ac05c.review_status === ac05cReviewBefore && ac05c.review_status !== "NEEDS_REVIEW");
 }
 
 
@@ -1829,6 +1872,131 @@ section("13. 初学者模式与正常模式（双模式）");
   app.setUserMode("beginner");
   ok("还原后 userMode 为 beginner", app.state.settings.userMode === "beginner");
   ok("还原后 body 带有 mode-beginner", document.body.classList.contains("mode-beginner"));
+}
+
+section("P1-④ 到点 / 已看到事项可编辑、可删除（真调函数，看 DOM）");
+{
+  const tick = () => new Promise(r => setTimeout(r, 30));
+  app.state.settings.dnd = false;
+  app.state.ui.activeExpanded = true;
+  app.state.ui.tab = "home";
+  const now = Date.now();
+  const due = app.makeItem({ title: "写错地点的会", status: "due", triggerAt: now - 60000, deliveredAt: now - 60000, remindCount: 1 });
+  const acked = app.makeItem({ title: "已看到的那件", status: "acknowledged", acknowledgedAt: now, triggerAt: now - 120000 });
+  app.state.items = [due, acked];
+  app.resetHomeRenderStats();
+  app.renderHome();
+  const dueHtml = getNode("#homeDue").innerHTML;
+  const editRe = id => new RegExp('data-act="edit" data-id="' + id + '"');
+  const delRe = id => new RegExp('data-act="delete" data-id="' + id + '"');
+  ok("P1-④ due 卡片有「修改」入口", editRe(due.id).test(dueHtml));
+  ok("P1-④ due 卡片有「删除」入口", delRe(due.id).test(dueHtml));
+  ok("P1-④ due 卡片三个主动作仍在", /data-act="snooze"/.test(dueHtml) && /data-act="ack"/.test(dueHtml) && /data-act="done"/.test(dueHtml));
+  ok("P1-④ 已看到卡片有「删除」入口", delRe(acked.id).test(getNode("#homeActive").innerHTML));
+
+  app.views.openDetail(due.id);
+  const dueFoot = getNode("#detailFoot").innerHTML;
+  ok("P1-④ due 详情有修改与删除", editRe(due.id).test(dueFoot) && delRe(due.id).test(dueFoot), dueFoot.slice(0, 200));
+  ok("P1-④ due 详情主动作不变", /data-act="ack"/.test(dueFoot) && /data-act="snooze"/.test(dueFoot));
+  app.views.openDetail(acked.id);
+  const ackFoot = getNode("#detailFoot").innerHTML;
+  ok("P1-④ 已看到详情有修改与删除", editRe(acked.id).test(ackFoot) && delRe(acked.id).test(ackFoot));
+
+  // 编辑：走现有编辑表单 → saveItemFromForm → 原生对账
+  app.resetNativeSyncStats();
+  app.openEditItem(due.id);
+  ok("P1-④ due 事项能打开编辑表单", getNode("#sheetItemTitle").textContent === "编辑事项" && getNode("#capText").value === "写错地点的会");
+  getNode("#capText").value = "改对地点的会";
+  app.saveItemFromForm();
+  await tick();
+  const edited = app.state.items.find(x => x.id === due.id);
+  ok("P1-④ 编辑 due 事项生效", !!edited && edited.title === "改对地点的会", edited && edited.title);
+  ok("P1-④ 编辑后触发原生对账（save-edit）", (app.nativeSyncStats().bySource["save-edit"] || 0) >= 1,
+    JSON.stringify(app.nativeSyncStats().bySource));
+
+  // 删除：移除 + 原生对账 + 8 秒撤销
+  app.resetNativeSyncStats();
+  ok("P1-④ 删除 due 事项返回成功", app.deleteItem(due.id) !== false);
+  ok("P1-④ 删除后事项不在列表", !app.state.items.some(x => x.id === due.id));
+  ok("P1-④ 删除后触发原生对账（delete）", (app.nativeSyncStats().bySource.delete || 0) >= 1,
+    JSON.stringify(app.nativeSyncStats().bySource));
+  ok("P1-④ 删除提示带「撤销」", getNode("#toastText").textContent === "已删除" &&
+    getNode("#toastAction").textContent === "撤销" && getNode("#toastAction").hidden === false);
+  ok("P1-④ 删除后登记了撤销入口", !!app.items.lastDeleteUndo());
+  getNode("#toastAction").onclick();
+  await tick();
+  const back = app.state.items.find(x => x.id === due.id);
+  ok("P1-④ 撤销删除后事项回来且状态不变", !!back && back.status === "due" && back.title === "改对地点的会");
+  ok("P1-④ 撤销删除后再次对账（undo-delete）", (app.nativeSyncStats().bySource["undo-delete"] || 0) >= 1,
+    JSON.stringify(app.nativeSyncStats().bySource));
+  ok("P1-④ 撤销入口只能用一次", app.items.undoLastDelete() === false);
+
+  // 过期的撤销不得复活
+  app.deleteItem(acked.id);
+  const u = app.items.lastDeleteUndo();
+  u.at = Date.now() - 9000;
+  ok("P1-④ 超过 8 秒撤销被拒绝", app.items.undoLastDelete() === false && !app.state.items.some(x => x.id === acked.id));
+  app.state.ui.activeExpanded = false;
+}
+
+section("P1-⑧ 重提醒中 / 已稍后 状态标识（次数上限读 REALERT）");
+{
+  const REALERT = sandbox.AttentionLib.REALERT;
+  const now = Date.now();
+  app.state.settings.importantRepeat = true;
+  app.state.ui.activeExpanded = false;
+  const imp = app.makeItem({ title: "重要在催", priority: "important", status: "due", triggerAt: now - 60000, remindCount: 2 });
+  const crit = app.makeItem({ title: "关键催满", priority: "critical", status: "due", triggerAt: now - 60000, remindCount: REALERT.critical.max });
+  const norm = app.makeItem({ title: "普通到点", priority: "normal", status: "due", triggerAt: now - 60000, remindCount: 1 });
+  app.state.items = [imp, crit, norm];
+  app.resetHomeRenderStats();
+  app.renderHome();
+  const html = getNode("#homeDue").innerHTML;
+  const impLabel = "重提醒中（第 2/" + REALERT.important.max + " 次）";
+  ok("P1-⑧ 重要事项卡片显示「" + impLabel + "」", html.indexOf(impLabel) >= 0, html.slice(0, 300));
+  ok("P1-⑧ 次数用尽时说「不再追」", html.indexOf("已提醒 " + REALERT.critical.max + "/" + REALERT.critical.max + " 次 · 不再追") >= 0);
+  const normCard = html.slice(html.indexOf("普通到点"));
+  ok("P1-⑧ 普通事项（不追提醒）不显示重提醒标识", !/重提醒中|不再追/.test(normCard.slice(0, normCard.indexOf("</article>"))));
+
+  app.views.openDetail(imp.id);
+  const body = getNode("#detailBody").innerHTML;
+  ok("P1-⑧ 详情显示重提醒进度与间隔",
+    body.indexOf(impLabel) >= 0 && body.indexOf("每 " + Math.round(REALERT.important.intervalMs / 60000) + " 分钟") >= 0);
+
+  // 计数推进后首页要真的重绘（签名包含重提醒进度）
+  imp.remindCount = 3;
+  app.renderHome();
+  ok("P1-⑧ 重提醒次数推进后卡片同步更新", getNode("#homeDue").innerHTML.indexOf("第 3/" + REALERT.important.max + " 次") >= 0);
+
+  app.state.settings.importantRepeat = false;
+  app.renderHome();
+  ok("P1-⑧ 关闭「重要事项重复提醒」后不显示重提醒中", getNode("#homeDue").innerHTML.indexOf("重提醒中") < 0);
+  app.state.settings.importantRepeat = true;
+
+  // 稍后：托管中列表里与 waiting 区分
+  const later = app.makeItem({ title: "我推迟的", status: "due", triggerAt: now - 60000 });
+  const wait = app.makeItem({ title: "等着的", status: "waiting", triggerAt: now + 3 * 3600000 });
+  app.state.items = [later, wait];
+  const at = new Date(now + 2 * 3600000);
+  at.setSeconds(0, 0);
+  app.snoozeItem(later.id, at.getTime(), "wall-clock");
+  const pad = n => String(n).padStart(2, "0");
+  const sameDayAt = at.toDateString() === new Date().toDateString();
+  const snoozeText = "已稍后至 " + (sameDayAt ? pad(at.getHours()) + ":" + pad(at.getMinutes()) : "");
+  app.state.ui.futureSeg = "waiting";
+  app.state.ui.futureFilter = "all";
+  app.state.ui.calSelected = null;
+  app.views.renderFuture();
+  const fut = getNode("#futureList").innerHTML;
+  const laterRow = fut.slice(fut.lastIndexOf("<article", fut.indexOf("我推迟的")));
+  const waitRow = fut.slice(fut.lastIndexOf("<article", fut.indexOf("等着的")));
+  ok("P1-⑧ 稍后事项在托管中列表标「" + snoozeText + "…」",
+    laterRow.slice(0, laterRow.indexOf("</article>")).indexOf(snoozeText) >= 0 && /is-snoozed/.test(laterRow.slice(0, 80)), laterRow.slice(0, 300));
+  ok("P1-⑧ waiting 事项不带稍后标识",
+    waitRow.slice(0, waitRow.indexOf("</article>")).indexOf("已稍后") < 0 && !/is-snoozed/.test(waitRow.slice(0, 80)));
+  ok("P1-⑧ 托管中计数说明其中几件是稍后的", /托管中 2 件（1 件已稍后）/.test(getNode("#pageSub").textContent), getNode("#pageSub").textContent);
+  app.views.openDetail(later.id);
+  ok("P1-⑧ 稍后事项详情状态写明稍后到几点", getNode("#detailBody").innerHTML.indexOf(snoozeText) >= 0);
 }
 
 section("UI 缺陷回归：收起面板与 hidden 属性（真机截图发现）");

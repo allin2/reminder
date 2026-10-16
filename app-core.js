@@ -318,6 +318,8 @@
     //   冗余，不是漏洞（闭合判定只看 `problems`，冗余不进 problems）。
     ["inQuietHours", "function", "lib/reminder.js 导出被破坏（免打扰时段判定）"],
     ["quietEnd", "function", "lib/reminder.js 导出被破坏（免打扰结束时刻）"],
+    ["effectiveTriggerAt", "function", "lib/reminder.js 导出被破坏（普通事项勿扰补发时刻）"],
+    ["quietNotifyTimeAllowed", "function", "lib/reminder.js 导出被破坏（补发时间校验）"],
     ["applyWindowTrigger", "function",
       "lib/reminder.js 导出被破坏 —— 柔性窗口不再生效：带 windowStart/End 的事项会按硬时刻触发"],
     ["shouldRealert", "function",
@@ -556,7 +558,7 @@
     factory: "AppItems.createAppItems",
     instance: ["promoteDue", "ensureSeriesId", "seriesMembers", "isUnstartedInstance", "spawnNextInstance",
       "advanceSeriesOnArchive", "ackItem", "completeItem", "snoozeItem", "deleteItem",
-      "reopenItem", "restoreItem", "resumeDeadlineProtection", "stopRepeat", "applyItemEdit",
+      "reopenItem", "restoreItem", "reviewItem", "resumeDeadlineProtection", "stopRepeat", "applyItemEdit",
       "applyNewItem", "applyProjectRemovalToItems", "applyCompleteUndo", "revertCompleteUndo",
       "undoLastComplete", "undoNewItem", "lastCompleteUndo"],
     instanceWhy: "lib/app-items.js 的 createAppItems 返回的实例缺少事项 API —— 事项状态与周期流转无法保证",
@@ -980,7 +982,9 @@
       getNativeReminders: () => NativeReminders, getSwReg: () => null, isNativeAndroidRuntime: () => isNativeAndroidRuntime(),
       evidenceStatusFor: (it, ctx) => (EvidenceLib ? EvidenceLib.evidenceStatusFor(it, ctx) : null),
       deliveryEvidenceReadable: () => deliveryEvidenceReadable(),
-      itemScheduleEvidence: (it) => itemScheduleEvidence(it)
+      itemScheduleEvidence: (it) => itemScheduleEvidence(it),
+      // P1-⑧：重提醒次数上限只读 lib/reminder.js 的 REALERT（唯一来源），展示层不另写常量
+      getRealertPolicy: () => Lib.REALERT || null
     };
   }
 
@@ -1042,6 +1046,7 @@
       query: (sel, scope) => $(sel, scope),
       queryAll: (sel, scope) => $$(sel, scope),
       ackItem: (id, silent) => ackItem(id, silent),
+      reviewItem: (id, silent) => reviewItem(id, silent),
       completeItem: (id) => completeItem(id),
       openSnoozeSheet: (id) => openSnoozeSheet(id),
       snoozeItem: (id, ts) => snoozeItem(id, ts),
@@ -1136,6 +1141,7 @@
 
   function eventsRuntimeDeps() {
     return {
+      quietNotifyTimeAllowed: settings => Lib.quietNotifyTimeAllowed(settings),
       getState: () => state,
       render: () => render(),
       renderHome: () => renderHome(),
@@ -1155,6 +1161,7 @@
       toast: function () { return toast.apply(null, arguments); },
       inflightDepth: () => inflightDepth(),
       ackItem: (id) => ackItem(id),
+      reviewItem: (id) => reviewItem(id),
       snoozeItem: (id, when, basis) => snoozeItem(id, when, basis),
       completeItem: (id) => completeItem(id),
       deleteItem: (id) => deleteItem(id),
@@ -1249,6 +1256,7 @@
       quietEnd: (d, s, e) => quietEnd(d, s, e),
       promoteDue: function () { return promoteDue.apply(null, arguments); },
       ackItem: (id) => ackItem(id),
+      reviewItem: (id) => reviewItem(id),
       completeItem: (id) => completeItem(id),
       snoozeItem: (id, when, basis) => snoozeItem(id, when, basis),
       reopenItem: (id) => reopenItem(id),
@@ -1793,6 +1801,7 @@
           isFallbackSuppressed: it => isFallbackSuppressed(it),
           inQuietHours: d => inQuietHours(d),
           quietEnd: d => quietEnd(d),
+          effectiveTriggerAt: it => Lib.effectiveTriggerAt(it, state.settings),
           deadlineStageKeyOf: (deadlineAt, now) => deadlineStageKeyOf(deadlineAt, now),
           applyWindowTrigger: (it, now) => Lib.applyWindowTrigger(it, now),
           actionSpec: (kind, opts) => {
@@ -1884,8 +1893,17 @@
           promoteDue: () => promoteDue(),
           refreshActiveAlarmPanel: force => refreshActiveAlarmPanel(force),
           renderMe: () => renderMe(),
+          // 体检 P1-3：系统没投递的提醒（关机跨点 / 强停 / 权限吊销）必须让用户知道，不能只躺在诊断环里
+          onRemindersLost: (lost) => {
+            const n = Array.isArray(lost) ? lost.length : 0;
+            if (!n) return;
+            toast(n + " 条提醒没能按时响（关机或被系统清理）· 已补发，请在首页查看");
+          },
           isNativeAndroidRuntime: () => isNativeAndroidRuntime(),
           waitForNativeBridge: (timeoutMs) => waitForNativeBridge(timeoutMs),
+          // B-3（JS 侧）：readDeliveryEvidence 顺带回读 lastAlarmDelivery（含
+          // notificationPosted），作为台账回读状态的补充证据面。
+          systemBridge: () => systemBridge(),
           getCapacitor: () => (typeof window !== "undefined" ? window.Capacitor : null),
           setTimeout: (fn, ms) => setTimeout(fn, ms),
           clearTimeout: id => clearTimeout(id)
@@ -2936,7 +2954,7 @@
    * 入口只做薄转发：`isAttentionDue`、提示条与测试接口都按这个名字取用。
    */
   function isDue(item, now) {
-    return appModel ? appModel.isDue(item, now) : false;
+    return appModel ? appModel.isDue(item, now, Lib.effectiveTriggerAt(item, state.settings)) : false;
   }
 
   /**
@@ -2994,6 +3012,10 @@
 
   function ackItem(id, silent) {
     return appItems.ackItem(id, silent);
+  }
+
+  function reviewItem(id, silent) {
+    return appItems.reviewItem(id, silent);
   }
 
   function advanceSeriesOnArchive(it) {

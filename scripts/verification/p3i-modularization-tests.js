@@ -170,6 +170,7 @@ console.log("== P3-I. AppActionFeedback, AppEvents, AppNotices & AppTestApi цибх
 
   const fakeState = { items: [], projects: [], notes: [], settings: {}, ui: {} };
   const instance = factory({
+    quietNotifyTimeAllowed: () => true,
     getState: () => fakeState,
     render: () => {},
     renderHome: () => {},

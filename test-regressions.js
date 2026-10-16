@@ -2635,6 +2635,78 @@ section("UX-T03 送达证据回流：只有拿到证据才下结论，缺证据�
 }
 
 /* =================================================================
+ * 体检 A-2（T3）：后台追提醒只写台账、不动 remindCount ——
+ * 首页「第 N/M 次」停在首投，用户看到的轮次比真实催促次数少。
+ * 修复：证据回流（对账/回读）时按当前轮实际过点轮数推进计数。
+ * 纪律：断言拔掉 syncRemindCountFromLedger 后必须变红。
+ * ================================================================= */
+section("A-2 后台追提醒证据回流同步 remindCount（首页「第 N/M 次」如实）");
+{
+  const h = createApp();
+  const app = await h.boot();
+  const now = Date.now();
+  // 重要事项：原生按 POLICY 排 4 轮（0@…3@…，间隔 30 分钟），后台把前两轮都响完了。
+  const it = app.makeItem({ title: "后台追了两轮", status: "due", priority: "important", triggerAt: now - 2 * 3600000 });
+  // normalizeItem 会把 triggerAt 截断到整秒：台账必须锚定归一后的实际值，
+  // 否则 entryRoundBase 认不出「当前轮」，回执会被当成换过时间的旧轮拒收（同 T03 的纪律）。
+  const at = it.triggerAt;
+  it.remindCount = 1;   // promoteDue 首投计数（既有写入点只有首投与前台 tick）
+  it.lastRemindAt = at;
+  it.reminderEvents = {};
+  [0, 1, 2].forEach(i => {
+    const when = at + i * 1800000;
+    it.reminderEvents[i + "@" + when] = { at: when, state: "scheduled", roundBase: at };
+  });
+  app.state.items = [it];
+
+  // ① 前两轮回执一起回流 → 台账与计数一起推进（拔掉同步后 remindCount 仍为 1，断言变红）
+  ok("A-2 回执推进计数到实际过点轮数，lastRemindAt 取最新接收时刻",
+    app.applyNativeDeliveryEvidence([
+      { itemId: it.id, reminderKey: "0@" + at, carrier: "notification", itemRev: String(it.rev), receivedAt: at },
+      { itemId: it.id, reminderKey: "1@" + (at + 1800000), carrier: "notification", itemRev: String(it.rev), receivedAt: at + 1800000 }
+    ]) === true &&
+    it.remindCount === 2 && it.lastRemindAt === at + 1800000,
+    "remindCount=" + it.remindCount + " lastRemindAt=" + it.lastRemindAt);
+
+  // ② 幂等：重复回执（deduped → 台账没变）不重复推进
+  ok("A-2 重复回执不重复推进计数",
+    app.applyNativeDeliveryEvidence([
+      { itemId: it.id, reminderKey: "1@" + (at + 1800000), carrier: "notification", itemRev: String(it.rev), receivedAt: at + 1800000 }
+    ]) === false && it.remindCount === 2);
+
+  // ③ B-2 的 lost 台账不参与计数：第 3 轮判丢后计数仍是已送达的最大轮次
+  it.reminderEvents["2@" + (at + 3600000)] = { at: at + 3600000, state: "lost", lostAt: now, lostReason: "reboot_expired", roundBase: at };
+  ok("A-2 lost 状态不抬高也不回退计数", it.remindCount === 2);
+
+  // ④ 补投送达后计数按最新一轮走（lost → delivered 的回执合法）
+  ok("A-2 补投送达把计数推进到该轮",
+    app.applyNativeDeliveryEvidence([
+      { itemId: it.id, reminderKey: "2@" + (at + 3600000), carrier: "notification", itemRev: String(it.rev), receivedAt: now }
+    ]) === true && it.remindCount === 3 && it.lastRemindAt === now);
+
+  // ⑤ 换轮（稍后提醒）后旧轮 delivered 不再作数：entryRoundBase 挡旧轮，snooze 的清零不被覆盖
+  it.triggerAt = now + 3600000;
+  it.remindCount = 0;
+  it.lastRemindAt = null;
+  ok("A-2 换轮后旧轮回执不推进新轮计数",
+    app.applyNativeDeliveryEvidence([
+      { itemId: it.id, reminderKey: "2@" + (at + 3600000), carrier: "notification", itemRev: String(it.rev), receivedAt: now }
+    ]) === false && it.remindCount === 0);
+
+  // ⑥ 非 due 事项不由台账推进：waiting 的首投计数交给 promoteDue
+  const itW = app.makeItem({ title: "等待中的", status: "waiting", priority: "important", triggerAt: now - 600000 });
+  const atW = itW.triggerAt;   // 同上：台账锚定归一后的实际触发点，不赌截断方向
+  itW.remindCount = 0;
+  itW.reminderEvents = {};
+  itW.reminderEvents["0@" + atW] = { at: atW, state: "scheduled", roundBase: atW };
+  app.state.items = [itW];
+  ok("A-2 waiting 事项的计数不由台账推进",
+    app.applyNativeDeliveryEvidence([
+      { itemId: itW.id, reminderKey: "0@" + atW, carrier: "notification", itemRev: String(itW.rev), receivedAt: now }
+    ]) === true && itW.remindCount === 0 && itW.status === "waiting");
+}
+
+/* =================================================================
  * 独立验收返工：R1–R7b 反例 → 有断言的回归
  *
  * 来源：`docs/reviews/user-experience-three-priorities-independent-acceptance-20260919.md`

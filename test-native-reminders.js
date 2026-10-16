@@ -77,7 +77,12 @@ function createEnvironment(options) {
   // `r.put("triggerAt", triggerAt)`）。mock 只回 `{ok:true}` 会比真机宽松，
   // 「排下去 ≠ 排对了」这类契约漂移就永远测不出来。
   // `honorsDelayMs:false` 复刻 Q2 的真机行为：delayMs 被静默丢弃、固定落到 10 秒后。
+  // B-2：真机还会回传 `exact`（scheduleAlarmInternal 按实际落点计算）；
+  // `scheduleExact:false` 复刻 D66 的非精确降级路径（inexactNoPermission）。
   const honorsDelayMs = options.honorsDelayMs !== false;
+  const scheduleExact = options.scheduleExact !== false;
+  // A-8：ActiveAlarmStore 的活跃投递台账（正在响铃的那几轮），可由测试按需注入
+  let activeAlarms = (options.activeAlarms || []).slice();
   const bridge = {
     async scheduleAlarm(value) {
       alarmCalls.scheduleAlarm.push(value);
@@ -85,7 +90,8 @@ function createEnvironment(options) {
       return {
         ok: true,
         id: value.id,
-        mode: "alarmClock",
+        mode: scheduleExact ? "alarmClock" : "inexactNoPermission",
+        exact: scheduleExact,
         triggerAt: Date.now() + delay
       };
     },
@@ -94,12 +100,14 @@ function createEnvironment(options) {
       return {
         ok: true,
         id: value.id,
-        mode: "alarmClock",
+        mode: scheduleExact ? "alarmClock" : "inexactNoPermission",
+        exact: scheduleExact,
         triggerAt: honorsDelayMs ? Number(value.at) : Date.now() + 10000
       };
     },
     async cancelAlarm(value) { alarmCalls.cancelAlarm.push(value); return { ok: true }; },
     async cancelNotification(value) { alarmCalls.cancelNotification.push(value); return { ok: true }; },
+    async activeAlarmDeliveries() { return { alarms: activeAlarms.slice() }; },
     async diagnose() {
       return {
         notificationsEnabled: display !== "denied",
@@ -118,7 +126,9 @@ function createEnvironment(options) {
     alarms: alarmCalls,
     get pending() { return pending; },
     fireAction(value) { if (actionCallback) actionCallback(value); },
-    resume() { if (resumeCallback) resumeCallback({ isActive: true }); }
+    resume() { if (resumeCallback) resumeCallback({ isActive: true }); },
+    // A-8：模拟「该闹钟已投递、正在响铃」（AlarmTestReceiver 已把投递行写进 ActiveAlarmStore）
+    setActiveAlarms(rows) { activeAlarms = (rows || []).slice(); }
   };
 }
 
@@ -172,6 +182,24 @@ async function run() {
       result.errors.some(e => e.includes("notification failure")));
   }
 
+  section("体检 P2-17：排程上限保护");
+  {
+    const env = createEnvironment();
+    const many = [];
+    for (let i = 0; i < native.MAX_SCHEDULED + 50; i++) {
+      many.push(item("cap-" + String(i).padStart(4, "0"), "normal", now + (i + 1) * 60000));
+    }
+    const st = await native.reconcile(many, { notify: true }, now);
+    const scheduledAts = env.calls.schedule.flat().map(n => n.schedule.at.getTime());
+    ok("P2-17 超过上限时只排最近的 MAX_SCHEDULED 条，并在状态里报出裁掉的数量",
+      st.desired === native.MAX_SCHEDULED && st.truncated === 50 && scheduledAts.length === native.MAX_SCHEDULED,
+      JSON.stringify({ desired: st.desired, truncated: st.truncated, n: scheduledAts.length }));
+    ok("P2-17 裁掉的是最远的，最近的一条一定在册",
+      Math.min.apply(null, scheduledAts) === now + 60000 &&
+      Math.max.apply(null, scheduledAts) === now + native.MAX_SCHEDULED * 60000);
+    ok("P2-17 裁剪本身不算对账失败", st.reliability !== "error" && st.errors.length === 0);
+  }
+
   section("schedule policies");
   createEnvironment();
   const desired = native.buildDesired([
@@ -211,6 +239,28 @@ async function run() {
   const quietImportant = quietDesired.find(n => n.extra.itemId === "quiet-important" && n.extra.attempt === 0);
   ok("勿扰时普通事项延后到次日 07:30", quietNormal.schedule.at.getHours() === 7 && quietNormal.schedule.at.getMinutes() === 30);
   ok("重要事项不被应用勿扰延后", quietImportant.schedule.at.getTime() === quietAt);
+  {
+    const settings = { notify: true, dnd: true, quietStart: "23:00", quietEnd: "07:30", quietNotifyAt: "09:15", alarmDurationMinutes: 2 };
+    const nightNow = +new Date(2026, 0, 15, 22, 0);
+    const target = +new Date(2026, 0, 16, 9, 15);
+    const a = item("sleep-a", "normal", +new Date(2026, 0, 15, 23, 30));
+    const b = item("sleep-b", "normal", +new Date(2026, 0, 16, 6, 0), { delivery_mode: "alarm", scheduleBasis: "wall-clock", localTrigger: "2026-01-16T06:00" });
+    const original = JSON.stringify([a, b]);
+    const plan = native.buildDesired([a, b], settings, nightNow);
+    ok("统一补发各有独立通知身份与事项", plan.length === 2 && new Set(plan.map(n => n.id)).size === 2 && plan.every(n => +n.schedule.at === target));
+    ok("补发排程不改写原事项时间与版本", JSON.stringify([a, b]) === original);
+    ok("补发前打开应用仍保留同一未来计划", native.buildDesired([a, b], settings, +new Date(2026, 0, 16, 8, 0)).every(n => +n.schedule.at === target));
+    const env = createEnvironment();
+    const first = await native.reconcile([b], settings, nightNow);
+    const call = env.alarms.scheduleAlarm[0] || env.alarms.scheduleAt[0];
+    ok("原生桥接收到时长及补发后的本地时刻", call && call.autoSilenceMs === 120000 && call.localTrigger === "2026-01-16T09:15:00");
+    const stable = { ...settings, scheduledAlarmIds: first.scheduledAlarmIds, scheduledAlarmSignatures: first.scheduledAlarmSignatures };
+    await native.reconcile([b], stable, nightNow);
+    ok("设置不变不重复排闹钟", env.alarms.scheduleAlarm.length + env.alarms.scheduleAt.length === 1);
+    await native.reconcile([b], { ...stable, alarmDurationMinutes: 3 }, nightNow);
+    ok("仅修改时长也更新既有未来闹钟", env.alarms.scheduleAlarm.length + env.alarms.scheduleAt.length === 2 &&
+      [...env.alarms.scheduleAlarm, ...env.alarms.scheduleAt].some(c => c.autoSilenceMs === 180000));
+  }
   ok("锁屏隐私隐藏正文", quietDesired.every(n => n.body === "有一条事项需要你确认"));
   ok("Deadline Protection 独立排程", quietDesired.some(n => n.extra.itemId === "deadline" && n.extra.event === "deadline"));
 
@@ -641,9 +691,18 @@ async function run() {
     ok("D59 渠道无声音无振动，且旧渠道被显式退役（渠道属性创建后不可改）",
       /channel\.setSound\(null, null\)/.test(receiverCode) &&
       /channel\.enableVibration\(false\)/.test(receiverCode) &&
-      /nm\.deleteNotificationChannel\(LEGACY_CHANNEL_ID\)/.test(receiverCode) &&
-      /CHANNEL_ID = "attention-alarm-v4"/.test(receiverCode) &&
-      /LEGACY_CHANNEL_ID = "attention-alarm-v3"/.test(receiverCode));
+      /nm\.deleteNotificationChannel\(legacy\)/.test(receiverCode) &&
+      /CHANNEL_ID = "attention-alarm-v5"/.test(receiverCode) &&
+      /LEGACY_CHANNEL_ID = "attention-alarm-v3"/.test(receiverCode) &&
+      /LEGACY_CHANNEL_IDS = \{ LEGACY_CHANNEL_ID, "attention-alarm-v4" \}/.test(receiverCode));
+    {
+      // 体检 P0-1：闹钟渠道只能由 AlarmTestReceiver.ensureAlarmChannel 一处创建。
+      const bridgeCode = strip(readSrc("android/app/src/main/java/space/alliswell/inbox/SystemBridgePlugin.java"));
+      ok("P0-1 SystemBridgePlugin 不再用带声模板创建闹钟渠道（单一事实源）",
+        bridgeCode.length > 1000 &&
+        !/createChannelIfMissing\(nm,\s*AlarmTestReceiver\.CHANNEL_ID/.test(bridgeCode) &&
+        /AlarmTestReceiver\.ensureAlarmChannel\(getContext\(\), nm\)/.test(bridgeCode));
+    }
     ok("D59 界面不再自己判断「通知是否持有声音」（所有权已不在通知）",
       activityCode.length > 1000 &&
       !/notificationOwnsSound/.test(activityCode) &&
@@ -1576,11 +1635,11 @@ async function run() {
       /delivery\.putExtra\(AlarmTestReceiver\.EXTRA_PLANNED_AT, plannedAt/.test(schedSrc));
     ok("T03 桥接侧把 JS 的 reminderKey 接进来（否则原生永远拿不到身份）",
       /private String callReminderKey\(PluginCall call\)/.test(bridgeSrc) &&
-      /callReminderKey\(call\)\);\s*\n\s*call\.resolve\(r\);/.test(bridgeSrc) &&
+      /callReminderKey\(call\), longArg\(call, "autoSilenceMs", AlarmRingService\.AUTO_SILENCE_MS\)\);\s*\n\s*call\.resolve\(r\);/.test(bridgeSrc) &&
       /intent\.putExtra\(AlarmTestReceiver\.EXTRA_REMINDER_KEY, reminderKey\)/.test(bridgeSrc));
     ok("T03 重排（开机恢复 / 恢复对账）沿用原提醒身份，而不是丢掉",
-      /persistAlarm\(getContext\(\), id, triggerAt, localTrigger, scheduleBasis, title, body, itemId, level, itemRev, reminderKey\)/.test(bridgeSrc) &&
-      /o\.optString\("reminderKey", ""\), triggerAt\)/.test(bridgeSrc));
+      /persistAlarm\(getContext\(\), id, triggerAt, localTrigger, scheduleBasis, title, body, itemId, level, itemRev, reminderKey, autoSilenceMs\)/.test(bridgeSrc) &&
+      /o\.optString\("reminderKey", ""\), triggerAt,\s*o\.optLong\("autoSilenceMs"/.test(bridgeSrc));
     ok("T03 原生快捷稍后（固定 2 小时）也带自解释身份",
       /"snooze@" \+ triggerAt/.test(readSrc3(JavaDir + "AlarmActivity.java")));
 
@@ -2334,6 +2393,249 @@ async function run() {
         st.errors.length === 0 && (st.removedDeliveredIds || []).length === 0);
     }
     delete global.localStorage;
+  }
+
+  section("体检 P1-5：重提醒策略单一来源");
+  {
+    const levels = Object.keys(reminderLib.REALERT);
+    ok("P1-5 原生 POLICY 档位与 REALERT 完全一致",
+      JSON.stringify(Object.keys(native.POLICY).sort()) === JSON.stringify(levels.slice().sort()));
+    ok("P1-5 每档 total = max（含首响）、间隔一致；普通档仍有首响 1 次",
+      levels.every(l => native.POLICY[l].total === Math.max(1, reminderLib.REALERT[l].max) &&
+        native.POLICY[l].intervalMs === reminderLib.REALERT[l].intervalMs) &&
+      native.POLICY.normal.total === 1);
+    ok("P1-5 native-reminders.js 不再手写策略字面量",
+      !/important:\s*\{\s*total:/.test(fs.readFileSync(path.join(__dirname, "lib/native-reminders.js"), "utf8")));
+  }
+
+  section("体检 P0-2：scheduled + 已过点 + 系统没投递 → lost → 补投一次");
+  {
+    const now = Date.UTC(2026, 9, 15, 4, 0, 0);
+    const at = now - 30 * 60 * 1000;
+    const mk = (extra) => Object.assign({
+      id: "lost-1", title: "交房租", status: "due", priority: "important",
+      triggerAt: at, rev: 1,
+      reminderEvents: { ["0@" + at]: { at, state: "scheduled", roundBase: at } }
+    }, extra || {});
+
+    // 旧行为基线：scheduled + 已过点 = 待定，不补投
+    // 重要档关掉追提醒 → 只有首次一个槽位，隔离出「首次闹钟」这一条
+    const oneShot = { notify: true, importantRepeat: false };
+    const stuck = native.buildDesired([mk()], oneShot, now);
+    ok("P0-2 基线：无丢失证据时 scheduled+过点仍保持待定（不重复打扰）",
+      !stuck.some(n => n.extra && n.extra.catchUp));
+
+    // 信号一：原生漏响台账（关机跨点 / 权限恢复时被防群响丢弃）
+    {
+      const it = mk();
+      const lost = native.markLostReminders([it], {
+        missed: [{ itemId: "lost-1", reminderKey: "0@" + at, reason: "reboot_expired" }]
+      }, now);
+      const rec = it.reminderEvents["0@" + at];
+      ok("P0-2 漏响台账命中 → 台账降级为 lost 并带原因",
+        lost.length === 1 && rec.state === native.REMINDER_STATE_LOST &&
+        rec.lostReason === "reboot_expired" && rec.lostAt === now && it.status === "due");
+      const desired = native.buildDesired([it], oneShot, now);
+      const cu = desired.filter(n => n.extra && n.extra.catchUp);
+      ok("P0-2 lost 走补投：补一条普通通知（不抢全屏），身份仍是原定触发点",
+        cu.length === 1 && !cu[0].extra.useAlarm && cu[0].extra.reminderKey === "0@" + at);
+      // 补投登记回 scheduled 但保留 lostAt → 不再被判丢失（不循环）
+      it.reminderEvents["0@" + at] = { at, state: "scheduled", roundBase: at, lostAt: now, lostReason: "reboot_expired" };
+      const again = native.markLostReminders([it], {
+        missed: [{ itemId: "lost-1", reminderKey: "0@" + at, reason: "reboot_expired" }],
+        evidenceReadable: true
+      }, now + 60 * 60 * 1000);
+      ok("P0-2 每个键只判一次丢失（lostAt 在册即跳过，补投不循环）", again.length === 0);
+    }
+
+    // 信号二：证据通道读得到、过点足够久仍无接收回执（强停 / 权限吊销）
+    {
+      const it = mk();
+      const lost = native.markLostReminders([it], { evidenceReadable: true }, now);
+      ok("P0-2 闹钟载体过点 30 分钟仍无接收证据 → lost(no-evidence)",
+        lost.length === 1 && lost[0].reason === "no-evidence");
+      const fresh = mk({ triggerAt: now - 60 * 1000,
+        reminderEvents: { ["0@" + (now - 60 * 1000)]: { at: now - 60 * 1000, state: "scheduled", roundBase: now - 60 * 1000 } } });
+      ok("P0-2 刚过点（< 10 分钟）不判丢失：给 Doze 与回读留余量",
+        native.markLostReminders([fresh], { evidenceReadable: true }, now).length === 0);
+      ok("P0-2 证据通道读不到时绝不凭「没证据」判丢失",
+        native.markLostReminders([mk()], { evidenceReadable: false }, now).length === 0);
+      ok("P0-2 超出证据保留期的键不判丢失",
+        native.markLostReminders([mk()], { evidenceReadable: true, evidenceMaxAgeMs: 10 * 60 * 1000 }, now).length === 0);
+      const normal = mk({ priority: "normal" });
+      ok("P0-2 普通通知载体没有原生接收证据 → 保持待定，不判丢失",
+        native.markLostReminders([normal], { evidenceReadable: true }, now).length === 0);
+      const realert = mk({ reminderEvents: { ["1@" + at]: { at, state: "scheduled", roundBase: at } } });
+      ok("P0-2 追提醒（attempt>0）走通知载体 → 不用证据判据",
+        native.markLostReminders([realert], { evidenceReadable: true }, now).length === 0);
+    }
+
+    // 边界：终态 / 已送达 / 旧轮 不动
+    {
+      const done = mk({ status: "completed" });
+      const delivered = mk({ reminderEvents: { ["0@" + at]: { at, state: "delivered", roundBase: at } } });
+      const oldRound = mk({ triggerAt: at + 1000 });
+      const sig = { missed: [{ itemId: "lost-1", reminderKey: "0@" + at }], evidenceReadable: true };
+      ok("P0-2 完成事项不因漏响复活（不写台账）",
+        native.markLostReminders([done], sig, now).length === 0 && done.reminderEvents["0@" + at].state === "scheduled");
+      ok("P0-2 已送达的键不会被降级",
+        native.markLostReminders([delivered], sig, now).length === 0);
+      ok("P0-2 旧轮（roundBase ≠ 当前 triggerAt）的键不判丢失",
+        native.markLostReminders([oldRound], sig, now).length === 0);
+    }
+
+    // Java 契约：漏响台账必须带 reminderKey，否则 JS 无法锚到具体一轮
+    {
+      const bridgeSrc = fs.readFileSync(path.join(__dirname,
+        "android/app/src/main/java/space/alliswell/inbox/SystemBridgePlugin.java"), "utf8");
+      ok("P0-2 原生漏响台账行带 reminderKey",
+        /entry\.put\("reminderKey", alarmObj\.optString\("reminderKey", ""\)\)/.test(bridgeSrc));
+    }
+  }
+
+  section("体检 B-2：非精确排程不误判丢失（Doze 延迟 ≠ 丢失）");
+  {
+    const t0 = new Date(2026, 0, 15, 10, 0, 0).getTime();
+    const trig = t0 + 60 * 60 * 1000;
+
+    // 判据一：scheduleAlarm 回传 exact:false（D66 非精确降级）→ 30 分钟宽限
+    {
+      await native._resetForTests();
+      createEnvironment({ scheduleExact: false });
+      const it = item("b2-inexact", "important", trig, { rev: 1 });
+      await native.reconcile([it], { notify: true, importantRepeat: false }, t0);
+      it.reminderEvents = { ["0@" + trig]: { at: trig, state: "scheduled", roundBase: trig } };
+      ok("B-2 非精确排程过点 11 分钟仍无证据 → 不判丢（Doze 还没派发 ≠ 丢了）",
+        native.markLostReminders([it], { evidenceReadable: true }, trig + 11 * 60 * 1000).length === 0 &&
+        it.reminderEvents["0@" + trig].state === "scheduled");
+      ok("B-2 非精确排程过点 30 分钟仍无证据 → lost（强停/权限吊销的真丢失仍补投）",
+        native.markLostReminders([it], { evidenceReadable: true }, trig + 31 * 60 * 1000).length === 1 &&
+        it.reminderEvents["0@" + trig].state === native.REMINDER_STATE_LOST);
+    }
+
+    // 判据二（对照）：排程回传 exact:true → 精确闹钟维持 10 分钟宽限
+    {
+      await native._resetForTests();
+      createEnvironment();
+      const it = item("b2-exact", "important", trig, { rev: 1 });
+      await native.reconcile([it], { notify: true, importantRepeat: false }, t0);
+      it.reminderEvents = { ["0@" + trig]: { at: trig, state: "scheduled", roundBase: trig } };
+      ok("B-2 精确排程过点 11 分钟无证据 → 照旧判丢（精确的 10 分钟宽限不放宽）",
+        native.markLostReminders([it], { evidenceReadable: true }, trig + 11 * 60 * 1000).length === 1);
+    }
+
+    // 判据三：跨重启丢了会话缓存 → 用当前精确闹钟权限回退
+    {
+      await native._resetForTests();
+      const mk = (id, when) => ({
+        id, title: "交房租", status: "due", priority: "important", triggerAt: when, rev: 1,
+        reminderEvents: { ["0@" + when]: { at: when, state: "scheduled", roundBase: when } }
+      });
+      ok("B-2 权限回退：exactAlarm 未授予（本轮排程必为非精确）过点 11 分钟不判丢",
+        native.markLostReminders([mk("b2-fallback", t0 - 11 * 60 * 1000)],
+          { evidenceReadable: true, exactAlarmGranted: false }, t0).length === 0);
+      ok("B-2 权限回退（对照）：exactAlarm 已授予时维持 10 分钟宽限",
+        native.markLostReminders([mk("b2-granted", t0 - 11 * 60 * 1000)],
+          { evidenceReadable: true, exactAlarmGranted: true }, t0).length === 1);
+      ok("B-2 权限回退：非精确过点 30 分钟仍无证据 → lost（补投兜底不失效）",
+        native.markLostReminders([mk("b2-too-late", t0 - 31 * 60 * 1000)],
+          { evidenceReadable: true, exactAlarmGranted: false }, t0).length === 1);
+    }
+
+    // Java 契约：判丢分流的数据源是 scheduleAlarm 回传的真实精确性，删掉测试必须红
+    {
+      const bridgeSrc = fs.readFileSync(path.join(__dirname,
+        "android/app/src/main/java/space/alliswell/inbox/SystemBridgePlugin.java"), "utf8");
+      ok("B-2 原生契约：scheduleAlarmInternal 回传 exact（真实落点，非权限现状）",
+        /r\.put\("exact", exact\)/.test(bridgeSrc));
+    }
+  }
+
+  section("体检 A-8：删除/编辑/ACK 连带停掉「正在响铃的那一轮」");
+  {
+    const t0 = new Date(2026, 0, 15, 10, 0, 0).getTime();
+    const trig = t0 + 60 * 60 * 1000;
+
+    // 删除事项（AC-11）：正在响的这轮随排程一起撤
+    {
+      await native._resetForTests();
+      const env = createEnvironment();
+      const it = item("a8-del", "important", trig, { rev: 1 });
+      const s1 = await native.reconcile([it], { notify: true, importantRepeat: false }, t0);
+      ok("A-8 前置：首次对账排下一次闹钟", s1.scheduledAlarmIds.length === 1);
+      const id = s1.scheduledAlarmIds[0];
+      env.setActiveAlarms([{ id, token: "tok-a8-del", itemId: "a8-del", itemRev: 1, receivedAt: trig }]);
+      const s2 = await native.reconcile([], {
+        notify: true, scheduledAlarmIds: [id], scheduledAlarmSignatures: s1.scheduledAlarmSignatures
+      }, trig + 1000);
+      ok("A-8 删除事项：撤销闹钟必须要求停掉正在响的这轮（stopActiveDelivery）",
+        s2.alarmCancelled === 1 && env.alarms.cancelAlarm.length === 1 &&
+        env.alarms.cancelAlarm[0].id === id &&
+        env.alarms.cancelAlarm[0].stopActiveDelivery === true);
+    }
+
+    // 送达后事项版本推进（AC-12：ACK/完成/稍后/改时间都 bumpRev）→ 停
+    {
+      await native._resetForTests();
+      const env = createEnvironment();
+      const it = item("a8-edit", "important", trig, { rev: 1 });
+      const s1 = await native.reconcile([it], { notify: true, importantRepeat: false }, t0);
+      const id = s1.scheduledAlarmIds[0];
+      env.setActiveAlarms([{ id, token: "tok-a8-edit", itemId: "a8-edit", itemRev: 1, receivedAt: trig }]);
+      const edited = item("a8-edit", "important", trig + 2 * 60 * 60 * 1000, { rev: 2 });
+      const s2 = await native.reconcile([edited], {
+        notify: true, scheduledAlarmIds: [id], scheduledAlarmSignatures: s1.scheduledAlarmSignatures
+      }, trig + 1000);
+      ok("A-8 改时间（bumpRev）：旧那轮正在响 → 撤销时要求停铃",
+        s2.alarmCancelled === 1 && env.alarms.cancelAlarm.length === 1 &&
+        env.alarms.cancelAlarm[0].id === id &&
+        env.alarms.cancelAlarm[0].stopActiveDelivery === true);
+    }
+
+    // 已送达且事项未动（正响着、用户还没处理）：对账每轮都会撤掉这个 id，
+    // 但那轮响铃是合法的 —— 绝不能因为打开应用停铃（preserveActive 语义不变）
+    {
+      await native._resetForTests();
+      const env = createEnvironment();
+      const it = item("a8-live", "important", trig, { rev: 2 });
+      const s1 = await native.reconcile([it], { notify: true, importantRepeat: false }, t0);
+      const id = s1.scheduledAlarmIds[0];
+      env.setActiveAlarms([{ id, token: "tok-a8-live", itemId: "a8-live", itemRev: 2, receivedAt: trig }]);
+      const delivered = item("a8-live", "important", trig, { rev: 2,
+        reminderEvents: { ["0@" + trig]: { at: trig, state: "delivered", roundBase: trig } } });
+      const s2 = await native.reconcile([delivered], {
+        notify: true, scheduledAlarmIds: [id], scheduledAlarmSignatures: s1.scheduledAlarmSignatures
+      }, trig + 1000);
+      ok("A-8 已送达仍在响且事项未动：只撤未来，不要求停铃（不误伤 preserveActive）",
+        s2.alarmCancelled === 1 && env.alarms.cancelAlarm.length === 1 &&
+        env.alarms.cancelAlarm[0].id === id &&
+        env.alarms.cancelAlarm[0].stopActiveDelivery !== true);
+    }
+
+    // 不在活跃台账（没在响）：撤销就是纯撤 PendingIntent，不触发停铃标记
+    {
+      await native._resetForTests();
+      const env = createEnvironment();
+      const it = item("a8-idle", "important", trig, { rev: 1 });
+      const s1 = await native.reconcile([it], { notify: true, importantRepeat: false }, t0);
+      const id = s1.scheduledAlarmIds[0];
+      const s2 = await native.reconcile([], {
+        notify: true, scheduledAlarmIds: [id], scheduledAlarmSignatures: s1.scheduledAlarmSignatures
+      }, trig + 1000);
+      ok("A-8 没在响的撤销：不带停铃标记（ActiveAlarmStore 无此行）",
+        s2.alarmCancelled === 1 && env.alarms.cancelAlarm.length === 1 &&
+        env.alarms.cancelAlarm[0].stopActiveDelivery !== true);
+    }
+
+    // Java 契约：cancelAlarm 必须按 id 定向停活跃投递（与通知栏「停止声振」同一收口），
+    // 否则 JS 传的 stopActiveDelivery 只是空喊
+    {
+      const bridgeSrc = fs.readFileSync(path.join(__dirname,
+        "android/app/src/main/java/space/alliswell/inbox/SystemBridgePlugin.java"), "utf8");
+      ok("A-8 原生契约：cancelAlarm 声明式停铃（stopActiveDelivery）+ ActiveAlarmStore.stop 定向停",
+        /stopActiveDelivery/.test(bridgeSrc) &&
+        /ActiveAlarmStore\.stop\(getContext\(\), id, null\)/.test(bridgeSrc));
+    }
   }
 
   await native._resetForTests();

@@ -1039,7 +1039,7 @@ async function run() {
     const itemCov = prod.itemInstanceCoverage(ROOT);
     ok("P3-D 事项实例 API 双向闭合（core 转发与实例合同逐项对齐）",
       itemCov.missingInContract.length === 0 && itemCov.unusedInContract.length === 0 &&
-      itemCov.used.length === 22 && itemCov.declared.length === 22, JSON.stringify(itemCov));
+      itemCov.used.length === 23 && itemCov.declared.length === 23, JSON.stringify(itemCov));
     const itemContractRemoved = baseSource.replace('"undoNewItem", "lastCompleteUndo"]',
       '"undoNewItem"]');
     const itemContractGap = prod.itemInstanceCoverage(ROOT, { source: itemContractRemoved });

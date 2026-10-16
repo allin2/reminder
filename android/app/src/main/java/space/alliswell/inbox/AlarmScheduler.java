@@ -46,6 +46,14 @@ public final class AlarmScheduler {
                               int id, String itemId, String level, String itemRev,
                               String scheduleBasis, long elapsedTriggerAtMs,
                               String reminderKey, long plannedAt) {
+    schedule(context, triggerAt, title, body, id, itemId, level, itemRev, scheduleBasis,
+      elapsedTriggerAtMs, reminderKey, plannedAt, AlarmRingService.AUTO_SILENCE_MS);
+  }
+
+  public static void schedule(Context context, long triggerAt, String title, String body,
+                              int id, String itemId, String level, String itemRev,
+                              String scheduleBasis, long elapsedTriggerAtMs,
+                              String reminderKey, long plannedAt, long autoSilenceMs) {
     // R3：minSdk 22 —— 不用 API 23+ 的 getSystemService(Class) 重载
     Object svc = context.getSystemService(Context.ALARM_SERVICE);
     AlarmManager am = svc instanceof AlarmManager ? (AlarmManager) svc : null;
@@ -73,6 +81,8 @@ public final class AlarmScheduler {
     delivery.putExtra(AlarmTestReceiver.EXTRA_TITLE, title);
     delivery.putExtra(AlarmTestReceiver.EXTRA_BODY, body);
     delivery.putExtra(AlarmTestReceiver.EXTRA_FULL_SCREEN, true);
+    delivery.putExtra(AlarmRingService.EXTRA_AUTO_SILENCE_MS,
+      Math.max(60000L, Math.min(30L * 60000L, autoSilenceMs)));
     delivery.putExtra(AlarmTestReceiver.EXTRA_ITEM_ID, itemId == null ? "" : itemId);
     delivery.putExtra(AlarmTestReceiver.EXTRA_ITEM_REV,
       itemRev == null || itemRev.isEmpty() ? "0" : itemRev);

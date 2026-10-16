@@ -112,6 +112,7 @@ function fixture(api, options) {
     isFallbackSuppressed: it => false,
     inQuietHours: d => false,
     quietEnd: d => Date.now(),
+    effectiveTriggerAt: it => Number(it.triggerAt) || 0,
     deadlineStageKeyOf: (dl, now) => (now >= dl ? "due" : null),
     applyWindowTrigger: (it, now) => null,
     actionSpec: (kind, opts) => ({ sub: "sub", firstTimeText: "first", firstTimeAction: "snooze" }),
@@ -182,6 +183,56 @@ async function healthy(api) {
     assert.strictEqual(calDerivedOnComplete.length, 1, "Calendar mode must derive 1 next instance on complete");
     assert.strictEqual(calDerivedOnComplete[0].repeatParentId, calItem.id, "derived instance must reference calItem");
     assert.strictEqual(calDerivedOnComplete[0].status, "waiting", "derived instance must start in waiting");
+  }
+
+  // 1b. AC-05：提醒级「待整理」= ACK + NEEDS_REVIEW 一个事务，不新建条目
+  {
+    const f = fixture(api);
+    const reviewTarget = f.deps.makeItem({
+      id: "it-review",
+      title: "Review Task",
+      status: "due",
+      triggerAt: Date.now() - 1000,
+      remindCount: 1,
+      lastRemindAt: Date.now() - 1000
+    });
+    f.state().items.push(reviewTarget);
+
+    const beforeCount = f.state().items.length;
+    const reviewResult = f.items.reviewItem(reviewTarget.id);
+    assert.strictEqual(reviewResult, true, "reviewItem must succeed");
+    assert.strictEqual(reviewTarget.status, "acknowledged", "reviewItem must ACK the item");
+    assert.ok(reviewTarget.acknowledgedAt, "reviewItem must set acknowledgedAt");
+    assert.strictEqual(reviewTarget.review_status, "NEEDS_REVIEW", "reviewItem must mark item for review");
+    assert.strictEqual(reviewTarget.lastRemindAt, null, "reviewItem must stop the current chase (clear lastRemindAt)");
+    assert.strictEqual(reviewTarget.dismissedUntil, null, "reviewItem must not leave a dismiss window");
+    assert.strictEqual(f.state().items.length, beforeCount, "reviewItem must NOT create a new item");
+
+    // ACK 型周期与 rawAckItem 同语义：提醒级收下即推进
+    const seriesItem = f.deps.makeItem({
+      id: "it-review-series",
+      title: "Review Series",
+      status: "waiting",
+      triggerAt: Date.now() - 1000,
+      repeat: { mode: "ack", every: "day" }
+    });
+    f.state().items.push(seriesItem);
+    f.items.reviewItem(seriesItem.id);
+    const seriesDerived = f.state().items.filter(x => x.seriesId === seriesItem.seriesId && x.id !== seriesItem.id);
+    assert.strictEqual(seriesDerived.length, 1, "ACK-mode repeat must derive next instance on review (same as ACK)");
+    assert.strictEqual(seriesItem.review_status, "NEEDS_REVIEW", "series item must also be marked for review");
+
+    // 终态保护：completed 不接受待整理动作
+    const doneItem = f.deps.makeItem({
+      id: "it-review-done",
+      title: "Done",
+      status: "due",
+      triggerAt: Date.now() - 1000
+    });
+    f.state().items.push(doneItem);
+    f.items.completeItem(doneItem.id);
+    assert.strictEqual(f.items.reviewItem(doneItem.id), false, "terminal item must reject reviewItem");
+    assert.notStrictEqual(doneItem.review_status, "NEEDS_REVIEW", "terminal item must not enter review");
   }
 
   // 2. stopRepeat：归档当前项与未来未开始项，严格保留历史已确认/已投递项
@@ -276,6 +327,7 @@ async function healthy(api) {
   {
     const f = fixture(api);
     assert.strictEqual(f.items.ackItem.__wrapped, true, "ackItem must be wrapped with wrapUserOp");
+    assert.strictEqual(f.items.reviewItem.__wrapped, true, "reviewItem must be wrapped with wrapUserOp");
     assert.strictEqual(f.items.completeItem.__wrapped, true, "completeItem must be wrapped with wrapUserOp");
     assert.strictEqual(f.items.snoozeItem.__wrapped, true, "snoozeItem must be wrapped with wrapUserOp");
     assert.strictEqual(f.items.deleteItem.__wrapped, true, "deleteItem must be wrapped with wrapUserOp");

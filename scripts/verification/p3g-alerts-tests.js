@@ -87,6 +87,7 @@ function fixture(api, options) {
   let toasts = [];
   let badgeUpdates = 0;
   let acknowledged = [];
+  let reviewed = [];
   let completed = [];
   let snoozed = [];
   let openedDetail = [];
@@ -200,6 +201,14 @@ function fixture(api, options) {
       if (it) it.status = "acknowledged";
       return true;
     },
+    // AC-05：弹条/通知「待整理」—— 真实事务在 items 模块（ACK + NEEDS_REVIEW），
+    // 这里记录调用形状并落同样的字段，供弹条行为断言。
+    reviewItem: (id, silent) => {
+      reviewed.push([id, silent]);
+      const it = state.items.find(x => x.id === id);
+      if (it) { it.status = "acknowledged"; it.review_status = "NEEDS_REVIEW"; }
+      return true;
+    },
     completeItem: (id) => {
       completed.push(id);
       const it = state.items.find(x => x.id === id);
@@ -236,6 +245,7 @@ function fixture(api, options) {
       toasts,
       get badgeUpdates() { return badgeUpdates; },
       acknowledged,
+      reviewed,
       completed,
       snoozed,
       openedDetail,
@@ -414,6 +424,18 @@ async function healthy(loaded) {
     f.getNode("alertSnooze").dispatchEvent("click");
     assert.strictEqual(f.spies.openedSnoozeSheets.indexOf("it-controls") >= 0, true, "Snooze button must open snooze sheet");
     assert.strictEqual(f.alerts.getAlertItem(), null, "Snooze button must hide alert");
+
+    // AC-05: review (待整理) button — same hide discipline, routes to reviewItem
+    // (ACK + NEEDS_REVIEW single transaction, not ackItem + separate review entry)
+    const ackedBeforeReview = f.spies.acknowledged.length;
+    f.alerts.showAlert(f.state.items[0]);
+    f.getNode("alertReview").dispatchEvent("click");
+    assert.strictEqual(f.spies.reviewed.length, 1, "Review button must call reviewItem");
+    assert.strictEqual(f.spies.reviewed[0][0], "it-controls");
+    assert.strictEqual(f.spies.reviewed[0][1], true, "Review from banner must be silent (banner emits its own toast)");
+    assert.strictEqual(f.spies.acknowledged.length, ackedBeforeReview, "Review must not route through ackItem");
+    assert.strictEqual(f.alerts.getAlertItem(), null, "Review button must hide alert");
+    assert.strictEqual(f.spies.toasts.indexOf("已收下 · 已加入待整理") >= 0, true, "Review must confirm it went to 待整理");
     f.alerts.clearAlert();
   }
 
@@ -450,6 +472,12 @@ async function healthy(loaded) {
     // snooze action (fixed 2 hours)
     assert.strictEqual(f.alerts.handleNotificationAction({ itemId: "it-action", action: "snooze" }), true);
     assert.strictEqual(f.spies.snoozed[0].until, 2000000 + 2 * 3600000);
+
+    // AC-05: review action (待整理) — same entry from notification as from banner
+    assert.strictEqual(f.alerts.handleNotificationAction({ itemId: "it-action", action: "review" }), true);
+    assert.strictEqual(f.spies.reviewed.length, 1, "Review action must call reviewItem");
+    assert.strictEqual(f.spies.reviewed[0][0], "it-action");
+    assert.strictEqual(f.spies.reviewed[0][1], true, "Review from notification must be silent");
 
     // review-session action
     assert.strictEqual(f.alerts.handleNotificationAction({ itemId: "review-session" }), true);

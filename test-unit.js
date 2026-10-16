@@ -50,7 +50,8 @@ section("P2-F1 AppContent — live 注入、笔记/搜索/项目与幂等绑定"
     const nodes = {}, docListeners = [];
     function node(id) {
       if (!nodes[id]) nodes[id] = { id, value: "", textContent: "", innerHTML: "", hidden: true, dataset: {},
-        classList: { on: false, toggle(_name, value) { this.on = !!value; } }, listeners: [],
+        classList: { on: false, toggle(_name, value) { this.on = !!value; } }, listeners: [], attrs: {},
+        setAttribute(name, value) { this.attrs[name] = value; },
         addEventListener(name, fn) { this.listeners.push({ name, fn }); }, focus() { this.focused = true; } };
       return nodes[id];
     }
@@ -237,7 +238,7 @@ section("P2-F2 AppViews — direct live dependencies");
     notes: [], projects: [], ui: { futureSeg: "archive" }, settings: { notify: true, userMode: "normal", quietStart: "23:00", quietEnd: "07:30" } };
   const nodes = {};
   const node = id => nodes[id] || (nodes[id] = { innerHTML: "", textContent: "", hidden: false, value: "", dataset: {},
-    classList: { toggle() {}, add() {}, remove() {} } });
+    classList: { toggle() {}, add() {}, remove() {} }, setAttribute() {} });
   let native = false, startCalls = 0, padCalls = 0;
   const noop = () => {};
   const views = appViewsMod.createAppViews({
@@ -278,7 +279,10 @@ section("P2-F2 AppViews — direct live dependencies");
   node("#capProject").value = "p"; views.refreshProjectSelects();
   ok("P2-F2 项目选择器刷新保留选中值", node("#capProject").value === "p" && /项目一/.test(node("#capProject").innerHTML),
     JSON.stringify({ value: node("#capProject").value, html: node("#capProject").innerHTML }));
-  global.navigator = { onLine: true, serviceWorker: null };
+  // 体检 P1-16：Node ≥21 的 navigator 是只读 getter，直接赋值会抛 TypeError；改为可配置地覆盖
+  Object.defineProperty(globalThis, "navigator", {
+    value: { onLine: true, serviceWorker: null }, configurable: true, writable: true
+  });
   views.renderMe();
   ok("P2-F2 stats 通过注入 pad2", padCalls > 0, String(padCalls));
   views.renderPwaStatus(); const webHidden = node("#btnSetup").hidden;
@@ -356,8 +360,8 @@ section("relative Chinese time");
   ok("正文含月报不误判为日期冲突", parse.parseChineseTime("三分钟后提醒我写月报", now).confidence === "high");
 }
 
-/* 解析层回归：H-01 / H-02 / H-03 / N-04（2026-09-18 修复） */
-section("calendar anchors: 下周 / 下下周 / 每月N号 / 下个月N号 / X前");
+/* 解析层回归：H-01 / H-02 / H-03 / N-04（2026-09-18 修复）+ P1-①~⑤（T2 体检 2026-10-15 修复） */
+section("calendar anchors: 下周 / 下个月N号 / X前 / T2-P1（每周X钟点 · 裸N号截止 · 最后一个周X · 裸钟点 · 刻）");
 {
   const now = new Date(2026, 8, 18, 14, 0, 0); // 2026-09-18 周五 14:00
   const at = (y, mo, d, h, mi) => new Date(y, mo - 1, d, h || 0, mi || 0, 0, 0).getTime();
@@ -423,6 +427,65 @@ section("calendar anchors: 下周 / 下下周 / 每月N号 / 下个月N号 / X�
   ok("周期事项仍是 monthEnd", mEnd.repeat && mEnd.repeat.every === "monthEnd");
   // 没有时间指向词时不得凭空造出截止
   ok("无截止语义时不产出截止", parse.parseChineseTime("记得买牛奶", now).deadline == null);
+
+  // ===== P1-① ~ P1-⑤（T2 体检 2026-10-15）：5 类实锤口语解析错误 =====
+
+  // P1-①：「每周一9点」的钟点被「一9」粘连吞掉（→10:00），首期又被「本周X」劫持
+  const q1 = parse.parseChineseTime("每周一9点开站会", new Date(2026, 8, 15, 9, 0, 0)); // 周二 09:00
+  ok("P1-① 每周一9点 = 下周一 09:00（钟点不再被吞）", q1.trigger === at(2026, 9, 21, 9, 0), show(q1.trigger));
+  ok("P1-① 每周一9点 标题干净（9点不残留）", q1.title === "开站会", q1.title);
+  const q1b = parse.parseChineseTime("每周一9点开站会", new Date(2026, 8, 14, 10, 0, 0)); // 周一 10:00 说，当天 9 点已过
+  ok("P1-① 周一当天说（时刻已过）→ 下周一 09:00", q1b.trigger === at(2026, 9, 21, 9, 0), show(q1b.trigger));
+  const q1c = parse.parseChineseTime("每周二晚上8点半例会", new Date(2026, 8, 15, 9, 0, 0));
+  ok("P1-① 每周二晚上8点半 = 周二 20:30", q1c.trigger === at(2026, 9, 15, 20, 30), show(q1c.trigger));
+  const q1d = parse.parseChineseTime("每週五下午三点盘点", new Date(2026, 8, 14, 10, 0, 0));
+  ok("P1-① 繁体「每週五」= 周五 15:00 且仍是每周周期",
+    q1d.trigger === at(2026, 9, 18, 15, 0) && q1d.repeat && q1d.repeat.every === "week",
+    show(q1d.trigger) + " " + JSON.stringify(q1d.repeat));
+
+  // P1-②：「30号前交材料」只给号数不给月，截止曾凭空落到 +7 天兜底（9/21，应 9/30）
+  const q2 = parse.parseChineseTime("30号前交材料", new Date(2026, 8, 14, 10, 0, 0));
+  ok("P1-② 30号前：截止 = 当月 30 号当天末尾", q2.deadline === eod(2026, 9, 30), show(q2.deadline));
+  ok("P1-② 30号前：标题干净（30号不残留）", q2.title === "交材料", q2.title);
+  const q2b = parse.parseChineseTime("30号交材料", new Date(2026, 8, 14, 10, 0, 0));
+  ok("P1-② 对照：无截止词锚 30 号当天、不产截止",
+    q2b.trigger === at(2026, 9, 30, 10, 0) && q2b.deadline == null,
+    show(q2b.trigger) + " / " + String(q2b.deadline));
+
+  // P1-③：「每月最后一个周五」曾退化成「每月」+30 天兜底；nth=-1 上游传不下去
+  const q3 = parse.parseChineseTime("每月最后一个周五盘点", new Date(2026, 8, 14, 10, 0, 0));
+  ok("P1-③ repeat = nthWeekday nth=-1 dow=5",
+    q3.repeat && q3.repeat.every === "nthWeekday" && q3.repeat.nth === -1 && q3.repeat.dow === 5,
+    JSON.stringify(q3.repeat));
+  ok("P1-③ 首期 = 当月最后一个周五 09-25（不是 +30 天）", q3.trigger === at(2026, 9, 25, 10, 0), show(q3.trigger));
+  const q3next = repeat.nextRepeatTrigger({ repeat: q3.repeat, triggerAt: q3.trigger }, q3.trigger);
+  ok("P1-③ 次期 = 10 月最后一个周五 10-30",
+    new Date(q3next).getMonth() === 9 && new Date(q3next).getDate() === 30, show(q3next));
+  ok("P1-③ repeatLabel 通顺（不出现「第 -1 个」）",
+    repeat.repeatLabel(q3.repeat) === "每月最后一个周五", repeat.repeatLabel(q3.repeat));
+  // P1-③ 同族：周期里的「周X」不得被「本周X」分支劫持（每月第2个周二曾锚到本周二 09-15）
+  const q3b = parse.parseChineseTime("每月第2个周二开例会", new Date(2026, 8, 14, 10, 0, 0));
+  ok("P1-③ 每月第2个周二 首期 = 10-13（不被本周X劫持）", q3b.trigger === at(2026, 10, 13, 10, 0), show(q3b.trigger));
+
+  // P1-④：裸钟点「三点半」曾被按凌晨 03:30 落到次日半夜
+  const q4 = parse.parseChineseTime("三点半开会", new Date(2026, 8, 14, 10, 0, 0));
+  ok("P1-④ 三点半 = 今天 15:30（不是次日 03:30）", q4.trigger === at(2026, 9, 14, 15, 30), show(q4.trigger));
+  const q4b = parse.parseChineseTime("三点半开会", new Date(2026, 8, 14, 16, 0, 0));
+  ok("P1-④ 已过 15:30 → 明天 15:30", q4b.trigger === at(2026, 9, 15, 15, 30), show(q4b.trigger));
+  ok("P1-④ 八点半（上午已过）→ 20:30",
+    parse.parseChineseTime("八点半开会", new Date(2026, 8, 14, 10, 0, 0)).trigger === at(2026, 9, 14, 20, 30));
+  ok("P1-④ 十一点半（上午未过）→ 11:30 不变",
+    parse.parseChineseTime("十一点半开会", new Date(2026, 8, 14, 10, 0, 0)).trigger === at(2026, 9, 14, 11, 30));
+  // 既有口径保持：截止语境「9点前」不做下午消歧（70 条语料 #37）
+  ok("P1-④ 「9点前」口径不变（已过上午 → 明天 09:00）",
+    parse.parseChineseTime("9点前提交申请", new Date(2026, 8, 14, 10, 0, 0)).deadline === at(2026, 9, 15, 9, 0));
+
+  // P1-⑤：「一刻/三刻」曾被当成 1/3 分，「刻」残留标题（15:01「刻开会」）
+  const q5 = parse.parseChineseTime("下午三点一刻开会", new Date(2026, 8, 14, 10, 0, 0));
+  ok("P1-⑤ 下午三点一刻 = 15:15（不是 15:01）", q5.trigger === at(2026, 9, 14, 15, 15), show(q5.trigger));
+  ok("P1-⑤ 「刻」不残留标题", q5.title === "开会", q5.title);
+  ok("P1-⑤ 三点三刻 = 15:45",
+    parse.parseChineseTime("下午三点三刻开会", new Date(2026, 8, 14, 10, 0, 0)).trigger === at(2026, 9, 14, 15, 45));
 }
 
 /* repeat */
@@ -459,6 +522,31 @@ section("reminder");
   ok("08:00 not quiet", !reminder.inQuietHours(new Date(2026, 5, 10, 8, 0), settings));
   const end = new Date(reminder.quietEnd(new Date(2026, 5, 10, 23, 30), settings));
   ok("quiet end next 07:30", end.getHours() === 7 && end.getMinutes() === 30 && end.getDate() === 11);
+
+  const custom = { ...settings, quietNotifyAt: "09:15" };
+  const expected = new Date(2026, 5, 11, 9, 15).getTime();
+  ok("夜间和凌晨的普通提醒统一补发", [new Date(2026, 5, 10, 23, 45), new Date(2026, 5, 11, 6, 0)].every(d =>
+    reminder.effectiveTriggerAt({ priority: "normal", triggerAt: +d }, custom) === expected));
+  ok("旧设置保留勿扰结束补发", reminder.quietResumeAt(new Date(2026, 5, 10, 23, 45), settings) === +new Date(2026, 5, 11, 7, 30));
+  ok("勿扰边界：开始延后、结束不延后", reminder.effectiveTriggerAt({ priority: "normal", triggerAt: +new Date(2026, 5, 10, 23, 0) }, custom) === expected &&
+    reminder.effectiveTriggerAt({ priority: "normal", triggerAt: +new Date(2026, 5, 11, 7, 30) }, custom) === +new Date(2026, 5, 11, 7, 30));
+  ok("白天勿扰：补发时间已过则使用下一天", reminder.quietResumeAt(new Date(2026, 5, 10, 14, 0),
+    { dnd: true, quietStart: "13:00", quietEnd: "15:00", quietNotifyAt: "09:00" }) === +new Date(2026, 5, 11, 9, 0));
+  ok("拒绝睡眠内补发时间、允许结束边界和留空", !reminder.quietNotifyTimeAllowed({ ...settings, quietNotifyAt: "02:00" }) &&
+    reminder.quietNotifyTimeAllowed({ ...settings, quietNotifyAt: "07:30" }) && reminder.quietNotifyTimeAllowed({ ...settings, quietNotifyAt: "" }));
+  ok("损坏补发时间不会重入睡眠", reminder.quietResumeAt(new Date(2026, 5, 10, 23, 45), { ...settings, quietNotifyAt: "02:00" }) === +new Date(2026, 5, 11, 7, 30));
+  ok("勿扰关闭、重要事项保留原时刻", reminder.effectiveTriggerAt({ priority: "normal", triggerAt: +new Date(2026, 5, 10, 23, 45) }, { ...custom, dnd: false }) === +new Date(2026, 5, 10, 23, 45) &&
+    reminder.effectiveTriggerAt({ priority: "important", triggerAt: +new Date(2026, 5, 10, 23, 45) }, custom) === +new Date(2026, 5, 10, 23, 45));
+  ok("闹钟时长默认及范围", reminder.alarmDurationMs({}) === 300000 && reminder.alarmDurationMs({ alarmDurationMinutes: 1 }) === 60000 &&
+    reminder.alarmDurationMs({ alarmDurationMinutes: 30 }) === 1800000 && [0, 31, -1, 1.5, "bad"].every(x => reminder.alarmDurationMs({ alarmDurationMinutes: x }) === 300000));
+  const backup = require("./lib/app-backup.js");
+  const payload = { app: "attention-inbox", schema: 5, exportedAt: "2026-09-30T00:00:00.000Z", items: [], notes: [], projects: [],
+    settings: { ...custom, alarmDurationMinutes: 2 } };
+  const verdict = backup.validateBackupPayload(payload, 5);
+  ok("新设置备份回环保留值", verdict.ok && verdict.sanitized.settings.alarmDurationMinutes === 2 && verdict.sanitized.settings.quietNotifyAt === "09:15");
+  ok("备份拒收越界时长与非法补发时刻", !backup.validateBackupPayload({ ...payload, settings: { alarmDurationMinutes: 31 } }, 5).ok &&
+    !backup.validateBackupPayload({ ...payload, settings: { quietNotifyAt: "25:00" } }, 5).ok);
+  ok("旧备份缺字段仍可恢复", backup.validateBackupPayload({ ...payload, settings: settings }, 5).ok);
 
   const now = Date.now();
   const important = {
@@ -1127,7 +1215,8 @@ const appAiDone = beginAsyncSection();
     const cls = new Set();
     const n = {
       id: id, value: "", textContent: "", disabled: false, dataset: {},
-      _cls: cls,
+      _cls: cls, _attrs: Object.create(null),
+      setAttribute(k, v) { this._attrs[k] = v; },
       classList: {
         add(c) { cls.add(c); }, remove(c) { cls.delete(c); },
         contains(c) { return cls.has(c); },
@@ -1956,6 +2045,24 @@ const appBackupDone = beginAsyncSection();
       foreignRun.toasts[0] === "导入失败：这不是「安心收件箱」的备份文件" &&
       shapeRun.toasts[0] === "导入失败：备份格式不正确（settings.injected）",
       JSON.stringify([futureRun.toasts, oldRun.toasts, foreignRun.toasts, shapeRun.toasts]));
+
+    // T10 导入文案：台账里的未知键/未知状态 = 跨版本拒收，说人话不甩内部路径
+    const ledgerKeyRun = runImport(appBackupMod, p => {
+      p.items[0].reminderEvents = { "fwd@1": { at: 1, state: "delivered", forwardedAt: 9 } };
+    });
+    await ledgerKeyRun.done;
+    const ledgerStateRun = runImport(appBackupMod, p => {
+      p.items[0].reminderEvents = { "fwd@1": { at: 1, state: "rescheduled" } };
+    });
+    await ledgerStateRun.done;
+    ok("跨版本台账拒收说「来自更新版本」，不再让用户去修一个根本没坏的文件",
+      ledgerKeyRun.toasts[0] === "导入失败：这份备份来自更新版本的应用，当前版本无法导入 · 请更新应用后再试" &&
+      ledgerStateRun.toasts[0] === "导入失败：这份备份来自更新版本的应用，当前版本无法导入 · 请更新应用后再试",
+      JSON.stringify([ledgerKeyRun.toasts, ledgerStateRun.toasts]));
+    ok("跨版本台账拒收仍是零副作用拒绝（确认框 0 / 提交 0 / 渲染 0）",
+      ledgerKeyRun.ledger.confirm === 0 && ledgerKeyRun.ledger.save === 0 &&
+      ledgerKeyRun.ledger.render === 0 && ledgerKeyRun.toasts.length === 1 &&
+      ledgerStateRun.ledger.confirm === 0 && ledgerStateRun.ledger.save === 0);
 
     /* ==================================================================
      * 变异：拔掉修复必红

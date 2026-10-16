@@ -373,7 +373,8 @@ public class AlarmActivity extends AppCompatActivity {
    */
   private void startLocalFallback() {
     String token = getIntent() == null ? null : getIntent().getStringExtra(AlarmTrace.EXTRA);
-    long remainingMs = AlarmRingService.getRemainingSilenceMs(this, token, AlarmRingService.AUTO_SILENCE_MS);
+    long remainingMs = AlarmRingService.getRemainingSilenceMs(this, token,
+      getIntent().getLongExtra(AlarmRingService.EXTRA_AUTO_SILENCE_MS, AlarmRingService.AUTO_SILENCE_MS));
     if (remainingMs <= 0L) {
       AlarmRingService.markAutoSilenced(this, token);
       stopLocalFallback();
@@ -443,10 +444,12 @@ public class AlarmActivity extends AppCompatActivity {
           // UX-T03：原生快捷稍后是**固定的 2 小时**（D11），JS 调度器并不知道这一轮，
           // 所以给它一个自解释的身份前缀。没有它，2 小时后真响的那次在证据台账里
           // 没有身份，用户回来查只能看到「尚未确认」。
-          "snooze@" + triggerAt, triggerAt);
+          "snooze@" + triggerAt, triggerAt,
+          getIntent().getLongExtra(AlarmRingService.EXTRA_AUTO_SILENCE_MS, AlarmRingService.AUTO_SILENCE_MS));
         // P0-2：自行重排的闹钟也要入账，否则下一轮对账撤不掉它（会变成幽灵闹钟 / 重复响）
-        SystemBridgePlugin.persistAlarm(this, currentAlarmId, triggerAt, currentTitle, currentBody,
-          itemIdForReschedule, currentLevel, itemRevForReschedule);
+        SystemBridgePlugin.persistAlarm(this, currentAlarmId, triggerAt, null, "wall-clock", currentTitle, currentBody,
+          itemIdForReschedule, currentLevel, itemRevForReschedule, "snooze@" + triggerAt,
+          getIntent().getLongExtra(AlarmRingService.EXTRA_AUTO_SILENCE_MS, AlarmRingService.AUTO_SILENCE_MS));
       } catch (Exception ignored) {}
     }
     // R8：四条出口都清掉已投递的通知，避免事后点残留通知再次进入全屏并响铃
