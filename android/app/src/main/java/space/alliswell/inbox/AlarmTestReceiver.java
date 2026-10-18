@@ -140,7 +140,18 @@ public class AlarmTestReceiver extends BroadcastReceiver {
   @Override
   public void onReceive(Context context, Intent intent) {
     if (context == null || intent == null) return;
-    String trace = intent.getStringExtra(AlarmTrace.EXTRA);
+    String trace = null;
+    try {
+      trace = intent.getStringExtra(AlarmTrace.EXTRA);
+      receiveAlarm(context, intent, trace);
+    } catch (RuntimeException error) {
+      // Preserve the trace and failure phase; do not claim delivery or change permissions.
+      AlarmTrace.record(context, trace, "receiverFailed", error.getClass().getSimpleName());
+      Log.e(TAG, "receiver failed before delivery completion: " + error.getClass().getSimpleName());
+    }
+  }
+
+  private void receiveAlarm(Context context, Intent intent, String trace) {
     AlarmTrace.record(context, trace, "received", "");
     int id = intent.getIntExtra(EXTRA_ID, 90002);
     String title = intent.getStringExtra(EXTRA_TITLE);
@@ -150,6 +161,8 @@ public class AlarmTestReceiver extends BroadcastReceiver {
     String itemRev = intent.getStringExtra(EXTRA_ITEM_REV);
     if (itemId == null) itemId = "";
     if (itemRev == null || itemRev.isEmpty()) itemRev = "0";
+    AlarmTrace.record(context, trace, "receiverIdentity", "id=" + id + ";itemId=" + itemId + ";rev=" + itemRev +
+      ";key=" + intent.getStringExtra(EXTRA_REMINDER_KEY) + ";plannedAt=" + intent.getLongExtra(EXTRA_PLANNED_AT, 0L));
     // UX-T03：这一行就是「系统接收」的落点 —— 只有走到这里的投递才写证据。
     // 之后的通知提交 / 声振请求 / 窗口可见都**不**在此处升级层级：
     // 接收可确认时只写「系统已接收」，绝不写成用户看到或已读。
@@ -157,6 +170,7 @@ public class AlarmTestReceiver extends BroadcastReceiver {
       intent.getStringExtra(EXTRA_REMINDER_KEY),
       intent.getLongExtra(EXTRA_PLANNED_AT, 0L),
       "alarm", itemRev, trace);
+    AlarmTrace.record(context, trace, "deliveryEvidenceRecorded", "");
     boolean fullScreen = intent.getBooleanExtra(EXTRA_FULL_SCREEN, true);
     if (title == null || title.isEmpty()) title = "安心收件箱";
     if (body == null || body.isEmpty()) body = "有一条事项需要你确认";

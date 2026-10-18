@@ -65,7 +65,7 @@
             android:layout_width="match_parent"
             android:layout_height="54dp"
             android:background="#24357A"
-            android:text="我知道了"
+            android:text="已知晓"
             android:textColor="#FFFFFF"
             android:textSize="16sp" />
 
@@ -114,7 +114,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="18dp"
         android:gravity="center"
-        android:text="「关闭」不会记作「我知道了」，后续提醒仍会继续"
+        android:text="「关闭」不会记作「已知晓」，后续提醒仍会继续"
         android:textColor="#6f7a86"
         android:textSize="12sp" />
 </LinearLayout>

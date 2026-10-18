@@ -4,4 +4,5 @@
     <string name="title_activity_main">安心收件箱</string>
     <string name="package_name">space.alliswell.inbox</string>
     <string name="custom_url_scheme">space.alliswell.inbox</string>
+    <string name="shortcut_capture">安心记下</string>
 </resources>

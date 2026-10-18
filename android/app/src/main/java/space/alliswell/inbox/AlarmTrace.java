@@ -114,6 +114,9 @@ final class AlarmTrace {
     if (stage == null) return false;
     switch (stage) {
       case "received":
+      case "receiverIdentity":
+      case "receiverFailed":
+      case "deliveryEvidenceRecorded":
       case "ringStarted":
       case "deliveryStopped":
       case "ringAutoSilenced":

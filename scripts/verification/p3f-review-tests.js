@@ -14,13 +14,13 @@ const targetPath = path.join(ROOT, "lib/app-review.js");
 const source = fs.readFileSync(targetPath, "utf8");
 const hashBefore = crypto.createHash("sha256").update(fs.readFileSync(targetPath)).digest("hex");
 
-function load(src) {
+function load(src, clock) {
   const box = {
     module: { exports: {} },
     self: {},
     setTimeout: setTimeout,
     clearTimeout: clearTimeout,
-    Date: Date,
+    Date: clock || Date,
     Map: Map,
     Set: Set,
     JSON: JSON,
@@ -123,7 +123,7 @@ function fixture(api, options) {
     },
     render: () => { renders++; },
     renderMe: () => { renderMes++; },
-    toast: (msg) => { toasts.push(msg); },
+    toast: (...args) => { toasts.push(args[0]); if (options.onToast) options.onToast(...args); },
     openSheet: (id) => { openedSheets.push(id); },
     closeSheet: (id) => { closedSheets.push(id); },
     fmtTime: (ts) => ts ? new Date(ts).toISOString().slice(11, 16) : "",
@@ -394,6 +394,7 @@ async function healthy(api) {
     shouldFail = true;
     await f.review.reviewConfirm();
     assert.strictEqual(f.state.ui.reviewIndex, 0, "reviewIndex must NOT advance on save failure");
+    assert.strictEqual(item.review_status, "NEEDS_REVIEW", "failed confirm restores the live review state");
     const body = f.deps.query("#reviewBody");
     assert.strictEqual(body.innerHTML.includes("整理完成"), false, "completion screen must NOT be shown on failure");
     assert.strictEqual(f.spies.queuedSyncs.length, 0, "queueNativeReminderSync must NOT be called on failure");
@@ -470,6 +471,26 @@ async function healthy(api) {
     assert.strictEqual(rs.sessionStatus, "custom");
   }
 
+  // Existing real time is preserved exactly; explicit clear re-enters the existing fallback policy.
+  {
+    const at = Date.now() + 86400123;
+    const item = { id: "time-source", title: "time", rev: 1, review_status: "NEEDS_REVIEW", status: "waiting", triggerAt: at, isFallbackTrigger: false, scheduleBasis: "elapsed", snoozedAt: 42, snoozeDelayMs: 60000 };
+    const f = fixture(api, { items: [item] });
+    f.review.openReviewSession();
+    await f.review.reviewConfirm();
+    assert.strictEqual(item.triggerAt, at);
+    assert.strictEqual(item.scheduleBasis, "elapsed");
+    assert.strictEqual(item.snoozedAt, 42);
+    assert.strictEqual(item.snoozeDelayMs, 60000);
+    item.review_status = "NEEDS_REVIEW";
+    f.review.openReviewSession();
+    f.deps.query("#reviewTrigger").value = "";
+    f.review.markReviewTriggerPicked(true);
+    await f.review.reviewConfirm();
+    assert.strictEqual(item.isFallbackTrigger, true, "explicit clear must not retain a real-time flag");
+    assert.ok(item.triggerAt > Date.now(), "fallback remains a future review window");
+  }
+
   return "healthy checks passed";
 }
 
@@ -485,6 +506,34 @@ async function mutant(name, transform) {
   }
   assert.strictEqual(failed, true, name + " did not fail healthy behavior");
   return name + ": mutation detected";
+}
+
+async function repairUndoAssertions() {
+  let now = 1800000000000;
+  class Clock extends Date { static now() { return now; } }
+  const api = load(source, Clock);
+  async function prepare() {
+    let undo, failNext = false;
+    const it = { id: "rf-undo", title: "review", rev: 2, status: "waiting", review_status: "NEEDS_REVIEW", triggerAt: now + 86400000, reminderEvents: {}, deadlineEvents: {} };
+    const f = fixture(api, { items: [it], saveFn: () => { if (failNext) { failNext = false; return Promise.reject(Error("disk")); } return Promise.resolve(); },
+      onToast: (text, label, fn, second, opts) => { if (label === "撤销") { undo = fn; assert.strictEqual(opts.durationMs, 8000); } } });
+    f.review.openReviewSession(); await f.review.reviewConfirm();
+    return { f, it, undo: () => undo(), fail: () => { failNext = true; } };
+  }
+  const projection = await prepare();
+  projection.it.reminderEvents = { ["0@" + projection.it.triggerAt]: { at: projection.it.triggerAt, state: "scheduled", roundBase: projection.it.triggerAt } };
+  await projection.undo();
+  assert.strictEqual(projection.it.review_status, "NEEDS_REVIEW", "passive projection must allow undo");
+  assert.strictEqual(Object.keys(projection.it.reminderEvents).length, 1, "retain current projection");
+  for (const mutate of [it => {it.rev++;}, it => {it.title="edited";}, it => {it.status="acknowledged";}, it => {it.status="archived";}, it => {it.deliveredAt=now;}, it => {it.reminderEvents={key:{state:"delivered",receivedAt:now}};}]) {
+    const t = await prepare(); mutate(t.it); await t.undo(); assert.strictEqual(t.it.review_status,"REVIEWED","business/delivery change must refuse");
+  }
+  const expired = await prepare(); now += 8000; await expired.undo(); assert.strictEqual(expired.it.review_status,"REVIEWED","exactly 8000ms expires");
+  const within = await prepare(); now += 7999; await within.undo(); assert.strictEqual(within.it.review_status,"NEEDS_REVIEW","7999ms allowed");
+  const removed = await prepare(); removed.f.state.items=[]; await removed.undo(); assert.strictEqual(removed.f.state.items.length,0,"deleted item never recreated");
+  const failed = await prepare(); failed.fail(); await failed.undo(); assert.strictEqual(failed.it.review_status,"REVIEWED","failed undo restores committed state");
+  await failed.undo(); assert.strictEqual(failed.it.review_status,"NEEDS_REVIEW","retry within original window succeeds");
+  return "RF-D2 projection, edit/rev, ACK/completion, delivery, deletion, 7999/8000ms, save failure passed";
 }
 
 (async () => {
@@ -556,6 +605,8 @@ async function mutant(name, transform) {
       "const reviewDefaults = { enabled: true, hour: 21, minute: 30, windowEndHour: 23, windowEndMinute: 0, followupCount: 0, snoozedUntil: 0, skippedUntil: 0, sessionStatus: 'idle', lastSessionKey: '', maxFollowups: 2, followupMs: 3600000 };"
     );
   }));
+
+  out.push(await repairUndoAssertions());
 
   const hashAfter = crypto.createHash("sha256").update(fs.readFileSync(targetPath)).digest("hex");
   assert.strictEqual(hashBefore, hashAfter, "lib/app-review.js must be byte-for-byte identical before and after mutations");

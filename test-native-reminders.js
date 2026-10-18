@@ -34,6 +34,7 @@ function createEnvironment(options) {
   const alarmCalls = { scheduleAlarm: [], scheduleAt: [], cancelAlarm: [], cancelNotification: [] };
   let pending = (options.pending || []).slice();
   let actionCallback = null;
+  let deliveredCallback = null;
   let resumeCallback = null;
   const display = options.display || "granted";
   const exact = options.exact || "granted";
@@ -49,12 +50,15 @@ function createEnvironment(options) {
     // 掩盖只在实际设备上复现的契约类缺陷。
     addListener(name, callback) {
       if (name === "localNotificationActionPerformed") actionCallback = callback;
+      if (name === "localNotificationReceived") deliveredCallback = callback;
       return { async remove() { actionCallback = null; } };
     },
     async getPending() { return { notifications: pending.slice() }; },
     async schedule(value) {
       calls.schedule.push(value.notifications.slice());
-      pending = pending.concat(value.notifications);
+      // Android stores/schedules one PendingIntent per id, including re-establishment.
+      const replacing = new Set(value.notifications.map(n => n.id));
+      pending = pending.filter(n => !replacing.has(n.id)).concat(value.notifications);
       return { notifications: value.notifications.map(n => ({ id: n.id })) };
     },
     async cancel(value) {
@@ -126,6 +130,7 @@ function createEnvironment(options) {
     alarms: alarmCalls,
     get pending() { return pending; },
     fireAction(value) { if (actionCallback) actionCallback(value); },
+    fireDelivered(value) { if (deliveredCallback) deliveredCallback(value); },
     resume() { if (resumeCallback) resumeCallback({ isActive: true }); },
     // A-8：模拟「该闹钟已投递、正在响铃」（AlarmTestReceiver 已把投递行写进 ActiveAlarmStore）
     setActiveAlarms(rows) { activeAlarms = (rows || []).slice(); }
@@ -749,7 +754,7 @@ async function run() {
     const diagnostics = require(path.join(__dirname, "lib/app-diagnostics.js"));
     const nodes = new Map();
     const $ = id => {
-      if (!nodes.has(id)) nodes.set(id, { disabled: false, textContent: "" });
+      if (!nodes.has(id)) nodes.set(id, { disabled: false, textContent: "", style: {} });
       return nodes.get(id);
     };
     let bridge = null, fallback = null, calls = 0, release;
@@ -793,6 +798,23 @@ async function run() {
     fallback = { openAppDetailsSettings: async () => { details++; } };
     await guide("background");
     ok("F6 旧桥可退应用详情且仍需手动确认", details === 2 && /后台耗电/.test(feedback()) && /手动确认/.test(feedback()));
+    const diag = { sdkInt: 36, notificationsEnabled: true, postNotificationsGranted: true,
+      normalChannelImportance: 3, importantChannelImportance: 4, criticalChannelImportance: 5 };
+    let openedChannel;
+    bridge = { diagnose: async () => diag, openNotificationSettings: async args => { openedChannel = args; } };
+    await instance.refreshNotifyLab();
+    ok("通知总开关开启仍报告普通渠道横幅受限", /渠道受限/.test($("#labNotifyPill").textContent) && /普通提醒：优先级不足/.test($("#labChannelStatus").textContent));
+    await instance.openSystemSetting("notifyNormal");
+    ok("普通提醒设置携带精确渠道身份", openedChannel.channelId === "attention-normal-v2");
+    diag.normalChannelImportance = 0;
+    await instance.refreshNotifyLab();
+    ok("用户关闭渠道时不伪报可用", /普通提醒：已关闭/.test($("#labChannelStatus").textContent));
+    delete diag.normalChannelImportance;
+    await instance.refreshNotifyLab();
+    ok("旧桥缺字段如实报告未知", /普通提醒：未知/.test($("#labChannelStatus").textContent));
+    diag.normalChannelImportance = 4;
+    await instance.refreshNotifyLab();
+    ok("高优先级不冒充横幅已显示", /普通提醒：高优先级，横幅待实测/.test($("#labChannelStatus").textContent));
   }
 
   // Q6：原生链路「静默失败」的可观测性。
@@ -1683,6 +1705,7 @@ async function run() {
     reviewActions.some(a => a.id === "review_skip" && a.title === "今天跳过"),
     JSON.stringify(reviewActions.map(a => a.title)));
   ok("创建三个通知渠道", actionEnv.calls.channels.length === 3);
+  ok("普通提醒也申请横幅所需的高优先级", actionEnv.calls.channels.find(c => c.id === "attention-normal-v2").importance === 4);
   ok("渠道显式开启声音和震动", actionEnv.calls.channels.every(c => c.sound === "attention_reminder" && c.vibration));
   actionEnv.fireAction({ actionId: "ack", notification: { id: 123, extra: { itemId: "x" } } });
   ok("通知 ACK 映射事项", events[0].action === "ack" && events[0].itemId === "x");
@@ -2636,6 +2659,447 @@ async function run() {
         /stopActiveDelivery/.test(bridgeSrc) &&
         /ActiveAlarmStore\.stop\(getContext\(\), id, null\)/.test(bridgeSrc));
     }
+  }
+
+  section("v64 ordinary native timing: migration / cancellation / fallback");
+  {
+    const t0 = Date.now();
+    const normal = item("v64-normal", "normal", t0 + 120000, { rev: 1, delivery_mode: "notification" });
+    const settings = { notify: true, importantRepeat: false };
+    const setup = async options => {
+      await native._resetForTests();
+      const env = createEnvironment(options);
+      const bridge = global.Capacitor.Plugins.SystemBridge;
+      let rows = [];
+      const calls = { schedule: [], cancel: [], restore: [] };
+      bridge.pendingNotifications = async opts => { calls.restore.push(opts); return { notifications: rows.slice() }; };
+      bridge.scheduleNotification = async payload => {
+        calls.schedule.push(payload);
+        const timing = { ok: true, triggerAt: payload.at, exact: !(options && options.inexact),
+          mode: options && options.inexact ? "inexactNotification" :
+            payload.notification.extra.punctual_reminder === true && payload.notification.extra.managedKind === "attention-reminder" ? "alarmClockNotification" : "exactNotification", token: "test-token" };
+        rows = rows.filter(n => n.id !== payload.notification.id);
+        rows.push(Object.assign({}, payload.notification, { nativeTiming: timing }));
+        return timing;
+      };
+      bridge.cancelScheduledNotification = async ({ id }) => {
+        calls.cancel.push(id); rows = rows.filter(n => n.id !== id);
+      };
+      return { env, bridge, calls, get rows() { return rows; } };
+    };
+    let f = await setup();
+    let a = await native.reconcile([normal], settings, t0);
+    ok("v64 ordinary uses native timing without alarm delivery", f.calls.schedule.length === 1 &&
+      f.env.calls.schedule.length === 0 && f.env.alarms.scheduleAlarm.length === 0 && a.alarmCount === 0);
+    const payload = f.calls.schedule[0];
+    ok("v64 ordinary preserves channel/actions/item/rev/key", payload.notification.channelId === "attention-normal-v2" &&
+      payload.notification.actionTypeId === "attention-actions" && payload.notification.extra.itemId === normal.id &&
+      payload.notification.extra.itemRev === 1 && !!payload.notification.extra.reminderKey && !payload.notification.extra.useAlarm);
+    ok("v69 default ordinary exact does not claim system next alarm", a.systemNextAlarm === false && a.ordinaryTiming === "native-notification");
+    await native.reconcile([normal], settings, t0);
+    ok("v64 native pending deduplicates unchanged reconcile", f.calls.schedule.length === 1 && f.calls.cancel.length === 0);
+    await native.reconcile([Object.assign({}, normal, { rev: 2, title: "edited" })], settings, t0);
+    ok("v64 edit cancels old projection and carries new rev", f.calls.cancel.length === 1 &&
+      f.calls.schedule.length === 2 && f.calls.schedule[1].notification.extra.itemRev === 2);
+    await native.reconcile([], settings, t0);
+    ok("v64 delete cancels native future projection", f.rows.length === 0 && f.calls.cancel.length === 2);
+
+    f = await setup({ pending: native.buildDesired([normal], settings, t0) });
+    await native.reconcile([normal], settings, t0);
+    ok("v64 upgrade migrates legacy pending once", f.env.calls.cancel.length === 1 &&
+      f.env.pending.length === 0 && f.calls.schedule.length === 1 && f.rows.length === 1);
+    f = await setup({ pending: native.buildDesired([normal], settings, t0) });
+    global.Capacitor.Plugins.LocalNotifications.cancel = async () => { throw new Error("cancel failed"); };
+    a = await native.reconcile([normal], settings, t0);
+    ok("v66 failed legacy cancellation rolls back accepted native and preserves legacy", f.calls.schedule.length === 1 &&
+      f.calls.cancel.length === 1 && f.rows.length === 0 && f.env.pending.length === 1 && a.reliability === "error");
+    f = await setup();
+    f.bridge.pendingNotifications = async () => { throw new Error("store unreadable"); };
+    a = await native.reconcile([normal], settings, t0);
+    ok("v64 unreadable native queue fails closed", a.reliability === "error" && f.calls.schedule.length === 0);
+    f = await setup({ inexact: true });
+    a = await native.reconcile([normal], settings, t0);
+    let b = await native.reconcile([normal], settings, t0);
+    ok("v64 inexact downgrade remains explicit across reconcile", a.reliability === "inexact" &&
+      b.reliability === "inexact" && !b.capabilities.exact && !b.systemNextAlarm);
+    f = await setup({ display: "denied" });
+    a = await native.reconcile([normal], settings, t0);
+    ok("v64 denied notifications never mark ordinary scheduled", f.calls.schedule.length === 0 && a.reminderEvents.length === 0 && a.reliability === "in-app");
+    f = await setup();
+    const important = item("v64-important", "important", t0 + 120000, { rev: 1, delivery_mode: "alarm" });
+    a = await native.reconcile([important], settings, t0);
+    ok("v64 important first still uses existing alarm path", f.env.alarms.scheduleAlarm.length === 1 && a.alarmCount === 1);
+    f = await setup();
+    await native.reconcile([normal], settings, t0);
+    f.rows[0].nativeTiming.mode = "restoreFailed";
+    await native.reconcile([normal], settings, t0);
+    ok("v64 failed restore row is retried instead of accepted", f.calls.cancel.length === 1 && f.calls.schedule.length === 2);
+    await native.reconcile([normal], settings, t0, null, { forceRebuild: true });
+    ok("v64 app-start force rebuild requests native restoration", f.calls.restore[f.calls.restore.length - 1].restore === true);
+    f = await setup();
+    f.bridge.pendingNotifications = async () => ({ unavailable: true });
+    a = await native.reconcile([normal], settings, t0);
+    ok("v64 invalid native queue is unknown, not empty", a.reliability === "error" && f.calls.schedule.length === 0);
+
+    section("v69 item opt-in and native timing mode consumers");
+    f = await setup();
+    const offPlan = native.buildDesired([normal], settings, t0)[0];
+    const missingFlag = Object.assign({}, normal); delete missingFlag.punctual_reminder;
+    const explicitOff = Object.assign({}, normal, { punctual_reminder: false });
+    ok("v69 legacy missing and explicit false keep stable schedule identity", offPlan.extra.scheduleKey ===
+      native.buildDesired([explicitOff], settings, t0)[0].extra.scheduleKey);
+    ok("v69 string true never opts into native punctual payload", native.buildDesired([Object.assign({},normal,{punctual_reminder:"true"})],settings,t0)[0].extra.punctual_reminder === false);
+    const enabled = Object.assign({}, normal, { punctual_reminder: true });
+    const onPlan = native.buildDesired([enabled],settings,t0)[0];
+    ok("v69 only true changes schedule policy identity", onPlan.extra.scheduleKey !== offPlan.extra.scheduleKey && onPlan.extra.punctual_reminder === true);
+    a = await native.reconcile([enabled],settings,t0);
+    ok("v69 true ordinary uses alarmClock with actual nextAlarm attribution", a.systemNextAlarm === true && f.calls.schedule[0].notification.extra.punctual_reminder === true);
+    a = await native.reconcile([Object.assign({},normal,{rev:2,punctual_reminder:false})],settings,t0);
+    ok("v69 disabling cancels old alarmClock projection and installs standard", f.rows.length === 1 && f.rows[0].nativeTiming.mode === "exactNotification" && !a.systemNextAlarm);
+    f = await setup();
+    const v68row=Object.assign({},offPlan,{nativeTiming:{token:"v68-default-clock",mode:"alarmClockNotification",exact:true,state:"pending"}});
+    f.rows.push(v68row);
+    a = await native.reconcile([normal],settings,t0);
+    ok("v69 same-key v68 unmarked future clock reconfigures without cancel-first", f.calls.cancel.length===0 && f.calls.schedule.length===1 && f.rows.length===1 && f.rows[0].nativeTiming.mode==="exactNotification" && !a.systemNextAlarm);
+    f.rows[0].nativeTiming.state="pending";
+    const standardPast=Object.assign({},normal,{reminderEvents:{[offPlan.extra.reminderKey]:{state:"scheduled",at:normal.triggerAt,roundBase:normal.triggerAt}}});
+    a=await native.reconcile([standardPast],settings,normal.triggerAt+100);
+    ok("v69 standard exact pending stays after due without system-next-alarm claim",f.rows.length===1&&f.calls.cancel.length===0&&f.calls.schedule.length===1&&!a.systemNextAlarm&&a.errors.length===0);
+
+    f = await setup();f.rows.push(v68row);
+    f.bridge.scheduleNotification=async()=>{throw Error("mode reconfigure rejected")};
+    a=await native.reconcile([normal],settings,t0);
+    ok("v69 rejected same-key mode conversion preserves accepted old queue and reports actual clock", f.rows.length===1&&f.calls.cancel.length===0&&a.reliability==="error"&&a.systemNextAlarm);
+    f = await setup();
+    const deadline=Object.assign({},enabled,{deadlineAt:t0+25*3600000});
+    ok("v69 item choice applies to ordinary deadline carriers",native.buildDesired([deadline],settings,t0).filter(n=>n.extra.event==="deadline").every(n=>n.extra.punctual_reminder===true));
+    const imp=Object.assign({},important,{punctual_reminder:true});
+    ok("v69 item choice applies to ordinary repeats while full alarm first remains separate",native.buildDesired([imp],{notify:true,importantRepeat:true},t0).some(n=>!n.extra.useAlarm&&n.extra.punctual_reminder===true)&&native.buildDesired([imp],settings,t0)[0].extra.useAlarm===true);
+
+    section("v65 independent-review counterexamples and bounded failed delivery");
+    const legacy = native.buildDesired([normal], settings, t0);
+    f = await setup({ pending: legacy });
+    f.bridge.pendingNotifications = async () => { throw new Error("native store unreadable"); };
+    a = await native.reconcile([normal], settings, t0);
+    ok("v65 unknown new queue preserves valid only legacy projection", f.env.pending.length === 1 &&
+      f.env.calls.cancel.length === 0 && f.calls.schedule.length === 0 && a.reliability === "error");
+    await native.reconcile([], settings, t0);
+    ok("v65 unknown new queue still cancels explicit deletion", f.env.pending.length === 0 && f.env.calls.cancel.length === 1);
+    f = await setup({ pending: legacy });
+    f.bridge.pendingNotifications = async () => { throw new Error("native store unreadable"); };
+    await native.reconcile([normal], { notify: false }, t0);
+    ok("v65 unknown new queue still cancels business disable", f.env.pending.length === 0 && f.env.calls.cancel.length === 1);
+    f = await setup({ pending: legacy });
+    f.bridge.pendingNotifications = async () => { throw new Error("native store unreadable"); };
+    await native.reconcile([Object.assign({}, normal, { rev: 2 })], settings, t0);
+    ok("v65 unknown new queue does not retain obsolete revision", f.env.pending.length === 0 && f.calls.schedule.length === 0);
+
+    const pastAt = t0 - 60000, key = "0@" + pastAt;
+    const past = item("v65-failed", "normal", pastAt, { rev: 1, delivery_mode: "notification",
+      reminderEvents: { [key]: { state: "scheduled", at: pastAt, roundBase: pastAt } } });
+    const original = native.buildDesired([Object.assign({}, past, { reminderEvents: {} })], settings, pastAt - 120000)[0];
+    f = await setup();
+    f.rows.push(Object.assign({}, original, { nativeTiming: { state: "failed", mode: "deliveryFailed", exact: false, token: "failed-token" } }));
+    a = await native.reconcile([past], settings, t0);
+    ok("v65 failed due row remains diagnostic without automatic native retry", f.calls.cancel.length === 0 &&
+      f.calls.schedule.length === 0 && f.rows.length === 1 && a.reliability === "error");
+    const missed = { itemId: past.id, itemRev: 1, reminderKey: key, reason: "notification_render_failed" };
+    ok("v65 mismatched failure revision cannot recover current reminder", native.markLostReminders([past],
+      { missed: [Object.assign({}, missed, { itemRev: 0 })] }, t0).length === 0);
+    ok("v65 matched renderer failure enters existing lost recovery once", native.markLostReminders([past], { missed: [missed] }, t0).length === 1);
+    await native.reconcile([past], settings, t0);
+    ok("v65 recovery replaces failed token with one new ordinary projection", f.calls.cancel.length === 1 && f.calls.schedule.length === 1 && f.rows.length === 1);
+    past.reminderEvents[key].state = "scheduled"; // coordinator commits recovery while preserving lostAt
+    f.rows[0].nativeTiming = { state: "failed", mode: "deliveryFailed", exact: false };
+    ok("v65 repeated recovery failure cannot start unbounded lost loop", native.markLostReminders([past], { missed: [missed] }, t0).length === 0);
+    await native.reconcile([past], settings, t0);
+    ok("v65 repeated reconciliation preserves second failure without retry", f.calls.schedule.length === 1 && f.calls.cancel.length === 1);
+    await native.reconcile([], settings, t0);
+    ok("v65 deletion clears retained failure identity", f.rows.length === 0 && f.calls.cancel.length === 2);
+
+    f = await setup();
+    const received = [];
+    await native.initialize({ onDelivered() {}, onReminderDelivered: row => received.push(row) });
+    f.env.fireDelivered({ extra: { managedKind: "attention-reminder", itemId: normal.id,
+      reminderKey: "0@" + normal.triggerAt, itemRev: 1, nativeReceiptPending: true } });
+    ok("v65 pre-notify renderer callback cannot mark delivered", received.length === 0);
+    f.env.fireDelivered({ extra: { managedKind: "attention-reminder", itemId: normal.id,
+      reminderKey: "0@" + normal.triggerAt, itemRev: 1 } });
+    ok("v65 successful post-notify receipt retains existing delivery handler", received.length === 1);
+
+    section("v66 backend handoff transaction matrix");
+    const oldProjection = native.buildDesired([normal], settings, t0);
+    f = await setup({ pending: oldProjection });
+    const rejectedSchedule = f.bridge.scheduleNotification;
+    let rejectedAttempts = 0;
+    f.bridge.scheduleNotification = async p => { rejectedAttempts++; throw new Error("persist failed"); };
+    a = await native.reconcile([normal], settings, t0);
+    ok("v66 new schedule reject leaves sole valid legacy intact", f.env.pending.length === 1 &&
+      f.env.calls.cancel.length === 0 && rejectedAttempts === 1 && f.rows.length === 0 && a.migrationOwnership[0].owner === "legacy");
+    await native.reconcile([normal], settings, t0);
+    ok("v66 rejected migration is held instead of recreated every heartbeat", rejectedAttempts === 1 && f.env.pending.length === 1);
+    f.bridge.scheduleNotification = rejectedSchedule;
+    a = await native.reconcile([normal], settings, t0, null, { forceRebuild: true });
+    ok("v66 explicit rebuild can retry one held migration", f.env.pending.length === 0 && f.rows.length === 1 && a.migrationOwnership[0].owner === "native");
+
+    f = await setup({ pending: oldProjection });
+    const order = [], originalSchedule = f.bridge.scheduleNotification;
+    const originalCancel = global.Capacitor.Plugins.LocalNotifications.cancel;
+    f.bridge.scheduleNotification = async p => { order.push("new"); return originalSchedule(p); };
+    const originalRead = f.bridge.pendingNotifications;
+    f.bridge.pendingNotifications = async p => { order.push("read-native"); return originalRead(p); };
+    global.Capacitor.Plugins.LocalNotifications.cancel = async p => { order.push("cancel-old"); return originalCancel(p); };
+    a = await native.reconcile([normal], settings, t0);
+    ok("v66 successful migration accepts and rereads before cancelling old", order.indexOf("new") < order.indexOf("cancel-old") &&
+      order.slice(order.indexOf("new") + 1, order.indexOf("cancel-old")).includes("read-native") &&
+      f.rows.length === 1 && f.env.pending.length === 0 && a.reliability !== "error");
+    await native.reconcile([normal], settings, t0);
+    ok("v66 committed native owner deduplicates next reconcile", f.calls.schedule.length === 1);
+
+    f = await setup({ pending: oldProjection });
+    const localCancel = global.Capacitor.Plugins.LocalNotifications.cancel;
+    global.Capacitor.Plugins.LocalNotifications.cancel = async () => { throw new Error("old cancel failed"); };
+    a = await native.reconcile([normal], settings, t0);
+    ok("v66 old cancellation failure retains legacy and confirms native rollback", f.rows.length === 0 &&
+      f.env.pending.length === 1 && a.migrationOwnership[0].owner === "legacy" && a.reliability === "error");
+    await native.reconcile([normal], settings, t0);
+    ok("v66 rollback-success failure does not schedule repeatedly", f.calls.schedule.length === 1);
+
+    f = await setup({ pending: oldProjection });
+    const cancelActually = global.Capacitor.Plugins.LocalNotifications.cancel;
+    global.Capacitor.Plugins.LocalNotifications.cancel = async p => { await cancelActually(p); throw new Error("reject after removal"); };
+    a = await native.reconcile([normal], settings, t0);
+    ok("v66 rejected cancellation with confirmed old removal keeps native sole owner", f.rows.length === 1 &&
+      f.env.pending.length === 0 && f.calls.cancel.length === 0 && a.migrationOwnership[0].owner === "native" && a.reliability === "error");
+
+    f = await setup({ pending: oldProjection });
+    global.Capacitor.Plugins.LocalNotifications.cancel = async () => { throw new Error("old cancel failed"); };
+    f.bridge.cancelScheduledNotification = async () => { throw new Error("rollback failed"); };
+    a = await native.reconcile([normal], settings, t0);
+    ok("v66 double cancellation failure reports unresolved ownership, never success", f.rows.length === 1 &&
+      f.env.pending.length === 1 && a.migrationOwnership[0].owner === "unknown" && a.reliability === "error");
+    await native.reconcile([normal], settings, t0);
+    ok("v66 unresolved ownership does not create more native tokens", f.calls.schedule.length === 1);
+
+    f = await setup({ pending: oldProjection });
+    const scheduleThenNoAck = f.bridge.scheduleNotification;
+    f.bridge.scheduleNotification = async p => { await scheduleThenNoAck(p); throw new Error("ack lost after persist"); };
+    a = await native.reconcile([normal], settings, t0);
+    ok("v66 rejected acknowledgement after partial native acceptance rolls back without touching old", f.rows.length === 0 &&
+      f.env.pending.length === 1 && f.env.calls.cancel.length === 0 && a.migrationOwnership[0].owner === "legacy");
+
+    const other = item("v66-other", "normal", t0 + 180000, { rev: 1, delivery_mode: "notification" });
+    const obsolete = item("v66-obsolete", "normal", t0 + 240000, { rev: 1, delivery_mode: "notification" });
+    const pendingBatch = native.buildDesired([normal, other, obsolete], settings, t0);
+    f = await setup({ pending: pendingBatch });
+    const mixedSchedule = f.bridge.scheduleNotification;
+    f.bridge.scheduleNotification = async p => { if (p.notification.extra.itemId === normal.id) throw new Error("first migration rejected"); return mixedSchedule(p); };
+    a = await native.reconcile([normal, other], settings, t0);
+    ok("v66 mixed batch keeps failed old owner, commits other migration and revokes deleted item", f.env.pending.length === 1 &&
+      f.env.pending[0].extra.itemId === normal.id && f.rows.length === 1 && f.rows[0].extra.itemId === other.id &&
+      a.migrationOwnership.some(m => m.owner === "native") && a.reliability === "error");
+
+    f = await setup({ pending: native.buildDesired([obsolete], settings, t0) });
+    global.Capacitor.Plugins.LocalNotifications.cancel = async () => { throw new Error("explicit revocation failed"); };
+    a = await native.reconcile([other], settings, t0);
+    ok("v66 failed unrelated business revocation does not skip valid new item", f.env.pending.length === 1 &&
+      f.rows.length === 1 && f.rows[0].extra.itemId === other.id && a.reliability === "error");
+
+    f = await setup({ pending: oldProjection });
+    const existingSchedule = f.bridge.scheduleNotification;
+    await existingSchedule({ notification: oldProjection[0], at: normal.triggerAt });
+    a = await native.reconcile([normal], settings, t0);
+    ok("v66 known matching pair cleans legacy without rescheduling native", f.calls.schedule.length === 1 &&
+      f.env.pending.length === 0 && f.rows.length === 1 && a.migrationOwnership[0].owner === "native");
+
+    const soon = item("v66-soon", "normal", Date.now() + 1000, { rev: 1, delivery_mode: "notification" });
+    f = await setup({ pending: native.buildDesired([soon], settings, Date.now()) });
+    a = await native.reconcile([soon], settings, Date.now());
+    ok("v66 imminent unchanged legacy is kept instead of racing receiver handoff", f.env.pending.length === 1 &&
+      f.calls.schedule.length === 0 && a.migrationOwnership[0].reason === "imminent-handoff-deferred");
+    const soonKey = "0@" + soon.triggerAt;
+    soon.reminderEvents = { [soonKey]: { state: "scheduled", at: soon.triggerAt, roundBase: soon.triggerAt } };
+    a = await native.reconcile([soon], settings, soon.triggerAt + 100);
+    ok("v66 delayed accepted legacy is not cancelled just because desired omitted past scheduled event", f.env.pending.length === 1 &&
+      f.env.calls.cancel.length === 0 && a.migrationOwnership[0].reason === "awaiting-existing-delivery");
+    await native.reconcile([], settings, soon.triggerAt + 100);
+    ok("v66 deletion still revokes a retained delayed legacy wakeup", f.env.pending.length === 0);
+
+    f = await setup({ pending: oldProjection });
+    global.Capacitor.Plugins.LocalNotifications.cancel = async () => {}; // false acknowledgement
+    a = await native.reconcile([normal], settings, t0);
+    ok("v66 legacy cancel no-op cannot be mistaken for successful migration", f.rows.length === 0 &&
+      f.env.pending.length === 1 && a.migrationOwnership[0].owner === "legacy" && a.reliability === "error");
+
+    f = await setup({ pending: oldProjection });
+    const readBeforeFailure = f.bridge.pendingNotifications;
+    let reads = 0;
+    f.bridge.pendingNotifications = async p => { if (++reads > 1) throw new Error("readback unavailable"); return readBeforeFailure(p); };
+    a = await native.reconcile([normal], settings, t0);
+    ok("v66 accepted-native readback failure never cancels valid legacy", f.env.pending.length === 1 &&
+      f.env.calls.cancel.length === 0 && f.rows.length === 0 && a.migrationOwnership[0].owner === "unknown" && a.reliability === "error");
+
+    f = await setup({ pending: oldProjection });
+    const localRead = global.Capacitor.Plugins.LocalNotifications.getPending;
+    let localReads = 0;
+    global.Capacitor.Plugins.LocalNotifications.getPending = async () => { if (++localReads > 1) throw new Error("legacy readback unavailable"); return localRead(); };
+    global.Capacitor.Plugins.LocalNotifications.cancel = async () => { throw new Error("legacy cancellation uncertain"); };
+    a = await native.reconcile([normal], settings, t0);
+    ok("v66 unknown legacy cancellation keeps accepted native instead of deleting possible sole owner", f.rows.length === 1 &&
+      f.calls.cancel.length === 0 && a.migrationOwnership[0].owner === "unknown" && a.reliability === "error");
+
+    f = await setup();
+    const partialSchedule = f.bridge.scheduleNotification;
+    f.bridge.scheduleNotification = async p => { if (p.notification.extra.itemId === normal.id) throw new Error("one new item rejected"); return partialSchedule(p); };
+    a = await native.reconcile([normal, other], settings, t0);
+    ok("v66 rejected new item does not skip independent new item", f.rows.length === 1 &&
+      f.rows[0].extra.itemId === other.id && a.reliability === "error");
+
+    section("v67 partial legacy cancellation requires a newly accepted fallback");
+    f = await setup({ pending: oldProjection });
+    let legacyArmed = true;
+    global.Capacitor.Plugins.LocalNotifications.cancel = async () => { legacyArmed = false; throw new Error("alarm cancelled, stored row not removed"); };
+    const rearm = global.Capacitor.Plugins.LocalNotifications.schedule;
+    global.Capacitor.Plugins.LocalNotifications.schedule = async p => { legacyArmed = true; return rearm(p); };
+    a = await native.reconcile([normal], settings, t0);
+    ok("v67 retained old storage alone is not trusted as an armed timer", legacyArmed &&
+      f.env.calls.schedule.length === 1 && f.rows.length === 0 && a.migrationOwnership[0].owner === "legacy");
+    await native.reconcile([normal], settings, t0);
+    ok("v67 fallback re-establishment does not become a heartbeat loop", f.env.calls.schedule.length === 1 && f.calls.schedule.length === 1);
+
+    f = await setup({ pending: oldProjection });
+    legacyArmed = true;
+    global.Capacitor.Plugins.LocalNotifications.cancel = async () => { legacyArmed = false; throw new Error("alarm cancelled, storage failed"); };
+    global.Capacitor.Plugins.LocalNotifications.schedule = async () => { throw new Error("legacy re-establishment failed"); };
+    a = await native.reconcile([normal], settings, t0);
+    ok("v67 failed fallback restoration keeps the accepted native timer", !legacyArmed && f.rows.length === 1 &&
+      f.calls.cancel.length === 0 && a.migrationOwnership[0].owner === "unknown" && a.reliability === "error");
+
+    f = await setup({ pending: oldProjection });
+    global.Capacitor.Plugins.LocalNotifications.cancel = async () => { throw new Error("cancel failed"); };
+    global.Capacitor.Plugins.LocalNotifications.schedule = async () => ({ notifications: [] });
+    a = await native.reconcile([normal], settings, t0);
+    ok("v67 malformed fallback acknowledgement cannot discard native owner", f.rows.length === 1 &&
+      f.calls.cancel.length === 0 && a.migrationOwnership[0].owner === "unknown" && a.reliability === "error");
+
+
+
+
+
+  }
+
+  section("v68 accepted pending lifecycle: omission versus explicit revocation");
+  {
+    const base = Date.now(), at = base + 120000;
+    const config = { notify: true, importantRepeat: true };
+    const pendingFixture = async (priority, cfg, options) => {
+      await native._resetForTests();
+      const it = item("v68-" + priority, priority, at, { rev: 1, delivery_mode: "notification" });
+      const all = native.buildDesired([it], cfg, base);
+      const ordinary = all.filter(n => !n.extra.useAlarm);
+      it.reminderEvents = Object.fromEntries(all.filter(n => n.extra.reminderKey).map(n =>
+        [n.extra.reminderKey, { state: "scheduled", at: n.schedule.at.getTime(), roundBase: at }]));
+      createEnvironment();
+      const bridge = global.Capacitor.Plugins.SystemBridge;
+      let rows = ordinary.map(n => Object.assign({}, n, { nativeTiming: {
+        token: "accepted:" + n.id, state: "pending", exact: !(options && options.inexact),
+        mode: options && options.inexact ? "inexactNotification" : "alarmClockNotification" } }));
+      const calls = { cancel: [], schedule: [] };
+      bridge.pendingNotifications = async () => ({ notifications: rows.slice() });
+      bridge.cancelScheduledNotification = async ({ id }) => { calls.cancel.push(id); rows = rows.filter(n => n.id !== id); };
+      bridge.scheduleNotification = async p => { calls.schedule.push(p); throw new Error("unexpected new schedule in pending lifecycle fixture"); };
+      return { it, bridge, calls, ordinary, get rows() { return rows; } };
+    };
+    for (const inexact of [false, true]) {
+      const f = await pendingFixture("normal", config, { inexact });
+      const before = JSON.stringify(f.it.reminderEvents);
+      const a = await native.reconcile([f.it], config, at + 100);
+      ok("v68 " + (inexact ? "inexact" : "exact") + " pending survives due+100ms without cancel or new schedule",
+        f.rows.length === 1 && f.calls.cancel.length === 0 && f.calls.schedule.length === 0 && a.errors.length === 0);
+      ok("v68 pending retention does not mark delivered/lost or mutate scheduled ledger", JSON.stringify(f.it.reminderEvents) === before);
+      if (inexact) ok("v68 retained actual inexact timing remains inexact", a.reliability === "inexact" && !a.capabilities.exact);
+    }
+    let f = await pendingFixture("important", config, { inexact: true });
+    const repeatAt = f.ordinary[0].schedule.at.getTime();
+    let a = await native.reconcile([f.it], config, repeatAt + 100);
+    ok("v68 ordinary important re-alert pending is retained after its own due time", f.rows.length === f.ordinary.length &&
+      f.calls.cancel.length === 0 && f.calls.schedule.length === 0 && a.errors.length === 0);
+    await native.reconcile([f.it], { notify: true, importantRepeat: false }, repeatAt + 100);
+    ok("v68 disabling important repeat revokes accepted ordinary repeat slots", f.rows.length === 0 && f.calls.cancel.length === f.ordinary.length);
+    f = await pendingFixture("critical", config, { inexact: true });
+    await native.reconcile([f.it], config, f.ordinary[0].schedule.at.getTime() + 100);
+    ok("v68 ordinary critical re-alert pending is retained after its own due time", f.rows.length === f.ordinary.length &&
+      f.calls.cancel.length === 0 && f.calls.schedule.length === 0);
+
+
+    const revocations = [
+      ["deleted", f => [], config],
+      ["notify disabled", f => [f.it], { notify: false }],
+      ["completed", f => { f.it.status = "completed"; return [f.it]; }, config],
+      ["archived", f => { f.it.status = "archived"; return [f.it]; }, config],
+      ["new revision", f => { f.it.rev++; return [f.it]; }, config],
+      ["cleared trigger", f => { f.it.triggerAt = null; return [f.it]; }, config],
+      ["delivered ledger", f => { Object.values(f.it.reminderEvents)[0].state = "delivered"; return [f.it]; }, config],
+      ["suppressed ledger", f => { Object.values(f.it.reminderEvents)[0].state = "suppressed"; return [f.it]; }, config],
+      ["wrong round", f => { Object.values(f.it.reminderEvents)[0].roundBase = at - 60000; return [f.it]; }, config],
+      ["alarm presentation selected", f => { f.it.delivery_mode = "alarm"; return [f.it]; }, config],
+      ["review fallback suppression", f => { f.it.isFallbackTrigger = true; return [f.it]; }, { notify: true, review: { enabled: true } }],
+      ["privacy policy changed", f => [f.it], { notify: true, privacyNotify: true }]
+    ];
+    for (const [name, change, cfg] of revocations) {
+      f = await pendingFixture("normal", config);
+      await native.reconcile(change(f), cfg, at + 100);
+      ok("v68 explicit " + name + " still cancels pending native ordinary", f.rows.length === 0 && f.calls.cancel.length === 1);
+    }
+    f = await pendingFixture("normal", config);
+    const d = new Date(at), minutes = d.getHours() * 60 + d.getMinutes();
+    const hhmm = mins => String(Math.floor(((mins + 1440) % 1440) / 60)).padStart(2,"0") + ":" + String((mins + 1440) % 60).padStart(2,"0");
+    await native.reconcile([f.it], { notify: true, dnd: true, quietStart: hhmm(minutes - 1), quietEnd: hhmm(minutes + 60) }, at + 100);
+    ok("v68 changed quiet-hours projection revokes old pending identity", f.rows.length === 0 && f.calls.cancel.length === 1);
+
+    f = await pendingFixture("normal", config, { inexact: true });
+    const key = f.ordinary[0].extra.reminderKey;
+    f.bridge.pendingNotifications = async () => ({ notifications: [] }); // production restore removed expired row
+    f.bridge.getMissedAlarms = async () => ({ missed: [{ itemId: f.it.id, reminderKey: key, reason: "notification_restore_expired" }] });
+    a = await native.reconcile([f.it], config, at + 100);
+    const missed = await native.getMissedAlarms();
+    const lost = native.markLostReminders([f.it], { missed: missed.rows }, at + 100);
+    ok("v68 no fabricated pending or delivery after explicit native restore expiry", a.scheduled === 0 && f.calls.schedule.length === 0 && f.calls.cancel.length === 0);
+    ok("v68 matched restore missed evidence still enters existing lost discipline", lost.length === 1 && f.it.reminderEvents[key].state === "lost");
+
+    // Deadline ordinary notifications share the accepted pending lifecycle and hard grace.
+    await native._resetForTests();
+    const deadlineAt = base + 25 * 3600000;
+    const deadline = item("v68-deadline", "normal", null, { rev: 1, deadlineAt });
+    const stages = native.buildDesired([deadline], config, base).filter(n => n.extra.event === "deadline");
+    const stage = stages[0];
+    deadline.deadlineEvents = Object.fromEntries(stages.map(n=>[n.extra.stageKey,{state:"scheduled",at:n.schedule.at.getTime()}]));
+    createEnvironment();let stageRows = stages.map(n=>Object.assign({},n,{nativeTiming:{token:"deadline:"+n.id,state:"pending",exact:false,mode:"inexactNotification"}}));
+    let stageCancels=0;const b=global.Capacitor.Plugins.SystemBridge;
+    b.pendingNotifications=async()=>({notifications:stageRows});b.cancelScheduledNotification=async({id})=>{stageCancels++;stageRows=stageRows.filter(n=>n.id!==id)};b.scheduleNotification=async()=>{throw Error("unexpected new deadline schedule")};
+    await native.reconcile([deadline], config, stage.schedule.at.getTime()+100);
+    ok("v68 deadline pending remains while current stage is valid", stageRows.length===stages.length&&stageCancels===0);
+    deadline.deadlinePaused=true;await native.reconcile([deadline], config, stage.schedule.at.getTime()+100);
+    ok("v68 deadline pause explicitly revokes retained pending", stageRows.length===0&&stageCancels===stages.length);
+    deadline.deadlinePaused=false;
+    stageRows=stages.map(n=>Object.assign({},n,{nativeTiming:{token:"deadline-expire:"+n.id,state:"pending",exact:false,mode:"inexactNotification"}}));
+    await native.reconcile([deadline],config,deadlineAt+reminderLib.DEADLINE_GRACE_MS+1);
+    ok("v68 deadline business grace expiry is not retained indefinitely", stageRows.length===0&&stageCancels===stages.length*2);
+
+
+    // Review slots remain eligible only within the same current session window.
+    await native._resetForTests();createEnvironment();
+    const day=new Date(base);day.setHours(20,0,0,0);const reviewNow=day.getTime();
+    const reviewSettings={enabled:true,hour:21,minute:0,windowEndHour:23,windowEndMinute:0,maxFollowups:0};
+    const reviewRow=native.buildReviewDesired(2,reviewSettings,reviewNow,config)[0];
+    let reviewRows=[Object.assign({},reviewRow,{nativeTiming:{token:"review",state:"pending",exact:false,mode:"inexactNotification"}})];
+    let reviewCancels=0;const reviewScheduled=[];const rb=global.Capacitor.Plugins.SystemBridge;
+    rb.pendingNotifications=async()=>({notifications:reviewRows});rb.cancelScheduledNotification=async({id})=>{reviewCancels++;reviewRows=reviewRows.filter(n=>n.id!==id)};
+    rb.scheduleNotification=async p=>{reviewScheduled.push(p.notification.id);const timing={ok:true,token:"review:"+p.notification.id,state:"pending",exact:false,mode:"inexactNotification",triggerAt:p.at};reviewRows.push({...p.notification,nativeTiming:timing});return timing};
+    await native.reconcile([],config,reviewRow.schedule.at.getTime()+100,{count:2,settings:reviewSettings});
+    ok("v68 review pending survives due time in its original valid window", reviewRows.some(n=>n.id===reviewRow.id)&&reviewCancels===0&&!reviewScheduled.includes(reviewRow.id));
+    day.setHours(23,0,0,0);await native.reconcile([],config,day.getTime(),{count:2,settings:reviewSettings});
+    ok("v68 review hard window expiry still revokes old pending", !reviewRows.some(n=>n.id===reviewRow.id)&&reviewCancels===1);
   }
 
   await native._resetForTests();

@@ -1185,7 +1185,14 @@ async function run() {
     h.releaseCommits(1, "fail"); // 第一笔（闹钟动作）失败
     let err = null;
     await action.catch(e => { err = e; });
-    const retried = app.snoozeItem(a.id, t4h, "elapsed");
+    // The selected target predates the awaited failed commit. Remaining duration
+    // is target minus retry time, not always a fresh four hours (load-independent).
+    const retryAt = Date.now(), expectedDelay = t4h - retryAt;
+    const realNow = Date.now;
+    let retried;
+    Date.now = () => retryAt;
+    try { retried = app.snoozeItem(a.id, t4h, "elapsed"); }
+    finally { Date.now = realNow; }
     ok("M1 失败落定后第二次稍后可重试", retried === true);
     await flush(3);
     h.releaseCommits(1, "ok");   // 第二笔（用户的稍后）成功
@@ -1195,7 +1202,7 @@ async function run() {
     ok("M1 闹钟动作提交失败如实上抛", !!err && /commit failed/.test(err.message), err && err.message);
     ok("M1 内存：第二次稍后完整保留（snoozed + elapsed + 四小时后 + 延迟）",
       a.status === "snoozed" && a.scheduleBasis === "elapsed" && a.localTrigger === null &&
-      a.triggerAt === t4h && Math.abs(a.snoozeDelayMs - 4 * 3600000) <= 5,
+      a.triggerAt === t4h && Number(a.snoozeDelayMs) === expectedDelay,
       "status=" + a.status + " basis=" + a.scheduleBasis + " local=" + a.localTrigger +
       " trigger=" + a.triggerAt + " delay=" + a.snoozeDelayMs);
     ok("M1 内存：elapsed 三件套自洽（snoozedAt + snoozeDelayMs === triggerAt）",
@@ -1209,14 +1216,14 @@ async function run() {
     const diskA = (snap.items || []).find(x => x.id === a.id) || {};
     ok("M1 磁盘：第二次稍后完整保留",
       diskA.status === "snoozed" && diskA.scheduleBasis === "elapsed" &&
-      Number(diskA.triggerAt) === t4h && Math.abs(Number(diskA.snoozeDelayMs) - 4 * 3600000) <= 5,
+      Number(diskA.triggerAt) === t4h && Number(diskA.snoozeDelayMs) === expectedDelay,
       JSON.stringify({ status: diskA.status, basis: diskA.scheduleBasis, trigger: diskA.triggerAt, delay: diskA.snoozeDelayMs }));
 
     const reloaded = await restartApp(h.disk);
     const rb = reloaded.app.state.items.find(x => x.id === a.id) || {};
     ok("M1 重载后：仍是 snoozed/elapsed，第二次选择的时间与延迟完整保留",
       rb.status === "snoozed" && rb.scheduleBasis === "elapsed" &&
-      Number(rb.triggerAt) === t4h && Math.abs(Number(rb.snoozeDelayMs) - 4 * 3600000) <= 5,
+      Number(rb.triggerAt) === t4h && Number(rb.snoozeDelayMs) === expectedDelay,
       JSON.stringify({ status: rb.status, basis: rb.scheduleBasis, trigger: rb.triggerAt, delay: rb.snoozeDelayMs }));
     ok("M1 重载后：不残留失败动作的已处理标记",
       reloaded.app.alarmEventSeen("evt-m1") === false);
@@ -2365,8 +2372,8 @@ async function run() {
 section("Q1. 启动链完整性 / addListener 返回契约");
 {
   const withPlatform = async (addListenerImpl) => {
-    const calls = { appListener: 0, bridgeListener: 0 };
-    const record = which => (...args) => { calls[which]++; return addListenerImpl(...args); };
+    const calls = { appListener: 0, bridgeListener: 0, backListener: 0 };
+    const record = which => (...args) => { calls[which === "appListener" && args[0] === "backButton" ? "backListener" : which]++; return addListenerImpl(...args); };
     global.Capacitor = {
       // 刻意返回 "web"：本用例只关心 onAlarmAction 的注册路径，
       // 不希望任何 native-only 分支（isNativeAndroid）被激活。
@@ -2393,7 +2400,7 @@ section("Q1. 启动链完整性 / addListener 返回契约");
   {
     const { h, app, calls, ready } = await withPlatform(() => ({ async remove() {} }));
     ok("Q1 真机契约：addListener 确实被调用到了（否则本用例在空转）",
-      calls.appListener === 1 && calls.bridgeListener === 1,
+      calls.appListener === 1 && calls.bridgeListener === 1 && calls.backListener === 1,
       "app=" + calls.appListener + " bridge=" + calls.bridgeListener);
     ok("Q1 真机契约（同步句柄）：ready() === true，init 未被中断", ready === true);
     // UX-C01 之后首启**不再自动 seed**，所以旧的 `items.length > 0` 代理失效了。
@@ -2413,7 +2420,7 @@ section("Q1. 启动链完整性 / addListener 返回契约");
       return p;
     });
     ok("Q1 Promise 契约：同样能注册且不中断启动",
-      calls.appListener === 1 && ready === true);
+      calls.appListener === 1 && calls.backListener === 1 && ready === true);
     ok("Q1 Promise 契约：启动链照常跑到底（首启无演示数据 + 15 秒心跳装上）",
       app.state.items.length === 0 && h.intervals.some(x => x.ms === 15000),
       "items=" + app.state.items.length + " intervals=" + JSON.stringify(h.intervals.map(x => x.ms)));

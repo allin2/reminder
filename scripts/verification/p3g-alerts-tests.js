@@ -451,6 +451,44 @@ async function healthy(loaded) {
     fRepeat.alerts.clearAlert();
   }
 
+  // 6c. AC-07: a rejected banner action must never be a silent no-op
+  // (事项已被原生闹钟/另一入口终态化时，completeItem/ackItem 返回 false ——
+  //  旧行为静默 return，弹条留在屏幕上怎么点都没反应)
+  {
+    const f = fixture(api, {
+      items: [{ id: "it-stale", title: "Stale alert", priority: "normal", status: "due" }]
+    });
+    f.alerts.bindAlertControls();
+    f.deps.completeItem = (id) => { f.spies.completed.push(id); return false; };
+    // 模拟「已被另一个入口完成」：业务层拒绝完成，且事项当前已处于终态
+    f.state.items[0].status = "archived";
+    f.alerts.showAlert(f.state.items[0]);
+    f.getNode("alertDone").dispatchEvent("click");
+    assert.strictEqual(f.alerts.getAlertItem(), null, "Rejected done must still hide the banner");
+    assert.strictEqual(f.getNode("alertBanner").classList.contains("show"), false, "Rejected done must remove .show");
+    assert.strictEqual(f.spies.toasts.includes("这条事项已处理 · 提醒已收起"), true, "Rejected done must give visible feedback (terminal item)");
+
+    const f2 = fixture(api, {
+      items: [{ id: "it-live", title: "Live alert", priority: "normal", status: "due" }]
+    });
+    f2.alerts.bindAlertControls();
+    f2.deps.ackItem = (id) => { f2.spies.acknowledged.push(id); return false; };
+    f2.alerts.showAlert(f2.state.items[0]);
+    f2.getNode("alertAck").dispatchEvent("click");
+    assert.strictEqual(f2.alerts.getAlertItem(), null, "Rejected ack must hide the banner");
+    assert.strictEqual(f2.spies.toasts.includes("操作没有生效 · 请重试"), true, "Rejected ack with live item must ask to retry");
+
+    const f3 = fixture(api, {
+      items: [{ id: "it-ghost", title: "Ghost", priority: "normal", status: "due" }]
+    });
+    f3.alerts.bindAlertControls();
+    f3.alerts.showAlert(f3.state.items[0]);
+    f3.alerts.clearAlert(); // alertItem 已清空、但 .show 仍在（竞态残留的死弹条）
+    f3.getNode("alertBanner").classList.add("show");
+    f3.getNode("alertAck").dispatchEvent("click");
+    assert.strictEqual(f3.getNode("alertBanner").classList.contains("show"), false, "Click on ghost banner must collapse it");
+  }
+
   // 7. SW notification actions: handleNotificationAction
   {
     const f = fixture(api, {

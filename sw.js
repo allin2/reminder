@@ -1,3 +1,9 @@
+// v69: item-level opt-in punctual ordinary reminders; review always standard.
+// v68: validate accepted pending carriers against current policy after due time.
+// v67: re-establish legacy timer after partial cancellation before native rollback.
+// v66: separate backend handoff from business revocation; preserve accepted fallback.
+// v65: preserve legacy timing on unknown native queues; retain failed delivery identity.
+// v64: ordinary notification native one-shot timing; presentation remains notification-only.
 /* 安心收件箱 Service Worker — network-first for app shell, offline fallback */
 // v33：P3-G 把 Web 提醒弹条、到期 tick、活动原生闹钟面板及其轮询迁出为 `lib/app-alerts.js`；新增运行时脚本换缓存名。
 // v32：P3-F-R 修复整理完成按钮无响应、IDB 保存失败误报完成与默认值单源收敛；更新运行时脚本缓存。
@@ -50,7 +56,14 @@
 // v41：P3-I-Q2 把 detailReminderStatusRow(it) 实现迁入 lib/app-views.js；更新运行时脚本缓存。
 // v40：U1 修复稍后面板入口 ReferenceError 与选时状态上收。
 // v51：补齐锁屏显示与通知手动检查入口，按本次投递身份和可见性判断锁屏测试结果。
-const CACHE = "attention-inbox-v55";
+// v56：删除同步清理弹条、隐藏弹条退出焦点与读屏访问、补充 ColorOS 后台限制引导。
+// v57：修复 UI 删除无关事项误收当前弹条，并覆盖真实删除事件入口。
+// v58：外层使用 clip，防止弹层控件滚动把导航整体顶离屏幕底部。
+// v60：待整理清单/按需编辑；完整清单置于到期弹条之上，关闭后仍保留弹条。
+// v61: absolute dates, review recovery and Android shared capture.
+// v62: resume the complete share-interrupted draft through normal capture.
+// v63: unobscured list scrolling and notification channel diagnostics.
+const CACHE = "attention-inbox-v69";
 /**
  * 预缓存清单必须**逐条等于** `index.html` 里真正加载的运行时脚本。
  *

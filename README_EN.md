@@ -105,7 +105,7 @@ This project uses a **Zero-Build, purely static architecture**. No `npm run buil
 3. **PWA Installation**: In your mobile browser, tap "Share → Add to Home Screen" to install it as an offline-first Web App.
 
 ### Option B: Android Native App (Full-screen alarm & lockscreen wakeup)
-- A prebuilt self-signed debug APK is included in the repository: [`releases/安心收件箱-debug.apk`](file:///Users/qlyf/Developer/reminder/releases/%E5%AE%89%E5%BF%83%E6%94%B6%E4%BB%B6%E7%AE%B1-debug.apk).
+- Download the signed APK from [Release 1.5](https://github.com/allin2/reminder/releases/tag/v1.5). See the [release record](docs/reviews/release-v1.5-2026-10-18.md) for changes and validation limits.
 - Supports Android 12+ exact alarm permissions and Android 13+ notification permissions, enabling background screen wakeup, ringtones, and reboot schedule restoration.
 
 ---

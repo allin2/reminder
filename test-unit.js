@@ -17,6 +17,30 @@ const appViewsMod = require(path.join(__dirname, "lib/app-views.js"));
 
 let passed = 0, failed = 0;
 const failures = [];
+// RF-D1: explicit absolute dates retain year/minutes and reject invalid calendars.
+{
+  const parse = require("./lib/parse-cn.js").parseChineseTime;
+  const now = new Date(2026, 9, 18, 12);
+  [
+    ["2037年1月1日 18:30 交材料", 2037, 0, 1, 18, 30],
+    ["1月1日 18:30 交材料", 2027, 0, 1, 18, 30],
+    ["2036年2月29日 09:17 交材料", 2036, 1, 29, 9, 17],
+    ["2月29日 09:17 交材料", 2028, 1, 29, 9, 17],
+    ["二〇三七年一月一日 18:30 交材料", 2037, 0, 1, 18, 30]
+  ].forEach(([text,y,m,d,h,min]) => {
+    const result = parse(text, now);
+    ok("RF-D1 " + text, result.trigger === new Date(y,m,d,h,min).getTime(), JSON.stringify(result));
+    ok("RF-D1 year consumed " + text, !/年/.test(result.title));
+  });
+  ["2037年2月29日 18:30", "2037年4月31日 18:30", "2037年13月1日 18:30", "2037年1月1日 25:70"].forEach(text => {
+    const result = parse(text, now);
+    ok("RF-D1 invalid " + text, result.trigger === null && result.deadline === null && result.confidence === "low");
+  });
+  const deadline = parse("2037年1月1日 18:30前提交", now);
+  ok("RF-D1 explicit deadline minutes", deadline.deadline === new Date(2037,0,1,18,30).getTime());
+  ok("RF-D1 deadline reminder three days before", deadline.trigger === new Date(2036,11,29,18,30).getTime());
+}
+
 /**
  * 异步段的**收尾门**计数（声明必须在这里，不能放到文件尾部跟 `finish()` 一起 ——
  * 段首登记发生在文件中部，`let` 在那时还处于 TDZ）。用法见文件末尾的
@@ -191,6 +215,41 @@ section("P2-G1 AppCapture — 表单会话、live 状态与幂等绑定");
   node("#capText").value = "后天下午3点交周报"; capture.updateParseHint();
   ok("快捷时间点击后继续打字：时间框不被解析结果覆盖", node("#capTrigger").value === "2026-09-22T09:30",
     node("#capTrigger").value);
+
+  // RF-D6-R1: closing a share is not sufficient: the normal capture entry must
+  // restore the entire interrupted draft in a fresh session, before any timer runs.
+  capture.openCapture();
+  node("#capText").value = "RF原草稿全文 <>& 中文";
+  node("#capNote").value = "原备注\n第二行";
+  node("#capUrl").value = "https://example.test/original";
+  node("#capTags").value = "原标签 二号";
+  node("#capTrigger").value = "2038-03-04T16:27";
+  capture.markTriggerPicked(true);
+  node("#capDeadline").value = "2038-03-05T18:45";
+  node("#capProject").value = "p1";
+  node("#capRepeat").value = "nthWeekday";
+  node("#capRepeatMode").value = "calendar";
+  node("#capNth").value = "2"; node("#capWeekday").value = "3";
+  node("#capAdvanced").hidden = false;
+  chips.forEach(c => c.classList.toggle("on", c.dataset.p === "important"));
+  const interrupted = capture.snapshotItemForm();
+  capture.receiveCaptureRequest({ id: "rf-unit-share", text: "收到分享内容" });
+  node("#btnCaptureShare").listeners.find(l => l.name === "click").fn({});
+  const shareSession = capture.session();
+  node("#sheetItem").listeners.find(l => l.name === "attention:sheet-closed").fn({});
+  capture.openCapture();
+  const resumed = capture.snapshotItemForm();
+  ok("RF-D6-R1 正常录入入口完整恢复分享前草稿", JSON.stringify(resumed) === JSON.stringify(interrupted), JSON.stringify(resumed));
+  ok("RF-D6-R1 恢复草稿创建新会话，更多选项和周期字段可见", capture.session() !== shareSession &&
+    node("#capAdvanced").hidden === false && node("#btnCapMore")["aria-expanded"] === "true" && node("#nthWeekdayRow").hidden === false);
+
+  node("#capDeadline").listeners.find(l => l.name === "change").fn({});
+  node("#capRepeat").listeners.find(l => l.name === "change").fn({});
+  const selectedFields = capture.snapshotItemForm();
+  node("#capText").value += " 继续编写";
+  capture.updateParseHint();
+  ok("RF-D6-R1 继续正文不清空手选截止或覆盖手选周期", node("#capDeadline").value === selectedFields.deadline &&
+    node("#capRepeat").value === selectedFields.repeat && node("#capNth").value === selectedFields.nth && node("#capWeekday").value === selectedFields.weekday);
 }
 
 section("快捷时间 quickTimeAt — 纯函数边界");
@@ -1914,7 +1973,7 @@ const appBackupDone = beginAsyncSection();
       lastAlertShownAt: null, scheduleBasis: "wall-clock", localTrigger: "2026-09-22T10:00:00",
       snoozedAt: 1790000000000, snoozeDelayMs: 600000, dismissedUntil: null,
       review_status: "NEEDS_REVIEW", reviewed_at: null, sourceTitle: "", sourceApp: "",
-      delivery_mode: "alarm", isFallbackTrigger: false, deadlineStageKey: "p24@1790003600000",
+      delivery_mode: "alarm", punctual_reminder: false, isFallbackTrigger: false, deadlineStageKey: "p24@1790003600000",
       deadlineEvents: { "p24@1790003600000": { at: 1790000000000, state: "scheduled" } },
       reminderEvents: {
         "1@1790000000000": { at: 1790000000000, state: "delivered", roundBase: 1790000000000,
@@ -2682,7 +2741,7 @@ section("feedback — 动作语义与术语");
   const stop = fb.actionSpec("stop");
   ok("关闭声振不冒充 ACK/完成/稍后", stop.notAck === true && !/已确认|已完成|稍后/.test(stop.sub));
 
-  ok("术语替换 ACK", fb.humanize("点击 ACK 按钮") === "点击 我知道了 按钮", fb.humanize("点击 ACK 按钮"));
+  ok("术语替换 ACK", fb.humanize("点击 ACK 按钮") === "点击 已知晓 按钮", fb.humanize("点击 ACK 按钮"));
   ok("术语替换 NEEDS_REVIEW", fb.humanize("NEEDS_REVIEW 记录") === "待整理 记录");
   ok("术语替换 Capture", fb.humanize("Capture 一条") === "记下 一条");
 

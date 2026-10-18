@@ -53,14 +53,19 @@
     * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
     /* 作者样式里的 display（如 .nav-badge 的 grid）会盖过浏览器默认的 [hidden]，这里统一让 hidden 属性生效 */
     [hidden] { display: none !important; }
-    html, body { height: 100%; }
+    html, body {
+      height: 100%;
+      overflow: hidden;
+      overflow: clip;
+    }
     body {
+      /* clip 不建立格式化上下文；保留宽屏 #app 外边距的边界，避免根页面多出 12px。 */
+      display: flow-root;
       font-family: var(--font);
       font-size: 16px;
       line-height: 1.5;
       color: var(--ink);
       background: var(--paper);
-      overflow: hidden;
       -webkit-font-smoothing: antialiased;
       user-select: none;
     }
@@ -78,8 +83,11 @@
       background: var(--paper);
       /* 窄屏也剪裁：18 个收起的 .sheet 靠 translateY(110%) 移出，若不剪裁会撑高
          documentElement.scrollHeight（390×844 下 1680），页面可被整体上移（真机 WebView 同）。
-         宽屏媒体查询里本就有同款 overflow:hidden，这里下沉为基础规则；列表滚动由 .main 自身负责，不受影响。 */
+         列表滚动由 .main 自身负责，不受影响。 */
       overflow: hidden;
+      /* hidden 仍允许焦点/scrollIntoView 滚动整个外壳，关闭弹层后导航会被顶走。
+         clip 禁止外层滚动；列表和 .sheet-body 继续各自滚动。hidden 保留为旧引擎回退。 */
+      overflow: clip;
     }
     .top {
       padding: calc(14px + var(--safe-t)) 18px 12px;
@@ -115,9 +123,14 @@
 
     .main {
       flex: 1;
+      min-height: 0;
       overflow-y: auto;
       overflow-x: hidden;
-      padding: 4px 16px calc(var(--nav-h) + var(--safe-b) + var(--cap-h) + 36px);
+      /* Keep the scroll viewport above the fixed capture bar and navigation.
+         Padding alone lets nearest/focus scrolling stop underneath those controls. */
+      margin-bottom: calc(var(--nav-h) + var(--safe-b) + var(--cap-h) + 20px);
+      padding: 4px 16px 16px;
+      scroll-padding-block: 12px;
       -webkit-overflow-scrolling: touch;
     }
     .sec { margin-bottom: 22px; }
@@ -502,6 +515,54 @@
       background: var(--paper);
     }
 
+    /* Review is a browsable list; only its list and edit form scroll. */
+    #sheetReview { height:100%; max-height:100%; border-radius:0; z-index:81; }
+    #sheetReview .sheet-head { padding-top:calc(12px + var(--safe-t)); gap:10px; }
+    #sheetReview .sheet-head h2 { flex:1; font-family:var(--font); font-size:1.15rem; }
+    #reviewProgress { font-size:.8rem; background:var(--signal-soft); color:var(--signal); border-radius:5px; padding:1px 7px; }
+    .review-intro { padding:0 18px 10px; color:var(--muted); font-size:.8rem; flex-shrink:0; }
+    .review-filters { display:flex; gap:5px; padding:0 12px 7px; flex-shrink:0; }
+    .review-filters button { min-height:44px; border-radius:10px; padding:6px 9px; color:var(--muted); font-size:.8rem; white-space:nowrap; }
+    .review-filters button[aria-pressed="true"] { background:var(--signal); color:#fff; }
+    #reviewSummary { padding:0 18px 7px; font-size:.7rem; color:var(--muted); flex-shrink:0; }
+    #reviewBody { min-height:0; flex:1; padding:0 12px; overscroll-behavior:contain; }
+    .review-row { display:flex; min-height:99px; gap:8px; padding:10px 12px; background:var(--card); border-bottom:1px solid var(--line); }
+    .review-row:first-child { border-radius:12px 12px 0 0; }
+    .review-row:last-child { border-radius:0 0 12px 12px; }
+    .review-row-content { flex:1; min-width:0; text-align:left; align-self:stretch; display:flex; flex-direction:column; justify-content:center; gap:4px; }
+    .review-row-content strong { font-size:.88rem; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; width:100%; }
+    .review-row-time { font-size:.76rem; color:var(--signal); }
+    .review-row-time.no-time { color:var(--attention); }
+    .review-row-source { font-size:.66rem; color:var(--muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:100%; }
+    .review-deadline { color:var(--critical); }
+    .review-row-actions { width:60px; flex-shrink:0; display:flex; flex-direction:column; justify-content:center; }
+    .review-row-primary { font-size:.76rem; font-weight:600; min-height:36px; border-radius:8px; background:var(--signal-soft); color:var(--signal); }
+    .review-row-primary.ready { background:var(--signal); color:#fff; }
+    .review-row-primary:disabled { opacity:.6; }
+    .review-row-more { min-height:44px; font-size:.65rem; letter-spacing:2px; color:var(--muted); }
+    #reviewFoot { padding:8px 12px max(8px, var(--safe-b)); }
+    #reviewFoot .btn { font-size:.78rem; min-width:0; white-space:normal; padding:10px 7px; }
+    #sheetReviewEdit, #sheetReviewActions, #sheetReviewSnooze { z-index:84; max-height:94%; }
+    #sheetReviewEdit .sheet-body { min-height:0; overscroll-behavior:contain; }
+    #sheetReviewEdit .sheet-foot .btn { white-space:nowrap; }
+    #sheetReviewEdit .sheet-foot .secondary { flex:0 0 auto; }
+    #reviewNote { resize:vertical; min-height:76px; }
+    .review-time-shortcuts { display:flex; flex-wrap:wrap; gap:6px; margin:-4px 0 12px; }
+    .review-time-shortcuts button { padding:8px 10px; min-height:44px; font-size:.76rem; border:1px solid var(--line); border-radius:8px; background:var(--card); }
+    .review-time-hint { font-size:.76rem; color:var(--attention); background:var(--attention-soft); border-radius:8px; padding:10px; margin-bottom:14px; }
+    #reviewSourceDetails { font-size:.8rem; color:var(--muted); margin:10px 0; }
+    #reviewSourceDetails summary { cursor:pointer; min-height:44px; padding:10px 0; }
+    #reviewOriginal { white-space:pre-wrap; overflow-wrap:anywhere; user-select:text; }
+    .review-menu-button { display:block; width:100%; min-height:50px; padding:10px 0; text-align:left; border-bottom:1px solid var(--line); }
+    #sheetReviewActions h2 { min-width:0; overflow-wrap:anywhere; font-family:var(--font); font-size:1.05rem; }
+    #reviewDelete { color:var(--critical); }
+    #reviewDeleteQuestion { padding:12px; background:var(--critical-soft); border-radius:10px; }
+    #reviewDeleteQuestion .btn { margin-top:8px; }
+    #sheetReview.open ~ #toast { z-index:85; }
+    #sheetReview.review-dimmed::after { content:""; position:absolute; inset:0; background:rgba(20,24,29,.35); }
+    #sheetReviewEdit:focus, #sheetReviewActions:focus, #sheetReviewSnooze:focus, #sheetReview:focus { outline:none; }
+    .review-row-content:focus-visible, .review-row-more:focus-visible, .review-row-primary:focus-visible { outline:2px solid var(--signal); outline-offset:2px; }
+
     .field { margin-bottom: 14px; }
     .field label {
       display: block;
@@ -756,6 +817,11 @@
       flex-shrink: 0;
       transition: background 0.15s ease;
     }
+    .punctual-option { display:flex; align-items:center; gap:12px; min-height:48px; padding:12px; margin:4px 0 12px; border:1px solid var(--line-strong); border-radius:12px; cursor:pointer; }
+    .punctual-option input { width:22px; height:22px; flex-shrink:0; accent-color:var(--signal-solid); }
+    .punctual-option strong { display:block; font-size:0.92rem; }
+    .punctual-option .muted { display:block; font-size:0.82rem; line-height:1.5; margin-top:4px; }
+    .punctual-option:focus-within { outline:2px solid var(--signal-solid); outline-offset:2px; }
     .switch.on { background: var(--signal-solid); }
     .switch::after {
       content: "";
@@ -1079,7 +1145,7 @@
         margin-bottom: 12px;
         height: calc(100% - 24px);
         border-radius: 20px;
-        overflow: hidden;
+        overflow: clip;
       }
       .nav, .fab, .sheet, .backdrop, .toast {
         max-width: 480px;
@@ -1255,7 +1321,7 @@
         <div class="set-row">
           <div>
             <div>重要事项持续提醒</div>
-            <div class="sub">没点「我知道了」时会再次提醒</div>
+            <div class="sub">没点「已知晓」时会再次提醒</div>
           </div>
           <button class="switch on" id="swImp" role="switch" aria-checked="true" aria-label="重要提醒"></button>
         </div>
@@ -1411,6 +1477,10 @@
     </div>
     <div class="sheet-body">
       <div class="field">
+        <div id="captureSharePrompt" class="parse-hint" hidden aria-live="polite">
+          <span>收到的分享会保留，当前草稿不会被替换。</span>
+          <button id="btnCaptureShare" class="btn secondary" type="button">查看分享</button>
+        </div>
         <label for="capText">一句话交给系统</label>
         <input id="capText" type="text" placeholder="例如：明天下午3点提醒我取快递" autocomplete="off" />
         <div class="parse-hint muted" id="capHint">输入内容后自动解析时间</div>
@@ -1428,6 +1498,10 @@
         <label for="capTrigger">提醒时间（可改）</label>
         <input id="capTrigger" type="datetime-local" />
       </div>
+      <label class="punctual-option" for="capPunctual">
+        <input type="checkbox" id="capPunctual" aria-describedby="capPunctualHint" />
+        <span><strong>准时保障</strong><span id="capPunctualHint" class="muted">普通通知尽量准时，可能显示系统“下一个闹钟”</span></span>
+      </label>
       <button type="button" class="more-toggle" id="btnCapMore" aria-expanded="false" aria-controls="capAdvanced">更多选项</button>
       <div id="capAdvanced" hidden>
         <div class="field-row">
@@ -1488,7 +1562,7 @@
           <label for="capRepeatMode">周期计时方式</label>
           <select id="capRepeatMode">
             <option value="calendar">按日历</option>
-            <option value="ack">从「我知道了」重新计时</option>
+            <option value="ack">从「已知晓」重新计时</option>
           </select>
         </div>
         <div id="repeatPreview" class="parse-hint muted" style="margin-top:-4px;margin-bottom:12px"></div>
@@ -1794,27 +1868,59 @@
     </div>
   </div>
 
-  <div class="sheet" id="sheetReview">
-    <div class="sheet-grip"></div>
+  <div class="sheet" id="sheetReview" role="dialog" aria-modal="true" aria-labelledby="reviewHeading" tabindex="-1">
     <div class="sheet-head">
-      <h2>待整理</h2>
-      <div id="reviewProgress" style="font-size:0.85rem;color:var(--muted)">0 / 0</div>
-      <button class="icon-btn" data-close="sheetReview" aria-label="关闭">
+      <h2 id="reviewHeading">待整理 <span id="reviewProgress">0</span></h2>
+      <button class="icon-btn" data-close="sheetReview" aria-label="关闭待整理">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"/></svg>
       </button>
     </div>
+    <p class="review-intro">先浏览记录，需要修改时再展开。</p>
+    <div class="review-filters" role="group" aria-label="筛选待整理记录">
+      <button data-review-filter="pending" aria-pressed="true">待处理 0</button>
+      <button data-review-filter="noTime" aria-pressed="false">未设时间 0</button>
+      <button data-review-filter="kept" aria-pressed="false">留待下次 0</button>
+    </div>
+    <div id="reviewSummary" aria-live="polite"></div>
     <div class="sheet-body" id="reviewBody"></div>
-    <div class="sheet-foot" id="reviewFoot" style="flex-wrap:wrap;gap:8px">
-      <button class="btn secondary" id="reviewSnooze">稍后</button>
-      <button class="btn secondary" id="reviewSkip">跳过本次</button>
+    <div class="sheet-foot" id="reviewFoot"></div>
+  </div>
+
+  <div class="sheet" id="sheetReviewEdit" role="dialog" aria-modal="true" aria-labelledby="reviewEditHeading" tabindex="-1">
+    <div class="sheet-grip"></div>
+    <div class="sheet-head">
+      <h2 id="reviewEditHeading">整理这条记录</h2>
+      <button class="icon-btn" data-review-close="sheetReviewEdit" aria-label="取消编辑">×</button>
+    </div>
+    <div class="sheet-body">
+      <div class="field"><label for="reviewTitle">标题</label><input id="reviewTitle" type="text" /></div>
+      <div class="field"><label for="reviewTrigger">提醒时间 · 可留空</label><input id="reviewTrigger" type="datetime-local" /></div>
+      <div class="review-time-shortcuts">
+        <button data-review-time="tomorrow">明天 09:00</button><button data-review-time="tonight">今天 20:00</button><button data-review-time="clear">清除时间</button>
+      </div>
+      <p class="review-time-hint">未选时间沿用现有兜底规则。确认整理不代表已知晓或完成事项。</p>
+      <div class="field"><label for="reviewNote">备注 · 可选</label><textarea id="reviewNote" rows="3"></textarea></div>
+      <details id="reviewSourceDetails"><summary>原始记录与完整来源</summary><div id="reviewOriginal"></div></details>
+    </div>
+    <div class="sheet-foot"><button class="btn secondary" data-review-close="sheetReviewEdit">取消</button><button class="btn primary" id="reviewSave">保存并确认</button></div>
+  </div>
+
+  <div class="sheet" id="sheetReviewActions" role="dialog" aria-modal="true" aria-labelledby="reviewActionTitle" tabindex="-1">
+    <div class="sheet-grip"></div>
+    <div class="sheet-head"><h2 id="reviewActionTitle">记录操作</h2><button class="icon-btn" data-review-close="sheetReviewActions" aria-label="关闭记录操作">×</button></div>
+    <div class="sheet-body">
+      <button class="review-menu-button" id="reviewEdit">查看与编辑</button>
+      <button class="review-menu-button" id="reviewKeep">留待下次</button>
+      <button class="review-menu-button" id="reviewDelete">删除这条记录</button>
+      <div id="reviewDeleteQuestion" hidden><p>确定删除这条记录？</p><button class="btn secondary" id="reviewDeleteCancel">取消</button><button class="btn primary" id="reviewDeleteConfirm">确认删除</button></div>
     </div>
   </div>
 
-  <div class="sheet" id="sheetReviewSnooze">
+  <div class="sheet" id="sheetReviewSnooze" role="dialog" aria-modal="true" aria-labelledby="reviewSnoozeHeading" tabindex="-1">
     <div class="sheet-grip"></div>
     <div class="sheet-head">
-      <h2>稍后整理</h2>
-      <button class="icon-btn" data-close="sheetReviewSnooze" aria-label="关闭">
+      <h2 id="reviewSnoozeHeading">稍后整理</h2>
+      <button class="icon-btn" data-review-close="sheetReviewSnooze" aria-label="关闭">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"/></svg>
       </button>
     </div>
@@ -1829,7 +1935,7 @@
       </div>
     </div>
     <div class="sheet-foot">
-      <button class="btn secondary" data-close="sheetReviewSnooze">取消</button>
+      <button class="btn secondary" data-review-close="sheetReviewSnooze">取消</button>
     </div>
   </div>
 
@@ -1903,12 +2009,19 @@
           <span class="pill" id="labNotifyPill">…</span>
         </div>
         <div class="set-row" style="padding-top:0;border-top:none">
-          <div class="sub" style="margin-top:0">到点在手机顶部出现横幅提醒与常驻通知。未授权时关掉应用将收不到任何通知。</div>
+          <div class="sub" style="margin-top:0">通知总开关与各类提醒的横幅、锁屏显示是不同设置。已授权仍可能只有通知栏条目，请检查下面的提醒渠道。</div>
         </div>
         <div class="set-row" style="background:var(--paper);gap:8px;padding:8px 14px">
           <button type="button" class="btn secondary sm" id="labReqNotify" style="flex:1">申请通知权限</button>
           <button type="button" class="btn secondary sm" id="labOpenNotify" style="flex:1">系统通知设置 ›</button>
         </div>
+        <div class="set-row"><div class="sub" id="labChannelStatus" role="status" aria-live="polite">提醒渠道状态待检测</div></div>
+        <div class="set-row" style="gap:8px;flex-wrap:wrap">
+          <button type="button" class="btn secondary sm" id="labOpenNormal">普通提醒设置 ›</button>
+          <button type="button" class="btn secondary sm" id="labOpenImportant">重要提醒设置 ›</button>
+          <button type="button" class="btn secondary sm" id="labOpenCritical">关键提醒设置 ›</button>
+        </div>
+        <div class="set-row"><div class="sub">OPPO / ColorOS：在对应提醒类别中检查「横幅」「锁屏通知」，并在系统的息屏显示设置中检查通知显示。系统通知不会主动拉起全屏或保证亮屏；息屏常显由系统控制。需要到点亮屏提醒时，可选择「闹钟」并完成下方实测。</div></div>
       </div>
 
       <!-- 2. 精确闹钟 -->
@@ -1921,7 +2034,7 @@
           <span class="pill" id="labExactPill">…</span>
         </div>
         <div class="set-row" style="padding-top:0;border-top:none">
-          <div class="sub" style="margin-top:0">保证到点分秒不差准时响铃。若未授权，系统会将提醒推迟数分钟甚至数十分钟。</div>
+          <div class="sub" style="margin-top:0">用于提高到点排程精度；未授权时提醒可能延迟。授权后仍需检查厂商后台限制，并用锁屏测试确认实际投递。</div>
         </div>
         <div class="set-row" style="background:var(--paper);padding:8px 14px">
           <button type="button" class="btn secondary sm" id="labOpenExact" style="width:100%">前往「闹钟和提醒」开启精确排程 ›</button>
@@ -1947,7 +2060,7 @@
         </div>
         <div class="set-row" style="padding-top:0;border-top:none">
           <div style="font-size:0.78rem;line-height:1.55;background:var(--paper);padding:10px 12px;border-radius:6px;width:100%">
-            <div>📱 <strong>OPPO / 一加 (ColorOS)</strong>：耗电管理 → 选「允许完全后台行为」；自启动管理 → 开启自启动。</div>
+            <div>📱 <strong>OPPO / 一加 (ColorOS)</strong>：耗电管理 → 选「允许完全后台行为」；自启动管理 → 开启自启动；若有「应用速冻」，请为本应用关闭。不同版本的设置名称和位置可能不同。</div>
             <div style="margin-top:4px">📱 <strong>vivo / iQOO (OriginOS)</strong>：电池 → 后台高耗电 → 允许；权限管理 → 允许自启动。</div>
             <div style="margin-top:4px">📱 <strong>小米 / Redmi (HyperOS)</strong>：省电策略 → 选「无限制」；应用权限 → 开启自启动。</div>
             <div style="margin-top:4px">📱 <strong>华为 / 荣耀 (HarmonyOS)</strong>：应用启动管理 → 关闭自动管理 → 勾选允许自启动与后台活动。</div>
@@ -1957,7 +2070,7 @@
           <button type="button" class="btn secondary sm" id="labOpenBackground" style="flex:1">打开「耗电管理/电池」›</button>
           <button type="button" class="btn secondary sm" id="labOpenAutoStart" style="flex:1">打开「自启动/应用详情」›</button>
         </div>
-        <div class="set-row" style="padding:6px 14px 10px"><div class="sub" id="labSettingsFeedback" role="status" aria-live="polite" style="font-size:0.75rem">返回后请点上方「刷新检测」；以上开关由你在系统手动确认。</div></div>
+        <div class="set-row" style="padding:6px 14px 10px"><div class="sub" id="labSettingsFeedback" role="status" aria-live="polite" style="font-size:0.75rem">返回后请点上方「刷新检测」；以上开关由你在系统手动确认。电池优化豁免不代表厂商已允许后台投递，请再做一次 60 秒锁屏测试。若仍被限制，下次打开应用时会补显示未处理的到期事项。</div></div>
       </div>
 
       <!-- 4. 全屏弹窗与锁屏亮屏 -->
@@ -2136,7 +2249,7 @@
       <div class="guide-sec">
         <h4>2. 到点时怎么处理</h4>
         <ul>
-          <li><strong>我知道了</strong>：停止这轮提醒，但事情<strong>还没完成</strong>，会留在首页「已看到未完成」里。</li>
+          <li><strong>已知晓</strong>：停止这轮提醒，但事情<strong>还没完成</strong>，会留在首页「已看到未完成」里。</li>
           <li><strong>稍后提醒</strong>：现在没空，改到一个具体时间再提醒。</li>
           <li><strong>完成</strong>：事情做完了，归档保存；周期事项会自动排到下一次。</li>
           <li>响铃时右上角 <strong>×</strong> 只关掉这一次铃声，不算看到、也不算完成。</li>
@@ -2180,20 +2293,20 @@
     <button class="toast-action" id="toastAction2" hidden>撤销</button>
   </div>
 
-  <div class="alert-banner" id="alertBanner">
+  <div class="alert-banner" id="alertBanner" role="region" aria-labelledby="alertTitle" aria-describedby="alertBody" aria-hidden="true" inert>
     <div class="alert-head">
       <div class="alert-title" id="alertTitle"></div>
-      <button class="alert-close" id="alertClose" aria-label="关闭这次铃声（不代表我知道了或完成）">
+      <button class="alert-close" id="alertClose" aria-label="关闭这次铃声（不代表已知晓或完成）">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"/></svg>
       </button>
     </div>
-    <div class="alert-body" id="alertBody"></div>
+    <div class="alert-body" id="alertBody" role="status" aria-live="polite" aria-atomic="true"></div>
     <div class="alert-actions">
       <button id="alertSnooze">稍后提醒<span class="act-sub">重新安排</span></button>
-      <button class="primary" id="alertAck">我知道了<span class="act-sub">停止本轮 · 仍未完成</span></button>
+      <button class="primary" id="alertAck">已知晓<span class="act-sub">停止本轮 · 仍未完成</span></button>
       <button id="alertDone">完成<span class="act-sub">结束并归档</span></button>
     </div>
-    <p class="alert-note">右上角 × 只关闭这次铃声，不算「我知道了」，也不算完成。</p>
+    <p class="alert-note">右上角 × 只关闭这次铃声，不算「已知晓」，也不算完成。</p>
   </div>
 
   <input type="file" id="importFile" accept="application/json,.json" hidden />

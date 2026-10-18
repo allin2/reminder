@@ -1004,7 +1004,7 @@
       toLocalInput: (ts) => toLocalInput(ts),
       parseLocalInput: (val) => parseLocalInput(val),
       escapeHtml: (str) => escapeHtml(str),
-      deleteItem: (id) => deleteItem(id),
+      deleteItem: (id, opts) => deleteItem(id, opts),
       bumpRev: (it) => bumpRev(it),
       wrapUserOp: (fn, opts) => wrapUserOp(fn, opts),
       queueNativeReminderSync: (reason) => queueNativeReminderSync(reason),
@@ -1164,7 +1164,7 @@
       reviewItem: (id) => reviewItem(id),
       snoozeItem: (id, when, basis) => snoozeItem(id, when, basis),
       completeItem: (id) => completeItem(id),
-      deleteItem: (id) => deleteItem(id),
+      deleteItem: (id, opts) => deleteItem(id, opts),
       reopenItem: (id) => reopenItem(id),
       restoreItem: (id) => restoreItem(id),
       stopRepeat: (id) => stopRepeat(id),
@@ -1261,7 +1261,7 @@
       snoozeItem: (id, when, basis) => snoozeItem(id, when, basis),
       reopenItem: (id) => reopenItem(id),
       restoreItem: (id) => restoreItem(id),
-      deleteItem: (id) => deleteItem(id),
+      deleteItem: (id, opts) => deleteItem(id, opts),
       seed: (which) => seed(which),
       fallbackTriggerAt: (it, created) => fallbackTriggerAt(it, created),
       resolveDeliveryMode: (it) => resolveDeliveryMode(it),
@@ -3047,8 +3047,8 @@
     return appItems.snoozeItem(id, when, basis);
   }
 
-  function deleteItem(id) {
-    return appItems.deleteItem(id);
+  function deleteItem(id, options) {
+    return appItems.deleteItem(id, options);
   }
 
   function reopenItem(id) {
@@ -3151,9 +3151,14 @@
     return appViews ? appViews.renderPwaStatus() : null;
   }
   function render() {
+    // 删除（含撤销新建）走同一个重绘入口，只收起已不存在的那条提醒。
+    const shownAlert = getAlertItem();
+    if (shownAlert && !state.items.some(it => it.id === shownAlert.id)) hideAlert();
     if (state.ui.tab === "home") { promoteDue(); renderSetupEntry(); renderHomeNotice(); }
     else if (state.ui.tab === "future") promoteDue();
-    return appViews.render();
+    const result = appViews.render();
+    if (appReview && $("#sheetReview").classList.contains("open")) appReview.renderReviewCard();
+    return result;
   }
   function refreshProjectSelects() { return appViews.refreshProjectSelects(); }
 
@@ -3811,6 +3816,19 @@
     //  · 后台桥异步初始化不受影响（ensureNativeReminders 在上面，本来就不挡启动链）。
     // 末尾 `tick()` 仍然执行，负责业务推进与**立即处理已到期事项**，不靠删它省渲染次数；
     // 它内部的 renderHome 在输入未变时由 O6 的签名短路兜成空操作。
+    if (appCapture && appCapture.bindNativeCapture) appCapture.bindNativeCapture();
+    const nativeApp = typeof window !== "undefined" && window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.App;
+    if (nativeApp && nativeApp.addListener) try {
+      const listener = nativeApp.addListener("backButton", () => {
+      const sheets = $$(".sheet.open");
+      const sheet = sheets[sheets.length - 1];
+      if (sheet) {
+        const cancel = sheet.querySelector("[data-review-close]");
+        if (cancel) cancel.click(); else closeSheet(sheet.id);
+      } else if (nativeApp.minimizeApp) nativeApp.minimizeApp();
+      });
+      if (listener && listener.catch) listener.catch(error => console.error("Back listener unavailable", error));
+    } catch (error) { console.error("Back listener unavailable", error); }
     const shared = applyShareParams();
     if (shared) state.ui.tab = "home";
     handleQueryActions();

@@ -104,7 +104,7 @@
 3. **PWA 安装**：在手机浏览器中点击「分享 → 添加到主屏幕」，即可享受接近原生体验的离线 Web App。
 
 ### 方式 B：Android 原生 App（享受全屏闹钟强力唤醒）
-- 仓库内已预置自签名测试包：[`releases/安心收件箱-debug.apk`](file:///Users/qlyf/Developer/reminder/releases/%E5%AE%89%E5%BF%83%E6%94%B6%E4%BB%B6%E7%AE%B1-debug.apk)；
+- 下载 [Release 1.5 正式签名 APK](https://github.com/allin2/reminder/releases/tag/v1.5)，更新与验证范围见 [1.5 发布记录](docs/reviews/release-v1.5-2026-10-18.md)。
 - 支持 Android 12+ 精确闹钟权限与 Android 13+ 通知权限，实现锁屏全屏直接拉起、关屏响铃与开机自动恢复排程。
 
 ---

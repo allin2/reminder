@@ -499,7 +499,7 @@ section("3d. 整理会话出口（P0-3）");
   const foot1 = getNode("#reviewFoot").innerHTML;
   ok("P0-3 会话含「稍后」出口", /id="reviewSnooze"/.test(foot1));
   ok("P0-3 会话含「跳过本次」出口", /id="reviewSkip"/.test(foot1));
-  ok("P0-3 卡片三动作仍在", /id="reviewDelete"/.test(foot1) && /id="reviewConfirm"/.test(foot1) && /id="reviewSave"/.test(foot1));
+  ok("P0-3 清单主操作按事项 ID 绑定，单条动作不挤入会话底栏", /data-review-primary=/.test(getNode("#reviewBody").innerHTML) && !/id="reviewDelete"|id="reviewSave"/.test(foot1));
 
   // 再次渲染不得把两个出口冲掉（此前每次渲染都整块替换 innerHTML）
   app.renderReviewCard();
@@ -965,7 +965,8 @@ section("3h. 业务逻辑回归（L01–L08 / D23）");
     app.state.items.find(x => x.title === "第二条已清楚").review_status === "NEEDS_REVIEW");
 
   // 用户在整理卡片里明确改时间 → 采用并解除兜底标记
-  app.state.ui.reviewIndex = 0;
+  kept.review_status = "NEEDS_REVIEW";
+  app.openReviewSession();
   app.renderReviewCard();
   getNode("#reviewTrigger").value = "2026-10-05T09:00";
   app.markReviewTriggerPicked(true);
@@ -1917,6 +1918,7 @@ section("P1-④ 到点 / 已看到事项可编辑、可删除（真调函数，�
   // 删除：移除 + 原生对账 + 8 秒撤销
   app.resetNativeSyncStats();
   ok("P1-④ 删除 due 事项返回成功", app.deleteItem(due.id) !== false);
+  await tick();
   ok("P1-④ 删除后事项不在列表", !app.state.items.some(x => x.id === due.id));
   ok("P1-④ 删除后触发原生对账（delete）", (app.nativeSyncStats().bySource.delete || 0) >= 1,
     JSON.stringify(app.nativeSyncStats().bySource));
@@ -1933,6 +1935,7 @@ section("P1-④ 到点 / 已看到事项可编辑、可删除（真调函数，�
 
   // 过期的撤销不得复活
   app.deleteItem(acked.id);
+  await tick();
   const u = app.items.lastDeleteUndo();
   u.at = Date.now() - 9000;
   ok("P1-④ 超过 8 秒撤销被拒绝", app.items.undoLastDelete() === false && !app.state.items.some(x => x.id === acked.id));

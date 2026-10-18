@@ -340,6 +340,22 @@ async function healthy(api) {
     assert.ok(found, "applyNewItem must consume replayCreatedId");
   }
 
+  // A review-list deletion waits for the same authoritative shared delete command.
+  {
+    const f = fixture(api, { failSave: true });
+    const it = f.deps.makeItem({ id: "delete-commit-probe", title: "delete save boundary" });
+    f.state().items = [it];
+    const failed = await f.items.deleteItem(it.id, { waitForSave: true });
+    assert.strictEqual(failed, false, "failed deletion returns false to the review UI");
+    assert.ok(f.state().items.some(x => x.id === it.id), "failed delete restores item");
+    assert.strictEqual(f.items.lastDeleteUndo(), null, "failed delete cannot offer successful undo");
+    assert.ok(!f.toasts().some(x => x.msg === "已删除"), "no premature success toast");
+    f.setFailSave(false);
+    assert.strictEqual(await f.items.deleteItem(it.id, { waitForSave: true }), true);
+    assert.ok(!f.state().items.some(x => x.id === it.id));
+    assert.ok(f.items.lastDeleteUndo(), "undo becomes available after commit");
+  }
+
   return "healthy direct behavior: PASS";
 }
 

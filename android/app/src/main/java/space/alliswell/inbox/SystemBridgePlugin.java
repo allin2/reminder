@@ -796,11 +796,15 @@ public class SystemBridgePlugin extends Plugin {
 
   /** 闹钟渠道的重要性；-2 = 渠道尚未创建，0 = 被用户关掉，>=4 = HIGH */
   private int alarmChannelImportance() {
+    return channelImportance(AlarmTestReceiver.CHANNEL_ID);
+  }
+
+  private int channelImportance(String id) {
     if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) return -1;
     NotificationManager nm = notificationManager();
     if (nm == null) return -1;
     try {
-      NotificationChannel channel = nm.getNotificationChannel(AlarmTestReceiver.CHANNEL_ID);
+      NotificationChannel channel = nm.getNotificationChannel(id);
       return channel == null ? -2 : channel.getImportance();
     } catch (Exception ignored) {
       return -1;
@@ -823,6 +827,9 @@ public class SystemBridgePlugin extends Plugin {
     result.put("canUseFullScreenIntent", canUseFullScreenIntent());
     result.put("alarmChannelImportance", alarmChannelImportance());
     result.put("alarmChannelId", AlarmTestReceiver.CHANNEL_ID);
+    result.put("normalChannelImportance", channelImportance("attention-normal-v2"));
+    result.put("importantChannelImportance", channelImportance("attention-important-v2"));
+    result.put("criticalChannelImportance", channelImportance("attention-critical-v2"));
     call.resolve(result);
   }
 
@@ -1011,6 +1018,8 @@ public class SystemBridgePlugin extends Plugin {
     try {
       SharedPreferences prefs = getContext().getSharedPreferences(PREFS_SCHEDULES, Context.MODE_PRIVATE);
       JSONArray missed = new JSONArray(prefs.getString(KEY_MISSED_ALARMS, "[]"));
+      JSONArray failedNotifications = NotificationScheduler.failedDeliveries(getContext());
+      for (int i = 0; i < failedNotifications.length(); i++) missed.put(failedNotifications.get(i));
       JSObject r = new JSObject();
       r.put("missed", missed);
       call.resolve(r);
@@ -1117,6 +1126,32 @@ public class SystemBridgePlugin extends Plugin {
   }
 
   /** R8 / R7：撤销闹钟时同步清掉可能已投递的通知 */
+  @PluginMethod
+  public void scheduleNotification(PluginCall call) {
+    try {
+      call.resolve(NotificationScheduler.schedule(getContext(), call.getObject("notification"),
+        longArg(call, "at", 0L), call.getString("scheduleBasis", "wall-clock"),
+        call.getString("localTrigger", "")));
+    } catch (Exception error) { call.reject("普通通知排程失败: " + error.getMessage()); }
+  }
+
+  @PluginMethod
+  public void pendingNotifications(PluginCall call) {
+    try {
+      if (Boolean.TRUE.equals(call.getBoolean("restore", false))) NotificationScheduler.restore(getContext(), "app-start");
+      call.resolve(new JSObject().put("notifications", NotificationScheduler.pending(getContext())));
+    }
+    catch (Exception error) { call.reject("普通通知排程读取失败: " + error.getMessage()); }
+  }
+
+  @PluginMethod
+  public void cancelScheduledNotification(PluginCall call) {
+    Integer id = call.getInt("id");
+    if (id == null) { call.reject("缺少通知ID"); return; }
+    try { NotificationScheduler.cancel(getContext(), id); call.resolve(); }
+    catch (Exception error) { call.reject("普通通知取消失败: " + error.getMessage()); }
+  }
+
   @PluginMethod
   public void cancelNotification(PluginCall call) {
     try {
@@ -1325,8 +1360,16 @@ public class SystemBridgePlugin extends Plugin {
     try {
       Intent intent = new Intent();
       if (Build.VERSION.SDK_INT >= 26) {
-        intent.setAction(Settings.ACTION_APP_NOTIFICATION_SETTINGS);
+        String channelId = call.getString("channelId");
+        if (channelId != null && !channelId.equals("attention-normal-v2")
+            && !channelId.equals("attention-important-v2") && !channelId.equals("attention-critical-v2")) {
+          call.reject("未知提醒渠道");
+          return;
+        }
+        intent.setAction(channelId == null ? Settings.ACTION_APP_NOTIFICATION_SETTINGS
+          : Settings.ACTION_CHANNEL_NOTIFICATION_SETTINGS);
         intent.putExtra(Settings.EXTRA_APP_PACKAGE, getContext().getPackageName());
+        if (channelId != null) intent.putExtra(Settings.EXTRA_CHANNEL_ID, channelId);
       } else {
         intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
         intent.setData(Uri.parse("package:" + getContext().getPackageName()));
