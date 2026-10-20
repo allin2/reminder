@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>Attention Inbox hero</title>
+<style>
+  :root {
+    --navy: #1e2a4a;
+    --navy-deep: #121a30;
+    --amber: #f2a93b;
+    --paper: #f3f4f1;
+    --serif: "Songti SC", "STSong", "Iowan Old Style", Georgia, serif;
+    --sans: -apple-system, "PingFang SC", "Hiragino Sans GB", system-ui, sans-serif;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { width: 1280px; height: 640px; overflow: hidden; }
+  body {
+    font-family: var(--sans);
+    color: #fff;
+    background:
+      radial-gradient(900px 520px at 88% 8%, rgba(242,169,59,.20), transparent 60%),
+      radial-gradient(700px 600px at 0% 100%, rgba(61,90,128,.45), transparent 65%),
+      linear-gradient(160deg, #22305a 0%, var(--navy) 45%, var(--navy-deep) 100%);
+    position: relative;
+  }
+  /* faint ruled-paper lines: an inbox / list motif */
+  body::before {
+    content: ""; position: absolute; inset: 0;
+    background: repeating-linear-gradient(180deg, transparent 0 47px, rgba(255,255,255,.035) 47px 48px);
+    mask-image: linear-gradient(90deg, #000 0%, #000 45%, transparent 70%);
+  }
+  .copy { position: absolute; left: 76px; top: 72px; width: 560px; }
+  .brand { display: flex; align-items: center; gap: 18px; }
+  .brand img { width: 68px; height: 68px; border-radius: 16px; box-shadow: 0 8px 24px rgba(0,0,0,.35), 0 0 0 1px rgba(255,255,255,.12); }
+  .brand .en { font-size: 15px; letter-spacing: .28em; text-transform: uppercase; color: var(--amber); font-weight: 600; }
+  .brand .ver { margin-top: 4px; font-size: 13px; color: rgba(255,255,255,.55); letter-spacing: .04em; }
+  h1 { margin-top: 30px; font-family: var(--serif); font-weight: 700; font-size: 72px; line-height: 1.05; letter-spacing: .02em; }
+  .tag { margin-top: 22px; font-family: var(--serif); font-size: 27px; line-height: 1.55; color: rgba(255,255,255,.92); }
+  .tag em { font-style: normal; color: var(--amber); }
+  .flow { margin-top: 34px; display: flex; align-items: center; gap: 10px; flex-wrap: nowrap; }
+  .flow span.step { padding: 9px 15px; border-radius: 999px; font-size: 16px; font-weight: 600; background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.16); white-space: nowrap; }
+  .flow span.step.hot { background: var(--amber); color: var(--navy); border-color: var(--amber); }
+  .flow i { font-style: normal; color: rgba(255,255,255,.4); font-size: 15px; }
+  .meta { position: absolute; left: 76px; bottom: 56px; display: flex; gap: 22px; font-size: 15px; color: rgba(255,255,255,.66); }
+  .meta b { color: #fff; font-weight: 600; }
+  .meta .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--amber); display: inline-block; margin-right: 8px; vertical-align: 2px; }
+
+  /* phones */
+  .phone {
+    position: absolute; width: 262px; padding: 9px; border-radius: 44px;
+    background: linear-gradient(145deg, #3a4560, #10162a);
+    box-shadow: 0 40px 80px rgba(0,0,0,.45), 0 0 0 1px rgba(255,255,255,.10) inset;
+  }
+  .phone img { display: block; width: 100%; border-radius: 36px; }
+  .p1 { left: 668px; top: 118px; transform: rotate(-7deg); filter: brightness(.94); }
+  .p3 { left: 1002px; top: 126px; transform: rotate(7deg); filter: brightness(.94); }
+  .p2 { left: 830px; top: 64px; width: 280px; z-index: 2; }
+  .p2 img { border-radius: 38px; }
+
+  .callout {
+    position: absolute; z-index: 3; padding: 10px 14px; border-radius: 14px; font-size: 14px; line-height: 1.35;
+    background: #fff; color: var(--navy); box-shadow: 0 14px 30px rgba(0,0,0,.35); font-weight: 600; white-space: nowrap;
+  }
+  .callout small { display: block; font-weight: 500; color: #6f7a86; font-size: 12px; margin-top: 2px; }
+  .callout { border: 2px solid var(--amber); text-align: center; padding: 12px 18px; font-size: 16px; }
+  .callout small { font-size: 13px; }
+  .callout::before { content: ""; position: absolute; left: 50%; top: -9px; width: 14px; height: 14px; margin-left: -7px; background: #fff; border-left: 2px solid var(--amber); border-top: 2px solid var(--amber); transform: rotate(45deg); }
+  .c1 { left: 878px; top: 352px; }
+  [lang="en"] h1 { font-family: "Iowan Old Style", Georgia, serif; font-size: 66px; letter-spacing: 0; }
+  [lang="en"] .tag { font-family: "Iowan Old Style", Georgia, serif; font-size: 25px; }
+  [lang="en"] .meta { gap: 16px; font-size: 14px; }
+  [lang="en"] .flow span.step { font-size: 15px; padding: 9px 13px; }
+</style>
+</head>
+<body>
+  <div class="copy">
+    <div class="brand">
+      <img src="../../../icon.svg" alt="">
+      <div>
+        <div class="en" data-i18n="kicker">Attention Inbox</div>
+        <div class="ver" data-i18n="ver">本地优先的个人提醒 · v1.5</div>
+      </div>
+    </div>
+    <h1 data-i18n="title">安心收件箱</h1>
+    <p class="tag" data-i18n-html="tag">把要记挂的事先放下，<br>到了该关注的时候<em>再拿回来</em>。</p>
+    <div class="flow">
+      <span class="step" data-i18n="s1">随手收下</span><i>→</i>
+      <span class="step" data-i18n="s2">暂时放下</span><i>→</i>
+      <span class="step" data-i18n="s3">到点关注</span><i>→</i>
+      <span class="step hot" data-i18n="s4">明确回应</span>
+    </div>
+  </div>
+  <div class="meta">
+    <span><span class="dot"></span><b data-i18n="m1">无需注册</b></span>
+    <span><span class="dot"></span><b data-i18n="m2">数据留在本机</b></span>
+    <span><span class="dot"></span><b data-i18n="m3">中文时间解析</b></span>
+    <span data-i18n="m4">Web / PWA · Android</span>
+  </div>
+
+  <div class="phone p1"><img src="shots/capture-light.png" alt=""></div>
+  <div class="phone p3"><img src="shots/future-light.png" alt=""></div>
+  <div class="phone p2"><img src="shots/alert-light.png" alt=""></div>
+  <div class="callout c1" data-i18n-html="callout">「已知晓」≠「完成」<small>看到了，事情还没做完</small></div>
+
+<script>
+  const EN = {
+    kicker: "安心收件箱",
+    ver: "Local-first personal reminders · v1.5",
+    title: "Attention Inbox",
+    tag: "Put it down now.<br>Bring it back <em>when it needs your attention</em>.",
+    s1: "Capture", s2: "Set aside", s3: "Resurface", s4: "Respond",
+    m1: "No account", m2: "Data stays local", m3: "Chinese time parsing", m4: "Web / PWA · Android",
+    callout: "Acknowledged ≠ Completed<small>Seen it, not finished yet</small>"
+  };
+  if (new URLSearchParams(location.search).get("lang") === "en") {
+    document.documentElement.lang = "en";
+    document.querySelectorAll("[data-i18n]").forEach(el => el.textContent = EN[el.dataset.i18n]);
+    document.querySelectorAll("[data-i18n-html]").forEach(el => el.innerHTML = EN[el.dataset.i18nHtml]);
+  }
+</script>
+</body>
+</html>

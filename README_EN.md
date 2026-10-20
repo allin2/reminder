@@ -1,205 +1,160 @@
 # Attention Inbox (安心收件箱)
 
-> **Remember less. Miss nothing.**  
-> *Local-first attention wakeup and future commitment custody.*
+<p align="center"><img src="docs/promo/hero-en.png" alt="Attention Inbox: put it down now, bring it back when it needs your attention" width="100%"></p>
 
-[English](./README_EN.md) | [简体中文](./README.md)
+> **Put it down now. Bring it back when it needs your attention.**
 
-[![Tests](https://img.shields.io/badge/Tests-862%20passed-1b6b4a.svg)](#verification--testing)
-[![Architecture](https://img.shields.io/badge/Architecture-Local--first%20%7C%20Zero--build-3d5a80.svg)](#architecture--file-map)
-[![Platform](https://img.shields.io/badge/Platform-Web%20PWA%20%7C%20Android-9a6b12.svg)](#android-app--packaging)
-[![License](https://img.shields.io/badge/License-Noncommercial-muted.svg)](#credits--license)
+A local-first personal reminder app: capture something you need to revisit, keep it in **Future** until its reminder time, then bring it back to your attention. **“Acknowledged” means you saw it. “Completed” means you finished it.**
 
----
+The app interface and built-in natural-language time parser are in Chinese.
 
-## Why Attention Inbox?
+[Download Android 1.5](https://github.com/allin2/reminder/releases/tag/v1.5) · [Quick start](#quick-start) · [简体中文](./README.md)
 
-Have you ever felt this way:
-- Your Todo lists (Todoist, TickTick) grow endlessly. Opening the app greets you with a wall of tasks, triggering hoarding anxiety;
-- In an effort not to miss anything, you are forced to categorize, tag, assign priorities, manage kanban boards, and time-block—**the management tool itself becomes a heavy cognitive tax**;
-- A reminder notification pops up, you swipe it away without thinking (or open it for a second), only to completely forget about it later;
-- Or simply because you're busy at that moment, you tap "Done" prematurely to silence the ping, accidentally archiving an unfinished item forever.
+[![CI](https://github.com/allin2/reminder/actions/workflows/test.yml/badge.svg)](https://github.com/allin2/reminder/actions/workflows/test.yml)
+[![Tests](https://img.shields.io/badge/Tests-15%2F15%20suites%20(3400+%20passed)-1b6b4a.svg)](#verification-and-testing)
+[![Release](https://img.shields.io/badge/Release-v1.5-0969da.svg)](https://github.com/allin2/reminder/releases/tag/v1.5)
+![Platform](https://img.shields.io/badge/Platform-Web%20%2F%20PWA%20%2F%20Android-3d5a80.svg)
+![Storage](https://img.shields.io/badge/Storage-Local--first-1b6b4a.svg)
 
-**Attention Inbox is not another complex Todo app, nor a project management board.**  
-Its sole purpose is: **to let you hand over things you need to pay attention to in the future at near-zero friction, then completely and safely forget about them; when the right time arrives, the system will reliably wake up your attention with sufficient intensity and rigorously confirm whether you have actually seen it.**
+## How does it differ from a to-do list, calendar or alarm?
 
----
+**Attention Inbox starts with one question: when does this need my attention again?**
 
-## Six Core Principles & Usage Logics
+| Tool / focus | Main question it addresses | Attention Inbox’s approach |
+|---|---|---|
+| To-do list / project manager | What needs doing, in what order, and how is it progressing? | **Decide when to revisit it first.** No project or tag required; future items stay off Home until their reminder time. |
+| Calendar | What activity occupies a time slot? | **Separate the reminder from the deadline.** Revisit something early, keep deadline alerts, or capture it before choosing a time. |
+| Alarm | Can you alert me at a particular time? | **Keep track of what happens after it rings.** Acknowledge, snooze, complete and mute are separate actions. |
+| Notes / bookmarks | Where can I save information for later? | **Give the record a chance to resurface.** Items without a clear time go to Needs Review for a scheduled review window. |
 
-```text
-┌─────────────────────────────────────────────────────────────┐
-│                    Capture (Instant Capture)                │
-│         Natural language · Fuzzy input never blocked        │
-└──────────────┬──────────────────────────────┬───────────────┘
-               │ (Time extracted)             │ (Time unclear)
-               ▼                              ▼
-┌─────────────────────────────┐┌──────────────────────────────┐
-│        Future View          ││         Needs Review         │
-│   Under custody; not on Home││  Subtle badge; Review Window │
-└──────────────┬──────────────┘└──────────────┬───────────────┘
-               │ (Due wakeup)                 │ (Clarification)
-               ▼                              │
-┌─────────────────────────────────────────────▼───────────────┐
-│                    Now / Due (Needs Attention)              │
-│       Normal Notification / Staggered Re-alerts / Alarm     │
-└──────────────┬──────────────────────────────┬───────────────┘
-               │                              │
-     ┌─────────┴─────────┐          ┌─────────┴─────────┐
-     ▼                   ▼          ▼                   ▼
-[Acknowledged]        [Snooze 2h]       [Dismiss / Mute]      [Completed]
-(Confirmed seen,     (Back to wait,     (Mute sound only,    (The ONLY way
- NOT completed)       re-alert later)    keep active)         to archive)
+Other tools may offer individual features too. The distinction is the default workflow: **capture → set aside → revisit when due → respond explicitly**, reducing the need to keep checking a list for things you might have missed.
+
+## One item, from capture to completion
+
+<p align="center"><img src="docs/promo/flow-en.png" alt="Four steps from capture to completion: capture in one line, wait in Future, resurface when due, acknowledged is not completed" width="100%"></p>
+
+Try `周五下午3点提醒我确认合同` (“Remind me to confirm the contract on Friday at 3 pm”):
+
+1. **Capture now:** the local Chinese parser extracts a reminder time. Check or edit it before saving; no categorization required.
+2. **Before it is due:** find it in the Future list or calendar, without keeping it on Home.
+3. **When it is due:** it enters Now / Due and uses the selected reminder method.
+4. **Respond with your actual status:**
+
+| Your situation | Action | Result |
+|---|---|---|
+| I saw it, but have not finished | **Acknowledged (我知道了)** | Stops the current round of regular follow-ups; keeps the item in Acknowledged & Active. |
+| I need another reminder later | **Snooze (稍后)** | Reschedules it. Choose a time in-app; Android notification / alarm shortcuts snooze for 2 hours. |
+| The contract is confirmed | **Completed (完成)** | Archives the item; it can be found and restored later. |
+| I only need the ringing to stop | **Dismiss / mute (关闭 / 止响)** | Stops sound and vibration without acknowledging or completing the item. |
+
+**Sending a notification, opening the app or muting an alarm never counts as acknowledgement.** An unfinished item with a separate deadline still retains its deadline protection alerts.
+
+## Four designs to try
+
+### Future items stay off Home
+
+Home focuses on what needs attention now. Acknowledged but unfinished items can be expanded when needed; future items live in their own list and calendar. Capturing more does not mean rereading every future commitment each time you open the app.
+
+### Capture before you know the time
+
+Enter `抽空给车做个保养` (“Get the car serviced sometime”) and keep it in Needs Review until a review window, when you can clarify the time and content. **Failure to extract a time does not itself prevent capture.** Ambiguous input containing time clues may ask for a brief clarification; saving still depends on successful local storage.
+
+### Match the reminder to the item, and protect deadlines separately
+
+- **Normal items:** support notifications, or alarms according to the default delivery setting.
+- **Important / critical items:** use an alarm for the first Android reminder, with limited follow-ups by priority. Acknowledgement stops the current round of regular follow-ups.
+- **Items with deadlines:** have independent protection points **24 hours and 2 hours before the deadline**, keeping “seen” distinct from “finished before it is due.”
+- **Android 1.5 punctual reminders (准时保障):** an opt-in setting per ordinary notification, off by default. Enabling it may occupy the system’s “next alarm” slot. Needs Review continues to use standard scheduling.
+
+Android alarms request a full-screen view while locked / screen-off, or a system banner while another app is in the foreground. Actual presentation and timing depend on permissions, notification channels and vendor background policies. Web / PWA limits are described below.
+
+### Use it without an account; keep core features offline
+
+Items, notes and settings are stored locally. Capture, Chinese time parsing and review require no account or application backend. Backup export / import lets you keep your own copies. **Built-in cross-device cloud sync and team collaboration are not currently provided.**
+
+AI understanding is optional and off by default. It requires your own OpenAI-compatible service configuration; text submitted for parsing is sent to that configured service. Failures fall back to local parsing. AI is not required to use the app.
+
+Also included: recurring reminders, quiet hours, configurable alarm duration, lightweight Markdown notes, and search across items, tags, projects and notes.
+
+## Who is it for?
+
+- People with personal follow-ups, renewals, maintenance or other things that need attention later.
+- People who want to capture first and clarify in batches, without organizing every item immediately.
+- People who need to say “I saw it, but it is not finished,” or manage a reminder separately from a deadline.
+
+For team assignments, project dependencies, time tracking or automatic cross-device sync, choose a collaboration / task management tool with those capabilities. Attention Inbox currently focuses on capturing, reminding and responding to personal items.
+
+## Quick start
+
+### Android: native notifications and alarms
+
+1. Open [Release 1.5](https://github.com/allin2/reminder/releases/tag/v1.5) and download the signed `attention-inbox-v1.5.apk`.
+2. Follow the in-app guidance for notifications, exact alarms, lock-screen display and background operation.
+3. Set a short reminder and try it with the app in the background and the screen off on your own phone before using it for everyday items.
+
+### Web / PWA: try the interaction without a build
+
+Serve the repository root with a static server. For example, if Python 3 is installed:
+
+```bash
+python3 -m http.server 8000 --bind 127.0.0.1
 ```
 
-### 1. Capture Never Fails
-- Parses natural language dates and colloquial expressions: *"Remind me to buy coffee beans Friday afternoon"*, *"Team sync 3rd Thursday every month"*, *"Tomorrow 10am"*, *"This weekend"*.
-- **Zero-friction capture**: Even if the input contains no date/time or is syntactically incomplete, the system will never throw an error or block you. It gracefully saves it into **Needs Review**, preserving your cognitive flow.
+Open the [local app](http://localhost:8000). **Mine → View demo (我的 → 查看演示)** previews examples without writing them into your data. You can also capture your own item using the bottom input bar.
 
-### 2. Future Hidden by Default
-- **Core Rule: Commitments in the future must not drain your present cognitive bandwidth.**
-- The Home view only presents items that deserve your immediate attention right now. There is no overwhelming "Upcoming" backlog to induce dread.
-- Future commitments reside peacefully in the dedicated "Future" calendar view, visible only when you intentionally choose to inspect them.
+Supporting browsers can install the page to the home screen. Offline caching requires a successful initial load; Service Workers require HTTPS or localhost. Opening `index.html` directly provides a preview, without full PWA capabilities.
 
-### 3. Acknowledged ≠ Completed
-- A fatal flaw of traditional task managers: dismissing a notification or tapping "seen" often marks an item as done.
-- In Attention Inbox:
-  - Tapping **"Acknowledged" (我知道了)** confirms to the system: *"I have seen this notice."* The persistent ringing stops, but the item **remains active** (tucked cleanly into the subtle "Acknowledged & Active" counter).
-  - Tapping **"Completed" (完成)** is the **sole legitimate exit** to archive an item.
+## Platform and reminder limits
 
-### 4. 3-Tier Escalating Wakeup (Actually Reaches You)
-The system never assumes "delivery equals user noticed". Wakeups escalate based on importance:
-- **Normal items**: Single standard notification.
-- **Important items (☆)**: Initial notification + staggered follow-up re-alerts every ~30 minutes (up to 4 times), preventing accidental dismissal.
-- **Critical items (🚨)**: Android **full-screen lockscreen alarm** (`setAlarmClock` + wake screen + looping ringtone + vibration pattern + keyguard bypass). It provides 4 clear action exits: *Acknowledged / Snooze 2 Hours / Completed / Dismiss (mute only)*. It pierces through Doze mode and silent settings.
-
-### 5. Dual-Stage Deadline Protection
-- Even if you have already clicked "Acknowledged", as long as an item has a hard deadline and remains uncompleted:
-- The system sounds independent wakeup alarms at **24 hours before deadline (p24)** and **2 hours before deadline (p2)**, ensuring critical commitments never slip past the final hour.
-
-### 6. 100% Local-First & Privacy First
-- Your data lives strictly in your device's `IndexedDB` (with automated `localStorage` mirror fallback).
-- **No account required, no login, zero tracking, no remote server dependency.** It functions seamlessly offline with 100% data sovereignty.
-
----
-
-## Typical Scenarios
-
-| Scenario | What You Do | How Attention Inbox Responds |
+| Capability | Web / PWA | Android |
 |---|---|---|
-| **A sudden thought while walking** | Tap `+` at bottom right, type *"Call Bob Tuesday 3pm to review proposal"* | 5-second capture; time parsed automatically. The item enters Future custody; Home remains pristine and empty. |
-| **Vague chore with uncertain timing** | Type *"Take the car in for maintenance sometime"* | Precise time cannot be extracted. Safely stored in **Needs Review**, gently surfaced during your scheduled Review Window. |
-| **Alarm rings while in a meeting** | Full-screen lockscreen alarm fires; tap **Snooze** | The ringtone silences immediately; automatically rescheduled to re-alert you in 2 hours. |
-| **Saw the reminder, will do it soon** | Alert banner appears; tap **Acknowledged** | Periodic re-alerts cease; item collapses into the "Acknowledged & Active" counter. You can focus on current work without fear of accidental completion. |
-| **Approaching critical project deadline** | A task is due tomorrow at 18:00 (already ACKed this morning) | At 18:00 today (T-24h) and 16:00 tomorrow (T-2h), the system triggers two independent high-priority alarm rescues. |
+| Capture, local Chinese parsing, Future / Needs Review, notes | Supported | Supported |
+| Local storage, backup export / import | Supported | Supported |
+| In-app due reminders | Supported while the page gets execution time | Supported |
+| Native scheduling after the page closes, lock-screen alarms | No promise of timely background reminders or lock-screen wakeup | Native implementation, subject to device settings and system policies |
 
----
+Standard ordinary notifications can still be delayed on some vendor devices. After a system **force stop**, the app must be reopened to resume operation. Do not use it as the sole safeguard for critical commitments.
 
-## Quick Start
+The [1.5 release record](docs/reviews/release-v1.5-2026-10-18.md) distinguishes source checks, build / signature checks and short-delay OPPO tests of a debug package using the same product source. **Installing the signed 1.5 APK and observing its reminders at their natural due times were not performed in that release round.** This evidence does not establish long-standby, cross-day, cold-process or wider vendor coverage.
 
-This project uses a **Zero-Build, purely static architecture**. No `npm run build`, no bundler configuration required.
+<details>
+<summary>Development, verification and project references</summary>
 
-### Option A: Web / PWA (Cross-platform, instant use)
-1. Open `index.html` directly in any modern browser (Chrome, Safari, Edge). (Optimized for mobile view ~390px width).
-2. **Load Sample Data**: If opening for the first time, go to **Mine → Load Sample Data** to immediately experience the full lifecycle.
-3. **PWA Installation**: In your mobile browser, tap "Share → Add to Home Screen" to install it as an offline-first Web App.
+### Architecture
 
-### Option B: Android Native App (Full-screen alarm & lockscreen wakeup)
-- Download the signed APK from [Release 1.5](https://github.com/allin2/reminder/releases/tag/v1.5). See the [release record](docs/reviews/release-v1.5-2026-10-18.md) for changes and validation limits.
-- Supports Android 12+ exact alarm permissions and Android 13+ notification permissions, enabling background screen wakeup, ringtones, and reboot schedule restoration.
+The Web app is static and requires no build; Android uses Capacitor 6. IndexedDB is the preferred store, with localStorage for mirroring and fallback. Local persistence is not a substitute for an independent backup.
 
----
-
-## Core Interactions Cheat Sheet
-
-| Action / View | Interaction & Business Semantics |
+| Path | Responsibility |
 |---|---|
-| **Quick Capture (+)** | Natural language one-liner; **capture never fails**, unparsed inputs route to Needs Review. |
-| **Now / Due View** | Shows only items requiring attention right now; **no anxiety-inducing upcoming list**. |
-| **Acknowledged (ACK)** | Confirms you've seen it; stops nag cycle; **never marks as completed**. |
-| **Snooze** | 6 flexible options in-app; lockscreen alarm & notification actions default to **2 hours**. |
-| **Completed (Done)** | Explicit confirmation of completion; archives the item (the only normal archive path). |
-| **Needs Review** | Inbox for fuzzy items; entry remains subtle until your Review Window arrives. |
-| **Future View** | All future items under custody + calendar view; hidden from Home by default. |
-| **Archive** | Chronological log of completed items; can be restored with a single click. |
-| **Full-Screen Alarm** | For important/critical items; wakes screen, plays alarm ringtone over lockscreen with 4 action exits. |
-| **Offline Notes** | Built-in lightweight Markdown notes; supports pinning and project associations. |
-| **AI Parsing (Optional)** | Optional BYOK (Bring Your Own Key) for OpenAI-compatible models; gracefully falls back to local regex. |
+| `index.html` / `app-core.js` | App interface and core orchestration |
+| `lib/app-*.js` | Capture, items, review, views, transactions, persistence and related modules |
+| `lib/parse-cn.js` / `lib/repeat.js` / `lib/reminder.js` | Chinese time parsing, recurrence, quiet hours, follow-ups and deadline protection |
+| `lib/storage.js` / `lib/native-reminders.js` | Local storage and Android reminder projection / reconciliation |
+| `sw.js` / `manifest.json` | PWA caching and install manifest |
+| `android/` | Native notifications, alarms, system permissions and schedule recovery |
 
----
-
-## Hardcore Engineering & Reliability
-
-Beneath its calm, minimalist exterior lies a hardened engine refined across 11 rounds of concurrency and consistency audits:
-
-- **D41 Unified Transaction Model**:
-  - Eliminates dropped user operations during asynchronous storage commits. Employs **Draft Isolation**: native lockscreen actions execute in an invisible memory draft, publishing to the UI only after `IndexedDB` confirms commit success.
-  - Commands targeting the same item during an active commit are explicitly rejected with a retry prompt. Unrelated user actions are recorded with stable IDs and replayed sequentially into the draft, preventing UI tearing and race conditions.
-- **Authoritative Persistence & Restart Consistency**:
-  - `IndexedDB` serves as the authoritative backend, with `localStorage` acting as a best-effort mirror. Every commit writes an isolated deep snapshot, ensuring state read upon restart matches exactly what the user saw.
-- **Android 14 Real-Device Emulator Verification**:
-  - Audited via Chrome DevTools Protocol (CDP) on Android 14 emulators down to DOM, IndexedDB, memory footprint (PSS 82.7 MB), `AlarmManager` reconciliation, and cold-boot integrity (`BootRestoreReceiver`).
-
----
-
-## Verification & Testing
-
-The repository features an exhaustive automated test suite (including simulated disk restarts and a 36-combination concurrency matrix):
+### Verification and testing
 
 ```bash
 npm test
 ```
 
-**Test Results (862 assertions passing):**
-- `test-unit.js`: **29 passed** (Natural language parser, calendar/ACK recurrence, storage adapters)
-- `test-native-reminders.js`: **105 passed** (Android notification projection, alarm routing, DND suppression, deadline staging)
-- `test-smoke.js`: **161 passed** (End-to-end lifecycle, home view architecture, banner & full-screen alarm semantics)
-- `test-regressions.js`: **567 passed** (D41 unified transactions, concurrent commit isolation, command replay, simulated restart consistency, 3 native actions × 6 UI commands × success/fail matrix)
+The current entry point runs 15 suites covering parsing, state transitions, persistence, concurrent transactions, native reminder mapping and module combinations. **Passing automated checks does not establish reminder visibility or timing on a target phone.** See the [1.5 release record](docs/reviews/release-v1.5-2026-10-18.md) for checks performed at publication.
 
----
+### Android development
 
-## Architecture & File Map
-
-```text
-├── index.html                  # App single-page structure & styling
-├── app-core.js                 # Central orchestrator (state machine, UI render, FIFO gate, replay)
-├── styles.css                  # UI stylesheet
-├── sw.js / manifest.json       # PWA Service Worker & web manifest
-├── lib/
-│   ├── parse-cn.js             # Chinese natural language date parser (modular UMD)
-│   ├── repeat.js               # Recurrence engine (calendar-anchored vs ACK-anchored)
-│   ├── reminder.js             # DND quiet hours, escalation policy, dual-stage deadline protection
-│   ├── storage.js              # IndexedDB authoritative storage adapter
-│   └── native-reminders.js     # Capacitor native reminder projection & reconciliation layer
-├── android/                    # Capacitor 6 Android platform project
-│   └── app/src/main/java/space/alliswell/inbox/
-│       ├── AlarmActivity.java          # Full-screen lockscreen alarm activity
-│       ├── SystemBridgePlugin.java     # Bridge plugin for exact alarms & notification channels
-│       └── BootRestoreReceiver.java    # Boot-completed broadcast receiver for alarm restoration
-├── test-unit.js                # Core unit test suite
-├── test-smoke.js               # Acceptance smoke tests
-├── test-native-reminders.js    # Native reminder projection tests
-└── test-regressions.js         # Concurrency, transaction & restart regression tests
-```
-
----
-
-## Android App & Packaging
-
-To inspect native code or build your own signed APK:
+Requires Node.js ≥ 18, JDK 17 and Android SDK (API 34). Android Studio can be used:
 
 ```bash
 npm ci
-npm run sync:www      # Sync web assets to www/
-npm run cap:sync      # Sync to android/ project
-npm run cap:open      # Open in Android Studio for build & run
+npm run cap:sync      # Sync Web assets and the Android project
+npm run cap:open      # Open the project in Android Studio
 ```
 
-- **Requirements**: Node.js ≥ 18, JDK 17, Android Studio + Android SDK (API 34).
+### Product references and license
 
----
+- [V0.2 product baseline](docs/baseline/Attention_Inbox_V0.2_产品需求与业务规格基线.md) and [approved amendments](docs/baseline/V0.2-amendments.md).
+- [Interaction decisions](docs/decisions/interaction-logic-2026-09-16.md) and [Android native reminder contract](docs/compose/spec/android-native-reminders.md).
+- This project incorporates ideas and capabilities from the [alliswell](https://github.com/allin2/alliswell) task / reminder / notes ecosystem. Copyright and licensing remain subject to the respective upstream declarations.
 
-## Credits & License
-
-This project incorporates design philosophies and capabilities from the [alliswell](https://github.com/allin2/alliswell) ecosystem, tailored strictly to the Attention Inbox V0.2 specification.  
-Copyrights and licenses adhere to respective upstream declarations.
+</details>

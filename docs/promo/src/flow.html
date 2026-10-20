@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>Attention Inbox flow</title>
+<style>
+  :root { --navy:#1e2a4a; --navy-2:#24357a; --amber:#f2a93b; --paper:#f3f4f1; --ink:#14181d; --muted:#6f7a86; --line:#d9e0db;
+    --serif:"Songti SC","STSong","Iowan Old Style",Georgia,serif; --sans:-apple-system,"PingFang SC","Hiragino Sans GB",system-ui,sans-serif; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  html,body { width:1600px; height:1000px; overflow:hidden; }
+  body { font-family:var(--sans); color:var(--ink);
+    background: radial-gradient(900px 400px at 50% 0%, #fff 0%, transparent 70%), var(--paper); position:relative; }
+  header { text-align:center; padding-top:58px; }
+  header .k { font-size:14px; letter-spacing:.3em; color:#9a6b12; font-weight:700; text-transform:uppercase; }
+  header h2 { margin-top:12px; font-family:var(--serif); font-size:46px; font-weight:700; color:var(--navy); letter-spacing:.02em; }
+  header p { margin-top:12px; font-size:18px; color:var(--muted); }
+  .rail { position:absolute; left:160px; right:160px; top:262px; height:2px; background:repeating-linear-gradient(90deg,#b8c4bc 0 8px,transparent 8px 16px); }
+  .cols { position:absolute; left:80px; right:80px; top:236px; display:grid; grid-template-columns:repeat(4,1fr); gap:40px; }
+  .col { display:flex; flex-direction:column; align-items:center; }
+  .num { width:54px; height:54px; border-radius:50%; background:var(--navy); color:#fff; font-weight:700; font-size:22px; display:grid; place-items:center; box-shadow:0 0 0 8px var(--paper); position:relative; z-index:1; }
+  .col.hot .num { background:var(--amber); color:var(--navy); }
+  .col h3 { white-space:nowrap; margin-top:16px; font-size:24px; font-weight:700; color:var(--navy); }
+  .col p { margin-top:6px; font-size:15px; color:var(--muted); text-align:center; line-height:1.5; height:46px; }
+  .phone { margin-top:20px; width:270px; padding:8px; border-radius:42px; background:linear-gradient(145deg,#3a4560,#10162a);
+    box-shadow:0 30px 60px rgba(30,42,74,.22), 0 6px 14px rgba(30,42,74,.12); }
+  .phone img { display:block; width:100%; border-radius:34px; }
+  .col:nth-child(even) .phone { margin-top:44px; }
+  footer { position:absolute; left:0; right:0; bottom:0; height:96px; background:linear-gradient(transparent, var(--paper) 55%); }
+  [lang="en"] header h2, [lang="en"] .col h3 { font-family:"Iowan Old Style",Georgia,serif; }
+</style>
+</head>
+<body>
+  <header>
+    <div class="k" data-i18n="k">One reminder, end to end</div>
+    <h2 data-i18n="h">一件事，从记下到做完</h2>
+    <p data-i18n="p">不用先建项目、打标签——先收下，到点再说。</p>
+  </header>
+  <div class="rail"></div>
+  <div class="cols">
+    <div class="col"><div class="num">1</div><h3 data-i18n="t1">一句话记下</h3><p data-i18n-html="d1">中文时间本地解析<br>可检查、可修改</p><div class="phone"><img src="shots/capture-light.png" alt=""></div></div>
+    <div class="col"><div class="num">2</div><h3 data-i18n="t2">没到点，先收进「未来」</h3><p data-i18n-html="d2">月历与列表随时可查<br>首页不被占满</p><div class="phone"><img src="shots/future-light.png" alt=""></div></div>
+    <div class="col"><div class="num">3</div><h3 data-i18n="t3">到点，推到你面前</h3><p data-i18n-html="d3">稍后 · 已知晓 · 待整理 · 完成<br>每个选择都有去向</p><div class="phone"><img src="shots/alert-light.png" alt=""></div></div>
+    <div class="col hot"><div class="num">4</div><h3 data-i18n="t4">看到了 ≠ 做完了</h3><p data-i18n-html="d4">「已看到未完成」单独保留<br>做完点「完成」才归档</p><div class="phone"><img src="shots/home-light.png" alt=""></div></div>
+  </div>
+  <footer></footer>
+<script>
+  const EN = {
+    k:"安心收件箱 · Attention Inbox", h:"One item, from capture to completion", p:"No projects or tags up front. Capture it now, deal with it when it’s due.",
+    t1:"Say it in one line", d1:"Chinese dates parsed on-device<br>Review and edit before saving",
+    t2:"Not yet? It waits in Future", d2:"Browse by calendar or list<br>Your home screen stays clear",
+    t3:"Due now? It’s in front of you", d3:"Snooze · Acknowledge · Triage · Complete<br>Every choice has a destination",
+    t4:"Acknowledged ≠ Completed", d4:"“Acknowledged &amp; Active” stays visible<br>Only “Completed” archives it"
+  };
+  if (new URLSearchParams(location.search).get("lang")==="en") {
+    document.documentElement.lang="en";
+    document.querySelectorAll("[data-i18n]").forEach(el=>el.textContent=EN[el.dataset.i18n]);
+    document.querySelectorAll("[data-i18n-html]").forEach(el=>el.innerHTML=EN[el.dataset.i18nHtml]);
+  }
+</script>
+</body>
+</html>

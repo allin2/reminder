@@ -1,0 +1,50 @@
+import { spawn } from "node:child_process";
+import { writeFileSync, mkdtempSync } from "node:fs";
+import { join } from "node:path";
+import { tmpdir } from "node:os";
+const OUT = process.argv[2];
+const SCHEME = process.argv[3] || "light";
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+const prof = mkdtempSync(join(tmpdir(), "promo-capture-"));
+const chrome = spawn("/Applications/Google Chrome.app/Contents/MacOS/Google Chrome", [
+  "--headless=new", "--remote-debugging-port=9333", `--user-data-dir=${prof}`,
+  "--no-first-run", "--hide-scrollbars", "--lang=zh-CN", "about:blank"], { stdio: "ignore" });
+let targets;
+for (let i = 0; i < 50; i++) { try { targets = await (await fetch("http://127.0.0.1:9333/json")).json(); break; } catch { await sleep(200); } }
+const page = targets.find((t) => t.type === "page");
+const ws = new WebSocket(page.webSocketDebuggerUrl);
+await new Promise((r) => ws.addEventListener("open", r));
+let id = 0; const pending = new Map();
+ws.addEventListener("message", (e) => { const m = JSON.parse(e.data); if (m.id && pending.has(m.id)) { pending.get(m.id)(m); pending.delete(m.id); } });
+const send = (method, params = {}) => new Promise((r) => { const i = ++id; pending.set(i, r); ws.send(JSON.stringify({ id: i, method, params })); });
+const ev = async (expr) => { const r = await send("Runtime.evaluate", { expression: expr, awaitPromise: true, returnByValue: true }); return r.result?.result?.value; };
+const shot = async (name) => { const r = await send("Page.captureScreenshot", { format: "png" }); writeFileSync(join(OUT, `${name}-${SCHEME}.png`), Buffer.from(r.result.data, "base64")); console.log("saved", name); };
+await send("Page.enable");
+await send("Emulation.setDeviceMetricsOverride", { width: 390, height: 844, deviceScaleFactor: 3, mobile: true });
+await send("Emulation.setEmulatedMedia", { features: [{ name: "prefers-color-scheme", value: SCHEME }] });
+await send("Page.navigate", { url: "http://localhost:8765/" });
+await sleep(2500);
+console.log("seed", await ev("window.seedAttentionInbox()"));
+for (let i = 0; i < 60; i++) { if (await ev("document.getElementById('alertBanner').getAttribute('aria-hidden')==='false'")) break; await sleep(500); }
+await sleep(3500);
+console.log("open sheets", await ev("[...document.querySelectorAll('.sheet.open')].map(s=>s.id).join(',')"));
+await shot("alert");
+await ev("document.getElementById('alertClose').click()");
+await sleep(4500);
+console.log("expand", await ev("(()=>{const el=[...document.querySelectorAll('#view-home button, #view-home [role=button], main button, .seen-toggle')].find(b=>/已看到未完成/.test(b.textContent)); if(el){el.click(); return el.outerHTML.slice(0,120)} return null})()"));
+await sleep(800);
+await shot("home");
+await ev("document.querySelector('[data-tab=future]').click()");
+await sleep(1500);
+await shot("future");
+await ev("document.querySelector('[data-tab=home]').click()");
+await sleep(500);
+await ev("document.getElementById('fab').click()");
+await sleep(800);
+await ev("document.getElementById('capText').focus()");
+await send("Input.insertText", { text: "周五下午3点提醒我确认合同" });
+await sleep(1200);
+await ev("document.activeElement.blur()");
+await sleep(400);
+await shot("capture");
+ws.close(); chrome.kill();

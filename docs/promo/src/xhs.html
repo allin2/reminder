@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>Attention Inbox xhs</title>
+<style>
+  :root {
+    --navy: #1e2a4a; --navy-2: #24357a; --amber: #f2a93b; --amber-soft: #fbe6c2;
+    --paper: #f7f4ee; --card: #ffffff; --ink: #14181d; --muted: #6f7a86; --line: #e6e1d6;
+    --signal: #1b6b4a; --critical: #8f3a3a;
+    --serif: "Songti SC", "STSong", serif;
+    --sans: -apple-system, "PingFang SC", "Hiragino Sans GB", system-ui, sans-serif;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { width: 1080px; height: 1440px; overflow: hidden; }
+  body { font-family: var(--sans); color: var(--ink); background: var(--paper); position: relative; }
+  .page { position: absolute; inset: 0; display: none; padding: 92px 84px; }
+  .page.on { display: block; }
+  .mk { background: linear-gradient(transparent 60%, rgba(242,169,59,.6) 60%, rgba(242,169,59,.6) 92%, transparent 92%); padding: 0 4px; }
+  .pn { position: absolute; top: 56px; right: 72px; font-size: 22px; font-weight: 600; color: #b3aa98; letter-spacing: .08em; }
+  .foot { position: absolute; left: 84px; bottom: 56px; display: flex; align-items: center; gap: 12px; font-size: 22px; color: var(--muted); font-weight: 600; }
+  .foot img { width: 40px; height: 40px; border-radius: 10px; }
+  .kick { display: inline-block; font-size: 26px; font-weight: 700; color: var(--navy); background: var(--amber-soft); padding: 8px 18px; border-radius: 999px; }
+  h1, h2 { font-family: var(--serif); font-weight: 900; color: var(--navy); }
+  h2 { font-size: 76px; line-height: 1.22; margin-top: 26px; letter-spacing: .01em; }
+  .lead { margin-top: 22px; font-size: 32px; line-height: 1.55; color: #4a5260; }
+  .phone { position: absolute; padding: 12px; border-radius: 58px; background: linear-gradient(145deg, #3a4560, #10162a);
+    box-shadow: 0 40px 80px rgba(30,42,74,.25), 0 8px 20px rgba(30,42,74,.12); overflow: hidden; }
+  .phone .scr { border-radius: 46px; overflow: hidden; height: 100%; }
+  .phone img { display: block; width: 100%; }
+  .note { position: absolute; background: var(--card); border-radius: 26px; padding: 22px 26px; box-shadow: 0 18px 40px rgba(30,42,74,.14);
+    font-size: 27px; line-height: 1.45; color: var(--ink); border: 2px solid var(--line); }
+  .note b { color: var(--navy); }
+  .note.hot { border-color: var(--amber); }
+  .note small { display: block; font-size: 22px; color: var(--muted); margin-top: 4px; }
+
+  /* P1 cover */
+  .p1 { background:
+      radial-gradient(700px 600px at 100% 100%, rgba(242,169,59,.35), transparent 70%),
+      radial-gradient(600px 500px at 0% 0%, #fff, transparent 70%), var(--paper); }
+  .p1 h1 { margin-top: 34px; font-size: 118px; line-height: 1.16; letter-spacing: .01em; }
+  .p1 .lead { font-size: 36px; margin-top: 30px; }
+  .p1 .phone { width: 520px; height: 1000px; right: 60px; top: 640px; transform: rotate(8deg); }
+  .p1 .tags { position: absolute; left: 84px; top: 1010px; display: flex; flex-direction: column; gap: 18px; }
+  .p1 .tags span { font-size: 28px; font-weight: 700; color: var(--navy); background: #fff; border: 2px solid var(--line); padding: 12px 24px; border-radius: 999px; width: fit-content; box-shadow: 0 8px 18px rgba(30,42,74,.06); }
+
+  /* P2 pain */
+  .pain { margin-top: 72px; display: flex; flex-direction: column; gap: 36px; }
+  .pain div { background: #fff; border-radius: 32px; padding: 48px 44px; display: flex; gap: 28px; align-items: flex-start; border: 2px solid var(--line); }
+  .pain .e { font-size: 64px; line-height: 1; }
+  .pain p { font-size: 38px; line-height: 1.5; font-weight: 600; }
+  .pain p span { display: block; font-size: 29px; font-weight: 400; color: var(--muted); margin-top: 8px; }
+  .turn { margin-top: 90px; font-family: var(--serif); font-size: 46px; font-weight: 900; color: var(--navy); text-align: center; }
+
+  /* feature pages: phone on right, notes on left */
+  .feat .phone { width: 450px; right: 64px; top: 560px; height: 980px; }
+  .rows { margin-top: 56px; display: flex; flex-direction: column; gap: 22px; width: 540px; position: relative; z-index: 2; }
+  .rows .note { position: static; }
+  .btns .note { display: flex; gap: 18px; align-items: center; padding: 20px 24px; }
+  .btns .pill { flex: none; width: 128px; text-align: center; font-size: 25px; font-weight: 700; padding: 12px 0; border-radius: 16px; background: #eeeae1; color: var(--ink); }
+  .btns .pill.ack { background: var(--navy-2); color: #fff; }
+  .btns .pill.done { background: #fff; color: var(--navy-2); border: 2px solid var(--navy-2); }
+  .btns .note div { font-size: 26px; line-height: 1.4; }
+
+  /* P5 alert */
+  .p5 .banner { margin-top: 34px; height: 452px; overflow: hidden; border-radius: 32px; background: var(--card);
+    box-shadow: 0 24px 50px rgba(30,42,74,.16); border: 2px solid var(--line); }
+  .p5 .banner img { display: block; width: 100%; margin-top: -6px; }
+  .p5 .grid { margin-top: 26px; display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .p5 .grid div { background: #fff; border: 2px solid var(--line); border-radius: 26px; padding: 18px 24px; }
+  .p5 .grid div.hot { border-color: var(--amber); }
+  .p5 .grid b { display: block; margin-top: 10px; font-size: 30px; color: var(--navy); }
+  .p5 .grid small { display: block; margin-top: 4px; font-size: 24px; color: var(--muted); }
+  .pill { display: inline-block; font-size: 24px; font-weight: 700; padding: 8px 18px; border-radius: 14px; background: #eeeae1; color: var(--ink); }
+  .pill.ack { background: var(--navy-2); color: #fff; }
+  .pill.done { background: #fff; color: var(--navy-2); box-shadow: inset 0 0 0 2px var(--navy-2); }
+  .p5 .mute { margin-top: 22px; font-size: 27px; line-height: 1.55; color: #4a5260; }
+
+  /* P7 summary */
+  .p7 { background: var(--navy); color: #fff; }
+  .p7 .pn { color: rgba(255,255,255,.4); }
+  .p7 .brand { display: flex; align-items: center; gap: 26px; }
+  .p7 .brand img { width: 120px; height: 120px; border-radius: 28px; box-shadow: 0 0 0 2px rgba(255,255,255,.12); }
+  .p7 .brand h1 { color: #fff; font-size: 72px; }
+  .p7 .brand p { font-size: 26px; color: var(--amber); letter-spacing: .06em; margin-top: 6px; font-weight: 600; }
+  .p7 .slogan { margin-top: 64px; font-family: var(--serif); font-size: 54px; font-weight: 900; line-height: 1.35; }
+  .p7 .slogan em { font-style: normal; color: var(--amber); }
+  .check { margin-top: 64px; display: flex; flex-direction: column; gap: 38px; }
+  .check div { display: flex; gap: 22px; font-size: 35px; line-height: 1.45; }
+  .check i { flex: none; width: 42px; height: 42px; border-radius: 50%; background: var(--amber); color: var(--navy); font-style: normal; font-weight: 900; display: grid; place-items: center; font-size: 26px; margin-top: 2px; }
+  .check small { display: block; font-size: 26px; color: rgba(255,255,255,.6); margin-top: 2px; }
+  .get { position: absolute; left: 84px; right: 84px; bottom: 84px; background: rgba(255,255,255,.08); border: 2px solid rgba(255,255,255,.16); border-radius: 30px; padding: 30px 36px; font-size: 28px; line-height: 1.6; }
+  .get b { color: var(--amber); }
+  .get span { color: rgba(255,255,255,.62); font-size: 24px; }
+</style>
+</head>
+<body>
+
+<!-- 1 · cover -->
+<section class="page p1" data-p="1">
+  <span class="kick">独立开发 · 给健忘的自己</span>
+  <h1>记性差的人<br>终于不用<br><span class="mk">反复翻清单</span>了</h1>
+  <p class="lead">一句话记下，没到点不打扰，<br>到点再推到你面前。</p>
+  <div class="tags"><span>✍️ 一句话设提醒</span><span>🙈 没到点不占首页</span><span>👀 看到 ≠ 做完</span></div>
+  <div class="phone"><div class="scr"><img src="shots/alert-light.png" alt=""></div></div>
+</section>
+
+<!-- 2 · pain -->
+<section class="page" data-p="2">
+  <div class="pn">02 / 07</div>
+  <span class="kick">先说痛点</span>
+  <h2>你是不是<br>也这样？</h2>
+  <div class="pain">
+    <div><span class="e">😵‍💫</span><p>待办清单越记越长<span>每次打开，都在复习一堆还没到时间的事</span></p></div>
+    <div><span class="e">⏰</span><p>闹钟响了顺手一关<span>然后……就真的忘了</span></p></div>
+    <div><span class="e">👀</span><p>明明只是「看到了」<span>却被当成「做完了」，事情悄悄漏掉</span></p></div>
+  </div>
+  <p class="turn">所以我们做了「安心收件箱」👇</p>
+  <div class="foot"><img src="../../../icon.svg" alt="">安心收件箱</div>
+</section>
+
+<!-- 3 · capture -->
+<section class="page feat" data-p="3">
+  <div class="pn">03 / 07</div>
+  <span class="kick">① 记下</span>
+  <h2>一句话<br><span class="mk">交给它</span></h2>
+  <p class="lead">不用先选日期，<br>也不用先分类。</p>
+  <div class="rows">
+    <div class="note">✍️ 输入<br><b>「周五下午3点提醒我确认合同」</b></div>
+    <div class="note hot">🕒 自动识别<br><b>10月23日 15:00</b><small>不对就改，确认了再存</small></div>
+    <div class="note">🗂️ 没想好时间？<br><b>先收进「待整理」</b><small>识别不出时间，也不会拒收</small></div>
+  </div>
+  <div class="phone" style="height:700px"><div class="scr"><img src="shots/capture-light.png" alt="" style="margin-top:-262px"></div></div>
+  <div class="foot"><img src="../../../icon.svg" alt="">安心收件箱</div>
+</section>
+
+<!-- 4 · future -->
+<section class="page feat" data-p="4">
+  <div class="pn">04 / 07</div>
+  <span class="kick">② 放下</span>
+  <h2>没到点<br><span class="mk">就别来烦我</span></h2>
+  <p class="lead">未来的事先收进「未来」，<br>首页只放现在要管的。</p>
+  <div class="rows">
+    <div class="note">📅 月历上一眼<br><b>看到哪天有事</b></div>
+    <div class="note">🔁 交房租、给爸妈打电话<br><b>周期提醒自动续上</b></div>
+    <div class="note hot">🧘 打开 App<br><b>不用再复习一遍所有事</b></div>
+  </div>
+  <div class="phone"><div class="scr"><img src="shots/future-light.png" alt=""></div></div>
+  <div class="foot"><img src="../../../icon.svg" alt="">安心收件箱</div>
+</section>
+
+<!-- 5 · alert -->
+<section class="page p5" data-p="5">
+  <div class="pn">05 / 07</div>
+  <span class="kick">③ 到点</span>
+  <h2>到点了，<br><span class="mk">四个按钮</span>说清楚</h2>
+  <div class="banner"><img src="shots/alert-light.png" alt=""></div>
+  <div class="grid">
+    <div><span class="pill">稍后提醒</span><b>现在顾不上</b><small>换个时间再叫我</small></div>
+    <div class="hot"><span class="pill ack">已知晓</span><b>看到了，还没做完</b><small>停止这一轮追提醒</small></div>
+    <div><span class="pill">待整理</span><b>先收下</b><small>之后集中整理</small></div>
+    <div><span class="pill done">完成</span><b>做完了</b><small>归档，随时能找回</small></div>
+  </div>
+  <p class="mute">🔕 只想先止住铃声？点右上角 ×<br>它不算「看到了」，更不算「做完了」</p>
+</section>
+
+<!-- 6 · seen != done -->
+<section class="page feat" data-p="6">
+  <div class="pn">06 / 07</div>
+  <span class="kick">④ 回应</span>
+  <h2>「看到了」<br>≠「<span class="mk">做完了</span>」</h2>
+  <p class="lead">这是我们最想解决的一件事。</p>
+  <div class="rows">
+    <div class="note hot">👀 点了「已知晓」<br><b>事情不会消失</b><small>留在「已看到未完成」里</small></div>
+    <div class="note">✅ 只有点「完成」<br><b>才真正归档</b></div>
+    <div class="note">⏳ 有截止日期的事<br><b>截止前 24 小时、2 小时</b><small>还会再提醒你一次</small></div>
+  </div>
+  <div class="phone"><div class="scr"><img src="shots/home-light.png" alt=""></div></div>
+  <div class="foot"><img src="../../../icon.svg" alt="">安心收件箱</div>
+</section>
+
+<!-- 7 · summary -->
+<section class="page p7" data-p="7">
+  <div class="pn">07 / 07</div>
+  <div class="brand"><img src="../../../icon.svg" alt=""><div><h1>安心收件箱</h1><p>Remember less. Miss nothing.</p></div></div>
+  <p class="slogan">把要记挂的事先放下，<br>到了该关注的时候<em>再拿回来</em>。</p>
+  <div class="check">
+    <div><i>✓</i><span>不用注册，数据存在自己手机里<small>支持备份导出 / 导入</small></span></div>
+    <div><i>✓</i><span>基础功能离线可用<small>记录、中文时间识别都在本机完成</small></span></div>
+    <div><i>✓</i><span>重要的事用闹钟提醒<small>Android 锁屏可弹全屏，效果受手机设置影响</small></span></div>
+    <div><i>✓</i><span>周期提醒 · 勿扰时段 · 轻量笔记</span></div>
+  </div>
+  <div class="get">📱 目前提供 <b>Android</b> 安装包，免费下载<br><span>GitHub：allin2/reminder · iOS 暂无原生 App</span></div>
+</section>
+
+<script>
+  const p = new URLSearchParams(location.search).get("p") || "1";
+  document.querySelector(`[data-p="${p}"]`).classList.add("on");
+</script>
+</body>
+</html>
