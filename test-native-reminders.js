@@ -2745,7 +2745,7 @@ async function run() {
 
     // 真正的 coordinator onResume → native.reconcile → bridge restore，两队列同时验证。
     f = await setup();
-    let granted = true, resumeHook;
+    let granted = true;
     const originalDiagnose = f.bridge.diagnose;
     f.bridge.diagnose = async () => ({ ...(await originalDiagnose()), canExactAlarm: granted });
     const originalPending = f.bridge.pendingNotifications;
@@ -2756,7 +2756,6 @@ async function run() {
     const lifeSettings = { notify: true, importantRepeat: false };
     const lifeItems = [normal, important];
     const wrapped = Object.assign({}, native, { initialize: async hooks => {
-      resumeHook = hooks.onResume;
       return native.initialize(hooks);
     } });
     const deps = {};
@@ -2769,10 +2768,12 @@ async function run() {
     const coordinator = require("./lib/app-native-coordinator").createAppNativeCoordinator(deps);
     await coordinator.initializeNativeReminders();
     const alarmsBefore = f.env.alarms.scheduleAlarm.length;
+    const readsBefore = f.calls.restore.length;
     granted = false;
-    await resumeHook();
+    f.env.resume(); // App.appStateChange → 原生 onResume → coordinator
+    await new Promise(resolve => setImmediate(resolve));
     while (queued.length) { queued.shift()(); await new Promise(resolve => setImmediate(resolve)); }
-    ok("D72 onResume 撤销权限真正请求通知恢复并降级持久化 mode", f.calls.restore.some(x => x.restore) && f.rows.every(row => row.nativeTiming.mode === "inexactNotification"));
+    ok("D72 onResume 撤销权限真正请求通知恢复并降级持久化 mode", f.calls.restore.slice(readsBefore).some(x => x.restore === true) && f.rows.length > 0 && f.rows.every(row => row.nativeTiming.mode === "inexactNotification"));
     ok("D72 onResume 撤销权限清理签名缓存并重排原有闹钟", f.env.alarms.scheduleAlarm.length > alarmsBefore);
     // 模拟冷启动仍持有授权时旧 mode：即使没有会话内 granted 状态也必须修复。
     f.rows.forEach(row => { row.nativeTiming.mode = "alarmClockNotification"; });
