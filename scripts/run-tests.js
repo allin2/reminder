@@ -13,6 +13,7 @@ const { spawnSync } = require("child_process");
 const root = path.join(__dirname, "..");
 const SUITES = [
   "test-unit.js",
+  "test-punctual-default.js",
   "test-native-reminders.js",
   "scripts/verification/p3a-model-tests.js",
   "scripts/verification/p3b-persistence-tests.js",

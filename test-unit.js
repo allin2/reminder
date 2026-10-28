@@ -173,6 +173,8 @@ section("P2-G1 AppCapture — 表单会话、live 状态与幂等绑定");
     queueNativeReminderSync: () => {}, toast: () => {}, getAi: () => null
   });
   capture.resetItemSheet(); const firstSession = capture.session();
+  ok("D71 新建表单默认勾选但不固化跟随态", node("#capPunctual").checked === true &&
+    capture.snapshotItemForm().punctual_reminder === undefined);
   node("#capText").value = "同一内容"; const untouched = capture.snapshotItemForm();
   node("#capTrigger").value = "2026-09-22T09:30"; capture.markTriggerPicked(true);
   const picked = capture.snapshotItemForm();
@@ -3119,6 +3121,18 @@ section("P2-E AppSetup — 求值、live 注入、60 秒测试与停铃边界");
       setBridge: value => { bridge = value; }
     };
   }
+
+  const deniedExact = setupFixture({ native: { isNativeAndroid: () => true },
+    status: { notifications: "granted", exactAlarm: "denied" } });
+  deniedExact.app.noteFirstRemindSaved({ triggerAt: 1234, isFallbackTrigger: true });
+  deniedExact.app.noteFirstRemindSaved({ triggerAt: null });
+  ok("D72 无明确时间/整理兜底不触发精确权限引导", deniedExact.calls.openSheets === 0);
+  deniedExact.app.noteFirstRemindSaved({ triggerAt: 1234 });
+  ok("D72 首次带时间保存无权限时给设置引导并保存一次标志",
+    deniedExact.calls.openSheets === 1 && deniedExact.state.settings.setupPromptStarted === true &&
+    deniedExact.calls.toasts.some(x => /提醒可能晚到/.test(x[0])));
+  deniedExact.app.noteFirstRemindSaved({ triggerAt: 5678 });
+  ok("D72 重复保存不反复弹权限引导", deniedExact.calls.openSheets === 1);
 
   const live = setupFixture();
   live.app.maybePromptAndroidNotify();

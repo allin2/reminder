@@ -1443,7 +1443,9 @@ async function run() {
     ok("D64 接收器以实测值为准再重排（不把「收到广播」当成「已授权」）",
       /AlarmScheduler\.canScheduleExactAlarms\(appContext\)/.test(exactReceiverSrc) &&
       /if \(granted\)/.test(exactReceiverSrc) &&
-      /SystemBridgePlugin\.restorePersistedAlarms\(appContext\)/.test(exactReceiverSrc));
+      /restoreGrantedSchedules\(appContext\)/.test(exactReceiverSrc) &&
+      /SystemBridgePlugin\.restorePersistedAlarms\(context\)/.test(exactReceiverSrc) &&
+      /NotificationScheduler\.restore\(context, "exact-permission-granted"\)/.test(exactReceiverSrc));
     ok("D64 投递时快照精确闹钟与全屏意图两项权限（同 H-08：不能用「现在」解释「当时」）",
       /KEY_DELIVERY_EXACT_ON = "deliveryExactEnabled"/.test(receiver) &&
       /KEY_DELIVERY_FSI_ON = "deliveryFullScreenIntentEnabled"/.test(receiver) &&
