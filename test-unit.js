@@ -155,6 +155,7 @@ section("P2-G1 AppCapture — 表单会话、live 状态与幂等绑定");
   const quickChips = ["tonight", "tomorrow", "weekend", "monday"].map(k => { const n = node("quick-" + k); n.dataset.quick = k; return n; });
   let lowConf = false; const calls = { refresh: 0, opens: [], details: [], timers: 0 };
   const capture = appCaptureMod.createAppCapture({
+    getNativeReminders: () => require("./lib/native-reminders"),
     query: node, queryAll: sel => sel === "#capQuick [data-quick]" ? quickChips
       : sel === "#capPriority .chip" || sel === "#capPriority .chip.on"
       ? (sel.endsWith(".on") ? chips.filter(c => c.classList.contains("on")) : chips) : [],
@@ -193,12 +194,37 @@ section("P2-G1 AppCapture — 表单会话、live 状态与幂等绑定");
     /&quot;/.test(node("#similarHint").innerHTML) && /&lt;b&gt;/.test(node("#similarHint").innerHTML), node("#similarHint").innerHTML);
   capture.resetItemSheet(); node("#capText").value = "明天"; node("#capTrigger").value = "保留"; capture.markTriggerPicked(true); capture.updateParseHint();
   ok("P2-G1 parse hint 尊重用户手选时间并更新摘要", node("#capTrigger").value === "保留" && node("#capSummary").textContent === "摘要 · 准时保障已开启", JSON.stringify({ trigger: node("#capTrigger").value, summary: node("#capSummary").textContent }));
+  for (const patch of [{}, {priority: "important"}, {priority: "critical"},
+    {isFallbackTrigger: true}, {review_status: "NEEDS_REVIEW"}, {managedKind: "review-session"}]) {
+    state.items.push({id: "summary-case", title: "摘要事项", triggerAt: 1, priority: "normal", ...patch});
+    capture.openEditItem("summary-case"); capture.renderCaptureSummary();
+    ok("D71 录入摘要与普通准时通道一致 " + JSON.stringify(patch),
+      node("#capSummary").textContent === (Object.keys(patch).length ? "摘要" : "摘要 · 准时保障已开启"));
+    state.items.pop();
+  }
+  capture.resetItemSheet(); node("#capText").value = "无时间"; capture.renderCaptureSummary();
+  ok("D71 未填时间的录入摘要不承诺准时保障", node("#capSummary").textContent === "摘要");
+  node("#capTrigger").value = "保留";
   capture.bind(); capture.bind();
   const punctualChange = () => node("#capPunctual").listeners.find(x => x.name === "change").fn();
   node("#capPunctual").checked = false; punctualChange();
   ok("D71 取消准时勾选形成关闭覆盖", capture.snapshotItemForm().punctual_reminder === false);
   node("#capPunctual").checked = true; punctualChange();
   ok("D71 重新勾回全局默认恢复跟随态", capture.snapshotItemForm().punctual_reminder === undefined);
+
+  for (const override of [false, true]) {
+    capture.resetItemSheet(); state.settings = {punctualPriority: !override};
+    node("#capPunctual").checked = override; punctualChange();
+    const draft = capture.snapshotItemForm();
+    capture.receiveCaptureRequest({id: "override-" + override, text: "分享"});
+    ok("D71 仅显式覆盖也保留草稿 " + override, node("#capText").value === "" && draft.punctual_reminder === override);
+    node("#btnCaptureShare").listeners.find(l => l.name === "click").fn({});
+    node("#sheetItem").listeners.find(l => l.name === "attention:sheet-closed").fn({});
+    capture.openCapture();
+    ok("D71 分享后完整恢复显式覆盖草稿 " + override,
+      JSON.stringify(capture.snapshotItemForm()) === JSON.stringify(draft));
+  }
+  state.settings = {}; capture.resetItemSheet();
 
   ok("P2-G1 capture bind 对输入、重复、时间和更多选项幂等", node("#capText").listeners.length === 3 &&
     node("#capTrigger").listeners.length === 2 && node("#btnCapMore").listeners.length === 1 && documentListeners.length === 1,

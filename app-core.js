@@ -937,6 +937,7 @@
   /** P2-G2：capture 只拿具名窄命令；事务原语与权威持久化仍归 core。 */
   function captureRuntimeDeps() {
     return {
+      getNativeReminders: () => NativeReminders,
       query: (sel) => $(sel), queryAll: (sel) => $$(sel), getDocument: () => document,
       getState: () => state,
       openSheet: (id) => openSheet(id), refreshProjectSelects: () => refreshProjectSelects(),
