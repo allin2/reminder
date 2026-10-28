@@ -69,3 +69,13 @@ OPPO 冻结、息屏、电池策略的真实延迟尚待设备验证；setAlarmC
 ### 剩余边界
 
 仍需 Android 14–16 / OPPO 真机验证系统设置撤销导致进程停止后重新启动、息屏投递及厂商电池策略。非精确降级只恢复队列，不保证准时。第 5 条兼容分支有历史数据依据，保留有意。其余旧数据 false 意图、送达不等于看到等限制仍按上文说明。
+
+### 第二轮 Gemini 建议收尾（2026-10-28）
+
+- 已阅读 `/tmp/pd-gemini2-review.md`；在 `feat/punctual-default` 执行 `git pull --ff-only`，结果 Already up to date。
+- `renderCaptureSummary` 通过 core 注入 NativeReminders，要求表单存在明确时间，并复用 `usesPunctualNotification`；传入当前优先级、实际 delivery mode 与勾选值，保留编辑事项的 fallback/review 标记。无时间、重要/关键首提闹钟、待整理和 review 不再显示准时保障后缀。
+- `hasCaptureDraft` 使用 `punctual_reminder !== undefined`，显式 true/false 都保护为草稿。
+- `test-unit.js` 新增 11 条断言：普通时间正例、重要/关键/fallback/NEEDS_REVIEW/review-session 五类反例、无时间反例，以及显式 true/false 各两条分享打断与完整恢复验证。原断言全部保留。
+- 双时区 `TZ=Asia/Shanghai npm test`、`TZ=UTC npm test` 均 16/16 套件通过；每时区 unit 775、native 472、boot 942、smoke 304、regressions 743、准时专项 11。模块行为/变异与单一来源检查全部通过。
+- `npm audit`：0 漏洞；`npm run cap:sync` 成功；`cd android && ./gradlew assembleDebug testDebugUnitTest --no-daemon`：BUILD SUCCESSFUL，9 类 63 条 JVM 测试，0 failures/errors（含 Gradle 缓存复用）。本轮无失败。
+- 代码提交：`47f6104`。全部指定验证通过后推送；未操作 main 或 fix/p1-sdk36，未强推。
