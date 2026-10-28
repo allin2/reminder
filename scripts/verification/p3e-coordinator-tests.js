@@ -582,6 +582,19 @@ async function healthy(api) {
     assert.ok(runs.every(opts => !opts.forceRebuild), "unchanged permission avoids repeated rebuild");
   }
 
+  // 对账回读先于 onResume 写入权限时，同样不能吞掉撤销边沿。
+  {
+    const f = fixture(api, { timers: fakeTimers() });
+    await f.coordinator.initializeNativeReminders();
+    const runs = [];
+    f.mockNativeReminders.reconcile = async (items, settings, now, review, opts) => {
+      runs.push(opts.forceRebuild);
+      return { exactAlarm: "denied" };
+    };
+    await f.coordinator.syncNativeRemindersNow();
+    assert.deepStrictEqual(runs, [false, true], "in-flight ordinary reconcile preserves forced follow-up after permission edge");
+  }
+
   // 12. 回前台后状态补读：厂商开关异步生效时，稍后补读到新值才回写；状态不变不重复回写
   {
     const unverified = { native: true, notifications: "granted", exactAlarm: "granted", reliability: "exact", source: "SystemBridge",

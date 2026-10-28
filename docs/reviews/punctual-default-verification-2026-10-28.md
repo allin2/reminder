@@ -58,13 +58,13 @@ OPPO 冻结、息屏、电池策略的真实延迟尚待设备验证；setAlarmC
 
 - unit 增加 4 条：取消勾选覆盖、勾回恢复跟随、unknown 不提前弹窗、denied 回读只补弹一次。
 - native 增加 3 条：App.appStateChange → onResume → 实际 JS reconcile → bridge restore 请求及 mode 降级；已有闹钟签名缓存失效后重排；冷启动持久化旧 mode 降级。桥及 AlarmManager 为 mock，不冒充真机生命周期或系统撤销验收。
-- coordinator 增加生命周期行为场景：冷启动 force、granted → denied 强制重建、重复 denied 不重复 force；原有行为/变异检查全部通过。
+- coordinator 增加生命周期行为场景：冷启动 force、granted → denied 强制重建、重复 denied 不重复 force；新增对账先回读到 denied 时保留强制后续轮次的并发测试；原有行为/变异检查全部通过。
 - 准时专项增加 2 条（11/11）：Manifest 单入口与详情共用策略（含六类反例）。
 - 最终双时区 `npm test` 均为 16/16 套件；每时区主计数：unit 764、native 472、boot 942、smoke 304、regressions 743、准时专项 11；模块行为/变异与单一来源检查均通过，不混算成一个测试总数。
 - `npm audit --json`：0 漏洞；`npm run cap:sync` 完成；Java 21 下 `assembleDebug testDebugUnitTest --no-daemon`：BUILD SUCCESSFUL，9 类 63 条 JVM 测试，0 failures / errors。
 - 本轮 APK SHA-256：`9ee73537ad71742befae83ed04517f2ba3816aaa822a4f545bfbd60d348da82d`（上方原轮次 SHA 为修复前产物）。
 - 本轮未新增 Java 测试；原有 NotificationScheduler 撤销/恢复单测验证原生安装降级能力，新增 JS 生命周期测试验证生产接线，两者职责分开。
-- 过程失败：首轮全套 15/16，提取共用判定误限制重要事项后续普通通知，定位并恢复普通载体策略，定向通过后全量复验。将测试升级为 App 前台事件时，一次把最后一次 pending 读取误当 restore 读取（后续还有 restore:false 的确认读取），改为只检查本次前台事件新增读取序列内的 restore:true 后通过。未出现同一问题连续两次失败；未通过时未推送。
+- 过程失败：首轮全套 15/16，提取共用判定误限制重要事项后续普通通知，定位并恢复普通载体策略，定向通过后全量复验。将测试升级为 App 前台事件时，一次把最后一次 pending 读取误当 restore 读取（后续还有 restore:false 的确认读取），改为只检查本次前台事件新增读取序列内的 restore:true 后通过。最终检查补集中状态入口时，首次误把 unknown → granted 初始化也当成权限变化，导致稳定对账多一轮；收窄为已知 granted/denied 之间变化后定向通过。未出现同一问题连续两次失败；未通过时未推送。
 
 ### 剩余边界
 
