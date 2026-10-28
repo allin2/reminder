@@ -4,7 +4,6 @@
     <!-- API 36：保留 Capacitor 返回监听与 AlarmActivity 返回即止响的旧回调。 -->
     <application
         android:allowBackup="true"
-        android:enableOnBackInvokedCallback="false"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
