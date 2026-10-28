@@ -57,6 +57,7 @@ public class AlarmBackNavigationTest {
     android.media.MediaPlayer player = mock(android.media.MediaPlayer.class);
     when(player.isPlaying()).thenReturn(true);
     android.os.Vibrator vibrator = mock(android.os.Vibrator.class);
+    setField("handler", mock(android.os.Handler.class));
     setField("mediaPlayer", player);
     setField("vibrator", vibrator);
     setField("currentAlarmId", 90002);
