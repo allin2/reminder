@@ -38,3 +38,10 @@ spec: ../product-logic.md
 ## 验证边界
 
 自动测试证明模型、投影、恢复与诊断口径；不能证明 OPPO 息屏/冻结时的真实送达时刻。真机步骤与本轮验证结果另见交付记录。
+
+## Gemini 复审修订（2026-10-28）
+
+- D71：详情复用排程层判定；兜底、待整理/review 与首次独立闹钟不标普通准时保障已开启（重要/关键事项后续普通通知仍按普通载体策略）。兜底即使遗留显式 true 也不升级。表单手动切回全局默认值恢复缺键跟随；未触碰的既有显式覆盖保持原值。
+- D72：权限状态变化在回前台即时及延迟补读时触发 forceRebuild；对账忙碌时保留强制请求。通知调用 native restore，闹钟清除签名及精确性缓存后重建。冷启动无条件强制重建，修复持久化 mode 与当前权限不一致。授权广播只由 ExactAlarmPermissionReceiver 统一恢复双队列。
+- D72：首次带时间保存时原生状态 unknown，保留本会话待引导请求；状态回读重绘入口时补弹一次。该待弹窗请求不跨进程持久化，首页设置入口仍持久化保留。
+- Android 官方行为依据：[Schedule alarms](https://developer.android.com/develop/background-work/services/alarms)、[AlarmManager](https://developer.android.com/reference/android/app/AlarmManager)：撤销权限停止应用并取消未来精确闹钟；状态广播用于授权，不依赖撤销广播恢复。
