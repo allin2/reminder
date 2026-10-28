@@ -25,6 +25,10 @@ android {
     }
     testOptions {
         unitTests.returnDefaultValues = true
+        unitTests.all {
+            // 现有路由测试用 Unsafe 改写 SDK_INT；禁用 JIT，避免 static final 被常量折叠。
+            jvmArgs '-Xint'
+        }
     }
 }
 

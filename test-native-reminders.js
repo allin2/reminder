@@ -884,7 +884,7 @@ async function run() {
     // D59 改写了这条边界的**理由**（结论仍是「响铃不越过界面销毁」，但只管回落路径）：
     // 铃声的主载体已经是前台服务，界面死掉不该把它一起带走 —— 那正是本次修复的目的。
     // 所以 onDestroy 只停回落，**不能**出现 requestStop 或 stopAllEffects。
-    const destroyBody = methodBody(activityCode, "protected void onDestroy()", "public void onBackPressed()");
+    const destroyBody = methodBody(activityCode, "protected void onDestroy()", "void registerBackHandler()");
     ok("D59 onDestroy 只停回落路径，不停服务（铃声不随界面销毁而中断）",
       destroyBody.length > 0 &&
       /stopLocalFallback\(\)/.test(destroyBody) &&

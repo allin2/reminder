@@ -100,6 +100,24 @@ public class AlarmActivity extends AppCompatActivity {
 
     current = new java.lang.ref.WeakReference<>(this);
     setContentView(R.layout.activity_alarm);
+    registerBackHandler();
+    // API 35+ 强制边到边：保留布局原有 padding，再加系统栏/刘海安全边距。
+    if (Build.VERSION.SDK_INT >= 35) {
+      android.view.ViewGroup content = findViewById(android.R.id.content);
+      android.view.View root = content == null ? null : content.getChildAt(0);
+      if (root != null) {
+        final int left = root.getPaddingLeft(), top = root.getPaddingTop();
+        final int right = root.getPaddingRight(), bottom = root.getPaddingBottom();
+        androidx.core.view.ViewCompat.setOnApplyWindowInsetsListener(root, (view, windowInsets) -> {
+          androidx.core.graphics.Insets bars = windowInsets.getInsets(
+            androidx.core.view.WindowInsetsCompat.Type.systemBars()
+              | androidx.core.view.WindowInsetsCompat.Type.displayCutout());
+          view.setPadding(left + bars.left, top + bars.top, right + bars.right, bottom + bars.bottom);
+          return windowInsets;
+        });
+        androidx.core.view.ViewCompat.requestApplyInsets(root);
+      }
+    }
 
     Button ack = findViewById(R.id.btnAck);
     Button snooze = findViewById(R.id.btnSnooze);
@@ -428,7 +446,7 @@ public class AlarmActivity extends AppCompatActivity {
     return value;
   }
 
-  private void finishWithAction(String action, boolean reschedule) {
+  void finishWithAction(String action, boolean reschedule) {
     trace("userAction", action);
     // 用户明确要求停止 —— 这是**唯一**该停服务的出口类型（服务 + 界面回落一起停）
     stopAllEffects();
@@ -602,10 +620,15 @@ public class AlarmActivity extends AppCompatActivity {
     super.onDestroy();
   }
 
-  @Override
-  public void onBackPressed() {
-    // D12：返回 = 「关闭」（只止响，不写 ACK）
-    finishWithAction("close", false);
+  // 与 Activity 生命周期绑定；手势提交和三键返回共用「关闭」，取消手势不止响。
+  void registerBackHandler() {
+    getOnBackPressedDispatcher().addCallback(this, new androidx.activity.OnBackPressedCallback(true) {
+      @Override
+      public void handleOnBackPressed() {
+        // D12：返回 = 「关闭」（只止响，不写 ACK，不重排）
+        finishWithAction("close", false);
+      }
+    });
   }
 
   @Override
