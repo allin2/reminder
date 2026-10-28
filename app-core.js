@@ -1105,6 +1105,7 @@
       escapeHtml: (s) => escapeHtml(s),
       writeIfChanged: (el, html) => writeIfChanged(el, html),
       openSheet: (id) => openSheet(id),
+      openExactAlarmSettings: () => NativeReminders.openExactAlarmSettings(),
       refreshNotifyLab: () => refreshNotifyLab(),
       render: () => render(),
       save: () => save(),

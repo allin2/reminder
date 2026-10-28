@@ -357,6 +357,26 @@ public class NotificationSchedulerTest {
     verify(alarm,times(4)).setExactAndAllowWhileIdle(eq(AlarmManager.RTC_WAKEUP),anyLong(),eq(pi));
   }
 
+  @Test public void punctualGrantRestorePromotesFallbackAndRevocationReturnsInexact() throws Exception {
+    when(alarm.canScheduleExactAlarms()).thenReturn(false);
+    JSObject first = schedule();
+    assertEquals("inexactNotification", first.getString("mode"));
+    assertFalse(first.getBoolean("systemNextAlarm"));
+    when(alarm.canScheduleExactAlarms()).thenReturn(true);
+    try (MockedStatic<SystemBridgePlugin> bridge = mockStatic(SystemBridgePlugin.class)) {
+      ExactAlarmPermissionReceiver.restoreGrantedSchedules(context);
+      bridge.verify(() -> SystemBridgePlugin.restorePersistedAlarms(context));
+    }
+    JSONObject restored = NotificationScheduler.pending(context).getJSONObject(0).getJSONObject("nativeTiming");
+    assertEquals("alarmClockNotification", restored.getString("mode"));
+    assertTrue(restored.getBoolean("systemNextAlarm"));
+    when(alarm.canScheduleExactAlarms()).thenReturn(false);
+    NotificationScheduler.restore(context, "permission-revoked-resume");
+    JSONObject revoked = NotificationScheduler.pending(context).getJSONObject(0).getJSONObject("nativeTiming");
+    assertEquals("inexactNotification", revoked.getString("mode"));
+    assertFalse(revoked.getBoolean("systemNextAlarm"));
+  }
+
   @Test public void reviewPayloadTrueIsForcedStandardEvenAcrossRestore() throws Exception {
     JSObject n=request(2);n.getJSONObject("extra").put("managedKind","review-session").put("punctual_reminder",true);
     JSObject r=NotificationScheduler.schedule(context,n,System.currentTimeMillis()+120000,"wall-clock","");

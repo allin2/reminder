@@ -1625,8 +1625,8 @@ section("11b. A-2 后台链路断了，首页必须直说（基线 §473 / AC-14
     verdictOf({ notifications: "granted", exactAlarm: "granted", reliability: "exact" }, true, true) === null);
   // 范围边界（刻意）：精确闹钟降级只让**到达时刻**可能被推迟，不产生「关掉 App 就没有提醒」
   // 这类硬断链，且已在「我的」页如实标注「时间可能延迟」—— 不进首页。
-  ok("A-2 仅「精确闹钟未授权」不进首页",
-    verdictOf({ notifications: "granted", exactAlarm: "denied", reliability: "inexact" }, true, true) === null);
+  ok("D72 精确闹钟未授权首页常驻轻提示",
+    verdictOf({ notifications: "granted", exactAlarm: "denied", reliability: "inexact" }, true, true).title === "提醒可能晚到");
   ok("A-2 非原生环境（PWA / 浏览器）不得出现告知条",
     verdictOf({ notifications: "denied" }, true, false) === null);
 

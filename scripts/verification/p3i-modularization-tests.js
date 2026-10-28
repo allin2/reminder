@@ -457,8 +457,8 @@ console.log("== P3-I. AppActionFeedback, AppEvents, AppNotices & AppTestApi 模�
       n.homeNoticeVerdict({}, on, true) === null);
     ok("AppNotices 红线：非原生运行时 ⇒ null（Web 上没有「关掉 App 就不响」这件事）",
       n.homeNoticeVerdict({ notifications: "denied" }, on, false) === null);
-    ok("AppNotices 范围边界：exactAlarm=denied 不进首页（只影响到达时刻）",
-      n.homeNoticeVerdict({ notifications: "granted", exactAlarm: "denied" }, on, true) === null);
+    ok("D72 AppNotices 精确权限缺失常驻提示",
+      n.homeNoticeVerdict({ notifications: "granted", exactAlarm: "denied" }, on, true).kind === "exact");
   }
 
   // (2) renderHomeNotice：#homeNotice 单写入者 + 断链消失时主动清空
