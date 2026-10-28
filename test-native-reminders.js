@@ -2743,6 +2743,42 @@ async function run() {
     a = await native.reconcile([normal], settings, t0);
     ok("v64 invalid native queue is unknown, not empty", a.reliability === "error" && f.calls.schedule.length === 0);
 
+    // 真正的 coordinator onResume → native.reconcile → bridge restore，两队列同时验证。
+    f = await setup();
+    let granted = true, resumeHook;
+    const originalDiagnose = f.bridge.diagnose;
+    f.bridge.diagnose = async () => ({ ...(await originalDiagnose()), canExactAlarm: granted });
+    const originalPending = f.bridge.pendingNotifications;
+    f.bridge.pendingNotifications = async opts => {
+      if (opts.restore) f.rows.forEach(row => { row.nativeTiming.mode = granted ? "exactNotification" : "inexactNotification"; row.nativeTiming.exact = granted; });
+      return originalPending(opts);
+    };
+    const lifeSettings = { notify: true, importantRepeat: false };
+    const lifeItems = [normal, important];
+    const wrapped = Object.assign({}, native, { initialize: async hooks => {
+      resumeHook = hooks.onResume;
+      return native.initialize(hooks);
+    } });
+    const deps = {};
+    for (const key of ["save","runUserOp","onStatusChange","onNotificationAction","handleAlarmAction","promoteDue","refreshActiveAlarmPanel","renderMe"]) deps[key] = () => {};
+    const queued = [];
+    Object.assign(deps, { getItems: () => lifeItems, getSettings: () => lifeSettings,
+      authoritativeWritesAllowed: () => true, getNativeReminders: () => wrapped, getEvidenceLib: () => null,
+      needsReviewCount: () => 0, ensureReviewSettings: () => ({enabled:false}), isNativeAndroidRuntime: () => true,
+      setTimeout: (fn, ms) => { if (ms === 80) queued.push(fn); return queued.length; }, clearTimeout: () => {} });
+    const coordinator = require("./lib/app-native-coordinator").createAppNativeCoordinator(deps);
+    await coordinator.initializeNativeReminders();
+    const alarmsBefore = f.env.alarms.scheduleAlarm.length;
+    granted = false;
+    await resumeHook();
+    while (queued.length) { queued.shift()(); await new Promise(resolve => setImmediate(resolve)); }
+    ok("D72 onResume 撤销权限真正请求通知恢复并降级持久化 mode", f.calls.restore.some(x => x.restore) && f.rows.every(row => row.nativeTiming.mode === "inexactNotification"));
+    ok("D72 onResume 撤销权限清理签名缓存并重排原有闹钟", f.env.alarms.scheduleAlarm.length > alarmsBefore);
+    // 模拟冷启动仍持有授权时旧 mode：即使没有会话内 granted 状态也必须修复。
+    f.rows.forEach(row => { row.nativeTiming.mode = "alarmClockNotification"; });
+    await coordinator.initializeNativeReminders();
+    ok("D72 冷启动当前拒绝但持久化旧 mode 仍强制降级", f.rows.every(row => row.nativeTiming.mode === "inexactNotification"));
+
     section("v69 item opt-in and native timing mode consumers");
     f = await setup();
     const offPlan = native.buildDesired([normal], settings, t0)[0];
