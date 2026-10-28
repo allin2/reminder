@@ -194,6 +194,12 @@ section("P2-G1 AppCapture — 表单会话、live 状态与幂等绑定");
   capture.resetItemSheet(); node("#capText").value = "明天"; node("#capTrigger").value = "保留"; capture.markTriggerPicked(true); capture.updateParseHint();
   ok("P2-G1 parse hint 尊重用户手选时间并更新摘要", node("#capTrigger").value === "保留" && node("#capSummary").textContent === "摘要 · 准时保障已开启", JSON.stringify({ trigger: node("#capTrigger").value, summary: node("#capSummary").textContent }));
   capture.bind(); capture.bind();
+  const punctualChange = () => node("#capPunctual").listeners.find(x => x.name === "change").fn();
+  node("#capPunctual").checked = false; punctualChange();
+  ok("D71 取消准时勾选形成关闭覆盖", capture.snapshotItemForm().punctual_reminder === false);
+  node("#capPunctual").checked = true; punctualChange();
+  ok("D71 重新勾回全局默认恢复跟随态", capture.snapshotItemForm().punctual_reminder === undefined);
+
   ok("P2-G1 capture bind 对输入、重复、时间和更多选项幂等", node("#capText").listeners.length === 3 &&
     node("#capTrigger").listeners.length === 2 && node("#btnCapMore").listeners.length === 1 && documentListeners.length === 1,
     JSON.stringify({ text: node("#capText").listeners.length, trigger: node("#capTrigger").listeners.length, more: node("#btnCapMore").listeners.length, delegated: documentListeners.length }));
@@ -3133,6 +3139,15 @@ section("P2-E AppSetup — 求值、live 注入、60 秒测试与停铃边界");
     deniedExact.calls.toasts.some(x => /提醒可能晚到/.test(x[0])));
   deniedExact.app.noteFirstRemindSaved({ triggerAt: 5678 });
   ok("D72 重复保存不反复弹权限引导", deniedExact.calls.openSheets === 1);
+
+  const delayedExact = setupFixture({ native: { isNativeAndroid: () => true },
+    status: { notifications: "unknown", exactAlarm: "unknown" } });
+  delayedExact.app.noteFirstRemindSaved({ triggerAt: 1234 });
+  ok("D72 桥延迟时不提前弹窗", delayedExact.calls.openSheets === 0);
+  delayedExact.setStatus({ notifications: "granted", exactAlarm: "denied" });
+  delayedExact.app.renderSetupEntry();
+  delayedExact.app.renderSetupEntry();
+  ok("D72 状态回读后首次引导补弹且仅一次", delayedExact.calls.openSheets === 1);
 
   const live = setupFixture();
   live.app.maybePromptAndroidNotify();

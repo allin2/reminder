@@ -60,4 +60,19 @@ test("D71 review 默认策略开启时仍保持独立普通载体", () => {
   const rows=native.buildReviewDesired(2,{enabled:true,hour:21,minute:30,windowEndHour:23,windowEndMinute:0},now,{notify:true,punctualPriority:true});
   assert.ok(rows.length>0); rows.forEach(r=>{assert.strictEqual(r.extra.managedKind,"review-session");assert.notStrictEqual(r.extra.punctual_reminder,true);});
 });
+
+
+test("D71 精确权限广播只有统一 Receiver 入口", () => {
+  const manifest = require("fs").readFileSync("android/app/src/main/AndroidManifest.xml", "utf8");
+  assert.strictEqual((manifest.match(/android.app.action.SCHEDULE_EXACT_ALARM_PERMISSION_STATE_CHANGED/g)||[]).length, 1);
+  assert.match(manifest, /ExactAlarmPermissionReceiver[\s\S]*SCHEDULE_EXACT_ALARM_PERMISSION_STATE_CHANGED/);
+});
+test("D71 详情复用排程判定，兜底/review/闹钟档即使显式开启也不承诺普通准时保障", () => {
+  for (const patch of [{isFallbackTrigger:true},{review_status:"NEEDS_REVIEW"},{managedKind:native.REVIEW_MANAGED_KIND},
+      {priority:"critical"},{priority:"important"},{delivery_mode:"alarm"}]) {
+    assert.strictEqual(native.usesPunctualNotification({...old,punctual_reminder:true,...patch},{}),false);
+  }
+  assert.strictEqual(native.usesPunctualNotification(old,{}),true);
+  assert.match(require("fs").readFileSync("lib/app-views.js","utf8"), /usesPunctualNotification\(it, state.settings\)/);
+});
 console.log(`${count}/${count} 通过`);
