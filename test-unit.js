@@ -190,7 +190,7 @@ section("P2-G1 AppCapture — 表单会话、live 状态与幂等绑定");
   ok("P2-G1 重复预览与相似提示真实渲染且危险 id/title 均转义", /D1/.test(node("#repeatPreview").textContent) &&
     /&quot;/.test(node("#similarHint").innerHTML) && /&lt;b&gt;/.test(node("#similarHint").innerHTML), node("#similarHint").innerHTML);
   capture.resetItemSheet(); node("#capText").value = "明天"; node("#capTrigger").value = "保留"; capture.markTriggerPicked(true); capture.updateParseHint();
-  ok("P2-G1 parse hint 尊重用户手选时间并更新摘要", node("#capTrigger").value === "保留" && node("#capSummary").textContent === "摘要", JSON.stringify({ trigger: node("#capTrigger").value, summary: node("#capSummary").textContent }));
+  ok("P2-G1 parse hint 尊重用户手选时间并更新摘要", node("#capTrigger").value === "保留" && node("#capSummary").textContent === "摘要 · 准时保障已开启", JSON.stringify({ trigger: node("#capTrigger").value, summary: node("#capSummary").textContent }));
   capture.bind(); capture.bind();
   ok("P2-G1 capture bind 对输入、重复、时间和更多选项幂等", node("#capText").listeners.length === 3 &&
     node("#capTrigger").listeners.length === 2 && node("#btnCapMore").listeners.length === 1 && documentListeners.length === 1,
@@ -210,7 +210,7 @@ section("P2-G1 AppCapture — 表单会话、live 状态与幂等绑定");
     beforeQuick.triggerPicked === false && afterQuick.triggerPicked === true && node("#capTrigger").value === "2026-09-22T09:30",
     JSON.stringify({ beforeQuick, afterQuick }));
   ok("快捷时间点击：提示「已保留你选择的时间」且摘要同步刷新",
-    /^已保留你选择的时间：T\d+ · 可修改$/.test(node("#capHint").textContent) && node("#capSummary").textContent === "摘要",
+    /^已保留你选择的时间：T\d+ · 可修改$/.test(node("#capHint").textContent) && node("#capSummary").textContent === "摘要 · 准时保障已开启",
     JSON.stringify({ hint: node("#capHint").textContent, summary: node("#capSummary").textContent }));
   node("#capText").value = "后天下午3点交周报"; capture.updateParseHint();
   ok("快捷时间点击后继续打字：时间框不被解析结果覆盖", node("#capTrigger").value === "2026-09-22T09:30",

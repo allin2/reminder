@@ -2665,7 +2665,7 @@ async function run() {
   {
     const t0 = Date.now();
     const normal = item("v64-normal", "normal", t0 + 120000, { rev: 1, delivery_mode: "notification" });
-    const settings = { notify: true, importantRepeat: false };
+    const settings = { notify: true, importantRepeat: false, punctualPriority: false };
     const setup = async options => {
       await native._resetForTests();
       const env = createEnvironment(options);
