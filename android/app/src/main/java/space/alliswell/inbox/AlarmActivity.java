@@ -103,17 +103,20 @@ public class AlarmActivity extends AppCompatActivity {
     registerBackHandler();
     // API 35+ 强制边到边：保留布局原有 padding，再加系统栏/刘海安全边距。
     if (Build.VERSION.SDK_INT >= 35) {
-      android.view.View root = ((android.view.ViewGroup) findViewById(android.R.id.content)).getChildAt(0);
-      final int left = root.getPaddingLeft(), top = root.getPaddingTop();
-      final int right = root.getPaddingRight(), bottom = root.getPaddingBottom();
-      androidx.core.view.ViewCompat.setOnApplyWindowInsetsListener(root, (view, windowInsets) -> {
-        androidx.core.graphics.Insets bars = windowInsets.getInsets(
-          androidx.core.view.WindowInsetsCompat.Type.systemBars()
-            | androidx.core.view.WindowInsetsCompat.Type.displayCutout());
-        view.setPadding(left + bars.left, top + bars.top, right + bars.right, bottom + bars.bottom);
-        return windowInsets;
-      });
-      androidx.core.view.ViewCompat.requestApplyInsets(root);
+      android.view.ViewGroup content = findViewById(android.R.id.content);
+      android.view.View root = content == null ? null : content.getChildAt(0);
+      if (root != null) {
+        final int left = root.getPaddingLeft(), top = root.getPaddingTop();
+        final int right = root.getPaddingRight(), bottom = root.getPaddingBottom();
+        androidx.core.view.ViewCompat.setOnApplyWindowInsetsListener(root, (view, windowInsets) -> {
+          androidx.core.graphics.Insets bars = windowInsets.getInsets(
+            androidx.core.view.WindowInsetsCompat.Type.systemBars()
+              | androidx.core.view.WindowInsetsCompat.Type.displayCutout());
+          view.setPadding(left + bars.left, top + bars.top, right + bars.right, bottom + bars.bottom);
+          return windowInsets;
+        });
+        androidx.core.view.ViewCompat.requestApplyInsets(root);
+      }
     }
 
     Button ack = findViewById(R.id.btnAck);
