@@ -4,6 +4,8 @@
     <!-- 返回处理统一使用 AndroidX Dispatcher，允许系统默认的预测返回行为。 -->
     <application
         android:allowBackup="true"
+        android:fullBackupContent="@xml/backup_rules"
+        android:dataExtractionRules="@xml/data_extraction_rules"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"

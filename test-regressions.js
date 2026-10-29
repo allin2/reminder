@@ -472,7 +472,7 @@ function installCapacitor(options) {
 
   global.Capacitor = {
     getPlatform() { return "android"; },
-    Plugins: { LocalNotifications: local, SystemBridge: bridge, App: { addListener() { return { async remove() {} }; } } }
+    Plugins: { SecureKey: { async get() { return { value: "" }; }, async set() {}, async remove() {} }, LocalNotifications: local, SystemBridge: bridge, App: { addListener() { return { async remove() {} }; } } }
   };
 
   return {

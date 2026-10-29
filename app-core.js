@@ -39,6 +39,7 @@
   // 反例要拦的第二种形态，所以实例也要进装配契约（见 `APP_AI_INSTANCE_CONTRACT`）。
   let AppAi = {};
   let ai = null;
+  let secureAiStorageReady = true;
   // P2-C：数据备份（`lib/app-backup.js`）。同一条规矩：命名空间与实例分开绑定，
   // 实例进装配契约（见 `APP_BACKUP_INSTANCE_CONTRACT`）—— 备份按钮绑到 `undefined`
   // 上是「点了没反应」的静默形态，必须由闸门在开门前拦下。
@@ -229,6 +230,9 @@
     ["AppAi", "object",
       "lib/app-ai.js 未加载 —— AI 理解/润色与 AI 设置页整体失效：" +
       "按钮点了没反应、「我的」页那行小字恒为「未开启」、保存时不再自动补时间，且不报错"],
+    ["AppAi.nativeAndroid", "function", "Android 安全存储平台检测"],
+    ["AppAi.prepareSnapshot", "function", "Android 持久化脱敏"],
+    ["AppAi.restoreApiKey", "function", "Android 密钥恢复与迁移"],
     ["AppAi.createAppAi", "function", "lib/app-ai.js 导出被破坏（AI 能力装配入口）"],
     ["AppAi.normalizeAiResult", "function",
       "lib/app-ai.js 导出被破坏 —— AI 结果归一失效：" +
@@ -1190,7 +1194,7 @@
       getAppModel: () => appModel,
       runAiOnCapture: (mode) => runAiOnCapture(mode),
       saveAiSettings: () => saveAiSettings(),
-      testAiConnection: () => testAiConnection(),
+      testAiConnection: config => testAiConnection(config),
       exportData: () => exportData(),
       importDataFile: (file) => importDataFile(file),
       bindDiagnostics: () => bindDiagnostics(),
@@ -1679,6 +1683,14 @@
       let persistenceStorage = null;
       persistenceInstance = persistenceFactory({
         key: KEY,
+        prepareSnapshot: payload => {
+          if (!AppAi.nativeAndroid()) return payload;
+          if (!secureAiStorageReady && payload.settings && payload.settings.ai &&
+              Object.prototype.hasOwnProperty.call(payload.settings.ai, "apiKey") && !payload.settings.ai.apiKey) {
+            throw new Error("AI 安全存储尚未恢复");
+          }
+          return AppAi.prepareSnapshot(payload);
+        },
         getSchema: () => SCHEMA,
         getItems: () => state.items,
         getNotes: () => state.notes,
@@ -2722,6 +2734,31 @@
    */
   function replayPendingSnapshot() { return appPersistence.replayPendingSnapshot(); }
   function loadAsync() { return appPersistence.loadAsync(); }
+  async function secureLoadedAiKey(report) {
+    if (report.status === LOAD_FAILED) return;
+    secureAiStorageReady = false;
+    try {
+      const legacy = !!(state.settings.ai && state.settings.ai.apiKey);
+      await AppAi.restoreApiKey(state.settings, toast);
+      secureAiStorageReady = true;
+      // 只有旧主库含明文时才重写；先安全写入，再清理旧副本。
+      if (legacy) await appPersistence.saveAsync({ deferNativeSync: true });
+      for (const key of [KEY, KEY + "-pending-replay"]) {
+        const raw = localStorage.getItem(key);
+        if (!raw) continue;
+        const container = JSON.parse(raw);
+        const snapshot = key === KEY ? container : JSON.parse(container.json);
+        if (snapshot.settings && snapshot.settings.ai &&
+            Object.prototype.hasOwnProperty.call(snapshot.settings.ai, "apiKey")) {
+          delete snapshot.settings.ai.apiKey;
+          if (key !== KEY) container.json = JSON.stringify(snapshot);
+          localStorage.setItem(key, JSON.stringify(container));
+        }
+      }
+    } catch (_) {
+      toast("AI 密钥迁移未完成，旧密钥已保留，请稍后重启重试");
+    }
+  }
   function loadSync() { return appPersistence.loadSync(); }
   function load() { return appPersistence.load(); }
   function mirrorBytes() { return appPersistence ? appPersistence.authoritySnapshot().mirrorBytes : null; }
@@ -3193,8 +3230,8 @@
     if (ai) return ai.saveAiSettings();
   }
 
-  function testAiConnection() {
-    if (ai) return ai.testConnection();
+  function testAiConnection(config) {
+    if (ai) return ai.testConnection(config);
   }
 
   /* ---------- sheets / toast / confirm：唯一来源 lib/app-ui.js ---------- */
@@ -3752,6 +3789,7 @@
     installGlobalErrorHandler();
 
     const report = await loadAsync();
+    if (AppAi.nativeAndroid()) await secureLoadedAiKey(report);
     if (report.status === LOAD_FAILED) {
       try {
         renderStateRecovery(report);

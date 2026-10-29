@@ -1327,7 +1327,7 @@ section("10. D43 提醒台账与 H-07 降级恢复");
   const persistenceCode = libAppPersistence
     .replace(/\/\*[\s\S]*?\*\//g, " ")
     .replace(/^[ \t]*\/\/[^\n]*$/gm, " ");
-  ok("H-07 降级写入留待回放凭据的接线在位", /markPendingReplay\(json\)/.test(persistenceCode));
+  ok("H-07 降级写入留待回放凭据的接线在位", /markPendingReplay\(persistedJson\)/.test(persistenceCode));
   ok("H-07 加载时先重放再回落到 IDB 旧值（P2-C-R 起：重放成功即判定为 loaded）",
     /storage\.backend === "idb" && await replayPendingSnapshot\(\)/.test(persistenceCode) &&
     /publishLoadReport\(LOAD_LOADED, "pending-replay"/.test(persistenceCode));
@@ -1335,7 +1335,7 @@ section("10. D43 提醒台账与 H-07 降级恢复");
     /if \(lastReplayFailure\)/.test(persistenceCode) &&
     /publishLoadReport\(LOAD_FAILED, "pending-replay-failed"/.test(persistenceCode));
   ok("H-07 覆盖「IDB 打不开 → 后端整体降级为 local」这条路径（storageReady 仍为 true）",
-    /authoritativeBackendMissing\(storage\)\) markPendingReplay\(json\)/.test(persistenceCode) &&
+    /authoritativeBackendMissing\(storage\)\) markPendingReplay\(persistedJson\)/.test(persistenceCode) &&
     /storage\.backend !== "idb"/.test(persistenceCode));
   ok("H-07 仍在镜像上跑时不得重放（否则凭据被提前清掉，IDB 恢复后拿不回来）",
     /storage\.backend === "idb" && await replayPendingSnapshot\(\)/.test(persistenceCode));
@@ -1695,6 +1695,7 @@ section("12. 导出文件：原生保存、诚实反馈与旧格式兼容");
   sandbox.window.Capacitor = {
     getPlatform: () => "android",
     Plugins: {
+      SecureKey: { async get() { return { value: "" }; }, async set() {}, async remove() {} },
       SystemBridge: {
         async saveDocument(args) {
           saveArgs = args;
@@ -1751,7 +1752,7 @@ section("12. 导出文件：原生保存、诚实反馈与旧格式兼容");
   ok("未知路径不虚构普通文件路径", /位置：你选择的位置/.test(getNode("#toastText").textContent));
 
   const anchorsBeforeUnavailable = createdElements.filter(x => x.id === "a").length;
-  sandbox.window.Capacitor = { getPlatform: () => "android", Plugins: {} };
+  sandbox.window.Capacitor = { getPlatform: () => "android", Plugins: { SecureKey: sandbox.window.Capacitor.Plugins.SecureKey } };
   result = await app.exportData();
   ok("Android 缺少原生保存能力时明确不可用且不退回网页下载",
     result.status === "unavailable" && /缺少系统保存能力/.test(getNode("#toastText").textContent) &&
