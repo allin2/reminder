@@ -155,6 +155,7 @@ section("P2-G1 AppCapture — 表单会话、live 状态与幂等绑定");
   const quickChips = ["tonight", "tomorrow", "weekend", "monday"].map(k => { const n = node("quick-" + k); n.dataset.quick = k; return n; });
   let lowConf = false; const calls = { refresh: 0, opens: [], details: [], timers: 0 };
   const capture = appCaptureMod.createAppCapture({
+    getNativeReminders: () => require("./lib/native-reminders"),
     query: node, queryAll: sel => sel === "#capQuick [data-quick]" ? quickChips
       : sel === "#capPriority .chip" || sel === "#capPriority .chip.on"
       ? (sel.endsWith(".on") ? chips.filter(c => c.classList.contains("on")) : chips) : [],
@@ -173,6 +174,8 @@ section("P2-G1 AppCapture — 表单会话、live 状态与幂等绑定");
     queueNativeReminderSync: () => {}, toast: () => {}, getAi: () => null
   });
   capture.resetItemSheet(); const firstSession = capture.session();
+  ok("D71 新建表单默认勾选但不固化跟随态", node("#capPunctual").checked === true &&
+    capture.snapshotItemForm().punctual_reminder === undefined);
   node("#capText").value = "同一内容"; const untouched = capture.snapshotItemForm();
   node("#capTrigger").value = "2026-09-22T09:30"; capture.markTriggerPicked(true);
   const picked = capture.snapshotItemForm();
@@ -190,8 +193,39 @@ section("P2-G1 AppCapture — 表单会话、live 状态与幂等绑定");
   ok("P2-G1 重复预览与相似提示真实渲染且危险 id/title 均转义", /D1/.test(node("#repeatPreview").textContent) &&
     /&quot;/.test(node("#similarHint").innerHTML) && /&lt;b&gt;/.test(node("#similarHint").innerHTML), node("#similarHint").innerHTML);
   capture.resetItemSheet(); node("#capText").value = "明天"; node("#capTrigger").value = "保留"; capture.markTriggerPicked(true); capture.updateParseHint();
-  ok("P2-G1 parse hint 尊重用户手选时间并更新摘要", node("#capTrigger").value === "保留" && node("#capSummary").textContent === "摘要", JSON.stringify({ trigger: node("#capTrigger").value, summary: node("#capSummary").textContent }));
+  ok("P2-G1 parse hint 尊重用户手选时间并更新摘要", node("#capTrigger").value === "保留" && node("#capSummary").textContent === "摘要 · 准时保障已开启", JSON.stringify({ trigger: node("#capTrigger").value, summary: node("#capSummary").textContent }));
+  for (const patch of [{}, {priority: "important"}, {priority: "critical"},
+    {isFallbackTrigger: true}, {review_status: "NEEDS_REVIEW"}, {managedKind: "review-session"}]) {
+    state.items.push({id: "summary-case", title: "摘要事项", triggerAt: 1, priority: "normal", ...patch});
+    capture.openEditItem("summary-case"); capture.renderCaptureSummary();
+    ok("D71 录入摘要与普通准时通道一致 " + JSON.stringify(patch),
+      node("#capSummary").textContent === (Object.keys(patch).length ? "摘要" : "摘要 · 准时保障已开启"));
+    state.items.pop();
+  }
+  capture.resetItemSheet(); node("#capText").value = "无时间"; capture.renderCaptureSummary();
+  ok("D71 未填时间的录入摘要不承诺准时保障", node("#capSummary").textContent === "摘要");
+  node("#capTrigger").value = "保留";
   capture.bind(); capture.bind();
+  const punctualChange = () => node("#capPunctual").listeners.find(x => x.name === "change").fn();
+  node("#capPunctual").checked = false; punctualChange();
+  ok("D71 取消准时勾选形成关闭覆盖", capture.snapshotItemForm().punctual_reminder === false);
+  node("#capPunctual").checked = true; punctualChange();
+  ok("D71 重新勾回全局默认恢复跟随态", capture.snapshotItemForm().punctual_reminder === undefined);
+
+  for (const override of [false, true]) {
+    capture.resetItemSheet(); state.settings = {punctualPriority: !override};
+    node("#capPunctual").checked = override; punctualChange();
+    const draft = capture.snapshotItemForm();
+    capture.receiveCaptureRequest({id: "override-" + override, text: "分享"});
+    ok("D71 仅显式覆盖也保留草稿 " + override, node("#capText").value === "" && draft.punctual_reminder === override);
+    node("#btnCaptureShare").listeners.find(l => l.name === "click").fn({});
+    node("#sheetItem").listeners.find(l => l.name === "attention:sheet-closed").fn({});
+    capture.openCapture();
+    ok("D71 分享后完整恢复显式覆盖草稿 " + override,
+      JSON.stringify(capture.snapshotItemForm()) === JSON.stringify(draft));
+  }
+  state.settings = {}; capture.resetItemSheet();
+
   ok("P2-G1 capture bind 对输入、重复、时间和更多选项幂等", node("#capText").listeners.length === 3 &&
     node("#capTrigger").listeners.length === 2 && node("#btnCapMore").listeners.length === 1 && documentListeners.length === 1,
     JSON.stringify({ text: node("#capText").listeners.length, trigger: node("#capTrigger").listeners.length, more: node("#btnCapMore").listeners.length, delegated: documentListeners.length }));
@@ -210,7 +244,7 @@ section("P2-G1 AppCapture — 表单会话、live 状态与幂等绑定");
     beforeQuick.triggerPicked === false && afterQuick.triggerPicked === true && node("#capTrigger").value === "2026-09-22T09:30",
     JSON.stringify({ beforeQuick, afterQuick }));
   ok("快捷时间点击：提示「已保留你选择的时间」且摘要同步刷新",
-    /^已保留你选择的时间：T\d+ · 可修改$/.test(node("#capHint").textContent) && node("#capSummary").textContent === "摘要",
+    /^已保留你选择的时间：T\d+ · 可修改$/.test(node("#capHint").textContent) && node("#capSummary").textContent === "摘要 · 准时保障已开启",
     JSON.stringify({ hint: node("#capHint").textContent, summary: node("#capSummary").textContent }));
   node("#capText").value = "后天下午3点交周报"; capture.updateParseHint();
   ok("快捷时间点击后继续打字：时间框不被解析结果覆盖", node("#capTrigger").value === "2026-09-22T09:30",
@@ -3119,6 +3153,27 @@ section("P2-E AppSetup — 求值、live 注入、60 秒测试与停铃边界");
       setBridge: value => { bridge = value; }
     };
   }
+
+  const deniedExact = setupFixture({ native: { isNativeAndroid: () => true },
+    status: { notifications: "granted", exactAlarm: "denied" } });
+  deniedExact.app.noteFirstRemindSaved({ triggerAt: 1234, isFallbackTrigger: true });
+  deniedExact.app.noteFirstRemindSaved({ triggerAt: null });
+  ok("D72 无明确时间/整理兜底不触发精确权限引导", deniedExact.calls.openSheets === 0);
+  deniedExact.app.noteFirstRemindSaved({ triggerAt: 1234 });
+  ok("D72 首次带时间保存无权限时给设置引导并保存一次标志",
+    deniedExact.calls.openSheets === 1 && deniedExact.state.settings.setupPromptStarted === true &&
+    deniedExact.calls.toasts.some(x => /提醒可能晚到/.test(x[0])));
+  deniedExact.app.noteFirstRemindSaved({ triggerAt: 5678 });
+  ok("D72 重复保存不反复弹权限引导", deniedExact.calls.openSheets === 1);
+
+  const delayedExact = setupFixture({ native: { isNativeAndroid: () => true },
+    status: { notifications: "unknown", exactAlarm: "unknown" } });
+  delayedExact.app.noteFirstRemindSaved({ triggerAt: 1234 });
+  ok("D72 桥延迟时不提前弹窗", delayedExact.calls.openSheets === 0);
+  delayedExact.setStatus({ notifications: "granted", exactAlarm: "denied" });
+  delayedExact.app.renderSetupEntry();
+  delayedExact.app.renderSetupEntry();
+  ok("D72 状态回读后首次引导补弹且仅一次", delayedExact.calls.openSheets === 1);
 
   const live = setupFixture();
   live.app.maybePromptAndroidNotify();

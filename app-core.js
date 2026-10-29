@@ -937,6 +937,7 @@
   /** P2-G2：capture 只拿具名窄命令；事务原语与权威持久化仍归 core。 */
   function captureRuntimeDeps() {
     return {
+      getNativeReminders: () => NativeReminders,
       query: (sel) => $(sel), queryAll: (sel) => $$(sel), getDocument: () => document,
       getState: () => state,
       openSheet: (id) => openSheet(id), refreshProjectSelects: () => refreshProjectSelects(),
@@ -1105,6 +1106,7 @@
       escapeHtml: (s) => escapeHtml(s),
       writeIfChanged: (el, html) => writeIfChanged(el, html),
       openSheet: (id) => openSheet(id),
+      openExactAlarmSettings: () => NativeReminders.openExactAlarmSettings(),
       refreshNotifyLab: () => refreshNotifyLab(),
       render: () => render(),
       save: () => save(),

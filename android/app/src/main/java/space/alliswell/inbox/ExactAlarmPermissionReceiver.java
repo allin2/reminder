@@ -42,6 +42,13 @@ public class ExactAlarmPermissionReceiver extends BroadcastReceiver {
   /** 本次权限变更事件的台账分组用的 token（区别于具体某条闹钟的 `id:uuid`） */
   static final String TRACE_TOKEN = "exactAlarmPermission";
 
+  /** 两种持久化队列都恢复；广播不是授权证明，调用入口仍需实测权限。 */
+  static void restoreGrantedSchedules(Context context) throws Exception {
+    if (!AlarmScheduler.canScheduleExactAlarms(context)) return;
+    try { SystemBridgePlugin.restorePersistedAlarms(context); }
+    finally { NotificationScheduler.restore(context, "exact-permission-granted"); }
+  }
+
   @Override
   public void onReceive(Context context, Intent intent) {
     if (context == null || intent == null) return;
@@ -64,7 +71,7 @@ public class ExactAlarmPermissionReceiver extends BroadcastReceiver {
         if (granted) {
           // 与开机恢复同一条实现：丢弃已过期的、重排仍未来的。
           // 每条闹钟会经 AlarmScheduler.schedule 落一条真实 mode 的台账（D64）。
-          SystemBridgePlugin.restorePersistedAlarms(appContext);
+          restoreGrantedSchedules(appContext);
         }
       } catch (Exception error) {
         AlarmTrace.record(appContext, TRACE_TOKEN, "exactAlarmPermissionFailed", error.toString());

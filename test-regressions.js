@@ -487,6 +487,40 @@ function installCapacitor(options) {
 /* ================================================================= */
 
 async function run() {
+  section("D71 旧事项跟随态与覆盖态经真实落盘、重启和编辑保持");
+  {
+    const h = createApp();
+    const app = await h.boot();
+    const now = Date.now();
+    ok("D71 全局准时优先初始开启", app.state.settings.punctualPriority === true);
+    app.state.items = [
+      app.makeItem({id:"d71-follow",title:"跟随事项",triggerAt:now+3600000}),
+      app.makeItem({id:"d71-off",title:"明确关闭",triggerAt:now+3600000,punctual_reminder:false}),
+      app.makeItem({id:"d71-on",title:"明确开启",triggerAt:now+3600000,punctual_reminder:true})
+    ];
+    await app.saveAsync();
+    const restarted = await restartApp(h.disk);
+    const restored = restarted.app;
+    ok("D71 缺键经权威落盘重启仍缺键", !Object.prototype.hasOwnProperty.call(restored.state.items[0],"punctual_reminder"));
+    ok("D71 显式关闭经权威落盘重启不变", restored.state.items[1].punctual_reminder === false);
+    const flags = settings => native.buildDesired(restored.state.items,{...settings,notify:true,dnd:false},now)
+      .filter(n=>n.extra.event==="primary").sort((a,b)=>a.extra.itemId.localeCompare(b.extra.itemId)).map(n=>n.extra.punctual_reminder);
+    ok("D71 全局开启投影依次为开关开", flags({punctualPriority:true}).join(",") === "true,false,true");
+    restored.state.settings.punctualPriority = false;
+    await restored.saveAsync();
+    const twice = await restartApp(restarted.disk);
+    ok("D71 全局关闭设置经重启保留", twice.app.state.settings.punctualPriority === false);
+    const offPlan=native.buildDesired(twice.app.state.items,{notify:true,dnd:false,punctualPriority:false},now)
+      .filter(n=>n.extra.event==="primary").sort((a,b)=>a.extra.itemId.localeCompare(b.extra.itemId));
+    ok("D71 全局关闭仍保留事项双向覆盖", offPlan.map(n=>n.extra.punctual_reminder).join(",") === "false,false,true");
+    twice.app.openEditItem("d71-follow");
+    twice.setField("#capText","仅改标题仍跟随");
+    twice.app.saveItemFromForm();
+    await flush(10); await twice.app.saveAsync();
+    const edited=twice.app.state.items.find(x=>x.id==="d71-follow");
+    ok("D71 未触碰准时勾选的编辑不固化覆盖", edited.title === "仅改标题仍跟随" &&
+      !Object.prototype.hasOwnProperty.call(edited,"punctual_reminder"));
+  }
   section("N5 / D13 整理四条即时落盘，重启仅继续剩余六条");
   {
     const h = createApp();

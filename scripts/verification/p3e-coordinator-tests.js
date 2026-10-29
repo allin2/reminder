@@ -65,7 +65,7 @@ function fixture(api, options) {
         await new Promise(r => setTimeout(r, reconcileDelayMs));
       }
       if (options.onReconcile) {
-        options.onReconcile();
+        options.onReconcile(opts);
       }
       return options.reconcileResult || {
         reliability: "exact",
@@ -562,6 +562,37 @@ async function healthy(api) {
     // 下次回前台重试时，可继续尝试消费
     await f.getHooks().onResume();
     assert.strictEqual(f.getAlarmActions().length, 2, "subsequent onResume retries queued action");
+  }
+
+  // D71 真实生命周期入口必须把权限撤销传到强制重建，不能只验证手工 restore。
+  {
+    const runs = [];
+    const timers = fakeTimers();
+    const f = fixture(api, { timers, permissionStates: [{ exactAlarm: "denied" }],
+      onReconcile: opts => runs.push(opts) });
+    await f.coordinator.initializeNativeReminders();
+    assert.strictEqual(runs[0].forceRebuild, true, "cold start always repairs persisted mode mismatch");
+    runs.length = 0;
+    await f.getHooks().onResume();
+    for (let i = 0; i < 20 && timers.pendingCount(); i++) await timers.runNext();
+    assert.ok(runs.some(opts => opts.forceRebuild), "onResume granted → denied forces native restore and alarm cache reset");
+    runs.length = 0;
+    await f.getHooks().onResume();
+    for (let i = 0; i < 20 && timers.pendingCount(); i++) await timers.runNext();
+    assert.ok(runs.every(opts => !opts.forceRebuild), "unchanged permission avoids repeated rebuild");
+  }
+
+  // 对账回读先于 onResume 写入权限时，同样不能吞掉撤销边沿。
+  {
+    const f = fixture(api, { timers: fakeTimers() });
+    await f.coordinator.initializeNativeReminders();
+    const runs = [];
+    f.mockNativeReminders.reconcile = async (items, settings, now, review, opts) => {
+      runs.push(opts.forceRebuild);
+      return { exactAlarm: "denied" };
+    };
+    await f.coordinator.syncNativeRemindersNow();
+    assert.deepStrictEqual(runs, [false, true], "in-flight ordinary reconcile preserves forced follow-up after permission edge");
   }
 
   // 12. 回前台后状态补读：厂商开关异步生效时，稍后补读到新值才回写；状态不变不重复回写
