@@ -1005,6 +1005,7 @@
       toLocalInput: (ts) => toLocalInput(ts),
       parseLocalInput: (val) => parseLocalInput(val),
       escapeHtml: (str) => escapeHtml(str),
+      completeItem: (id) => completeItem(id),
       deleteItem: (id, opts) => deleteItem(id, opts),
       bumpRev: (it) => bumpRev(it),
       wrapUserOp: (fn, opts) => wrapUserOp(fn, opts),
