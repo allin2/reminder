@@ -175,7 +175,6 @@ public class AlarmTestReceiver extends BroadcastReceiver {
     if (title == null || title.isEmpty()) title = "安心收件箱";
     if (body == null || body.isEmpty()) body = "有一条事项需要你确认";
 
-    // R3：minSdk 22 —— 用字符串形式的 getSystemService，避免 API 23+ 的 Class 重载
     Object pmObj = context.getSystemService(Context.POWER_SERVICE);
     PowerManager pm = pmObj instanceof PowerManager ? (PowerManager) pmObj : null;
     PowerManager.WakeLock wl = null;
@@ -312,7 +311,7 @@ public class AlarmTestReceiver extends BroadcastReceiver {
       } catch (Exception ignored) {}
 
       int flags = PendingIntent.FLAG_UPDATE_CURRENT;
-      if (Build.VERSION.SDK_INT >= 23) flags |= PendingIntent.FLAG_IMMUTABLE;
+      flags |= PendingIntent.FLAG_IMMUTABLE;
 
       Intent alarmUi = new Intent(context, AlarmActivity.class);
       alarmUi.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
@@ -487,7 +486,6 @@ public class AlarmTestReceiver extends BroadcastReceiver {
 
   /** 投递当时是否已有「显示在其他应用上层」—— 没有的话后台 startActivity 必被 BAL 静默拦下 */
   static boolean canDrawOverlays(Context context) {
-    if (Build.VERSION.SDK_INT < 23) return true;
     try {
       return Settings.canDrawOverlays(context);
     } catch (Exception ignored) {
@@ -499,7 +497,7 @@ public class AlarmTestReceiver extends BroadcastReceiver {
    * H-08：系统通知是否真的可用（Android 13+ 未授予 POST_NOTIFICATIONS 时 `notify()` 是**静默**空操作）。
    *
    * 用 NotificationManagerCompat 而不是 `NotificationManager.areNotificationsEnabled()`：
-   * 后者是 API 24+ 的方法，minSdk 22 下直接调用会抛 `NoSuchMethodError`，而
+   * 后者是 API 24+ 的方法，API 23 下直接调用会抛 `NoSuchMethodError`，而
    * `catch (Exception)` 兜不住它（H-04 已修过同一处，这里是投递侧的同一坑）。
    */
   static boolean notificationsUsable(Context context) {
@@ -532,7 +530,7 @@ public class AlarmTestReceiver extends BroadcastReceiver {
    * 与上面的通知可用性同一条纪律：**投递当时**取值才有解释力，
    * `SystemBridgePlugin.lastAlarmDelivery` 里那个活值表达的是「现在」。
    *
-   * minSdk 22 陷阱同 H-08：`NotificationManager.canUseFullScreenIntent()` 是 API 34+ 的方法，
+   * 低版本兼容陷阱同 H-08：`NotificationManager.canUseFullScreenIntent()` 是 API 34+ 的方法，
    * 低版本直接调用抛 `NoSuchMethodError`，而 `catch (Exception)` **兜不住它** ——
    * 所以版本判断必须前置，且 catch 要并上 `Error`。
    */

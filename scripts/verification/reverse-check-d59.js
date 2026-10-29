@@ -154,7 +154,7 @@ const cases = [
     name: "D64 排程不再先查权限，退回「只靠 try/catch 兜」（静默降级的老路）",
     file: path.join(JAVA, "AlarmScheduler.java"),
     from: "    boolean exactPerm = canScheduleExactAlarms(context);",
-    to: "    boolean exactPerm = Build.VERSION.SDK_INT >= 21;",
+    to: "    boolean exactPerm = true;",
     suite: "native",
     expect: "D64 精确闹钟权限先查再排（不再只靠 try/catch 兜）",
   },

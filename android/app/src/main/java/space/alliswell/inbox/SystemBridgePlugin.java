@@ -677,7 +677,6 @@ public class SystemBridgePlugin extends Plugin {
     } catch (Exception ignored) {}
   }
 
-  /** R3：minSdk 22 —— 一律用字符串形式的 getSystemService，避免 API 23+ 的 Class 重载 */
   private static <T> T systemService(Context context, String name, Class<T> type) {
     Object svc = context.getSystemService(name);
     return type.isInstance(svc) ? type.cast(svc) : null;
@@ -729,7 +728,7 @@ public class SystemBridgePlugin extends Plugin {
 
   /**
    * R3：`areNotificationsEnabled()` 是 API 24 才有的 NotificationManager 方法，
-   * minSdk 22 上直接调用会 NoSuchMethodError（catch(Exception) 兜不住 Error）。
+   * API 23 上直接调用会 NoSuchMethodError（catch(Exception) 兜不住 Error）。
    * 改用 androidx 的 NotificationManagerCompat，在所有版本上都有定义。
    */
   private boolean notificationsEnabled() {
@@ -756,7 +755,6 @@ public class SystemBridgePlugin extends Plugin {
   }
 
   private boolean ignoringBatteryOptimizations() {
-    if (Build.VERSION.SDK_INT < 23) return true;
     PowerManager pm = powerManager();
     return pm != null && pm.isIgnoringBatteryOptimizations(getContext().getPackageName());
   }
@@ -771,7 +769,6 @@ public class SystemBridgePlugin extends Plugin {
    * （不抛异常，只写一行 logcat `Background activity launch blocked … BAL_BLOCK`）。
    */
   private boolean canDrawOverlays() {
-    if (Build.VERSION.SDK_INT < 23) return true;
     try {
       return Settings.canDrawOverlays(getContext());
     } catch (Exception ignored) {
@@ -889,7 +886,7 @@ public class SystemBridgePlugin extends Plugin {
       if (intent != null) {
         intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         int flags = PendingIntent.FLAG_UPDATE_CURRENT;
-        if (Build.VERSION.SDK_INT >= 23) flags |= PendingIntent.FLAG_IMMUTABLE;
+        flags |= PendingIntent.FLAG_IMMUTABLE;
         builder.setContentIntent(PendingIntent.getActivity(getContext(), id, intent, flags));
       }
       NotificationManager nm = notificationManager();
@@ -1199,7 +1196,7 @@ public class SystemBridgePlugin extends Plugin {
     }
 
     int flags = PendingIntent.FLAG_UPDATE_CURRENT;
-    if (Build.VERSION.SDK_INT >= 23) flags |= PendingIntent.FLAG_IMMUTABLE;
+    flags |= PendingIntent.FLAG_IMMUTABLE;
 
     // 投递载体 = 广播（唯一实现，见 AlarmTestReceiver）。闹钟时钟另外再排一条前台服务，
     // 专门把进程从 vivo fast_freezer 的冻结态里拉出来 —— 详见 AlarmScheduler.scheduleUnfreezer。
@@ -1230,57 +1227,37 @@ public class SystemBridgePlugin extends Plugin {
     long nowElapsed = android.os.SystemClock.elapsedRealtime();
     long elapsedTriggerAtMs = nowElapsed + delayMs;
 
-    if (Build.VERSION.SDK_INT >= 21) {
-      try {
-        Intent showIntent = getContext().getPackageManager()
-          .getLaunchIntentForPackage(getContext().getPackageName());
-        if (showIntent == null) showIntent = new Intent(getContext(), MainActivity.class);
-        showIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-        PendingIntent showPi = PendingIntent.getActivity(getContext(), id + 100000, showIntent, flags);
-        clockInfo = new AlarmManager.AlarmClockInfo(triggerAt, showPi);
-        am.setAlarmClock(clockInfo, pi);
-        alarmClock = true;
-        exact = true;
-        mode = isElapsed ? "alarmClockElapsed" : "alarmClock";
-      } catch (Exception ignored) {}
-    }
+    try {
+      Intent showIntent = getContext().getPackageManager()
+        .getLaunchIntentForPackage(getContext().getPackageName());
+      if (showIntent == null) showIntent = new Intent(getContext(), MainActivity.class);
+      showIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+      PendingIntent showPi = PendingIntent.getActivity(getContext(), id + 100000, showIntent, flags);
+      clockInfo = new AlarmManager.AlarmClockInfo(triggerAt, showPi);
+      am.setAlarmClock(clockInfo, pi);
+      alarmClock = true;
+      exact = true;
+      mode = isElapsed ? "alarmClockElapsed" : "alarmClock";
+    } catch (Exception ignored) {}
 
     if (!alarmClock) {
       exact = canExactAlarm();
       try {
-        if (Build.VERSION.SDK_INT >= 23) {
-          if (exact) {
-            if (isElapsed) {
-              am.setExactAndAllowWhileIdle(AlarmManager.ELAPSED_REALTIME_WAKEUP, elapsedTriggerAtMs, pi);
-              mode = "exactElapsed";
-            } else {
-              am.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, triggerAt, pi);
-              mode = "exactIdle";
-            }
-          } else {
-            if (isElapsed) {
-              am.setAndAllowWhileIdle(AlarmManager.ELAPSED_REALTIME_WAKEUP, elapsedTriggerAtMs, pi);
-              mode = "inexactElapsedIdle";
-            } else {
-              am.setAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, triggerAt, pi);
-              mode = "inexactIdle";
-            }
-          }
-        } else if (exact) {
+        if (exact) {
           if (isElapsed) {
-            am.setExact(AlarmManager.ELAPSED_REALTIME_WAKEUP, elapsedTriggerAtMs, pi);
+            am.setExactAndAllowWhileIdle(AlarmManager.ELAPSED_REALTIME_WAKEUP, elapsedTriggerAtMs, pi);
             mode = "exactElapsed";
           } else {
-            am.setExact(AlarmManager.RTC_WAKEUP, triggerAt, pi);
-            mode = "exact";
+            am.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, triggerAt, pi);
+            mode = "exactIdle";
           }
         } else {
           if (isElapsed) {
-            am.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, elapsedTriggerAtMs, pi);
-            mode = "inexactElapsed";
+            am.setAndAllowWhileIdle(AlarmManager.ELAPSED_REALTIME_WAKEUP, elapsedTriggerAtMs, pi);
+            mode = "inexactElapsedIdle";
           } else {
-            am.set(AlarmManager.RTC_WAKEUP, triggerAt, pi);
-            mode = "inexact";
+            am.setAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, triggerAt, pi);
+            mode = "inexactIdle";
           }
         }
       } catch (SecurityException se) {

@@ -1397,9 +1397,9 @@ async function run() {
       /KEY_DELIVERY_NOTIFY_ON = "deliveryNotifyEnabled"/.test(receiver));
     ok("H-08 投递时把通知可用性写进台账（事后改权限不能篡改当时的结论）",
       /putBoolean\(KEY_DELIVERY_NOTIFY_ON, notificationsUsable\(context\)\)/.test(receiver));
-    // minSdk 22：`NotificationManager.areNotificationsEnabled()` 是 API 24+，直接调用会
+    // API 23：`NotificationManager.areNotificationsEnabled()` 是 API 24+，直接调用会
     // 抛 NoSuchMethodError 且 catch(Exception) 兜不住（H-04 已修过同一坑，这里是投递侧）。
-    ok("H-08 判权限用 NotificationManagerCompat（API 22 不会 NoSuchMethodError）",
+    ok("H-08 判权限用 NotificationManagerCompat（API 23 不会 NoSuchMethodError）",
       /NotificationManagerCompat\.from\(context\)\.areNotificationsEnabled\(\)/.test(receiver));
     // D59 改的是**字段与措辞两者**，不只是措辞。
     //
@@ -1458,7 +1458,7 @@ async function run() {
       /d\.fsiAtDelivery !== undefined/.test(coreCodeH8) &&
       /d\.canUseFullScreenIntent !== false/.test(coreCodeH8) &&
       /d\.exactAtDelivery === false/.test(coreCodeH8));
-    ok("D64 全屏意图判定前置版本闸门（API 34+ 方法在 minSdk 22 上抛 NoSuchMethodError，catch(Exception) 兜不住）",
+    ok("D64 全屏意图判定前置版本闸门（API 34+ 方法在 API 23 上抛 NoSuchMethodError，catch(Exception) 兜不住）",
       /if \(Build\.VERSION\.SDK_INT < 34\) return true;/.test(receiver) &&
       /catch \(Exception \| Error ignored\)/.test(receiver));
 

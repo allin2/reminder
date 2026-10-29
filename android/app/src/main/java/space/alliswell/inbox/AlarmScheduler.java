@@ -54,7 +54,6 @@ public final class AlarmScheduler {
                               int id, String itemId, String level, String itemRev,
                               String scheduleBasis, long elapsedTriggerAtMs,
                               String reminderKey, long plannedAt, long autoSilenceMs) {
-    // R3：minSdk 22 —— 不用 API 23+ 的 getSystemService(Class) 重载
     Object svc = context.getSystemService(Context.ALARM_SERVICE);
     AlarmManager am = svc instanceof AlarmManager ? (AlarmManager) svc : null;
     if (am == null) return;
@@ -71,7 +70,7 @@ public final class AlarmScheduler {
     AlarmTrace.record(context, trace, "requested", "restore/snooze triggerAt=" + triggerAt + ";basis=" + scheduleBasis);
 
     int flags = PendingIntent.FLAG_UPDATE_CURRENT;
-    if (Build.VERSION.SDK_INT >= 23) flags |= PendingIntent.FLAG_IMMUTABLE;
+    flags |= PendingIntent.FLAG_IMMUTABLE;
 
     // 投递 = 广播（唯一实现，见 AlarmTestReceiver）
     Intent delivery = new Intent(context, AlarmTestReceiver.class);
@@ -98,7 +97,7 @@ public final class AlarmScheduler {
     boolean exactPerm = canScheduleExactAlarms(context);
 
     AlarmManager.AlarmClockInfo info = null;
-    if (exactPerm && Build.VERSION.SDK_INT >= 21) {
+    if (exactPerm) {
       try {
         Intent showIntent = new Intent(context, MainActivity.class);
         showIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
@@ -119,22 +118,12 @@ public final class AlarmScheduler {
       mode = isElapsed ? "alarmClockElapsed" : "alarmClock";
     } else if (exactPerm) {
       try {
-        if (Build.VERSION.SDK_INT >= 23) {
-          if (isElapsed && elapsedTriggerAtMs > 0) {
-            am.setExactAndAllowWhileIdle(AlarmManager.ELAPSED_REALTIME_WAKEUP, elapsedTriggerAtMs, pi);
-            mode = "exactElapsed";
-          } else {
-            am.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, triggerAt, pi);
-            mode = "exactIdle";
-          }
+        if (isElapsed && elapsedTriggerAtMs > 0) {
+          am.setExactAndAllowWhileIdle(AlarmManager.ELAPSED_REALTIME_WAKEUP, elapsedTriggerAtMs, pi);
+          mode = "exactElapsed";
         } else {
-          if (isElapsed && elapsedTriggerAtMs > 0) {
-            am.setExact(AlarmManager.ELAPSED_REALTIME_WAKEUP, elapsedTriggerAtMs, pi);
-            mode = "exactElapsed";
-          } else {
-            am.setExact(AlarmManager.RTC_WAKEUP, triggerAt, pi);
-            mode = "exact";
-          }
+          am.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, triggerAt, pi);
+          mode = "exactIdle";
         }
       } catch (Exception error) {
         AlarmTrace.record(context, trace, "exactScheduleFailed", error.toString());
@@ -249,7 +238,7 @@ public final class AlarmScheduler {
     Object svc = context.getSystemService(Context.ALARM_SERVICE);
     AlarmManager am = svc instanceof AlarmManager ? (AlarmManager) svc : null;
     int flags = PendingIntent.FLAG_UPDATE_CURRENT;
-    if (Build.VERSION.SDK_INT >= 23) flags |= PendingIntent.FLAG_IMMUTABLE;
+    flags |= PendingIntent.FLAG_IMMUTABLE;
 
     Intent intent = new Intent(context, AlarmTestReceiver.class);
     intent.setAction("space.alliswell.inbox.ACTION_TEST_ALARM");
