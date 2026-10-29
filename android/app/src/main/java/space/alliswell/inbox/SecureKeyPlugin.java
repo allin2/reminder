@@ -33,7 +33,12 @@ public class SecureKeyPlugin extends Plugin {
   }
   private SecretKey encryptionKey() throws Exception {
     KeyStore store = keyStore();
-    if (store.containsAlias(ALIAS)) return (SecretKey) store.getKey(ALIAS, null);
+    if (store.containsAlias(ALIAS)) {
+      SecretKey key = (SecretKey) store.getKey(ALIAS, null);
+      if (key != null) return key;
+      // A stale alias must not permanently prevent key generation.
+      store.deleteEntry(ALIAS);
+    }
     KeyGenerator generator = KeyGenerator.getInstance(KeyProperties.KEY_ALGORITHM_AES, "AndroidKeyStore");
     generator.init(new KeyGenParameterSpec.Builder(ALIAS,
         KeyProperties.PURPOSE_ENCRYPT | KeyProperties.PURPOSE_DECRYPT)
@@ -74,7 +79,8 @@ public class SecureKeyPlugin extends Plugin {
       } catch (GeneralSecurityException | IllegalArgumentException e) {
         // Restored ciphertext has no corresponding Keystore key. Reset, never crash or log secrets.
         if (!preferences.edit().clear().commit()) { call.reject("安全存储清理失败"); return; }
-        keyStore().deleteEntry(ALIAS);
+        // Cleanup is best effort once ciphertext has been cleared.
+        try { keyStore().deleteEntry(ALIAS); } catch (Exception ignored) {}
         result.put("value", "");
         result.put("reset", true);
       }

@@ -1683,10 +1683,10 @@
       let persistenceStorage = null;
       persistenceInstance = persistenceFactory({
         key: KEY,
+        // Pending replay is part of startup migration: preserve its legacy key before redaction.
+        beforeReplaySnapshot: payload => AppAi.restoreApiKey(payload.settings || {}, toast),
         prepareSnapshot: payload => {
-          if (!AppAi.nativeAndroid()) return payload;
-          if (!secureAiStorageReady && payload.settings && payload.settings.ai &&
-              Object.prototype.hasOwnProperty.call(payload.settings.ai, "apiKey") && !payload.settings.ai.apiKey) {
+          if (AppAi.nativeAndroid() && !secureAiStorageReady) {
             throw new Error("AI 安全存储尚未恢复");
           }
           return AppAi.prepareSnapshot(payload);
