@@ -325,13 +325,19 @@ function createAndroidEnv(options) {
     });
   })();
 
+  let secureValue = "";
+  const secureKey = {
+    async get() { return { value: secureValue }; },
+    async set({ value }) { secureValue = value; },
+    async remove() { secureValue = ""; }
+  };
   return {
     contract: contract,
     calls: calls,
     listeners: listeners,
     capacitor: {
       getPlatform() { return "android"; },
-      Plugins: { LocalNotifications: local, App: app, SystemBridge: bridge, AppSettings: {} }
+      Plugins: { SecureKey: secureKey, LocalNotifications: local, App: app, SystemBridge: bridge, AppSettings: {} }
     },
     fireResume() { if (listeners.appStateChange) listeners.appStateChange({ isActive: true }); }
   };
@@ -661,6 +667,19 @@ async function bootCombination(options) {
 
 async function run() {
   const indexScripts = prod.readIndexScripts(ROOT);
+
+  section("P2 安全：真实启动迁移密钥并清理全部旧副本");
+  {
+    const seed = { schema: 5, items: [], notes: [], projects: [], settings: { ai: { apiKey: "migration-sentinel", model: "m" } } };
+    const boot = await bootCombination({ idbValue: seed, seedState: seed });
+    const secured = await boot.env.capacitor.Plugins.SecureKey.get();
+    ok("启动后密钥可用且进入安全插件", boot.ready && boot.app.state.settings.ai.apiKey === "migration-sentinel" && secured.value === "migration-sentinel");
+    ok("主库与镜像均不再含明文密钥", !JSON.stringify(boot.disk.idbValue).includes("migration-sentinel") && !boot.sandbox.localStorage.getItem("attention-inbox-v2").includes("migration-sentinel"));
+    const failed = loadCombination({ idbValue: seed, seedState: seed });
+    failed.env.capacitor.Plugins.SecureKey.set = async () => { throw new Error("secure-write-failed"); };
+    await failed.sandbox.__ATTENTION_INBOX__.ready();
+    ok("安全写入失败仍保留旧主库及旧镜像", failed.disk.idbValue.settings.ai.apiKey === "migration-sentinel" && failed.sandbox.localStorage.getItem("attention-inbox-v2").includes("migration-sentinel"));
+  }
 
   /* ---------- A. 生产组合清单本身：从 index.html 推导并逐条判定 ---------- */
   section("A. 生产组合清单从 index.html 推导（未知脚本 / 缺文件 / 顺序 / 加载期依赖）");
@@ -2824,10 +2843,10 @@ async function run() {
         return probs.length >= 7 && probs.every(pp => pp.path.indexOf("AppDiagnostics.") === 0);
       })());
 
-ok("收口：N6/N7 的补丁同样只差那几行（N6 改 1 行、N7 删 4 条声明）",
-      // N6 把 4 行成员清单压成 1 行 ⇒ 少 3 行；N7 删掉 4 条声明（共 9 行）⇒ 少 9 行。
+ok("收口：N6/N7 的补丁同样只差那几行（N6 改 1 行、N7 删 7 条声明）",
+      // N6 把 4 行成员清单压成 1 行 ⇒ 少 3 行；N7 删掉 4 条声明（共 12 行）⇒ 少 12 行。
       n6Src.split("\n").length === appCoreSrc.split("\n").length - 3 &&
-      n7Src.split("\n").length === appCoreSrc.split("\n").length - 9 &&
+      n7Src.split("\n").length === appCoreSrc.split("\n").length - 12 &&
       n7Src.indexOf('["AppAi.createAppAi"') < 0 &&
       n7Src.indexOf("APP_AI_INSTANCE_CONTRACT") > 0,
       JSON.stringify({ n6: n6Src.split("\n").length, n7: n7Src.split("\n").length,
@@ -4227,8 +4246,8 @@ ok("收口：N6/N7 的补丁同样只差那几行（N6 改 1 行、N7 删 4 条�
     await app.saveAsync();   // 这一刻只计量 writeSnapshot 这条路径
     const measured = { parse: h.jsonCount.parse, stringify: h.jsonCount.stringify };
     ok("一次保存只有 **1 次**全量 JSON.parse", measured.parse === 1, JSON.stringify(measured));
-    ok("两次 stringify 各自都有出处：① 生成 json 载荷 ② localStorage 镜像序列化",
-      measured.stringify === 2, JSON.stringify(measured));
+    ok("三次 stringify 各自都有出处：① 独立快照 ② 安全脱敏载荷 ③ localStorage 镜像序列化",
+      measured.stringify === 3, JSON.stringify(measured));
     ok("镜像仍然照写（不能为了少一次 parse 把镜像去掉）",
       !!h.localStorage.getItem("attention-inbox-v2"));
     ok("权威后端（IDB）上确实落到了这次提交",

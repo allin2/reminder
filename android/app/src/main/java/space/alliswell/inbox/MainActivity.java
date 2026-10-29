@@ -7,6 +7,7 @@ import com.getcapacitor.BridgeActivity;
 public class MainActivity extends BridgeActivity {
   @Override
   public void onCreate(Bundle savedInstanceState) {
+    registerPlugin(SecureKeyPlugin.class);
     registerPlugin(SystemBridgePlugin.class);
     registerPlugin(AppSettingsPlugin.class);
     registerPlugin(CaptureIntentPlugin.class);
