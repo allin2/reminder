@@ -131,6 +131,7 @@ function fixture(api, options) {
     toLocalInput: (ts) => ts ? new Date(ts).toISOString().slice(0, 16) : "",
     parseLocalInput: (val) => val ? new Date(val).getTime() : 0,
     escapeHtml: (str) => String(str || "").replace(/&/g, "&amp;").replace(/</g, "&lt;"),
+    completeItem: (id) => options.completeItem ? options.completeItem(id) : false,
     deleteItem: (id) => { deletedIds.push(id); state.items = state.items.filter(it => it.id !== id); },
     bumpRev: (it) => { it.rev = (it.rev || 1) + 1; bumpedRevs.push(it.id); },
     wrapUserOp: (fn, opts) => {
@@ -605,6 +606,65 @@ async function repairUndoAssertions() {
       "const reviewDefaults = { enabled: true, hour: 21, minute: 30, windowEndHour: 23, windowEndMinute: 0, followupCount: 0, snoozedUntil: 0, skippedUntil: 0, sessionStatus: 'idle', lastSessionKey: '', maxFollowups: 2, followupMs: 3600000 };"
     );
   }));
+
+  // D76: exercise the real shared completion command and its toast undo in a review session.
+  {
+    let undo;
+    const rows = ["first", "last"].map((id, i) => ({ id, title: id, createdAt: i + 1,
+      rev: 1, status: "waiting", review_status: "NEEDS_REVIEW" }));
+    const f = fixture(load(source), { items: rows, completeItem: id => commands.completeItem(id) });
+    const filters = ["pending", "noTime", "kept"].map(reviewFilter => ({ dataset: { reviewFilter },
+      setAttribute() {} }));
+    f.deps.queryAll = selector => selector === "[data-review-filter]" ? filters : [];
+    const commands = require("../../lib/app-items.js").createAppItems(Object.assign({}, f.deps, {
+      setItems: items => { f.state.items = items; },
+      render: () => f.review.renderReviewCard(),
+      toast: (msg, label, action, secondary) => { if (secondary) undo = secondary.onClick; },
+      uid: () => "next", isTerminal: it => ["archived", "completed"].includes(it.status),
+      normalizeItem: it => it, makeItem: it => it, resolveDeliveryMode: () => "inexact",
+      nextRepeatTrigger: () => Date.now() + 86400000, takeReplayCreatedId: () => null,
+      isFeedbackSuppressed: () => false, inflightDepth: () => 0,
+      runUserOp: (fn, args) => fn(...args), openSnoozeSheet() {}, openRestoreSnooze() {},
+      goToArchive() {}, markUndoNativeCheckPending() {}, isFallbackSuppressed: () => false,
+      effectiveTriggerAt: it => it.triggerAt, deadlineStageKeyOf: () => null, applyWindowTrigger() {}
+    }));
+    f.review.openReviewSession();
+    assert.ok(f.deps.query("#reviewBody").innerHTML.includes('data-review-complete="first"'));
+    assert.ok(f.deps.query("#reviewBody").innerHTML.includes('aria-label="将first标为已完成"'));
+    assert.strictEqual(f.review.reviewComplete("first"), true);
+    assert.strictEqual(rows[0].status, "archived");
+    assert.strictEqual(rows[0].review_status, "NEEDS_REVIEW");
+    assert.strictEqual(f.review.currentReviewItem().id, "last", "advance to next ID");
+    assert.strictEqual(f.state.ui.reviewIndex, 1);
+    assert.strictEqual(f.deps.query("#reviewProgress").textContent, "1");
+    assert.deepStrictEqual(filters.map(b => b.textContent), ["待处理 1", "未设时间 1", "留待下次 0"]);
+    assert.strictEqual(f.review.reviewComplete("first"), false, "terminal row cannot complete twice");
+    assert.strictEqual(commands.completeItem("first"), false, "shared L04 guard");
+    undo(); await Promise.resolve();
+    assert.strictEqual(f.review.currentReviewItem().id, "first");
+    assert.strictEqual(f.state.ui.reviewIndex, 0);
+    assert.strictEqual(f.deps.query("#reviewProgress").textContent, "2");
+    f.review.reviewComplete("first");
+    f.review.reviewComplete("last");
+    assert.strictEqual(f.review.currentReviewItem(), null);
+    assert.strictEqual(f.state.ui.reviewIndex, 2);
+    assert.ok(f.deps.query("#reviewBody").innerHTML.includes("整理完成"));
+    assert.ok(f.deps.query("#reviewFoot").innerHTML.includes("btnReviewDone"));
+    undo(); await Promise.resolve();
+    assert.strictEqual(f.state.ui.reviewIndex, 1);
+    assert.strictEqual(f.deps.query("#reviewProgress").textContent, "1");
+    assert.ok(f.deps.query("#reviewFoot").innerHTML.includes("reviewSnooze"));
+    f.review.reviewKeepCurrent();
+    assert.deepStrictEqual(filters.map(b => b.textContent), ["待处理 0", "未设时间 0", "留待下次 1"]);
+    const keptIndex = f.state.ui.reviewIndex;
+    f.review.reviewComplete("last");
+    assert.strictEqual(f.state.ui.reviewIndex, keptIndex, "completing a kept row must not count it twice");
+    undo(); await Promise.resolve();
+    assert.deepStrictEqual(filters.map(b => b.textContent), ["待处理 1", "未设时间 1", "留待下次 0"]);
+    assert.strictEqual(f.state.ui.reviewIndex, 1);
+    assert.strictEqual(f.spies.notifications.length, 0, "completion sends no review notification");
+    out.push("D76 shared completion, advance, counts, terminal guard, toast undo and final-screen undo passed");
+  }
 
   out.push(await repairUndoAssertions());
 
