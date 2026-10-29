@@ -81,7 +81,7 @@ final class DeliveryEvidenceStore {
    *
    * 这里**刻意不写 `if (Build.VERSION.SDK_INT >= 24)`**：`createDeviceProtectedStorageContext()`
    * 本身就是 API 24 才有的方法，拿不到它就说明平台不支持 —— 直接兜住。
-   * 少一个 SDK_INT 判断有两个好处：① minSdk 22 上不必依赖编译器对 API 的静态检查；
+   * 少一个 SDK_INT 判断有两个好处：① API 23 上不必依赖编译器对 API 的静态检查；
    * ② 单测不必再去用 Unsafe 改写 `Build.VERSION.SDK_INT`。那个字段是 `static final`，
    *    JIT 可以把它常量折叠，而一旦某个测试类先改写它，同一 JVM 里后跑的测试就会读到
    *    折叠后的旧值（实测：本仓既有的 Direct Boot 路由测试会因此变红）。

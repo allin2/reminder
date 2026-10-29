@@ -58,7 +58,7 @@ public class NotificationScheduler extends BroadcastReceiver {
   }
 
   private static int immutable() {
-    return Build.VERSION.SDK_INT >= 23 ? PendingIntent.FLAG_IMMUTABLE : 0;
+    return PendingIntent.FLAG_IMMUTABLE;
   }
 
   static synchronized JSObject schedule(Context context, JSObject notification, long at,
@@ -146,16 +146,14 @@ public class NotificationScheduler extends BroadcastReceiver {
     long trigger = elapsed ? row.getLong("elapsedAt") : at;
     if (!exact && exactPermission) {
       try {
-        if (Build.VERSION.SDK_INT >= 23) am.setExactAndAllowWhileIdle(type, trigger, pi);
-        else am.setExact(type, trigger, pi);
+        am.setExactAndAllowWhileIdle(type, trigger, pi);
         exact = true;
       } catch (SecurityException error) {
         AlarmTrace.record(context, token, "notificationExactUnavailable", error.toString());
       }
     }
     if (!exact) {
-      if (Build.VERSION.SDK_INT >= 23) am.setAndAllowWhileIdle(type, trigger, pi);
-      else am.set(type, trigger, pi);
+      am.setAndAllowWhileIdle(type, trigger, pi);
     }
     String mode = systemNextAlarm ? "alarmClockNotification" : exact ? "exactNotification" : "inexactNotification";
     row.put("exact", exact).put("mode", mode);

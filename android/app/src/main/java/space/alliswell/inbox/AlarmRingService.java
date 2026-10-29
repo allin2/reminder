@@ -751,7 +751,7 @@ public class AlarmRingService extends Service {
     }
   }
 
-  /** R3：minSdk 22 —— `VibratorManager` 是 API 31+，低版本回落到 `VIBRATOR_SERVICE` */
+  /** R3：minSdk 23 —— `VibratorManager` 是 API 31+，低版本回落到 `VIBRATOR_SERVICE` */
   private Vibrator obtainVibrator() {
     if (Build.VERSION.SDK_INT >= 31) {
       Object svc = getSystemService(Context.VIBRATOR_MANAGER_SERVICE);
